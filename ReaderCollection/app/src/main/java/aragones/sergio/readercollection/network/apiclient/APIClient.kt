@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 16/10/2020
  */
 
-package aragones.sergio.readercollection.network
+package aragones.sergio.readercollection.network.apiclient
 
 import aragones.sergio.readercollection.utils.Constants
 import com.google.gson.*
@@ -42,6 +42,15 @@ class APIClient {
             Retrofit
                 .Builder()
                 .baseUrl(Constants.BASE_ENDPOINT)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build()
+
+        val googleRetrofit: Retrofit =
+            Retrofit
+                .Builder()
+                .baseUrl(Constants.BASE_GOOGLE_ENDPOINT)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
