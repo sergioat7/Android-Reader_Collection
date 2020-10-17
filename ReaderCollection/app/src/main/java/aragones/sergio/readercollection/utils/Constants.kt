@@ -24,6 +24,10 @@ class Constants {
         const val CONNECT_TIMEOUT: Long = 60
         const val READ_TIMEOUT: Long = 30
         const val WRITE_TIMEOUT: Long = 15
+        const val FORMAT_PARAM = "format";
+        const val STATE_PARAM = "state";
+        const val IS_FAVOURITE_PARAM = "isFavourite";
+        const val SEARCH_PARAM = "q";
         val SUBSCRIBER_SCHEDULER = Schedulers.io()
         val OBSERVER_SCHEDULER = AndroidSchedulers.mainThread()
 
