@@ -18,6 +18,7 @@ class Constants {
         // MARK: - Retrofit constants
 
         const val BASE_ENDPOINT = "https://books-collection-services.herokuapp.com/"
+        const val BASE_GOOGLE_ENDPOINT = "https://www.googleapis.com/books/v1/"
         const val ACCEPT_LANGUAGE_HEADER = "Accept-Language"
         const val AUTHORIZATION_HEADER = "Authorization"
         const val CONNECT_TIMEOUT: Long = 60
