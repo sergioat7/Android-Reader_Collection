@@ -18,17 +18,23 @@ class Constants {
         // MARK: - Retrofit constants
 
         const val BASE_ENDPOINT = "https://books-collection-services.herokuapp.com/"
+        const val BASE_GOOGLE_ENDPOINT = "https://www.googleapis.com/books/v1/"
         const val ACCEPT_LANGUAGE_HEADER = "Accept-Language"
         const val AUTHORIZATION_HEADER = "Authorization"
         const val CONNECT_TIMEOUT: Long = 60
         const val READ_TIMEOUT: Long = 30
         const val WRITE_TIMEOUT: Long = 15
+        const val FORMAT_PARAM = "format";
+        const val STATE_PARAM = "state";
+        const val IS_FAVOURITE_PARAM = "isFavourite";
+        const val SEARCH_PARAM = "q";
         val SUBSCRIBER_SCHEDULER = Schedulers.io()
         val OBSERVER_SCHEDULER = AndroidSchedulers.mainThread()
 
         // MARK: - SharedPref constants
 
         const val PREFERENCES_NAME = "preferences"
+        const val AUTH_DATA_PREFERENCES_NAME = "authData"
         const val LANGUAGE_PREFERENCE_NAME = "language"
 
         // MARK: Date format
