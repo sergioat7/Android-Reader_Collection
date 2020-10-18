@@ -21,7 +21,7 @@ class UserAPIClient(
 
     private val api = APIClient.retrofit.create(UserAPIService::class.java)
 
-    fun register(username: String, password: String): Completable {
+    fun registerObserver(username: String, password: String): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -29,7 +29,7 @@ class UserAPIClient(
         return api.register(headers, body).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun deleteUser(@HeaderMap headers: Map<String, String>): Completable {
+    fun deleteUserObserver(@HeaderMap headers: Map<String, String>): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -37,7 +37,7 @@ class UserAPIClient(
         return api.deleteUser(headers).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun login(username: String, password: String): Single<LoginResponse> {
+    fun loginObserver(username: String, password: String): Single<LoginResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -45,7 +45,7 @@ class UserAPIClient(
         return api.login(headers, body).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun logout(@HeaderMap headers: Map<String, String>): Completable {
+    fun logoutObserver(@HeaderMap headers: Map<String, String>): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -53,7 +53,7 @@ class UserAPIClient(
         return api.logout(headers).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun updatePassword(password: String): Completable {
+    fun updatePasswordObserver(password: String): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()

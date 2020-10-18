@@ -19,7 +19,7 @@ class BookAPIClient(
 
     private val api = APIClient.retrofit.create(BookAPIService::class.java)
 
-    fun getBooks(format: String?, state: String?, isFavourite: Boolean?): Single<List<BookResponse>> {
+    fun getBooksObserver(format: String?, state: String?, isFavourite: Boolean?): Single<List<BookResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -39,7 +39,7 @@ class BookAPIClient(
         return api.getBooks(headers, queryParams).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getBook(googleId: String): Single<BookResponse> {
+    fun getBookObserver(googleId: String): Single<BookResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -47,7 +47,7 @@ class BookAPIClient(
         return api.getBook(headers, googleId).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun createBook(book: BookResponse): Completable {
+    fun createBookObserver(book: BookResponse): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -55,7 +55,7 @@ class BookAPIClient(
         return api.createBook(headers, book).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun setBook(book: BookResponse): Single<BookResponse> {
+    fun setBookObserver(book: BookResponse): Single<BookResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -63,7 +63,7 @@ class BookAPIClient(
         return api.setBook(headers, book.id, book).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun deleteBook(googleId: String): Completable {
+    fun deleteBookObserver(googleId: String): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -71,7 +71,7 @@ class BookAPIClient(
         return api.deleteBook(headers, googleId).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun setFavouriteBook(googleId: String, isFavourite: Boolean): Single<BookResponse> {
+    fun setFavouriteBookObserver(googleId: String, isFavourite: Boolean): Single<BookResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
