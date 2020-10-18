@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Reader Collection</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_books">Books</string>
+    <string name="title_search">Search</string>
+    <string name="title_profile">Profile</string>
 </resources>
