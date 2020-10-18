@@ -35,7 +35,7 @@ data class BookResponse(
     @SerializedName("categories")
     val categories: List<String>?,
     @SerializedName("averageRating")
-    val averageRating: Int,
+    val averageRating: Double,
     @SerializedName("ratingsCount")
     val ratingsCount: Int,
     @SerializedName("rating")
