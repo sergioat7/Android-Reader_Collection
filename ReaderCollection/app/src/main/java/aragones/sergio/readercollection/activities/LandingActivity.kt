@@ -6,7 +6,6 @@
 package aragones.sergio.readercollection.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
