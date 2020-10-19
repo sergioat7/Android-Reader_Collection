@@ -34,8 +34,9 @@ class Constants {
         // MARK: - SharedPref constants
 
         const val PREFERENCES_NAME = "preferences"
-        const val AUTH_DATA_PREFERENCES_NAME = "authData"
         const val LANGUAGE_PREFERENCE_NAME = "language"
+        const val AUTH_DATA_PREFERENCES_NAME = "authData"
+        const val USER_DATA_PREFERENCES_NAME = "userData"
 
         // MARK: Date format
 
