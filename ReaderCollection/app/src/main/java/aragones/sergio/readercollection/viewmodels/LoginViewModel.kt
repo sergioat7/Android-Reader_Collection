@@ -5,14 +5,18 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
+import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.apiclient.APIClient
 import aragones.sergio.readercollection.repositories.LoginRepository
+import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import retrofit2.HttpException
 
@@ -20,10 +24,13 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
 
     //MARK: - Private properties
 
+    private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginError = MutableLiveData<ErrorResponse>()
 
     //MARK: - Public properties
 
+    val username: String? = loginRepository.username
+    val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginError: LiveData<ErrorResponse> = _loginError
 
     //MARK: - Public methods
@@ -46,9 +53,30 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
                         _loginError.value = APIClient.gson.fromJson(
                             errorBody.charStream(), ErrorResponse::class.java
                         )
+                    } ?: run {
+                        _loginError.value = ErrorResponse("", R.string.login_failed)
                     }
+                } else {
+                    _loginError.value = ErrorResponse("", R.string.login_failed)
                 }
             }
         )
+    }
+
+    fun loginDataChanged(username: String, password: String) {
+
+        var usernameError: Int? = null
+        var passwordError: Int? = null
+        var isDataValid = true
+
+        if (!Constants.isUserNameValid(username)) {
+            usernameError = R.string.invalid_username
+            isDataValid = false
+        }
+        if (!Constants.isPasswordValid(password)) {
+            passwordError = R.string.invalid_password
+            isDataValid = false
+        }
+        _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
 }
