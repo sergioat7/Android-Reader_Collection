@@ -12,6 +12,8 @@ import aragones.sergio.readercollection.fragments.LoginFragment
 
 class LoginActivity : BaseActivity() {
 
+    //MARK: - Lifecycle methods
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.login_activity)
