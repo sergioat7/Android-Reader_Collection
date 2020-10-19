@@ -6,7 +6,9 @@
 package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.repositories.LoginRepository
 
-class LoginViewModel : ViewModel() {
-    // TODO: Implement the ViewModel
+class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+
+
 }
