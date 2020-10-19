@@ -40,7 +40,7 @@ class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel()
         loginRepository.login(username, password).subscribeBy(
             onSuccess = {
 
-                val userData = UserData(username, password, false)
+                val userData = UserData(username, password, true)
                 val authData = AuthData(it.token)
                 loginRepository.storeLoginData(userData, authData)
                 _loginError.value = null
