@@ -19,7 +19,11 @@ import kotlinx.android.synthetic.main.fragment_books.*
 
 class BooksFragment : Fragment() {
 
+    //MARK: - Private properties
+
     private lateinit var booksViewModel: BooksViewModel
+
+    //MARK: - Lifecycle methods
 
     override fun onCreateView(
         inflater: LayoutInflater,

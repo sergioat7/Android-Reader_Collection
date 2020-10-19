@@ -14,6 +14,8 @@ import kotlin.math.max
 
 class LandingActivity : BaseActivity() {
 
+    //MARK: - Lifecycle methods
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

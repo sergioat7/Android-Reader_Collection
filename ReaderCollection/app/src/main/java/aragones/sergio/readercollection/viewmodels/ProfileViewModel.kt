@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModel
 
 class ProfileViewModel : ViewModel() {
 
+    //MARK: - Private properties
+
     private val _text = MutableLiveData<String>().apply {
         value = "This is profile Fragment"
     }

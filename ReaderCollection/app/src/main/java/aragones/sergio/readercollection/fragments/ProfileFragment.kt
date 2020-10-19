@@ -19,7 +19,11 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : Fragment() {
 
+    //MARK: - Private properties
+
     private lateinit var profileViewModel: ProfileViewModel
+
+    //MARK: - Lifecycle methods
 
     override fun onCreateView(
         inflater: LayoutInflater,
