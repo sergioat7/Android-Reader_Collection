@@ -5,9 +5,9 @@
 
 package aragones.sergio.readercollection.network.apiclient
 
-import aragones.sergio.readercollection.models.LoginCredentials
-import aragones.sergio.readercollection.models.LoginResponse
-import aragones.sergio.readercollection.models.NewPassword
+import aragones.sergio.readercollection.models.requests.LoginCredentials
+import aragones.sergio.readercollection.models.responses.LoginResponse
+import aragones.sergio.readercollection.models.requests.NewPassword
 import aragones.sergio.readercollection.network.apiservice.UserAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler

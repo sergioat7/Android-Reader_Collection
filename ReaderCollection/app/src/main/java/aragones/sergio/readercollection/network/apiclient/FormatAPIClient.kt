@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.network.apiclient
 
-import aragones.sergio.readercollection.models.FormatResponse
+import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.network.apiservice.FormatAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler

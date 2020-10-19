@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 19/10/2020
  */
 
-package aragones.sergio.readercollection.models
+package aragones.sergio.readercollection.models.login
 
 data class UserData(
     var username: String,
