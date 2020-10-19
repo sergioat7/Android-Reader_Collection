@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.utils
 
 import android.content.Context
-import aragones.sergio.readercollection.models.AuthData
-import aragones.sergio.readercollection.models.UserData
+import aragones.sergio.readercollection.models.login.AuthData
+import aragones.sergio.readercollection.models.login.UserData
 import com.google.gson.Gson
 import java.util.*
 
