@@ -10,6 +10,7 @@ import android.os.Bundle
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import java.util.*
+import kotlin.math.max
 
 class LandingActivity : BaseActivity() {
 
@@ -23,7 +24,24 @@ class LandingActivity : BaseActivity() {
         conf.setLocale(Locale(language))
         resources.updateConfiguration(conf, resources.displayMetrics)
 
-        val intent = Intent(this, MainActivity::class.java)
+        val cls: Class<*>
+        val initTime = System.currentTimeMillis() / 1000
+        cls = if (sharedPrefHandler.isLoggedIn()) {
+            MainActivity::class.java
+        } else {
+            LoginActivity::class.java
+        }
+        val finalTime = System.currentTimeMillis() / 1000
+        val taskTime = finalTime - initTime
+        val time = max(0, 1000 - taskTime)
+
+        try {
+            Thread.sleep(time)
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        }
+
+        val intent = Intent(this, cls)
         startActivity(intent)
     }
 }
