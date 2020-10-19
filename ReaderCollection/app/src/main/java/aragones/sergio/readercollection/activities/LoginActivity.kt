@@ -5,12 +5,12 @@
 
 package aragones.sergio.readercollection.activities
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.fragments.LoginFragment
 
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,5 +22,9 @@ class LoginActivity : AppCompatActivity() {
                 .replace(R.id.container, LoginFragment.newInstance())
                 .commitNow()
         }
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
     }
 }
