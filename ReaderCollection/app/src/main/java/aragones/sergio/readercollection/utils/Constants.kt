@@ -81,5 +81,15 @@ class Constants {
                 return null
             }
         }
+
+        // MARK: - Login constants
+
+        fun isUserNameValid(username: String): Boolean {
+            return username.isNotBlank()
+        }
+
+        fun isPasswordValid(password: String): Boolean {
+            return password.length > 3
+        }
     }
 }

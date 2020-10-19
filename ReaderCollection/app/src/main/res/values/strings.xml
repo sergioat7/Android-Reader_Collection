@@ -4,4 +4,7 @@
     <string name="title_books">Books</string>
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >3 characters</string>
+    <string name="login_failed">"Login failed"</string>
 </resources>
