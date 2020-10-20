@@ -11,8 +11,9 @@ import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.network.apiclient.UserAPIClient
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class LoginRepository(
+class LoginRepository @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val userAPIClient: UserAPIClient
 ) {

@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.viewmodels
 
-import android.util.Patterns
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,8 +18,11 @@ import aragones.sergio.readercollection.repositories.LoginRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import retrofit2.HttpException
+import javax.inject.Inject
 
-class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val loginRepository: LoginRepository
+): ViewModel() {
 
     //MARK: - Private properties
 
