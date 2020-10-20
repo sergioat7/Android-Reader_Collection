@@ -14,8 +14,9 @@ import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.HeaderMap
+import javax.inject.Inject
 
-class UserAPIClient(
+class UserAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 

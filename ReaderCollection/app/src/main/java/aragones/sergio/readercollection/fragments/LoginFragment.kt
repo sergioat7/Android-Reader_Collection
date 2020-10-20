@@ -6,8 +6,6 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,10 +53,11 @@ class LoginFragment : BaseFragment() {
 
     private fun initializeUI() {
 
+        val application = activity?.application ?: return
         etUsername = edit_text_username
         etPassword = edit_text_password
         btLogin = button_login
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(context)).get(LoginViewModel::class.java)
+        viewModel = ViewModelProvider(this, LoginViewModelFactory(application)).get(LoginViewModel::class.java)
 
         etUsername.setText(viewModel.username)
 
