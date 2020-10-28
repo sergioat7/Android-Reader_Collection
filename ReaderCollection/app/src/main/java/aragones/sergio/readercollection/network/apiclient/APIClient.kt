@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 class APIClient {
     companion object {
 
-        private val gson: Gson =
+        val gson: Gson =
             GsonBuilder()
                 .registerTypeAdapter(
                     Date::class.java,

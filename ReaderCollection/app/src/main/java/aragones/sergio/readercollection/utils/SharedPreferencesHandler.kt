@@ -5,16 +5,19 @@
 
 package aragones.sergio.readercollection.utils
 
-import android.content.Context
-import aragones.sergio.readercollection.models.AuthData
+import android.content.SharedPreferences
+import aragones.sergio.readercollection.models.login.AuthData
+import aragones.sergio.readercollection.models.login.UserData
 import com.google.gson.Gson
 import java.util.*
+import javax.inject.Inject
 
-class SharedPreferencesHandler(context: Context?) {
+class SharedPreferencesHandler @Inject constructor(
+    private val sharedPreferences: SharedPreferences?
+) {
 
     //MARK: Private properties
 
-    private val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
     private val gson = Gson()
 
     //MARK: Public methods
@@ -65,5 +68,52 @@ class SharedPreferencesHandler(context: Context?) {
 
     fun removeCredentials() {
         sharedPreferences?.edit()?.remove(Constants.AUTH_DATA_PREFERENCES_NAME)?.apply()
+    }
+
+    fun isLoggedIn(): Boolean {
+
+        val userData = getUserData()
+        val authData = getCredentials()
+        return userData.isLoggedIn && authData.token.isNotEmpty()
+    }
+
+    fun getUserData(): UserData {
+
+        val userDataJson = sharedPreferences?.getString(Constants.USER_DATA_PREFERENCES_NAME,null)
+        return if (userDataJson != null) {
+            gson.fromJson(userDataJson, UserData::class.java)
+        } else {
+            UserData("", "", false)
+        }
+    }
+
+    fun storeUserData(userData: UserData) {
+
+        if (sharedPreferences != null) {
+            with (sharedPreferences.edit()) {
+                val userDataJson = gson.toJson(userData)
+                putString(Constants.USER_DATA_PREFERENCES_NAME, userDataJson)
+                commit()
+            }
+        }
+    }
+
+    fun storePassword(password: String) {
+
+        val userData = getUserData()
+        userData.password = password
+        storeUserData(userData)
+    }
+
+    fun removeUserData() {
+        sharedPreferences?.edit()?.remove(Constants.USER_DATA_PREFERENCES_NAME)?.apply()
+    }
+
+    fun removePassword() {
+
+        val userData = getUserData()
+        userData.password = ""
+        userData.isLoggedIn = false
+        storeUserData(userData)
     }
 }

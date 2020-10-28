@@ -5,8 +5,8 @@
 
 package aragones.sergio.readercollection.network.apiservice
 
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.FavouriteBook
+import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.models.requests.FavouriteBook
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
