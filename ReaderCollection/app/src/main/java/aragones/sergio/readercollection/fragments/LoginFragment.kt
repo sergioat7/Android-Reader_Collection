@@ -23,7 +23,7 @@ import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
 
-class LoginFragment : BaseFragment() {
+class LoginFragment: BaseFragment() {
 
     //MARK: - Private properties
 

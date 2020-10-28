@@ -15,7 +15,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity() {
+class MainActivity: BaseActivity() {
 
     //MARK: - Lifecycle methods
 

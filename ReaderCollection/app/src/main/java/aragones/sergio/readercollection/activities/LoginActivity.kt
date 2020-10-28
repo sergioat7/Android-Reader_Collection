@@ -10,7 +10,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.fragments.LoginFragment
 
-class LoginActivity : BaseActivity() {
+class LoginActivity: BaseActivity() {
 
     //MARK: - Lifecycle methods
 
