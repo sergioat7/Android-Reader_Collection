@@ -7,11 +7,13 @@ package aragones.sergio.readercollection.fragments.base
 
 import android.content.Intent
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 
 open class BaseFragment : Fragment() {
 
-    open fun manageError(errorResponse: ErrorResponse) {
+    fun manageError(errorResponse: ErrorResponse) {
 
         val error = StringBuilder()
         if (errorResponse.error.isNotEmpty()) {
@@ -19,7 +21,19 @@ open class BaseFragment : Fragment() {
         } else {
             error.append(resources.getString(errorResponse.errorKey))
         }
-        // TODO show error in popup
+        showPopupDialog(error.toString())
+    }
+
+    fun showPopupDialog(message: String) {
+
+        val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
+        val prev = activity?.supportFragmentManager?.findFragmentByTag("popupDialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        val dialogFragment = PopupErrorDialogFragment(message)
+        dialogFragment.show(ft, "popupDialog")
     }
 
     fun <T> launchActivity(activity: Class<T>) {
