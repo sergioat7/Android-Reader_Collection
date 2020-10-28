@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
+import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
@@ -86,7 +87,7 @@ class LoginFragment : BaseFragment() {
         }
 
         btRegister.setOnClickListener {
-            //TODO go to Register view
+            launchActivity(RegisterActivity::class.java)
         }
 
         viewModel.loginFormState.observe(requireActivity(), {
