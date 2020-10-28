@@ -29,6 +29,7 @@ class LoginFragment : BaseFragment() {
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
     private lateinit var btLogin: Button
+    private lateinit var btRegister: Button
     private lateinit var viewModel: LoginViewModel
 
     //MARK: - Lifecycle methods
@@ -57,6 +58,7 @@ class LoginFragment : BaseFragment() {
         etUsername = edit_text_username
         etPassword = edit_text_password
         btLogin = button_login
+        btRegister = button_register
         viewModel = ViewModelProvider(this, LoginViewModelFactory(application)).get(LoginViewModel::class.java)
 
         etUsername.setText(viewModel.username)
@@ -83,9 +85,13 @@ class LoginFragment : BaseFragment() {
             }
         }
 
-        viewModel.loginFormState.observe(requireActivity(), Observer {
+        btRegister.setOnClickListener {
+            //TODO go to Register view
+        }
 
-            val loginState = it ?: return@Observer
+        viewModel.loginFormState.observe(requireActivity(), {
+
+            val loginState = it ?: return@observe
 
             btLogin.isEnabled = loginState.isDataValid
 
@@ -97,12 +103,21 @@ class LoginFragment : BaseFragment() {
             }
         })
 
-        viewModel.loginError.observe(requireActivity(), {
+        viewModel.loginLoading.observe(requireActivity(), { isLoading ->
 
-            if (it == null) {
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.loginError.observe(requireActivity(), { error ->
+
+            if (error == null) {
                 launchActivity(MainActivity::class.java)
             } else {
-                manageError(it)
+                manageError(error)
             }
         })
     }

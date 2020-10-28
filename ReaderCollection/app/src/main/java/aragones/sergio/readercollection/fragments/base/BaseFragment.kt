@@ -13,6 +13,8 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 
 open class BaseFragment : Fragment() {
 
+    private var loadingFragment: PopupErrorDialogFragment? = null
+
     fun manageError(errorResponse: ErrorResponse) {
 
         val error = StringBuilder()
@@ -40,5 +42,13 @@ open class BaseFragment : Fragment() {
 
         val intent = Intent(context, activity).apply {}
         startActivity(intent)
+    }
+
+    fun showLoading() {
+        //TODO show loading
+    }
+
+    fun hideLoading() {
+        //TODO hide loading
     }
 }

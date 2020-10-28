@@ -27,21 +27,25 @@ class LoginViewModel @Inject constructor(
     //MARK: - Private properties
 
     private val _loginForm = MutableLiveData<LoginFormState>()
+    private val _loginLoading = MutableLiveData<Boolean>()
     private val _loginError = MutableLiveData<ErrorResponse>()
 
     //MARK: - Public properties
 
     val username: String? = loginRepository.username
     val loginFormState: LiveData<LoginFormState> = _loginForm
+    val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse> = _loginError
 
     //MARK: - Public methods
 
     fun login(username: String, password: String) {
 
+        _loginLoading.value = true
         loginRepository.login(username, password).subscribeBy(
             onSuccess = {
 
+                _loginLoading.value = false
                 val userData = UserData(username, password, true)
                 val authData = AuthData(it.token)
                 loginRepository.storeLoginData(userData, authData)
@@ -49,6 +53,7 @@ class LoginViewModel @Inject constructor(
             },
             onError = { error ->
 
+                _loginLoading.value = false
                 if (error is HttpException) {
                     error.response()?.errorBody()?.let { errorBody ->
 
