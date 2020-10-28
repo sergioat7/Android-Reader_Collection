@@ -17,7 +17,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment : Fragment() {
+class SearchFragment: Fragment() {
 
     //MARK: - Private properties
 

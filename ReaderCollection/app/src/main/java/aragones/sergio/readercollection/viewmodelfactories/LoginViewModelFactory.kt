@@ -33,7 +33,7 @@ class LoginViewModelFactory(
     //MARK: - Lifecycle methods
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+    override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).sharedPreferencesComponent.inject(this)
