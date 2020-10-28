@@ -7,4 +7,9 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >3 characters</string>
     <string name="login_failed">"Login failed"</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="not_account">Don\'t have an account?</string>
+    <string name="create_account">Create account</string>
 </resources>
