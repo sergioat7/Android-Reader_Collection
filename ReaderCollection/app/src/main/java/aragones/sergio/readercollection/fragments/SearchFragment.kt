@@ -19,7 +19,11 @@ import kotlinx.android.synthetic.main.fragment_search.*
 
 class SearchFragment : Fragment() {
 
+    //MARK: - Private properties
+
     private lateinit var searchViewModel: SearchViewModel
+
+    //MARK: - Lifecycle methods
 
     override fun onCreateView(
         inflater: LayoutInflater,

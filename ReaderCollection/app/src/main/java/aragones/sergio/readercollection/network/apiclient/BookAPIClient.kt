@@ -5,8 +5,8 @@
 
 package aragones.sergio.readercollection.network.apiclient
 
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.FavouriteBook
+import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.network.apiservice.BookAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler

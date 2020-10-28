@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.network.apiclient
 
-import aragones.sergio.readercollection.models.StateResponse
+import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.network.apiservice.StateAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
