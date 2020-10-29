@@ -52,6 +52,15 @@
         style="@style/PasswordEditText"
         />
 
+    <ImageButton
+        android:id="@+id/image_button_password"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_password"
+        style="@style/PasswordEyeButton"
+        />
+
     <EditText
         android:id="@+id/edit_text_confirm_password"
         android:layout_width="0dp"
@@ -61,6 +70,15 @@
         app:layout_constraintStart_toStartOf="@+id/edit_text_username"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
         style="@style/PasswordEditText"
+        />
+
+    <ImageButton
+        android:id="@+id/image_button_confirm_password"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_confirm_password"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_confirm_password"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_confirm_password"
+        style="@style/PasswordEyeButton"
         />
 
     <Button

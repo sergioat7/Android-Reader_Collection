@@ -49,6 +49,15 @@
         style="@style/PasswordEditText"
         />
 
+    <ImageButton
+        android:id="@+id/image_button_password"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_password"
+        style="@style/PasswordEyeButton"
+        />
+
     <Button
         android:id="@+id/button_login"
         android:layout_height="wrap_content"

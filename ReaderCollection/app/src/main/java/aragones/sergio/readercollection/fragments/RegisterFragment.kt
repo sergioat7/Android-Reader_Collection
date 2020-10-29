@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
@@ -18,6 +19,7 @@ import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.extensions.clearErrors
 import aragones.sergio.readercollection.extensions.onFocusChange
 import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.register_fragment.*
@@ -28,7 +30,9 @@ class RegisterFragment: BaseFragment() {
 
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
+    private lateinit var ibPassword: ImageButton
     private lateinit var etConfirmPassword: EditText
+    private lateinit var ibConfirmPassword: ImageButton
     private lateinit var btRegister: Button
     private lateinit var viewModel: RegisterViewModel
 
@@ -57,7 +61,9 @@ class RegisterFragment: BaseFragment() {
         val application = activity?.application ?: return
         etUsername = edit_text_username
         etPassword = edit_text_password
+        ibPassword = image_button_password
         etConfirmPassword = edit_text_confirm_password
+        ibConfirmPassword = image_button_confirm_password
         btRegister = button_register
         viewModel = ViewModelProvider(this, RegisterViewModelFactory(application)).get(
             RegisterViewModel::class.java
@@ -66,7 +72,6 @@ class RegisterFragment: BaseFragment() {
         etUsername.afterTextChanged {
             registerDataChanged()
         }
-
         etUsername.onFocusChange {
             registerDataChanged()
         }
@@ -74,21 +79,27 @@ class RegisterFragment: BaseFragment() {
         etPassword.afterTextChanged {
             registerDataChanged()
         }
-
         etPassword.onFocusChange {
             registerDataChanged()
+        }
+
+        ibPassword.setOnClickListener {
+            Constants.showOrHidePassword(etPassword, ibPassword)
         }
 
         etConfirmPassword.afterTextChanged {
             registerDataChanged()
         }
+        etConfirmPassword.onFocusChange {
+            registerDataChanged()
+        }
+
+        ibConfirmPassword.setOnClickListener {
+            Constants.showOrHidePassword(etConfirmPassword, ibConfirmPassword)
+        }
 
         btRegister.setOnClickListener {
             register()
-        }
-
-        etConfirmPassword.onFocusChange {
-            registerDataChanged()
         }
 
         viewModel.registerFormState.observe(requireActivity(), {
