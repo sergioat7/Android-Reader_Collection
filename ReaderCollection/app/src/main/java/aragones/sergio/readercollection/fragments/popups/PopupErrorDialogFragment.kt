@@ -13,7 +13,7 @@ import androidx.fragment.app.DialogFragment
 import aragones.sergio.readercollection.R
 import kotlinx.android.synthetic.main.fragment_popup_error_dialog.*
 
-class PopupErrorDialogFragment(private val message: String) : DialogFragment() {
+class PopupErrorDialogFragment(private val message: String): DialogFragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

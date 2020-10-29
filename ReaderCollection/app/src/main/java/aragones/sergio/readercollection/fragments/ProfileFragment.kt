@@ -17,7 +17,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 
-class ProfileFragment : Fragment() {
+class ProfileFragment: Fragment() {
 
     //MARK: - Private properties
 

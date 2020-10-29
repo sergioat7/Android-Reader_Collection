@@ -14,7 +14,7 @@ import java.util.*
 import javax.inject.Inject
 import kotlin.math.max
 
-class LandingActivity : BaseActivity() {
+class LandingActivity: BaseActivity() {
 
     //MARK: - Public properties
 

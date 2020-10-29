@@ -17,7 +17,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import kotlinx.android.synthetic.main.fragment_books.*
 
-class BooksFragment : Fragment() {
+class BooksFragment: Fragment() {
 
     //MARK: - Private properties
 

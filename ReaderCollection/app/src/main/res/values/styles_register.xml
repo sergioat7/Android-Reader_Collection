@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 29/10/2020
+  -->
+
+<resources>
+
+    <style name="RegisterButton" parent="RoundedButton.Action">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:text">@string/sign_up</item>
+    </style>
+
+</resources>
