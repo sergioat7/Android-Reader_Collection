@@ -9,10 +9,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
@@ -68,22 +66,12 @@ class LoginFragment: BaseFragment() {
             loginDataChanged()
         }
 
-        etPassword.apply {
+        etPassword.afterTextChanged {
+            loginDataChanged()
+        }
 
-            afterTextChanged {
-                loginDataChanged()
-            }
-
-            setOnEditorActionListener { _, actionId, _ ->
-                when (actionId) {
-                    EditorInfo.IME_ACTION_DONE -> login()
-                }
-                false
-            }
-
-            btLogin.setOnClickListener {
-                login()
-            }
+        btLogin.setOnClickListener {
+            login()
         }
 
         btRegister.setOnClickListener {
