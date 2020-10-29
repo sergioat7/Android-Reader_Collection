@@ -6,7 +6,12 @@
 package aragones.sergio.readercollection.utils
 
 import android.annotation.SuppressLint
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
+import android.widget.EditText
+import android.widget.ImageButton
+import aragones.sergio.readercollection.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -90,6 +95,19 @@ class Constants {
 
         fun isPasswordValid(password: String): Boolean {
             return password.length > 3
+        }
+
+        fun showOrHidePassword(editText: EditText, imageButton: ImageButton) {
+
+            if (editText.transformationMethod is HideReturnsTransformationMethod) {
+
+                imageButton.setImageResource(R.drawable.ic_show_password)
+                editText.transformationMethod = PasswordTransformationMethod.getInstance();
+            } else {
+
+                imageButton.setImageResource(R.drawable.ic_hide_password)
+                editText.transformationMethod = HideReturnsTransformationMethod.getInstance();
+            }
         }
     }
 }

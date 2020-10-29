@@ -11,12 +11,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.login_fragment.*
@@ -27,6 +29,7 @@ class LoginFragment: BaseFragment() {
 
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
+    private lateinit var ibPassword: ImageButton
     private lateinit var btLogin: Button
     private lateinit var btRegister: Button
     private lateinit var viewModel: LoginViewModel
@@ -56,6 +59,7 @@ class LoginFragment: BaseFragment() {
         val application = activity?.application ?: return
         etUsername = edit_text_username
         etPassword = edit_text_password
+        ibPassword = image_button_password
         btLogin = button_login
         btRegister = button_register
         viewModel = ViewModelProvider(this, LoginViewModelFactory(application)).get(LoginViewModel::class.java)
@@ -68,6 +72,10 @@ class LoginFragment: BaseFragment() {
 
         etPassword.afterTextChanged {
             loginDataChanged()
+        }
+
+        ibPassword.setOnClickListener {
+            Constants.showOrHidePassword(etPassword, ibPassword)
         }
 
         btLogin.setOnClickListener {
