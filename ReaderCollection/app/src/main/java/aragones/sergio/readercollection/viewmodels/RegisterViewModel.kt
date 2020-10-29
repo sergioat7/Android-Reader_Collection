@@ -6,7 +6,11 @@
 package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.repositories.RegisterRepository
+import javax.inject.Inject
 
-class RegisterViewModel: ViewModel() {
+class RegisterViewModel @Inject constructor(
+        private val registerRepository: RegisterRepository
+): ViewModel() {
     // TODO: Implement the ViewModel
 }

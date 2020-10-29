@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 
 class RegisterFragment: BaseFragment() {
@@ -38,7 +39,8 @@ class RegisterFragment: BaseFragment() {
 
     private fun initializeUI() {
 
-        viewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
+        val application = activity?.application ?: return
+        viewModel = ViewModelProvider(this, RegisterViewModelFactory(application)).get(RegisterViewModel::class.java)
         // TODO: Use the ViewModel
     }
 }
