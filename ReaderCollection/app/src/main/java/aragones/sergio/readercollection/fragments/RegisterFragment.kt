@@ -13,6 +13,10 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.activities.MainActivity
+import aragones.sergio.readercollection.extensions.afterTextChanged
+import aragones.sergio.readercollection.extensions.clearErrors
+import aragones.sergio.readercollection.extensions.onFocusChange
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
@@ -55,7 +59,108 @@ class RegisterFragment: BaseFragment() {
         etPassword = edit_text_password
         etConfirmPassword = edit_text_confirm_password
         btRegister = button_register
-        viewModel = ViewModelProvider(this, RegisterViewModelFactory(application)).get(RegisterViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel = ViewModelProvider(this, RegisterViewModelFactory(application)).get(
+            RegisterViewModel::class.java
+        )
+
+        etUsername.afterTextChanged {
+            registerDataChanged()
+        }
+
+        etUsername.onFocusChange {
+            registerDataChanged()
+        }
+
+        etPassword.afterTextChanged {
+            registerDataChanged()
+        }
+
+        etPassword.onFocusChange {
+            registerDataChanged()
+        }
+
+        etConfirmPassword.afterTextChanged {
+            registerDataChanged()
+        }
+
+        btRegister.setOnClickListener {
+            register()
+        }
+
+        etConfirmPassword.onFocusChange {
+            registerDataChanged()
+        }
+
+        viewModel.registerFormState.observe(requireActivity(), {
+
+            val registerState = it ?: return@observe
+
+            etUsername.clearErrors()
+            etPassword.clearErrors()
+            etConfirmPassword.clearErrors()
+
+            btRegister.isEnabled = registerState.isDataValid
+
+            if (registerState.usernameError != null) {
+                etUsername.error = getString(registerState.usernameError)
+            }
+            if (registerState.passwordError != null) {
+
+                etPassword.error = getString(registerState.passwordError)
+                etConfirmPassword.error = getString(registerState.passwordError)
+            }
+        })
+
+        viewModel.registerLoading.observe(requireActivity(), { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.registerError.observe(requireActivity(), { error ->
+
+            if (error == null) {
+                login()
+            } else {
+                manageError(error)
+            }
+        })
+
+        viewModel.loginError.observe(requireActivity(), { error ->
+
+            if (error == null) {
+                launchActivity(MainActivity::class.java)
+            } else {
+                manageError(error)
+            }
+        })
+    }
+
+    private fun registerDataChanged() {
+
+        viewModel.registerDataChanged(
+            etUsername.text.toString(),
+            etPassword.text.toString(),
+            etConfirmPassword.text.toString()
+        )
+    }
+
+    private fun register() {
+
+        viewModel.register(
+            etUsername.text.toString(),
+            etPassword.text.toString()
+        )
+    }
+
+    private fun login() {
+
+        viewModel.login(
+            etUsername.text.toString(),
+            etPassword.text.toString()
+        )
     }
 }

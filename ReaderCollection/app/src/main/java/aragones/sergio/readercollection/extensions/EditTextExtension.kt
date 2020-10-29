@@ -10,7 +10,9 @@ import android.text.TextWatcher
 import android.widget.EditText
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
+
     this.addTextChangedListener(object: TextWatcher {
+
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())
         }
@@ -19,4 +21,17 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 
         override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
     })
+}
+
+fun EditText.onFocusChange(onFocusChange: () -> Unit) {
+
+    this.setOnFocusChangeListener { _, hasFocus ->
+        if (!hasFocus) {
+            onFocusChange()
+        }
+    }
+}
+
+fun EditText.clearErrors() {
+    this.error = null
 }
