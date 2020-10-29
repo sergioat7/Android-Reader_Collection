@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.injection
 
 import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
+import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import dagger.Component
 
 @Component(modules = [SharedPreferencesModule::class])
@@ -14,4 +15,5 @@ interface SharedPreferencesComponent {
 
     fun inject(landingActivity: LandingActivity)
     fun inject(loginViewModelFactory: LoginViewModelFactory)
+    fun inject(registerViewModelFactory: RegisterViewModelFactory)
 }

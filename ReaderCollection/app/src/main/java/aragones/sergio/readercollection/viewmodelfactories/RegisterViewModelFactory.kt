@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 19/10/2020
+ * Created by Sergio Aragonés on 28/10/2020
  */
 
 package aragones.sergio.readercollection.viewmodelfactories
@@ -10,12 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.UserAPIClient
-import aragones.sergio.readercollection.repositories.LoginRepository
+import aragones.sergio.readercollection.repositories.RegisterRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
-import aragones.sergio.readercollection.viewmodels.LoginViewModel
+import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import javax.inject.Inject
 
-class LoginViewModelFactory(
+class RegisterViewModelFactory(
     private val application: Application
 ): ViewModelProvider.Factory {
 
@@ -26,18 +26,18 @@ class LoginViewModelFactory(
     @Inject
     lateinit var userAPIClient: UserAPIClient
     @Inject
-    lateinit var loginRepository: LoginRepository
+    lateinit var registerRepository: RegisterRepository
     @Inject
-    lateinit var loginViewModel: LoginViewModel
+    lateinit var registerViewModel: RegisterViewModel
 
     //MARK: - Lifecycle methods
 
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(LoginViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).sharedPreferencesComponent.inject(this)
-            return loginViewModel as T
+            return registerViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 
-open class BaseFragment : Fragment() {
+open class BaseFragment: Fragment() {
 
     private var loadingFragment: PopupErrorDialogFragment? = null
 
