@@ -1,15 +1,21 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme.ReaderCollection" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
-        <item name="titleTextColor">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/textPrimary</item>
     </style>
 
-    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.NoActionBar">
+    <style name="Theme.ReaderCollection.NoActionBar" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
-        <item name="titleTextColor">@color/colorPrimary</item>
+        <item name="titleTextColor">@color/textPrimary</item>
+    </style>
+
+    <style name="BottomMenu">
+        <item name="itemTextColor">@color/colorSecondary</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="menu">@menu/bottom_nav_menu</item>
     </style>
 
     <style name="RoundedButton" parent="android:style/Widget.Button">
@@ -28,8 +34,8 @@
 
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
         <item name="backgroundTint">@color/colorPrimary</item>
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="android:textColorHint">@color/colorPrimaryLight</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textColorHint">@color/textPrimaryLight</item>
         <item name="android:textIsSelectable">true</item>
     </style>
 

@@ -75,7 +75,7 @@ class LoginFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword)
+            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
         }
 
         btLogin.setOnClickListener {
