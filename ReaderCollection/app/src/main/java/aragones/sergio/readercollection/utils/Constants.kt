@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.utils
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.res.Configuration
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
@@ -20,6 +22,12 @@ import java.util.*
 
 class Constants {
     companion object {
+
+        fun isDarkMode(context: Context?): Boolean {
+
+            val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
+            return mode == Configuration.UI_MODE_NIGHT_YES
+        }
 
         // MARK: - Retrofit constants
 
@@ -97,15 +105,17 @@ class Constants {
             return password.length > 3
         }
 
-        fun showOrHidePassword(editText: EditText, imageButton: ImageButton) {
+        fun showOrHidePassword(editText: EditText, imageButton: ImageButton, isDarkMode: Boolean) {
 
             if (editText.transformationMethod is HideReturnsTransformationMethod) {
 
-                imageButton.setImageResource(R.drawable.ic_show_password)
+                val image = if (isDarkMode) R.drawable.ic_show_password_dark else R.drawable.ic_show_password_light
+                imageButton.setImageResource(image)
                 editText.transformationMethod = PasswordTransformationMethod.getInstance();
             } else {
 
-                imageButton.setImageResource(R.drawable.ic_hide_password)
+                val image = if (isDarkMode) R.drawable.ic_hide_password_dark else R.drawable.ic_hide_password_light
+                imageButton.setImageResource(image)
                 editText.transformationMethod = HideReturnsTransformationMethod.getInstance();
             }
         }
