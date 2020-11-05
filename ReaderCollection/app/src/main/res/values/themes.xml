@@ -12,6 +12,12 @@
         <item name="titleTextColor">@color/textPrimary</item>
     </style>
 
+    <style name="BottomMenu">
+        <item name="itemTextColor">@color/colorSecondary</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="menu">@menu/bottom_nav_menu</item>
+    </style>
+
     <style name="RoundedButton" parent="android:style/Widget.Button">
         <item name="android:layout_width">200dp</item>
         <item name="android:textColor">@color/colorSecondary</item>
