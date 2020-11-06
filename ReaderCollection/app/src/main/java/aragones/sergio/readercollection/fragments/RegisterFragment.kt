@@ -43,7 +43,8 @@ class RegisterFragment: BaseFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.register_fragment, container, false)
@@ -102,7 +103,7 @@ class RegisterFragment: BaseFragment() {
             register()
         }
 
-        viewModel.registerFormState.observe(requireActivity(), {
+        viewModel.registerFormState.observe(viewLifecycleOwner, {
 
             val registerState = it ?: return@observe
 
@@ -122,7 +123,7 @@ class RegisterFragment: BaseFragment() {
             }
         })
 
-        viewModel.registerLoading.observe(requireActivity(), { isLoading ->
+        viewModel.registerLoading.observe(viewLifecycleOwner, { isLoading ->
 
             if (isLoading) {
                 showLoading()
@@ -131,7 +132,7 @@ class RegisterFragment: BaseFragment() {
             }
         })
 
-        viewModel.registerError.observe(requireActivity(), { error ->
+        viewModel.registerError.observe(viewLifecycleOwner, { error ->
 
             if (error == null) {
                 login()
@@ -140,7 +141,7 @@ class RegisterFragment: BaseFragment() {
             }
         })
 
-        viewModel.loginError.observe(requireActivity(), { error ->
+        viewModel.loginError.observe(viewLifecycleOwner, { error ->
 
             if (error == null) {
                 launchActivity(MainActivity::class.java)
