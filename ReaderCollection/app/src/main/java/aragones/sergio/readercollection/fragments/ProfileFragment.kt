@@ -9,13 +9,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.activities.LoginActivity
+import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 
-class ProfileFragment: Fragment() {
+class ProfileFragment: BaseFragment() {
 
     //MARK: - Private properties
 
@@ -42,6 +44,41 @@ class ProfileFragment: Fragment() {
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
-        //TODO use the ViewModel
+        setupBindings()
+
+        val language = viewModel.language
+
+        val userData = viewModel.profileUserData.value
+        val username = userData?.username
+        val password = userData?.password
+
+        print(username)
+        print(password)
+    }
+
+    private fun setupBindings() {
+
+        viewModel.profileUserData.observe(viewLifecycleOwner, Observer {
+            viewModel.login(it.username, it.password)
+        })
+
+        viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->
+
+            if (!redirect) return@Observer
+            launchActivity(LoginActivity::class.java)
+        })
+
+        viewModel.profileLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.profileError.observe(viewLifecycleOwner, Observer { error ->
+            manageError(error)
+        })
     }
 }
