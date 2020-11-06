@@ -65,12 +65,16 @@ class ProfileFragment: BaseFragment() {
         when(item.itemId) {
             R.id.action_delete -> {
 
-                viewModel.deleteUser()
+                showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
+                    viewModel.deleteUser()
+                })
                 return true
             }
             R.id.action_logout -> {
 
-                viewModel.logout()
+                showPopupConfirmationDialog(R.string.profile_logout_confirmation, acceptHandler = {
+                    viewModel.logout()
+                })
                 return true
             }
         }
@@ -114,7 +118,7 @@ class ProfileFragment: BaseFragment() {
 
     private fun setupBindings() {
 
-        viewModel.profileUserData.observe(viewLifecycleOwner, Observer {
+        viewModel.profileUserData.observe(viewLifecycleOwner, {
             viewModel.login(it.username, it.password)
         })
 
@@ -133,7 +137,7 @@ class ProfileFragment: BaseFragment() {
             launchActivity(LoginActivity::class.java)
         })
 
-        viewModel.profileLoading.observe(viewLifecycleOwner, Observer { isLoading ->
+        viewModel.profileLoading.observe(viewLifecycleOwner, { isLoading ->
 
             if (isLoading) {
                 showLoading()
@@ -142,7 +146,7 @@ class ProfileFragment: BaseFragment() {
             }
         })
 
-        viewModel.profileError.observe(viewLifecycleOwner, Observer { error ->
+        viewModel.profileError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
     }
