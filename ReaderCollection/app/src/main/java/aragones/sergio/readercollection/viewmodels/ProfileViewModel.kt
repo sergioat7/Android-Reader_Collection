@@ -61,7 +61,10 @@ class ProfileViewModel @Inject constructor(
 
     fun saveData(newPassword: String, newLanguage: String) {
 
-        if (newPassword != profileRepository.userData.password) {
+        val changePassword = newPassword != profileRepository.userData.password
+        val changeLanguage = newLanguage != language
+
+        if (changePassword) {
 
             _profileLoading.value = true
             profileRepository.updatePassword(newPassword).subscribeBy(
@@ -70,6 +73,9 @@ class ProfileViewModel @Inject constructor(
                     profileRepository.storePassword(newPassword)
                     _profileLoading.value = false
                     _userdata.value = profileRepository.userData
+                    if (changeLanguage) {
+                        _profileRedirection.value = true
+                    }
                 },
                 onError = {
 
@@ -79,8 +85,12 @@ class ProfileViewModel @Inject constructor(
             )
         }
 
-        if (newLanguage != language) {
+        if (changeLanguage) {
+
             profileRepository.storeLanguage(newLanguage)
+            if (!changePassword) {
+                _profileRedirection.value = true
+            }
         }
     }
 
