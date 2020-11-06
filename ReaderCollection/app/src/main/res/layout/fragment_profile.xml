@@ -22,7 +22,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.20"
+        app:layout_constraintVertical_bias="0.15"
         style="@style/UsernameEditText"
         />
 
@@ -46,6 +46,18 @@
         style="@style/PasswordEyeButton"
         />
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/radio_group_language"
+        app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
+        app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
+        app:layout_constraintVertical_bias="1.0"
+        style="@style/AppLanguageTextView"
+        />
+
     <RadioGroup
         android:id="@+id/radio_group_language"
         android:layout_width="0dp"
@@ -54,28 +66,31 @@
         app:layout_constraintBottom_toTopOf="@+id/button_save"
         app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
         app:layout_constraintStart_toStartOf="@+id/edit_text_password"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_password">
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
+        >
 
         <RadioButton
             android:id="@+id/radio_button_en"
-            style="@style/RadioButtonLanguage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/english" />
+            android:text="@string/english"
+            style="@style/RadioButtonLanguage"
+            />
 
         <RadioButton
             android:id="@+id/radio_button_es"
-            style="@style/RadioButtonLanguage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/spanish" />
+            android:text="@string/spanish"
+            style="@style/RadioButtonLanguage"
+            />
 
     </RadioGroup>
 
     <Button
         android:id="@+id/button_save"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="24dp"
         android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
