@@ -59,22 +59,29 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-    fun updatePassword(newPassword: String) {
+    fun saveData(newPassword: String, newLanguage: String) {
 
-        _profileLoading.value = true
-        profileRepository.updatePassword(newPassword).subscribeBy(
-            onComplete = {
+        if (newPassword != profileRepository.userData.password) {
 
-                profileRepository.storePassword(newPassword)
-                _profileLoading.value = false
-                _userdata.value = profileRepository.userData
-            },
-            onError = {
+            _profileLoading.value = true
+            profileRepository.updatePassword(newPassword).subscribeBy(
+                onComplete = {
 
-                _profileLoading.value = false
-                _profileError.value = Constants.handleError(it)
-            }
-        )
+                    profileRepository.storePassword(newPassword)
+                    _profileLoading.value = false
+                    _userdata.value = profileRepository.userData
+                },
+                onError = {
+
+                    _profileLoading.value = false
+                    _profileError.value = Constants.handleError(it)
+                }
+            )
+        }
+
+        if (newLanguage != language) {
+            profileRepository.storeLanguage(newLanguage)
+        }
     }
 
     fun login(username: String, password: String) {

@@ -64,4 +64,8 @@ class ProfileRepository @Inject constructor(
     fun removeCredentials() {
         sharedPreferencesHandler.removeCredentials()
     }
+
+    fun storeLanguage(language: String) {
+        sharedPreferencesHandler.setLanguage(language)
+    }
 }

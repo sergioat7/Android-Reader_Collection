@@ -65,6 +65,7 @@ class ProfileFragment: BaseFragment() {
         when(item.itemId) {
             R.id.action_delete -> {
 
+                viewModel.deleteUser()
                 return true
             }
             R.id.action_logout -> {
@@ -91,8 +92,10 @@ class ProfileFragment: BaseFragment() {
         setupBindings()
 
         etUsername.setText(viewModel.profileUserData.value?.username)
-        etPassword.setText(viewModel.profileUserData.value?.password)
         etUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
+        etPassword.setText(viewModel.profileUserData.value?.password)
+        rbEnglish.isChecked = viewModel.language == Constants.ENGLISH_LANGUAGE_KEY
+        rbSpanish.isChecked = viewModel.language == Constants.SPANISH_LANGUAGE_KEY
 
         etPassword.afterTextChanged {
             viewModel.profileDataChanged(it)
@@ -102,6 +105,11 @@ class ProfileFragment: BaseFragment() {
             Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
         }
 
+        btSave.setOnClickListener {
+
+            val language = if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY else Constants.SPANISH_LANGUAGE_KEY
+            viewModel.saveData(etPassword.text.toString(), language)
+        }
     }
 
     private fun setupBindings() {
