@@ -72,6 +72,8 @@ class Constants {
         const val LANGUAGE_PREFERENCE_NAME = "language"
         const val AUTH_DATA_PREFERENCES_NAME = "authData"
         const val USER_DATA_PREFERENCES_NAME = "userData"
+        const val ENGLISH_LANGUAGE_KEY = "en"
+        const val SPANISH_LANGUAGE_KEY = "es"
 
         // MARK: Date format
 
