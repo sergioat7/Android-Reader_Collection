@@ -49,21 +49,10 @@ class RegisterViewModel @Inject constructor(
                                 _registerLoading.value = false
                                 _registerError.value = null
                         },
-                        onError = { error ->
+                        onError = {
 
                                 _registerLoading.value = false
-                                if (error is HttpException) {
-                                        error.response()?.errorBody()?.let { errorBody ->
-
-                                                _registerError.value = APIClient.gson.fromJson(
-                                                        errorBody.charStream(), ErrorResponse::class.java
-                                                )
-                                        } ?: run {
-                                                _registerError.value = ErrorResponse("", R.string.login_failed)
-                                        }
-                                } else {
-                                        _registerError.value = ErrorResponse("", R.string.login_failed)
-                                }
+                                _registerError.value = Constants.handleError(it)
                         }
                 )
         }
@@ -80,21 +69,10 @@ class RegisterViewModel @Inject constructor(
                                 registerRepository.storeLoginData(userData, authData)
                                 _loginError.value = null
                         },
-                        onError = { error ->
+                        onError = {
 
                                 _registerLoading.value = false
-                                if (error is HttpException) {
-                                        error.response()?.errorBody()?.let { errorBody ->
-
-                                                _loginError.value = APIClient.gson.fromJson(
-                                                        errorBody.charStream(), ErrorResponse::class.java
-                                                )
-                                        } ?: run {
-                                                _loginError.value = ErrorResponse("", R.string.login_failed)
-                                        }
-                                } else {
-                                        _loginError.value = ErrorResponse("", R.string.login_failed)
-                                }
+                                _loginError.value = Constants.handleError(it)
                         }
                 )
         }

@@ -14,9 +14,12 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.apiclient.APIClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
+import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,6 +47,24 @@ class Constants {
         const val SEARCH_PARAM = "q";
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
+
+        fun handleError(error: Throwable): ErrorResponse {
+
+            lateinit var errorResponse: ErrorResponse
+            if (error is HttpException) {
+                error.response()?.errorBody()?.let { errorBody ->
+
+                    errorResponse = APIClient.gson.fromJson(
+                        errorBody.charStream(), ErrorResponse::class.java
+                    )
+                } ?: run {
+                    errorResponse = ErrorResponse("", R.string.login_failed)
+                }
+            } else {
+                errorResponse = ErrorResponse("", R.string.login_failed)
+            }
+            return errorResponse
+        }
 
         // MARK: - SharedPref constants
 
