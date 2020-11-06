@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
@@ -23,6 +24,7 @@ class ProfileViewModel @Inject constructor(
     //MARK: - Private properties
 
     private val _userdata: MutableLiveData<UserData> = MutableLiveData(profileRepository.userData)
+    private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse>()
@@ -31,6 +33,7 @@ class ProfileViewModel @Inject constructor(
 
     val language: String = profileRepository.language
     val profileUserData: LiveData<UserData> = _userdata
+    val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse> = _profileError
@@ -109,5 +112,14 @@ class ProfileViewModel @Inject constructor(
                 _profileError.value = Constants.handleError(it)
             }
         )
+    }
+
+    fun profileDataChanged(password: String) {
+
+        var passwordError: Int? = null
+        if (!Constants.isPasswordValid(password)) {
+            passwordError = R.string.invalid_password
+        }
+        _profileForm.value = passwordError
     }
 }

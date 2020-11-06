@@ -16,4 +16,7 @@
     <string name="create_account">Create account</string>
     <string name="sign_up">Sign up</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="save">Save</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
 </resources>
