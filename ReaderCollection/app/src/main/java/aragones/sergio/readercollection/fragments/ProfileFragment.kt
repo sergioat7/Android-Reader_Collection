@@ -15,7 +15,7 @@ import android.widget.RadioButton
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.LoginActivity
+import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.extensions.clearErrors
 import aragones.sergio.readercollection.extensions.setReadOnly
@@ -134,7 +134,8 @@ class ProfileFragment: BaseFragment() {
         viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->
 
             if (!redirect) return@Observer
-            launchActivity(LoginActivity::class.java)
+            launchActivity(LandingActivity::class.java)
+            activity?.finish()
         })
 
         viewModel.profileLoading.observe(viewLifecycleOwner, { isLoading ->
