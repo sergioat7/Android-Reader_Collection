@@ -19,6 +19,14 @@ class ProfileRepository @Inject constructor(
     private val userAPIClient: UserAPIClient
 ) {
 
+    //MARK: - Public properties
+
+    val userData: UserData
+        get() = sharedPreferencesHandler.getUserData()
+
+    val language: String
+        get() = sharedPreferencesHandler.getLanguage()
+
     //MARK: - Public methods
 
     fun logout(): Completable {
