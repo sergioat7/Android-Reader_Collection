@@ -9,19 +9,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment: Fragment() {
 
     //MARK: - Private properties
 
-    private lateinit var profileViewModel: ProfileViewModel
+    private lateinit var viewModel: ProfileViewModel
 
     //MARK: - Lifecycle methods
 
@@ -30,11 +28,20 @@ class ProfileFragment: Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        profileViewModel = ViewModelProvider(this).get(ProfileViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_profile, container, false)
-        profileViewModel.text.observe(viewLifecycleOwner, Observer {
-            text_profile.text = it
-        })
-        return root
+        return inflater.inflate(R.layout.fragment_profile, container, false)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        initializeUI()
+    }
+
+    //MARK: - Private methods
+
+    private fun initializeUI() {
+
+        val application = activity?.application ?: return
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
+        //TODO use the ViewModel
     }
 }
