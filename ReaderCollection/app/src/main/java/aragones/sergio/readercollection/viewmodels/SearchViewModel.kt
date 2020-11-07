@@ -5,16 +5,12 @@
 
 package aragones.sergio.readercollection.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.repositories.SearchRepository
+import javax.inject.Inject
 
-class SearchViewModel: ViewModel() {
-
-    //MARK: - Private properties
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is search Fragment"
-    }
-    val text: LiveData<String> = _text
+class SearchViewModel @Inject constructor(
+    private val searchRepository: SearchRepository
+): ViewModel() {
+    //TODO implement ViewModel
 }
