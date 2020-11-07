@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Reader Collection</string>
     <string name="accept">Accept</string>
+    <string name="cancel">Cancel</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="title_books">Books</string>
     <string name="title_search">Search</string>
@@ -16,4 +17,10 @@
     <string name="create_account">Create account</string>
     <string name="sign_up">Sign up</string>
     <string name="confirm_password">Confirm password</string>
+    <string name="save">Save</string>
+    <string name="english">English</string>
+    <string name="spanish">Spanish</string>
+    <string name="profile_delete_confirmation">Are you sure you want to delete your user? You will lose all your stored information about the books.</string>
+    <string name="profile_logout_confirmation">Are you sure you want to exit?</string>
+    <string name="app_language">App language</string>
 </resources>

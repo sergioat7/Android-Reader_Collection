@@ -41,7 +41,8 @@ class LoginFragment: BaseFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         return inflater.inflate(R.layout.login_fragment, container, false)
@@ -86,7 +87,7 @@ class LoginFragment: BaseFragment() {
             launchActivity(RegisterActivity::class.java)
         }
 
-        viewModel.loginFormState.observe(requireActivity(), {
+        viewModel.loginFormState.observe(viewLifecycleOwner, {
 
             val loginState = it ?: return@observe
 
@@ -100,7 +101,7 @@ class LoginFragment: BaseFragment() {
             }
         })
 
-        viewModel.loginLoading.observe(requireActivity(), { isLoading ->
+        viewModel.loginLoading.observe(viewLifecycleOwner, { isLoading ->
 
             if (isLoading) {
                 showLoading()
@@ -109,7 +110,7 @@ class LoginFragment: BaseFragment() {
             }
         })
 
-        viewModel.loginError.observe(requireActivity(), { error ->
+        viewModel.loginError.observe(viewLifecycleOwner, { error ->
 
             if (error == null) {
                 launchActivity(MainActivity::class.java)
