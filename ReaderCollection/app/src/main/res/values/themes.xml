@@ -3,7 +3,7 @@
     <style name="Theme.ReaderCollection" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
-        <item name="titleTextColor">@color/textPrimary</item>
+        <item name="titleTextColor">@color/colorSecondary</item>
     </style>
 
     <style name="Theme.ReaderCollection.NoActionBar" parent="Theme.AppCompat.NoActionBar">
