@@ -14,9 +14,12 @@ import android.util.Log
 import android.widget.EditText
 import android.widget.ImageButton
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.apiclient.APIClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
+import retrofit2.HttpException
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -45,12 +48,32 @@ class Constants {
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
 
+        fun handleError(error: Throwable): ErrorResponse {
+
+            lateinit var errorResponse: ErrorResponse
+            if (error is HttpException) {
+                error.response()?.errorBody()?.let { errorBody ->
+
+                    errorResponse = APIClient.gson.fromJson(
+                        errorBody.charStream(), ErrorResponse::class.java
+                    )
+                } ?: run {
+                    errorResponse = ErrorResponse("", R.string.login_failed)
+                }
+            } else {
+                errorResponse = ErrorResponse("", R.string.login_failed)
+            }
+            return errorResponse
+        }
+
         // MARK: - SharedPref constants
 
         const val PREFERENCES_NAME = "preferences"
         const val LANGUAGE_PREFERENCE_NAME = "language"
         const val AUTH_DATA_PREFERENCES_NAME = "authData"
         const val USER_DATA_PREFERENCES_NAME = "userData"
+        const val ENGLISH_LANGUAGE_KEY = "en"
+        const val SPANISH_LANGUAGE_KEY = "es"
 
         // MARK: Date format
 

@@ -51,21 +51,10 @@ class LoginViewModel @Inject constructor(
                 loginRepository.storeLoginData(userData, authData)
                 _loginError.value = null
             },
-            onError = { error ->
+            onError = {
 
                 _loginLoading.value = false
-                if (error is HttpException) {
-                    error.response()?.errorBody()?.let { errorBody ->
-
-                        _loginError.value = APIClient.gson.fromJson(
-                            errorBody.charStream(), ErrorResponse::class.java
-                        )
-                    } ?: run {
-                        _loginError.value = ErrorResponse("", R.string.login_failed)
-                    }
-                } else {
-                    _loginError.value = ErrorResponse("", R.string.login_failed)
-                }
+                _loginError.value = Constants.handleError(it)
             }
         )
     }

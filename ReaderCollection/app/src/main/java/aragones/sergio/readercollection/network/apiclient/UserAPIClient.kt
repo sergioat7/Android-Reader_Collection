@@ -13,7 +13,6 @@ import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import retrofit2.http.HeaderMap
 import javax.inject.Inject
 
 class UserAPIClient @Inject constructor(
@@ -30,7 +29,7 @@ class UserAPIClient @Inject constructor(
         return api.register(headers, body).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun deleteUserObserver(@HeaderMap headers: Map<String, String>): Completable {
+    fun deleteUserObserver(): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -46,7 +45,7 @@ class UserAPIClient @Inject constructor(
         return api.login(headers, body).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun logoutObserver(@HeaderMap headers: Map<String, String>): Completable {
+    fun logoutObserver(): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
