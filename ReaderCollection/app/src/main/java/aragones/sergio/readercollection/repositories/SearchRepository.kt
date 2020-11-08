@@ -17,8 +17,8 @@ class SearchRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun searchBooks(query: String?): Single<GoogleBookListResponse> {
-        return googleAPIClient.searchGoogleBooksObserver(query)
+    fun searchBooks(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
+        return googleAPIClient.searchGoogleBooksObserver(query, page, order)
     }
 
     fun getBook(volumeId: String): Single<GoogleBookResponse> {

@@ -45,6 +45,12 @@ class Constants {
         const val STATE_PARAM = "state";
         const val IS_FAVOURITE_PARAM = "isFavourite";
         const val SEARCH_PARAM = "q";
+        const val PAGE_PARAM = "startIndex";
+        const val RESULTS_PARAM = "maxResults";
+        const val ORDER_PARAM = "orderBy";
+        const val RESULTS = 20;
+        const val RELEVANCE_ORDER = "relevance ";
+        const val NEWEST_ORDER = "newest";
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
 
