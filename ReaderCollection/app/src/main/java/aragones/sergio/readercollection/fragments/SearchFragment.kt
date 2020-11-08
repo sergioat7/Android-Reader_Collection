@@ -42,6 +42,29 @@ class SearchFragment: BaseFragment() {
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
-        //TODO use ViewModel
+        setupBindings()
+    }
+
+    private fun setupBindings() {
+
+        viewModel.googleBooks.observe(viewLifecycleOwner, { googleBooksResponse ->
+
+            if (googleBooksResponse.isEmpty()) {
+                //TODO reset list
+                //TODO show no books image
+            } else {
+                //TODO add books to list
+                //TODO hide no books image
+            }
+        })
+
+        viewModel.searchLoading.observe(viewLifecycleOwner, { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
     }
 }
