@@ -29,7 +29,7 @@ class SearchViewModel @Inject constructor(
 
     //MARK: - Public methods
 
-    fun searchBook() {
+    fun searchBooks() {
 
         _searchLoading.value = true
         searchRepository.searchBooks(query, page, null).subscribeBy(
