@@ -13,16 +13,18 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment: BaseFragment() {
+class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
     //MARK: - Private properties
 
@@ -30,6 +32,7 @@ class SearchFragment: BaseFragment() {
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
     private lateinit var viewModel: SearchViewModel
+    private lateinit var booksAdapter: BooksAdapter
 
     //MARK: - Lifecycle methods
 
@@ -45,6 +48,14 @@ class SearchFragment: BaseFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         initializeUI()
+    }
+
+    //MARK: - Interface methods
+
+    override fun onItemClick(bookId: String) {
+
+        val params = mapOf(Constants.BOOK_ID to bookId)
+        //TODO go to Book id
     }
 
     //MARK: - Public methods
@@ -66,6 +77,11 @@ class SearchFragment: BaseFragment() {
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
         viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
+        booksAdapter = BooksAdapter(
+            viewModel.books.value ?: mutableListOf(),
+            requireContext(),
+            this
+        )
         setupBindings()
 
         srlBooks.setOnRefreshListener {
@@ -74,6 +90,7 @@ class SearchFragment: BaseFragment() {
             viewModel.searchBooks()
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
+        rvBooks.adapter = booksAdapter
         rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
@@ -90,11 +107,13 @@ class SearchFragment: BaseFragment() {
 
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
-                //TODO reset list
             if (booksResponse.isEmpty()) {
+
+                booksAdapter.resetList()
                 ivNoResults.visibility = View.VISIBLE
             } else {
-                //TODO add books to list
+
+                booksAdapter.addBooks(booksResponse)
                 ivNoResults.visibility = View.GONE
             }
         })
