@@ -88,10 +88,10 @@ class SearchFragment: BaseFragment() {
 
     private fun setupBindings() {
 
-        viewModel.googleBooks.observe(viewLifecycleOwner, { googleBooksResponse ->
+        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
-            if (googleBooksResponse.isEmpty()) {
                 //TODO reset list
+            if (booksResponse.isEmpty()) {
                 ivNoResults.visibility = View.VISIBLE
             } else {
                 //TODO add books to list
