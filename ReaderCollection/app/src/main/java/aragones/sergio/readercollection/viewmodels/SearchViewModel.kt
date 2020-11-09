@@ -8,8 +8,9 @@ package aragones.sergio.readercollection.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import aragones.sergio.readercollection.models.responses.GoogleBookResponse
+import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.repositories.SearchRepository
+import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
@@ -19,12 +20,12 @@ class SearchViewModel @Inject constructor(
 
     private var page: Int = 1
     private lateinit var query: String
-    private val _googleBooks = MutableLiveData<MutableList<GoogleBookResponse>>()
+    private val _books = MutableLiveData<MutableList<BookResponse>>()
     private val _searchLoading = MutableLiveData<Boolean>()
 
     //MARK: - Public properties
 
-    val googleBooks: LiveData<MutableList<GoogleBookResponse>> = _googleBooks
+    val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
 
     //MARK: - Public methods
@@ -36,9 +37,9 @@ class SearchViewModel @Inject constructor(
             onSuccess = {
 
                 page++
-                val currentValues = _googleBooks.value ?: mutableListOf()
-                currentValues.addAll(it.items)
-                _googleBooks.value = currentValues
+                val currentValues = _books.value ?: mutableListOf()
+                currentValues.addAll(Constants.mapGoogleBooks(it.items))
+                _books.value = currentValues
                 _searchLoading.value = false
             },
             onError = {
@@ -52,7 +53,7 @@ class SearchViewModel @Inject constructor(
     fun reloadData() {
 
         page = 1
-        _googleBooks.value = mutableListOf()
+        _books.value = mutableListOf()
     }
 
     fun setSearch(query: String) {

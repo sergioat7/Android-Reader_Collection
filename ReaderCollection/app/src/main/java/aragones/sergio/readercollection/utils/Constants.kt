@@ -16,7 +16,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.models.responses.*
 import aragones.sergio.readercollection.network.apiclient.APIClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
@@ -32,15 +32,6 @@ class Constants {
 
             val mode = context?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK)
             return mode == Configuration.UI_MODE_NIGHT_YES
-        }
-
-        fun hideSoftKeyboard(activity: Activity) {
-
-            activity.currentFocus?.let { currentFocus ->
-
-                val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-            } ?: return
         }
 
         // MARK: - Retrofit constants
@@ -159,5 +150,67 @@ class Constants {
                 editText.transformationMethod = HideReturnsTransformationMethod.getInstance();
             }
         }
+
+        // MARK: - Search books constants
+
+        fun hideSoftKeyboard(activity: Activity) {
+
+            activity.currentFocus?.let { currentFocus ->
+
+                val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+            } ?: return
+        }
+
+        fun mapGoogleBooks(googleBooks: List<GoogleBookResponse>): List<BookResponse> {
+
+            val result = mutableListOf<BookResponse>()
+            for (googleBook in googleBooks) {
+
+                result.add(
+                    BookResponse(
+                        googleBook.id,
+                        googleBook.volumeInfo.title,
+                        googleBook.volumeInfo.subtitle,
+                        googleBook.volumeInfo.authors,
+                        googleBook.volumeInfo.publisher,
+                        googleBook.volumeInfo.publishedDate,
+                        null,
+                        googleBook.volumeInfo.description,
+                        null,
+                        getGoogleBookIsbn(googleBook.volumeInfo.industryIdentifiers),
+                        googleBook.volumeInfo.pageCount ?: 0,
+                        googleBook.volumeInfo.categories,
+                        googleBook.volumeInfo.averageRating ?: 0.0,
+                        googleBook.volumeInfo.ratingsCount ?: 0,
+                        0.0,
+                        getGoogleBookThumbnail(googleBook.volumeInfo.imageLinks),
+                        getGoogleBookImage(googleBook.volumeInfo.imageLinks),
+                        null,
+                        null,
+                        false
+                    )
+                )
+            }
+            return result
+        }
+
+        private fun getGoogleBookIsbn(industryIdentifiers: List<GoogleIsbnResponse>?): String? {
+
+            return industryIdentifiers?.mapNotNull { if (it.type == "ISBN_13") it.identifier else null }?.get(0)
+                ?: industryIdentifiers?.mapNotNull { if (it.type == "ISBN_10") it.identifier else null }?.get(0)
+        }
+
+        private fun getGoogleBookThumbnail(imageLinks: GoogleImageLinksResponse?): String? {
+            return imageLinks?.thumbnail ?: imageLinks?.smallThumbnail
+        }
+
+        private fun getGoogleBookImage(imageLinks: GoogleImageLinksResponse?): String? {
+            return imageLinks?.extraLarge ?: imageLinks?.large ?: imageLinks?.medium ?: imageLinks?.small
+        }
+
+        // MARK: - Book detail
+
+        const val BOOK_ID = "bookId"
     }
 }
