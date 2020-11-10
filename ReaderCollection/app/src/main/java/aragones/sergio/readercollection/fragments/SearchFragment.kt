@@ -123,6 +123,10 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel.searchLoading.observe(viewLifecycleOwner, { isLoading ->
             srlBooks.isRefreshing = isLoading
         })
+
+        viewModel.searchError.observe(viewLifecycleOwner, { error ->
+            manageError(error)
+        })
     }
 
     private fun setupSearchView(menu: Menu) {

@@ -66,10 +66,10 @@ class Constants {
                         errorBody.charStream(), ErrorResponse::class.java
                     )
                 } ?: run {
-                    errorResponse = ErrorResponse("", R.string.login_failed)
+                    errorResponse = ErrorResponse("", R.string.error_server)
                 }
             } else {
-                errorResponse = ErrorResponse("", R.string.login_failed)
+                errorResponse = ErrorResponse("", R.string.error_server)
             }
             return errorResponse
         }
