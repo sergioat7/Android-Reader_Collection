@@ -13,11 +13,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReaderCollection">
         <activity
-            android:name=".activities.RegisterActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar" />
-        <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" />
+        <activity
+            android:name=".activities.RegisterActivity"
+            android:theme="@style/Theme.ReaderCollection.NoActionBar" />
         <activity
             android:name=".activities.LoginActivity"
             android:theme="@style/Theme.ReaderCollection.NoActionBar" />
