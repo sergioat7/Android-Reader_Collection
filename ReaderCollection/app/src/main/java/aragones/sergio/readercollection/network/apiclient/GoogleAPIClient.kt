@@ -15,11 +15,14 @@ class GoogleAPIClient() {
 
     private val api = APIClient.googleRetrofit.create(GooglePIService::class.java)
 
-    fun searchGoogleBooksObserver(query: String?): Single<GoogleBookListResponse> {
+    fun searchGoogleBooksObserver(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
 
-        val params: MutableMap<String, String> = java.util.HashMap()
-        if (query != null) {
-            params[Constants.SEARCH_PARAM] = query
+        val params: MutableMap<String, String> = HashMap()
+        params[Constants.SEARCH_PARAM] = query
+        params[Constants.PAGE_PARAM] = ((page - 1) * Constants.RESULTS).toString()
+        params[Constants.RESULTS_PARAM] = Constants.RESULTS.toString()
+        if (order != null) {
+            params[Constants.ORDER_PARAM] = order
         }
         return api.searchGoogleBooks(params).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }

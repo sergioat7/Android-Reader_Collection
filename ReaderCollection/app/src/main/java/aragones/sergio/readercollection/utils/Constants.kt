@@ -6,15 +6,17 @@
 package aragones.sergio.readercollection.utils
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.models.responses.*
 import aragones.sergio.readercollection.network.apiclient.APIClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
@@ -45,6 +47,12 @@ class Constants {
         const val STATE_PARAM = "state";
         const val IS_FAVOURITE_PARAM = "isFavourite";
         const val SEARCH_PARAM = "q";
+        const val PAGE_PARAM = "startIndex";
+        const val RESULTS_PARAM = "maxResults";
+        const val ORDER_PARAM = "orderBy";
+        const val RESULTS = 20;
+        const val RELEVANCE_ORDER = "relevance ";
+        const val NEWEST_ORDER = "newest";
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
 
@@ -58,10 +66,10 @@ class Constants {
                         errorBody.charStream(), ErrorResponse::class.java
                     )
                 } ?: run {
-                    errorResponse = ErrorResponse("", R.string.login_failed)
+                    errorResponse = ErrorResponse("", R.string.error_server)
                 }
             } else {
-                errorResponse = ErrorResponse("", R.string.login_failed)
+                errorResponse = ErrorResponse("", R.string.error_server)
             }
             return errorResponse
         }
@@ -142,5 +150,86 @@ class Constants {
                 editText.transformationMethod = HideReturnsTransformationMethod.getInstance();
             }
         }
+
+        // MARK: - Search books constants
+
+        fun hideSoftKeyboard(activity: Activity) {
+
+            activity.currentFocus?.let { currentFocus ->
+
+                val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
+            } ?: return
+        }
+
+        fun mapGoogleBooks(googleBooks: List<GoogleBookResponse>?): List<BookResponse> {
+
+            val result = mutableListOf<BookResponse>()
+            googleBooks?.let {
+                for (googleBook in it) {
+
+                    result.add(
+                        BookResponse(
+                            googleBook.id,
+                            googleBook.volumeInfo.title,
+                            googleBook.volumeInfo.subtitle,
+                            googleBook.volumeInfo.authors,
+                            googleBook.volumeInfo.publisher,
+                            googleBook.volumeInfo.publishedDate,
+                            null,
+                            googleBook.volumeInfo.description,
+                            null,
+                            getGoogleBookIsbn(googleBook.volumeInfo.industryIdentifiers),
+                            googleBook.volumeInfo.pageCount ?: 0,
+                            googleBook.volumeInfo.categories,
+                            googleBook.volumeInfo.averageRating ?: 0.0,
+                            googleBook.volumeInfo.ratingsCount ?: 0,
+                            0.0,
+                            getGoogleBookThumbnail(googleBook.volumeInfo.imageLinks),
+                            getGoogleBookImage(googleBook.volumeInfo.imageLinks),
+                            null,
+                            null,
+                            false
+                        )
+                    )
+                }
+            }
+            return result
+        }
+
+        private fun getGoogleBookIsbn(industryIdentifiers: List<GoogleIsbnResponse>?): String? {
+
+            industryIdentifiers?.mapNotNull { if (it.type == "ISBN_13") it.identifier else null }?.let {
+                if (it.isNotEmpty()) {
+                    return it[0]
+                }
+            }
+
+            industryIdentifiers?.mapNotNull { if (it.type == "ISBN_10") it.identifier else null }?.let {
+                if (it.isNotEmpty()) {
+                    return it[0]
+                }
+            }
+
+            industryIdentifiers?.mapNotNull { if (it.type == "OTHER") it.identifier else null }?.let {
+                if (it.isNotEmpty()) {
+                    return it[0]
+                }
+            }
+
+            return null
+        }
+
+        private fun getGoogleBookThumbnail(imageLinks: GoogleImageLinksResponse?): String? {
+            return imageLinks?.thumbnail ?: imageLinks?.smallThumbnail
+        }
+
+        private fun getGoogleBookImage(imageLinks: GoogleImageLinksResponse?): String? {
+            return imageLinks?.extraLarge ?: imageLinks?.large ?: imageLinks?.medium ?: imageLinks?.small
+        }
+
+        // MARK: - Book detail
+
+        const val BOOK_ID = "bookId"
     }
 }
