@@ -11,5 +11,5 @@ data class GoogleBookListResponse(
     @SerializedName("totalItems")
     val totalItems: Int,
     @SerializedName("items")
-    var items: List<GoogleBookResponse>
+    var items: List<GoogleBookResponse>?
 )

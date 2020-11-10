@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 10/11/2020
+  -->
+
+<resources>
+
+    <style name="Theme.ReaderCollection" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorSecondary</item>
+        <item name="titleTextColor">@color/colorSecondary</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_dark</item>
+    </style>
+
+</resources>

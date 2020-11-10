@@ -19,7 +19,7 @@ class SearchViewModel @Inject constructor(
 ): ViewModel() {
 
     private var page: Int = 1
-    private lateinit var query: String
+    private var query: String = ""
     private val _books = MutableLiveData<MutableList<BookResponse>>()
     private val _searchLoading = MutableLiveData<Boolean>()
 
