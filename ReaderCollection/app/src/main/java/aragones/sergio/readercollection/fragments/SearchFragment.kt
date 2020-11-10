@@ -7,10 +7,12 @@ package aragones.sergio.readercollection.fragments
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -128,6 +130,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager?
         val searchView = menu.findItem(R.id.action_search).actionView as SearchView
         if (searchManager != null) {
+
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
             searchView.isIconified = false
             searchView.isIconifiedByDefault = false
@@ -145,7 +148,21 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 }
             })
         }
-        val searchPlateId = searchView.context.resources.getIdentifier("android:id/search_plate", null, null)
+
+        val color = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
+
+        val searchIconId = searchView.context.resources.getIdentifier(
+            "android:id/search_mag_icon",
+            null,
+            null
+        )
+        searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList = ColorStateList.valueOf(color)
+
+        val searchPlateId = searchView.context.resources.getIdentifier(
+            "android:id/search_plate",
+            null,
+            null
+        )
         val searchPlate = searchView.findViewById<View>(searchPlateId)
         if (searchPlate != null) {
 
@@ -157,9 +174,16 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             val searchText = searchPlate.findViewById<TextView>(searchTextId)
             if (searchText != null) {
 
-                searchText.setTextColor(ContextCompat.getColor(requireActivity(), R.color.colorSecondary))
-                searchText.setHintTextColor(ContextCompat.getColor(requireActivity(),R.color.colorSecondary))
+                searchText.setTextColor(color)
+                searchText.setHintTextColor(color)
             }
+
+            val searchCloseId = searchPlate.context.resources.getIdentifier(
+                "android:id/search_close_btn",
+                null,
+                null
+            )
+            searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
         }
     }
 
