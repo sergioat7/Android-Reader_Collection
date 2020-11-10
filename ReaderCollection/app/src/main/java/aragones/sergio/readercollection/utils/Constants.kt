@@ -197,8 +197,25 @@ class Constants {
 
         private fun getGoogleBookIsbn(industryIdentifiers: List<GoogleIsbnResponse>?): String? {
 
-            return industryIdentifiers?.mapNotNull { if (it.type == "ISBN_13") it.identifier else null }?.get(0)
-                ?: industryIdentifiers?.mapNotNull { if (it.type == "ISBN_10") it.identifier else null }?.get(0)
+            industryIdentifiers?.mapNotNull { if (it.type == "ISBN_13") it.identifier else null }?.let {
+                if (it.isNotEmpty()) {
+                    return it[0]
+                }
+            }
+
+            industryIdentifiers?.mapNotNull { if (it.type == "ISBN_10") it.identifier else null }?.let {
+                if (it.isNotEmpty()) {
+                    return it[0]
+                }
+            }
+
+            industryIdentifiers?.mapNotNull { if (it.type == "OTHER") it.identifier else null }?.let {
+                if (it.isNotEmpty()) {
+                    return it[0]
+                }
+            }
+
+            return null
         }
 
         private fun getGoogleBookThumbnail(imageLinks: GoogleImageLinksResponse?): String? {
