@@ -8,7 +8,9 @@ package aragones.sergio.readercollection.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.SearchRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -22,11 +24,13 @@ class SearchViewModel @Inject constructor(
     private var query: String = ""
     private val _books = MutableLiveData<MutableList<BookResponse>>()
     private val _searchLoading = MutableLiveData<Boolean>()
+    private val _searchError = MutableLiveData<ErrorResponse>()
 
     //MARK: - Public properties
 
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
+    val searchError: LiveData<ErrorResponse> = _searchError
 
     //MARK: - Public methods
 
@@ -45,7 +49,7 @@ class SearchViewModel @Inject constructor(
             onError = {
 
                 _searchLoading.value = false
-                //TODO handle Google error
+                _searchError.value = ErrorResponse("", R.string.error_search)
             }
         )
     }
