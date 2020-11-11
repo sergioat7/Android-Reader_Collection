@@ -231,5 +231,6 @@ class Constants {
         // MARK: - Book detail
 
         const val BOOK_ID = "bookId"
+        const val IS_GOOGLE_BOOK = "isGoogleBook"
     }
 }

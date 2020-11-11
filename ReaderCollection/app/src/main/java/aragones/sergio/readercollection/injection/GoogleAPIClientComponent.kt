@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.injection
 
+import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import dagger.Component
 
@@ -12,4 +13,5 @@ import dagger.Component
 interface GoogleAPIClientComponent {
 
     fun inject(searchViewModelFactory: SearchViewModelFactory)
+    fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
 }
