@@ -20,6 +20,8 @@ class SearchViewModel @Inject constructor(
     private val searchRepository: SearchRepository
 ): ViewModel() {
 
+    //MARK: - Private properties
+
     private var page: Int = 1
     private var query: String = ""
     private val _books = MutableLiveData<MutableList<BookResponse>>()

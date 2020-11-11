@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import java.io.Serializable
 
 open class BaseFragment: Fragment() {
 
@@ -43,6 +44,15 @@ open class BaseFragment: Fragment() {
     fun <T> launchActivity(activity: Class<T>) {
 
         val intent = Intent(context, activity).apply {}
+        startActivity(intent)
+    }
+
+    fun <T> launchActivityWithExtras(activity: Class<T>, params: Map<String, Serializable>) {
+
+        val intent = Intent(context, activity).apply {}
+        for (param in params) {
+            intent.putExtra(param.key, param.value)
+        }
         startActivity(intent)
     }
 

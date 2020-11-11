@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReaderCollection">
         <activity
+            android:name=".activities.BookDetailActivity"
+            android:parentActivityName=".activities.MainActivity" />
+        <activity
             android:name=".activities.MainActivity"
             android:label="@string/title_activity_main" />
         <activity
