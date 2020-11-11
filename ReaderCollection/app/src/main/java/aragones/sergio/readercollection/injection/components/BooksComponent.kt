@@ -3,8 +3,10 @@
  * Created by Sergio Aragonés on 11/11/2020
  */
 
-package aragones.sergio.readercollection.injection
+package aragones.sergio.readercollection.injection.components
 
+import aragones.sergio.readercollection.injection.modules.GoogleAPIClientModule
+import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import dagger.Component
 

@@ -3,9 +3,10 @@
  * Created by Sergio Aragonés on 20/10/2020
  */
 
-package aragones.sergio.readercollection.injection
+package aragones.sergio.readercollection.injection.components
 
 import aragones.sergio.readercollection.activities.LandingActivity
+import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory

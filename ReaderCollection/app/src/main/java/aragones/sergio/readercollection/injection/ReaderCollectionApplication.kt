@@ -6,6 +6,10 @@
 package aragones.sergio.readercollection.injection
 
 import android.app.Application
+import aragones.sergio.readercollection.injection.components.GoogleAPIClientComponent
+import aragones.sergio.readercollection.injection.components.SharedPreferencesComponent
+import aragones.sergio.readercollection.injection.modules.GoogleAPIClientModule
+import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 
 class ReaderCollectionApplication: Application() {
 
