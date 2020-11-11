@@ -13,6 +13,7 @@ class ReaderCollectionApplication: Application() {
 
     lateinit var sharedPreferencesComponent: SharedPreferencesComponent
     lateinit var googleApiClientComponent: GoogleAPIClientComponent
+    lateinit var booksComponent: BooksComponent
 
     //MARK: - Lifecycle methods
 
@@ -24,6 +25,12 @@ class ReaderCollectionApplication: Application() {
         ).build()
 
         googleApiClientComponent = DaggerGoogleAPIClientComponent.builder().googleAPIClientModule(
+            GoogleAPIClientModule()
+        ).build()
+
+        booksComponent = DaggerBooksComponent.builder().sharedPreferencesModule(
+            SharedPreferencesModule(applicationContext)
+        ).googleAPIClientModule(
             GoogleAPIClientModule()
         ).build()
     }

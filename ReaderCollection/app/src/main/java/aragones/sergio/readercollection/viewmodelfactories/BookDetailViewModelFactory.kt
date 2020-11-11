@@ -9,8 +9,10 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
+import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
 import aragones.sergio.readercollection.repositories.BookDetailRepository
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
 
@@ -20,6 +22,10 @@ class BookDetailViewModelFactory(
 
     //MARK: - Public properties
 
+    @Inject
+    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
+    @Inject
+    lateinit var bookAPIClient: BookAPIClient
     @Inject
     lateinit var googleAPIClient: GoogleAPIClient
     @Inject
@@ -33,7 +39,7 @@ class BookDetailViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BookDetailViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).googleApiClientComponent.inject(this)
+            (application as ReaderCollectionApplication).booksComponent.inject(this)
             return bookDetailViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
