@@ -49,6 +49,10 @@ itemView: View
 
         itemView.text_view_name.text = book.title
 
+        val rating = book.averageRating / 2
+        itemView.rating_bar.rating = rating.toFloat()
+        itemView.text_view_rating.text = rating.toString()
+
         val llCategories = itemView.linear_layout_categories
         llCategories.removeAllViews()
         book.categories?.let { categories ->

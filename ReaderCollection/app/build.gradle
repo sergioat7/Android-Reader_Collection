@@ -75,6 +75,8 @@ dependencies {
     kapt "com.google.dagger:dagger-android-processor:${daggerVersion}"
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
+    //Material RatingBar
+    implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
     //Test
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
