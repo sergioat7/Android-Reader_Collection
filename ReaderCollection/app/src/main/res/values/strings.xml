@@ -24,4 +24,5 @@
     <string name="search_books">Search books</string>
     <string name="error_server">There was an error on getting data. Please, try again</string>
     <string name="error_search">You must provide a text to search</string>
+    <string name="new_book">New</string>
 </resources>

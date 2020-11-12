@@ -36,6 +36,14 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
+    <style name="NoRatingTextView">
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:text">@string/new_book</item>
+        <item name="android:textColor">@color/colorTertiary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
     <style name="RoundedTextView">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_text_view</item>

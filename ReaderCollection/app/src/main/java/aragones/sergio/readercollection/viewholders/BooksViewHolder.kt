@@ -52,6 +52,8 @@ itemView: View
         val rating = book.averageRating / 2
         itemView.rating_bar.rating = rating.toFloat()
         itemView.text_view_rating.text = rating.toString()
+        itemView.linear_layout_rating.visibility = if (rating > 0) View.VISIBLE else View.GONE
+        itemView.text_view_new.visibility = if (rating > 0) View.GONE else View.VISIBLE
 
         val llCategories = itemView.linear_layout_categories
         llCategories.removeAllViews()
