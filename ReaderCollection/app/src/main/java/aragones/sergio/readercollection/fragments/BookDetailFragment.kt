@@ -6,9 +6,7 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.base.BaseFragment
@@ -48,6 +46,13 @@ class BookDetailFragment: BaseFragment() {
         initializeUI()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.book_detail_toolbar_menu, menu)
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {
@@ -80,7 +85,7 @@ class BookDetailFragment: BaseFragment() {
             manageError(it)
         })
     }
-    
+
     private fun showData(bookResponse: BookResponse) {
         //TODO show data
     }
