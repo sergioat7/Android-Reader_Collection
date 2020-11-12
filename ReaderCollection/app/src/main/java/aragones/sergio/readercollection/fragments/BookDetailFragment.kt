@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
@@ -20,7 +21,7 @@ class BookDetailFragment: BaseFragment() {
 
     //MARK: - Private properties
 
-    private var bookId: String? = null
+    private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private lateinit var viewModel: BookDetailViewModel
 
@@ -37,7 +38,7 @@ class BookDetailFragment: BaseFragment() {
     ): View {
 
         setHasOptionsMenu(true)
-        bookId = this.arguments?.getString(Constants.BOOK_ID)
+        bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
         isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
         return inflater.inflate(R.layout.book_detail_fragment, container, false)
     }
@@ -53,6 +54,34 @@ class BookDetailFragment: BaseFragment() {
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(BookDetailViewModel::class.java)
-        // TODO: Use the ViewModel
+        viewModel.setBookId(bookId)
+        viewModel.setIsGoogleBook(isGoogleBook)
+        setupBindings()
+
+        viewModel.getBook()
+    }
+
+    private fun setupBindings() {
+
+        viewModel.book.observe(viewLifecycleOwner, {
+            showData(it)
+        })
+
+        viewModel.bookDetailLoading.observe(viewLifecycleOwner, { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.bookDetailError.observe(viewLifecycleOwner, {
+            manageError(it)
+        })
+    }
+    
+    private fun showData(bookResponse: BookResponse) {
+        //TODO show data
     }
 }

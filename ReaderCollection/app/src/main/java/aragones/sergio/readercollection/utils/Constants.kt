@@ -167,34 +167,36 @@ class Constants {
             val result = mutableListOf<BookResponse>()
             googleBooks?.let {
                 for (googleBook in it) {
-
-                    result.add(
-                        BookResponse(
-                            googleBook.id,
-                            googleBook.volumeInfo.title,
-                            googleBook.volumeInfo.subtitle,
-                            googleBook.volumeInfo.authors,
-                            googleBook.volumeInfo.publisher,
-                            googleBook.volumeInfo.publishedDate,
-                            null,
-                            googleBook.volumeInfo.description,
-                            null,
-                            getGoogleBookIsbn(googleBook.volumeInfo.industryIdentifiers),
-                            googleBook.volumeInfo.pageCount ?: 0,
-                            googleBook.volumeInfo.categories,
-                            googleBook.volumeInfo.averageRating ?: 0.0,
-                            googleBook.volumeInfo.ratingsCount ?: 0,
-                            0.0,
-                            getGoogleBookThumbnail(googleBook.volumeInfo.imageLinks),
-                            getGoogleBookImage(googleBook.volumeInfo.imageLinks),
-                            null,
-                            null,
-                            false
-                        )
-                    )
+                    result.add(mapGoogleBook(googleBook))
                 }
             }
             return result
+        }
+
+        fun mapGoogleBook(googleBook: GoogleBookResponse): BookResponse {
+
+            return BookResponse(
+                googleBook.id,
+                googleBook.volumeInfo.title,
+                googleBook.volumeInfo.subtitle,
+                googleBook.volumeInfo.authors,
+                googleBook.volumeInfo.publisher,
+                googleBook.volumeInfo.publishedDate,
+                null,
+                googleBook.volumeInfo.description,
+                null,
+                getGoogleBookIsbn(googleBook.volumeInfo.industryIdentifiers),
+                googleBook.volumeInfo.pageCount ?: 0,
+                googleBook.volumeInfo.categories,
+                googleBook.volumeInfo.averageRating ?: 0.0,
+                googleBook.volumeInfo.ratingsCount ?: 0,
+                0.0,
+                getGoogleBookThumbnail(googleBook.volumeInfo.imageLinks),
+                getGoogleBookImage(googleBook.volumeInfo.imageLinks),
+                null,
+                null,
+                false
+            )
         }
 
         private fun getGoogleBookIsbn(industryIdentifiers: List<GoogleIsbnResponse>?): String? {
