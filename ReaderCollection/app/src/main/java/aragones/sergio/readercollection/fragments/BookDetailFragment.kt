@@ -112,7 +112,59 @@ class BookDetailFragment: BaseFragment() {
         })
     }
 
-    private fun showData(bookResponse: BookResponse) {
-        //TODO show data
+    private fun showData(book: BookResponse) {
+
+        val image = book.image?.replace("http", "https") ?: "-"
+        Picasso
+            .get()
+            .load(image)
+            .fit()
+            .centerCrop()
+            .into(ivBook, object: Callback {
+
+                override fun onSuccess() {
+                    pbLoadingImage.visibility = View.GONE
+                }
+
+                override fun onError(e: Exception) {
+                    pbLoadingImage.visibility = View.GONE
+                }
+            })
+
+        fbFavourite.setOnClickListener {
+            //TODO
+        }
+
+        val rating = if (isGoogleBook) book.averageRating.toFloat() else book.rating.toFloat()
+        rbStars.rating = rating / 2
+        rbStars.setIsIndicator(isGoogleBook)
+
+        tvRatingCount.text = book.ratingsCount.toString()
+
+        tvTitle.text = book.title
+
+        tvAuthor.text = book.authors.toString()
+
+        llCategories.removeAllViews()
+        book.categories?.let { categories ->
+            for (category in categories) {
+
+                val tv = Constants.getRoundedTextView(category, requireContext())
+                llCategories.addView(tv)
+
+                val view = View(context)
+                view.layoutParams = ViewGroup.LayoutParams(
+                    20,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                llCategories.addView(view)
+            }
+        }
+
+        tvDescription.text = book.description
+
+        btReadMore.setOnClickListener {
+            //TODO
+        }
     }
 }
