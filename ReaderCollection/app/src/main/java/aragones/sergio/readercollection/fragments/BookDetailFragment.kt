@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.*
+import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.base.BaseFragment
@@ -14,6 +15,11 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.book_detail_fragment.*
+import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 class BookDetailFragment: BaseFragment() {
 
@@ -21,6 +27,16 @@ class BookDetailFragment: BaseFragment() {
 
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
+    private lateinit var ivBook: ImageView
+    private lateinit var pbLoadingImage: ProgressBar
+    private lateinit var fbFavourite: FloatingActionButton
+    private lateinit var rbStars: MaterialRatingBar
+    private lateinit var tvRatingCount: TextView
+    private lateinit var tvTitle: TextView
+    private lateinit var tvAuthor: TextView
+    private lateinit var llCategories: LinearLayout
+    private lateinit var tvDescription: TextView
+    private lateinit var btReadMore: Button
     private lateinit var viewModel: BookDetailViewModel
 
     //MARK: - Lifecycle methods
@@ -61,6 +77,16 @@ class BookDetailFragment: BaseFragment() {
         viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(BookDetailViewModel::class.java)
         viewModel.setBookId(bookId)
         viewModel.setIsGoogleBook(isGoogleBook)
+        ivBook = image_view_book
+        pbLoadingImage = progress_bar_loading
+        fbFavourite = floating_action_button_favourite
+        rbStars = rating_bar
+        tvRatingCount = text_view_rating_count
+        tvTitle = text_view_title
+        tvAuthor = text_view_author
+        llCategories = linear_layout_categories
+        tvDescription = text_view_description
+        btReadMore = button_read_more
         setupBindings()
 
         viewModel.getBook()
