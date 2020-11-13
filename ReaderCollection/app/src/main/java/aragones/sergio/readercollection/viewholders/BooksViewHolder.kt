@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.viewholders
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -47,7 +45,7 @@ itemView: View
                 }
             })
 
-        itemView.text_view_name.text = book.title
+        itemView.text_view_title.text = book.title
 
         val rating = book.averageRating / 2
         itemView.rating_bar.rating = rating.toFloat()
@@ -60,7 +58,7 @@ itemView: View
         book.categories?.let { categories ->
             for (category in categories) {
 
-                val tv = getRoundedTextView(category, context)
+                val tv = Constants.getRoundedTextView(category, context)
                 llCategories.addView(tv)
 
                 val view = View(context)
@@ -71,18 +69,5 @@ itemView: View
                 llCategories.addView(view)
             }
         }
-    }
-
-    //MARK: - Private methods
-
-    private fun getRoundedTextView(text: String, context: Context): TextView {
-
-        val tv = TextView(context, null, R.style.RoundedTextView, R.style.RoundedTextView)
-        tv.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        tv.text = text
-        return tv
     }
 }
