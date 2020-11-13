@@ -12,9 +12,11 @@ import android.content.res.Configuration
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.Log
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.TextView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.*
 import aragones.sergio.readercollection.network.apiclient.APIClient
@@ -160,6 +162,17 @@ class Constants {
                 val inputMethodManager = activity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
             } ?: return
+        }
+
+        fun getRoundedTextView(text: String, context: Context): TextView {
+
+            val tv = TextView(context, null, R.style.RoundedTextView, R.style.RoundedTextView)
+            tv.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
+            tv.text = text
+            return tv
         }
 
         fun mapGoogleBooks(googleBooks: List<GoogleBookResponse>?): List<BookResponse> {

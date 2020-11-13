@@ -10,6 +10,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.fragments.BookDetailFragment
 import aragones.sergio.readercollection.utils.Constants
+import kotlinx.android.synthetic.main.book_detail_activity.*
 
 class BookDetailActivity: BaseActivity() {
 
@@ -20,6 +21,7 @@ class BookDetailActivity: BaseActivity() {
         setContentView(R.layout.book_detail_activity)
 
         title = ""
+        setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val bookId = intent.getStringExtra(Constants.BOOK_ID)
