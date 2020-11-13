@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 13/11/2020
+  -->
+
+<resources>
+
+    <style name="Theme.ReaderCollection.NoActionBar.BookDetail" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_light</item>
+    </style>
+
+    <style name="FavouriteFloatingButton">
+        <item name="android:layout_marginEnd">40dp</item>
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:src">@drawable/ic_favourite_empty_light</item>
+    </style>
+
+    <style name="RatingCountImageView">
+        <item name="android:layout_width">20dp</item>
+        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:src">@drawable/ic_person_light</item>
+    </style>
+
+    <style name="RatingCountTextView">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="BookTitleTextView">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="BookAuthorsTextView">
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="BookDescriptionTitleTextView">
+        <item name="android:layout_marginTop">30dp</item>
+        <item name="android:text">@string/description</item>
+        <item name="android:textColor">@color/textPrimaryLight</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="BookDescriptionTextView">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:lineSpacingExtra">5dp</item>
+    </style>
+
+    <style name="BookDescriptionReadMoreButton">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:gravity">top</item>
+        <item name="android:text">@string/read_more</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+</resources>
