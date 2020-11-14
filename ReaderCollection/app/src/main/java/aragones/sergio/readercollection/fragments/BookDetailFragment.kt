@@ -30,8 +30,10 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var ivBook: ImageView
     private lateinit var pbLoadingImage: ProgressBar
     private lateinit var fbFavourite: FloatingActionButton
+    private lateinit var llRating: LinearLayout
     private lateinit var rbStars: MaterialRatingBar
     private lateinit var tvRatingCount: TextView
+    private lateinit var tvNoRatings: TextView
     private lateinit var tvTitle: TextView
     private lateinit var tvAuthor: TextView
     private lateinit var llCategories: LinearLayout
@@ -80,8 +82,10 @@ class BookDetailFragment: BaseFragment() {
         ivBook = image_view_book
         pbLoadingImage = progress_bar_loading
         fbFavourite = floating_action_button_favourite
+        llRating = linear_layout_rating
         rbStars = rating_bar
         tvRatingCount = text_view_rating_count
+        tvNoRatings = text_view_no_ratings
         tvTitle = text_view_title
         tvAuthor = text_view_author
         llCategories = linear_layout_categories
@@ -135,11 +139,15 @@ class BookDetailFragment: BaseFragment() {
             //TODO
         }
 
-        val rating = if (isGoogleBook) book.averageRating.toFloat() else book.rating.toFloat()
-        rbStars.rating = rating / 2
+        val rating = if (isGoogleBook) book.averageRating else book.rating
+        rbStars.rating = rating.toFloat() / 2
         rbStars.setIsIndicator(isGoogleBook)
 
         tvRatingCount.text = book.ratingsCount.toString()
+
+        val hideRating = rating == 0.0 && isGoogleBook
+        llRating.visibility = if (hideRating) View.INVISIBLE else View.VISIBLE
+        tvNoRatings.visibility = if (hideRating) View.VISIBLE else View.GONE
 
         tvTitle.text = book.title
 
