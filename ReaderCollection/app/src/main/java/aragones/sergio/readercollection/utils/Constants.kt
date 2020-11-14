@@ -24,6 +24,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.HttpException
+import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -36,6 +37,20 @@ class Constants {
             return mode == Configuration.UI_MODE_NIGHT_YES
         }
 
+        fun<T> listToString(list: List<T>?): String {
+
+            var result = StringBuilder()
+            list?.let {
+                for (element in it) {
+
+                    result.append(element.toString())
+                    result.append(", ")
+                }
+                result = StringBuilder(if (result.isEmpty()) "" else result.substring(0, result.length - 2))
+            }
+            return result.toString()
+        }
+
         // MARK: - Retrofit constants
 
         const val BASE_ENDPOINT = "https://books-collection-services.herokuapp.com/"
@@ -45,16 +60,16 @@ class Constants {
         const val CONNECT_TIMEOUT: Long = 60
         const val READ_TIMEOUT: Long = 30
         const val WRITE_TIMEOUT: Long = 15
-        const val FORMAT_PARAM = "format";
-        const val STATE_PARAM = "state";
-        const val IS_FAVOURITE_PARAM = "isFavourite";
-        const val SEARCH_PARAM = "q";
-        const val PAGE_PARAM = "startIndex";
-        const val RESULTS_PARAM = "maxResults";
-        const val ORDER_PARAM = "orderBy";
-        const val RESULTS = 20;
-        const val RELEVANCE_ORDER = "relevance ";
-        const val NEWEST_ORDER = "newest";
+        const val FORMAT_PARAM = "format"
+        const val STATE_PARAM = "state"
+        const val IS_FAVOURITE_PARAM = "isFavourite"
+        const val SEARCH_PARAM = "q"
+        const val PAGE_PARAM = "startIndex"
+        const val RESULTS_PARAM = "maxResults"
+        const val ORDER_PARAM = "orderBy"
+        const val RESULTS = 20
+        const val RELEVANCE_ORDER = "relevance "
+        const val NEWEST_ORDER = "newest"
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
 
@@ -144,12 +159,12 @@ class Constants {
 
                 val image = if (isDarkMode) R.drawable.ic_show_password_dark else R.drawable.ic_show_password_light
                 imageButton.setImageResource(image)
-                editText.transformationMethod = PasswordTransformationMethod.getInstance();
+                editText.transformationMethod = PasswordTransformationMethod.getInstance()
             } else {
 
                 val image = if (isDarkMode) R.drawable.ic_hide_password_dark else R.drawable.ic_hide_password_light
                 imageButton.setImageResource(image)
-                editText.transformationMethod = HideReturnsTransformationMethod.getInstance();
+                editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
             }
         }
 
@@ -247,5 +262,19 @@ class Constants {
 
         const val BOOK_ID = "bookId"
         const val IS_GOOGLE_BOOK = "isGoogleBook"
+        const val MAX_LINES = Int.MAX_VALUE
+
+        fun getFavouriteImage(isFavourite: Boolean, context: Context?): Int {
+
+            return if (isFavourite && isDarkMode(context)) {
+                R.drawable.ic_favourite_full_dark
+            } else if (isFavourite && !isDarkMode(context)) {
+                R.drawable.ic_favourite_full_light
+            } else if (!isFavourite && isDarkMode(context)) {
+                R.drawable.ic_favourite_empty_dark
+            } else {
+                R.drawable.ic_favourite_empty_light
+            }
+        }
     }
 }
