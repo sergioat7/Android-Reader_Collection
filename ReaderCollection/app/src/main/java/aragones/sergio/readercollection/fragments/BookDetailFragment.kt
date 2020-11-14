@@ -40,6 +40,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var tvDescription: TextView
     private lateinit var btReadMore: Button
     private lateinit var viewModel: BookDetailViewModel
+    private var isFavourite: Boolean = false
 
     //MARK: - Lifecycle methods
 
@@ -76,7 +77,9 @@ class BookDetailFragment: BaseFragment() {
     private fun initializeUI() {
 
         val application = activity?.application ?: return
-        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(BookDetailViewModel::class.java)
+        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(
+            BookDetailViewModel::class.java
+        )
         viewModel.setBookId(bookId)
         viewModel.setIsGoogleBook(isGoogleBook)
         ivBook = image_view_book
@@ -124,7 +127,7 @@ class BookDetailFragment: BaseFragment() {
             .load(image)
             .fit()
             .centerCrop()
-            .into(ivBook, object: Callback {
+            .into(ivBook, object : Callback {
 
                 override fun onSuccess() {
                     pbLoadingImage.visibility = View.GONE
@@ -135,8 +138,12 @@ class BookDetailFragment: BaseFragment() {
                 }
             })
 
+        isFavourite = book.isFavourite
+        fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, context))
         fbFavourite.setOnClickListener {
-            //TODO
+
+            isFavourite = !isFavourite
+            fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, context))
         }
 
         val rating = if (isGoogleBook) book.averageRating else book.rating
@@ -151,7 +158,7 @@ class BookDetailFragment: BaseFragment() {
 
         tvTitle.text = book.title
 
-        tvAuthor.text = book.authors.toString()
+        tvAuthor.text = resources.getString(R.string.authors_text, Constants.listToString(book.authors))
 
         llCategories.removeAllViews()
         book.categories?.let { categories ->
@@ -172,7 +179,9 @@ class BookDetailFragment: BaseFragment() {
         tvDescription.text = book.description
 
         btReadMore.setOnClickListener {
-            //TODO
+
+            tvDescription.maxLines = Constants.MAX_LINES
+            btReadMore.visibility = View.GONE
         }
     }
 }

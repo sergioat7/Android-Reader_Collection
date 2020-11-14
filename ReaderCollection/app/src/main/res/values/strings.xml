@@ -27,4 +27,5 @@
     <string name="new_book">New</string>
     <string name="description">Description:</string>
     <string name="read_more">Read more</string>
+    <string name="authors_text">By %s</string>
 </resources>
