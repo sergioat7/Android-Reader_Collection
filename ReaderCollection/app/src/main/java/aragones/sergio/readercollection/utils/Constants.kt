@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.adapters.SpinnerAdapter
 import aragones.sergio.readercollection.models.responses.*
 import aragones.sergio.readercollection.network.apiclient.APIClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -280,6 +281,13 @@ class Constants {
             } else {
                 R.drawable.ic_favourite_empty_light
             }
+        }
+
+        fun getAdapter(context: Context, data: List<String>): SpinnerAdapter {
+
+            val arrayAdapter = SpinnerAdapter(context, data)
+            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            return arrayAdapter
         }
     }
 }
