@@ -5,14 +5,20 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.setReadOnly
+import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -36,11 +42,27 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var tvNoRatings: TextView
     private lateinit var tvTitle: TextView
     private lateinit var tvAuthor: TextView
+    private lateinit var svCategories: HorizontalScrollView
     private lateinit var llCategories: LinearLayout
     private lateinit var tvDescription: TextView
-    private lateinit var btReadMore: Button
+    private lateinit var btReadMoreDescription: Button
+    private lateinit var tvIsbn: TextView
+    private lateinit var tvPageCount: TextView
+    private lateinit var tvPublisher: TextView
+    private lateinit var tvPublishedDate: TextView
+    private lateinit var llTitles3: LinearLayout
+    private lateinit var llValues3: LinearLayout
+    private lateinit var etReadingDate: EditText
+    private lateinit var llTitles4: LinearLayout
+    private lateinit var llValues4: LinearLayout
+    private lateinit var spFormats: Spinner
+    private lateinit var spStates: Spinner
+    private lateinit var llSummary: LinearLayout
+    private lateinit var tvSummary: TextView
+    private lateinit var btReadMoreSummary: Button
     private lateinit var viewModel: BookDetailViewModel
     private var isFavourite: Boolean = false
+    private lateinit var sharedPreferencesHandler: SharedPreferencesHandler
 
     //MARK: - Lifecycle methods
 
@@ -76,12 +98,6 @@ class BookDetailFragment: BaseFragment() {
 
     private fun initializeUI() {
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(
-            BookDetailViewModel::class.java
-        )
-        viewModel.setBookId(bookId)
-        viewModel.setIsGoogleBook(isGoogleBook)
         ivBook = image_view_book
         pbLoadingImage = progress_bar_loading
         fbFavourite = floating_action_button_favourite
@@ -91,10 +107,42 @@ class BookDetailFragment: BaseFragment() {
         tvNoRatings = text_view_no_ratings
         tvTitle = text_view_title
         tvAuthor = text_view_author
+        svCategories = horizontal_scroll_view_categories
         llCategories = linear_layout_categories
         tvDescription = text_view_description
-        btReadMore = button_read_more
+        btReadMoreDescription = button_read_more_description
+        tvIsbn = text_view_isbn
+        tvPageCount = text_view_page_count
+        tvPublisher = text_view_publisher
+        tvPublishedDate = text_view_published_date
+        llTitles3 = linear_layout_titles_3
+        llValues3 = linear_layout_values_3
+        etReadingDate = edit_text_reading_date
+        llTitles4 = linear_layout_titles_4
+        llValues4 = linear_layout_values_4
+        spFormats = spinner_formats
+        spStates = spinner_states
+        llSummary = linear_layout_summary
+        tvSummary = text_view_summary
+        btReadMoreSummary = button_read_more_summary
+        val application = activity?.application ?: return
+        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(
+            BookDetailViewModel::class.java
+        )
+        viewModel.setBookId(bookId)
+        viewModel.setIsGoogleBook(isGoogleBook)
+        sharedPreferencesHandler = SharedPreferencesHandler(
+            context?.getSharedPreferences(
+                Constants.PREFERENCES_NAME,
+                Context.MODE_PRIVATE
+            )
+        )
         setupBindings()
+
+        etReadingDate.showDatePicker(requireContext())
+
+        spFormats.adapter = Constants.getAdapter(requireContext(), ArrayList())//TODO send format values
+        spStates.adapter = Constants.getAdapter(requireContext(), ArrayList())//TODO send state values
 
         viewModel.getBook()
     }
@@ -158,7 +206,11 @@ class BookDetailFragment: BaseFragment() {
 
         tvTitle.text = book.title
 
-        tvAuthor.text = resources.getString(R.string.authors_text, Constants.listToString(book.authors))
+        var authors = Constants.listToString(book.authors)
+        if (authors.isEmpty()) {
+            authors = Constants.NO_VALUE
+        }
+        tvAuthor.text = resources.getString(R.string.authors_text, authors)
 
         llCategories.removeAllViews()
         book.categories?.let { categories ->
@@ -175,13 +227,78 @@ class BookDetailFragment: BaseFragment() {
                 llCategories.addView(view)
             }
         }
+        svCategories.visibility = if (llCategories.childCount > 0) View.VISIBLE else View.GONE
 
-        tvDescription.text = book.description
+        var description = Constants.NO_VALUE
+        if (book.description != null && book.description.isNotBlank()) {
+            description = book.description
+        }
+        tvDescription.text = description
 
-        btReadMore.setOnClickListener {
+        btReadMoreDescription.visibility = if(description == Constants.NO_VALUE) View.GONE else View.VISIBLE
+        btReadMoreDescription.setOnClickListener {
 
             tvDescription.maxLines = Constants.MAX_LINES
-            btReadMore.visibility = View.GONE
+            btReadMoreDescription.visibility = View.GONE
+        }
+
+        var isbn = Constants.NO_VALUE
+        if (book.isbn != null && book.isbn.isNotBlank()) {
+            isbn = book.isbn
+        }
+        tvIsbn.text = isbn
+
+        tvPageCount.text = book.pageCount.toString()
+
+        var publisher = Constants.NO_VALUE
+        if (book.publisher != null && book.publisher.isNotBlank()) {
+            publisher = book.publisher
+        }
+        tvPublisher.text = publisher
+
+        var publishedDate = Constants.dateToString(book.publishedDate, Constants.getDateFormatToShow(sharedPreferencesHandler))
+        if (publishedDate == null || publishedDate.isEmpty()) {
+            publishedDate = Constants.NO_VALUE
+        }
+        tvPublishedDate.text = publishedDate
+
+        var readingDate = Constants.dateToString(book.readingDate, Constants.getDateFormatToShow(sharedPreferencesHandler))
+        if (readingDate == null || readingDate.isEmpty()) {
+            readingDate = Constants.NO_VALUE
+        }
+        etReadingDate.setText(readingDate)
+
+
+        etReadingDate.setReadOnly(
+            true, InputType.TYPE_NULL, ContextCompat.getColor(
+                requireContext(),
+                R.color.colorSecondary
+            )
+        )
+
+        llTitles3.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llValues3.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+
+        //TODO set format
+
+        //TODO set state
+
+        llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+
+        var summary = Constants.NO_VALUE
+        if (book.summary != null && book.summary.isNotBlank()) {
+            summary = book.summary
+        }
+        tvSummary.text = summary
+
+        llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+
+        btReadMoreSummary.visibility = if(summary == Constants.NO_VALUE) View.GONE else View.VISIBLE
+        btReadMoreSummary.setOnClickListener {
+
+            tvSummary.maxLines = Constants.MAX_LINES
+            btReadMoreSummary.visibility = View.GONE
         }
     }
 }
