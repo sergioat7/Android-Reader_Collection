@@ -105,15 +105,17 @@ class Constants {
         const val DATE_FORMAT = "yyyy-MM-dd"
 
         fun getDateFormatToShow(sharedPrefHandler: SharedPreferencesHandler): String {
-            return if (sharedPrefHandler.getLanguage() == "es") "d MMMM, yyyy" else "MMMM d, yyyy"
+            return if (sharedPrefHandler.getLanguage() == "es") "d MMMM yyyy" else "MMMM d, yyyy"
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun dateToString(date: Date?): String? {
+        fun dateToString(date: Date?, format: String? = null): String? {
+
+            val dateFormat = format ?: DATE_FORMAT
             date?.let {
 
                 return try {
-                    SimpleDateFormat(DATE_FORMAT).format(it)
+                    SimpleDateFormat(dateFormat).format(it)
                 } catch (e: Exception) {
 
                     Log.e("Constants", e.message ?: "")
@@ -127,11 +129,13 @@ class Constants {
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun stringToDate(dateString: String?): Date? {
+        fun stringToDate(dateString: String?, format: String? = null): Date? {
+
+            val dateFormat = format ?: DATE_FORMAT
             dateString?.let {
 
                 return try {
-                    SimpleDateFormat(DATE_FORMAT).parse(it)
+                    SimpleDateFormat(dateFormat).parse(it)
                 } catch (e: Exception) {
 
                     Log.e("Constants", e.message ?: "")
@@ -263,6 +267,7 @@ class Constants {
         const val BOOK_ID = "bookId"
         const val IS_GOOGLE_BOOK = "isGoogleBook"
         const val MAX_LINES = Int.MAX_VALUE
+        const val NO_VALUE = "-"
 
         fun getFavouriteImage(isFavourite: Boolean, context: Context?): Int {
 
