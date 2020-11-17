@@ -7,13 +7,10 @@ package aragones.sergio.readercollection.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.extensions.setReadOnly
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -242,6 +239,28 @@ class BookDetailFragment: BaseFragment() {
             btReadMoreDescription.visibility = View.GONE
         }
 
+        var summary = Constants.NO_VALUE
+        if (book.summary != null && book.summary.isNotBlank()) {
+            summary = book.summary
+        }
+        tvSummary.text = summary
+
+        llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+
+        btReadMoreSummary.visibility = if(summary == Constants.NO_VALUE) View.GONE else View.VISIBLE
+        btReadMoreSummary.setOnClickListener {
+
+            tvSummary.maxLines = Constants.MAX_LINES
+            btReadMoreSummary.visibility = View.GONE
+        }
+
+        //TODO set format
+
+        //TODO set state
+
+        llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+
         var isbn = Constants.NO_VALUE
         if (book.isbn != null && book.isbn.isNotBlank()) {
             isbn = book.isbn
@@ -269,36 +288,7 @@ class BookDetailFragment: BaseFragment() {
         etReadingDate.setText(readingDate)
 
 
-        etReadingDate.setReadOnly(
-            true, InputType.TYPE_NULL, ContextCompat.getColor(
-                requireContext(),
-                R.color.colorSecondary
-            )
-        )
-
         llTitles3.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues3.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-
-        //TODO set format
-
-        //TODO set state
-
-        llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-        llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-
-        var summary = Constants.NO_VALUE
-        if (book.summary != null && book.summary.isNotBlank()) {
-            summary = book.summary
-        }
-        tvSummary.text = summary
-
-        llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-
-        btReadMoreSummary.visibility = if(summary == Constants.NO_VALUE) View.GONE else View.VISIBLE
-        btReadMoreSummary.setOnClickListener {
-
-            tvSummary.maxLines = Constants.MAX_LINES
-            btReadMoreSummary.visibility = View.GONE
-        }
     }
 }
