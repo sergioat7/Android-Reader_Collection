@@ -14,6 +14,8 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.models.responses.FormatResponse
+import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
@@ -58,8 +60,12 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var llValues4: LinearLayout
     private lateinit var etReadingDate: EditText
     private lateinit var viewModel: BookDetailViewModel
-    private var isFavourite: Boolean = false
     private lateinit var sharedPreferencesHandler: SharedPreferencesHandler
+    private var isFavourite: Boolean = false
+    private var formats: List<FormatResponse>? = null
+    private var formatValues = ArrayList<String>()
+    private var states: List<StateResponse>? = null
+    private var stateValues = ArrayList<String>()
 
     //MARK: - Lifecycle methods
 
@@ -128,26 +134,46 @@ class BookDetailFragment: BaseFragment() {
         )
         viewModel.setBookId(bookId)
         viewModel.setIsGoogleBook(isGoogleBook)
-        sharedPreferencesHandler = SharedPreferencesHandler(
-            context?.getSharedPreferences(
-                Constants.PREFERENCES_NAME,
-                Context.MODE_PRIVATE
-            )
-        )
         setupBindings()
+
+        sharedPreferencesHandler = SharedPreferencesHandler(context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE))
 
         etReadingDate.showDatePicker(requireContext())
 
-        spFormats.adapter = Constants.getAdapter(requireContext(), ArrayList())//TODO send format values
-        spStates.adapter = Constants.getAdapter(requireContext(), ArrayList())//TODO send state values
 
         viewModel.getBook()
+        viewModel.getFormats()
+        viewModel.getStates()
     }
 
     private fun setupBindings() {
 
         viewModel.book.observe(viewLifecycleOwner, {
             showData(it)
+        })
+
+        viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
+
+            formats = formatsResponse
+            formatValues = ArrayList()
+            formatValues.run {
+
+                this.add(resources.getString((R.string.select_format)))
+                this.addAll(formatsResponse.map { it.name })
+            }
+            spFormats.adapter = Constants.getAdapter(requireContext(), formatValues)
+        })
+
+        viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
+
+            states = statesResponse
+            stateValues = ArrayList()
+            stateValues.run {
+
+                this.add(resources.getString((R.string.select_state)))
+                this.addAll(statesResponse.map { it.name })
+            }
+            spStates.adapter = Constants.getAdapter(requireContext(), stateValues)
         })
 
         viewModel.bookDetailLoading.observe(viewLifecycleOwner, { isLoading ->
@@ -157,6 +183,14 @@ class BookDetailFragment: BaseFragment() {
             } else {
                 hideLoading()
             }
+        })
+
+        viewModel.bookDetailFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
+            //TODO show/hide states loading
+        })
+
+        viewModel.bookDetailStatesLoading.observe(viewLifecycleOwner, { isLoading ->
+            //TODO show/hide states loading
         })
 
         viewModel.bookDetailError.observe(viewLifecycleOwner, {
