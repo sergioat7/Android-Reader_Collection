@@ -37,4 +37,6 @@
     <string name="state">State</string>
     <string name="summary">Summary</string>
     <string name="select_a_date">Select a date</string>
+    <string name="select_format">Select a format</string>
+    <string name="select_state">Select a state</string>
 </resources>

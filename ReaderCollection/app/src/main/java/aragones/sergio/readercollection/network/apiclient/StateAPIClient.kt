@@ -10,8 +10,9 @@ import aragones.sergio.readercollection.network.apiservice.StateAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class StateAPIClient(
+class StateAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
