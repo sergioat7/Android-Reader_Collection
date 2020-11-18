@@ -43,20 +43,20 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var llCategories: LinearLayout
     private lateinit var tvDescription: TextView
     private lateinit var btReadMoreDescription: Button
+    private lateinit var llSummary: LinearLayout
+    private lateinit var tvSummary: TextView
+    private lateinit var btReadMoreSummary: Button
+    private lateinit var llTitles1: LinearLayout
+    private lateinit var llValues1: LinearLayout
+    private lateinit var spFormats: Spinner
+    private lateinit var spStates: Spinner
     private lateinit var tvIsbn: TextView
     private lateinit var tvPageCount: TextView
     private lateinit var tvPublisher: TextView
     private lateinit var tvPublishedDate: TextView
-    private lateinit var llTitles3: LinearLayout
-    private lateinit var llValues3: LinearLayout
-    private lateinit var etReadingDate: EditText
     private lateinit var llTitles4: LinearLayout
     private lateinit var llValues4: LinearLayout
-    private lateinit var spFormats: Spinner
-    private lateinit var spStates: Spinner
-    private lateinit var llSummary: LinearLayout
-    private lateinit var tvSummary: TextView
-    private lateinit var btReadMoreSummary: Button
+    private lateinit var etReadingDate: EditText
     private lateinit var viewModel: BookDetailViewModel
     private var isFavourite: Boolean = false
     private lateinit var sharedPreferencesHandler: SharedPreferencesHandler
@@ -108,20 +108,20 @@ class BookDetailFragment: BaseFragment() {
         llCategories = linear_layout_categories
         tvDescription = text_view_description
         btReadMoreDescription = button_read_more_description
+        llSummary = linear_layout_summary
+        tvSummary = text_view_summary
+        btReadMoreSummary = button_read_more_summary
+        llTitles1 = linear_layout_titles_1
+        llValues1 = linear_layout_values_1
+        spFormats = spinner_formats
+        spStates = spinner_states
         tvIsbn = text_view_isbn
         tvPageCount = text_view_page_count
         tvPublisher = text_view_publisher
         tvPublishedDate = text_view_published_date
-        llTitles3 = linear_layout_titles_3
-        llValues3 = linear_layout_values_3
-        etReadingDate = edit_text_reading_date
         llTitles4 = linear_layout_titles_4
         llValues4 = linear_layout_values_4
-        spFormats = spinner_formats
-        spStates = spinner_states
-        llSummary = linear_layout_summary
-        tvSummary = text_view_summary
-        btReadMoreSummary = button_read_more_summary
+        etReadingDate = edit_text_reading_date
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(
             BookDetailViewModel::class.java
@@ -258,8 +258,8 @@ class BookDetailFragment: BaseFragment() {
 
         //TODO set state
 
-        llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-        llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llTitles1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llValues1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
 
         var isbn = Constants.NO_VALUE
         if (book.isbn != null && book.isbn.isNotBlank()) {
@@ -287,8 +287,7 @@ class BookDetailFragment: BaseFragment() {
         }
         etReadingDate.setText(readingDate)
 
-
-        llTitles3.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-        llValues3.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
     }
 }
