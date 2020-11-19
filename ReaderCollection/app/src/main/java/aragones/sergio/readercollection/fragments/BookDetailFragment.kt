@@ -62,6 +62,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var viewModel: BookDetailViewModel
     private lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     private var isFavourite: Boolean = false
+    private var book: BookResponse? = null
     private var formats: List<FormatResponse>? = null
     private var formatValues = ArrayList<String>()
     private var states: List<StateResponse>? = null
@@ -140,7 +141,6 @@ class BookDetailFragment: BaseFragment() {
 
         etReadingDate.showDatePicker(requireContext())
 
-
         viewModel.getBook()
         viewModel.getFormats()
         viewModel.getStates()
@@ -149,6 +149,8 @@ class BookDetailFragment: BaseFragment() {
     private fun setupBindings() {
 
         viewModel.book.observe(viewLifecycleOwner, {
+
+            book = it
             showData(it)
         })
 
@@ -162,6 +164,9 @@ class BookDetailFragment: BaseFragment() {
                 this.addAll(formatsResponse.map { it.name })
             }
             spFormats.adapter = Constants.getAdapter(requireContext(), formatValues)
+            book?.let {
+                setFormat(it)
+            }
         })
 
         viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
@@ -174,6 +179,9 @@ class BookDetailFragment: BaseFragment() {
                 this.addAll(statesResponse.map { it.name })
             }
             spStates.adapter = Constants.getAdapter(requireContext(), stateValues)
+            book?.let {
+                setState(it)
+            }
         })
 
         viewModel.bookDetailLoading.observe(viewLifecycleOwner, { isLoading ->
@@ -288,9 +296,9 @@ class BookDetailFragment: BaseFragment() {
             btReadMoreSummary.visibility = View.GONE
         }
 
-        //TODO set format
+        setFormat(book)
 
-        //TODO set state
+        setState(book)
 
         llTitles1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
@@ -323,5 +331,29 @@ class BookDetailFragment: BaseFragment() {
 
         llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+    }
+
+    private fun setFormat(book: BookResponse) {
+
+        var formatPosition = 0
+        book.format?.let { formatId ->
+
+            val formatName = formats?.firstOrNull { it.id == formatId }?.name
+            val pos = formatValues.indexOf(formatName)
+            formatPosition = if(pos > 0) pos else 0
+        }
+        spFormats.setSelection(formatPosition)
+    }
+
+    private fun setState(book: BookResponse) {
+
+        var statePosition = 0
+        book.state?.let { stateId ->
+
+            val stateName = states?.firstOrNull { it.id == stateId }?.name
+            val pos = stateValues.indexOf(stateName)
+            statePosition = if(pos > 0) pos else 0
+        }
+        spStates.setSelection(statePosition)
     }
 }
