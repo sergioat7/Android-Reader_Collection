@@ -39,4 +39,5 @@
     <string name="select_a_date">Select a date</string>
     <string name="select_format">Select a format</string>
     <string name="select_state">Select a state</string>
+    <string name="is_favourite">Is Favourite</string>
 </resources>
