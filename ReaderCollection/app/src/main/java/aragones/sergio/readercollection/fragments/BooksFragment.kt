@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import kotlinx.android.synthetic.main.fragment_books.*
 
@@ -59,10 +60,11 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
     private fun initializeUI() {
 
+        val application = activity?.application ?: return
         srlBooks = swipe_refresh_layout_books
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
-        viewModel = ViewModelProvider(this).get(BooksViewModel::class.java)
+        viewModel = ViewModelProvider(this, BooksViewModelFactory(application)).get(BooksViewModel::class.java)
         booksAdapter = BooksAdapter(
             /*viewModel.books.value ?: */mutableListOf(),
             requireContext(),
