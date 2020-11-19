@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 20/10/2020
  */
 
-package aragones.sergio.readercollection.injection
+package aragones.sergio.readercollection.injection.modules
 
 import android.content.Context
 import android.content.SharedPreferences

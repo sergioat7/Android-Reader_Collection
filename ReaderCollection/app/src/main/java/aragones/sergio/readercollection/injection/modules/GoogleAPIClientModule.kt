@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 7/11/2020
  */
 
-package aragones.sergio.readercollection.injection
+package aragones.sergio.readercollection.injection.modules
 
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
 import dagger.Module

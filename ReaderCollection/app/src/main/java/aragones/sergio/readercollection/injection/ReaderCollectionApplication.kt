@@ -6,6 +6,9 @@
 package aragones.sergio.readercollection.injection
 
 import android.app.Application
+import aragones.sergio.readercollection.injection.components.*
+import aragones.sergio.readercollection.injection.modules.GoogleAPIClientModule
+import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 
 class ReaderCollectionApplication: Application() {
 
@@ -13,18 +16,32 @@ class ReaderCollectionApplication: Application() {
 
     lateinit var sharedPreferencesComponent: SharedPreferencesComponent
     lateinit var googleApiClientComponent: GoogleAPIClientComponent
+    lateinit var booksComponent: BooksComponent
 
     //MARK: - Lifecycle methods
 
     override fun onCreate() {
         super.onCreate()
 
-        sharedPreferencesComponent = DaggerSharedPreferencesComponent.builder().sharedPreferencesModule(
-            SharedPreferencesModule(applicationContext)
-        ).build()
+        sharedPreferencesComponent = DaggerSharedPreferencesComponent.builder()
+            .sharedPreferencesModule(
+                SharedPreferencesModule(applicationContext)
+            )
+            .build()
 
-        googleApiClientComponent = DaggerGoogleAPIClientComponent.builder().googleAPIClientModule(
-            GoogleAPIClientModule()
-        ).build()
+        googleApiClientComponent = DaggerGoogleAPIClientComponent.builder()
+            .googleAPIClientModule(
+                GoogleAPIClientModule()
+            )
+            .build()
+
+        booksComponent = DaggerBooksComponent.builder()
+            .sharedPreferencesModule(
+                SharedPreferencesModule(applicationContext)
+            )
+            .googleAPIClientModule(
+                GoogleAPIClientModule()
+            )
+            .build()
     }
 }

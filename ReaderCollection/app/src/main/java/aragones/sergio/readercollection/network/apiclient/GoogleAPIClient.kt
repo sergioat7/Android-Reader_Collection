@@ -11,7 +11,7 @@ import aragones.sergio.readercollection.network.apiservice.GooglePIService
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.core.Single
 
-class GoogleAPIClient() {
+class GoogleAPIClient {
 
     private val api = APIClient.googleRetrofit.create(GooglePIService::class.java)
 
