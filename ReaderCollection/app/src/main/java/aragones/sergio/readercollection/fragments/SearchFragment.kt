@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
@@ -56,8 +57,8 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
     override fun onItemClick(bookId: String) {
 
-        val params = mapOf(Constants.BOOK_ID to bookId)
-        //TODO go to Book id
+        val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to true)
+        launchActivityWithExtras(BookDetailActivity::class.java, params)
     }
 
     //MARK: - Public methods

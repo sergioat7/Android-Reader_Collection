@@ -10,8 +10,9 @@ import aragones.sergio.readercollection.network.apiservice.FormatAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class FormatAPIClient(
+class FormatAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 

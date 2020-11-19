@@ -2,7 +2,6 @@
     <string name="app_name">Reader Collection</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
-    <string name="title_activity_main">MainActivity</string>
     <string name="title_books">Books</string>
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
@@ -25,4 +24,19 @@
     <string name="search_books">Search books</string>
     <string name="error_server">There was an error on getting data. Please, try again</string>
     <string name="error_search">You must provide a text to search</string>
+    <string name="new_book">New</string>
+    <string name="description">Description</string>
+    <string name="read_more">Read more</string>
+    <string name="authors_text">By %s</string>
+    <string name="publisher">Publisher</string>
+    <string name="published_date">Published date</string>
+    <string name="isbn">ISBN</string>
+    <string name="pages">Pages</string>
+    <string name="reading_date">Reading date</string>
+    <string name="format">Format</string>
+    <string name="state">State</string>
+    <string name="summary">Summary</string>
+    <string name="select_a_date">Select a date</string>
+    <string name="select_format">Select a format</string>
+    <string name="select_state">Select a state</string>
 </resources>

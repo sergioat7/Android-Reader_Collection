@@ -10,11 +10,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.ReaderCollection">
+        android:supportsRtl="true">
+        <activity
+            android:name=".activities.BookDetailActivity"
+            android:theme="@style/Theme.ReaderCollection.NoActionBar"
+            android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.MainActivity"
-            android:label="@string/title_activity_main" />
+            android:theme="@style/Theme.ReaderCollection"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activities.RegisterActivity"
             android:theme="@style/Theme.ReaderCollection.NoActionBar" />
