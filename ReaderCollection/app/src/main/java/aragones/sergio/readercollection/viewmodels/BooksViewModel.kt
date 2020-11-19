@@ -12,9 +12,4 @@ import androidx.lifecycle.ViewModel
 class BooksViewModel: ViewModel() {
 
     //MARK: - Private properties
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is books Fragment"
-    }
-    val text: LiveData<String> = _text
 }
