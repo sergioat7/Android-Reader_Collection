@@ -82,6 +82,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
+            true,
             requireContext(),
             this
         )

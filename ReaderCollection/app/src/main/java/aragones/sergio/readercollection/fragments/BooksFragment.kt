@@ -66,7 +66,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         ivNoResults = image_view_no_results
         viewModel = ViewModelProvider(this, BooksViewModelFactory(application)).get(BooksViewModel::class.java)
         booksAdapter = BooksAdapter(
-            /*viewModel.books.value ?: */mutableListOf(),
+            viewModel.books.value ?: mutableListOf(),
+            false,
             requireContext(),
             this
         )
@@ -74,24 +75,36 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
         srlBooks.setOnRefreshListener {
 
-            //TODO reload data
-            //TODO get books
+            viewModel.reloadData()
+            viewModel.getBooks()
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
-        rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    //TODO get books
-                }
-            }
-        })
+        viewModel.getBooks()
     }
 
     private fun setupBindings() {
-        //TODO use ViewModel
+
+        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
+
+            if (booksResponse.isEmpty()) {
+
+                booksAdapter.resetList()
+                ivNoResults.visibility = View.VISIBLE
+            } else {
+
+                booksAdapter.addBooks(booksResponse)
+                ivNoResults.visibility = View.GONE
+            }
+        })
+
+        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+            srlBooks.isRefreshing = isLoading
+        })
+
+        viewModel.booksError.observe(viewLifecycleOwner, { error ->
+            manageError(error)
+        })
     }
 }

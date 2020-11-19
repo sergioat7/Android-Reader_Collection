@@ -22,7 +22,7 @@ itemView: View
 
     //MARK: - Public methods
 
-    fun fillData(book: BookResponse, context: Context) {
+    fun fillData(book: BookResponse, isGoogleBook: Boolean, context: Context) {
 
         val image = book.thumbnail?.replace("http", "https") ?: "-"
         val errorImage = if (Constants.isDarkMode(context)) R.drawable.default_book_cover_dark else R.drawable.default_book_cover_light
@@ -45,9 +45,13 @@ itemView: View
                 }
             })
 
-        itemView.text_view_title.text = book.title
+        itemView.text_view_title.text = StringBuilder()
+            .append(book.title ?: "")
+            .append(" ")
+            .append(book.subtitle ?: "")
+            .toString()
 
-        val rating = book.averageRating / 2
+        val rating = if (isGoogleBook) book.averageRating / 2 else book.rating / 2
         itemView.rating_bar.rating = rating.toFloat()
         itemView.text_view_rating.text = rating.toString()
         itemView.linear_layout_rating.visibility = if (rating > 0) View.VISIBLE else View.GONE
