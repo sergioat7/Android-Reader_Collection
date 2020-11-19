@@ -5,11 +5,12 @@
 
 package aragones.sergio.readercollection.viewmodels
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.repositories.BooksRepository
+import javax.inject.Inject
 
-class BooksViewModel: ViewModel() {
-
-    //MARK: - Private properties
+class BooksViewModel @Inject constructor(
+    private val booksRepository: BooksRepository
+): ViewModel() {
+    //TODO use ViewModel
 }
