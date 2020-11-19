@@ -54,7 +54,9 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var btReadMoreSummary: Button
     private lateinit var llTitles1: LinearLayout
     private lateinit var llValues1: LinearLayout
+    private lateinit var pbLoadingFormats: ProgressBar
     private lateinit var spFormats: Spinner
+    private lateinit var pbLoadingStates: ProgressBar
     private lateinit var spStates: Spinner
     private lateinit var tvIsbn: TextView
     private lateinit var tvPageCount: TextView
@@ -124,7 +126,9 @@ class BookDetailFragment: BaseFragment() {
         btReadMoreSummary = button_read_more_summary
         llTitles1 = linear_layout_titles_1
         llValues1 = linear_layout_values_1
+        pbLoadingFormats = progress_bar_loading_formats
         spFormats = spinner_formats
+        pbLoadingStates = progress_bar_loading_states
         spStates = spinner_states
         tvIsbn = text_view_isbn
         tvPageCount = text_view_page_count
@@ -198,11 +202,11 @@ class BookDetailFragment: BaseFragment() {
         })
 
         viewModel.bookDetailFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
-            //TODO show/hide states loading
+            pbLoadingFormats.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
         })
 
         viewModel.bookDetailStatesLoading.observe(viewLifecycleOwner, { isLoading ->
-            //TODO show/hide states loading
+            pbLoadingStates.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
         })
 
         viewModel.bookDetailError.observe(viewLifecycleOwner, {

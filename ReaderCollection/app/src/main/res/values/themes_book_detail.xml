@@ -106,10 +106,12 @@
 
     <style name="CustomSpinner.Left">
         <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
 
     <style name="CustomSpinner.Right">
         <item name="android:layout_marginStart">5dp</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
 
 </resources>

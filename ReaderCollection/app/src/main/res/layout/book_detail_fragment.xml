@@ -234,6 +234,33 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linear_layout_loadings"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toTopOf="@+id/linear_layout_values_1"
+                app:layout_constraintBottom_toBottomOf="@+id/linear_layout_values_1"
+                app:layout_constraintStart_toStartOf="@+id/linear_layout_values_1"
+                app:layout_constraintEnd_toEndOf="@+id/linear_layout_values_1"
+                >
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_formats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_states"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/linear_layout_values_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
