@@ -17,6 +17,7 @@ import java.util.ArrayList
 
 class BooksAdapter(
     var books: MutableList<BookResponse>,
+    private val isGoogleBook: Boolean,
     private val context: Context,
     private var onItemClickListener: OnItemClickListener
 ): RecyclerView.Adapter<BooksViewHolder?>() {
@@ -38,7 +39,11 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: BooksViewHolder, position: Int) {
 
         val book = books[position]
-        holder.fillData(book, context)
+        holder.fillData(
+            book,
+            isGoogleBook,
+            context
+        )
 
         holder.itemView.setOnClickListener {
             onItemClickListener.onItemClick(book.id)

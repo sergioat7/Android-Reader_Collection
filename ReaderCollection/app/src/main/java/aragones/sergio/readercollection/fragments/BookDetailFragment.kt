@@ -6,11 +6,15 @@
 package aragones.sergio.readercollection.fragments
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.text.InputType
 import android.view.*
 import android.widget.*
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.setReadOnly
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -208,7 +212,7 @@ class BookDetailFragment: BaseFragment() {
 
     private fun showData(book: BookResponse) {
 
-        val image = book.image?.replace("http", "https") ?: "-"
+        val image = book.image?.replace("http", "https") ?: book.thumbnail?.replace("http", "https") ?: "-"
         Picasso
             .get()
             .load(image)
@@ -243,7 +247,11 @@ class BookDetailFragment: BaseFragment() {
         llRating.visibility = if (hideRating) View.INVISIBLE else View.VISIBLE
         tvNoRatings.visibility = if (hideRating) View.VISIBLE else View.GONE
 
-        tvTitle.text = book.title
+        tvTitle.text = StringBuilder()
+            .append(book.title ?: "")
+            .append(" ")
+            .append(book.subtitle ?: "")
+            .toString()
 
         var authors = Constants.listToString(book.authors)
         if (authors.isEmpty()) {
@@ -297,8 +305,12 @@ class BookDetailFragment: BaseFragment() {
         }
 
         setFormat(book)
+        spFormats.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        spFormats.isEnabled = false
 
         setState(book)
+        spStates.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        spStates.isEnabled = false
 
         llTitles1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
@@ -328,6 +340,7 @@ class BookDetailFragment: BaseFragment() {
             readingDate = Constants.NO_VALUE
         }
         etReadingDate.setText(readingDate)
+        etReadingDate.setReadOnly(true, InputType.TYPE_NULL, 0)
 
         llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
