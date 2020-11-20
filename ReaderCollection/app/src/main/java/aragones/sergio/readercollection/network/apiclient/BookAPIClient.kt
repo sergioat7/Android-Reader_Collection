@@ -41,7 +41,7 @@ class BookAPIClient @Inject constructor(
         return api.getBooks(headers, queryParams).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getBookObserver(googleId: String): Single<BookResponse> {
+    fun getBookObserver(googleId: String): Maybe<BookResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()

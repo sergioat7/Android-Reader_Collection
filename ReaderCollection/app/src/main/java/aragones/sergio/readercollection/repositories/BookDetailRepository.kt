@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ class BookDetailRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun getBook(googleId: String): Single<BookResponse> {
+    fun getBook(googleId: String): Maybe<BookResponse> {
         return bookAPIClient.getBookObserver(googleId)
     }
 
