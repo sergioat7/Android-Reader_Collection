@@ -174,15 +174,9 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
-            if (booksResponse.isEmpty()) {
-
-                booksAdapter.resetList()
-                ivNoResults.visibility = View.VISIBLE
-            } else {
-
-                booksAdapter.addBooks(booksResponse)
-                ivNoResults.visibility = View.GONE
-            }
+            ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
+            booksAdapter.resetList()
+            booksAdapter.addBooks(booksResponse)
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
