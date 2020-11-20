@@ -66,6 +66,11 @@ class BookDetailViewModel @Inject constructor(
         } else {
 
             bookDetailRepository.getBook(bookId).subscribeBy(
+                onComplete = {
+
+                    _bookDetailLoading.value = false
+                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                },
                 onSuccess = {
 
                     _book.value = it

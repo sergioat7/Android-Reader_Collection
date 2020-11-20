@@ -24,7 +24,7 @@ interface BookAPIService {
         "Accept:application/json"
     )
     @GET("book/{googleId}")
-    fun getBook(@HeaderMap headers: Map<String, String>, @Path(value = "googleId") googleId: String): Single<BookResponse>
+    fun getBook(@HeaderMap headers: Map<String, String>, @Path(value = "googleId") googleId: String): Maybe<BookResponse>
 
     @Headers(
         "Content-Type:application/json"
