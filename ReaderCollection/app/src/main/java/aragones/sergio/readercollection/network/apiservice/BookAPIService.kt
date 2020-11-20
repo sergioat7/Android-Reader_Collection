@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.network.apiservice
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.requests.FavouriteBook
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
@@ -17,7 +18,7 @@ interface BookAPIService {
         "Accept:application/json"
     )
     @GET("books")
-    fun getBooks(@HeaderMap headers: Map<String, String>, @QueryMap queryParams: Map<String, String>): Single<List<BookResponse>>
+    fun getBooks(@HeaderMap headers: Map<String, String>, @QueryMap queryParams: Map<String, String>): Maybe<List<BookResponse>>
 
     @Headers(
         "Accept:application/json"

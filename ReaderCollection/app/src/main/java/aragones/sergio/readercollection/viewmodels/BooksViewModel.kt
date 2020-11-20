@@ -50,6 +50,11 @@ class BooksViewModel @Inject constructor(
 
         _booksLoading.value = true
         booksRepository.getBooks(format, state, isFavourite).subscribeBy(
+            onComplete = {
+
+                _books.value = mutableListOf()
+                _booksLoading.value = false
+            },
             onSuccess = {
 
                 _books.value = it.toMutableList()
