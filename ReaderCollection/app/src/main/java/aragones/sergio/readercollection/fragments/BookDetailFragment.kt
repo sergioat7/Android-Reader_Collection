@@ -202,11 +202,11 @@ class BookDetailFragment: BaseFragment() {
         })
 
         viewModel.bookDetailFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingFormats.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
+            pbLoadingFormats.visibility = if(isLoading) View.VISIBLE else View.GONE
         })
 
         viewModel.bookDetailStatesLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingStates.visibility = if(isLoading) View.VISIBLE else View.INVISIBLE
+            pbLoadingStates.visibility = if(isLoading) View.VISIBLE else View.GONE
         })
 
         viewModel.bookDetailError.observe(viewLifecycleOwner, {
