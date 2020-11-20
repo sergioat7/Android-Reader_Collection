@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -24,7 +25,7 @@ class BooksRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun getBooks(format: String?, state: String?, isFavourite: Boolean?): Single<List<BookResponse>> {
+    fun getBooks(format: String?, state: String?, isFavourite: Boolean?): Maybe<List<BookResponse>> {
         return bookAPIClient.getBooksObserver(format, state, isFavourite)
     }
 
