@@ -3,7 +3,7 @@
     <style name="Theme.ReaderCollection" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
-        <item name="titleTextColor">@color/colorSecondary</item>
+        <item name="titleTextColor">@color/textTertiary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_light</item>
     </style>
 
@@ -14,14 +14,14 @@
 
     <style name="BottomMenu">
         <item name="android:background">@color/colorPrimary</item>
-        <item name="itemTextColor">@color/colorSecondary</item>
+        <item name="itemTextColor">@color/textTertiary</item>
         <item name="labelVisibilityMode">labeled</item>
         <item name="menu">@menu/bottom_nav_menu</item>
     </style>
 
     <style name="RoundedButton" parent="android:style/Widget.Button">
         <item name="android:layout_width">200dp</item>
-        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:textColor">@color/textTertiary</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:textSize">16sp</item>
         <item name="android:textAllCaps">false</item>
@@ -53,7 +53,19 @@
         <item name="android:background">@color/colorPrimary</item>
         <item name="android:text">@string/accept</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:textColor">@color/textTertiary</item>
+    </style>
+
+    <style name="CustomSpinner" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:minHeight">30dp</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="SpinnerTextView">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
 </resources>

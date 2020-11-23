@@ -12,6 +12,7 @@
     <color name="textPrimaryLight">#750D1A5E</color>
     <color name="textSecondary">#585858</color>
     <color name="textSecondaryLight">#75585858</color>
-    <color name="textTertiary">#CECDCE</color>
+    <color name="textTertiary">#FFFFFF</color>
+    <color name="textTertiaryLight">#75FFFFFF</color>
 
 </resources>

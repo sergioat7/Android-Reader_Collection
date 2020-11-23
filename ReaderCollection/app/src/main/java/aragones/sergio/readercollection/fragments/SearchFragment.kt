@@ -155,7 +155,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             })
         }
 
-        val color = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
+        val color = ContextCompat.getColor(requireActivity(), R.color.textTertiary)
 
         val searchIconId = searchView.context.resources.getIdentifier(
             "android:id/search_mag_icon",
