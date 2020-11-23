@@ -132,7 +132,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
-        spFavourite.adapter = Constants.getAdapter(requireContext(), favouriteValues, true)
+        spFavourite.adapter = Constants.getAdapter(requireContext(), favouriteValues, true, true)
         spFavourite.backgroundTintList = ColorStateList.valueOf(
             ContextCompat.getColor(
                 requireActivity(),
@@ -188,7 +188,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 this.add(resources.getString((R.string.none)))
                 this.addAll(formatsResponse.map { it.name })
             }
-            spFormats.adapter = Constants.getAdapter(requireContext(), formatValues, true)
+            spFormats.adapter = Constants.getAdapter(requireContext(), formatValues, true, true)
             spFormats.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
                     requireActivity(),
@@ -206,7 +206,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 this.add(resources.getString((R.string.none)))
                 this.addAll(statesResponse.map { it.name })
             }
-            spStates.adapter = Constants.getAdapter(requireContext(), stateValues, true)
+            spStates.adapter = Constants.getAdapter(requireContext(), stateValues, true, true)
             spStates.backgroundTintList = ColorStateList.valueOf(
                 ContextCompat.getColor(
                     requireActivity(),
