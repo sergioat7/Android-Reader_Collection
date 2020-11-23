@@ -17,13 +17,15 @@ import aragones.sergio.readercollection.R
 class SpinnerAdapter(
     private val ctx: Context,
     private val values: List<String>,
-    private val firstOptionEnabled: Boolean
+    private val firstOptionEnabled: Boolean,
+    private val rounded: Boolean
 ): ArrayAdapter<Any?>(ctx, R.layout.spinner_dropdown_item, values) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
+        val layout = if (rounded) R.layout.spinner_rounded_item else R.layout.spinner_item
         val listItem = convertView ?: LayoutInflater.from(ctx).inflate(
-            R.layout.spinner_item,
+            layout,
             parent,
             false
         )
@@ -31,7 +33,11 @@ class SpinnerAdapter(
         val tvValue = listItem.findViewById<TextView>(R.id.text_view_value)
         tvValue.text = values[position]
 
-        val colorId = if(position == 0 && !firstOptionEnabled) R.color.textSecondaryLight else R.color.textSecondary
+        val colorId = if (rounded) {
+            if(position == 0 && !firstOptionEnabled) R.color.textTertiaryLight else R.color.textTertiary
+        } else {
+            if(position == 0 && !firstOptionEnabled) R.color.textSecondaryLight else R.color.textSecondary
+        }
         tvValue.setTextColor(ContextCompat.getColor(ctx, colorId))
 
         return listItem
