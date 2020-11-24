@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,7 +13,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ProgressBar
 import android.widget.Spinner
-import androidx.core.content.ContextCompat
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +22,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
@@ -44,8 +44,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private lateinit var ivNoResults: View
     private lateinit var viewModel: BooksViewModel
     private lateinit var booksAdapter: BooksAdapter
-    private lateinit var formatValues: ArrayList<String>
-    private lateinit var stateValues: ArrayList<String>
+    private lateinit var formatValues: MutableList<String>
+    private lateinit var stateValues: MutableList<String>
     private lateinit var favouriteValues: List<String>
 
     //MARK: - Lifecycle methods
@@ -129,18 +129,10 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
-        val favouriteSpinner = Constants.getAdapter(
-            context = requireContext(),
-            data = favouriteValues,
-            firstOptionEnabled = true,
-            rounded = true,
-            title = resources.getString(R.string.favourite))
-        spFavourite.adapter = favouriteSpinner
-        spFavourite.backgroundTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(
-                requireActivity(),
-                R.color.colorPrimary
-            )
+        createSpinner(
+            spFavourite,
+            favouriteValues,
+            resources.getString(R.string.favourite)
         )
 
         val pos = when(viewModel.isFavourite.value) {
@@ -187,13 +179,13 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
 
             fillFormats(formatsResponse)
-            spFormats.adapter = Constants.getAdapter(
-                context = requireContext(),
-                data = formatValues,
-                firstOptionEnabled = true,
-                rounded = true,
-                title = resources.getString(R.string.format))
-            val selectedFormatName = viewModel.formats.value?.firstOrNull { it.id == viewModel.selectedFormat.value }?.name
+            createSpinner(
+                spFormats,
+                formatValues,
+                resources.getString(R.string.format)
+            )
+
+            val selectedFormatName = getSelectedValue( viewModel.formats, viewModel.selectedFormat)?.name
             spFormats.setSelection(
                 formatValues.indexOf(selectedFormatName)
             )
@@ -202,13 +194,13 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
 
             fillStates(statesResponse)
-            spStates.adapter = Constants.getAdapter(
-                context = requireContext(),
-                data = stateValues,
-                firstOptionEnabled = true,
-                rounded = true,
-                title = resources.getString(R.string.state))
-            val selectedStateName = viewModel.states.value?.firstOrNull { it.id == viewModel.selectedState.value }?.name
+            createSpinner(
+                spStates,
+                stateValues,
+                resources.getString(R.string.state)
+            )
+
+            val selectedStateName = getSelectedValue( viewModel.states, viewModel.selectedState)?.name
             spStates.setSelection(
                 stateValues.indexOf(selectedStateName)
             )
@@ -233,25 +225,36 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
     private fun fillFormats(formatsResponse: List<FormatResponse>?) {
 
-        formatValues = ArrayList()
+        formatValues = mutableListOf()
+        formatValues.add(resources.getString((R.string.none)))
         formatsResponse?.let {
-            formatValues.run {
-
-                this.add(resources.getString((R.string.none)))
-                this.addAll(formatsResponse.map { it.name })
-            }
+            formatValues.addAll(formatsResponse.map { it.name })
         }
     }
 
     private fun fillStates(statesResponse: List<StateResponse>?) {
 
-        stateValues = ArrayList()
+        stateValues = mutableListOf()
+        stateValues.add(resources.getString((R.string.none)))
         statesResponse?.let {
-            stateValues.run {
-
-                this.add(resources.getString((R.string.none)))
-                this.addAll(statesResponse.map { it.name })
-            }
+            stateValues.addAll(statesResponse.map { it.name })
         }
+    }
+
+    private fun createSpinner(spinner: Spinner,
+                              values: List<String>,
+                              title: String) {
+
+        spinner.adapter = Constants.getAdapter(
+            context = requireContext(),
+            data = values,
+            firstOptionEnabled = true,
+            rounded = true,
+            title = title)
+    }
+
+    private fun <T: BaseModel<String>> getSelectedValue(values: LiveData<List<T>>,
+                                                        selectedValue: LiveData<String?>): T? {
+        return values.value?.firstOrNull { it.id == selectedValue.value }
     }
 }
