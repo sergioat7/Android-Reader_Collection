@@ -286,15 +286,17 @@ class Constants {
         fun getAdapter(context: Context,
                        data: List<String>,
                        firstOptionEnabled: Boolean = false,
-                       rounded: Boolean = false): SpinnerAdapter {
+                       rounded: Boolean = false,
+                       title: String? = null): SpinnerAdapter {
 
-            val arrayAdapter = SpinnerAdapter(
+            val spinnerAdapter = SpinnerAdapter(
                 context,
                 data,
                 firstOptionEnabled,
-                rounded)
-            arrayAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
-            return arrayAdapter
+                rounded,
+                title)
+            spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            return spinnerAdapter
         }
     }
 }
