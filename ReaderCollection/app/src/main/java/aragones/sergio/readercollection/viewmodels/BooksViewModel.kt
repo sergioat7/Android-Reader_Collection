@@ -23,7 +23,7 @@ class BooksViewModel @Inject constructor(
 
     //MARK: - Private properties
 
-    private val _books = MutableLiveData<MutableList<BookResponse>>()
+    private val _books = MutableLiveData<List<BookResponse>>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
@@ -36,7 +36,7 @@ class BooksViewModel @Inject constructor(
 
     //MARK: - Public properties
 
-    val books: LiveData<MutableList<BookResponse>> = _books
+    val books: LiveData<List<BookResponse>> = _books
     val formats: LiveData<List<FormatResponse>> = _formats
     val states: LiveData<List<StateResponse>> = _states
     val booksLoading: LiveData<Boolean> = _booksLoading
@@ -55,12 +55,12 @@ class BooksViewModel @Inject constructor(
         booksRepository.getBooks(_selectedFormat.value, _selectedState.value, _isFavourite.value).subscribeBy(
             onComplete = {
 
-                _books.value = mutableListOf()
+                _books.value = listOf()
                 _booksLoading.value = false
             },
             onSuccess = {
 
-                _books.value = it.toMutableList()
+                _books.value = it
                 _booksLoading.value = false
             },
             onError = {
@@ -82,7 +82,7 @@ class BooksViewModel @Inject constructor(
             },
             onError = {
 
-                _formats.value = ArrayList()
+                _formats.value = listOf()
                 _booksFormatsLoading.value = false
             }
         )
@@ -99,7 +99,7 @@ class BooksViewModel @Inject constructor(
             },
             onError = {
 
-                _states.value = ArrayList()
+                _states.value = listOf()
                 _booksStatesLoading.value = false
             }
         )
