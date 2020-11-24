@@ -30,9 +30,9 @@ class BooksViewModel @Inject constructor(
     private val _booksFormatsLoading = MutableLiveData<Boolean>()
     private val _booksStatesLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private var format: String? = null
-    private var state: String? = null
-    private var isFavourite: Boolean? = null
+    private var _selectedFormat = MutableLiveData<String?>()
+    private var _selectedState = MutableLiveData<String?>()
+    private var _isFavourite = MutableLiveData<Boolean?>()
 
     //MARK: - Public properties
 
@@ -43,13 +43,16 @@ class BooksViewModel @Inject constructor(
     val booksFormatsLoading: LiveData<Boolean> = _booksFormatsLoading
     val booksStatesLoading: LiveData<Boolean> = _booksStatesLoading
     val booksError: LiveData<ErrorResponse> = _booksError
+    val selectedFormat: LiveData<String?> = _selectedFormat
+    val selectedState: LiveData<String?> = _selectedState
+    val isFavourite: LiveData<Boolean?> = _isFavourite
 
     //MARK: - Public methods
 
     fun getBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(format, state, isFavourite).subscribeBy(
+        booksRepository.getBooks(_selectedFormat.value, _selectedState.value, _isFavourite.value).subscribeBy(
             onComplete = {
 
                 _books.value = mutableListOf()
@@ -107,14 +110,14 @@ class BooksViewModel @Inject constructor(
     }
 
     fun setFormat(format: String?) {
-        this.format = format
+        _selectedFormat.value = format
     }
 
     fun setState(state: String?) {
-        this.state = state
+        _selectedState.value = state
     }
 
     fun setFavourite(isFavourite: Boolean?) {
-        this.isFavourite = isFavourite
+        _isFavourite.value = isFavourite
     }
 }

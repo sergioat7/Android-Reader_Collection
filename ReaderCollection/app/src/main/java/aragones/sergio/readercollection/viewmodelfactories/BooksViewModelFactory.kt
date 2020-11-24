@@ -43,6 +43,9 @@ class BooksViewModelFactory(
         if (modelClass.isAssignableFrom(BooksViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).sharedPreferencesComponent.inject(this)
+            booksViewModel.getFormats()
+            booksViewModel.getStates()
+            booksViewModel.getBooks()
             return booksViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

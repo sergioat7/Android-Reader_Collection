@@ -44,10 +44,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private lateinit var ivNoResults: View
     private lateinit var viewModel: BooksViewModel
     private lateinit var booksAdapter: BooksAdapter
-    private var formats: List<FormatResponse>? = null
-    private var formatValues = ArrayList<String>()
-    private var states: List<StateResponse>? = null
-    private var stateValues = ArrayList<String>()
+    private lateinit var formatValues: ArrayList<String>
+    private lateinit var stateValues: ArrayList<String>
     private lateinit var favouriteValues: List<String>
 
     //MARK: - Lifecycle methods
@@ -100,13 +98,13 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         spFormats.onItemSelectedListener = object: OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
-                selectedItemView: View,
+                selectedItemView: View?,
                 position: Int,
                 id: Long
             ) {
 
                 val formatName = formatValues[position]
-                val formatId = formats?.firstOrNull { it.name == formatName }?.id
+                val formatId = viewModel.formats.value?.firstOrNull { it.name == formatName }?.id
                 viewModel.setFormat(formatId)
                 viewModel.getBooks()
             }
@@ -117,13 +115,13 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         spStates.onItemSelectedListener = object: OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
-                selectedItemView: View,
+                selectedItemView: View?,
                 position: Int,
                 id: Long
             ) {
 
                 val stateName = stateValues[position]
-                val stateId = states?.firstOrNull { it.name == stateName }?.id
+                val stateId = viewModel.states.value?.firstOrNull { it.name == stateName }?.id
                 viewModel.setState(stateId)
                 viewModel.getBooks()
             }
@@ -145,10 +143,16 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             )
         )
 
+        val pos = when(viewModel.isFavourite.value) {
+            true -> 1
+            false -> 2
+            else -> 0
+        }
+        spFavourite.setSelection(pos)
         spFavourite.onItemSelectedListener = object: OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
-                selectedItemView: View,
+                selectedItemView: View?,
                 position: Int,
                 id: Long
             ) {
@@ -169,10 +173,6 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
-
-        viewModel.getBooks()
-        viewModel.getFormats()
-        viewModel.getStates()
     }
 
     private fun setupBindings() {
@@ -193,6 +193,9 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 firstOptionEnabled = true,
                 rounded = true,
                 title = resources.getString(R.string.format))
+            val selectedFormatName = viewModel.formats.value?.firstOrNull { it.id == viewModel.selectedFormat.value }?.name
+            spFormats.setSelection(
+                formatValues.indexOf(selectedFormatName)
             )
         })
 
@@ -205,6 +208,9 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 firstOptionEnabled = true,
                 rounded = true,
                 title = resources.getString(R.string.state))
+            val selectedStateName = viewModel.states.value?.firstOrNull { it.id == viewModel.selectedState.value }?.name
+            spStates.setSelection(
+                stateValues.indexOf(selectedStateName)
             )
         })
 
