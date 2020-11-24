@@ -87,7 +87,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, BooksViewModelFactory(application)).get(BooksViewModel::class.java)
         booksAdapter = BooksAdapter(
-            viewModel.books.value ?: mutableListOf(),
+            viewModel.books.value?.toMutableList() ?: mutableListOf(),
             false,
             requireContext(),
             this
@@ -107,6 +107,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 val formatId = viewModel.formats.value?.firstOrNull { it.name == formatName }?.id
                 viewModel.setFormat(formatId)
                 viewModel.getBooks()
+                spFormats.requestLayout()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
@@ -124,6 +125,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 val stateId = viewModel.states.value?.firstOrNull { it.name == stateName }?.id
                 viewModel.setState(stateId)
                 viewModel.getBooks()
+                spStates.requestLayout()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
@@ -153,6 +155,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 val isFavourite = if(favouriteValue == resources.getString(R.string.yes)) true else if(favouriteValue == resources.getString(R.string.no)) false else null
                 viewModel.setFavourite(isFavourite)
                 viewModel.getBooks()
+                spFavourite.requestLayout()
             }
 
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
@@ -173,7 +176,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
             ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
             booksAdapter.resetList()
-            booksAdapter.addBooks(booksResponse)
+            booksAdapter.addBooks(booksResponse.toMutableList())
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -185,7 +188,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 resources.getString(R.string.format)
             )
 
-            val selectedFormatName = getSelectedValue( viewModel.formats, viewModel.selectedFormat)?.name
+            val selectedFormatName = getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
             spFormats.setSelection(
                 formatValues.indexOf(selectedFormatName)
             )
@@ -200,7 +203,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 resources.getString(R.string.state)
             )
 
-            val selectedStateName = getSelectedValue( viewModel.states, viewModel.selectedState)?.name
+            val selectedStateName = getSelectedValue(viewModel.states, viewModel.selectedState)?.name
             spStates.setSelection(
                 stateValues.indexOf(selectedStateName)
             )
