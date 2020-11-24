@@ -30,7 +30,6 @@ import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import kotlinx.android.synthetic.main.fragment_books.*
 
-
 class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
     //MARK: - Private properties
@@ -132,7 +131,13 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
-        spFavourite.adapter = Constants.getAdapter(requireContext(), favouriteValues, true, true)
+        val favouriteSpinner = Constants.getAdapter(
+            context = requireContext(),
+            data = favouriteValues,
+            firstOptionEnabled = true,
+            rounded = true,
+            title = resources.getString(R.string.favourite))
+        spFavourite.adapter = favouriteSpinner
         spFavourite.backgroundTintList = ColorStateList.valueOf(
             ContextCompat.getColor(
                 requireActivity(),
@@ -181,37 +186,25 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
 
-            formats = formatsResponse
-            formatValues = ArrayList()
-            formatValues.run {
-
-                this.add(resources.getString((R.string.none)))
-                this.addAll(formatsResponse.map { it.name })
-            }
-            spFormats.adapter = Constants.getAdapter(requireContext(), formatValues, true, true)
-            spFormats.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireActivity(),
-                    R.color.colorPrimary
-                )
+            fillFormats(formatsResponse)
+            spFormats.adapter = Constants.getAdapter(
+                context = requireContext(),
+                data = formatValues,
+                firstOptionEnabled = true,
+                rounded = true,
+                title = resources.getString(R.string.format))
             )
         })
 
         viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
 
-            states = statesResponse
-            stateValues = ArrayList()
-            stateValues.run {
-
-                this.add(resources.getString((R.string.none)))
-                this.addAll(statesResponse.map { it.name })
-            }
-            spStates.adapter = Constants.getAdapter(requireContext(), stateValues, true, true)
-            spStates.backgroundTintList = ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireActivity(),
-                    R.color.colorPrimary
-                )
+            fillStates(statesResponse)
+            spStates.adapter = Constants.getAdapter(
+                context = requireContext(),
+                data = stateValues,
+                firstOptionEnabled = true,
+                rounded = true,
+                title = resources.getString(R.string.state))
             )
         })
 
@@ -230,5 +223,29 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
+    }
+
+    private fun fillFormats(formatsResponse: List<FormatResponse>?) {
+
+        formatValues = ArrayList()
+        formatsResponse?.let {
+            formatValues.run {
+
+                this.add(resources.getString((R.string.none)))
+                this.addAll(formatsResponse.map { it.name })
+            }
+        }
+    }
+
+    private fun fillStates(statesResponse: List<StateResponse>?) {
+
+        stateValues = ArrayList()
+        statesResponse?.let {
+            stateValues.run {
+
+                this.add(resources.getString((R.string.none)))
+                this.addAll(statesResponse.map { it.name })
+            }
+        }
     }
 }

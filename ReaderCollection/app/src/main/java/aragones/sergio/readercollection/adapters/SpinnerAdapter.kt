@@ -18,8 +18,11 @@ class SpinnerAdapter(
     private val ctx: Context,
     private val values: List<String>,
     private val firstOptionEnabled: Boolean,
-    private val rounded: Boolean
+    private val rounded: Boolean,
+    private val title: String?
 ): ArrayAdapter<Any?>(ctx, R.layout.spinner_dropdown_item, values) {
+
+    //MARK: - Lifecycle methods
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
@@ -29,6 +32,11 @@ class SpinnerAdapter(
             parent,
             false
         )
+
+        if (rounded) {
+            val tvTitle = listItem.findViewById<TextView>(R.id.text_view_title)
+            tvTitle.text = title
+        }
 
         val tvValue = listItem.findViewById<TextView>(R.id.text_view_value)
         tvValue.text = values[position]

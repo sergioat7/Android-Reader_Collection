@@ -44,4 +44,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="error_no_book">There is no book with that id</string>
+    <string name="favourite">Favourite</string>
 </resources>

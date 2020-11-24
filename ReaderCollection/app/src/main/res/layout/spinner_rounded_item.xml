@@ -4,27 +4,49 @@
   ~ Created by Sergio Aragonés on 23/11/2020
   -->
 
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/SpinnerRoundedItem"
     >
 
     <TextView
-        android:id="@+id/text_view_value"
-        android:layout_width="match_parent"
+        android:id="@+id/text_view_title"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="0.1"
-        style="@style/SpinnerTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/BookDataTextView"
         />
 
-    <include
-        layout="@layout/image_view_arrow_dropdown"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:layout_weight="1"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+        style="@style/SpinnerRoundedItem"
+        >
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/text_view_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            style="@style/SpinnerTextView"
+            />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            layout="@layout/image_view_arrow_dropdown"
+            />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
