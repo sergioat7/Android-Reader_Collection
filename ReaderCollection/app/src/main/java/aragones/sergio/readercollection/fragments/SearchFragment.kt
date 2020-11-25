@@ -141,6 +141,9 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             searchView.isIconified = false
             searchView.isIconifiedByDefault = false
             searchView.queryHint = resources.getString(R.string.search_books)
+            if (viewModel.query.isNotBlank()) {
+                searchView.setQuery(viewModel.query, false)
+            }
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {

@@ -23,13 +23,13 @@ class SearchViewModel @Inject constructor(
     //MARK: - Private properties
 
     private var page: Int = 1
-    private var query: String = ""
     private val _books = MutableLiveData<MutableList<BookResponse>>()
     private val _searchLoading = MutableLiveData<Boolean>()
     private val _searchError = MutableLiveData<ErrorResponse>()
 
     //MARK: - Public properties
 
+    var query: String = ""
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
     val searchError: LiveData<ErrorResponse> = _searchError
