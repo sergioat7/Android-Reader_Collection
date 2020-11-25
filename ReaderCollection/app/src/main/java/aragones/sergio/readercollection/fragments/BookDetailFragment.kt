@@ -39,6 +39,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var ivBook: ImageView
     private lateinit var pbLoadingImage: ProgressBar
     private lateinit var fbFavourite: FloatingActionButton
+    private lateinit var pbLoadingFavourite: ProgressBar
     private lateinit var llRating: LinearLayout
     private lateinit var rbStars: MaterialRatingBar
     private lateinit var tvRatingCount: TextView
@@ -109,8 +110,9 @@ class BookDetailFragment: BaseFragment() {
     private fun initializeUI() {
 
         ivBook = image_view_book
-        pbLoadingImage = progress_bar_loading
+        pbLoadingImage = progress_bar_loading_image
         fbFavourite = floating_action_button_favourite
+        pbLoadingFavourite = progress_bar_loading_favourite
         llRating = linear_layout_rating
         rbStars = rating_bar
         tvRatingCount = text_view_rating_count
@@ -147,9 +149,13 @@ class BookDetailFragment: BaseFragment() {
 
         sharedPreferencesHandler = SharedPreferencesHandler(context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE))
 
-        etReadingDate.showDatePicker(requireContext())
-
         fbFavourite.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        pbLoadingFavourite.visibility = View.GONE
+        fbFavourite.setOnClickListener {
+            viewModel.setFavourite(!isFavourite)
+        }
+
+        etReadingDate.showDatePicker(requireContext())
     }
 
     private fun setupBindings() {
@@ -158,6 +164,12 @@ class BookDetailFragment: BaseFragment() {
 
             book = it
             showData(it)
+        })
+
+        viewModel.isFavourite.observe(viewLifecycleOwner, {
+
+            isFavourite = it
+            fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, context))
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -207,6 +219,12 @@ class BookDetailFragment: BaseFragment() {
             pbLoadingStates.visibility = if(isLoading) View.VISIBLE else View.GONE
         })
 
+        viewModel.bookDetailFavouriteLoading.observe(viewLifecycleOwner, { isLoading ->
+
+            fbFavourite.visibility = if(isLoading) View.INVISIBLE else View.VISIBLE
+            pbLoadingFavourite.visibility = if(isLoading) View.VISIBLE else View.GONE
+        })
+
         viewModel.bookDetailError.observe(viewLifecycleOwner, {
             manageError(it)
         })
@@ -230,14 +248,6 @@ class BookDetailFragment: BaseFragment() {
                     pbLoadingImage.visibility = View.GONE
                 }
             })
-
-        isFavourite = book.isFavourite
-        fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, context))
-        fbFavourite.setOnClickListener {
-
-            isFavourite = !isFavourite
-            fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, context))
-        }
 
         val rating = if (isGoogleBook) book.averageRating else book.rating
         rbStars.rating = rating.toFloat() / 2
