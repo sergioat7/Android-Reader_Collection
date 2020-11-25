@@ -69,10 +69,10 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     private var isFavourite: Boolean = false
     private var book: BookResponse? = null
-    private var formats: List<FormatResponse>? = null
-    private var formatValues = ArrayList<String>()
-    private var states: List<StateResponse>? = null
-    private var stateValues = ArrayList<String>()
+    private lateinit var formats: List<FormatResponse>
+    private lateinit var formatValues: MutableList<String>
+    private lateinit var states: List<StateResponse>
+    private lateinit var stateValues: MutableList<String>
 
     //MARK: - Lifecycle methods
 
@@ -140,6 +140,10 @@ class BookDetailFragment: BaseFragment() {
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application, bookId, isGoogleBook)).get(BookDetailViewModel::class.java)
         setupBindings()
+        formats = listOf()
+        formatValues = mutableListOf()
+        states = listOf()
+        stateValues = mutableListOf()
 
         sharedPreferencesHandler = SharedPreferencesHandler(context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE))
 
@@ -159,7 +163,7 @@ class BookDetailFragment: BaseFragment() {
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
 
             formats = formatsResponse
-            formatValues = ArrayList()
+            formatValues = mutableListOf()
             formatValues.run {
 
                 this.add(resources.getString((R.string.select_format)))
@@ -174,7 +178,7 @@ class BookDetailFragment: BaseFragment() {
         viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
 
             states = statesResponse
-            stateValues = ArrayList()
+            stateValues = mutableListOf()
             stateValues.run {
 
                 this.add(resources.getString((R.string.select_state)))
@@ -295,7 +299,7 @@ class BookDetailFragment: BaseFragment() {
 
         llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
 
-        btReadMoreSummary.visibility = if(summary == Constants.NO_VALUE) View.GONE else View.VISIBLE
+        btReadMoreSummary.visibility = if(summary == Constants.NO_VALUE || tvSummary.maxLines == Constants.MAX_LINES) View.GONE else View.VISIBLE
         btReadMoreSummary.setOnClickListener {
 
             tvSummary.maxLines = Constants.MAX_LINES
@@ -349,7 +353,7 @@ class BookDetailFragment: BaseFragment() {
         var formatPosition = 0
         book.format?.let { formatId ->
 
-            val formatName = formats?.firstOrNull { it.id == formatId }?.name
+            val formatName = formats.firstOrNull { it.id == formatId }?.name
             val pos = formatValues.indexOf(formatName)
             formatPosition = if(pos > 0) pos else 0
         }
@@ -361,7 +365,7 @@ class BookDetailFragment: BaseFragment() {
         var statePosition = 0
         book.state?.let { stateId ->
 
-            val stateName = states?.firstOrNull { it.id == stateId }?.name
+            val stateName = states.firstOrNull { it.id == stateId }?.name
             val pos = stateValues.indexOf(stateName)
             statePosition = if(pos > 0) pos else 0
         }
