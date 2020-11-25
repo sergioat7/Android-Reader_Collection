@@ -149,6 +149,8 @@ class BookDetailFragment: BaseFragment() {
 
         etReadingDate.showDatePicker(requireContext())
 
+        fbFavourite.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+
         viewModel.getBook()
         viewModel.getFormats()
         viewModel.getStates()
