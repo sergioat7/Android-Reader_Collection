@@ -19,7 +19,9 @@ import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
 
 class BookDetailViewModelFactory(
-    private val application: Application
+    private val application: Application,
+    private val bookId: String,
+    private val isGoogleBook: Boolean
 ): ViewModelProvider.Factory {
 
     //MARK: - Public properties
@@ -46,6 +48,11 @@ class BookDetailViewModelFactory(
         if (modelClass.isAssignableFrom(BookDetailViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).booksComponent.inject(this)
+            bookDetailViewModel.setBookId(bookId)
+            bookDetailViewModel.setIsGoogleBook(isGoogleBook)
+            bookDetailViewModel.getBook()
+            bookDetailViewModel.getFormats()
+            bookDetailViewModel.getStates()
             return bookDetailViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

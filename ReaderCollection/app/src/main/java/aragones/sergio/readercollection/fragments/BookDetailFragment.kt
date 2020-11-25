@@ -138,11 +138,7 @@ class BookDetailFragment: BaseFragment() {
         llValues4 = linear_layout_values_4
         etReadingDate = edit_text_reading_date
         val application = activity?.application ?: return
-        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application)).get(
-            BookDetailViewModel::class.java
-        )
-        viewModel.setBookId(bookId)
-        viewModel.setIsGoogleBook(isGoogleBook)
+        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application, bookId, isGoogleBook)).get(BookDetailViewModel::class.java)
         setupBindings()
 
         sharedPreferencesHandler = SharedPreferencesHandler(context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE))
@@ -150,10 +146,6 @@ class BookDetailFragment: BaseFragment() {
         etReadingDate.showDatePicker(requireContext())
 
         fbFavourite.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-
-        viewModel.getBook()
-        viewModel.getFormats()
-        viewModel.getStates()
     }
 
     private fun setupBindings() {
@@ -288,7 +280,7 @@ class BookDetailFragment: BaseFragment() {
         }
         tvDescription.text = description
 
-        btReadMoreDescription.visibility = if(description == Constants.NO_VALUE) View.GONE else View.VISIBLE
+        btReadMoreDescription.visibility = if(description == Constants.NO_VALUE || tvDescription.maxLines == Constants.MAX_LINES) View.GONE else View.VISIBLE
         btReadMoreDescription.setOnClickListener {
 
             tvDescription.maxLines = Constants.MAX_LINES
