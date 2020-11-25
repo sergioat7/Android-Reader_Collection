@@ -30,7 +30,7 @@
     <string name="format">Formato</string>
     <string name="state">Estado</string>
     <string name="favourite">Favorito</string>
-    <string name="none">Ninguno</string>
+    <string name="anything">Cualquiera</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
     <string name="search_books">Buscar libros</string>

@@ -7,7 +7,7 @@
 <resources>
 
     <string-array name="favourites">
-        <item>@string/none</item>
+        <item>@string/anything</item>
         <item>@string/yes</item>
         <item>@string/no</item>
     </string-array>

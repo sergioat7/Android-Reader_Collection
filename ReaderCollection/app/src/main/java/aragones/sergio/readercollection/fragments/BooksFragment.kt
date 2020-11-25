@@ -231,7 +231,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private fun fillFormats(formatsResponse: List<FormatResponse>?) {
 
         formatValues = mutableListOf()
-        formatValues.add(resources.getString((R.string.none)))
+        formatValues.add(resources.getString((R.string.anything)))
         formatsResponse?.let {
             formatValues.addAll(formatsResponse.map { it.name })
         }
@@ -240,7 +240,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private fun fillStates(statesResponse: List<StateResponse>?) {
 
         stateValues = mutableListOf()
-        stateValues.add(resources.getString((R.string.none)))
+        stateValues.add(resources.getString((R.string.anything)))
         statesResponse?.let {
             stateValues.addAll(statesResponse.map { it.name })
         }
