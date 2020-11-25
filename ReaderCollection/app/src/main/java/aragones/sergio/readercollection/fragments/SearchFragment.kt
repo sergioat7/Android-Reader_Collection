@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -105,6 +106,10 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 }
             }
         })
+
+        if (viewModel.query.isNotBlank()) {
+            (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, viewModel.query)
+        }
     }
 
     private fun setupBindings() {
@@ -141,6 +146,9 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             searchView.isIconified = false
             searchView.isIconifiedByDefault = false
             searchView.queryHint = resources.getString(R.string.search_books)
+            if (viewModel.query.isNotBlank()) {
+                searchView.setQuery(viewModel.query, false)
+            }
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
@@ -199,5 +207,6 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel.reloadData()
         viewModel.searchBooks()
         Constants.hideSoftKeyboard(requireActivity())
+        (activity as AppCompatActivity?)?.supportActionBar?.title = "\"" + query + "\""
     }
 }
