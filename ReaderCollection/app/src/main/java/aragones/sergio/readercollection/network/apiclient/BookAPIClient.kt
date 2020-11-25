@@ -11,6 +11,7 @@ import aragones.sergio.readercollection.network.apiservice.BookAPIService
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
@@ -20,7 +21,7 @@ class BookAPIClient @Inject constructor(
 
     private val api = APIClient.retrofit.create(BookAPIService::class.java)
 
-    fun getBooksObserver(format: String?, state: String?, isFavourite: Boolean?): Single<List<BookResponse>> {
+    fun getBooksObserver(format: String?, state: String?, isFavourite: Boolean?): Maybe<List<BookResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
@@ -40,7 +41,7 @@ class BookAPIClient @Inject constructor(
         return api.getBooks(headers, queryParams).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getBookObserver(googleId: String): Single<BookResponse> {
+    fun getBookObserver(googleId: String): Maybe<BookResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()

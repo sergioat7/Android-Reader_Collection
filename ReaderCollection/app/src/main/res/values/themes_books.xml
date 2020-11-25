@@ -6,6 +6,17 @@
 
 <resources>
 
+    <style name="CustomSpinner.Rounded">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="SpinnerRoundedItem">
+        <item name="android:background">@drawable/spinner_background</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:minHeight">30dp</item>
+    </style>
+
     <style name="BookNameTextView">
         <item name="android:layout_weight">1</item>
         <item name="android:textColor">@color/colorPrimary</item>
@@ -47,7 +58,7 @@
     <style name="RoundedTextView">
         <item name="android:gravity">center</item>
         <item name="android:background">@drawable/rounded_text_view</item>
-        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:textColor">@color/textTertiary</item>
         <item name="android:maxLines">1</item>
         <item name="fontFamily">@font/roboto_bold</item>
         <item name="android:textSize">14sp</item>
