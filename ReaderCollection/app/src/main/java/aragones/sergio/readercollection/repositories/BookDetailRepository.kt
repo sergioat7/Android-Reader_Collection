@@ -41,4 +41,8 @@ class BookDetailRepository @Inject constructor(
     fun getStates(): Single<List<StateResponse>> {
         return stateAPIClient.getStatesObserver()
     }
+
+    fun setFavourite(googleId: String, isFavourite: Boolean): Single<BookResponse> {
+        return bookAPIClient.setFavouriteBookObserver(googleId, isFavourite)
+    }
 }
