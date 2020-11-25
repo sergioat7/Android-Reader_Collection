@@ -13,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ProgressBar
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -177,6 +178,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
             booksAdapter.resetList()
             booksAdapter.addBooks(booksResponse.toMutableList())
+            setTitle(booksResponse.size)
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -259,5 +261,14 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private fun <T: BaseModel<String>> getSelectedValue(values: LiveData<List<T>>,
                                                         selectedValue: LiveData<String?>): T? {
         return values.value?.firstOrNull { it.id == selectedValue.value }
+    }
+
+    private fun setTitle(booksCount: Int) {
+
+        val title = when(booksCount) {
+            1 -> resources.getString(R.string.title_book, booksCount)
+            else -> resources.getString(R.string.title_books, booksCount)
+        }
+        (activity as AppCompatActivity?)?.supportActionBar?.title = title
     }
 }
