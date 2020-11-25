@@ -2,7 +2,8 @@
     <string name="app_name">Reader Collection</string>
     <string name="accept">Accept</string>
     <string name="cancel">Cancel</string>
-    <string name="title_books">Books</string>
+    <string name="title_books">%d Books</string>
+    <string name="title_book">%d Book</string>
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
     <string name="invalid_username">Not a valid username</string>
@@ -39,4 +40,10 @@
     <string name="select_a_date">Select a date</string>
     <string name="select_format">Select a format</string>
     <string name="select_state">Select a state</string>
+    <string name="is_favourite">Is Favourite</string>
+    <string name="none">None</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="error_no_book">There is no book with that id</string>
+    <string name="favourite">Favourite</string>
 </resources>

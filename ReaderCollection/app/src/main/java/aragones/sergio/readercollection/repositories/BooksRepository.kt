@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 11/11/2020
+ * Created by Sergio Aragonés on 19/11/2020
  */
 
 package aragones.sergio.readercollection.repositories
@@ -17,21 +17,16 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class BookDetailRepository @Inject constructor(
+class BooksRepository @Inject constructor(
     private val bookAPIClient: BookAPIClient,
-    private val googleAPIClient: GoogleAPIClient,
     private val formatAPIClient: FormatAPIClient,
     private val stateAPIClient: StateAPIClient
 ) {
 
     //MARK: - Public methods
 
-    fun getBook(googleId: String): Maybe<BookResponse> {
-        return bookAPIClient.getBookObserver(googleId)
-    }
-
-    fun getGoogleBook(volumeId: String): Single<GoogleBookResponse> {
-        return googleAPIClient.getGoogleBookObserver(volumeId)
+    fun getBooks(format: String?, state: String?, isFavourite: Boolean?): Maybe<List<BookResponse>> {
+        return bookAPIClient.getBooksObserver(format, state, isFavourite)
     }
 
     fun getFormats(): Single<List<FormatResponse>> {

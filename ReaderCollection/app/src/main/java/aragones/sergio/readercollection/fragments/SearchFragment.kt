@@ -82,6 +82,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
+            true,
             requireContext(),
             this
         )
@@ -154,7 +155,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
             })
         }
 
-        val color = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
+        val color = ContextCompat.getColor(requireActivity(), R.color.textTertiary)
 
         val searchIconId = searchView.context.resources.getIdentifier(
             "android:id/search_mag_icon",

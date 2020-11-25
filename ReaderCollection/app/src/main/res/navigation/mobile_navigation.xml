@@ -15,7 +15,6 @@
     <fragment
         android:id="@+id/navigation_books"
         android:name="aragones.sergio.readercollection.fragments.BooksFragment"
-        android:label="@string/title_books"
         tools:layout="@layout/fragment_books"
         />
 
