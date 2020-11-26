@@ -65,6 +65,11 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         initializeUI()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getBooks()
+    }
+
     //MARK: - Interface methods
 
     override fun onItemClick(bookId: String) {
