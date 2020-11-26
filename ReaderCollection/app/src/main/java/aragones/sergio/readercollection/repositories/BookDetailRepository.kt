@@ -47,6 +47,10 @@ class BookDetailRepository @Inject constructor(
         return bookAPIClient.createBookObserver(book)
     }
 
+    fun deleteBook(googleId: String): Completable {
+        return bookAPIClient.deleteBookObserver(googleId)
+    }
+
     fun setFavourite(googleId: String, isFavourite: Boolean): Single<BookResponse> {
         return bookAPIClient.setFavouriteBookObserver(googleId, isFavourite)
     }
