@@ -265,10 +265,8 @@ class BookDetailFragment: BaseFragment() {
             .append(book.subtitle ?: "")
             .toString()
 
-        var authors = Constants.listToString(book.authors)
-        if (authors.isEmpty()) {
-            authors = Constants.NO_VALUE
-        }
+        val authors = Constants.listToString(book.authors)
+        tvAuthor.visibility = if(authors.isEmpty()) View.GONE else View.VISIBLE
         tvAuthor.text = resources.getString(R.string.authors_text, authors)
 
         llCategories.removeAllViews()
