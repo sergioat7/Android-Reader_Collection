@@ -4,6 +4,22 @@
   ~ Created by Sergio Aragonés on 13/11/2020
   -->
 
-<menu>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit_book_dark"
+        android:title=""
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_remove_book_dark"
+        android:title=""
+        app:showAsAction="always"
+        />
 
 </menu>
