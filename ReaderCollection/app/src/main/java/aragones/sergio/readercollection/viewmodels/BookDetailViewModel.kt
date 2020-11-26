@@ -34,6 +34,7 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFormatsLoading = MutableLiveData<Boolean>()
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
+    private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse>()
 
     //MARK: - Public properties
@@ -46,6 +47,7 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
+    val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
 
     //MARK: - Public methods
@@ -131,7 +133,7 @@ class BookDetailViewModel @Inject constructor(
             onComplete = {
 
                 _bookDetailLoading.value = true
-                _bookDetailError.value = ErrorResponse("", R.string.book_saved)
+                _bookDetailSuccessMessage.value = R.string.book_saved
             },
             onError = {
 
@@ -148,7 +150,7 @@ class BookDetailViewModel @Inject constructor(
             onComplete = {
 
                 _bookDetailLoading.value = true
-                _bookDetailError.value = ErrorResponse("", R.string.book_removed)
+                _bookDetailSuccessMessage.value = R.string.book_removed
             },
             onError = {
 
