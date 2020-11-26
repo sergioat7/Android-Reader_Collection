@@ -9,7 +9,7 @@
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_save_dark"
+        android:icon="@drawable/ic_save_book_dark"
         android:title=""
         app:showAsAction="always"
         />
