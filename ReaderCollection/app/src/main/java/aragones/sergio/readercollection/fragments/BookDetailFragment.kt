@@ -108,6 +108,17 @@ class BookDetailFragment: BaseFragment() {
             inflater.inflate(R.menu.book_detail_toolbar_menu, menu)
         }
     }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.action_save -> {
+                book?.let {
+                    viewModel.createBook(it)
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //MARK: - Private methods

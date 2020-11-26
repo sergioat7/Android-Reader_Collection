@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -40,6 +41,10 @@ class BookDetailRepository @Inject constructor(
 
     fun getStates(): Single<List<StateResponse>> {
         return stateAPIClient.getStatesObserver()
+    }
+
+    fun createBook(book: BookResponse): Completable {
+        return bookAPIClient.createBookObserver(book)
     }
 
     fun setFavourite(googleId: String, isFavourite: Boolean): Single<BookResponse> {

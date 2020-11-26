@@ -78,13 +78,22 @@ class Constants {
 
             lateinit var errorResponse: ErrorResponse
             if (error is HttpException) {
-                error.response()?.errorBody()?.let { errorBody ->
 
-                    errorResponse = APIClient.gson.fromJson(
-                        errorBody.charStream(), ErrorResponse::class.java
-                    )
-                } ?: run {
-                    errorResponse = ErrorResponse("", R.string.error_server)
+                if (error.code() == 302) {
+                    errorResponse = ErrorResponse("", R.string.error_resource_found)
+                } else {
+                    error.response()?.errorBody()?.let { errorBody ->
+
+                        errorResponse = try {
+                            APIClient.gson.fromJson(
+                                errorBody.charStream(), ErrorResponse::class.java
+                            )
+                        } catch (e: Exception) {
+                            ErrorResponse("", R.string.error_server)
+                        }
+                    } ?: run {
+                        errorResponse = ErrorResponse("", R.string.error_server)
+                    }
                 }
             } else {
                 errorResponse = ErrorResponse("", R.string.error_server)
