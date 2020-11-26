@@ -124,6 +124,23 @@ class BookDetailViewModel @Inject constructor(
         )
     }
 
+    fun createBook(book: BookResponse) {
+
+        _bookDetailLoading.value = true
+        bookDetailRepository.createBook(book).subscribeBy(
+            onComplete = {
+
+                _bookDetailLoading.value = true
+                _bookDetailError.value = ErrorResponse("", R.string.book_saved)
+            },
+            onError = {
+
+                _bookDetailLoading.value = false
+                _bookDetailError.value = Constants.handleError(it)
+            }
+        )
+    }
+
     fun setFavourite(isFavourite: Boolean) {
 
         _bookDetailFavouriteLoading.value = true
