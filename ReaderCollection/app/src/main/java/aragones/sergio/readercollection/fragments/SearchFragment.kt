@@ -137,9 +137,11 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     }
 
     private fun setupSearchView(menu: Menu) {
+        
+        val menuItem = menu.findItem(R.id.action_search)
+        val searchView = menuItem.actionView as SearchView
 
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager?
-        val searchView = menu.findItem(R.id.action_search).actionView as SearchView
         if (searchManager != null) {
 
             searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
@@ -158,6 +160,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 override fun onQueryTextSubmit(query: String): Boolean {
 
                     searchBooks(query)
+                    menuItem.collapseActionView()
                     return true
                 }
             })
@@ -207,6 +210,6 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         viewModel.reloadData()
         viewModel.searchBooks()
         Constants.hideSoftKeyboard(requireActivity())
-        (activity as AppCompatActivity?)?.supportActionBar?.title = "\"" + query + "\""
+        (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, query)
     }
 }
