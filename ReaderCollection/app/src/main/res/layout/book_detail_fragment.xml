@@ -27,6 +27,16 @@
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/gradient_view"
+        app:layout_constraintTop_toTopOf="@+id/image_view_book"
+        app:layout_constraintBottom_toBottomOf="@+id/image_view_book"
+        app:layout_constraintStart_toStartOf="@+id/image_view_book"
+        app:layout_constraintEnd_toEndOf="@+id/image_view_book"
+        />
+
     <ProgressBar
         android:id="@+id/progress_bar_loading_image"
         android:layout_width="wrap_content"
