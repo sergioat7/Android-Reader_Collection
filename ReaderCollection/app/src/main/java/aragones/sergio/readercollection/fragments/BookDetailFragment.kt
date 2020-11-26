@@ -102,7 +102,12 @@ class BookDetailFragment: BaseFragment() {
         super.onCreateOptionsMenu(menu, inflater)
 
         menu.clear()
-        inflater.inflate(R.menu.book_detail_toolbar_menu, menu)
+        if (isGoogleBook) {
+            inflater.inflate(R.menu.google_book_detail_toolbar_menu, menu)
+        } else {
+            inflater.inflate(R.menu.book_detail_toolbar_menu, menu)
+        }
+    }
     }
 
     //MARK: - Private methods
