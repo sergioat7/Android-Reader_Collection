@@ -117,6 +117,7 @@ class BookDetailFragment: BaseFragment() {
                     viewModel.createBook(it)
                 }
             }
+            R.id.action_remove -> viewModel.deleteBook()
         }
         return super.onOptionsItemSelected(item)
     }

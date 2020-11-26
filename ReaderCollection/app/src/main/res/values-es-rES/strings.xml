@@ -47,7 +47,8 @@
     <string name="select_a_date">Selecciona una fecha</string>
     <string name="select_format">Selecciona un formato</string>
     <string name="select_state">Selecciona un estado</string>
-    <string name="book_saved">Libro guardado!</string>
+    <string name="book_saved">¡Libro guardado!</string>
+    <string name="book_removed">¡Libro eliminado!</string>
 
     //PROFILE
     <string name="save">Guardar</string>

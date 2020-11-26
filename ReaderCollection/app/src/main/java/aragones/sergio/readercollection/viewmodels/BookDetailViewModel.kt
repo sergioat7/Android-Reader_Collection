@@ -141,6 +141,23 @@ class BookDetailViewModel @Inject constructor(
         )
     }
 
+    fun deleteBook() {
+
+        _bookDetailLoading.value = true
+        bookDetailRepository.deleteBook(bookId).subscribeBy(
+            onComplete = {
+
+                _bookDetailLoading.value = true
+                _bookDetailError.value = ErrorResponse("", R.string.book_removed)
+            },
+            onError = {
+
+                _bookDetailLoading.value = false
+                _bookDetailError.value = Constants.handleError(it)
+            }
+        )
+    }
+
     fun setFavourite(isFavourite: Boolean) {
 
         _bookDetailFavouriteLoading.value = true
