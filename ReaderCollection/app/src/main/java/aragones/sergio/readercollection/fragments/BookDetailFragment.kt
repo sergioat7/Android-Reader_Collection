@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.setReadOnly
@@ -74,6 +75,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var formatValues: MutableList<String>
     private lateinit var states: List<StateResponse>
     private lateinit var stateValues: MutableList<String>
+    private val goBack = MutableLiveData<Boolean>()
 
     //MARK: - Lifecycle methods
 
@@ -242,8 +244,18 @@ class BookDetailFragment: BaseFragment() {
             pbLoadingFavourite.visibility = if(isLoading) View.VISIBLE else View.GONE
         })
 
+        viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner, {
+
+            val message = resources.getString(it)
+            showPopupDialog(message, goBack)
+        })
+
         viewModel.bookDetailError.observe(viewLifecycleOwner, {
             manageError(it)
+        })
+
+        goBack.observe(viewLifecycleOwner, {
+            activity?.onBackPressed()
         })
     }
 
