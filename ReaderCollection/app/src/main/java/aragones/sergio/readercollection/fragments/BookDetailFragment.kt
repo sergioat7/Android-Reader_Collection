@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
@@ -52,7 +53,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var tvDescription: TextView
     private lateinit var btReadMoreDescription: Button
     private lateinit var llSummary: LinearLayout
-    private lateinit var tvSummary: TextView
+    private lateinit var etSummary: EditText
     private lateinit var btReadMoreSummary: Button
     private lateinit var llTitles1: LinearLayout
     private lateinit var llValues1: LinearLayout
@@ -76,6 +77,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var states: List<StateResponse>
     private lateinit var stateValues: MutableList<String>
     private val goBack = MutableLiveData<Boolean>()
+    private lateinit var menu: Menu
 
     //MARK: - Lifecycle methods
 
@@ -103,23 +105,34 @@ class BookDetailFragment: BaseFragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
+        this.menu = menu
         menu.clear()
-        if (isGoogleBook) {
-            inflater.inflate(R.menu.google_book_detail_toolbar_menu, menu)
-        } else {
-            inflater.inflate(R.menu.book_detail_toolbar_menu, menu)
-        }
+
+        val menuRes = if(isGoogleBook) R.menu.google_book_detail_toolbar_menu else R.menu.book_detail_toolbar_menu
+        inflater.inflate(menuRes, menu)
+        menu.findItem(R.id.action_save).isVisible = isGoogleBook
+        menu.findItem(R.id.action_cancel).isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId) {
-            R.id.action_save -> {
-                book?.let {
-                    viewModel.createBook(it)
+            R.id.action_save ->  {
+                if (isGoogleBook) {
+                    viewModel.createBook(getBookData())
+                } else {
+
+                    //TODO set book
+                    setEdition(false)
                 }
             }
+            R.id.action_edit -> setEdition(true)
             R.id.action_remove -> viewModel.deleteBook()
+            R.id.action_cancel -> {
+
+                setEdition(false)
+                book?.let { showData(it) }
+            }
         }
         return super.onOptionsItemSelected(item)
     }
@@ -143,7 +156,7 @@ class BookDetailFragment: BaseFragment() {
         tvDescription = text_view_description
         btReadMoreDescription = button_read_more_description
         llSummary = linear_layout_summary
-        tvSummary = text_view_summary
+        etSummary = edit_text_summary
         btReadMoreSummary = button_read_more_summary
         llTitles1 = linear_layout_titles_1
         llValues1 = linear_layout_values_1
@@ -174,7 +187,19 @@ class BookDetailFragment: BaseFragment() {
             viewModel.setFavourite(!isFavourite)
         }
 
-        etReadingDate.showDatePicker(requireContext())
+        etSummary.setReadOnly(true, InputType.TYPE_NULL, 0)
+
+        btReadMoreSummary.setOnClickListener {
+
+            etSummary.maxLines = Constants.MAX_LINES
+            btReadMoreSummary.visibility = View.GONE
+        }
+
+        etReadingDate.setOnClickListener {
+            etReadingDate.showDatePicker(requireActivity())
+        }
+        etReadingDate.isEnabled = false
+        etReadingDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
     }
 
     private fun setupBindings() {
@@ -339,21 +364,16 @@ class BookDetailFragment: BaseFragment() {
         if (book.summary != null && book.summary.isNotBlank()) {
             summary = book.summary
         }
-        tvSummary.text = summary
+        etSummary.setText(summary)
 
         llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
 
         btReadMoreSummary.visibility =
-            if(summary == Constants.NO_VALUE || tvSummary.maxLines == Constants.MAX_LINES) {
+            if(summary == Constants.NO_VALUE || etSummary.maxLines == Constants.MAX_LINES) {
                 View.GONE
             } else {
                 View.VISIBLE
             }
-        btReadMoreSummary.setOnClickListener {
-
-            tvSummary.maxLines = Constants.MAX_LINES
-            btReadMoreSummary.visibility = View.GONE
-        }
 
         setFormat(book)
         spFormats.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
@@ -397,7 +417,6 @@ class BookDetailFragment: BaseFragment() {
             readingDate = Constants.NO_VALUE
         }
         etReadingDate.setText(readingDate)
-        etReadingDate.setReadOnly(true, InputType.TYPE_NULL, 0)
 
         llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
@@ -425,5 +444,45 @@ class BookDetailFragment: BaseFragment() {
             statePosition = if(pos > 0) pos else 0
         }
         spStates.setSelection(statePosition)
+    }
+
+    private fun getBookData(): BookResponse {
+        return book!!
+    }
+
+    private fun setEdition(editable: Boolean) {
+
+        val backgroundTint =
+            if(editable) {
+                ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.colorPrimary))
+            } else {
+                ColorStateList.valueOf(Color.TRANSPARENT)
+            }
+
+        menu.findItem(R.id.action_edit).isVisible = !editable
+        menu.findItem(R.id.action_remove).isVisible = !editable
+        menu.findItem(R.id.action_save).isVisible = editable
+        menu.findItem(R.id.action_cancel).isVisible = editable
+
+        rbStars.setIsIndicator(!editable)
+
+        if (etSummary.text.toString() == Constants.NO_VALUE) {
+            etSummary.text = null
+        }
+        etSummary.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
+        etSummary.backgroundTintList = backgroundTint
+        etSummary.maxLines = if(editable) Constants.MAX_LINES else Constants.MIN_LINES
+
+        spFormats.backgroundTintList = backgroundTint
+        spFormats.isEnabled = editable
+
+        spStates.backgroundTintList = backgroundTint
+        spStates.isEnabled = editable
+
+        if (etReadingDate.text.toString() == Constants.NO_VALUE) {
+            etReadingDate.text = null
+        }
+        etReadingDate.isEnabled = editable
+        etReadingDate.backgroundTintList = backgroundTint
     }
 }

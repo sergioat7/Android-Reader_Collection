@@ -276,6 +276,7 @@ class Constants {
 
         const val BOOK_ID = "bookId"
         const val IS_GOOGLE_BOOK = "isGoogleBook"
+        const val MIN_LINES = 7
         const val MAX_LINES = Int.MAX_VALUE
         const val NO_VALUE = "-"
 

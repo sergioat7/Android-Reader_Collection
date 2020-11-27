@@ -37,17 +37,18 @@
     <string name="search_books">Buscar libros</string>
 
     //BOOK DETAILS
+    <string name="authors_text">Por %s</string>
     <string name="description">Descripción</string>
     <string name="read_more">Leer más</string>
-    <string name="authors_text">Por %s</string>
+    <string name="summary">Resumen</string>
+    <string name="add_summary">Añade un resumen</string>
+    <string name="select_format">Selecciona un formato</string>
+    <string name="select_state">Selecciona un estado</string>
     <string name="publisher">Editorial</string>
     <string name="published_date">Fecha de publicación</string>
     <string name="pages">Páginas</string>
     <string name="reading_date">Fecha de lectura</string>
-    <string name="summary">Resumen</string>
     <string name="select_a_date">Selecciona una fecha</string>
-    <string name="select_format">Selecciona un formato</string>
-    <string name="select_state">Selecciona un estado</string>
     <string name="book_saved">¡Libro guardado!</string>
     <string name="book_removed">¡Libro eliminado!</string>
 
