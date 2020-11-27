@@ -69,7 +69,6 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var llValues4: LinearLayout
     private lateinit var etReadingDate: EditText
     private lateinit var viewModel: BookDetailViewModel
-    private lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     private var isFavourite: Boolean = false
     private var book: BookResponse? = null
     private lateinit var formats: List<FormatResponse>
@@ -179,12 +178,18 @@ class BookDetailFragment: BaseFragment() {
         states = listOf()
         stateValues = mutableListOf()
 
-        sharedPreferencesHandler = SharedPreferencesHandler(context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE))
-
         fbFavourite.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         pbLoadingFavourite.visibility = View.GONE
         fbFavourite.setOnClickListener {
             viewModel.setFavourite(!isFavourite)
+        }
+
+        rbStars.setIsIndicator(true)
+
+        btReadMoreDescription.setOnClickListener {
+
+            tvDescription.maxLines = Constants.MAX_LINES
+            btReadMoreDescription.visibility = View.GONE
         }
 
         etSummary.setReadOnly(true, InputType.TYPE_NULL, 0)
@@ -194,6 +199,12 @@ class BookDetailFragment: BaseFragment() {
             etSummary.maxLines = Constants.MAX_LINES
             btReadMoreSummary.visibility = View.GONE
         }
+
+        spFormats.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        spFormats.isEnabled = false
+
+        spStates.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+        spStates.isEnabled = false
 
         etReadingDate.setOnClickListener {
             etReadingDate.showDatePicker(requireActivity())
@@ -307,7 +318,6 @@ class BookDetailFragment: BaseFragment() {
 
         val rating = if (isGoogleBook) book.averageRating else book.rating
         rbStars.rating = rating.toFloat() / 2
-        rbStars.setIsIndicator(true)
 
         tvRatingCount.text = book.ratingsCount.toString()
 
@@ -354,15 +364,10 @@ class BookDetailFragment: BaseFragment() {
             } else {
                 View.VISIBLE
             }
-        btReadMoreDescription.setOnClickListener {
 
-            tvDescription.maxLines = Constants.MAX_LINES
-            btReadMoreDescription.visibility = View.GONE
-        }
-
-        var summary = Constants.NO_VALUE
-        if (book.summary != null && book.summary.isNotBlank()) {
-            summary = book.summary
+        var summary = book.summary
+        if (summary == null || summary.isBlank()) {
+            summary = Constants.NO_VALUE
         }
         etSummary.setText(summary)
 
@@ -376,12 +381,8 @@ class BookDetailFragment: BaseFragment() {
             }
 
         setFormat(book)
-        spFormats.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
-        spFormats.isEnabled = false
 
         setState(book)
-        spStates.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
-        spStates.isEnabled = false
 
         llTitles1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
         llValues1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
@@ -402,18 +403,18 @@ class BookDetailFragment: BaseFragment() {
 
         var publishedDate = Constants.dateToString(
             book.publishedDate,
-            Constants.getDateFormatToShow(sharedPreferencesHandler)
+            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler)
         )
-        if (publishedDate == null || publishedDate.isEmpty()) {
+        if (publishedDate == null || publishedDate.isBlank()) {
             publishedDate = Constants.NO_VALUE
         }
         tvPublishedDate.text = publishedDate
 
         var readingDate = Constants.dateToString(
             book.readingDate,
-            Constants.getDateFormatToShow(sharedPreferencesHandler)
+            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler)
         )
-        if (readingDate == null || readingDate.isEmpty()) {
+        if (readingDate == null || readingDate.isBlank()) {
             readingDate = Constants.NO_VALUE
         }
         etReadingDate.setText(readingDate)
