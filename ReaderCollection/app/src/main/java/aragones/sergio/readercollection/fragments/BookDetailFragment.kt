@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -23,7 +22,6 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -121,7 +119,7 @@ class BookDetailFragment: BaseFragment() {
                     viewModel.createBook(getBookData())
                 } else {
 
-                    //TODO set book
+                    viewModel.setBook(getBookData())
                     setEdition(false)
                 }
             }
@@ -448,7 +446,35 @@ class BookDetailFragment: BaseFragment() {
     }
 
     private fun getBookData(): BookResponse {
-        return book!!
+
+        val summary = etSummary.text.toString()
+        val readingDate = Constants.stringToDate(etReadingDate.text.toString(), Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler))
+        val rating = rbStars.rating.toDouble() * 2
+        val format = viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
+        val state = viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
+
+        return BookResponse(
+            id = book?.id ?: "",
+            title = book?.title,
+            subtitle = book?.subtitle,
+            authors = book?.authors,
+            publisher = book?.publisher,
+            publishedDate = book?.publishedDate,
+            readingDate = readingDate,
+            description = book?.description,
+            summary = summary,
+            isbn = book?.isbn,
+            pageCount = book?.pageCount ?: 0,
+            categories = book?.categories,
+            averageRating = book?.averageRating ?: 0.0,
+            ratingsCount = book?.ratingsCount ?: 0,
+            rating = rating,
+            thumbnail = book?.thumbnail,
+            image = book?.image,
+            format = format,
+            state = state,
+            isFavourite = book?.isFavourite ?: false
+        )
     }
 
     private fun setEdition(editable: Boolean) {

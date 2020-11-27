@@ -47,6 +47,10 @@ class BookDetailRepository @Inject constructor(
         return bookAPIClient.createBookObserver(book)
     }
 
+    fun setBook(book: BookResponse): Single<BookResponse> {
+        return bookAPIClient.setBookObserver(book)
+    }
+
     fun deleteBook(googleId: String): Completable {
         return bookAPIClient.deleteBookObserver(googleId)
     }
