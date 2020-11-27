@@ -261,7 +261,9 @@ class BookDetailFragment: BaseFragment() {
 
     private fun showData(book: BookResponse) {
 
-        val image = book.image?.replace("http", "https") ?: book.thumbnail?.replace("http", "https") ?: "-"
+        val image =
+            book.image?.replace("http", "https") ?:
+            book.thumbnail?.replace("http", "https") ?: "-"
         Picasso
             .get()
             .load(image)
@@ -321,7 +323,12 @@ class BookDetailFragment: BaseFragment() {
         }
         tvDescription.text = description
 
-        btReadMoreDescription.visibility = if(description == Constants.NO_VALUE || tvDescription.maxLines == Constants.MAX_LINES) View.GONE else View.VISIBLE
+        btReadMoreDescription.visibility =
+            if(description == Constants.NO_VALUE || tvDescription.maxLines == Constants.MAX_LINES) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
         btReadMoreDescription.setOnClickListener {
 
             tvDescription.maxLines = Constants.MAX_LINES
@@ -336,7 +343,12 @@ class BookDetailFragment: BaseFragment() {
 
         llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
 
-        btReadMoreSummary.visibility = if(summary == Constants.NO_VALUE || tvSummary.maxLines == Constants.MAX_LINES) View.GONE else View.VISIBLE
+        btReadMoreSummary.visibility =
+            if(summary == Constants.NO_VALUE || tvSummary.maxLines == Constants.MAX_LINES) {
+                View.GONE
+            } else {
+                View.VISIBLE
+            }
         btReadMoreSummary.setOnClickListener {
 
             tvSummary.maxLines = Constants.MAX_LINES
@@ -368,13 +380,19 @@ class BookDetailFragment: BaseFragment() {
         }
         tvPublisher.text = publisher
 
-        var publishedDate = Constants.dateToString(book.publishedDate, Constants.getDateFormatToShow(sharedPreferencesHandler))
+        var publishedDate = Constants.dateToString(
+            book.publishedDate,
+            Constants.getDateFormatToShow(sharedPreferencesHandler)
+        )
         if (publishedDate == null || publishedDate.isEmpty()) {
             publishedDate = Constants.NO_VALUE
         }
         tvPublishedDate.text = publishedDate
 
-        var readingDate = Constants.dateToString(book.readingDate, Constants.getDateFormatToShow(sharedPreferencesHandler))
+        var readingDate = Constants.dateToString(
+            book.readingDate,
+            Constants.getDateFormatToShow(sharedPreferencesHandler)
+        )
         if (readingDate == null || readingDate.isEmpty()) {
             readingDate = Constants.NO_VALUE
         }
