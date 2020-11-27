@@ -280,7 +280,7 @@ class BookDetailFragment: BaseFragment() {
 
         val rating = if (isGoogleBook) book.averageRating else book.rating
         rbStars.rating = rating.toFloat() / 2
-        rbStars.setIsIndicator(isGoogleBook)
+        rbStars.setIsIndicator(true)
 
         tvRatingCount.text = book.ratingsCount.toString()
 
