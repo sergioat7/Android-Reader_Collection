@@ -22,4 +22,18 @@
         app:showAsAction="always"
         />
 
+    <item
+        android:id="@+id/action_cancel"
+        android:icon="@drawable/ic_cancel_changes_dark"
+        android:title=""
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_save_changes_dark"
+        android:title=""
+        app:showAsAction="always"
+        />
+
 </menu>
