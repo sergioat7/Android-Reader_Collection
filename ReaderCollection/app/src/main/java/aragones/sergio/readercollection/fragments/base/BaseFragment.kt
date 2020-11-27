@@ -37,6 +37,7 @@ open class BaseFragment: Fragment() {
         }
         ft.addToBackStack(null)
         val dialogFragment = PopupErrorDialogFragment(message, goBack)
+        dialogFragment.isCancelable = false
         dialogFragment.show(ft, "popupDialog")
     }
 

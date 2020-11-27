@@ -8,10 +8,11 @@
 
     //GENERAL
     <string name="app_name">Reader Collection</string>
-    <string name="title_books">%d Libros</string>
-    <string name="title_book">%d Libro</string>
+    <string name="title_books">Libros</string>
     <string name="title_search">Búsqueda</string>
     <string name="title_profile">Perfil</string>
+    <string name="title_books_count">%d Libros</string>
+    <string name="title_book_count">%d Libro</string>
 
     //LOGIN &amp; REGISTRATION
     <string name="invalid_username">Usuario no válido</string>
