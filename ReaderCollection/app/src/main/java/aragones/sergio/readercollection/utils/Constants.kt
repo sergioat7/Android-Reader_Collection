@@ -69,8 +69,6 @@ class Constants {
         const val RESULTS_PARAM = "maxResults"
         const val ORDER_PARAM = "orderBy"
         const val RESULTS = 20
-        const val RELEVANCE_ORDER = "relevance "
-        const val NEWEST_ORDER = "newest"
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
 
@@ -78,13 +76,22 @@ class Constants {
 
             lateinit var errorResponse: ErrorResponse
             if (error is HttpException) {
-                error.response()?.errorBody()?.let { errorBody ->
 
-                    errorResponse = APIClient.gson.fromJson(
-                        errorBody.charStream(), ErrorResponse::class.java
-                    )
-                } ?: run {
-                    errorResponse = ErrorResponse("", R.string.error_server)
+                if (error.code() == 302) {
+                    errorResponse = ErrorResponse("", R.string.error_resource_found)
+                } else {
+                    error.response()?.errorBody()?.let { errorBody ->
+
+                        errorResponse = try {
+                            APIClient.gson.fromJson(
+                                errorBody.charStream(), ErrorResponse::class.java
+                            )
+                        } catch (e: Exception) {
+                            ErrorResponse("", R.string.error_server)
+                        }
+                    } ?: run {
+                        errorResponse = ErrorResponse("", R.string.error_server)
+                    }
                 }
             } else {
                 errorResponse = ErrorResponse("", R.string.error_server)
@@ -106,17 +113,28 @@ class Constants {
         const val DATE_FORMAT = "yyyy-MM-dd"
 
         fun getDateFormatToShow(sharedPrefHandler: SharedPreferencesHandler): String {
-            return if (sharedPrefHandler.getLanguage() == "es") "d MMMM yyyy" else "MMMM d, yyyy"
+
+            return when(sharedPrefHandler.getLanguage()) {
+                "es" -> "d MMMM yyyy"
+                else -> "MMMM d, yyyy"
+            }
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun dateToString(date: Date?, format: String? = null): String? {
+        fun dateToString(date: Date?,
+                         format: String? = null,
+                         language: String? = null): String? {
 
             val dateFormat = format ?: DATE_FORMAT
+            val locale = language?.let {
+                Locale.forLanguageTag(it)
+            } ?: run {
+                Locale.getDefault()
+            }
             date?.let {
 
                 return try {
-                    SimpleDateFormat(dateFormat).format(it)
+                    SimpleDateFormat(dateFormat, locale).format(it)
                 } catch (e: Exception) {
 
                     Log.e("Constants", e.message ?: "")
@@ -130,13 +148,20 @@ class Constants {
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun stringToDate(dateString: String?, format: String? = null): Date? {
+        fun stringToDate(dateString: String?,
+                         format: String? = null,
+                         language: String? = null): Date? {
 
             val dateFormat = format ?: DATE_FORMAT
+            val locale = language?.let {
+                Locale.forLanguageTag(it)
+            } ?: run {
+                Locale.getDefault()
+            }
             dateString?.let {
 
                 return try {
-                    SimpleDateFormat(dateFormat).parse(it)
+                    SimpleDateFormat(dateFormat, locale).parse(it)
                 } catch (e: Exception) {
 
                     Log.e("Constants", e.message ?: "")
@@ -267,6 +292,7 @@ class Constants {
 
         const val BOOK_ID = "bookId"
         const val IS_GOOGLE_BOOK = "isGoogleBook"
+        const val MIN_LINES = 7
         const val MAX_LINES = Int.MAX_VALUE
         const val NO_VALUE = "-"
 

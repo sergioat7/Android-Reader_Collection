@@ -9,14 +9,13 @@ import android.app.AlertDialog
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import java.io.Serializable
 
 open class BaseFragment: Fragment() {
-
-    private var loadingFragment: PopupErrorDialogFragment? = null
 
     fun manageError(errorResponse: ErrorResponse) {
 
@@ -29,7 +28,7 @@ open class BaseFragment: Fragment() {
         showPopupDialog(error.toString())
     }
 
-    fun showPopupDialog(message: String) {
+    fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
 
         val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
         val prev = activity?.supportFragmentManager?.findFragmentByTag("popupDialog")
@@ -37,7 +36,8 @@ open class BaseFragment: Fragment() {
             ft.remove(prev)
         }
         ft.addToBackStack(null)
-        val dialogFragment = PopupErrorDialogFragment(message)
+        val dialogFragment = PopupErrorDialogFragment(message, goBack)
+        dialogFragment.isCancelable = false
         dialogFragment.show(ft, "popupDialog")
     }
 

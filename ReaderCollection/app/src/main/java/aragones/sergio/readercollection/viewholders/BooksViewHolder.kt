@@ -51,9 +51,9 @@ itemView: View
             .append(book.subtitle ?: "")
             .toString()
 
-        val rating = if (isGoogleBook) book.averageRating / 2 else book.rating / 2
+        val rating = if (isGoogleBook) book.averageRating else book.rating
         itemView.rating_bar.rating = rating.toFloat()
-        itemView.text_view_rating.text = rating.toString()
+        itemView.text_view_rating.text = rating.toInt().toString()
         itemView.linear_layout_rating.visibility = if (rating > 0) View.VISIBLE else View.GONE
         itemView.text_view_new.visibility = if (rating > 0) View.GONE else View.VISIBLE
 

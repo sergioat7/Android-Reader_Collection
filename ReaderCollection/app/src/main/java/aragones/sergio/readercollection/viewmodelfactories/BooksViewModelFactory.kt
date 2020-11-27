@@ -45,7 +45,6 @@ class BooksViewModelFactory(
             (application as ReaderCollectionApplication).sharedPreferencesComponent.inject(this)
             booksViewModel.getFormats()
             booksViewModel.getStates()
-            booksViewModel.getBooks()
             return booksViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

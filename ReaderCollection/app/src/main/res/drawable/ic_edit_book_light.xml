@@ -1,0 +1,17 @@
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 26/11/2020
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="32dp"
+    android:height="32dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+  <path
+      android:pathData="m15.06,15.41l-0.11,-7l3.62,-3.62l-13.13,0a1.81,1.81 0,0 0,-1.81 1.8l0,21.61a1.81,1.81 0,0 0,1.81 1.8l15.31,0a1.81,1.81 0,0 0,1.81 -1.8l0,-13.36l-0.58,0.57l-6.92,0zM18.21,18.73l-11.43,0a1,1 0,0 1,0 -2l4.51,0a1,1 0,0 1,0 2l6.92,0zM20.91,14.23l-14.13,0a1,1 0,0 1,0 -2l7.22,0a1,1 0,0 1,0 2l6.91,0z"
+      android:fillColor="#ffffff"/>
+  <path
+      android:pathData="M24.2163,1.9537l-2.76,2.76l-4.45,4.44l0.07,4.21l4.13,0l1.4,-1.39l0,-0.01l5.81,-5.81l-4.2,-4.2z"
+      android:fillColor="#ffffff"/>
+</vector>

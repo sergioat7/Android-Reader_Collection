@@ -81,6 +81,12 @@
         <item name="android:ellipsize">end</item>
     </style>
 
+    <style name="BookSummaryEditText" parent="CustomEditText.BookDetails">
+        <item name="android:lineSpacingExtra">5dp</item>
+        <item name="android:maxLines">7</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
     <style name="BookReadMoreButton">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:gravity">top</item>
@@ -92,9 +98,16 @@
     </style>
 
     <style name="CustomEditText.BookDetails" parent="CustomEditText">
+        <item name="android:textColorHint">@color/textSecondaryLight</item>
         <item name="android:textColor">@color/textSecondary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="CustomEditText.BookDetails.Date" parent="CustomEditText.BookDetails">
+        <item name="android:inputType">date</item>
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">true</item>
     </style>
 
     <style name="CustomSpinner.Left">

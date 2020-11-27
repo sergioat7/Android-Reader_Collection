@@ -36,6 +36,7 @@ class APIClient {
                 .connectTimeout(Constants.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .followRedirects(false)
                 .build()
 
         val retrofit: Retrofit =

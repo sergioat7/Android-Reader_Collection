@@ -15,10 +15,12 @@ import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.BookDetailRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
+    val sharedPreferencesHandler: SharedPreferencesHandler,
     private val bookDetailRepository: BookDetailRepository
 ): ViewModel() {
 
@@ -27,21 +29,27 @@ class BookDetailViewModel @Inject constructor(
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private val _book = MutableLiveData<BookResponse>()
+    private val _isFavourite = MutableLiveData<Boolean>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
     private val _bookDetailLoading = MutableLiveData<Boolean>()
     private val _bookDetailFormatsLoading = MutableLiveData<Boolean>()
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
+    private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
+    private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse>()
 
     //MARK: - Public properties
 
     val book: LiveData<BookResponse> = _book
+    val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
     val states: LiveData<List<StateResponse>> = _states
     val bookDetailLoading: LiveData<Boolean> = _bookDetailLoading
     val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
+    val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
+    val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
 
     //MARK: - Public methods
@@ -74,6 +82,7 @@ class BookDetailViewModel @Inject constructor(
                 onSuccess = {
 
                     _book.value = it
+                    _isFavourite.value = it.isFavourite
                     _bookDetailLoading.value = false
                 },
                 onError = {
@@ -115,6 +124,72 @@ class BookDetailViewModel @Inject constructor(
 
                 _states.value = ArrayList()
                 _bookDetailStatesLoading.value = false
+            }
+        )
+    }
+
+    fun createBook(book: BookResponse) {
+
+        _bookDetailLoading.value = true
+        bookDetailRepository.createBook(book).subscribeBy(
+            onComplete = {
+
+                _bookDetailLoading.value = true
+                _bookDetailSuccessMessage.value = R.string.book_saved
+            },
+            onError = {
+
+                _bookDetailLoading.value = false
+                _bookDetailError.value = Constants.handleError(it)
+            }
+        )
+    }
+
+    fun setBook(book: BookResponse) {
+
+        _bookDetailLoading.value = true
+        bookDetailRepository.setBook(book).subscribeBy(
+            onSuccess = {
+
+                _book.value = it
+                _bookDetailLoading.value = false
+            },
+            onError = {
+
+                _bookDetailLoading.value = false
+                _bookDetailError.value = Constants.handleError(it)
+            }
+        )
+    }
+
+    fun deleteBook() {
+
+        _bookDetailLoading.value = true
+        bookDetailRepository.deleteBook(bookId).subscribeBy(
+            onComplete = {
+
+                _bookDetailLoading.value = true
+                _bookDetailSuccessMessage.value = R.string.book_removed
+            },
+            onError = {
+
+                _bookDetailLoading.value = false
+                _bookDetailError.value = Constants.handleError(it)
+            }
+        )
+    }
+
+    fun setFavourite(isFavourite: Boolean) {
+
+        _bookDetailFavouriteLoading.value = true
+        bookDetailRepository.setFavourite(bookId, isFavourite).subscribeBy(
+            onSuccess = {
+
+                _isFavourite.value = it.isFavourite
+                _bookDetailFavouriteLoading.value = false
+            },
+            onError = {
+                _bookDetailFavouriteLoading.value = false
             }
         )
     }
