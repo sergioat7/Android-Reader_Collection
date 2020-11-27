@@ -15,10 +15,12 @@ import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.BookDetailRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
+    val sharedPreferencesHandler: SharedPreferencesHandler,
     private val bookDetailRepository: BookDetailRepository
 ): ViewModel() {
 
