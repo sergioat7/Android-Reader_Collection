@@ -29,7 +29,7 @@ data class BookResponse(
     @SerializedName("summary")
     val summary: String?,
     @SerializedName("isbn")
-    val isbn:  String?,
+    val isbn: String?,
     @SerializedName("pageCount")
     val pageCount: Int,
     @SerializedName("categories")

@@ -65,6 +65,11 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         initializeUI()
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.getBooks()
+    }
+
     //MARK: - Interface methods
 
     override fun onItemClick(bookId: String) {
@@ -266,8 +271,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private fun setTitle(booksCount: Int) {
 
         val title = when(booksCount) {
-            1 -> resources.getString(R.string.title_book, booksCount)
-            else -> resources.getString(R.string.title_books, booksCount)
+            1 -> resources.getString(R.string.title_book_count, booksCount)
+            else -> resources.getString(R.string.title_books_count, booksCount)
         }
         (activity as AppCompatActivity?)?.supportActionBar?.title = title
     }
