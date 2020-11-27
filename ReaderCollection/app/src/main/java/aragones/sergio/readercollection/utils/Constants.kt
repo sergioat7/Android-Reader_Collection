@@ -69,8 +69,6 @@ class Constants {
         const val RESULTS_PARAM = "maxResults"
         const val ORDER_PARAM = "orderBy"
         const val RESULTS = 20
-        const val RELEVANCE_ORDER = "relevance "
-        const val NEWEST_ORDER = "newest"
         val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
         val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
 
@@ -115,17 +113,28 @@ class Constants {
         const val DATE_FORMAT = "yyyy-MM-dd"
 
         fun getDateFormatToShow(sharedPrefHandler: SharedPreferencesHandler): String {
-            return if (sharedPrefHandler.getLanguage() == "es") "d MMMM yyyy" else "MMMM d, yyyy"
+
+            return when(sharedPrefHandler.getLanguage()) {
+                "es" -> "d MMMM yyyy"
+                else -> "MMMM d, yyyy"
+            }
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun dateToString(date: Date?, format: String? = null): String? {
+        fun dateToString(date: Date?,
+                         format: String? = null,
+                         language: String? = null): String? {
 
             val dateFormat = format ?: DATE_FORMAT
+            val locale = language?.let {
+                Locale.forLanguageTag(it)
+            } ?: run {
+                Locale.getDefault()
+            }
             date?.let {
 
                 return try {
-                    SimpleDateFormat(dateFormat).format(it)
+                    SimpleDateFormat(dateFormat, locale).format(it)
                 } catch (e: Exception) {
 
                     Log.e("Constants", e.message ?: "")
@@ -139,13 +148,20 @@ class Constants {
         }
 
         @SuppressLint("SimpleDateFormat")
-        fun stringToDate(dateString: String?, format: String? = null): Date? {
+        fun stringToDate(dateString: String?,
+                         format: String? = null,
+                         language: String? = null): Date? {
 
             val dateFormat = format ?: DATE_FORMAT
+            val locale = language?.let {
+                Locale.forLanguageTag(it)
+            } ?: run {
+                Locale.getDefault()
+            }
             dateString?.let {
 
                 return try {
-                    SimpleDateFormat(dateFormat).parse(it)
+                    SimpleDateFormat(dateFormat, locale).parse(it)
                 } catch (e: Exception) {
 
                     Log.e("Constants", e.message ?: "")

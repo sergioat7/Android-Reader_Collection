@@ -108,7 +108,9 @@ class BookDetailFragment: BaseFragment() {
         val menuRes = if(isGoogleBook) R.menu.google_book_detail_toolbar_menu else R.menu.book_detail_toolbar_menu
         inflater.inflate(menuRes, menu)
         menu.findItem(R.id.action_save).isVisible = isGoogleBook
-        menu.findItem(R.id.action_cancel).isVisible = false
+        if(!isGoogleBook) {
+            menu.findItem(R.id.action_cancel).isVisible = false
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -124,7 +126,12 @@ class BookDetailFragment: BaseFragment() {
                 }
             }
             R.id.action_edit -> setEdition(true)
-            R.id.action_remove -> viewModel.deleteBook()
+            R.id.action_remove -> {
+
+                showPopupConfirmationDialog(R.string.book_remove_confirmation, acceptHandler = {
+                    viewModel.deleteBook()
+                })
+            }
             R.id.action_cancel -> {
 
                 setEdition(false)
@@ -401,7 +408,8 @@ class BookDetailFragment: BaseFragment() {
 
         var publishedDate = Constants.dateToString(
             book.publishedDate,
-            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler)
+            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
+            viewModel.sharedPreferencesHandler.getLanguage()
         )
         if (publishedDate == null || publishedDate.isBlank()) {
             publishedDate = Constants.NO_VALUE
@@ -410,7 +418,8 @@ class BookDetailFragment: BaseFragment() {
 
         var readingDate = Constants.dateToString(
             book.readingDate,
-            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler)
+            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
+            viewModel.sharedPreferencesHandler.getLanguage()
         )
         if (readingDate == null || readingDate.isBlank()) {
             readingDate = Constants.NO_VALUE
@@ -448,7 +457,11 @@ class BookDetailFragment: BaseFragment() {
     private fun getBookData(): BookResponse {
 
         val summary = etSummary.text.toString()
-        val readingDate = Constants.stringToDate(etReadingDate.text.toString(), Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler))
+        val readingDate = Constants.stringToDate(
+            etReadingDate.text.toString(),
+            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
+            viewModel.sharedPreferencesHandler.getLanguage()
+        )
         val rating = rbStars.rating.toDouble() * 2
         val format = viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
         val state = viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
