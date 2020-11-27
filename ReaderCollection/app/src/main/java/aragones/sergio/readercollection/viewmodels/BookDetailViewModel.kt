@@ -145,6 +145,23 @@ class BookDetailViewModel @Inject constructor(
         )
     }
 
+    fun setBook(book: BookResponse) {
+
+        _bookDetailLoading.value = true
+        bookDetailRepository.setBook(book).subscribeBy(
+            onSuccess = {
+
+                _book.value = it
+                _bookDetailLoading.value = false
+            },
+            onError = {
+
+                _bookDetailLoading.value = false
+                _bookDetailError.value = Constants.handleError(it)
+            }
+        )
+    }
+
     fun deleteBook() {
 
         _bookDetailLoading.value = true
