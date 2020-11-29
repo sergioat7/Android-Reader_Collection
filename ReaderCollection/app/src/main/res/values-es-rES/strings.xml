@@ -34,6 +34,7 @@
     <string name="anything">Cualquiera</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="publisher_text">Ed. %s</string>
     <string name="search_books">Buscar libros</string>
 
     //BOOK DETAILS
