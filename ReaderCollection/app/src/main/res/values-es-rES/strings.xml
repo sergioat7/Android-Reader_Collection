@@ -38,6 +38,8 @@
     <string name="search_books">Buscar libros</string>
 
     //BOOK DETAILS
+    <string name="add_title">Añade un título</string>
+    <string name="add_author">Añade un autor(es)</string>
     <string name="authors_text">Por %s</string>
     <string name="description">Descripción</string>
     <string name="add_description">Añade una descripción</string>

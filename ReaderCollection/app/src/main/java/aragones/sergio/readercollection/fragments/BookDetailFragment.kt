@@ -44,8 +44,8 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var rbStars: MaterialRatingBar
     private lateinit var tvRatingCount: TextView
     private lateinit var tvNoRatings: TextView
-    private lateinit var tvTitle: TextView
-    private lateinit var tvAuthor: TextView
+    private lateinit var etTitle: EditText
+    private lateinit var etAuthor: EditText
     private lateinit var svCategories: HorizontalScrollView
     private lateinit var llCategories: LinearLayout
     private lateinit var etDescription: EditText
@@ -153,8 +153,8 @@ class BookDetailFragment: BaseFragment() {
         rbStars = rating_bar
         tvRatingCount = text_view_rating_count
         tvNoRatings = text_view_no_ratings
-        tvTitle = text_view_title
-        tvAuthor = text_view_author
+        etTitle = edit_text_title
+        etAuthor = edit_text_author
         svCategories = horizontal_scroll_view_categories
         llCategories = linear_layout_categories
         etDescription = edit_text_description
@@ -190,6 +190,10 @@ class BookDetailFragment: BaseFragment() {
         }
 
         rbStars.setIsIndicator(true)
+
+        etTitle.setReadOnly(true, InputType.TYPE_NULL, 0)
+
+        etAuthor.setReadOnly(true, InputType.TYPE_NULL, 0)
 
         etDescription.setReadOnly(true, InputType.TYPE_NULL, 0)
 
@@ -332,15 +336,19 @@ class BookDetailFragment: BaseFragment() {
         llRating.visibility = if (hideRating) View.INVISIBLE else View.VISIBLE
         tvNoRatings.visibility = if (hideRating) View.VISIBLE else View.GONE
 
-        tvTitle.text = StringBuilder()
+        val title = StringBuilder()
             .append(book.title ?: "")
             .append(" ")
             .append(book.subtitle ?: "")
             .toString()
+        etTitle.setText(
+            if (title.isNotBlank()) title
+            else Constants.NO_VALUE
+        )
 
         val authors = Constants.listToString(book.authors)
-        tvAuthor.visibility = if(authors.isEmpty()) View.GONE else View.VISIBLE
-        tvAuthor.text = resources.getString(R.string.authors_text, authors)
+        etAuthor.visibility = if(authors.isEmpty()) View.GONE else View.VISIBLE
+        etAuthor.setText(resources.getString(R.string.authors_text, authors))
 
         llCategories.removeAllViews()
         book.categories?.let { categories ->
@@ -469,9 +477,9 @@ class BookDetailFragment: BaseFragment() {
 
         return BookResponse(
             id = book?.id ?: "",
-            title = book?.title,
+            title = etTitle.text.toString(),
             subtitle = book?.subtitle,
-            authors = book?.authors,
+            authors = book?.authors,//TODO transform string to list
             publisher = book?.publisher,
             publishedDate = book?.publishedDate,
             readingDate = readingDate,
@@ -506,6 +514,18 @@ class BookDetailFragment: BaseFragment() {
         menu.findItem(R.id.action_cancel).isVisible = editable
 
         rbStars.setIsIndicator(!editable)
+
+        if (etTitle.text.toString() == Constants.NO_VALUE) {
+            etTitle.text = null
+        }
+        etTitle.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
+        etTitle.backgroundTintList = backgroundTint
+
+        if (etAuthor.text.toString() == Constants.NO_VALUE) {
+            etAuthor.text = null
+        }
+        etAuthor.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
+        etAuthor.backgroundTintList = backgroundTint
 
         if (etDescription.text.toString() == Constants.NO_VALUE) {
             etDescription.text = null
