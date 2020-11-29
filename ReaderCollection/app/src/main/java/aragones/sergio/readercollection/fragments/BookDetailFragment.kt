@@ -59,8 +59,8 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var spFormats: Spinner
     private lateinit var pbLoadingStates: ProgressBar
     private lateinit var spStates: Spinner
-    private lateinit var tvIsbn: TextView
-    private lateinit var tvPageCount: TextView
+    private lateinit var etIsbn: EditText
+    private lateinit var etPageCount: EditText
     private lateinit var tvPublisher: TextView
     private lateinit var tvPublishedDate: TextView
     private lateinit var llTitles4: LinearLayout
@@ -168,10 +168,10 @@ class BookDetailFragment: BaseFragment() {
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
         spStates = spinner_states
-        tvIsbn = text_view_isbn
-        tvPageCount = text_view_page_count
         tvPublisher = text_view_publisher
         tvPublishedDate = text_view_published_date
+        etIsbn = edit_text_isbn
+        etPageCount = edit_text_page_count
         llTitles4 = linear_layout_titles_4
         llValues4 = linear_layout_values_4
         etReadingDate = edit_text_reading_date
@@ -216,6 +216,10 @@ class BookDetailFragment: BaseFragment() {
 
         spStates.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
         spStates.isEnabled = false
+
+        etIsbn.setReadOnly(true, InputType.TYPE_NULL, 0)
+
+        etPageCount.setReadOnly(true, InputType.TYPE_NULL, 0)
 
         etReadingDate.setOnClickListener {
             etReadingDate.showDatePicker(requireActivity())
@@ -406,9 +410,9 @@ class BookDetailFragment: BaseFragment() {
         if (book.isbn != null && book.isbn.isNotBlank()) {
             isbn = book.isbn
         }
-        tvIsbn.text = isbn
+        etIsbn.setText(isbn)
 
-        tvPageCount.text = book.pageCount.toString()
+        etPageCount.setText(book.pageCount.toString())
 
         var publisher = Constants.NO_VALUE
         if (book.publisher != null && book.publisher.isNotBlank()) {
@@ -471,6 +475,10 @@ class BookDetailFragment: BaseFragment() {
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
             viewModel.sharedPreferencesHandler.getLanguage()
         )
+        val pageCountText = etPageCount.text.toString()
+        val pageCount =
+            if(pageCountText.isNotBlank()) pageCountText.toInt()
+            else 0
         val rating = rbStars.rating.toDouble() * 2
         val format = viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
         val state = viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
@@ -485,8 +493,8 @@ class BookDetailFragment: BaseFragment() {
             readingDate = readingDate,
             description = etDescription.text.toString(),
             summary = etSummary.text.toString(),
-            isbn = book?.isbn,
-            pageCount = book?.pageCount ?: 0,
+            isbn = etIsbn.text.toString(),
+            pageCount = pageCount,
             categories = book?.categories,
             averageRating = book?.averageRating ?: 0.0,
             ratingsCount = book?.ratingsCount ?: 0,
@@ -495,7 +503,7 @@ class BookDetailFragment: BaseFragment() {
             image = book?.image,
             format = format,
             state = state,
-            isFavourite = book?.isFavourite ?: false
+            isFavourite = isFavourite
         )
     }
 
@@ -515,31 +523,33 @@ class BookDetailFragment: BaseFragment() {
 
         rbStars.setIsIndicator(!editable)
 
-        if (etTitle.text.toString() == Constants.NO_VALUE) {
-            etTitle.text = null
-        }
-        etTitle.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
-        etTitle.backgroundTintList = backgroundTint
+        setEditTextEdition(
+            etTitle,
+            editable,
+            InputType.TYPE_CLASS_TEXT,
+            backgroundTint
+        )
 
-        if (etAuthor.text.toString() == Constants.NO_VALUE) {
-            etAuthor.text = null
-        }
-        etAuthor.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
-        etAuthor.backgroundTintList = backgroundTint
+        setEditTextEdition(
+            etAuthor,
+            editable,
+            InputType.TYPE_CLASS_TEXT,
+            backgroundTint
+        )
 
-        if (etDescription.text.toString() == Constants.NO_VALUE) {
-            etDescription.text = null
-        }
-        etDescription.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
-        etDescription.backgroundTintList = backgroundTint
-        etDescription.maxLines = if(editable) Constants.MAX_LINES else Constants.MIN_LINES
+        setEditTextEdition(
+            etDescription,
+            editable,
+            InputType.TYPE_CLASS_TEXT,
+            backgroundTint
+        )
 
-        if (etSummary.text.toString() == Constants.NO_VALUE) {
-            etSummary.text = null
-        }
-        etSummary.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
-        etSummary.backgroundTintList = backgroundTint
-        etSummary.maxLines = if(editable) Constants.MAX_LINES else Constants.MIN_LINES
+        setEditTextEdition(
+            etSummary,
+            editable,
+            InputType.TYPE_CLASS_TEXT,
+            backgroundTint
+        )
 
         spFormats.backgroundTintList = backgroundTint
         spFormats.isEnabled = editable
@@ -547,10 +557,37 @@ class BookDetailFragment: BaseFragment() {
         spStates.backgroundTintList = backgroundTint
         spStates.isEnabled = editable
 
-        if (etReadingDate.text.toString() == Constants.NO_VALUE) {
-            etReadingDate.text = null
+        setEditTextEdition(
+            etIsbn,
+            editable,
+            InputType.TYPE_CLASS_NUMBER,
+            backgroundTint
+        )
+
+        setEditTextEdition(
+            etPageCount,
+            editable,
+            InputType.TYPE_CLASS_NUMBER,
+            backgroundTint
+        )
+
+        setEditTextEdition(
+            etReadingDate,
+            editable,
+            InputType.TYPE_CLASS_TEXT,
+            backgroundTint
+        )
+    }
+
+    private fun setEditTextEdition(editText: EditText,
+                                   editable: Boolean,
+                                   inputType: Int,
+                                   backgroundTint: ColorStateList?) {
+
+        if (editText.text.toString() == Constants.NO_VALUE) {
+            editText.text = null
         }
-        etReadingDate.isEnabled = editable
-        etReadingDate.backgroundTintList = backgroundTint
+        editText.setReadOnly(!editable, if(editable) inputType else InputType.TYPE_NULL, 0)
+        editText.backgroundTintList = backgroundTint
     }
 }
