@@ -75,13 +75,7 @@
         <item name="android:layout_marginStart">5dp</item>
     </style>
 
-    <style name="BookDescriptionTextView" parent="BookDataTextView">
-        <item name="android:lineSpacingExtra">5dp</item>
-        <item name="android:maxLines">7</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="BookSummaryEditText" parent="CustomEditText.BookDetails">
+    <style name="BookDetailEditText" parent="CustomEditText.BookDetails">
         <item name="android:lineSpacingExtra">5dp</item>
         <item name="android:maxLines">7</item>
         <item name="android:ellipsize">end</item>
