@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setReadOnly
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.fragments.base.BaseFragment
@@ -358,9 +359,11 @@ class BookDetailFragment: BaseFragment() {
             else Constants.NO_VALUE
         )
 
-        val authors = Constants.listToString(book.authors)
-        etAuthor.visibility = if(authors.isEmpty()) View.GONE else View.VISIBLE
-        etAuthor.setText(resources.getString(R.string.authors_text, authors))
+        val authors = book.authors?.joinToString(separator = ", ") ?: ""
+        etAuthor.setText(
+            if(authors.isNotBlank()) resources.getString(R.string.authors_text, authors)
+            else Constants.NO_VALUE
+        )
 
         llCategories.removeAllViews()
         book.categories?.let { categories ->
@@ -478,6 +481,11 @@ class BookDetailFragment: BaseFragment() {
 
     private fun getBookData(): BookResponse {
 
+        val prefix = resources.getString(R.string.authors_text).split(" ")[0]
+        val authorsValue = etAuthor.getValue().removePrefix(prefix).trimStart().trimEnd()
+        val authors = Constants.stringToList<String>(authorsValue).map {
+            it.trimStart().trimEnd()
+        }
         val publishedDate = Constants.stringToDate(
             etPublishedDate.text.toString(),
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
@@ -488,7 +496,7 @@ class BookDetailFragment: BaseFragment() {
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
             viewModel.sharedPreferencesHandler.getLanguage()
         )
-        val pageCountText = etPageCount.text.toString()
+        val pageCountText = etPageCount.getValue()
         val pageCount =
             if(pageCountText.isNotBlank()) pageCountText.toInt()
             else 0
@@ -498,15 +506,15 @@ class BookDetailFragment: BaseFragment() {
 
         return BookResponse(
             id = book?.id ?: "",
-            title = etTitle.text.toString(),
+            title = etTitle.getValue(),
             subtitle = book?.subtitle,
-            authors = book?.authors,//TODO transform string to list
-            publisher = etPublisher.text.toString(),
+            authors = authors,
+            publisher = etPublisher.getValue(),
             publishedDate = publishedDate,
             readingDate = readingDate,
-            description = etDescription.text.toString(),
-            summary = etSummary.text.toString(),
-            isbn = etIsbn.text.toString(),
+            description = etDescription.getValue(),
+            summary = etSummary.getValue(),
+            isbn = etIsbn.getValue(),
             pageCount = pageCount,
             categories = book?.categories,
             averageRating = book?.averageRating ?: 0.0,

@@ -66,6 +66,10 @@ fun EditText.showDatePicker(context: Context) {
     }
 }
 
+fun EditText.getValue(): String {
+    return this.text.toString().trimStart().trimEnd()
+}
+
 // MARK - Private functions
 
 private fun getPicker(editText: EditText, context: Context): DatePickerDialog {

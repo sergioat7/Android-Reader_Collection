@@ -50,7 +50,7 @@ itemView: View
             .append(book.subtitle ?: "")
             .toString()
 
-        val authors = Constants.listToString(book.authors)
+        val authors = book.authors?.joinToString(separator = ", ") ?: ""
         itemView.text_view_author.text = context.resources.getString(R.string.authors_text, authors)
         itemView.text_view_author.visibility = if(authors.isBlank()) View.GONE else View.VISIBLE
 
