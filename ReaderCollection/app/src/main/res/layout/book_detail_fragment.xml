@@ -382,7 +382,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataEditText.Left"
+                    android:hint="@string/add_isbn"
+                    style="@style/CustomEditText.BookDetails.Left"
                     />
 
                 <EditText
@@ -390,7 +391,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataEditText.Right"
+                    android:hint="@string/add_pages"
+                    style="@style/CustomEditText.BookDetails.Right"
                     />
 
             </LinearLayout>
@@ -437,20 +439,23 @@
                 app:layout_constraintVertical_bias="0.0"
                 >
 
-                <TextView
-                    android:id="@+id/text_view_publisher"
+                <EditText
+                    android:id="@+id/edit_text_publisher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Left"
+                    android:hint="@string/add_publisher"
+                    style="@style/CustomEditText.BookDetails.Left"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_published_date"
+                <EditText
+                    android:id="@+id/edit_text_published_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Right"
+                    android:layout_marginStart="5dp"
+                    android:hint="@string/select_a_date"
+                    style="@style/CustomEditText.BookDetails.Date"
                     />
 
             </LinearLayout>
