@@ -377,20 +377,20 @@
                 app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_2"
                 >
 
-                <TextView
-                    android:id="@+id/text_view_isbn"
+                <EditText
+                    android:id="@+id/edit_text_isbn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Left"
+                    style="@style/BookDataEditText.Left"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_page_count"
+                <EditText
+                    android:id="@+id/edit_text_page_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Right"
+                    style="@style/BookDataEditText.Right"
                     />
 
             </LinearLayout>

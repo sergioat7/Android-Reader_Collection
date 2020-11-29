@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.viewholders
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
