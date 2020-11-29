@@ -40,6 +40,7 @@
     //BOOK DETAILS
     <string name="authors_text">Por %s</string>
     <string name="description">Descripción</string>
+    <string name="add_description">Añade una descripción</string>
     <string name="read_more">Leer más</string>
     <string name="summary">Resumen</string>
     <string name="add_summary">Añade un resumen</string>

@@ -48,7 +48,7 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var tvAuthor: TextView
     private lateinit var svCategories: HorizontalScrollView
     private lateinit var llCategories: LinearLayout
-    private lateinit var tvDescription: TextView
+    private lateinit var etDescription: EditText
     private lateinit var btReadMoreDescription: Button
     private lateinit var llSummary: LinearLayout
     private lateinit var etSummary: EditText
@@ -157,7 +157,7 @@ class BookDetailFragment: BaseFragment() {
         tvAuthor = text_view_author
         svCategories = horizontal_scroll_view_categories
         llCategories = linear_layout_categories
-        tvDescription = text_view_description
+        etDescription = edit_text_description
         btReadMoreDescription = button_read_more_description
         llSummary = linear_layout_summary
         etSummary = edit_text_summary
@@ -191,9 +191,11 @@ class BookDetailFragment: BaseFragment() {
 
         rbStars.setIsIndicator(true)
 
+        etDescription.setReadOnly(true, InputType.TYPE_NULL, 0)
+
         btReadMoreDescription.setOnClickListener {
 
-            tvDescription.maxLines = Constants.MAX_LINES
+            etDescription.maxLines = Constants.MAX_LINES
             btReadMoreDescription.visibility = View.GONE
         }
 
@@ -361,10 +363,10 @@ class BookDetailFragment: BaseFragment() {
         if (book.description != null && book.description.isNotBlank()) {
             description = book.description
         }
-        tvDescription.text = description
+        etDescription.setText(description)
 
         btReadMoreDescription.visibility =
-            if(description == Constants.NO_VALUE || tvDescription.maxLines == Constants.MAX_LINES) {
+            if(description == Constants.NO_VALUE || etDescription.maxLines == Constants.MAX_LINES) {
                 View.GONE
             } else {
                 View.VISIBLE
@@ -456,7 +458,6 @@ class BookDetailFragment: BaseFragment() {
 
     private fun getBookData(): BookResponse {
 
-        val summary = etSummary.text.toString()
         val readingDate = Constants.stringToDate(
             etReadingDate.text.toString(),
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
@@ -474,8 +475,8 @@ class BookDetailFragment: BaseFragment() {
             publisher = book?.publisher,
             publishedDate = book?.publishedDate,
             readingDate = readingDate,
-            description = book?.description,
-            summary = summary,
+            description = etDescription.text.toString(),
+            summary = etSummary.text.toString(),
             isbn = book?.isbn,
             pageCount = book?.pageCount ?: 0,
             categories = book?.categories,
@@ -505,6 +506,13 @@ class BookDetailFragment: BaseFragment() {
         menu.findItem(R.id.action_cancel).isVisible = editable
 
         rbStars.setIsIndicator(!editable)
+
+        if (etDescription.text.toString() == Constants.NO_VALUE) {
+            etDescription.text = null
+        }
+        etDescription.setReadOnly(!editable, if(editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL, 0)
+        etDescription.backgroundTintList = backgroundTint
+        etDescription.maxLines = if(editable) Constants.MAX_LINES else Constants.MIN_LINES
 
         if (etSummary.text.toString() == Constants.NO_VALUE) {
             etSummary.text = null
