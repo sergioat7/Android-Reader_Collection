@@ -60,7 +60,7 @@ itemView: View
         itemView.text_view_publisher.visibility = if(publisher.isBlank()) View.GONE else View.VISIBLE
 
         val rating = if (isGoogleBook) book.averageRating else book.rating
-        itemView.rating_bar.rating = rating.toFloat()
+        itemView.rating_bar.rating = rating.toFloat() / 2
         itemView.text_view_rating.text = rating.toInt().toString()
         itemView.linear_layout_rating.visibility = if (rating > 0) View.VISIBLE else View.GONE
         itemView.text_view_new.visibility = if (rating > 0) View.GONE else View.VISIBLE
