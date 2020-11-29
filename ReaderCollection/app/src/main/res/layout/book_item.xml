@@ -60,16 +60,31 @@
             <TextView
                 android:id="@+id/text_view_title"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 style="@style/BookNameTextView"
+                />
+
+            <TextView
+                android:id="@+id/text_view_author"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/BookSecondaryTextView"
+                />
+
+            <TextView
+                android:id="@+id/text_view_publisher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/BookSecondaryTextView"
                 />
 
             <LinearLayout
                 android:id="@+id/linear_layout_rating"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_height="match_parent"
                 android:orientation="horizontal"
+                android:gravity="bottom"
+                android:visibility="visible"
                 >
 
                 <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -83,7 +98,7 @@
                 <TextView
                     android:id="@+id/text_view_rating"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     style="@style/RatingTextView"
                     />
 
@@ -92,25 +107,11 @@
             <TextView
                 android:id="@+id/text_view_new"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:visibility="gone"
                 style="@style/NoRatingTextView"
                 />
-
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                android:layout_weight="1"
-                android:scrollbars="none"
-                >
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    />
-
-            </HorizontalScrollView>
 
         </LinearLayout>
 

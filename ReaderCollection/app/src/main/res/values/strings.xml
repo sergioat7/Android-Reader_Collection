@@ -28,6 +28,7 @@
     <string name="anything">Anything</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="publisher_text">Pub. %s</string>
     <string name="search_books">Search books</string>
     <string name="query_title" translatable="false">\"%s\"</string>
 
