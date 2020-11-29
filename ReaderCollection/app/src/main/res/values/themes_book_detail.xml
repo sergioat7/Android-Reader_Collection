@@ -61,40 +61,6 @@
         <item name="android:layout_marginStart">5dp</item>
     </style>
 
-    <style name="BookDataTextView">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="BookDataTextView.Left">
-        <item name="android:layout_marginEnd">5dp</item>
-    </style>
-
-    <style name="BookDataTextView.Right">
-        <item name="android:layout_marginStart">5dp</item>
-    </style>
-
-    <style name="BookDataEditText" parent="CustomEditText">
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="BookDataEditText.Left">
-        <item name="android:layout_marginEnd">5dp</item>
-    </style>
-
-    <style name="BookDataEditText.Right">
-        <item name="android:layout_marginStart">5dp</item>
-    </style>
-
-    <style name="BookDetailEditText" parent="CustomEditText.BookDetails">
-        <item name="android:lineSpacingExtra">5dp</item>
-        <item name="android:maxLines">7</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
     <style name="BookReadMoreButton">
         <item name="android:background">@android:color/transparent</item>
         <item name="android:gravity">top</item>
@@ -110,6 +76,20 @@
         <item name="android:textColor">@color/textSecondary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="BookDetailEditText" parent="CustomEditText.BookDetails">
+        <item name="android:lineSpacingExtra">5dp</item>
+        <item name="android:maxLines">7</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="CustomEditText.BookDetails.Left">
+        <item name="android:layout_marginEnd">5dp</item>
+    </style>
+
+    <style name="CustomEditText.BookDetails.Right">
+        <item name="android:layout_marginStart">5dp</item>
     </style>
 
     <style name="CustomEditText.BookDetails.Date" parent="CustomEditText.BookDetails">

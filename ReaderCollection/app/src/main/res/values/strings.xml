@@ -34,7 +34,7 @@
 
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
-    <string name="add_author">Add an author(s)</string>
+    <string name="add_author">Add the author(s)</string>
     <string name="authors_text">By %s</string>
     <string name="description">Description</string>
     <string name="add_description">Add a description</string>
@@ -43,12 +43,15 @@
     <string name="add_summary">Add a summary</string>
     <string name="select_format">Select a format</string>
     <string name="select_state">Select a state</string>
-    <string name="publisher">Publisher</string>
-    <string name="published_date">Published date</string>
     <string name="isbn" translatable="false">ISBN</string>
+    <string name="add_isbn">Add the ISBN</string>
     <string name="pages">Pages</string>
-    <string name="reading_date">Reading date</string>
+    <string name="add_pages">Add the pages</string>
+    <string name="publisher">Publisher</string>
+    <string name="add_publisher">Add the publisher</string>
+    <string name="published_date">Published date</string>
     <string name="select_a_date">Select a date</string>
+    <string name="reading_date">Reading date</string>
     <string name="book_saved">Book saved!</string>
     <string name="book_removed">Book removed!</string>
 

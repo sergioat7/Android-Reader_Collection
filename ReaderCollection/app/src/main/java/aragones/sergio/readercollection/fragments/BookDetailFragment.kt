@@ -61,8 +61,8 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var spStates: Spinner
     private lateinit var etIsbn: EditText
     private lateinit var etPageCount: EditText
-    private lateinit var tvPublisher: TextView
-    private lateinit var tvPublishedDate: TextView
+    private lateinit var etPublisher: EditText
+    private lateinit var etPublishedDate: EditText
     private lateinit var llTitles4: LinearLayout
     private lateinit var llValues4: LinearLayout
     private lateinit var etReadingDate: EditText
@@ -168,10 +168,10 @@ class BookDetailFragment: BaseFragment() {
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
         spStates = spinner_states
-        tvPublisher = text_view_publisher
-        tvPublishedDate = text_view_published_date
         etIsbn = edit_text_isbn
         etPageCount = edit_text_page_count
+        etPublisher = edit_text_publisher
+        etPublishedDate = edit_text_published_date
         llTitles4 = linear_layout_titles_4
         llValues4 = linear_layout_values_4
         etReadingDate = edit_text_reading_date
@@ -220,6 +220,14 @@ class BookDetailFragment: BaseFragment() {
         etIsbn.setReadOnly(true, InputType.TYPE_NULL, 0)
 
         etPageCount.setReadOnly(true, InputType.TYPE_NULL, 0)
+
+        etPublisher.setReadOnly(true, InputType.TYPE_NULL, 0)
+
+        etPublishedDate.setOnClickListener {
+            etPublishedDate.showDatePicker(requireActivity())
+        }
+        etPublishedDate.isEnabled = false
+        etPublishedDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
 
         etReadingDate.setOnClickListener {
             etReadingDate.showDatePicker(requireActivity())
@@ -418,7 +426,7 @@ class BookDetailFragment: BaseFragment() {
         if (book.publisher != null && book.publisher.isNotBlank()) {
             publisher = book.publisher
         }
-        tvPublisher.text = publisher
+        etPublisher.setText(publisher)
 
         var publishedDate = Constants.dateToString(
             book.publishedDate,
@@ -428,7 +436,7 @@ class BookDetailFragment: BaseFragment() {
         if (publishedDate == null || publishedDate.isBlank()) {
             publishedDate = Constants.NO_VALUE
         }
-        tvPublishedDate.text = publishedDate
+        etPublishedDate.setText(publishedDate)
 
         var readingDate = Constants.dateToString(
             book.readingDate,
@@ -470,6 +478,11 @@ class BookDetailFragment: BaseFragment() {
 
     private fun getBookData(): BookResponse {
 
+        val publishedDate = Constants.stringToDate(
+            etPublishedDate.text.toString(),
+            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
+            viewModel.sharedPreferencesHandler.getLanguage()
+        )
         val readingDate = Constants.stringToDate(
             etReadingDate.text.toString(),
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
@@ -488,8 +501,8 @@ class BookDetailFragment: BaseFragment() {
             title = etTitle.text.toString(),
             subtitle = book?.subtitle,
             authors = book?.authors,//TODO transform string to list
-            publisher = book?.publisher,
-            publishedDate = book?.publishedDate,
+            publisher = etPublisher.text.toString(),
+            publishedDate = publishedDate,
             readingDate = readingDate,
             description = etDescription.text.toString(),
             summary = etSummary.text.toString(),
@@ -572,11 +585,23 @@ class BookDetailFragment: BaseFragment() {
         )
 
         setEditTextEdition(
-            etReadingDate,
+            etPublisher,
             editable,
             InputType.TYPE_CLASS_TEXT,
             backgroundTint
         )
+
+        if (etPublishedDate.text.toString() == Constants.NO_VALUE) {
+            etPublishedDate.text = null
+        }
+        etPublishedDate.isEnabled = editable
+        etPublishedDate.backgroundTintList = backgroundTint
+
+        if (etReadingDate.text.toString() == Constants.NO_VALUE) {
+            etReadingDate.text = null
+        }
+        etReadingDate.isEnabled = editable
+        etReadingDate.backgroundTintList = backgroundTint
     }
 
     private fun setEditTextEdition(editText: EditText,
