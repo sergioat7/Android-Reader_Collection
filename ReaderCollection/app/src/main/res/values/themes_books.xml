@@ -109,4 +109,15 @@
         <item name="android:src">@drawable/ic_double_arrow_down_light</item>
     </style>
 
+    <style name="LoadMoreButton" parent="RoundedButton.Action">
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:paddingStart">10dp</item>
+        <item name="android:paddingEnd">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+    </style>
+
+    <style name="LoadMoreButton.Image">
+        <item name="android:drawableStart">@drawable/ic_add_circle_outline_light</item>
+    </style>
+
 </resources>
