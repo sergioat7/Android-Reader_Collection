@@ -13,54 +13,75 @@ import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
-import java.util.ArrayList
+import aragones.sergio.readercollection.viewholders.LoadMoreItemsViewHolder
+import java.util.*
 
 class BooksAdapter(
-    var books: MutableList<BookResponse>,
+    private var books: MutableList<BookResponse>,
     private val isGoogleBook: Boolean,
     private val context: Context,
     private var onItemClickListener: OnItemClickListener
-): RecyclerView.Adapter<BooksViewHolder?>() {
+): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BooksViewHolder {
+    //MARK: - Lifecycle methods
+
+    override fun getItemViewType(position: Int): Int {
+
+        return if (books[position].id.isNotBlank()) {
+            R.layout.book_item
+        } else {
+            R.layout.load_more_items_item
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
         val itemView: View = LayoutInflater.from(parent.context).inflate(
-            R.layout.book_item,
+            viewType,
             parent,
             false
         )
-        return BooksViewHolder(itemView)
+        return if (viewType == R.layout.book_item) {
+            BooksViewHolder(itemView)
+        } else {
+            LoadMoreItemsViewHolder(itemView)
+        }
     }
 
     override fun getItemCount(): Int {
         return books.size
     }
 
-    override fun onBindViewHolder(holder: BooksViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        val book = books[position]
-        holder.fillData(
-            book,
-            isGoogleBook,
-            context
-        )
+        if (holder is BooksViewHolder) {
 
-        holder.itemView.setOnClickListener {
-            onItemClickListener.onItemClick(book.id)
+            val book = books[position]
+            holder.fillData(
+                book,
+                isGoogleBook,
+                context
+            )
+
+            holder.itemView.setOnClickListener {
+                onItemClickListener.onItemClick(book.id)
+            }
+        } else {
+            (holder as LoadMoreItemsViewHolder).setItem(onItemClickListener)
         }
-    }
-
-    interface OnItemClickListener {
-        fun onItemClick(bookId: String)
     }
 
     //MARK: - Public methods
 
-    fun addBooks(newBooks: MutableList<BookResponse>) {
+    fun setBooks(newBooks: MutableList<BookResponse>) {
 
-        val position: Int = this.books.size
+        val position = this.books.size
         this.books = newBooks
-        notifyItemInserted(position)
+        if (position < newBooks.size) {
+            notifyItemInserted(position)
+        } else {
+            notifyDataSetChanged()
+        }
     }
 
     fun resetList() {

@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
+import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
@@ -29,7 +30,7 @@ import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
+class SearchFragment: BaseFragment(), OnItemClickListener {
 
     //MARK: - Private properties
 
@@ -63,6 +64,10 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
         val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to true)
         launchActivityWithExtras(BookDetailActivity::class.java, params)
+    }
+
+    override fun onLoadMoreItemsClick() {
+        viewModel.searchBooks()
     }
 
     //MARK: - Public methods
@@ -105,10 +110,6 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    viewModel.searchBooks()
-                }
 
                 fbStartList.visibility =
                     if (!recyclerView.canScrollVertically(-1)
@@ -160,7 +161,7 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 ivNoResults.visibility = View.VISIBLE
             } else {
 
-                booksAdapter.addBooks(booksResponse)
+                booksAdapter.setBooks(booksResponse)
                 ivNoResults.visibility = View.GONE
                 fbEndList.visibility = View.VISIBLE
             }

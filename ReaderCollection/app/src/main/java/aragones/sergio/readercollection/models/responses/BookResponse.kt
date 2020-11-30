@@ -50,4 +50,26 @@ data class BookResponse(
     val state: String?,
     @SerializedName("isFavourite")
     val isFavourite: Boolean
-): BaseModel<String>
+): BaseModel<String> {
+    constructor(id: String): this(
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        0.0,
+        0,
+        0.0,
+        null,
+        null,
+        null,
+        null,
+        false)
+}

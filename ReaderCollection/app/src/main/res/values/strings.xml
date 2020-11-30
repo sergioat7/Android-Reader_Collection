@@ -31,6 +31,7 @@
     <string name="publisher_text">Pub. %s</string>
     <string name="search_books">Search books</string>
     <string name="query_title" translatable="false">\"%s\"</string>
+    <string name="load_more">Load more</string>
 
     //BOOK DETAILS
     <string name="add_title">Add a title</string>

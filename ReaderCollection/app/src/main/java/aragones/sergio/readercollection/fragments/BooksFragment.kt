@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
+import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.FormatResponse
@@ -32,7 +33,7 @@ import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_books.*
 
-class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
+class BooksFragment: BaseFragment(), OnItemClickListener {
 
     //MARK: - Private properties
 
@@ -80,6 +81,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to false)
         launchActivityWithExtras(BookDetailActivity::class.java, params)
     }
+
+    override fun onLoadMoreItemsClick() {}
 
     //MARK: - Private methods
 
@@ -225,7 +228,7 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
 
             ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
             booksAdapter.resetList()
-            booksAdapter.addBooks(booksResponse.toMutableList())
+            booksAdapter.setBooks(booksResponse.toMutableList())
             setTitle(booksResponse.size)
         })
 

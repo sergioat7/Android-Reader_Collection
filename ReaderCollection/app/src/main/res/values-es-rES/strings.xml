@@ -36,6 +36,7 @@
     <string name="no">No</string>
     <string name="publisher_text">Ed. %s</string>
     <string name="search_books">Buscar libros</string>
+    <string name="load_more">Cargar más</string>
 
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>
