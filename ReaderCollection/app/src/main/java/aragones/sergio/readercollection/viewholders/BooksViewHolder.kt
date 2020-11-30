@@ -44,11 +44,7 @@ itemView: View
                 }
             })
 
-        itemView.text_view_title.text = StringBuilder()
-            .append(book.title ?: "")
-            .append(" ")
-            .append(book.subtitle ?: "")
-            .toString()
+        itemView.text_view_title.text = book.title
 
         val authors = book.authors?.joinToString(separator = ", ") ?: ""
         itemView.text_view_author.text = context.resources.getString(R.string.authors_text, authors)

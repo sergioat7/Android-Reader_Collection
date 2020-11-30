@@ -229,10 +229,15 @@ class Constants {
 
         fun mapGoogleBook(googleBook: GoogleBookResponse): BookResponse {
 
+            val title = StringBuilder()
+                .append(googleBook.volumeInfo.title ?: "")
+                .append(" ")
+                .append(googleBook.volumeInfo.subtitle ?: "")
+                .toString()
             return BookResponse(
                 googleBook.id,
-                googleBook.volumeInfo.title,
-                googleBook.volumeInfo.subtitle,
+                title,
+                null,
                 googleBook.volumeInfo.authors,
                 googleBook.volumeInfo.publisher,
                 googleBook.volumeInfo.publishedDate,
