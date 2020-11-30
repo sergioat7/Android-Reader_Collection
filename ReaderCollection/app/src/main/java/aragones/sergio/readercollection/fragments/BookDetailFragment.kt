@@ -349,11 +349,7 @@ class BookDetailFragment: BaseFragment() {
         llRating.visibility = if (hideRating) View.INVISIBLE else View.VISIBLE
         tvNoRatings.visibility = if (hideRating) View.VISIBLE else View.GONE
 
-        val title = StringBuilder()
-            .append(book.title ?: "")
-            .append(" ")
-            .append(book.subtitle ?: "")
-            .toString()
+        val title = book.title ?: ""
         etTitle.setText(
             if (title.isNotBlank()) title
             else Constants.NO_VALUE
