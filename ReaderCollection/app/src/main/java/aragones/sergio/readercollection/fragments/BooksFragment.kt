@@ -29,6 +29,7 @@ import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_books.*
 
 class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
@@ -43,6 +44,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
     private lateinit var srlBooks: SwipeRefreshLayout
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
+    private lateinit var fbStartList: FloatingActionButton
+    private lateinit var fbEndList: FloatingActionButton
     private lateinit var viewModel: BooksViewModel
     private lateinit var booksAdapter: BooksAdapter
     private lateinit var formatValues: MutableList<String>
@@ -90,6 +93,8 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         srlBooks = swipe_refresh_layout_books
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
+        fbStartList = floating_action_button_start_list
+        fbEndList = floating_action_button_end_list
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(this, BooksViewModelFactory(application)).get(BooksViewModel::class.java)
         booksAdapter = BooksAdapter(
@@ -174,6 +179,44 @@ class BooksFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
+        rvBooks.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+                fbStartList.visibility =
+                    if (!recyclerView.canScrollVertically(-1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+
+                fbEndList.visibility =
+                    if (!recyclerView.canScrollVertically(1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+            }
+        })
+
+        fbStartList.visibility = View.GONE
+        fbStartList.setOnClickListener {
+
+            rvBooks.scrollToPosition(0)
+            fbStartList.visibility = View.GONE
+            fbEndList.visibility = View.VISIBLE
+        }
+
+        fbEndList.setOnClickListener {
+
+            val position: Int = booksAdapter.itemCount - 1
+            rvBooks.scrollToPosition(position)
+            fbStartList.visibility = View.VISIBLE
+            fbEndList.visibility = View.GONE
+        }
     }
 
     private fun setupBindings() {
