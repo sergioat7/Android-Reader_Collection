@@ -80,4 +80,33 @@
         <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
+    <style name="PositionListButton">
+        <item name="android:backgroundTint">@color/buttonPrimary</item>
+        <item name="android:tint">@color/colorSecondary</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="borderWidth">0dp</item>
+        <item name="maxImageSize">10dp</item>
+        <item name="fabSize">mini</item>
+    </style>
+
+    <style name="StartListButton" parent="PositionListButton">
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+    </style>
+
+    <style name="StartListButton.Image">
+        <item name="android:src">@drawable/ic_double_arrow_up_light</item>
+    </style>
+
+    <style name="EndListButton" parent="PositionListButton">
+        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginEnd">10dp</item>
+    </style>
+
+    <style name="EndListButton.Image">
+        <item name="android:src">@drawable/ic_double_arrow_down_light</item>
+    </style>
+
 </resources>

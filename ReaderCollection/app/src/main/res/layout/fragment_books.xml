@@ -119,6 +119,24 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_start_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
+        app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
+        style="@style/StartListButton.Image"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_end_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/swipe_refresh_layout_books"
+        app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
+        style="@style/EndListButton.Image"
+        />
+
     <include
         android:id="@+id/image_view_no_results"
         android:layout_width="0dp"
