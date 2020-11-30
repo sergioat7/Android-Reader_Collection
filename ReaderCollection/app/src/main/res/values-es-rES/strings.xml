@@ -69,6 +69,7 @@
     //POPUPS
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
+    <string name="loading">Cargando…</string>
     <string name="book_remove_confirmation">¿Estás seguro de que quieres borrar este libro?</string>
     <string name="profile_delete_confirmation">¿Estás seguro de que quieres borrar tu usuario? Perderás toda la información almacenada sobre los libros.</string>
     <string name="profile_logout_confirmation">¿Estás seguro de que quieres salir?</string>
