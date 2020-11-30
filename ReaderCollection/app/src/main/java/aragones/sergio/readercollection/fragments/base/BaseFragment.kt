@@ -12,10 +12,13 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
+import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import java.io.Serializable
 
 open class BaseFragment: Fragment() {
+
+    private var loadingFragment: PopupLoadingDialogFragment? = null
 
     fun manageError(errorResponse: ErrorResponse) {
 
@@ -57,11 +60,24 @@ open class BaseFragment: Fragment() {
     }
 
     fun showLoading() {
-        //TODO show loading
+
+        val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
+        val prev = activity?.supportFragmentManager?.findFragmentByTag("loadingDialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        loadingFragment = PopupLoadingDialogFragment()
+        loadingFragment?.let {
+            it.isCancelable = false
+            it.show(ft, "loadingDialog")
+        }
     }
 
     fun hideLoading() {
-        //TODO hide loading
+
+        loadingFragment?.dismiss()
+        loadingFragment = null
     }
 
     fun showPopupConfirmationDialog(messageId: Int, acceptHandler: () -> Unit) {
