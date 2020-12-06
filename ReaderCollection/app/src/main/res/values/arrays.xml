@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 20/11/2020
+  -->
+
+<resources>
+
+    <string-array name="favourites">
+        <item>@string/anything</item>
+        <item>@string/yes</item>
+        <item>@string/no</item>
+    </string-array>
+
+</resources>

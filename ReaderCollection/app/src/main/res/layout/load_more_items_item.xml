@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 30/11/2020
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/constraint_layout_load_more_items"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
+
+    <Button
+        android:id="@+id/button_load_more_items"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/load_more"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/LoadMoreButton.Image"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

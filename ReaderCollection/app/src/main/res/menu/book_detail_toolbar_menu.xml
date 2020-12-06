@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 12/11/2020
+  -->
+
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_edit"
+        android:icon="@drawable/ic_edit_book_light"
+        android:title=""
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_remove"
+        android:icon="@drawable/ic_remove_book_light"
+        android:title=""
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_cancel"
+        android:icon="@drawable/ic_cancel_changes_light"
+        android:title=""
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_save_changes_light"
+        android:title=""
+        app:showAsAction="always"
+        />
+
+</menu>
