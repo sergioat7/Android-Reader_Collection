@@ -5,12 +5,22 @@
 
 package aragones.sergio.readercollection.utils
 
-import android.content.Context
+import android.content.SharedPreferences
+import aragones.sergio.readercollection.models.login.AuthData
+import aragones.sergio.readercollection.models.login.UserData
+import com.google.gson.Gson
 import java.util.*
+import javax.inject.Inject
 
-class SharedPreferencesHandler(context: Context?) {
+class SharedPreferencesHandler @Inject constructor(
+    private val sharedPreferences: SharedPreferences?
+) {
 
-    private val sharedPreferences = context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
+    //MARK: Private properties
+
+    private val gson = Gson()
+
+    //MARK: Public methods
 
     fun getLanguage(): String {
 
@@ -33,5 +43,77 @@ class SharedPreferencesHandler(context: Context?) {
                 commit()
             }
         }
+    }
+
+    fun getCredentials(): AuthData {
+
+        val authDataJson = sharedPreferences?.getString(Constants.AUTH_DATA_PREFERENCES_NAME,null)
+        return if (authDataJson != null) {
+            gson.fromJson(authDataJson, AuthData::class.java)
+        } else {
+            AuthData("")
+        }
+    }
+
+    fun storeCredentials(authData: AuthData) {
+
+        if (sharedPreferences != null) {
+            with (sharedPreferences.edit()) {
+                val authDataJson = gson.toJson(authData)
+                putString(Constants.AUTH_DATA_PREFERENCES_NAME, authDataJson)
+                commit()
+            }
+        }
+    }
+
+    fun removeCredentials() {
+        sharedPreferences?.edit()?.remove(Constants.AUTH_DATA_PREFERENCES_NAME)?.apply()
+    }
+
+    fun isLoggedIn(): Boolean {
+
+        val userData = getUserData()
+        val authData = getCredentials()
+        return userData.isLoggedIn && authData.token.isNotEmpty()
+    }
+
+    fun getUserData(): UserData {
+
+        val userDataJson = sharedPreferences?.getString(Constants.USER_DATA_PREFERENCES_NAME,null)
+        return if (userDataJson != null) {
+            gson.fromJson(userDataJson, UserData::class.java)
+        } else {
+            UserData("", "", false)
+        }
+    }
+
+    fun storeUserData(userData: UserData) {
+
+        if (sharedPreferences != null) {
+            with (sharedPreferences.edit()) {
+                val userDataJson = gson.toJson(userData)
+                putString(Constants.USER_DATA_PREFERENCES_NAME, userDataJson)
+                commit()
+            }
+        }
+    }
+
+    fun storePassword(password: String) {
+
+        val userData = getUserData()
+        userData.password = password
+        storeUserData(userData)
+    }
+
+    fun removeUserData() {
+        sharedPreferences?.edit()?.remove(Constants.USER_DATA_PREFERENCES_NAME)?.apply()
+    }
+
+    fun removePassword() {
+
+        val userData = getUserData()
+        userData.password = ""
+        userData.isLoggedIn = false
+        storeUserData(userData)
     }
 }

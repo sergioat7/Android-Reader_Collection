@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 28/10/2020
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragments.RegisterFragment"
+    >
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/edit_text_username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        style="@style/LoginImage"
+        />
+
+    <EditText
+        android:id="@+id/edit_text_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/edit_text_password"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_view"
+        style="@style/UsernameEditText"
+        />
+
+    <EditText
+        android:id="@+id/edit_text_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/password"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+        app:layout_constraintStart_toStartOf="@+id/edit_text_username"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.6"
+        style="@style/PasswordEditText"
+        />
+
+    <ImageButton
+        android:id="@+id/image_button_password"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_password"
+        style="@style/PasswordEyeButton"
+        />
+
+    <EditText
+        android:id="@+id/edit_text_confirm_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/confirm_password"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+        app:layout_constraintStart_toStartOf="@+id/edit_text_username"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
+        style="@style/PasswordEditText"
+        />
+
+    <ImageButton
+        android:id="@+id/image_button_confirm_password"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_confirm_password"
+        app:layout_constraintEnd_toEndOf="@+id/edit_text_confirm_password"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_confirm_password"
+        style="@style/PasswordEyeButton"
+        />
+
+    <Button
+        android:id="@+id/button_register"
+        android:layout_height="wrap_content"
+        android:enabled="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_confirm_password"
+        style="@style/RegisterButton"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

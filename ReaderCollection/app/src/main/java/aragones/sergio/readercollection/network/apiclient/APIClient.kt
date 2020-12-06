@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 16/10/2020
  */
 
-package aragones.sergio.readercollection.network
+package aragones.sergio.readercollection.network.apiclient
 
 import aragones.sergio.readercollection.utils.Constants
 import com.google.gson.*
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 class APIClient {
     companion object {
 
-        private val gson: Gson =
+        val gson: Gson =
             GsonBuilder()
                 .registerTypeAdapter(
                     Date::class.java,
@@ -36,12 +36,22 @@ class APIClient {
                 .connectTimeout(Constants.CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .readTimeout(Constants.READ_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(Constants.WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .followRedirects(false)
                 .build()
 
         val retrofit: Retrofit =
             Retrofit
                 .Builder()
                 .baseUrl(Constants.BASE_ENDPOINT)
+                .client(okHttpClient)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                .build()
+
+        val googleRetrofit: Retrofit =
+            Retrofit
+                .Builder()
+                .baseUrl(Constants.BASE_GOOGLE_ENDPOINT)
                 .client(okHttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJava3CallAdapterFactory.create())

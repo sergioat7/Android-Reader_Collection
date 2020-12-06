@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="colorPrimaryLight">#75FFFFFF</color>
+    <color name="colorSecondary">#2C2C42</color>
+    <color name="colorTertiary">#F9B197</color>
+    <color name="colorTertiaryLight">#75F9B197</color>
+    <color name="buttonPrimary">#FFFFFF</color>
+    <color name="buttonSecondary">#4E4A65</color>
+    <color name="textPrimary">#FFFFFF</color>
+    <color name="textPrimaryLight">#75FFFFFF</color>
+    <color name="textSecondary">#CECDCE</color>
+    <color name="textSecondaryLight">#75CECDCE</color>
+    <color name="textTertiary">#2C2C42</color>
+    <color name="textTertiaryLight">#752C2C42</color>
+
+</resources>
