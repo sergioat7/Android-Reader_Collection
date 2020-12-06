@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.viewholders
 
 import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -45,33 +44,20 @@ itemView: View
                 }
             })
 
-        itemView.text_view_title.text = StringBuilder()
-            .append(book.title ?: "")
-            .append(" ")
-            .append(book.subtitle ?: "")
-            .toString()
+        itemView.text_view_title.text = book.title
+
+        val authors = book.authors?.joinToString(separator = ", ") ?: ""
+        itemView.text_view_author.text = context.resources.getString(R.string.authors_text, authors)
+        itemView.text_view_author.visibility = if(authors.isBlank()) View.GONE else View.VISIBLE
+
+        val publisher = book.publisher ?: ""
+        itemView.text_view_publisher.text = context.resources.getString(R.string.publisher_text, publisher)
+        itemView.text_view_publisher.visibility = if(publisher.isBlank()) View.GONE else View.VISIBLE
 
         val rating = if (isGoogleBook) book.averageRating else book.rating
-        itemView.rating_bar.rating = rating.toFloat()
+        itemView.rating_bar.rating = rating.toFloat() / 2
         itemView.text_view_rating.text = rating.toInt().toString()
         itemView.linear_layout_rating.visibility = if (rating > 0) View.VISIBLE else View.GONE
         itemView.text_view_new.visibility = if (rating > 0) View.GONE else View.VISIBLE
-
-        val llCategories = itemView.linear_layout_categories
-        llCategories.removeAllViews()
-        book.categories?.let { categories ->
-            for (category in categories) {
-
-                val tv = Constants.getRoundedTextView(category, context)
-                llCategories.addView(tv)
-
-                val view = View(context)
-                view.layoutParams = ViewGroup.LayoutParams(
-                    20,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                llCategories.addView(view)
-            }
-        }
     }
 }

@@ -34,21 +34,29 @@
     <string name="anything">Cualquiera</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="publisher_text">Ed. %s</string>
     <string name="search_books">Buscar libros</string>
+    <string name="load_more">Cargar más</string>
 
     //BOOK DETAILS
+    <string name="add_title">Añade un título</string>
+    <string name="add_author">Añade el autor(es)</string>
     <string name="authors_text">Por %s</string>
     <string name="description">Descripción</string>
+    <string name="add_description">Añade una descripción</string>
     <string name="read_more">Leer más</string>
     <string name="summary">Resumen</string>
     <string name="add_summary">Añade un resumen</string>
     <string name="select_format">Selecciona un formato</string>
     <string name="select_state">Selecciona un estado</string>
-    <string name="publisher">Editorial</string>
-    <string name="published_date">Fecha de publicación</string>
+    <string name="add_isbn">Añade el ISBN</string>
     <string name="pages">Páginas</string>
-    <string name="reading_date">Fecha de lectura</string>
+    <string name="add_pages">Añade las páginas</string>
+    <string name="publisher">Editorial</string>
+    <string name="add_publisher">Añade la editorial</string>
+    <string name="published_date">Fecha de publicación</string>
     <string name="select_a_date">Selecciona una fecha</string>
+    <string name="reading_date">Fecha de lectura</string>
     <string name="book_saved">¡Libro guardado!</string>
     <string name="book_removed">¡Libro eliminado!</string>
 
@@ -61,6 +69,7 @@
     //POPUPS
     <string name="accept">Aceptar</string>
     <string name="cancel">Cancelar</string>
+    <string name="loading">Cargando…</string>
     <string name="book_remove_confirmation">¿Estás seguro de que quieres borrar este libro?</string>
     <string name="profile_delete_confirmation">¿Estás seguro de que quieres borrar tu usuario? Perderás toda la información almacenada sobre los libros.</string>
     <string name="profile_logout_confirmation">¿Estás seguro de que quieres salir?</string>

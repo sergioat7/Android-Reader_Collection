@@ -40,11 +40,21 @@ class SearchViewModel @Inject constructor(
 
         _searchLoading.value = true
         searchRepository.searchBooks(query, page, null).subscribeBy(
-            onSuccess = {
+            onSuccess = { googleBookListResponse ->
 
                 page++
                 val currentValues = _books.value ?: mutableListOf()
-                currentValues.addAll(Constants.mapGoogleBooks(it.items))
+                val newValues = Constants.mapGoogleBooks(googleBookListResponse.items)
+
+                if (currentValues.isEmpty()) {
+                    currentValues.add(BookResponse(id = ""))
+                }
+
+                currentValues.addAll(currentValues.size - 1, newValues)
+                if (newValues.isEmpty()) {
+                    currentValues.removeLast()
+                }
+
                 _books.value = currentValues
                 _searchLoading.value = false
             },
