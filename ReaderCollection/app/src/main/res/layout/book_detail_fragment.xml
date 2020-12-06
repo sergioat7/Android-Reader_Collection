@@ -79,6 +79,7 @@
                 android:id="@+id/text_view_no_ratings"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -119,24 +120,26 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/text_view_title"
+            <EditText
+                android:id="@+id/edit_text_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
-                style="@style/BookTitleTextView"
+                android:hint="@string/add_title"
+                style="@style/BookTitleEditText"
                 />
 
-            <TextView
-                android:id="@+id/text_view_author"
+            <EditText
+                android:id="@+id/edit_text_author"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-                style="@style/BookAuthorsTextView"
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
+                android:hint="@string/add_author"
+                style="@style/BookAuthorsEditText"
                 />
 
             <HorizontalScrollView
@@ -147,7 +150,7 @@
                 android:scrollbars="none"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_author"
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_author"
                 >
 
                 <LinearLayout
@@ -171,14 +174,15 @@
                 style="@style/BookDataTitleTextView"
                 />
 
-            <TextView
-                android:id="@+id/text_view_description"
+            <EditText
+                android:id="@+id/edit_text_description"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_description_title"
-                style="@style/BookDescriptionTextView"
+                android:hint="@string/add_description"
+                style="@style/BookDetailEditText"
                 />
 
             <Button
@@ -186,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_description"
+                app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
                 style="@style/BookReadMoreButton"
                 />
 
@@ -214,7 +218,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/add_summary"
-                    style="@style/BookSummaryEditText"
+                    style="@style/BookDetailEditText"
                     />
 
                 <Button
@@ -373,20 +377,22 @@
                 app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_2"
                 >
 
-                <TextView
-                    android:id="@+id/text_view_isbn"
+                <EditText
+                    android:id="@+id/edit_text_isbn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Left"
+                    android:hint="@string/add_isbn"
+                    style="@style/CustomEditText.BookDetails.Left"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_page_count"
+                <EditText
+                    android:id="@+id/edit_text_page_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Right"
+                    android:hint="@string/add_pages"
+                    style="@style/CustomEditText.BookDetails.Right"
                     />
 
             </LinearLayout>
@@ -433,20 +439,23 @@
                 app:layout_constraintVertical_bias="0.0"
                 >
 
-                <TextView
-                    android:id="@+id/text_view_publisher"
+                <EditText
+                    android:id="@+id/edit_text_publisher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Left"
+                    android:hint="@string/add_publisher"
+                    style="@style/CustomEditText.BookDetails.Left"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_published_date"
+                <EditText
+                    android:id="@+id/edit_text_published_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    style="@style/BookDataTextView.Right"
+                    android:layout_marginStart="5dp"
+                    android:hint="@string/select_a_date"
+                    style="@style/CustomEditText.BookDetails.Date"
                     />
 
             </LinearLayout>

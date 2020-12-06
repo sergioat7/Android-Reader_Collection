@@ -134,7 +134,7 @@ class BookDetailViewModel @Inject constructor(
         bookDetailRepository.createBook(book).subscribeBy(
             onComplete = {
 
-                _bookDetailLoading.value = true
+                _bookDetailLoading.value = false
                 _bookDetailSuccessMessage.value = R.string.book_saved
             },
             onError = {
@@ -168,7 +168,7 @@ class BookDetailViewModel @Inject constructor(
         bookDetailRepository.deleteBook(bookId).subscribeBy(
             onComplete = {
 
-                _bookDetailLoading.value = true
+                _bookDetailLoading.value = false
                 _bookDetailSuccessMessage.value = R.string.book_removed
             },
             onError = {

@@ -22,19 +22,23 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
+import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_search.*
 
-class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
+class SearchFragment: BaseFragment(), OnItemClickListener {
 
     //MARK: - Private properties
 
     private lateinit var srlBooks: SwipeRefreshLayout
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
+    private lateinit var fbStartList: FloatingActionButton
+    private lateinit var fbEndList: FloatingActionButton
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
 
@@ -62,6 +66,10 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         launchActivityWithExtras(BookDetailActivity::class.java, params)
     }
 
+    override fun onLoadMoreItemsClick() {
+        viewModel.searchBooks()
+    }
+
     //MARK: - Public methods
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -80,6 +88,8 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         srlBooks = swipe_refresh_layout_books
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
+        fbStartList = floating_action_button_start_list
+        fbEndList = floating_action_button_end_list
         viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
@@ -96,16 +106,45 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
-        rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        rvBooks.addOnScrollListener(object: RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    viewModel.searchBooks()
-                }
+                fbStartList.visibility =
+                    if (!recyclerView.canScrollVertically(-1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+
+                fbEndList.visibility =
+                    if (!recyclerView.canScrollVertically(1)
+                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
             }
         })
+
+        fbStartList.visibility = View.GONE
+        fbStartList.setOnClickListener {
+
+            rvBooks.scrollToPosition(0)
+            fbStartList.visibility = View.GONE
+            fbEndList.visibility = View.VISIBLE
+        }
+
+        fbEndList.visibility = View.GONE
+        fbEndList.setOnClickListener {
+
+            val position: Int = booksAdapter.itemCount - 1
+            rvBooks.scrollToPosition(position)
+            fbStartList.visibility = View.VISIBLE
+            fbEndList.visibility = View.GONE
+        }
 
         if (viewModel.query.isNotBlank()) {
             (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, viewModel.query)
@@ -122,8 +161,9 @@ class SearchFragment: BaseFragment(), BooksAdapter.OnItemClickListener {
                 ivNoResults.visibility = View.VISIBLE
             } else {
 
-                booksAdapter.addBooks(booksResponse)
+                booksAdapter.setBooks(booksResponse)
                 ivNoResults.visibility = View.GONE
+                fbEndList.visibility = View.VISIBLE
             }
         })
 

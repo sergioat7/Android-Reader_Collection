@@ -28,6 +28,7 @@ import retrofit2.HttpException
 import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Constants {
     companion object {
@@ -38,18 +39,13 @@ class Constants {
             return mode == Configuration.UI_MODE_NIGHT_YES
         }
 
-        fun<T> listToString(list: List<T>?): String {
+        fun<T> stringToList(string: String?): List<T> {
 
-            var result = StringBuilder()
-            list?.let {
-                for (element in it) {
-
-                    result.append(element.toString())
-                    result.append(", ")
-                }
-                result = StringBuilder(if (result.isEmpty()) "" else result.substring(0, result.length - 2))
+            return if(string != null && string.isNotBlank()) {
+                string.split(",").toList() as List<T>
+            } else {
+                ArrayList()
             }
-            return result.toString()
         }
 
         // MARK: - Retrofit constants
@@ -233,10 +229,15 @@ class Constants {
 
         fun mapGoogleBook(googleBook: GoogleBookResponse): BookResponse {
 
+            val title = StringBuilder()
+                .append(googleBook.volumeInfo.title ?: "")
+                .append(" ")
+                .append(googleBook.volumeInfo.subtitle ?: "")
+                .toString()
             return BookResponse(
                 googleBook.id,
-                googleBook.volumeInfo.title,
-                googleBook.volumeInfo.subtitle,
+                title,
+                null,
                 googleBook.volumeInfo.authors,
                 googleBook.volumeInfo.publisher,
                 googleBook.volumeInfo.publishedDate,
@@ -292,7 +293,6 @@ class Constants {
 
         const val BOOK_ID = "bookId"
         const val IS_GOOGLE_BOOK = "isGoogleBook"
-        const val MIN_LINES = 7
         const val MAX_LINES = Int.MAX_VALUE
         const val NO_VALUE = "-"
 
