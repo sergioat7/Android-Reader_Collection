@@ -25,8 +25,8 @@ class BooksRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun getBooks(format: String?, state: String?, isFavourite: Boolean?): Maybe<List<BookResponse>> {
-        return bookAPIClient.getBooksObserver(format, state, isFavourite)
+    fun getBooks(format: String?, state: String?, isFavourite: Boolean?, sortParam: String?): Maybe<List<BookResponse>> {
+        return bookAPIClient.getBooksObserver(format, state, isFavourite, sortParam)
     }
 
     fun getFormats(): Single<List<FormatResponse>> {

@@ -58,7 +58,12 @@ class BooksViewModel @Inject constructor(
     fun getBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(_selectedFormat.value, _selectedState.value, _isFavourite.value).subscribeBy(
+        booksRepository.getBooks(
+            _selectedFormat.value,
+            _selectedState.value,
+            _isFavourite.value,
+            _sortKey.value
+        ).subscribeBy(
             onComplete = {
 
                 _books.value = listOf()

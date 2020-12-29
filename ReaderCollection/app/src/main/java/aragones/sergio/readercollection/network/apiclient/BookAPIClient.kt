@@ -21,21 +21,24 @@ class BookAPIClient @Inject constructor(
 
     private val api = APIClient.retrofit.create(BookAPIService::class.java)
 
-    fun getBooksObserver(format: String?, state: String?, isFavourite: Boolean?): Maybe<List<BookResponse>> {
+    fun getBooksObserver(format: String?, state: String?, isFavourite: Boolean?, sortParam: String?): Maybe<List<BookResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[Constants.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
 
         val queryParams: MutableMap<String, String> = java.util.HashMap()
-        if (format != null) {
-            queryParams[Constants.FORMAT_PARAM] = format
+        format?.let {
+            queryParams[Constants.FORMAT_PARAM] = it
         }
-        if (state != null) {
-            queryParams[Constants.STATE_PARAM] = state
+        state?.let {
+            queryParams[Constants.STATE_PARAM] = it
         }
-        if (isFavourite != null) {
-            queryParams[Constants.IS_FAVOURITE_PARAM] = isFavourite.toString()
+        isFavourite?.let {
+            queryParams[Constants.IS_FAVOURITE_PARAM] = it.toString()
+        }
+        sortParam?.let {
+            queryParams[Constants.SORT_PARAM] = it
         }
 
         return api.getBooks(headers, queryParams).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
