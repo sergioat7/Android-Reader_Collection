@@ -6,9 +6,7 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ProgressBar
@@ -72,6 +70,22 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     override fun onResume() {
         super.onResume()
         viewModel.getBooks()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.books_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        if (item.itemId == R.id.action_sort) {
+            //TODO: sort books
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //MARK: - Interface methods
