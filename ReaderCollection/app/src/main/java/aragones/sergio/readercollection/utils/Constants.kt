@@ -14,9 +14,7 @@ import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
+import android.widget.*
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.SpinnerAdapter
 import aragones.sergio.readercollection.models.responses.*
@@ -25,7 +23,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
 import retrofit2.HttpException
-import java.lang.StringBuilder
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -192,6 +189,41 @@ class Constants {
                 imageButton.setImageResource(image)
                 editText.transformationMethod = HideReturnsTransformationMethod.getInstance()
             }
+        }
+
+        // MARK: - Books constants
+
+        fun getPicker(context: Context, values: Array<String>): NumberPicker {
+
+            val picker = NumberPicker(context)
+            picker.minValue = 0
+            picker.maxValue = values.size - 1
+            picker.wrapSelectorWheel = true
+            picker.descendantFocusability = NumberPicker.FOCUS_BLOCK_DESCENDANTS
+            picker.displayedValues = values
+            return picker
+        }
+
+        fun getPickerParams(): LinearLayout.LayoutParams {
+
+            val params = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            params.weight = 1f
+            return params
+        }
+
+        fun getValuePositionInArray(value: String, values: Array<String>): Int {
+
+            var i = 0
+            while (i < values.size) {
+                if (values[i] == value) {
+                    break
+                }
+                i++
+            }
+            return i % values.size
         }
 
         // MARK: - Search books constants

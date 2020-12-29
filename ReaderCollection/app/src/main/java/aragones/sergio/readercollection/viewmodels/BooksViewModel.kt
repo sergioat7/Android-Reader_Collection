@@ -5,9 +5,14 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import android.app.AlertDialog
+import android.content.Context
+import android.view.Gravity
+import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
@@ -33,6 +38,7 @@ class BooksViewModel @Inject constructor(
     private var _selectedFormat = MutableLiveData<String?>()
     private var _selectedState = MutableLiveData<String?>()
     private var _isFavourite = MutableLiveData<Boolean?>()
+    private var _sortKey = MutableLiveData<String?>()
 
     //MARK: - Public properties
 
@@ -119,5 +125,38 @@ class BooksViewModel @Inject constructor(
 
     fun setFavourite(isFavourite: Boolean?) {
         _isFavourite.value = isFavourite
+    }
+
+    fun sort(context: Context, sortingKeys: Array<String>, sortingValues: Array<String>) {
+
+        val dialogView = LinearLayout(context)
+        dialogView.orientation = LinearLayout.HORIZONTAL
+
+        val sortKeysPicker = Constants.getPicker(context, sortingValues)
+        _sortKey.value?.let {
+            sortKeysPicker.value = Constants.getValuePositionInArray(it, sortingKeys)
+        }
+
+        val params = LinearLayout.LayoutParams(50, 50)
+        params.gravity = Gravity.CENTER
+
+        dialogView.layoutParams = params
+        dialogView.addView(sortKeysPicker, Constants.getPickerParams())
+
+        AlertDialog.Builder(context)
+            .setTitle(context.resources.getString(R.string.order_by))
+            .setView(dialogView)
+            .setCancelable(false)
+            .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, _ ->
+
+                val sort = sortingKeys[sortKeysPicker.value]
+                _sortKey.value = if (sort.isNotBlank()) sort else null
+                getBooks()
+                dialog.dismiss()
+            }
+            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

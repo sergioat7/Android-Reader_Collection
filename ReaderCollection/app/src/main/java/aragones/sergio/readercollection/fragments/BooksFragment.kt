@@ -82,7 +82,12 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.action_sort) {
-            //TODO: sort books
+
+                viewModel.sort(
+                    requireContext(),
+                    resources.getStringArray(R.array.sorting_keys_ids),
+                    resources.getStringArray(R.array.sorting_keys)
+                )
             return true
         }
         return super.onOptionsItemSelected(item)
