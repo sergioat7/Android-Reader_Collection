@@ -1,0 +1,18 @@
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 29/12/2020
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:fillColor="#FF000000"
+      android:pathData="m3,4l13,0m-13,4l9,0m-9,4l9,0m5,-4l0,12m0,0l-4,-4m4,4l4,-4"
+      android:strokeLineJoin="round"
+      android:strokeWidth="2"
+      android:strokeColor="#0d1a5e"
+      android:strokeLineCap="round"/>
+</vector>
