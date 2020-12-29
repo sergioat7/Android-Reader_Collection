@@ -76,6 +76,8 @@
     <string name="reading_date_sorting_key">Reading date</string>
     <string name="page_count_sorting_key">Page count</string>
     <string name="rating_sorting_key">Rating</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
 
     //ERRORS
     <string name="error_server">There was an error on getting data. Please, try again.</string>

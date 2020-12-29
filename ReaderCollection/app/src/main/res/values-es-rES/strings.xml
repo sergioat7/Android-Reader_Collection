@@ -80,6 +80,8 @@
     <string name="reading_date_sorting_key">Fecha de lectura</string>
     <string name="page_count_sorting_key">Nº de páginas</string>
     <string name="rating_sorting_key">Puntuación</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">Descendente</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>
