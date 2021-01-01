@@ -65,6 +65,7 @@
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
+    <string name="sort_books_param">Parámetro de ordenación de libros</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>
