@@ -61,6 +61,7 @@
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
+    <string name="sort_books_param">Sort books param</string>
 
     //POPUPS
     <string name="accept">Accept</string>
