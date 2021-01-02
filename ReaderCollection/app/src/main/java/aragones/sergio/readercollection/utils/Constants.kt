@@ -101,6 +101,7 @@ class Constants {
         const val USER_DATA_PREFERENCES_NAME = "userData"
         const val ENGLISH_LANGUAGE_KEY = "en"
         const val SPANISH_LANGUAGE_KEY = "es"
+        const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
 
         // MARK: Date format
 
