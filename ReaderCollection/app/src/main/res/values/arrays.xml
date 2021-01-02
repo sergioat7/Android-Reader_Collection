@@ -12,4 +12,22 @@
         <item>@string/no</item>
     </string-array>
 
+    <string-array name="sorting_keys">
+        <item>@string/none</item>
+        <item>@string/title_sorting_key</item>
+        <item>@string/published_date_sorting_key</item>
+        <item>@string/reading_date_sorting_key</item>
+        <item>@string/page_count_sorting_key</item>
+        <item>@string/rating_sorting_key</item>
+    </string-array>
+
+    <string-array name="sorting_keys_ids">
+        <item />
+        <item>TITLE</item>
+        <item>PUBLISHED_DATE</item>
+        <item>READING_DATE</item>
+        <item>PAGE_COUNT</item>
+        <item>RATING</item>
+    </string-array>
+
 </resources>

@@ -32,6 +32,7 @@ class ProfileViewModel @Inject constructor(
     //MARK: - Public properties
 
     val language: String = profileRepository.language
+    val sortParam: String? = profileRepository.sortParam
     val profileUserData: LiveData<UserData> = _userdata
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
@@ -59,10 +60,11 @@ class ProfileViewModel @Inject constructor(
         )
     }
 
-    fun saveData(newPassword: String, newLanguage: String) {
+    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
 
         val changePassword = newPassword != profileRepository.userData.password
         val changeLanguage = newLanguage != language
+        val changeSortParam = newSortParam != sortParam
 
         if (changePassword) {
 
@@ -83,6 +85,10 @@ class ProfileViewModel @Inject constructor(
                     _profileError.value = Constants.handleError(it)
                 }
             )
+        }
+
+        if (changeSortParam) {
+            profileRepository.storeSortParam(newSortParam)
         }
 
         if (changeLanguage) {
