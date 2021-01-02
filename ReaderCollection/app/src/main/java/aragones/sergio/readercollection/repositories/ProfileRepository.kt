@@ -27,6 +27,9 @@ class ProfileRepository @Inject constructor(
     val language: String
         get() = sharedPreferencesHandler.getLanguage()
 
+    val sortParam: String?
+        get() = sharedPreferencesHandler.getSortParam()
+
     //MARK: - Public methods
 
     fun logout(): Completable {
@@ -67,5 +70,9 @@ class ProfileRepository @Inject constructor(
 
     fun storeLanguage(language: String) {
         sharedPreferencesHandler.setLanguage(language)
+    }
+
+    fun storeSortParam(sortParam: String?) {
+        sharedPreferencesHandler.setSortParam(sortParam)
     }
 }

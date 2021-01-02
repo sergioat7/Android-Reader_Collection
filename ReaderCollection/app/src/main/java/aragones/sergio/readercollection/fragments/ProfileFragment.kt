@@ -119,11 +119,25 @@ class ProfileFragment: BaseFragment() {
             data = resources.getStringArray(R.array.sorting_keys).toList(),
             firstOptionEnabled = true
         )
+        var position = 0
+        viewModel.sortParam?.let { sortParam ->
+            position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
+        }
+        spSortParams.setSelection(position)
 
         btSave.setOnClickListener {
 
-            val language = if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY else Constants.SPANISH_LANGUAGE_KEY
-            viewModel.saveData(etPassword.text.toString(), language)
+            val language =
+                if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY
+                else Constants.SPANISH_LANGUAGE_KEY
+            val sortParam =
+                if (spSortParams.selectedItemPosition == 0) null
+                else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]
+            viewModel.saveData(
+                etPassword.text.toString(),
+                language,
+                sortParam
+            )
         }
     }
 
