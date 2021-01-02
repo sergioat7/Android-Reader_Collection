@@ -188,6 +188,6 @@ class BooksViewModel @Inject constructor(
 
         _books.value = _originalbooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
-        }
+        } ?: listOf()
     }
 }
