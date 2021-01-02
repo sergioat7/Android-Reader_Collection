@@ -5,9 +5,14 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import android.app.AlertDialog
+import android.content.Context
+import android.view.Gravity
+import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
@@ -33,6 +38,8 @@ class BooksViewModel @Inject constructor(
     private var _selectedFormat = MutableLiveData<String?>()
     private var _selectedState = MutableLiveData<String?>()
     private var _isFavourite = MutableLiveData<Boolean?>()
+    private var _sortKey = MutableLiveData<String?>()
+    private var _sortDescending = MutableLiveData<Boolean?>()
 
     //MARK: - Public properties
 
@@ -52,7 +59,12 @@ class BooksViewModel @Inject constructor(
     fun getBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(_selectedFormat.value, _selectedState.value, _isFavourite.value).subscribeBy(
+        booksRepository.getBooks(
+            _selectedFormat.value,
+            _selectedState.value,
+            _isFavourite.value,
+            _sortKey.value
+        ).subscribeBy(
             onComplete = {
 
                 _books.value = listOf()
@@ -60,7 +72,7 @@ class BooksViewModel @Inject constructor(
             },
             onSuccess = {
 
-                _books.value = it
+                _books.value = if(_sortDescending.value == true) it.reversed() else it
                 _booksLoading.value = false
             },
             onError = {
@@ -105,6 +117,10 @@ class BooksViewModel @Inject constructor(
         )
     }
 
+    fun getSortParam() {
+        _sortKey.value = booksRepository.sortParam
+    }
+
     fun reloadData() {
         _books.value = mutableListOf()
     }
@@ -119,5 +135,49 @@ class BooksViewModel @Inject constructor(
 
     fun setFavourite(isFavourite: Boolean?) {
         _isFavourite.value = isFavourite
+    }
+
+    fun sort(context: Context, sortingKeys: Array<String>, sortingValues: Array<String>) {
+
+        val dialogView = LinearLayout(context)
+        dialogView.orientation = LinearLayout.HORIZONTAL
+
+        val sortKeysPicker = Constants.getPicker(context, sortingValues)
+        _sortKey.value?.let {
+            sortKeysPicker.value = Constants.getValuePositionInArray(it, sortingKeys)
+        }
+
+        val values = arrayOf(
+            context.resources.getString(R.string.ascending),
+            context.resources.getString(R.string.descending)
+        )
+        val sortOrdersPicker = Constants.getPicker(context, values)
+        _sortDescending.value?.let {
+            sortOrdersPicker.value = if(it) 1 else 0
+        }
+
+        val params = LinearLayout.LayoutParams(50, 50)
+        params.gravity = Gravity.CENTER
+
+        dialogView.layoutParams = params
+        dialogView.addView(sortKeysPicker, Constants.getPickerParams())
+        dialogView.addView(sortOrdersPicker, Constants.getPickerParams());
+
+        AlertDialog.Builder(context)
+            .setTitle(context.resources.getString(R.string.order_by))
+            .setView(dialogView)
+            .setCancelable(false)
+            .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, _ ->
+
+                val sort = sortingKeys[sortKeysPicker.value]
+                _sortKey.value = if (sort.isNotBlank()) sort else null
+                _sortDescending.value = sortOrdersPicker.value == 1
+                getBooks()
+                dialog.dismiss()
+            }
+            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
 }

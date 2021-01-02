@@ -116,4 +116,19 @@ class SharedPreferencesHandler @Inject constructor(
         userData.isLoggedIn = false
         storeUserData(userData)
     }
+
+    fun getSortParam(): String? {
+        return sharedPreferences?.getString(Constants.SORT_PARAM_PREFERENCE_NAME, null)
+    }
+
+    fun setSortParam(sortParam: String?) {
+
+        if (sharedPreferences != null) {
+            with (sharedPreferences.edit()) {
+
+                putString(Constants.SORT_PARAM_PREFERENCE_NAME, sortParam)
+                commit()
+            }
+        }
+    }
 }
