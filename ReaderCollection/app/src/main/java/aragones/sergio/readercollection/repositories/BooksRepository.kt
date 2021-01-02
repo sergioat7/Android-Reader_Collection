@@ -13,15 +13,22 @@ import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
+    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val bookAPIClient: BookAPIClient,
     private val formatAPIClient: FormatAPIClient,
     private val stateAPIClient: StateAPIClient
 ) {
+
+    //MARK: - Public properties
+
+    val sortParam: String?
+        get() = sharedPreferencesHandler.getSortParam()
 
     //MARK: - Public methods
 

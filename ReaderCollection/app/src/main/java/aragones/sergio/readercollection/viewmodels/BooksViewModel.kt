@@ -117,6 +117,10 @@ class BooksViewModel @Inject constructor(
         )
     }
 
+    fun getSortParam() {
+        _sortKey.value = booksRepository.sortParam
+    }
+
     fun reloadData() {
         _books.value = mutableListOf()
     }
