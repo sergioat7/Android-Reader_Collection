@@ -361,13 +361,15 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
+
+                    viewModel.searchBooks(newText)
                     return true
                 }
 
                 override fun onQueryTextSubmit(query: String): Boolean {
 
-                    searchBooks(query)
                     menuItem.collapseActionView()
+                    Constants.hideSoftKeyboard(requireActivity())
                     return true
                 }
             })
@@ -409,11 +411,5 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             )
             searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
         }
-    }
-
-    private fun searchBooks(query: String) {
-
-        viewModel.searchBooks(query)
-        Constants.hideSoftKeyboard(requireActivity())
     }
 }
