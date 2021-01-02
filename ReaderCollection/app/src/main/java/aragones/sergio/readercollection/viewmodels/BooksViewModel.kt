@@ -28,6 +28,7 @@ class BooksViewModel @Inject constructor(
 
     //MARK: - Private properties
 
+    private val _originalbooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
@@ -67,11 +68,13 @@ class BooksViewModel @Inject constructor(
         ).subscribeBy(
             onComplete = {
 
+                _originalbooks.value = listOf()
                 _books.value = listOf()
                 _booksLoading.value = false
             },
             onSuccess = {
 
+                _originalbooks.value = if(_sortDescending.value == true) it.reversed() else it
                 _books.value = if(_sortDescending.value == true) it.reversed() else it
                 _booksLoading.value = false
             },
@@ -179,5 +182,12 @@ class BooksViewModel @Inject constructor(
                 dialog.dismiss()
             }
             .show()
+    }
+
+    fun searchBooks(query: String) {
+
+        _books.value = _originalbooks.value?.filter { book ->
+            book.title?.contains(query, true) ?: false
+        }
     }
 }
