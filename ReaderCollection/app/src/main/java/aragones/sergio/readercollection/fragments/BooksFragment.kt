@@ -5,13 +5,16 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.app.SearchManager
+import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ProgressBar
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatImageView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -77,6 +80,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
 
         menu.clear()
         inflater.inflate(R.menu.books_toolbar_menu, menu)
+        setupSearchView(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -340,5 +344,72 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             else -> resources.getString(R.string.title_books_count, booksCount)
         }
         (activity as AppCompatActivity?)?.supportActionBar?.title = title
+    }
+
+    private fun setupSearchView(menu: Menu) {
+
+        val menuItem = menu.findItem(R.id.action_search)
+        val searchView = menuItem.actionView as SearchView
+
+        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager?
+        if (searchManager != null) {
+
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+            searchView.isIconified = false
+            searchView.isIconifiedByDefault = false
+            searchView.queryHint = resources.getString(R.string.search_books)
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+
+                override fun onQueryTextChange(newText: String): Boolean {
+
+                    viewModel.searchBooks(newText)
+                    return true
+                }
+
+                override fun onQueryTextSubmit(query: String): Boolean {
+
+                    menuItem.collapseActionView()
+                    Constants.hideSoftKeyboard(requireActivity())
+                    return true
+                }
+            })
+        }
+
+        val color = ContextCompat.getColor(requireActivity(), R.color.textTertiary)
+
+        val searchIconId = searchView.context.resources.getIdentifier(
+            "android:id/search_mag_icon",
+            null,
+            null
+        )
+        searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList = ColorStateList.valueOf(color)
+
+        val searchPlateId = searchView.context.resources.getIdentifier(
+            "android:id/search_plate",
+            null,
+            null
+        )
+        val searchPlate = searchView.findViewById<View>(searchPlateId)
+        if (searchPlate != null) {
+
+            val searchTextId = searchPlate.context.resources.getIdentifier(
+                "android:id/search_src_text",
+                null,
+                null
+            )
+            val searchText = searchPlate.findViewById<TextView>(searchTextId)
+            if (searchText != null) {
+
+                searchText.setTextColor(color)
+                searchText.setHintTextColor(color)
+            }
+
+            val searchCloseId = searchPlate.context.resources.getIdentifier(
+                "android:id/search_close_btn",
+                null,
+                null
+            )
+            searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
+        }
     }
 }
