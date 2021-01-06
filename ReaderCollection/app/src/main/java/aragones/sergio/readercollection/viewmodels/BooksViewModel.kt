@@ -18,12 +18,16 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
+    private val formatRepository: FormatRepository,
+    private val stateRepository: StateRepository
 ): ViewModel() {
 
     //MARK: - Private properties
@@ -89,7 +93,7 @@ class BooksViewModel @Inject constructor(
     fun getFormats() {
 
         _booksFormatsLoading.value = true
-        booksRepository.getFormats().subscribeBy(
+        formatRepository.getFormats().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -106,7 +110,7 @@ class BooksViewModel @Inject constructor(
     fun getStates() {
 
         _booksStatesLoading.value = true
-        booksRepository.getStates().subscribeBy(
+        stateRepository.getStates().subscribeBy(
             onSuccess = {
 
                 _states.value = it
