@@ -9,7 +9,7 @@ import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteQuery
 import aragones.sergio.readercollection.models.responses.BookResponse
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Maybe
 
 @Dao
 interface BookDao {
@@ -24,5 +24,5 @@ interface BookDao {
     fun deleteBooks(books: List<BookResponse>): Completable
 
     @RawQuery
-    fun getBooks(query: SupportSQLiteQuery): Single<List<BookResponse>>
+    fun getBooks(query: SupportSQLiteQuery): Maybe<List<BookResponse>>
 }
