@@ -18,4 +18,5 @@ import dagger.Component
 interface LoginComponent {
 
     fun inject(loginViewModelFactory: LoginViewModelFactory)
+    fun inject(booksViewModelFactory: BooksViewModelFactory)
 }

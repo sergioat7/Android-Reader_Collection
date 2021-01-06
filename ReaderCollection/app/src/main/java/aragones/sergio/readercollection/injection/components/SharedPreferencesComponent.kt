@@ -19,5 +19,4 @@ interface SharedPreferencesComponent {
     fun inject(landingActivity: LandingActivity)
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
     fun inject(profileViewModelFactory: ProfileViewModelFactory)
-    fun inject(booksViewModelFactory: BooksViewModelFactory)
 }
