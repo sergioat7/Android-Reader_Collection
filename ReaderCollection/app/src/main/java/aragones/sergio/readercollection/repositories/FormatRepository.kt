@@ -40,29 +40,28 @@ class FormatRepository @Inject constructor(
 
             formatAPIClient.getFormatsObserver().subscribeBy(
                 onSuccess = { newFormats ->
-                    insertFormats(newFormats)
-                        .subscribeBy(
-                            onComplete = {
-                                getFormats()
-                                    .subscribeBy(
-                                        onSuccess = { currentFormats ->
+                    insertFormats(newFormats).subscribeBy(
+                        onComplete = {
+                            getFormats().subscribeBy(
+                                onSuccess = { currentFormats ->
 
-                                            val formatsToRemove = Constants.getDisabledContent(currentFormats, newFormats) as List<FormatResponse>
-                                            deleteFormats(formatsToRemove)
-                                                .subscribe({
-                                                    emitter.onComplete()
-                                                }, {
-                                                    emitter.onError(it)
-                                                })
+                                    val formatsToRemove = Constants.getDisabledContent(currentFormats, newFormats) as List<FormatResponse>
+                                    deleteFormats(formatsToRemove).subscribeBy(
+                                        onComplete = {
+                                            emitter.onComplete()
                                         },
                                         onError = {
                                             emitter.onError(it)
                                         })
-                                    .addTo(disposables)
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            })
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                })
+                                .addTo(disposables)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
                         .addTo(disposables)
                 },
                 onError = {
