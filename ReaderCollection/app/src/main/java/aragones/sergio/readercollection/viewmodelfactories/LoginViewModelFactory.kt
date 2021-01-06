@@ -10,10 +10,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
+import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.network.apiclient.UserAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.LoginRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import javax.inject.Inject
@@ -29,11 +31,15 @@ class LoginViewModelFactory(
     @Inject
     lateinit var formatAPIClient: FormatAPIClient
     @Inject
+    lateinit var stateAPIClient: StateAPIClient
+    @Inject
     lateinit var userAPIClient: UserAPIClient
     @Inject
     lateinit var loginRepository: LoginRepository
     @Inject
     lateinit var formatRepository: FormatRepository
+    @Inject
+    lateinit var stateRepository: StateRepository
     @Inject
     lateinit var loginViewModel: LoginViewModel
 

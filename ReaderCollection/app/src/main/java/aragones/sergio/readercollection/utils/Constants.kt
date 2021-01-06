@@ -17,6 +17,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.SpinnerAdapter
+import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.*
 import aragones.sergio.readercollection.network.apiclient.APIClient
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -106,6 +107,19 @@ class Constants {
         // MARK: - Database constants
 
         const val DATABASE_NAME = "ReaderCollection"
+
+        fun <T> getDisabledContent(currentValues: List<BaseModel<T>>, newValues: List<BaseModel<T>>): List<BaseModel<T>> {
+
+            val disabledContent = arrayListOf<BaseModel<T>>()
+            for (currentValue in currentValues) {
+
+                if (newValues.firstOrNull { it.id == currentValue.id } == null) {
+                    disabledContent.add(currentValue)
+                }
+            }
+            return disabledContent
+        }
+
         // MARK: Date format
 
         const val DATE_FORMAT = "yyyy-MM-dd"
