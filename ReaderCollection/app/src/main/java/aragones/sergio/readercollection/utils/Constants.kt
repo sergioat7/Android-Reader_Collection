@@ -103,6 +103,9 @@ class Constants {
         const val SPANISH_LANGUAGE_KEY = "es"
         const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
 
+        // MARK: - Database constants
+
+        const val DATABASE_NAME = "ReaderCollection"
         // MARK: Date format
 
         const val DATE_FORMAT = "yyyy-MM-dd"
