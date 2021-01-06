@@ -68,6 +68,7 @@ class LoginViewModel @Inject constructor(
 
                 _loginLoading.value = false
                 _loginError.value = Constants.handleError(it)
+                onDestroy()
             }
         ).addTo(disposables)
     }
@@ -95,30 +96,34 @@ class LoginViewModel @Inject constructor(
 
         var result = 0
 
-        loadFormats()
-            .subscribeBy(
-                onComplete = {
-                    result += 1
-                    if (result == 2) {
-                        finishLoadingContent(userData, authData)
-                    }
-                },
-                onError = {
-                    _loginError.value = ErrorResponse("", R.string.error_database)
+        loadFormats().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 2) {
+                    finishLoadingContent(userData, authData)
                 }
+            },
+            onError = {
+
+                _loginError.value = ErrorResponse("", R.string.error_database)
+                onDestroy()
+            }
         )
-        loadStates()
-            .subscribeBy(
-                onComplete = {
-                    result += 1
-                    if (result == 2) {
-                        finishLoadingContent(userData, authData)
-                    }
-                },
-                onError = {
-                    _loginError.value = ErrorResponse("", R.string.error_database)
+        loadStates().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 2) {
+                    finishLoadingContent(userData, authData)
                 }
-            )
+            },
+            onError = {
+
+                _loginError.value = ErrorResponse("", R.string.error_database)
+                onDestroy()
+            }
+        )
     }
 
     private fun loadFormats(): Completable {

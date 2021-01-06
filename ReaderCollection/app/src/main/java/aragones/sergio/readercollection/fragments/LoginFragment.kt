@@ -120,6 +120,8 @@ class LoginFragment: BaseFragment() {
             if (error == null) {
                 launchActivity(MainActivity::class.java)
             } else {
+
+                hideLoading()
                 manageError(error)
             }
         })
