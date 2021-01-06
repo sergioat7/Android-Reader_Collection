@@ -53,6 +53,11 @@ class LoginFragment: BaseFragment() {
         initializeUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {

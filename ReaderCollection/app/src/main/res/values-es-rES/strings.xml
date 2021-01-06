@@ -89,5 +89,6 @@
     <string name="error_search">Debes introducir un texto para buscar.</string>
     <string name="error_no_book">No existe un libro con ese id.</string>
     <string name="error_resource_found">Este libro ya está en tu colección.</string>
+    <string name="error_database">Hubo un error con la base de datos. Por favor, inténtalo otra vez.</string>
 
 </resources>

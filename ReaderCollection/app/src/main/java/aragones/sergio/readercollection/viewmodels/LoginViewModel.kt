@@ -13,13 +13,14 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.apiclient.APIClient
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.LoginRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
@@ -33,6 +34,7 @@ class LoginViewModel @Inject constructor(
     private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginLoading = MutableLiveData<Boolean>()
     private val _loginError = MutableLiveData<ErrorResponse>()
+    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -40,6 +42,15 @@ class LoginViewModel @Inject constructor(
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse> = _loginError
+
+    // MARK: - Lifecycle methods
+
+    fun onDestroy() {
+
+        disposables.clear()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
 
     //MARK: - Public methods
 
@@ -49,18 +60,16 @@ class LoginViewModel @Inject constructor(
         loginRepository.login(username, password).subscribeBy(
             onSuccess = {
 
-                _loginLoading.value = false
                 val userData = UserData(username, password, true)
                 val authData = AuthData(it.token)
-                loginRepository.storeLoginData(userData, authData)
-                _loginError.value = null
+                loadContent(userData, authData)
             },
             onError = {
 
                 _loginLoading.value = false
                 _loginError.value = Constants.handleError(it)
             }
-        )
+        ).addTo(disposables)
     }
 
     fun loginDataChanged(username: String, password: String) {
@@ -79,4 +88,80 @@ class LoginViewModel @Inject constructor(
         }
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
+
+    //MARK: - Private methods
+
+    private fun loadContent(userData: UserData, authData: AuthData) {
+
+        var result = 0
+
+        loadFormats()
+            .subscribeBy(
+                onComplete = {
+                    result += 1
+                    if (result == 2) {
+                        finishLoadingContent(userData, authData)
+                    }
+                },
+                onError = {
+                    _loginError.value = ErrorResponse("", R.string.error_database)
+                }
+        )
+        loadStates()
+            .subscribeBy(
+                onComplete = {
+                    result += 1
+                    if (result == 2) {
+                        finishLoadingContent(userData, authData)
+                    }
+                },
+                onError = {
+                    _loginError.value = ErrorResponse("", R.string.error_database)
+                }
+            )
+    }
+
+    private fun loadFormats(): Completable {
+
+        return Completable.create { emitter ->
+
+            formatRepository
+                .loadFormats()
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                )
+                .addTo(disposables)
+        }
+    }
+
+    private fun loadStates(): Completable {
+
+        return Completable.create { emitter ->
+
+            stateRepository
+                .loadStates()
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                )
+                .addTo(disposables)
+        }
+    }
+
+    private fun finishLoadingContent(userData: UserData, authData: AuthData) {
+
+        _loginLoading.value = false
+        loginRepository.storeLoginData(userData, authData)
+        _loginError.value = null
+    }
+
 }
