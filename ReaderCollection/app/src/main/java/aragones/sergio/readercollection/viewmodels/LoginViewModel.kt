@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.apiclient.APIClient
+import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.LoginRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -21,7 +22,8 @@ import retrofit2.HttpException
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository
+    private val loginRepository: LoginRepository,
+    private val formatRepository: FormatRepository,
 ): ViewModel() {
 
     //MARK: - Private properties

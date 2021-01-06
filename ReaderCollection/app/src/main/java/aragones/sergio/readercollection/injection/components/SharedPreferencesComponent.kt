@@ -17,7 +17,6 @@ import dagger.Component
 interface SharedPreferencesComponent {
 
     fun inject(landingActivity: LandingActivity)
-    fun inject(loginViewModelFactory: LoginViewModelFactory)
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
     fun inject(profileViewModelFactory: ProfileViewModelFactory)
     fun inject(booksViewModelFactory: BooksViewModelFactory)
