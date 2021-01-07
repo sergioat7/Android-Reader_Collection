@@ -104,7 +104,9 @@ class LoginViewModel @Inject constructor(
 
                 result += 1
                 if (result == 2) {
-                    finishLoadingContent(userData, authData)
+
+                    loginRepository.storeLoginData(userData, authData)
+                    loadBooks()
                 }
             },
             onError = {
@@ -118,7 +120,9 @@ class LoginViewModel @Inject constructor(
 
                 result += 1
                 if (result == 2) {
-                    finishLoadingContent(userData, authData)
+
+                    loginRepository.storeLoginData(userData, authData)
+                    loadBooks()
                 }
             },
             onError = {
@@ -165,11 +169,22 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun finishLoadingContent(userData: UserData, authData: AuthData) {
+    private fun loadBooks() {
 
-        _loginLoading.value = false
-        loginRepository.storeLoginData(userData, authData)
-        _loginError.value = null
+        booksRepository
+            .loadBooks()
+            .subscribeBy(
+                onComplete = {
+
+                    _loginLoading.value = false
+                    _loginError.value = null
+                },
+                onError = {
+
+                    _loginError.value = ErrorResponse("", R.string.error_database)
+                    onDestroy()
+                }
+            )
+            .addTo(disposables)
     }
-
 }
