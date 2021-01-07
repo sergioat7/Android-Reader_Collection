@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.LoginRepository
 import aragones.sergio.readercollection.repositories.StateRepository
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val loginRepository: LoginRepository,
     private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository
+    private val stateRepository: StateRepository,
+    private val booksRepository: BooksRepository
 ): ViewModel() {
 
     //MARK: - Private properties
@@ -50,6 +52,7 @@ class LoginViewModel @Inject constructor(
         disposables.clear()
         formatRepository.onDestroy()
         stateRepository.onDestroy()
+        booksRepository.onDestroy()
     }
 
     //MARK: - Public methods
