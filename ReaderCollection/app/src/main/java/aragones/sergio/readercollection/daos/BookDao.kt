@@ -10,6 +10,7 @@ import androidx.sqlite.db.SupportSQLiteQuery
 import aragones.sergio.readercollection.models.responses.BookResponse
 import io.reactivex.Completable
 import io.reactivex.Maybe
+import io.reactivex.Single
 
 @Dao
 interface BookDao {
@@ -25,4 +26,7 @@ interface BookDao {
 
     @RawQuery
     fun getBooks(query: SupportSQLiteQuery): Maybe<List<BookResponse>>
+
+    @Query("SELECT * FROM Book WHERE id == :bookId")
+    fun getBook(bookId: String): Single<BookResponse>
 }
