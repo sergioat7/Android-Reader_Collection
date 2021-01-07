@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.BookDetailRepository
+import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
@@ -23,6 +24,7 @@ import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
     val sharedPreferencesHandler: SharedPreferencesHandler,
+    private val booksRepository: BooksRepository,
     private val bookDetailRepository: BookDetailRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
@@ -77,12 +79,7 @@ class BookDetailViewModel @Inject constructor(
             )
         } else {
 
-            bookDetailRepository.getBook(bookId).subscribeBy(
-                onComplete = {
-
-                    _bookDetailLoading.value = false
-                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                },
+            booksRepository.getBook(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = it
@@ -92,7 +89,7 @@ class BookDetailViewModel @Inject constructor(
                 onError = {
 
                     _bookDetailLoading.value = false
-                    _bookDetailError.value = Constants.handleError(it)
+                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
                 }
             )
         }
@@ -135,7 +132,7 @@ class BookDetailViewModel @Inject constructor(
     fun createBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        bookDetailRepository.createBook(book).subscribeBy(
+        booksRepository.createBook(book).subscribeBy(
             onComplete = {
 
                 _bookDetailLoading.value = false
@@ -152,7 +149,7 @@ class BookDetailViewModel @Inject constructor(
     fun setBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        bookDetailRepository.setBook(book).subscribeBy(
+        booksRepository.updateBook(book).subscribeBy(
             onSuccess = {
 
                 _book.value = it
@@ -169,7 +166,7 @@ class BookDetailViewModel @Inject constructor(
     fun deleteBook() {
 
         _bookDetailLoading.value = true
-        bookDetailRepository.deleteBook(bookId).subscribeBy(
+        booksRepository.deleteBook(bookId).subscribeBy(
             onComplete = {
 
                 _bookDetailLoading.value = false
@@ -186,7 +183,7 @@ class BookDetailViewModel @Inject constructor(
     fun setFavourite(isFavourite: Boolean) {
 
         _bookDetailFavouriteLoading.value = true
-        bookDetailRepository.setFavourite(bookId, isFavourite).subscribeBy(
+        booksRepository.setFavouriteBook(bookId, isFavourite).subscribeBy(
             onSuccess = {
 
                 _isFavourite.value = it.isFavourite

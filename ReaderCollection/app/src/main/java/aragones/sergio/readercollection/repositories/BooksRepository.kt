@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -51,7 +52,7 @@ class BooksRepository @Inject constructor(
                     emitter.onComplete()
                 },
                 onSuccess = { newBooks ->
-                    insertBooks(newBooks).subscribeBy(
+                    insertBooksDatabase(newBooks).subscribeBy(
                         onComplete = {
                             getBooks(null, null, null, null).subscribeBy(
                                 onComplete = {
@@ -60,7 +61,7 @@ class BooksRepository @Inject constructor(
                                 onSuccess = { currentBooks ->
 
                                     val booksToRemove = Constants.getDisabledContent(currentBooks, newBooks) as List<BookResponse>
-                                    deleteBooks(booksToRemove).subscribeBy(
+                                    deleteBooksDatabase(booksToRemove).subscribeBy(
                                         onComplete = {
                                             emitter.onComplete()
                                         },
@@ -84,33 +85,6 @@ class BooksRepository @Inject constructor(
                 })
                 .addTo(disposables)
         }
-    }
-
-    fun insertBooks(books: List<BookResponse>): Completable {
-        return database
-            .bookDao()
-            .insertBooks(books)
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun updateBooks(books: List<BookResponse>): Completable {
-        return database
-            .bookDao()
-            .updateBooks(books)
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun deleteBooks(books: List<BookResponse>): Completable {
-        return database
-            .bookDao()
-            .deleteBooks(books)
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     fun getBooks(format: String?, state: String?, isFavourite: Boolean?, sortParam: String?): Maybe<List<BookResponse>> {
@@ -138,6 +112,144 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .getBooks(query)
             .`as`(RxJavaBridge.toV3Maybe())
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
+    }
+
+    fun getBook(googleId: String): Single<BookResponse> {
+        return database
+            .bookDao()
+            .getBook(googleId)
+            .`as`(RxJavaBridge.toV3Single())
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
+    }
+
+    fun createBook(book: BookResponse): Completable {
+
+        return Completable.create { emitter ->
+
+            bookAPIClient.createBookObserver(book).subscribeBy(
+                onComplete = {
+
+                    loadBooks().subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
+    fun updateBook(book: BookResponse): Single<BookResponse> {
+
+        return Single.create { emitter ->
+
+            bookAPIClient.setBookObserver(book).subscribeBy(
+                onSuccess = {
+
+                    updateBooksDatabase(listOf(book)).subscribeBy(
+                        onComplete = {
+                            emitter.onSuccess(book)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
+    fun deleteBook(googleId: String): Completable {
+
+        return Completable.create { emitter ->
+
+            bookAPIClient.deleteBookObserver(googleId).subscribeBy(
+                onComplete = {
+
+                    getBook(googleId).subscribeBy(
+                        onSuccess = { book ->
+
+                            deleteBooksDatabase(listOf(book)).subscribeBy(
+                                onComplete = {
+                                    emitter.onComplete()
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                })
+                                .addTo(disposables)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
+    fun setFavouriteBook(googleId: String, isFavourite: Boolean): Single<BookResponse> {
+
+        return Single.create { emitter ->
+
+            bookAPIClient.setFavouriteBookObserver(googleId, isFavourite).subscribeBy(
+                onSuccess = { book ->
+
+                    updateBooksDatabase(listOf(book)).subscribeBy(
+                        onComplete = {
+                            emitter.onSuccess(book)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
+    //MARK: - Private methods
+
+    private fun insertBooksDatabase(books: List<BookResponse>): Completable {
+        return database
+            .bookDao()
+            .insertBooks(books)
+            .`as`(RxJavaBridge.toV3Completable())
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
+    }
+
+    private fun updateBooksDatabase(books: List<BookResponse>): Completable {
+        return database
+            .bookDao()
+            .updateBooks(books)
+            .`as`(RxJavaBridge.toV3Completable())
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
+    }
+
+    private fun deleteBooksDatabase(books: List<BookResponse>): Completable {
+        return database
+            .bookDao()
+            .deleteBooks(books)
+            .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
