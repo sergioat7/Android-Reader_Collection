@@ -19,33 +19,12 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class BookDetailRepository @Inject constructor(
-    private val bookAPIClient: BookAPIClient,
     private val googleAPIClient: GoogleAPIClient
 ) {
 
     //MARK: - Public methods
 
-    fun getBook(googleId: String): Maybe<BookResponse> {
-        return bookAPIClient.getBookObserver(googleId)
-    }
-
     fun getGoogleBook(volumeId: String): Single<GoogleBookResponse> {
         return googleAPIClient.getGoogleBookObserver(volumeId)
-    }
-
-    fun createBook(book: BookResponse): Completable {
-        return bookAPIClient.createBookObserver(book)
-    }
-
-    fun setBook(book: BookResponse): Single<BookResponse> {
-        return bookAPIClient.setBookObserver(book)
-    }
-
-    fun deleteBook(googleId: String): Completable {
-        return bookAPIClient.deleteBookObserver(googleId)
-    }
-
-    fun setFavourite(googleId: String, isFavourite: Boolean): Single<BookResponse> {
-        return bookAPIClient.setFavouriteBookObserver(googleId, isFavourite)
     }
 }
