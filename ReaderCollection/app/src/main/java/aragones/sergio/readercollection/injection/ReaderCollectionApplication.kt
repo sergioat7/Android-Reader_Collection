@@ -44,6 +44,9 @@ class ReaderCollectionApplication: Application() {
             .googleAPIClientModule(
                 GoogleAPIClientModule()
             )
+            .appDatabaseModule(
+                AppDatabaseModule(applicationContext)
+            )
             .build()
 
         loginComponent = DaggerLoginComponent.builder()

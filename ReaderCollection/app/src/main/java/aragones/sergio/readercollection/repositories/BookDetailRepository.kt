@@ -20,9 +20,7 @@ import javax.inject.Inject
 
 class BookDetailRepository @Inject constructor(
     private val bookAPIClient: BookAPIClient,
-    private val googleAPIClient: GoogleAPIClient,
-    private val formatAPIClient: FormatAPIClient,
-    private val stateAPIClient: StateAPIClient
+    private val googleAPIClient: GoogleAPIClient
 ) {
 
     //MARK: - Public methods
@@ -33,14 +31,6 @@ class BookDetailRepository @Inject constructor(
 
     fun getGoogleBook(volumeId: String): Single<GoogleBookResponse> {
         return googleAPIClient.getGoogleBookObserver(volumeId)
-    }
-
-    fun getFormats(): Single<List<FormatResponse>> {
-        return formatAPIClient.getFormatsObserver()
-    }
-
-    fun getStates(): Single<List<StateResponse>> {
-        return stateAPIClient.getStatesObserver()
     }
 
     fun createBook(book: BookResponse): Completable {
