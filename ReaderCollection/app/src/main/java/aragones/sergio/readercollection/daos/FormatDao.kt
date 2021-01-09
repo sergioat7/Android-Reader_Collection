@@ -16,9 +16,6 @@ interface FormatDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertFormatsObserver(formats: List<FormatResponse>): Completable
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateFormatsObserver(formats: List<FormatResponse>): Completable
-
     @Delete
     fun deleteFormatsObserver(formats: List<FormatResponse>): Completable
 

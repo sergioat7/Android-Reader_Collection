@@ -74,6 +74,15 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
+    fun getStatesObserver(): Single<List<StateResponse>> {
+        return database
+            .stateDao()
+            .getStatesObserver()
+            .`as`(RxJavaBridge.toV3Single())
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
+    }
+
     fun resetTableObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -97,7 +106,9 @@ class StateRepository @Inject constructor(
         }
     }
 
-    fun insertStatesObserver(states: List<StateResponse>): Completable {
+    //MARK: - Private methods
+
+    private fun insertStatesObserver(states: List<StateResponse>): Completable {
         return database
             .stateDao()
             .insertStatesObserver(states)
@@ -106,29 +117,11 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun updateStatesObserver(states: List<StateResponse>): Completable {
-        return database
-            .stateDao()
-            .updateStatesObserver(states)
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun deleteStatesObserver(states: List<StateResponse>): Completable {
+    private fun deleteStatesObserver(states: List<StateResponse>): Completable {
         return database
             .stateDao()
             .deleteStatesObserver(states)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun getStatesObserver(): Single<List<StateResponse>> {
-        return database
-            .stateDao()
-            .getStatesObserver()
-            .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
