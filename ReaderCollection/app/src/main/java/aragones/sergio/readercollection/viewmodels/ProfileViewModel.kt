@@ -74,8 +74,9 @@ class ProfileViewModel @Inject constructor(
 
                 _profileLoading.value = false
                 _profileError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
@@ -101,8 +102,9 @@ class ProfileViewModel @Inject constructor(
 
                     _profileLoading.value = false
                     _profileError.value = Constants.handleError(it)
+                    onDestroy()
                 }
-            )
+            ).addTo(disposables)
         }
 
         if (changeSortParam) {
@@ -132,8 +134,9 @@ class ProfileViewModel @Inject constructor(
 
                 _profileLoading.value = false
                 _profileError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun deleteUser() {
@@ -151,8 +154,9 @@ class ProfileViewModel @Inject constructor(
 
                 _profileLoading.value = false
                 _profileError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun profileDataChanged(password: String) {
@@ -182,9 +186,14 @@ class ProfileViewModel @Inject constructor(
             },
             onError = {
 
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
             }
-        )
-            .addTo(disposables)
+        ).addTo(disposables)
 
         formatRepository.resetTableObserver().subscribeBy(
             onComplete = {
@@ -204,8 +213,8 @@ class ProfileViewModel @Inject constructor(
                     _profileLoading.value = false
                     _profileRedirection.value = true
                 }
-            })
-            .addTo(disposables)
+            }
+        ).addTo(disposables)
 
         stateRepository.resetTableObserver().subscribeBy(
             onComplete = {
@@ -225,7 +234,7 @@ class ProfileViewModel @Inject constructor(
                     _profileLoading.value = false
                     _profileRedirection.value = true
                 }
-            })
-            .addTo(disposables)
+            }
+        ).addTo(disposables)
     }
 }

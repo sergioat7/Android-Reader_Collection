@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
@@ -45,6 +46,7 @@ class BooksViewModel @Inject constructor(
     private var _isFavourite = MutableLiveData<Boolean?>()
     private var _sortKey = MutableLiveData<String?>()
     private var _sortDescending = MutableLiveData<Boolean?>()
+    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -58,6 +60,16 @@ class BooksViewModel @Inject constructor(
     val selectedFormat: LiveData<String?> = _selectedFormat
     val selectedState: LiveData<String?> = _selectedState
     val isFavourite: LiveData<Boolean?> = _isFavourite
+
+    // MARK: - Lifecycle methods
+
+    fun onDestroy() {
+
+        disposables.clear()
+        booksRepository.onDestroy()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
 
     //MARK: - Public methods
 

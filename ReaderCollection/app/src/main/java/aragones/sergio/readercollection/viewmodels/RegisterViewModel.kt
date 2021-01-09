@@ -64,7 +64,9 @@ class RegisterViewModel @Inject constructor(
                         login(username, password)
                     },
                     onError = {
+
                         _registerError.value = ErrorResponse("", R.string.error_database)
+                        onDestroy()
                     }
                 ).addTo(disposables)
             },
@@ -72,6 +74,7 @@ class RegisterViewModel @Inject constructor(
 
                 _registerLoading.value = false
                 _registerError.value = Constants.handleError(it)
+                onDestroy()
             }
         ).addTo(disposables)
     }
