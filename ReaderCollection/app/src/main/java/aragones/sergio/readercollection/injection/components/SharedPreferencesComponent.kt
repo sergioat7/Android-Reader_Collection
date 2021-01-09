@@ -15,7 +15,5 @@ import dagger.Component
 
 @Component(modules = [SharedPreferencesModule::class])
 interface SharedPreferencesComponent {
-
     fun inject(landingActivity: LandingActivity)
-    fun inject(registerViewModelFactory: RegisterViewModelFactory)
 }

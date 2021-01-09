@@ -17,6 +17,5 @@ import dagger.Component
     AppDatabaseModule::class
 ])
 interface BooksComponent {
-
     fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
 }
