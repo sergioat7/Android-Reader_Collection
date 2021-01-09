@@ -132,42 +132,42 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     private fun loadFormatsObserver(): Completable {
 
         return Completable.create { emitter ->
 
-            formatRepository
-                .loadFormatsObserver()
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                )
-                .addTo(disposables)
+            formatRepository.loadFormatsObserver().subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     private fun loadStatesObserver(): Completable {
 
         return Completable.create { emitter ->
 
-            stateRepository
-                .loadStatesObserver()
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                )
-                .addTo(disposables)
+            stateRepository.loadStatesObserver().subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     private fun login(username: String, password: String) {
