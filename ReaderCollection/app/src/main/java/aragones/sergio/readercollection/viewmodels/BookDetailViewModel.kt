@@ -13,10 +13,7 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
-import aragones.sergio.readercollection.repositories.BookDetailRepository
-import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
+import aragones.sergio.readercollection.repositories.*
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -25,7 +22,7 @@ import javax.inject.Inject
 class BookDetailViewModel @Inject constructor(
     val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
-    private val bookDetailRepository: BookDetailRepository,
+    private val googleBookRepository: GoogleBookRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
 ): ViewModel() {
@@ -65,7 +62,7 @@ class BookDetailViewModel @Inject constructor(
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            bookDetailRepository.getGoogleBook(bookId).subscribeBy(
+            googleBookRepository.getGoogleBook(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = Constants.mapGoogleBook(it)
