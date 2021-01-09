@@ -13,15 +13,13 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.apiclient.APIClient
-import aragones.sergio.readercollection.repositories.RegisterRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class RegisterViewModel @Inject constructor(
-        private val registerRepository: RegisterRepository
+        private val userRepository: UserRepository
 ): ViewModel() {
 
         //MARK: - Private properties
@@ -43,7 +41,7 @@ class RegisterViewModel @Inject constructor(
         fun register(username: String, password: String) {
 
                 _registerLoading.value = true
-                registerRepository.register(username, password).subscribeBy(
+                userRepository.register(username, password).subscribeBy(
                         onComplete = {
 
                                 _registerLoading.value = false
@@ -60,13 +58,13 @@ class RegisterViewModel @Inject constructor(
         fun login(username: String, password: String) {
 
                 _registerLoading.value = true
-                registerRepository.login(username, password).subscribeBy(
+                userRepository.login(username, password).subscribeBy(
                         onSuccess = {
 
                                 _registerLoading.value = false
                                 val userData = UserData(username, password, true)
                                 val authData = AuthData(it.token)
-                                registerRepository.storeLoginData(userData, authData)
+                                userRepository.storeLoginData(userData, authData)
                                 _loginError.value = null
                         },
                         onError = {

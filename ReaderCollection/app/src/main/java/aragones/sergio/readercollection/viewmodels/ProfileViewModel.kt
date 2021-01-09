@@ -12,18 +12,18 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.repositories.ProfileRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     //MARK: - Private properties
 
-    private val _userdata: MutableLiveData<UserData> = MutableLiveData(profileRepository.userData)
+    private val _userdata: MutableLiveData<UserData> = MutableLiveData(userRepository.userData)
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
@@ -31,8 +31,8 @@ class ProfileViewModel @Inject constructor(
 
     //MARK: - Public properties
 
-    val language: String = profileRepository.language
-    val sortParam: String? = profileRepository.sortParam
+    val language: String = userRepository.language
+    val sortParam: String? = userRepository.sortParam
     val profileUserData: LiveData<UserData> = _userdata
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
@@ -44,11 +44,11 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
 
         _profileLoading.value = true
-        profileRepository.logout().subscribeBy(
+        userRepository.logout().subscribeBy(
             onComplete = {
 
-                profileRepository.removePassword()
-                profileRepository.removeCredentials()
+                userRepository.removePassword()
+                userRepository.removeCredentials()
                 _profileLoading.value = false
                 _profileRedirection.value = true
             },
@@ -62,19 +62,19 @@ class ProfileViewModel @Inject constructor(
 
     fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
 
-        val changePassword = newPassword != profileRepository.userData.password
+        val changePassword = newPassword != userRepository.userData.password
         val changeLanguage = newLanguage != language
         val changeSortParam = newSortParam != sortParam
 
         if (changePassword) {
 
             _profileLoading.value = true
-            profileRepository.updatePassword(newPassword).subscribeBy(
+            userRepository.updatePassword(newPassword).subscribeBy(
                 onComplete = {
 
-                    profileRepository.storePassword(newPassword)
+                    userRepository.storePassword(newPassword)
                     _profileLoading.value = false
-                    _userdata.value = profileRepository.userData
+                    _userdata.value = userRepository.userData
                     if (changeLanguage) {
                         _profileRedirection.value = true
                     }
@@ -88,12 +88,12 @@ class ProfileViewModel @Inject constructor(
         }
 
         if (changeSortParam) {
-            profileRepository.storeSortParam(newSortParam)
+            userRepository.storeSortParam(newSortParam)
         }
 
         if (changeLanguage) {
 
-            profileRepository.storeLanguage(newLanguage)
+            userRepository.storeLanguage(newLanguage)
             if (!changePassword) {
                 _profileRedirection.value = true
             }
@@ -103,11 +103,11 @@ class ProfileViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _profileLoading.value = true
-        profileRepository.login(username, password).subscribeBy(
+        userRepository.login(username, password).subscribeBy(
             onSuccess = {
 
                 val authData = AuthData(it.token)
-                profileRepository.storeCredentials(authData)
+                userRepository.storeCredentials(authData)
                 _profileLoading.value = false
             },
             onError = {
@@ -121,11 +121,11 @@ class ProfileViewModel @Inject constructor(
     fun deleteUser() {
 
         _profileLoading.value = true
-        profileRepository.deleteUser().subscribeBy(
+        userRepository.deleteUser().subscribeBy(
             onComplete = {
 
-                profileRepository.removeUserData()
-                profileRepository.removeCredentials()
+                userRepository.removeUserData()
+                userRepository.removeCredentials()
                 _profileLoading.value = false
                 _profileRedirection.value = true
             },

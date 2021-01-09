@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 6/11/2020
+ * Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 9/1/2021
  */
 
 package aragones.sergio.readercollection.repositories
@@ -14,12 +14,15 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class ProfileRepository @Inject constructor(
+class UserRepository @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val userAPIClient: UserAPIClient
 ) {
 
     //MARK: - Public properties
+
+    val username: String?
+        get() = sharedPreferencesHandler.getUserData().username
 
     val userData: UserData
         get() = sharedPreferencesHandler.getUserData()
@@ -32,6 +35,18 @@ class ProfileRepository @Inject constructor(
 
     //MARK: - Public methods
 
+    fun register(username: String, password: String): Completable {
+        return userAPIClient.registerObserver(username, password)
+    }
+
+    fun deleteUser(): Completable {
+        return userAPIClient.deleteUserObserver()
+    }
+
+    fun login(username: String, password: String): Single<LoginResponse> {
+        return userAPIClient.loginObserver(username, password)
+    }
+
     fun logout(): Completable {
         return userAPIClient.logoutObserver()
     }
@@ -40,39 +55,37 @@ class ProfileRepository @Inject constructor(
         return userAPIClient.updatePasswordObserver(newPassword)
     }
 
-    fun login(username: String, password: String): Single<LoginResponse> {
-        return userAPIClient.loginObserver(username, password)
-    }
-
-    fun deleteUser(): Completable {
-        return userAPIClient.deleteUserObserver()
-    }
-
-    fun storePassword(newPassword: String) {
-        sharedPreferencesHandler.storePassword(newPassword)
+    fun storeLanguage(language: String) {
+        sharedPreferencesHandler.setLanguage(language)
     }
 
     fun storeCredentials(authData: AuthData) {
         sharedPreferencesHandler.storeCredentials(authData)
     }
 
-    fun removePassword() {
-        sharedPreferencesHandler.removePassword()
+    fun removeCredentials() {
+        sharedPreferencesHandler.removeCredentials()
+    }
+
+    fun storePassword(newPassword: String) {
+        sharedPreferencesHandler.storePassword(newPassword)
     }
 
     fun removeUserData() {
         sharedPreferencesHandler.removeUserData()
     }
 
-    fun removeCredentials() {
-        sharedPreferencesHandler.removeCredentials()
-    }
-
-    fun storeLanguage(language: String) {
-        sharedPreferencesHandler.setLanguage(language)
+    fun removePassword() {
+        sharedPreferencesHandler.removePassword()
     }
 
     fun storeSortParam(sortParam: String?) {
         sharedPreferencesHandler.setSortParam(sortParam)
+    }
+
+    fun storeLoginData(userData: UserData, authData: AuthData) {
+
+        sharedPreferencesHandler.storeUserData(userData)
+        sharedPreferencesHandler.storeCredentials(authData)
     }
 }

@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.UserAPIClient
-import aragones.sergio.readercollection.repositories.RegisterRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import javax.inject.Inject
@@ -26,7 +26,7 @@ class RegisterViewModelFactory(
     @Inject
     lateinit var userAPIClient: UserAPIClient
     @Inject
-    lateinit var registerRepository: RegisterRepository
+    lateinit var userRepository: UserRepository
     @Inject
     lateinit var registerViewModel: RegisterViewModel
 
