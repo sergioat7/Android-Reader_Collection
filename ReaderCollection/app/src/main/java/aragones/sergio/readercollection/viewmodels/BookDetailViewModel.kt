@@ -22,8 +22,8 @@ import javax.inject.Inject
 class BookDetailViewModel @Inject constructor(
     val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
-    private val googleBookRepository: GoogleBookRepository,
     private val formatRepository: FormatRepository,
+    private val googleBookRepository: GoogleBookRepository,
     private val stateRepository: StateRepository
 ): ViewModel() {
 

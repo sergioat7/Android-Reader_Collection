@@ -168,7 +168,7 @@ class BooksViewModel @Inject constructor(
 
         dialogView.layoutParams = params
         dialogView.addView(sortKeysPicker, Constants.getPickerParams())
-        dialogView.addView(sortOrdersPicker, Constants.getPickerParams());
+        dialogView.addView(sortOrdersPicker, Constants.getPickerParams())
 
         AlertDialog.Builder(context)
             .setTitle(context.resources.getString(R.string.order_by))

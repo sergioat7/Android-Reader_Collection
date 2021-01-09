@@ -31,17 +31,17 @@ class BookDetailViewModelFactory(
     @Inject
     lateinit var bookAPIClient: BookAPIClient
     @Inject
-    lateinit var googleAPIClient: GoogleAPIClient
-    @Inject
     lateinit var formatAPIClient: FormatAPIClient
+    @Inject
+    lateinit var googleAPIClient: GoogleAPIClient
     @Inject
     lateinit var stateAPIClient: StateAPIClient
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
-    lateinit var googleBookRepository: GoogleBookRepository
-    @Inject
     lateinit var formatRepository: FormatRepository
+    @Inject
+    lateinit var googleBookRepository: GoogleBookRepository
     @Inject
     lateinit var stateRepository: StateRepository
     @Inject

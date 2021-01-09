@@ -14,14 +14,14 @@ import io.reactivex.Single
 interface FormatDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertFormats(formats: List<FormatResponse>): Completable
+    fun insertFormatsObserver(formats: List<FormatResponse>): Completable
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateFormats(formats: List<FormatResponse>): Completable
+    fun updateFormatsObserver(formats: List<FormatResponse>): Completable
 
     @Delete
-    fun deleteFormats(formats: List<FormatResponse>): Completable
+    fun deleteFormatsObserver(formats: List<FormatResponse>): Completable
 
     @Query("SELECT * FROM Format")
-    fun getFormats(): Single<List<FormatResponse>>
+    fun getFormatsObserver(): Single<List<FormatResponse>>
 }

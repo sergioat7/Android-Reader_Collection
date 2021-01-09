@@ -21,9 +21,9 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val bookAPIClient: BookAPIClient,
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
     //MARK: - Private properties
@@ -110,7 +110,7 @@ class BooksRepository @Inject constructor(
         val query = SimpleSQLiteQuery(queryString)
         return database
             .bookDao()
-            .getBooks(query)
+            .getBooksObserver(query)
             .`as`(RxJavaBridge.toV3Maybe())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -119,7 +119,7 @@ class BooksRepository @Inject constructor(
     fun getBook(googleId: String): Single<BookResponse> {
         return database
             .bookDao()
-            .getBook(googleId)
+            .getBookObserver(googleId)
             .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -230,7 +230,7 @@ class BooksRepository @Inject constructor(
     private fun insertBooksDatabase(books: List<BookResponse>): Completable {
         return database
             .bookDao()
-            .insertBooks(books)
+            .insertBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -239,7 +239,7 @@ class BooksRepository @Inject constructor(
     private fun updateBooksDatabase(books: List<BookResponse>): Completable {
         return database
             .bookDao()
-            .updateBooks(books)
+            .updateBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -248,7 +248,7 @@ class BooksRepository @Inject constructor(
     private fun deleteBooksDatabase(books: List<BookResponse>): Completable {
         return database
             .bookDao()
-            .deleteBooks(books)
+            .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)

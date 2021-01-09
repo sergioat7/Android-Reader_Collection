@@ -14,14 +14,14 @@ import io.reactivex.Single
 interface StateDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertStates(states: List<StateResponse>): Completable
+    fun insertStatesObserver(states: List<StateResponse>): Completable
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateStates(states: List<StateResponse>): Completable
+    fun updateStatesObserver(states: List<StateResponse>): Completable
 
     @Delete
-    fun deleteStates(states: List<StateResponse>): Completable
+    fun deleteStatesObserver(states: List<StateResponse>): Completable
 
     @Query("SELECT * FROM State")
-    fun getStates(): Single<List<StateResponse>>
+    fun getStatesObserver(): Single<List<StateResponse>>
 }

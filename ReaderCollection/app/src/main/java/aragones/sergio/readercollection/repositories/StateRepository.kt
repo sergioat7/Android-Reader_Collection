@@ -18,8 +18,8 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class StateRepository @Inject constructor(
-    private val stateAPIClient: StateAPIClient,
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val stateAPIClient: StateAPIClient
 ) {
 
     //MARK: - Private properties
@@ -77,7 +77,7 @@ class StateRepository @Inject constructor(
     fun insertStates(states: List<StateResponse>): Completable {
         return database
             .stateDao()
-            .insertStates(states)
+            .insertStatesObserver(states)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -86,7 +86,7 @@ class StateRepository @Inject constructor(
     fun updateStates(states: List<StateResponse>): Completable {
         return database
             .stateDao()
-            .updateStates(states)
+            .updateStatesObserver(states)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -95,7 +95,7 @@ class StateRepository @Inject constructor(
     fun deleteStates(states: List<StateResponse>): Completable {
         return database
             .stateDao()
-            .deleteStates(states)
+            .deleteStatesObserver(states)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -104,7 +104,7 @@ class StateRepository @Inject constructor(
     fun getStates(): Single<List<StateResponse>> {
         return database
             .stateDao()
-            .getStates()
+            .getStatesObserver()
             .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
