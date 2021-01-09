@@ -16,9 +16,6 @@ interface StateDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertStatesObserver(states: List<StateResponse>): Completable
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateStatesObserver(states: List<StateResponse>): Completable
-
     @Delete
     fun deleteStatesObserver(states: List<StateResponse>): Completable
 

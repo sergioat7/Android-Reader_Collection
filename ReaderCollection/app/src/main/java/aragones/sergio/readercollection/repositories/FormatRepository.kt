@@ -73,6 +73,15 @@ class FormatRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
+    fun getFormatsObserver(): Single<List<FormatResponse>> {
+        return database
+            .formatDao()
+            .getFormatsObserver()
+            .`as`(RxJavaBridge.toV3Single())
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
+    }
+
     fun resetTableObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -96,7 +105,9 @@ class FormatRepository @Inject constructor(
         }
     }
 
-    fun insertFormatsObserver(formats: List<FormatResponse>): Completable {
+    //MARK: - Private methods
+
+    private fun insertFormatsObserver(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
             .insertFormatsObserver(formats)
@@ -105,29 +116,11 @@ class FormatRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun updateFormatsObserver(formats: List<FormatResponse>): Completable {
-        return database
-            .formatDao()
-            .updateFormatsObserver(formats)
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun deleteFormatsObserver(formats: List<FormatResponse>): Completable {
+    private fun deleteFormatsObserver(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
             .deleteFormatsObserver(formats)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun getFormatsObserver(): Single<List<FormatResponse>> {
-        return database
-            .formatDao()
-            .getFormatsObserver()
-            .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
