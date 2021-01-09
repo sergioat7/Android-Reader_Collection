@@ -63,7 +63,7 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
 
         _profileLoading.value = true
-        userRepository.logout().subscribeBy(
+        userRepository.logoutObserver().subscribeBy(
             onComplete = {
 
                 userRepository.removePassword()
@@ -87,7 +87,7 @@ class ProfileViewModel @Inject constructor(
         if (changePassword) {
 
             _profileLoading.value = true
-            userRepository.updatePassword(newPassword).subscribeBy(
+            userRepository.updatePasswordObserver(newPassword).subscribeBy(
                 onComplete = {
 
                     userRepository.storePassword(newPassword)
@@ -121,7 +121,7 @@ class ProfileViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _profileLoading.value = true
-        userRepository.login(username, password).subscribeBy(
+        userRepository.loginObserver(username, password).subscribeBy(
             onSuccess = {
 
                 val authData = AuthData(it.token)
@@ -139,7 +139,7 @@ class ProfileViewModel @Inject constructor(
     fun deleteUser() {
 
         _profileLoading.value = true
-        userRepository.deleteUser().subscribeBy(
+        userRepository.deleteUserObserver().subscribeBy(
             onComplete = {
 
                 userRepository.removeUserData()
@@ -170,7 +170,7 @@ class ProfileViewModel @Inject constructor(
 
         var result = 0
 
-        booksRepository.resetTable().subscribeBy(
+        booksRepository.resetTableObserver().subscribeBy(
             onComplete = {
 
                 result += 1
@@ -186,7 +186,7 @@ class ProfileViewModel @Inject constructor(
         )
             .addTo(disposables)
 
-        formatRepository.resetTable().subscribeBy(
+        formatRepository.resetTableObserver().subscribeBy(
             onComplete = {
 
                 result += 1
@@ -207,7 +207,7 @@ class ProfileViewModel @Inject constructor(
             })
             .addTo(disposables)
 
-        stateRepository.resetTable().subscribeBy(
+        stateRepository.resetTableObserver().subscribeBy(
             onComplete = {
 
                 result += 1

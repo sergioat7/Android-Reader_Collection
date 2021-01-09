@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _loginLoading.value = true
-        userRepository.login(username, password).subscribeBy(
+        userRepository.loginObserver(username, password).subscribeBy(
             onSuccess = {
 
                 val userData = UserData(username, password, true)
@@ -135,7 +135,7 @@ class LoginViewModel @Inject constructor(
         return Completable.create { emitter ->
 
             formatRepository
-                .loadFormats()
+                .loadFormatsObserver()
                 .subscribeBy(
                     onComplete = {
                         emitter.onComplete()
@@ -153,7 +153,7 @@ class LoginViewModel @Inject constructor(
         return Completable.create { emitter ->
 
             stateRepository
-                .loadStates()
+                .loadStatesObserver()
                 .subscribeBy(
                     onComplete = {
                         emitter.onComplete()
@@ -169,7 +169,7 @@ class LoginViewModel @Inject constructor(
     private fun loadBooks() {
 
         booksRepository
-            .loadBooks()
+            .loadBooksObserver()
             .subscribeBy(
                 onComplete = {
 

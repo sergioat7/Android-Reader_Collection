@@ -35,23 +35,23 @@ class UserRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun register(username: String, password: String): Completable {
+    fun registerObserver(username: String, password: String): Completable {
         return userAPIClient.registerObserver(username, password)
     }
 
-    fun deleteUser(): Completable {
+    fun deleteUserObserver(): Completable {
         return userAPIClient.deleteUserObserver()
     }
 
-    fun login(username: String, password: String): Single<LoginResponse> {
+    fun loginObserver(username: String, password: String): Single<LoginResponse> {
         return userAPIClient.loginObserver(username, password)
     }
 
-    fun logout(): Completable {
+    fun logoutObserver(): Completable {
         return userAPIClient.logoutObserver()
     }
 
-    fun updatePassword(newPassword: String): Completable {
+    fun updatePasswordObserver(newPassword: String): Completable {
         return userAPIClient.updatePasswordObserver(newPassword)
     }
 
