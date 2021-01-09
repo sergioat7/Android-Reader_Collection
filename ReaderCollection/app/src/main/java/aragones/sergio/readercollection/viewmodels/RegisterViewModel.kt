@@ -46,6 +46,7 @@ class RegisterViewModel @Inject constructor(
 
                                 _registerLoading.value = false
                                 _registerError.value = null
+                                //TODO: load formats and states
                         },
                         onError = {
 

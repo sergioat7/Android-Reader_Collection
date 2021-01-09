@@ -74,6 +74,29 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
+    fun resetTable(): Completable {
+
+        return Completable.create { emitter ->
+
+            getStates().subscribeBy(
+                onSuccess = { states ->
+
+                    deleteStates(states).subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
     fun insertStates(states: List<StateResponse>): Completable {
         return database
             .stateDao()

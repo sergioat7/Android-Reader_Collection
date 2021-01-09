@@ -73,6 +73,29 @@ class FormatRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
+    fun resetTable(): Completable {
+
+        return Completable.create { emitter ->
+
+            getFormats().subscribeBy(
+                onSuccess = { formats ->
+
+                    deleteFormats(formats).subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
     fun insertFormats(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()

@@ -225,6 +225,32 @@ class BooksRepository @Inject constructor(
         }
     }
 
+    fun resetTable(): Completable {
+
+        return Completable.create { emitter ->
+
+            getBooks(null, null, null, null).subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onSuccess = { books ->
+
+                    deleteBooksDatabase(books).subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        })
+                        .addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                })
+                .addTo(disposables)
+        }
+    }
+
     //MARK: - Private methods
 
     private fun insertBooksDatabase(books: List<BookResponse>): Completable {

@@ -12,12 +12,20 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
+    private val booksRepository: BooksRepository,
+    private val formatRepository: FormatRepository,
+    private val stateRepository: StateRepository,
     private val userRepository: UserRepository
 ): ViewModel() {
 
@@ -28,6 +36,7 @@ class ProfileViewModel @Inject constructor(
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse>()
+    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -39,6 +48,16 @@ class ProfileViewModel @Inject constructor(
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse> = _profileError
 
+    // MARK: - Lifecycle methods
+
+    fun onDestroy() {
+
+        disposables.clear()
+        booksRepository.onDestroy()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
+
     //MARK: - Public methods
 
     fun logout() {
@@ -49,8 +68,7 @@ class ProfileViewModel @Inject constructor(
 
                 userRepository.removePassword()
                 userRepository.removeCredentials()
-                _profileLoading.value = false
-                _profileRedirection.value = true
+                resetDatabase()
             },
             onError = {
 
@@ -144,5 +162,70 @@ class ProfileViewModel @Inject constructor(
             passwordError = R.string.invalid_password
         }
         _profileForm.value = passwordError
+    }
+
+    //MARK: - Private methods
+
+    private fun resetDatabase() {
+
+        var result = 0
+
+        booksRepository.resetTable().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            },
+            onError = {
+
+            }
+        )
+            .addTo(disposables)
+
+        formatRepository.resetTable().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            },
+            onError = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            })
+            .addTo(disposables)
+
+        stateRepository.resetTable().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            },
+            onError = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            })
+            .addTo(disposables)
     }
 }
