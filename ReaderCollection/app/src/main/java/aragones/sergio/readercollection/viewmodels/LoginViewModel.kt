@@ -13,10 +13,7 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.LoginRepository
-import aragones.sergio.readercollection.repositories.StateRepository
+import aragones.sergio.readercollection.repositories.*
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -25,7 +22,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    private val loginRepository: LoginRepository,
+    private val userRepository: UserRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository,
     private val booksRepository: BooksRepository
@@ -40,7 +37,7 @@ class LoginViewModel @Inject constructor(
 
     //MARK: - Public properties
 
-    val username: String? = loginRepository.username
+    val username: String? = userRepository.username
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse> = _loginError
@@ -60,7 +57,7 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _loginLoading.value = true
-        loginRepository.login(username, password).subscribeBy(
+        userRepository.login(username, password).subscribeBy(
             onSuccess = {
 
                 val userData = UserData(username, password, true)
@@ -105,7 +102,7 @@ class LoginViewModel @Inject constructor(
                 result += 1
                 if (result == 2) {
 
-                    loginRepository.storeLoginData(userData, authData)
+                    userRepository.storeLoginData(userData, authData)
                     loadBooks()
                 }
             },
@@ -121,7 +118,7 @@ class LoginViewModel @Inject constructor(
                 result += 1
                 if (result == 2) {
 
-                    loginRepository.storeLoginData(userData, authData)
+                    userRepository.storeLoginData(userData, authData)
                     loadBooks()
                 }
             },
