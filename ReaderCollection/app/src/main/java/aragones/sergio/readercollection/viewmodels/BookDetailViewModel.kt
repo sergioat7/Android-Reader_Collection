@@ -7,16 +7,18 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
-import aragones.sergio.readercollection.repositories.*
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -27,7 +29,7 @@ class BookDetailViewModel @Inject constructor(
     private val formatRepository: FormatRepository,
     private val googleBookRepository: GoogleBookRepository,
     private val stateRepository: StateRepository
-): ViewModel() {
+): BaseViewModel() {
 
     //MARK: - Private properties
 
@@ -43,7 +45,6 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse>()
-    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -60,9 +61,9 @@ class BookDetailViewModel @Inject constructor(
 
     // MARK: - Lifecycle methods
 
-    fun onDestroy() {
+    override fun onDestroy() {
+        super.onDestroy()
 
-        disposables.clear()
         booksRepository.onDestroy()
         formatRepository.onDestroy()
         stateRepository.onDestroy()

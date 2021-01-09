@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
@@ -17,8 +16,8 @@ import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -27,14 +26,13 @@ class RegisterViewModel @Inject constructor(
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository,
     private val userRepository: UserRepository
-): ViewModel() {
+): BaseViewModel() {
 
     //MARK: - Private properties
 
     private val _registerForm = MutableLiveData<LoginFormState>()
     private val _registerLoading = MutableLiveData<Boolean>()
     private val _registerError = MutableLiveData<ErrorResponse>()
-    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -44,9 +42,9 @@ class RegisterViewModel @Inject constructor(
 
     // MARK: - Lifecycle methods
 
-    fun onDestroy() {
+    override fun onDestroy() {
+        super.onDestroy()
 
-        disposables.clear()
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }

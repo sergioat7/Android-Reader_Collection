@@ -11,7 +11,6 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
@@ -21,7 +20,7 @@ import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
-import io.reactivex.rxjava3.disposables.CompositeDisposable
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -30,7 +29,7 @@ class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
-): ViewModel() {
+): BaseViewModel() {
 
     //MARK: - Private properties
 
@@ -47,7 +46,6 @@ class BooksViewModel @Inject constructor(
     private var _isFavourite = MutableLiveData<Boolean?>()
     private var _sortKey = MutableLiveData<String?>()
     private var _sortDescending = MutableLiveData<Boolean?>()
-    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -64,9 +62,9 @@ class BooksViewModel @Inject constructor(
 
     // MARK: - Lifecycle methods
 
-    fun onDestroy() {
+    override fun onDestroy() {
+        super.onDestroy()
 
-        disposables.clear()
         booksRepository.onDestroy()
         formatRepository.onDestroy()
         stateRepository.onDestroy()
