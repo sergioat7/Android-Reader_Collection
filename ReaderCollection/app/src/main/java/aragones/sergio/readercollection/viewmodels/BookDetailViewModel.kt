@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.*
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
@@ -41,6 +42,7 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse>()
+    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -54,6 +56,16 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
+
+    // MARK: - Lifecycle methods
+
+    fun onDestroy() {
+
+        disposables.clear()
+        booksRepository.onDestroy()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
 
     //MARK: - Public methods
 

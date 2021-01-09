@@ -96,7 +96,7 @@ class LoginViewModel @Inject constructor(
 
         var result = 0
 
-        loadFormats().subscribeBy(
+        loadFormatsObserver().subscribeBy(
             onComplete = {
 
                 result += 1
@@ -111,8 +111,9 @@ class LoginViewModel @Inject constructor(
                 _loginError.value = ErrorResponse("", R.string.error_database)
                 onDestroy()
             }
-        )
-        loadStates().subscribeBy(
+        ).addTo(disposables)
+
+        loadStatesObserver().subscribeBy(
             onComplete = {
 
                 result += 1
@@ -127,61 +128,52 @@ class LoginViewModel @Inject constructor(
                 _loginError.value = ErrorResponse("", R.string.error_database)
                 onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
-    private fun loadFormats(): Completable {
+    private fun loadFormatsObserver(): Completable {
 
         return Completable.create { emitter ->
 
-            formatRepository
-                .loadFormatsObserver()
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                )
-                .addTo(disposables)
+            formatRepository.loadFormatsObserver().subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
         }
     }
 
-    private fun loadStates(): Completable {
+    private fun loadStatesObserver(): Completable {
 
         return Completable.create { emitter ->
 
-            stateRepository
-                .loadStatesObserver()
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                )
-                .addTo(disposables)
+            stateRepository.loadStatesObserver().subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
         }
     }
 
     private fun loadBooks() {
 
-        booksRepository
-            .loadBooksObserver()
-            .subscribeBy(
-                onComplete = {
+        booksRepository.loadBooksObserver().subscribeBy(
+            onComplete = {
 
-                    _loginLoading.value = false
-                    _loginError.value = null
-                },
-                onError = {
+                _loginLoading.value = false
+                _loginError.value = null
+            },
+            onError = {
 
-                    _loginError.value = ErrorResponse("", R.string.error_database)
-                    onDestroy()
-                }
-            )
-            .addTo(disposables)
+                _loginError.value = ErrorResponse("", R.string.error_database)
+                onDestroy()
+            }
+        ).addTo(disposables)
     }
 }
