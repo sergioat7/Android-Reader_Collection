@@ -145,6 +145,8 @@ class LoginViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     private fun loadStatesObserver(): Completable {
@@ -160,6 +162,8 @@ class LoginViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     private fun loadBooks() {
