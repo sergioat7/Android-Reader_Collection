@@ -28,21 +28,21 @@ class LoginViewModelFactory(
     @Inject
     lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
-    lateinit var userAPIClient: UserAPIClient
+    lateinit var bookAPIClient: BookAPIClient
     @Inject
     lateinit var formatAPIClient: FormatAPIClient
     @Inject
     lateinit var stateAPIClient: StateAPIClient
     @Inject
-    lateinit var bookAPIClient: BookAPIClient
+    lateinit var userAPIClient: UserAPIClient
     @Inject
-    lateinit var userRepository: UserRepository
+    lateinit var booksRepository: BooksRepository
     @Inject
     lateinit var formatRepository: FormatRepository
     @Inject
     lateinit var stateRepository: StateRepository
     @Inject
-    lateinit var booksRepository: BooksRepository
+    lateinit var userRepository: UserRepository
     @Inject
     lateinit var loginViewModel: LoginViewModel
 

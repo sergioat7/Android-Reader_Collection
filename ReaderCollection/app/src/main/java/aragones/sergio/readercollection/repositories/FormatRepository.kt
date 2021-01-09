@@ -18,8 +18,8 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class FormatRepository @Inject constructor(
-    private val formatAPIClient: FormatAPIClient,
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    private val formatAPIClient: FormatAPIClient
 ) {
 
     //MARK: - Private properties
@@ -76,7 +76,7 @@ class FormatRepository @Inject constructor(
     fun insertFormats(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
-            .insertFormats(formats)
+            .insertFormatsObserver(formats)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -85,7 +85,7 @@ class FormatRepository @Inject constructor(
     fun updateFormats(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
-            .updateFormats(formats)
+            .updateFormatsObserver(formats)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -94,7 +94,7 @@ class FormatRepository @Inject constructor(
     fun deleteFormats(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
-            .deleteFormats(formats)
+            .deleteFormatsObserver(formats)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -103,7 +103,7 @@ class FormatRepository @Inject constructor(
     fun getFormats(): Single<List<FormatResponse>> {
         return database
             .formatDao()
-            .getFormats()
+            .getFormatsObserver()
             .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)

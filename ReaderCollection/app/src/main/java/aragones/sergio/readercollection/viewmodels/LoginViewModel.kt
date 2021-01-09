@@ -22,10 +22,10 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
-    private val userRepository: UserRepository,
+    private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository,
-    private val booksRepository: BooksRepository
+    private val userRepository: UserRepository
 ): ViewModel() {
 
     //MARK: - Private properties
@@ -47,9 +47,9 @@ class LoginViewModel @Inject constructor(
     fun onDestroy() {
 
         disposables.clear()
+        booksRepository.onDestroy()
         formatRepository.onDestroy()
         stateRepository.onDestroy()
-        booksRepository.onDestroy()
     }
 
     //MARK: - Public methods
