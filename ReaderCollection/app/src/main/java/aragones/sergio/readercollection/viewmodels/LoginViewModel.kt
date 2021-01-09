@@ -7,16 +7,18 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.repositories.*
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.StateRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -26,14 +28,13 @@ class LoginViewModel @Inject constructor(
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository,
     private val userRepository: UserRepository
-): ViewModel() {
+): BaseViewModel() {
 
     //MARK: - Private properties
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginLoading = MutableLiveData<Boolean>()
     private val _loginError = MutableLiveData<ErrorResponse>()
-    private val disposables = CompositeDisposable()
 
     //MARK: - Public properties
 
@@ -44,9 +45,9 @@ class LoginViewModel @Inject constructor(
 
     // MARK: - Lifecycle methods
 
-    fun onDestroy() {
+    override fun onDestroy() {
+        super.onDestroy()
 
-        disposables.clear()
         booksRepository.onDestroy()
         formatRepository.onDestroy()
         stateRepository.onDestroy()
