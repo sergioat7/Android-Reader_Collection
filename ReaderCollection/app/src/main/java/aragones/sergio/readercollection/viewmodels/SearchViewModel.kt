@@ -11,13 +11,13 @@ import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.repositories.SearchRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val googleBookRepository: GoogleBookRepository
 ): ViewModel() {
 
     //MARK: - Private properties
@@ -39,7 +39,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        searchRepository.searchBooks(query, page, null).subscribeBy(
+        googleBookRepository.searchBooks(query, page, null).subscribeBy(
             onSuccess = { googleBookListResponse ->
 
                 page++
