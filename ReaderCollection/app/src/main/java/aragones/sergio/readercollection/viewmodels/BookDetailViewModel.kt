@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.repositories.*
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
@@ -84,8 +85,9 @@ class BookDetailViewModel @Inject constructor(
 
                     _bookDetailLoading.value = false
                     _bookDetailError.value = ErrorResponse("", R.string.error_server)
+                    onDestroy()
                 }
-            )
+            ).addTo(disposables)
         } else {
 
             booksRepository.getBookObserver(bookId).subscribeBy(
@@ -99,8 +101,9 @@ class BookDetailViewModel @Inject constructor(
 
                     _bookDetailLoading.value = false
                     _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                    onDestroy()
                 }
-            )
+            ).addTo(disposables)
         }
     }
 
@@ -117,8 +120,9 @@ class BookDetailViewModel @Inject constructor(
 
                 _formats.value = ArrayList()
                 _bookDetailFormatsLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getStates() {
@@ -134,8 +138,9 @@ class BookDetailViewModel @Inject constructor(
 
                 _states.value = ArrayList()
                 _bookDetailStatesLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun createBook(book: BookResponse) {
@@ -151,8 +156,9 @@ class BookDetailViewModel @Inject constructor(
 
                 _bookDetailLoading.value = false
                 _bookDetailError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun setBook(book: BookResponse) {
@@ -168,8 +174,9 @@ class BookDetailViewModel @Inject constructor(
 
                 _bookDetailLoading.value = false
                 _bookDetailError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun deleteBook() {
@@ -185,8 +192,9 @@ class BookDetailViewModel @Inject constructor(
 
                 _bookDetailLoading.value = false
                 _bookDetailError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun setFavourite(isFavourite: Boolean) {
@@ -199,9 +207,11 @@ class BookDetailViewModel @Inject constructor(
                 _bookDetailFavouriteLoading.value = false
             },
             onError = {
+
                 _bookDetailFavouriteLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun setBookId(bookId: String) {
