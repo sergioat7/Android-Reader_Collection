@@ -41,7 +41,7 @@ class RegisterViewModel @Inject constructor(
         fun register(username: String, password: String) {
 
                 _registerLoading.value = true
-                userRepository.register(username, password).subscribeBy(
+                userRepository.registerObserver(username, password).subscribeBy(
                         onComplete = {
 
                                 _registerLoading.value = false
@@ -59,7 +59,7 @@ class RegisterViewModel @Inject constructor(
         fun login(username: String, password: String) {
 
                 _registerLoading.value = true
-                userRepository.login(username, password).subscribeBy(
+                userRepository.loginObserver(username, password).subscribeBy(
                         onSuccess = {
 
                                 _registerLoading.value = false

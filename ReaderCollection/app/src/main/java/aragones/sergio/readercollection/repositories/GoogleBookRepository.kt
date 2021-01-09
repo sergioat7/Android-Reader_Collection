@@ -17,11 +17,11 @@ class GoogleBookRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun searchBooks(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
+    fun searchBooksObserver(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
         return googleAPIClient.searchGoogleBooksObserver(query, page, order)
     }
 
-    fun getGoogleBook(volumeId: String): Single<GoogleBookResponse> {
+    fun getGoogleBookObserver(volumeId: String): Single<GoogleBookResponse> {
         return googleAPIClient.getGoogleBookObserver(volumeId)
     }
 }

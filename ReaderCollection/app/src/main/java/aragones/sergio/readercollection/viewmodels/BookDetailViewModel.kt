@@ -62,7 +62,7 @@ class BookDetailViewModel @Inject constructor(
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            googleBookRepository.getGoogleBook(bookId).subscribeBy(
+            googleBookRepository.getGoogleBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = Constants.mapGoogleBook(it)
@@ -76,7 +76,7 @@ class BookDetailViewModel @Inject constructor(
             )
         } else {
 
-            booksRepository.getBook(bookId).subscribeBy(
+            booksRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = it
@@ -95,7 +95,7 @@ class BookDetailViewModel @Inject constructor(
     fun getFormats() {
 
         _bookDetailFormatsLoading.value = true
-        formatRepository.getFormats().subscribeBy(
+        formatRepository.getFormatsObserver().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -112,7 +112,7 @@ class BookDetailViewModel @Inject constructor(
     fun getStates() {
 
         _bookDetailStatesLoading.value = true
-        stateRepository.getStates().subscribeBy(
+        stateRepository.getStatesObserver().subscribeBy(
             onSuccess = {
 
                 _states.value = it
@@ -129,7 +129,7 @@ class BookDetailViewModel @Inject constructor(
     fun createBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        booksRepository.createBook(book).subscribeBy(
+        booksRepository.createBookObserver(book).subscribeBy(
             onComplete = {
 
                 _bookDetailLoading.value = false
@@ -146,7 +146,7 @@ class BookDetailViewModel @Inject constructor(
     fun setBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        booksRepository.updateBook(book).subscribeBy(
+        booksRepository.updateBookObserver(book).subscribeBy(
             onSuccess = {
 
                 _book.value = it
@@ -163,7 +163,7 @@ class BookDetailViewModel @Inject constructor(
     fun deleteBook() {
 
         _bookDetailLoading.value = true
-        booksRepository.deleteBook(bookId).subscribeBy(
+        booksRepository.deleteBookObserver(bookId).subscribeBy(
             onComplete = {
 
                 _bookDetailLoading.value = false
@@ -180,7 +180,7 @@ class BookDetailViewModel @Inject constructor(
     fun setFavourite(isFavourite: Boolean) {
 
         _bookDetailFavouriteLoading.value = true
-        booksRepository.setFavouriteBook(bookId, isFavourite).subscribeBy(
+        booksRepository.setFavouriteBookObserver(bookId, isFavourite).subscribeBy(
             onSuccess = {
 
                 _isFavourite.value = it.isFavourite

@@ -39,7 +39,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        googleBookRepository.searchBooks(query, page, null).subscribeBy(
+        googleBookRepository.searchBooksObserver(query, page, null).subscribeBy(
             onSuccess = { googleBookListResponse ->
 
                 page++

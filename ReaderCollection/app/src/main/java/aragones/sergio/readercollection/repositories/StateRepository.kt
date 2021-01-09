@@ -34,21 +34,21 @@ class StateRepository @Inject constructor(
 
     //MARK: - Public methods
 
-    fun loadStates(): Completable {
+    fun loadStatesObserver(): Completable {
 
         return Completable.create { emitter ->
 
             stateAPIClient.getStatesObserver().subscribeBy(
                 onSuccess = { newStates ->
-                    insertStates(newStates)
+                    insertStatesObserver(newStates)
                         .subscribeBy(
                             onComplete = {
-                                getStates()
+                                getStatesObserver()
                                     .subscribeBy(
                                         onSuccess = { currentStates ->
 
                                             val statesToRemove = Constants.getDisabledContent(currentStates, newStates) as List<StateResponse>
-                                            deleteStates(statesToRemove)
+                                            deleteStatesObserver(statesToRemove)
                                                 .subscribe({
                                                     emitter.onComplete()
                                                 }, {
@@ -74,14 +74,14 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun resetTable(): Completable {
+    fun resetTableObserver(): Completable {
 
         return Completable.create { emitter ->
 
-            getStates().subscribeBy(
+            getStatesObserver().subscribeBy(
                 onSuccess = { states ->
 
-                    deleteStates(states).subscribeBy(
+                    deleteStatesObserver(states).subscribeBy(
                         onComplete = {
                             emitter.onComplete()
                         },
@@ -97,7 +97,7 @@ class StateRepository @Inject constructor(
         }
     }
 
-    fun insertStates(states: List<StateResponse>): Completable {
+    fun insertStatesObserver(states: List<StateResponse>): Completable {
         return database
             .stateDao()
             .insertStatesObserver(states)
@@ -106,7 +106,7 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun updateStates(states: List<StateResponse>): Completable {
+    fun updateStatesObserver(states: List<StateResponse>): Completable {
         return database
             .stateDao()
             .updateStatesObserver(states)
@@ -115,7 +115,7 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun deleteStates(states: List<StateResponse>): Completable {
+    fun deleteStatesObserver(states: List<StateResponse>): Completable {
         return database
             .stateDao()
             .deleteStatesObserver(states)
@@ -124,7 +124,7 @@ class StateRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getStates(): Single<List<StateResponse>> {
+    fun getStatesObserver(): Single<List<StateResponse>> {
         return database
             .stateDao()
             .getStatesObserver()
