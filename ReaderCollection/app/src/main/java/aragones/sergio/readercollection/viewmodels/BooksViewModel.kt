@@ -22,6 +22,7 @@ import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
@@ -98,8 +99,9 @@ class BooksViewModel @Inject constructor(
 
                 _booksLoading.value = false
                 _booksError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getFormats() {
@@ -115,8 +117,9 @@ class BooksViewModel @Inject constructor(
 
                 _formats.value = listOf()
                 _booksFormatsLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getStates() {
@@ -132,8 +135,9 @@ class BooksViewModel @Inject constructor(
 
                 _states.value = listOf()
                 _booksStatesLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getSortParam() {
