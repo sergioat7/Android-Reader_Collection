@@ -38,7 +38,7 @@ class LoginViewModel @Inject constructor(
 
     //MARK: - Public properties
 
-    val username: String? = userRepository.username
+    val username: String = userRepository.username
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse> = _loginError

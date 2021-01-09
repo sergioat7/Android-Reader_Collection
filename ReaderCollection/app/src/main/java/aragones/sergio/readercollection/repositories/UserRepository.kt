@@ -9,6 +9,7 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.network.apiclient.UserAPIClient
+import aragones.sergio.readercollection.repositories.base.BaseRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -17,11 +18,11 @@ import javax.inject.Inject
 class UserRepository @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val userAPIClient: UserAPIClient
-) {
+): BaseRepository() {
 
     //MARK: - Public properties
 
-    val username: String?
+    val username: String
         get() = sharedPreferencesHandler.getUserData().username
 
     val userData: UserData

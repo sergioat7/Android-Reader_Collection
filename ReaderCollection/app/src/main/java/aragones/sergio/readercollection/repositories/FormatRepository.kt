@@ -8,11 +8,11 @@ package aragones.sergio.readercollection.repositories
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
+import aragones.sergio.readercollection.repositories.base.BaseRepository
 import aragones.sergio.readercollection.utils.Constants
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -20,17 +20,7 @@ import javax.inject.Inject
 class FormatRepository @Inject constructor(
     private val database: AppDatabase,
     private val formatAPIClient: FormatAPIClient
-) {
-
-    //MARK: - Private properties
-
-    private val disposables = CompositeDisposable()
-
-    // MARK: - Lifecycle methods
-
-    fun onDestroy() {
-        disposables.clear()
-    }
+): BaseRepository() {
 
     //MARK: - Public methods
 
@@ -52,22 +42,23 @@ class FormatRepository @Inject constructor(
                                         },
                                         onError = {
                                             emitter.onError(it)
-                                        })
+                                        }
+                                    ).addTo(disposables)
                                 },
                                 onError = {
                                     emitter.onError(it)
-                                })
-                                .addTo(disposables)
+                                }
+                            ).addTo(disposables)
                         },
                         onError = {
                             emitter.onError(it)
-                        })
-                        .addTo(disposables)
+                        }
+                    ).addTo(disposables)
                 },
                 onError = {
                     emitter.onError(it)
-                })
-                .addTo(disposables)
+                }
+            ).addTo(disposables)
         }
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -88,21 +79,22 @@ class FormatRepository @Inject constructor(
 
             getFormatsObserver().subscribeBy(
                 onSuccess = { formats ->
-
                     deleteFormatsObserver(formats).subscribeBy(
                         onComplete = {
                             emitter.onComplete()
                         },
                         onError = {
                             emitter.onError(it)
-                        })
-                        .addTo(disposables)
+                        }
+                    ).addTo(disposables)
                 },
                 onError = {
                     emitter.onError(it)
-                })
-                .addTo(disposables)
+                }
+            ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     //MARK: - Private methods

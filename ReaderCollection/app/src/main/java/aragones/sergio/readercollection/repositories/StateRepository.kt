@@ -8,11 +8,11 @@ package aragones.sergio.readercollection.repositories
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
+import aragones.sergio.readercollection.repositories.base.BaseRepository
 import aragones.sergio.readercollection.utils.Constants
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -20,17 +20,7 @@ import javax.inject.Inject
 class StateRepository @Inject constructor(
     private val database: AppDatabase,
     private val stateAPIClient: StateAPIClient
-) {
-
-    //MARK: - Private properties
-
-    private val disposables = CompositeDisposable()
-
-    // MARK: - Lifecycle methods
-
-    fun onDestroy() {
-        disposables.clear()
-    }
+): BaseRepository() {
 
     //MARK: - Public methods
 
@@ -40,35 +30,35 @@ class StateRepository @Inject constructor(
 
             stateAPIClient.getStatesObserver().subscribeBy(
                 onSuccess = { newStates ->
-                    insertStatesObserver(newStates)
-                        .subscribeBy(
-                            onComplete = {
-                                getStatesObserver()
-                                    .subscribeBy(
-                                        onSuccess = { currentStates ->
+                    insertStatesObserver(newStates).subscribeBy(
+                        onComplete = {
+                            getStatesObserver().subscribeBy(
+                                onSuccess = { currentStates ->
 
-                                            val statesToRemove = Constants.getDisabledContent(currentStates, newStates) as List<StateResponse>
-                                            deleteStatesObserver(statesToRemove)
-                                                .subscribe({
-                                                    emitter.onComplete()
-                                                }, {
-                                                    emitter.onError(it)
-                                                })
+                                    val statesToRemove = Constants.getDisabledContent(currentStates, newStates) as List<StateResponse>
+                                    deleteStatesObserver(statesToRemove).subscribeBy(
+                                        onComplete = {
+                                            emitter.onComplete()
                                         },
                                         onError = {
                                             emitter.onError(it)
-                                        })
-                                    .addTo(disposables)
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            })
-                        .addTo(disposables)
+                                        }
+                                    ).addTo(disposables)
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                }
+                            ).addTo(disposables)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        }
+                    ).addTo(disposables)
                 },
                 onError = {
                     emitter.onError(it)
-                })
-                .addTo(disposables)
+                }
+            ).addTo(disposables)
         }
             .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
             .observeOn(Constants.OBSERVER_SCHEDULER)
@@ -89,21 +79,22 @@ class StateRepository @Inject constructor(
 
             getStatesObserver().subscribeBy(
                 onSuccess = { states ->
-
                     deleteStatesObserver(states).subscribeBy(
                         onComplete = {
                             emitter.onComplete()
                         },
                         onError = {
                             emitter.onError(it)
-                        })
-                        .addTo(disposables)
+                        }
+                    ).addTo(disposables)
                 },
                 onError = {
                     emitter.onError(it)
-                })
-                .addTo(disposables)
+                }
+            ).addTo(disposables)
         }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     //MARK: - Private methods
