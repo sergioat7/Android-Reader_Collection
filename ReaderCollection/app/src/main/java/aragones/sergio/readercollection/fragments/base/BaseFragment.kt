@@ -95,4 +95,9 @@ open class BaseFragment: Fragment() {
             }
             .show()
     }
+
+    fun openSyncPopup() {
+
+        //TODO: show popup
+    }
 }
