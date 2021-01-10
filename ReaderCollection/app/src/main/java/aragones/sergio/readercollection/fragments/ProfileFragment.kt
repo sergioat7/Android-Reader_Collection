@@ -5,13 +5,12 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.RadioButton
+import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
@@ -34,6 +33,7 @@ class ProfileFragment: BaseFragment() {
     private lateinit var ibPassword: ImageButton
     private lateinit var rbEnglish: RadioButton
     private lateinit var rbSpanish: RadioButton
+    private lateinit var spSortParams: Spinner
     private lateinit var btSave: Button
     private lateinit var viewModel: ProfileViewModel
 
@@ -63,6 +63,11 @@ class ProfileFragment: BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId) {
+            R.id.action_synchronize -> {
+
+                openSyncPopup()
+                return true
+            }
             R.id.action_delete -> {
 
                 showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
@@ -81,6 +86,11 @@ class ProfileFragment: BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {
@@ -91,13 +101,14 @@ class ProfileFragment: BaseFragment() {
         ibPassword = image_button_password
         rbEnglish = radio_button_en
         rbSpanish = radio_button_es
+        spSortParams = spinner_sort_params
         btSave = button_save
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
         setupBindings()
 
-        etUsername.setText(viewModel.profileUserData.value?.username)
+        etUsername.setText(viewModel.userData.username)
         etUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
-        etPassword.setText(viewModel.profileUserData.value?.password)
+        etPassword.setText(viewModel.userData.password)
         rbEnglish.isChecked = viewModel.language == Constants.ENGLISH_LANGUAGE_KEY
         rbSpanish.isChecked = viewModel.language == Constants.SPANISH_LANGUAGE_KEY
 
@@ -109,18 +120,38 @@ class ProfileFragment: BaseFragment() {
             Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
         }
 
+        spSortParams.backgroundTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(requireActivity(),
+                R.color.colorPrimary)
+        )
+        spSortParams.adapter = Constants.getAdapter(
+            context = requireContext(),
+            data = resources.getStringArray(R.array.sorting_keys).toList(),
+            firstOptionEnabled = true
+        )
+        var position = 0
+        viewModel.sortParam?.let { sortParam ->
+            position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
+        }
+        spSortParams.setSelection(position)
+
         btSave.setOnClickListener {
 
-            val language = if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY else Constants.SPANISH_LANGUAGE_KEY
-            viewModel.saveData(etPassword.text.toString(), language)
+            val language =
+                if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY
+                else Constants.SPANISH_LANGUAGE_KEY
+            val sortParam =
+                if (spSortParams.selectedItemPosition == 0) null
+                else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]
+            viewModel.saveData(
+                etPassword.text.toString(),
+                language,
+                sortParam
+            )
         }
     }
 
     private fun setupBindings() {
-
-        viewModel.profileUserData.observe(viewLifecycleOwner, {
-            viewModel.login(it.username, it.password)
-        })
 
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
 

@@ -7,18 +7,19 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.repositories.SearchRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
-): ViewModel() {
+    private val googleBookRepository: GoogleBookRepository
+): BaseViewModel() {
 
     //MARK: - Private properties
 
@@ -39,7 +40,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        searchRepository.searchBooks(query, page, null).subscribeBy(
+        googleBookRepository.searchBooksObserver(query, page, null).subscribeBy(
             onSuccess = { googleBookListResponse ->
 
                 page++
@@ -62,8 +63,9 @@ class SearchViewModel @Inject constructor(
 
                 _searchLoading.value = false
                 _searchError.value = ErrorResponse("", R.string.error_search)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun reloadData() {

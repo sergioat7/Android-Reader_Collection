@@ -11,6 +11,5 @@ import dagger.Component
 
 @Component(modules = [GoogleAPIClientModule::class])
 interface GoogleAPIClientComponent {
-
     fun inject(searchViewModelFactory: SearchViewModelFactory)
 }

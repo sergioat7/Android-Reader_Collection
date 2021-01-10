@@ -142,6 +142,11 @@ class BookDetailFragment: BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {

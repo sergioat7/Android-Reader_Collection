@@ -5,24 +5,35 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import android.app.AlertDialog
+import android.content.Context
+import android.view.Gravity
+import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
-    private val booksRepository: BooksRepository
-): ViewModel() {
+    private val booksRepository: BooksRepository,
+    private val formatRepository: FormatRepository,
+    private val stateRepository: StateRepository
+): BaseViewModel() {
 
     //MARK: - Private properties
 
+    private val _originalbooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
@@ -33,6 +44,8 @@ class BooksViewModel @Inject constructor(
     private var _selectedFormat = MutableLiveData<String?>()
     private var _selectedState = MutableLiveData<String?>()
     private var _isFavourite = MutableLiveData<Boolean?>()
+    private var _sortKey = MutableLiveData<String?>()
+    private var _sortDescending = MutableLiveData<Boolean?>()
 
     //MARK: - Public properties
 
@@ -47,34 +60,52 @@ class BooksViewModel @Inject constructor(
     val selectedState: LiveData<String?> = _selectedState
     val isFavourite: LiveData<Boolean?> = _isFavourite
 
+    // MARK: - Lifecycle methods
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        booksRepository.onDestroy()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
+
     //MARK: - Public methods
 
     fun getBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(_selectedFormat.value, _selectedState.value, _isFavourite.value).subscribeBy(
+        booksRepository.getBooksObserver(
+            _selectedFormat.value,
+            _selectedState.value,
+            _isFavourite.value,
+            _sortKey.value
+        ).subscribeBy(
             onComplete = {
 
+                _originalbooks.value = listOf()
                 _books.value = listOf()
                 _booksLoading.value = false
             },
             onSuccess = {
 
-                _books.value = it
+                _originalbooks.value = if(_sortDescending.value == true) it.reversed() else it
+                _books.value = if(_sortDescending.value == true) it.reversed() else it
                 _booksLoading.value = false
             },
             onError = {
 
                 _booksLoading.value = false
                 _booksError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getFormats() {
 
         _booksFormatsLoading.value = true
-        booksRepository.getFormats().subscribeBy(
+        formatRepository.getFormatsObserver().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -84,14 +115,15 @@ class BooksViewModel @Inject constructor(
 
                 _formats.value = listOf()
                 _booksFormatsLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getStates() {
 
         _booksStatesLoading.value = true
-        booksRepository.getStates().subscribeBy(
+        stateRepository.getStatesObserver().subscribeBy(
             onSuccess = {
 
                 _states.value = it
@@ -101,8 +133,13 @@ class BooksViewModel @Inject constructor(
 
                 _states.value = listOf()
                 _booksStatesLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
+    }
+
+    fun getSortParam() {
+        _sortKey.value = booksRepository.sortParam
     }
 
     fun reloadData() {
@@ -119,5 +156,56 @@ class BooksViewModel @Inject constructor(
 
     fun setFavourite(isFavourite: Boolean?) {
         _isFavourite.value = isFavourite
+    }
+
+    fun sort(context: Context, sortingKeys: Array<String>, sortingValues: Array<String>) {
+
+        val dialogView = LinearLayout(context)
+        dialogView.orientation = LinearLayout.HORIZONTAL
+
+        val sortKeysPicker = Constants.getPicker(context, sortingValues)
+        _sortKey.value?.let {
+            sortKeysPicker.value = Constants.getValuePositionInArray(it, sortingKeys)
+        }
+
+        val values = arrayOf(
+            context.resources.getString(R.string.ascending),
+            context.resources.getString(R.string.descending)
+        )
+        val sortOrdersPicker = Constants.getPicker(context, values)
+        _sortDescending.value?.let {
+            sortOrdersPicker.value = if(it) 1 else 0
+        }
+
+        val params = LinearLayout.LayoutParams(50, 50)
+        params.gravity = Gravity.CENTER
+
+        dialogView.layoutParams = params
+        dialogView.addView(sortKeysPicker, Constants.getPickerParams())
+        dialogView.addView(sortOrdersPicker, Constants.getPickerParams())
+
+        AlertDialog.Builder(context)
+            .setTitle(context.resources.getString(R.string.order_by))
+            .setView(dialogView)
+            .setCancelable(false)
+            .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, _ ->
+
+                val sort = sortingKeys[sortKeysPicker.value]
+                _sortKey.value = if (sort.isNotBlank()) sort else null
+                _sortDescending.value = sortOrdersPicker.value == 1
+                getBooks()
+                dialog.dismiss()
+            }
+            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    fun searchBooks(query: String) {
+
+        _books.value = _originalbooks.value?.filter { book ->
+            book.title?.contains(query, true) ?: false
+        } ?: listOf()
     }
 }

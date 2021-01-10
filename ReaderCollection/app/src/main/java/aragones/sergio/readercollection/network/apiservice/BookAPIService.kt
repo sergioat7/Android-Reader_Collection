@@ -18,13 +18,7 @@ interface BookAPIService {
         "Accept:application/json"
     )
     @GET("books")
-    fun getBooks(@HeaderMap headers: Map<String, String>, @QueryMap queryParams: Map<String, String>): Maybe<List<BookResponse>>
-
-    @Headers(
-        "Accept:application/json"
-    )
-    @GET("book/{googleId}")
-    fun getBook(@HeaderMap headers: Map<String, String>, @Path(value = "googleId") googleId: String): Maybe<BookResponse>
+    fun getBooks(@HeaderMap headers: Map<String, String>): Maybe<List<BookResponse>>
 
     @Headers(
         "Content-Type:application/json"

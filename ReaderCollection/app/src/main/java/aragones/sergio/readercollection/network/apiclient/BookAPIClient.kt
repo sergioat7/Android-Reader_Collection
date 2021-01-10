@@ -21,32 +21,13 @@ class BookAPIClient @Inject constructor(
 
     private val api = APIClient.retrofit.create(BookAPIService::class.java)
 
-    fun getBooksObserver(format: String?, state: String?, isFavourite: Boolean?): Maybe<List<BookResponse>> {
+    fun getBooksObserver(): Maybe<List<BookResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[Constants.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
 
-        val queryParams: MutableMap<String, String> = java.util.HashMap()
-        if (format != null) {
-            queryParams[Constants.FORMAT_PARAM] = format
-        }
-        if (state != null) {
-            queryParams[Constants.STATE_PARAM] = state
-        }
-        if (isFavourite != null) {
-            queryParams[Constants.IS_FAVOURITE_PARAM] = isFavourite.toString()
-        }
-
-        return api.getBooks(headers, queryParams).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
-    }
-
-    fun getBookObserver(googleId: String): Maybe<BookResponse> {
-
-        val headers: MutableMap<String, String> = HashMap()
-        headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
-        headers[Constants.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        return api.getBook(headers, googleId).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
+        return api.getBooks(headers).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
     fun createBookObserver(book: BookResponse): Completable {

@@ -7,23 +7,30 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.repositories.ProfileRepository
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.StateRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
-    private val profileRepository: ProfileRepository
-): ViewModel() {
+    private val booksRepository: BooksRepository,
+    private val formatRepository: FormatRepository,
+    private val stateRepository: StateRepository,
+    private val userRepository: UserRepository
+): BaseViewModel() {
 
     //MARK: - Private properties
 
-    private val _userdata: MutableLiveData<UserData> = MutableLiveData(profileRepository.userData)
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
@@ -31,95 +38,104 @@ class ProfileViewModel @Inject constructor(
 
     //MARK: - Public properties
 
-    val language: String = profileRepository.language
-    val profileUserData: LiveData<UserData> = _userdata
+    val language: String = userRepository.language
+    val sortParam: String? = userRepository.sortParam
+    val userData: UserData = userRepository.userData
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse> = _profileError
+
+    // MARK: - Lifecycle methods
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        booksRepository.onDestroy()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
 
     //MARK: - Public methods
 
     fun logout() {
 
         _profileLoading.value = true
-        profileRepository.logout().subscribeBy(
+        userRepository.logoutObserver().subscribeBy(
             onComplete = {
 
-                profileRepository.removePassword()
-                profileRepository.removeCredentials()
-                _profileLoading.value = false
-                _profileRedirection.value = true
+                userRepository.removePassword()
+                userRepository.removeCredentials()
+                resetDatabase()
             },
             onError = {
 
                 _profileLoading.value = false
                 _profileError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
-    fun saveData(newPassword: String, newLanguage: String) {
+    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
 
-        val changePassword = newPassword != profileRepository.userData.password
+        val changePassword = newPassword != userRepository.userData.password
         val changeLanguage = newLanguage != language
+        val changeSortParam = newSortParam != sortParam
 
         if (changePassword) {
 
             _profileLoading.value = true
-            profileRepository.updatePassword(newPassword).subscribeBy(
+            userRepository.updatePasswordObserver(newPassword).subscribeBy(
                 onComplete = {
 
-                    profileRepository.storePassword(newPassword)
-                    _profileLoading.value = false
-                    _userdata.value = profileRepository.userData
-                    if (changeLanguage) {
-                        _profileRedirection.value = true
-                    }
+                    userRepository.storePassword(newPassword)
+                    loginObserver().subscribeBy(
+                        onComplete = {
+
+                            _profileLoading.value = false
+                            if (changeLanguage) {
+                                _profileRedirection.value = true
+                            }
+                        },
+                        onError = {
+
+                            _profileLoading.value = false
+                            _profileError.value = Constants.handleError(it)
+                            onDestroy()
+                        }
+                    ).addTo(disposables)
                 },
                 onError = {
 
                     _profileLoading.value = false
                     _profileError.value = Constants.handleError(it)
+                    onDestroy()
                 }
-            )
+            ).addTo(disposables)
+        }
+
+        if (changeSortParam) {
+            userRepository.storeSortParam(newSortParam)
         }
 
         if (changeLanguage) {
 
-            profileRepository.storeLanguage(newLanguage)
+            userRepository.storeLanguage(newLanguage)
             if (!changePassword) {
                 _profileRedirection.value = true
             }
         }
     }
 
-    fun login(username: String, password: String) {
-
-        _profileLoading.value = true
-        profileRepository.login(username, password).subscribeBy(
-            onSuccess = {
-
-                val authData = AuthData(it.token)
-                profileRepository.storeCredentials(authData)
-                _profileLoading.value = false
-            },
-            onError = {
-
-                _profileLoading.value = false
-                _profileError.value = Constants.handleError(it)
-            }
-        )
-    }
-
     fun deleteUser() {
 
         _profileLoading.value = true
-        profileRepository.deleteUser().subscribeBy(
+        userRepository.deleteUserObserver().subscribeBy(
             onComplete = {
 
-                profileRepository.removeUserData()
-                profileRepository.removeCredentials()
+                userRepository.removeUserData()
+                userRepository.removeCredentials()
                 _profileLoading.value = false
                 _profileRedirection.value = true
             },
@@ -127,8 +143,9 @@ class ProfileViewModel @Inject constructor(
 
                 _profileLoading.value = false
                 _profileError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun profileDataChanged(password: String) {
@@ -138,5 +155,97 @@ class ProfileViewModel @Inject constructor(
             passwordError = R.string.invalid_password
         }
         _profileForm.value = passwordError
+    }
+
+    //MARK: - Private methods
+
+    private fun resetDatabase() {
+
+        var result = 0
+
+        booksRepository.resetTableObserver().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            },
+            onError = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            }
+        ).addTo(disposables)
+
+        formatRepository.resetTableObserver().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            },
+            onError = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            }
+        ).addTo(disposables)
+
+        stateRepository.resetTableObserver().subscribeBy(
+            onComplete = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            },
+            onError = {
+
+                result += 1
+                if (result == 3) {
+
+                    _profileLoading.value = false
+                    _profileRedirection.value = true
+                }
+            }
+        ).addTo(disposables)
+    }
+
+    private fun loginObserver(): Completable {
+
+        return Completable.create { emitter ->
+
+            val username = userRepository.username
+            val password = userRepository.userData.password
+            userRepository.loginObserver(username, password).subscribeBy(
+                onSuccess = {
+
+                    val authData = AuthData(it.token)
+                    userRepository.storeCredentials(authData)
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
+        }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 }
