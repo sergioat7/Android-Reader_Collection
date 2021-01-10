@@ -7,22 +7,29 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
-import aragones.sergio.readercollection.repositories.BookDetailRepository
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
     val sharedPreferencesHandler: SharedPreferencesHandler,
-    private val bookDetailRepository: BookDetailRepository
-): ViewModel() {
+    private val booksRepository: BooksRepository,
+    private val formatRepository: FormatRepository,
+    private val googleBookRepository: GoogleBookRepository,
+    private val stateRepository: StateRepository
+): BaseViewModel() {
 
     //MARK: - Private properties
 
@@ -52,6 +59,16 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
 
+    // MARK: - Lifecycle methods
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        booksRepository.onDestroy()
+        formatRepository.onDestroy()
+        stateRepository.onDestroy()
+    }
+
     //MARK: - Public methods
 
     fun getBook() {
@@ -59,7 +76,7 @@ class BookDetailViewModel @Inject constructor(
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            bookDetailRepository.getGoogleBook(bookId).subscribeBy(
+            googleBookRepository.getGoogleBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = Constants.mapGoogleBook(it)
@@ -69,16 +86,12 @@ class BookDetailViewModel @Inject constructor(
 
                     _bookDetailLoading.value = false
                     _bookDetailError.value = ErrorResponse("", R.string.error_server)
+                    onDestroy()
                 }
-            )
+            ).addTo(disposables)
         } else {
 
-            bookDetailRepository.getBook(bookId).subscribeBy(
-                onComplete = {
-
-                    _bookDetailLoading.value = false
-                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                },
+            booksRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = it
@@ -88,16 +101,17 @@ class BookDetailViewModel @Inject constructor(
                 onError = {
 
                     _bookDetailLoading.value = false
-                    _bookDetailError.value = Constants.handleError(it)
+                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                    onDestroy()
                 }
-            )
+            ).addTo(disposables)
         }
     }
 
     fun getFormats() {
 
         _bookDetailFormatsLoading.value = true
-        bookDetailRepository.getFormats().subscribeBy(
+        formatRepository.getFormatsObserver().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -107,14 +121,15 @@ class BookDetailViewModel @Inject constructor(
 
                 _formats.value = ArrayList()
                 _bookDetailFormatsLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun getStates() {
 
         _bookDetailStatesLoading.value = true
-        bookDetailRepository.getStates().subscribeBy(
+        stateRepository.getStatesObserver().subscribeBy(
             onSuccess = {
 
                 _states.value = it
@@ -124,14 +139,15 @@ class BookDetailViewModel @Inject constructor(
 
                 _states.value = ArrayList()
                 _bookDetailStatesLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun createBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        bookDetailRepository.createBook(book).subscribeBy(
+        booksRepository.createBookObserver(book).subscribeBy(
             onComplete = {
 
                 _bookDetailLoading.value = false
@@ -141,14 +157,15 @@ class BookDetailViewModel @Inject constructor(
 
                 _bookDetailLoading.value = false
                 _bookDetailError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun setBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        bookDetailRepository.setBook(book).subscribeBy(
+        booksRepository.updateBookObserver(book).subscribeBy(
             onSuccess = {
 
                 _book.value = it
@@ -158,14 +175,15 @@ class BookDetailViewModel @Inject constructor(
 
                 _bookDetailLoading.value = false
                 _bookDetailError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun deleteBook() {
 
         _bookDetailLoading.value = true
-        bookDetailRepository.deleteBook(bookId).subscribeBy(
+        booksRepository.deleteBookObserver(bookId).subscribeBy(
             onComplete = {
 
                 _bookDetailLoading.value = false
@@ -175,23 +193,26 @@ class BookDetailViewModel @Inject constructor(
 
                 _bookDetailLoading.value = false
                 _bookDetailError.value = Constants.handleError(it)
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun setFavourite(isFavourite: Boolean) {
 
         _bookDetailFavouriteLoading.value = true
-        bookDetailRepository.setFavourite(bookId, isFavourite).subscribeBy(
+        booksRepository.setFavouriteBookObserver(bookId, isFavourite).subscribeBy(
             onSuccess = {
 
                 _isFavourite.value = it.isFavourite
                 _bookDetailFavouriteLoading.value = false
             },
             onError = {
+
                 _bookDetailFavouriteLoading.value = false
+                onDestroy()
             }
-        )
+        ).addTo(disposables)
     }
 
     fun setBookId(bookId: String) {

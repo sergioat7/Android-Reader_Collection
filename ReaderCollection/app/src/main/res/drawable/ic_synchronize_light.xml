@@ -1,0 +1,29 @@
+<!--
+  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 10/1/2021
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="30dp"
+    android:height="30dp"
+    android:viewportWidth="30"
+    android:viewportHeight="30">
+  <path
+      android:pathData="m6.294,21.706c2.012,2.607 5.158,4.294 8.706,4.294c5.589,0 10.193,-4.171 10.896,-9.568"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#ffffff"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="m23.706,8.294c-2.012,-2.607 -5.158,-4.294 -8.706,-4.294c-5.589,0 -10.193,4.171 -10.896,9.568"
+      android:strokeWidth="2"
+      android:fillColor="#00000000"
+      android:strokeColor="#ffffff"
+      android:strokeLineCap="round"/>
+  <path
+      android:pathData="M26,11l-6,-1l5,-5z"
+      android:fillColor="#ffffff"/>
+  <path
+      android:pathData="M3,19l6,1l-5,5z"
+      android:fillColor="#ffffff"/>
+</vector>

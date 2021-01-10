@@ -58,6 +58,11 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         initializeUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Interface methods
 
     override fun onItemClick(bookId: String) {
@@ -78,6 +83,18 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         menu.clear()
         inflater.inflate(R.menu.search_toolbar_menu, menu)
         setupSearchView(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.action_synchronize -> {
+
+                openSyncPopup()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     //MARK: - Private methods

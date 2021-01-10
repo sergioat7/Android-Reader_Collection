@@ -61,6 +61,7 @@
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
+    <string name="sort_books_param">Sort books param</string>
 
     //POPUPS
     <string name="accept">Accept</string>
@@ -69,11 +70,23 @@
     <string name="book_remove_confirmation">Are you sure you want to delete this book?</string>
     <string name="profile_delete_confirmation">Are you sure you want to delete your user? You will lose all your stored information about the books.</string>
     <string name="profile_logout_confirmation">Are you sure you want to exit?</string>
+    <string name="order_by">Order by</string>
+    <string name="none">None</string>
+    <string name="title_sorting_key">Title</string>
+    <string name="published_date_sorting_key">Published date</string>
+    <string name="reading_date_sorting_key">Reading date</string>
+    <string name="page_count_sorting_key">Page count</string>
+    <string name="rating_sorting_key">Rating</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="sync_title">Synchronizing…</string>
+    <string name="sync_confirmation">Are you sure you want to sync the app? This process could take a while</string>
 
     //ERRORS
     <string name="error_server">There was an error on getting data. Please, try again.</string>
     <string name="error_search">You must provide a text to search.</string>
     <string name="error_no_book">There is no book with that id.</string>
     <string name="error_resource_found">This book is already in your collection.</string>
+    <string name="error_database">There was an error with the database. Please, try again.</string>
 
 </resources>

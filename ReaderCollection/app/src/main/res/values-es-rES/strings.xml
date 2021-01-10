@@ -65,6 +65,7 @@
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
+    <string name="sort_books_param">Parámetro de ordenación de libros</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>
@@ -73,11 +74,23 @@
     <string name="book_remove_confirmation">¿Estás seguro de que quieres borrar este libro?</string>
     <string name="profile_delete_confirmation">¿Estás seguro de que quieres borrar tu usuario? Perderás toda la información almacenada sobre los libros.</string>
     <string name="profile_logout_confirmation">¿Estás seguro de que quieres salir?</string>
+    <string name="order_by">Ordenar por</string>
+    <string name="none">Nada</string>
+    <string name="title_sorting_key">Título</string>
+    <string name="published_date_sorting_key">Fecha de publicación</string>
+    <string name="reading_date_sorting_key">Fecha de lectura</string>
+    <string name="page_count_sorting_key">Nº de páginas</string>
+    <string name="rating_sorting_key">Puntuación</string>
+    <string name="ascending">Ascendente</string>
+    <string name="descending">Descendente</string>
+    <string name="sync_title">Sincronizando…</string>
+    <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>
     <string name="error_search">Debes introducir un texto para buscar.</string>
     <string name="error_no_book">No existe un libro con ese id.</string>
     <string name="error_resource_found">Este libro ya está en tu colección.</string>
+    <string name="error_database">Hubo un error con la base de datos. Por favor, inténtalo otra vez.</string>
 
 </resources>

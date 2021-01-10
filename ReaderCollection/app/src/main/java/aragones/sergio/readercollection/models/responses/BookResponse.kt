@@ -5,11 +5,15 @@
 
 package aragones.sergio.readercollection.models.responses
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import aragones.sergio.readercollection.models.base.BaseModel
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
+@Entity(tableName = "Book")
 data class BookResponse(
+    @PrimaryKey
     @SerializedName("googleId")
     override val id: String,
     @SerializedName("title")
