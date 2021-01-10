@@ -83,6 +83,8 @@
     <string name="rating_sorting_key">Puntuación</string>
     <string name="ascending">Ascendente</string>
     <string name="descending">Descendente</string>
+    <string name="sync_title">Sincronizando…</string>
+    <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>

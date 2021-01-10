@@ -69,6 +69,7 @@ class LoginFragment: BaseFragment() {
         btLogin = button_login
         btRegister = button_register
         viewModel = ViewModelProvider(this, LoginViewModelFactory(application)).get(LoginViewModel::class.java)
+        setupBindings()
 
         etUsername.setText(viewModel.username)
 
@@ -85,12 +86,19 @@ class LoginFragment: BaseFragment() {
         }
 
         btLogin.setOnClickListener {
-            login()
+
+            viewModel.login(
+                etUsername.text.toString(),
+                etPassword.text.toString()
+            )
         }
 
         btRegister.setOnClickListener {
             launchActivity(RegisterActivity::class.java)
         }
+    }
+
+    private fun setupBindings() {
 
         viewModel.loginFormState.observe(viewLifecycleOwner, {
 
@@ -130,14 +138,6 @@ class LoginFragment: BaseFragment() {
     private fun loginDataChanged() {
 
         viewModel.loginDataChanged(
-            etUsername.text.toString(),
-            etPassword.text.toString()
-        )
-    }
-
-    private fun login() {
-
-        viewModel.login(
             etUsername.text.toString(),
             etPassword.text.toString()
         )

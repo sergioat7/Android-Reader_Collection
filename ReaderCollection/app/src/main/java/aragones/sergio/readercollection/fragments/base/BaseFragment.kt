@@ -13,6 +13,7 @@ import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
+import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import java.io.Serializable
 
@@ -94,5 +95,27 @@ open class BaseFragment: Fragment() {
                 dialog.dismiss()
             }
             .show()
+    }
+
+    fun openSyncPopup() {
+
+        showPopupConfirmationDialog(R.string.sync_confirmation, acceptHandler = {
+            showSyncPopup()
+        })
+    }
+
+    //MARK - Private functions
+
+    private fun showSyncPopup() {
+
+        val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
+        val prev = activity?.supportFragmentManager?.findFragmentByTag("syncDialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        val dialogFragment = PopupSyncAppDialogFragment()
+        dialogFragment.isCancelable = false
+        dialogFragment.show(ft, "syncDialog")
     }
 }

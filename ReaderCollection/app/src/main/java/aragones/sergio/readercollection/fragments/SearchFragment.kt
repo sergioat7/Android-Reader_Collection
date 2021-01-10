@@ -85,6 +85,18 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         setupSearchView(menu)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when(item.itemId) {
+            R.id.action_synchronize -> {
+
+                openSyncPopup()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {

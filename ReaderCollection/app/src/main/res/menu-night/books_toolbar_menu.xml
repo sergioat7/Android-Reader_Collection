@@ -12,6 +12,13 @@
     >
 
     <item
+        android:id="@+id/action_synchronize"
+        android:icon="@drawable/ic_synchronize_dark"
+        android:title=""
+        app:showAsAction="ifRoom"
+        />
+
+    <item
         android:id="@+id/action_search"
         android:icon="@drawable/ic_search_dark"
         android:title=""
