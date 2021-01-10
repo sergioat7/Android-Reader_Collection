@@ -37,7 +37,7 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookAPIClient.getBooksObserver(null, null, null, null).subscribeBy(
+            bookAPIClient.getBooksObserver().subscribeBy(
                 onComplete = {
                     emitter.onComplete()
                 },
