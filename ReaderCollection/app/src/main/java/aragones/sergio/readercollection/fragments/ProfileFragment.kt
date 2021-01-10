@@ -101,9 +101,9 @@ class ProfileFragment: BaseFragment() {
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
         setupBindings()
 
-        etUsername.setText(viewModel.profileUserData.value?.username)
+        etUsername.setText(viewModel.userData.username)
         etUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
-        etPassword.setText(viewModel.profileUserData.value?.password)
+        etPassword.setText(viewModel.userData.password)
         rbEnglish.isChecked = viewModel.language == Constants.ENGLISH_LANGUAGE_KEY
         rbSpanish.isChecked = viewModel.language == Constants.SPANISH_LANGUAGE_KEY
 
@@ -147,10 +147,6 @@ class ProfileFragment: BaseFragment() {
     }
 
     private fun setupBindings() {
-
-        viewModel.profileUserData.observe(viewLifecycleOwner, {
-            viewModel.login(it.username, it.password)
-        })
 
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
 

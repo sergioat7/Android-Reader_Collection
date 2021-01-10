@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -30,7 +31,6 @@ class ProfileViewModel @Inject constructor(
 
     //MARK: - Private properties
 
-    private val _userdata: MutableLiveData<UserData> = MutableLiveData(userRepository.userData)
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
@@ -40,7 +40,7 @@ class ProfileViewModel @Inject constructor(
 
     val language: String = userRepository.language
     val sortParam: String? = userRepository.sortParam
-    val profileUserData: LiveData<UserData> = _userdata
+    val userData: UserData = userRepository.userData
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
@@ -90,11 +90,21 @@ class ProfileViewModel @Inject constructor(
                 onComplete = {
 
                     userRepository.storePassword(newPassword)
-                    _profileLoading.value = false
-                    _userdata.value = userRepository.userData
-                    if (changeLanguage) {
-                        _profileRedirection.value = true
-                    }
+                    loginObserver().subscribeBy(
+                        onComplete = {
+
+                            _profileLoading.value = false
+                            if (changeLanguage) {
+                                _profileRedirection.value = true
+                            }
+                        },
+                        onError = {
+
+                            _profileLoading.value = false
+                            _profileError.value = Constants.handleError(it)
+                            onDestroy()
+                        }
+                    ).addTo(disposables)
                 },
                 onError = {
 
@@ -116,25 +126,6 @@ class ProfileViewModel @Inject constructor(
                 _profileRedirection.value = true
             }
         }
-    }
-
-    fun login(username: String, password: String) {
-
-        _profileLoading.value = true
-        userRepository.loginObserver(username, password).subscribeBy(
-            onSuccess = {
-
-                val authData = AuthData(it.token)
-                userRepository.storeCredentials(authData)
-                _profileLoading.value = false
-            },
-            onError = {
-
-                _profileLoading.value = false
-                _profileError.value = Constants.handleError(it)
-                onDestroy()
-            }
-        ).addTo(disposables)
     }
 
     fun deleteUser() {
@@ -234,5 +225,27 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         ).addTo(disposables)
+    }
+
+    private fun loginObserver(): Completable {
+
+        return Completable.create { emitter ->
+
+            val username = userRepository.username
+            val password = userRepository.userData.password
+            userRepository.loginObserver(username, password).subscribeBy(
+                onSuccess = {
+
+                    val authData = AuthData(it.token)
+                    userRepository.storeCredentials(authData)
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
+        }
+            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
+            .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 }
