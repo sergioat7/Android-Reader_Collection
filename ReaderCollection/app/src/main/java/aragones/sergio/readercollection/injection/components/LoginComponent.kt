@@ -7,10 +7,7 @@ package aragones.sergio.readercollection.injection.components
 
 import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
 import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
-import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
-import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
-import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
-import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
+import aragones.sergio.readercollection.viewmodelfactories.*
 import dagger.Component
 
 @Component(modules = [
@@ -23,4 +20,5 @@ interface LoginComponent {
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
     fun inject(booksViewModelFactory: BooksViewModelFactory)
     fun inject(profileViewModelFactory: ProfileViewModelFactory)
+    fun inject(popupSyncAppViewModelFactory: PopupSyncAppViewModelFactory)
 }
