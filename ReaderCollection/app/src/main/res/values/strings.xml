@@ -85,5 +85,6 @@
     <string name="error_search">You must provide a text to search.</string>
     <string name="error_no_book">There is no book with that id.</string>
     <string name="error_resource_found">This book is already in your collection.</string>
+    <string name="error_database">There was an error with the database. Please, try again.</string>
 
 </resources>

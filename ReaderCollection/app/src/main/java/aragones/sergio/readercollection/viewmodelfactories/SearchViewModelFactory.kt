@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
-import aragones.sergio.readercollection.repositories.SearchRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import javax.inject.Inject
 
@@ -23,7 +23,7 @@ class SearchViewModelFactory(
     @Inject
     lateinit var googleAPIClient: GoogleAPIClient
     @Inject
-    lateinit var searchRepository: SearchRepository
+    lateinit var googleBookRepository: GoogleBookRepository
     @Inject
     lateinit var searchViewModel: SearchViewModel
 

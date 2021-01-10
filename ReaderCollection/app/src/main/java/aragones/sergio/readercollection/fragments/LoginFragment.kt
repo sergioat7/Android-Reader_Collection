@@ -53,6 +53,11 @@ class LoginFragment: BaseFragment() {
         initializeUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {
@@ -115,6 +120,8 @@ class LoginFragment: BaseFragment() {
             if (error == null) {
                 launchActivity(MainActivity::class.java)
             } else {
+
+                hideLoading()
                 manageError(error)
             }
         })

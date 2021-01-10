@@ -13,6 +13,8 @@ import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import javax.inject.Inject
@@ -34,6 +36,10 @@ class BooksViewModelFactory(
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
+    lateinit var formatRepository: FormatRepository
+    @Inject
+    lateinit var stateRepository: StateRepository
+    @Inject
     lateinit var booksViewModel: BooksViewModel
 
     //MARK: - Lifecycle methods
@@ -42,7 +48,7 @@ class BooksViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BooksViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).sharedPreferencesComponent.inject(this)
+            (application as ReaderCollectionApplication).loginComponent.inject(this)
             booksViewModel.getFormats()
             booksViewModel.getStates()
             booksViewModel.getSortParam()
