@@ -55,6 +55,11 @@ class RegisterFragment: BaseFragment() {
         initializeUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {
@@ -135,15 +140,6 @@ class RegisterFragment: BaseFragment() {
         viewModel.registerError.observe(viewLifecycleOwner, { error ->
 
             if (error == null) {
-                login()
-            } else {
-                manageError(error)
-            }
-        })
-
-        viewModel.loginError.observe(viewLifecycleOwner, { error ->
-
-            if (error == null) {
                 launchActivity(MainActivity::class.java)
             } else {
                 manageError(error)
@@ -163,14 +159,6 @@ class RegisterFragment: BaseFragment() {
     private fun register() {
 
         viewModel.register(
-            etUsername.text.toString(),
-            etPassword.text.toString()
-        )
-    }
-
-    private fun login() {
-
-        viewModel.login(
             etUsername.text.toString(),
             etPassword.text.toString()
         )

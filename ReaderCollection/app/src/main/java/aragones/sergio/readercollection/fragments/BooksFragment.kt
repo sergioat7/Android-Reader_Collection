@@ -83,6 +83,11 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         setupSearchView(menu)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         if (item.itemId == R.id.action_sort) {

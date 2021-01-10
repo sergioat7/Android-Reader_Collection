@@ -58,6 +58,11 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         initializeUI()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel.onDestroy()
+    }
+
     //MARK: - Interface methods
 
     override fun onItemClick(bookId: String) {
