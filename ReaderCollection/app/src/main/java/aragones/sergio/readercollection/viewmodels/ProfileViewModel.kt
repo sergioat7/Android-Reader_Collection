@@ -136,8 +136,7 @@ class ProfileViewModel @Inject constructor(
 
                 userRepository.removeUserData()
                 userRepository.removeCredentials()
-                _profileLoading.value = false
-                _profileRedirection.value = true
+                resetDatabase()
             },
             onError = {
 
