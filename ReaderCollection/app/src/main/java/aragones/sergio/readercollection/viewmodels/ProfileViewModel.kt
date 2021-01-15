@@ -61,20 +61,15 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
 
         _profileLoading.value = true
+
+        userRepository.removePassword()
+        userRepository.removeCredentials()
         userRepository.logoutObserver().subscribeBy(
-            onComplete = {
-
-                userRepository.removePassword()
-                userRepository.removeCredentials()
-                resetDatabase()
-            },
-            onError = {
-
-                _profileLoading.value = false
-                _profileError.value = Constants.handleError(it)
-                onDestroy()
-            }
+            onComplete = {},
+            onError = {}
         ).addTo(disposables)
+
+        resetDatabase()
     }
 
     fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
