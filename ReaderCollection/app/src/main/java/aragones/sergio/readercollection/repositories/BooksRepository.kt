@@ -44,7 +44,7 @@ class BooksRepository @Inject constructor(
                 onSuccess = { newBooks ->
                     insertBooksDatabaseObserver(newBooks).subscribeBy(
                         onComplete = {
-                            getBooksObserver().subscribeBy(
+                            getBooksDatabaseObserver().subscribeBy(
                                 onComplete = {
                                     emitter.onComplete()
                                 },
@@ -79,7 +79,7 @@ class BooksRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getBooksObserver(format: String? = null,
+    fun getBooksDatabaseObserver(format: String? = null,
                          state: String? = null,
                          isFavourite: Boolean? = null,
                          sortParam: String? = null): Maybe<List<BookResponse>> {
@@ -111,7 +111,7 @@ class BooksRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getBookObserver(googleId: String): Single<BookResponse> {
+    fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {
         return database
             .bookDao()
             .getBookObserver(googleId)
@@ -177,7 +177,7 @@ class BooksRepository @Inject constructor(
 
             bookAPIClient.deleteBookObserver(googleId).subscribeBy(
                 onComplete = {
-                    getBookObserver(googleId).subscribeBy(
+                    getBookDatabaseObserver(googleId).subscribeBy(
                         onSuccess = { book ->
                             deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
                                 onComplete = {
@@ -231,7 +231,7 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            getBooksObserver().subscribeBy(
+            getBooksDatabaseObserver().subscribeBy(
                 onComplete = {
                     emitter.onComplete()
                 },
