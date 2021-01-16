@@ -39,6 +39,15 @@
                 style="@style/UsernameEditText"
                 />
 
+            <ImageButton
+                android:id="@+id/image_button_info"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_text_username"
+                app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+                app:layout_constraintTop_toTopOf="@+id/edit_text_username"
+                style="@style/UsernameInfoButton"
+                />
+
             <EditText
                 android:id="@+id/edit_text_password"
                 android:layout_width="0dp"
