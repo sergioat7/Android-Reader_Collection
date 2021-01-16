@@ -91,7 +91,7 @@ class BookDetailViewModel @Inject constructor(
             ).addTo(disposables)
         } else {
 
-            booksRepository.getBookObserver(bookId).subscribeBy(
+            booksRepository.getBookDatabaseObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = it
@@ -111,7 +111,7 @@ class BookDetailViewModel @Inject constructor(
     fun getFormats() {
 
         _bookDetailFormatsLoading.value = true
-        formatRepository.getFormatsObserver().subscribeBy(
+        formatRepository.getFormatsDatabaseObserver().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -129,7 +129,7 @@ class BookDetailViewModel @Inject constructor(
     fun getStates() {
 
         _bookDetailStatesLoading.value = true
-        stateRepository.getStatesObserver().subscribeBy(
+        stateRepository.getStatesDatabaseObserver().subscribeBy(
             onSuccess = {
 
                 _states.value = it

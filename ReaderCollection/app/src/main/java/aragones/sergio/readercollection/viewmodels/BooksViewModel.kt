@@ -75,7 +75,7 @@ class BooksViewModel @Inject constructor(
     fun getBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooksObserver(
+        booksRepository.getBooksDatabaseObserver(
             _selectedFormat.value,
             _selectedState.value,
             _isFavourite.value,
@@ -105,7 +105,7 @@ class BooksViewModel @Inject constructor(
     fun getFormats() {
 
         _booksFormatsLoading.value = true
-        formatRepository.getFormatsObserver().subscribeBy(
+        formatRepository.getFormatsDatabaseObserver().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -123,7 +123,7 @@ class BooksViewModel @Inject constructor(
     fun getStates() {
 
         _booksStatesLoading.value = true
-        stateRepository.getStatesObserver().subscribeBy(
+        stateRepository.getStatesDatabaseObserver().subscribeBy(
             onSuccess = {
 
                 _states.value = it
