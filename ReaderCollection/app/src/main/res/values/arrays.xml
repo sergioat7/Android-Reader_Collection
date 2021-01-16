@@ -23,11 +23,11 @@
 
     <string-array name="sorting_keys_ids">
         <item />
-        <item>TITLE</item>
-        <item>PUBLISHED_DATE</item>
-        <item>READING_DATE</item>
-        <item>PAGE_COUNT</item>
-        <item>RATING</item>
+        <item>title</item>
+        <item>publishedDate</item>
+        <item>readingDate</item>
+        <item>pageCount</item>
+        <item>rating</item>
     </string-array>
 
 </resources>
