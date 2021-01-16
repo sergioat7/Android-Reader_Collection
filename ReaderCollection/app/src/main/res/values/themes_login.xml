@@ -30,13 +30,20 @@
         <item name="android:inputType">textPassword</item>
     </style>
 
-    <style name="PasswordEyeButton">
+    <style name="EditTextButton">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_marginTop">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
         <item name="android:layout_marginEnd">20dp</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:scaleType">fitCenter</item>
+    </style>
+
+    <style name="UsernameInfoButton" parent="EditTextButton">
+        <item name="android:src">@drawable/ic_show_info_light</item>
+    </style>
+
+    <style name="PasswordEyeButton" parent="EditTextButton">
         <item name="android:src">@drawable/ic_show_password_light</item>
     </style>
 
