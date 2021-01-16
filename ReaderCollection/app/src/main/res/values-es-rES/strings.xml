@@ -25,7 +25,7 @@
     <string name="create_account">Crear cuenta</string>
     <string name="sign_up">Regístrate</string>
     <string name="confirm_password">Confirmar contraseña</string>
-    <string name="username_info">El usuario sólo es necesario para identificarte y poder diferenciar tus libros de los de otro usuario. Sin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla. Si esto pasa, contacta con el desarrollador de la aplicación, puedes encontrar su contacto en la ficha de la aplicación en Google Play Store.</string>
+    <string name="username_info">El usuario sólo es necesario para identificarte y poder diferenciar tus libros de los de otro usuario.\n\nSin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla.\n\nSi esto pasa, contacta con el desarrollador de la aplicación, puedes encontrar su correo electrónico en la ficha de la aplicación en Google Play Store.</string>
 
     //BOOKS
     <string name="new_book">Nuevo</string>
