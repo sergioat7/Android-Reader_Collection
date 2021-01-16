@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.activities
 
 import android.content.Intent
 import android.os.Bundle
+import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
@@ -19,7 +20,7 @@ class LandingActivity: BaseActivity() {
     //MARK: - Public properties
 
     @Inject
-    lateinit var sharedPrefHandler: SharedPreferencesHandler
+    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
 
     //MARK: - Lifecycle methods
 
@@ -28,13 +29,12 @@ class LandingActivity: BaseActivity() {
 
         (application as ReaderCollectionApplication).sharedPreferencesComponent.inject(this)
 
-        val language: String = sharedPrefHandler.getLanguage()
-        val conf = resources.configuration
-        conf.setLocale(Locale(language))
-        resources.updateConfiguration(conf, resources.displayMetrics)
+        checkVersion()
+
+        configLanguage()
 
         val initTime = System.currentTimeMillis() / 1000
-        val cls: Class<*> = if (sharedPrefHandler.isLoggedIn()) {
+        val cls: Class<*> = if (sharedPreferencesHandler.isLoggedIn()) {
             MainActivity::class.java
         } else {
             LoginActivity::class.java
@@ -51,5 +51,27 @@ class LandingActivity: BaseActivity() {
 
         val intent = Intent(this, cls)
         startActivity(intent)
+    }
+
+    //MARK: - Private methods
+
+    private fun configLanguage() {
+
+        val language: String = sharedPreferencesHandler.getLanguage()
+        val conf = resources.configuration
+        conf.setLocale(Locale(language))
+        resources.updateConfiguration(conf, resources.displayMetrics)
+    }
+
+    private fun checkVersion() {
+
+        val currentVersion = sharedPreferencesHandler.getVersion()
+        val newVersion = BuildConfig.VERSION_CODE
+        if (newVersion > currentVersion) {
+
+            sharedPreferencesHandler.setVersion(newVersion)
+            sharedPreferencesHandler.removePassword()
+            sharedPreferencesHandler.removeCredentials()
+        }
     }
 }
