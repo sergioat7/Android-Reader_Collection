@@ -17,7 +17,6 @@ import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
-import kotlin.math.max
 
 class LandingViewModel @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler,
@@ -58,25 +57,14 @@ class LandingViewModel @Inject constructor(
             sharedPreferencesHandler.removePassword()
             sharedPreferencesHandler.removeCredentials()
             resetDatabase()
-        }
-
-        val initTime = System.currentTimeMillis() / 1000
-        val cls: Class<*> = if (sharedPreferencesHandler.isLoggedIn()) {
-            MainActivity::class.java
         } else {
-            LoginActivity::class.java
-        }
-        val finalTime = System.currentTimeMillis() / 1000
-        val taskTime = finalTime - initTime
-        val time = max(0, 1000 - taskTime)
 
-        try {
-            Thread.sleep(time)
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
+            _landingClassToStart.value = if (sharedPreferencesHandler.isLoggedIn()) {
+                MainActivity::class.java
+            } else {
+                LoginActivity::class.java
+            }
         }
-
-        _landingClassToStart.value = cls
     }
 
     //MARK: - Private methods
@@ -89,18 +77,12 @@ class LandingViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    //TODO: fin
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    //TODO: fin
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
 
@@ -108,18 +90,12 @@ class LandingViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    //TODO: fin
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    //TODO: fin
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
 
@@ -127,19 +103,20 @@ class LandingViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    //TODO: fin
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    //TODO: fin
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
+    }
+
+    private fun checkProgress(result: Int) {
+
+        if (result == 3) {
+            _landingClassToStart.value = LoginActivity::class.java
+        }
     }
 }
