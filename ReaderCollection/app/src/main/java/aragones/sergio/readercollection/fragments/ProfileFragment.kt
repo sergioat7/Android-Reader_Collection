@@ -29,6 +29,7 @@ class ProfileFragment: BaseFragment() {
     //MARK: - Private properties
 
     private lateinit var etUsername: EditText
+    private lateinit var ibInfo: ImageButton
     private lateinit var etPassword: EditText
     private lateinit var ibPassword: ImageButton
     private lateinit var rbEnglish: RadioButton
@@ -97,6 +98,7 @@ class ProfileFragment: BaseFragment() {
 
         val application = activity?.application ?: return
         etUsername = edit_text_username
+        ibInfo = image_button_info
         etPassword = edit_text_password
         ibPassword = image_button_password
         rbEnglish = radio_button_en
@@ -116,13 +118,16 @@ class ProfileFragment: BaseFragment() {
             viewModel.profileDataChanged(it)
         }
 
+        ibInfo.setOnClickListener {
+            showPopupDialog(resources.getString(R.string.username_info))
+        }
+
         ibPassword.setOnClickListener {
             Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
         }
 
         spSortParams.backgroundTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(requireActivity(),
-                R.color.colorPrimary)
+            ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
         )
         spSortParams.adapter = Constants.getAdapter(
             context = requireContext(),

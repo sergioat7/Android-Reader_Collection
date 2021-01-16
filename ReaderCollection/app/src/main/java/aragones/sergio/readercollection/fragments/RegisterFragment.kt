@@ -29,6 +29,7 @@ class RegisterFragment: BaseFragment() {
     //MARK: - Private properties
 
     private lateinit var etUsername: EditText
+    private lateinit var ibInfo: ImageButton
     private lateinit var etPassword: EditText
     private lateinit var ibPassword: ImageButton
     private lateinit var etConfirmPassword: EditText
@@ -66,6 +67,7 @@ class RegisterFragment: BaseFragment() {
 
         val application = activity?.application ?: return
         etUsername = edit_text_username
+        ibInfo = image_button_info
         etPassword = edit_text_password
         ibPassword = image_button_password
         etConfirmPassword = edit_text_confirm_password
@@ -80,6 +82,10 @@ class RegisterFragment: BaseFragment() {
         }
         etUsername.onFocusChange {
             registerDataChanged()
+        }
+
+        ibInfo.setOnClickListener {
+            showPopupDialog(resources.getString(R.string.username_info))
         }
 
         etPassword.afterTextChanged {
