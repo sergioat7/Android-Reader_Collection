@@ -21,4 +21,5 @@ interface LoginComponent {
     fun inject(booksViewModelFactory: BooksViewModelFactory)
     fun inject(profileViewModelFactory: ProfileViewModelFactory)
     fun inject(popupSyncAppViewModelFactory: PopupSyncAppViewModelFactory)
+    fun inject(landingViewModelFactory: LandingViewModelFactory)
 }
