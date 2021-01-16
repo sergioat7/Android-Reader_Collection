@@ -161,20 +161,12 @@ class ProfileViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
 
@@ -182,20 +174,12 @@ class ProfileViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
 
@@ -203,22 +187,23 @@ class ProfileViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
+    }
+
+    private fun checkProgress(result: Int) {
+
+        if (result == 3) {
+
+            _profileLoading.value = false
+            _profileRedirection.value = true
+        }
     }
 
     private fun loginObserver(): Completable {

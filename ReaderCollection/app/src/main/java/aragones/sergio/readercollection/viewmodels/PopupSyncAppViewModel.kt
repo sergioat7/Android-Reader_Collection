@@ -53,9 +53,7 @@ class PopupSyncAppViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-                    _loginError.value = null
-                }
+                checkProgress(result)
             },
             onError = {
 
@@ -68,9 +66,7 @@ class PopupSyncAppViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-                    _loginError.value = null
-                }
+                checkProgress(result)
             },
             onError = {
 
@@ -83,9 +79,7 @@ class PopupSyncAppViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-                    _loginError.value = null
-                }
+                checkProgress(result)
             },
             onError = {
 
@@ -96,6 +90,13 @@ class PopupSyncAppViewModel @Inject constructor(
     }
 
     //MARK: - Private methods
+
+    private fun checkProgress(result: Int) {
+
+        if (result == 3) {
+            _loginError.value = null
+        }
+    }
 
     private fun loadFormatsObserver(): Completable {
 

@@ -103,6 +103,7 @@ class Constants {
         const val ENGLISH_LANGUAGE_KEY = "en"
         const val SPANISH_LANGUAGE_KEY = "es"
         const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
+        const val VERSION_PREFERENCE_NAME = "version"
 
         // MARK: - Database constants
 
