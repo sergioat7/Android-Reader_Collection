@@ -15,7 +15,6 @@ class ReaderCollectionApplication: Application() {
 
     //MARK: - Public properties
 
-    lateinit var sharedPreferencesComponent: SharedPreferencesComponent
     lateinit var googleApiClientComponent: GoogleAPIClientComponent
     lateinit var booksComponent: BooksComponent
     lateinit var loginComponent: LoginComponent
@@ -24,12 +23,6 @@ class ReaderCollectionApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        sharedPreferencesComponent = DaggerSharedPreferencesComponent.builder()
-            .sharedPreferencesModule(
-                SharedPreferencesModule(applicationContext)
-            )
-            .build()
 
         googleApiClientComponent = DaggerGoogleAPIClientComponent.builder()
             .googleAPIClientModule(

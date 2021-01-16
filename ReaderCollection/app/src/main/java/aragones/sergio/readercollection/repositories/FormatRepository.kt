@@ -30,13 +30,13 @@ class FormatRepository @Inject constructor(
 
             formatAPIClient.getFormatsObserver().subscribeBy(
                 onSuccess = { newFormats ->
-                    insertFormatsObserver(newFormats).subscribeBy(
+                    insertFormatsDatabaseObserver(newFormats).subscribeBy(
                         onComplete = {
-                            getFormatsObserver().subscribeBy(
+                            getFormatsDatabaseObserver().subscribeBy(
                                 onSuccess = { currentFormats ->
 
                                     val formatsToRemove = Constants.getDisabledContent(currentFormats, newFormats) as List<FormatResponse>
-                                    deleteFormatsObserver(formatsToRemove).subscribeBy(
+                                    deleteFormatsDatabaseObserver(formatsToRemove).subscribeBy(
                                         onComplete = {
                                             emitter.onComplete()
                                         },
@@ -64,7 +64,7 @@ class FormatRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getFormatsObserver(): Single<List<FormatResponse>> {
+    fun getFormatsDatabaseObserver(): Single<List<FormatResponse>> {
         return database
             .formatDao()
             .getFormatsObserver()
@@ -77,9 +77,9 @@ class FormatRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            getFormatsObserver().subscribeBy(
+            getFormatsDatabaseObserver().subscribeBy(
                 onSuccess = { formats ->
-                    deleteFormatsObserver(formats).subscribeBy(
+                    deleteFormatsDatabaseObserver(formats).subscribeBy(
                         onComplete = {
                             emitter.onComplete()
                         },
@@ -99,7 +99,7 @@ class FormatRepository @Inject constructor(
 
     //MARK: - Private methods
 
-    private fun insertFormatsObserver(formats: List<FormatResponse>): Completable {
+    private fun insertFormatsDatabaseObserver(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
             .insertFormatsObserver(formats)
@@ -108,7 +108,7 @@ class FormatRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    private fun deleteFormatsObserver(formats: List<FormatResponse>): Completable {
+    private fun deleteFormatsDatabaseObserver(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()
             .deleteFormatsObserver(formats)
