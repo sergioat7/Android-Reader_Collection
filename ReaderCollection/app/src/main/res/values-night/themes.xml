@@ -11,6 +11,7 @@
         <item name="android:colorBackground">@color/colorSecondary</item>
         <item name="titleTextColor">@color/colorSecondary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_dark</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
 </resources>
