@@ -3,6 +3,7 @@
 
     <color name="colorPrimary">#0D1A5E</color>
     <color name="colorPrimaryLight">#750D1A5E</color>
+    <color name="colorPrimaryUltraLight">#0D0D1A5E</color>
     <color name="colorSecondary">#FFFFFF</color>
     <color name="colorTertiary">#F9B197</color>
     <color name="colorTertiaryLight">#75F9B197</color>

@@ -12,9 +12,9 @@ import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFa
 import dagger.Component
 
 @Component(modules = [
-    SharedPreferencesModule::class,
+    AppDatabaseModule::class,
     GoogleAPIClientModule::class,
-    AppDatabaseModule::class
+    SharedPreferencesModule::class
 ])
 interface BooksComponent {
     fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
