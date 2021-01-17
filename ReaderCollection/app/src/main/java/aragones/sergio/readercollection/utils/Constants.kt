@@ -104,6 +104,7 @@ class Constants {
         const val SPANISH_LANGUAGE_KEY = "es"
         const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
         const val VERSION_PREFERENCE_NAME = "version"
+        const val SWIPE_REFRESH_PREFERENCE_NAME = "swipeRefreshEnabled"
 
         // MARK: - Database constants
 

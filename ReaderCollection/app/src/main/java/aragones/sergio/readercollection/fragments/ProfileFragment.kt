@@ -143,6 +143,8 @@ class ProfileFragment: BaseFragment() {
         }
         spSortParams.setSelection(position)
 
+        swSwipeRefresh.isChecked = viewModel.swipeRefresh
+
         btSave.setOnClickListener {
 
             val language =
@@ -154,7 +156,8 @@ class ProfileFragment: BaseFragment() {
             viewModel.saveData(
                 etPassword.text.toString(),
                 language,
-                sortParam
+                sortParam,
+                swSwipeRefresh.isChecked
             )
         }
     }
