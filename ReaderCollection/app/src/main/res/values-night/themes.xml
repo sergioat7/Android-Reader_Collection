@@ -6,7 +6,7 @@
 
 <resources>
 
-    <style name="Theme.ReaderCollection.Dark" parent="Theme.ReaderCollection">
+    <style name="Theme.ReaderCollection" parent="Theme">
         <item name="titleTextColor">@color/colorSecondary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_dark</item>
     </style>

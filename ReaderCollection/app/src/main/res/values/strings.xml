@@ -82,7 +82,7 @@
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="sync_title">Synchronizing…</string>
-    <string name="sync_confirmation">Are you sure you want to sync the app? This process could take a while</string>
+    <string name="sync_confirmation">Are you sure you want to sync the app? This process could take a while.</string>
 
     //ERRORS
     <string name="error_server">There was an error on getting data. Please, try again.</string>
