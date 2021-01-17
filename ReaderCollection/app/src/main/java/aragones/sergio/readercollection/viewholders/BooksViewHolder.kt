@@ -24,7 +24,7 @@ itemView: View
     fun fillData(book: BookResponse, isGoogleBook: Boolean, context: Context) {
 
         val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val errorImage = if (Constants.isDarkMode(context)) R.drawable.default_book_cover_dark else R.drawable.default_book_cover_light
+        val errorImage = if (Constants.isDarkMode(context)) R.drawable.ic_default_book_cover_dark else R.drawable.ic_default_book_cover_light
         val loading = itemView.progress_bar_loading
         loading.visibility = View.VISIBLE
         Picasso

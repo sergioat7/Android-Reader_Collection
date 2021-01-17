@@ -131,4 +131,32 @@ class SharedPreferencesHandler @Inject constructor(
             }
         }
     }
+
+    fun getVersion(): Int {
+        return sharedPreferences?.getInt(Constants.VERSION_PREFERENCE_NAME, 0) ?: 0
+    }
+
+    fun setVersion(version: Int) {
+
+        sharedPreferences?.let {
+            with(it.edit()) {
+                putInt(Constants.VERSION_PREFERENCE_NAME, version)
+                commit()
+            }
+        }
+    }
+
+    fun getSwipeRefresh(): Boolean {
+        return sharedPreferences?.getBoolean(Constants.SWIPE_REFRESH_PREFERENCE_NAME, true) ?: true
+    }
+
+    fun setSwipeRefresh(swipeRefresh: Boolean) {
+
+        sharedPreferences?.let {
+            with(it.edit()) {
+                putBoolean(Constants.SWIPE_REFRESH_PREFERENCE_NAME, swipeRefresh)
+                commit()
+            }
+        }
+    }
 }

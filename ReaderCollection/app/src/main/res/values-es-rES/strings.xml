@@ -25,6 +25,7 @@
     <string name="create_account">Crear cuenta</string>
     <string name="sign_up">Regístrate</string>
     <string name="confirm_password">Confirmar contraseña</string>
+    <string name="username_info">El usuario sólo es necesario para identificarte y poder diferenciar tus libros de los de otro usuario.\n\nSin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla.\n\nSi esto pasa, contacta con el desarrollador de la aplicación, puedes encontrar su correo electrónico en la ficha de la aplicación en Google Play Store.</string>
 
     //BOOKS
     <string name="new_book">Nuevo</string>
@@ -66,6 +67,7 @@
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
     <string name="sort_books_param">Parámetro de ordenación de libros</string>
+    <string name="enable_list_refresh">Habilitar actualización de lista</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>
@@ -84,7 +86,7 @@
     <string name="ascending">Ascendente</string>
     <string name="descending">Descendente</string>
     <string name="sync_title">Sincronizando…</string>
-    <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo</string>
+    <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo.</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>

@@ -48,7 +48,7 @@ class PopupSyncAppViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(PopupSyncAppViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).loginComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             return popupSyncAppViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
