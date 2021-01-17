@@ -19,12 +19,9 @@
         <item name="android:textColor">@color/textSecondary</item>
     </style>
 
-    <style name="AppLanguageTextView" parent="TitleConfigTextView">
-        <item name="android:text">@string/app_language</item>
-    </style>
-
-    <style name="SortParamTextView" parent="TitleConfigTextView">
-        <item name="android:text">@string/sort_books_param</item>
+    <style name="ProfileSwitch">
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:textColor">@color/textSecondary</item>
     </style>
 
 </resources>

@@ -15,25 +15,21 @@ class ReaderCollectionApplication: Application() {
 
     //MARK: - Public properties
 
-    lateinit var sharedPreferencesComponent: SharedPreferencesComponent
-    lateinit var googleApiClientComponent: GoogleAPIClientComponent
+    lateinit var appComponent: AppComponent
     lateinit var booksComponent: BooksComponent
-    lateinit var loginComponent: LoginComponent
+    lateinit var googleApiClientComponent: GoogleAPIClientComponent
 
     //MARK: - Lifecycle methods
 
     override fun onCreate() {
         super.onCreate()
 
-        sharedPreferencesComponent = DaggerSharedPreferencesComponent.builder()
+        appComponent = DaggerAppComponent.builder()
             .sharedPreferencesModule(
                 SharedPreferencesModule(applicationContext)
             )
-            .build()
-
-        googleApiClientComponent = DaggerGoogleAPIClientComponent.builder()
-            .googleAPIClientModule(
-                GoogleAPIClientModule()
+            .appDatabaseModule(
+                AppDatabaseModule(applicationContext)
             )
             .build()
 
@@ -49,12 +45,9 @@ class ReaderCollectionApplication: Application() {
             )
             .build()
 
-        loginComponent = DaggerLoginComponent.builder()
-            .sharedPreferencesModule(
-                SharedPreferencesModule(applicationContext)
-            )
-            .appDatabaseModule(
-                AppDatabaseModule(applicationContext)
+        googleApiClientComponent = DaggerGoogleAPIClientComponent.builder()
+            .googleAPIClientModule(
+                GoogleAPIClientModule()
             )
             .build()
     }

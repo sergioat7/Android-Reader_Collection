@@ -40,6 +40,7 @@ class ProfileViewModel @Inject constructor(
 
     val language: String = userRepository.language
     val sortParam: String? = userRepository.sortParam
+    val swipeRefresh: Boolean = userRepository.swipeRefresh
     val userData: UserData = userRepository.userData
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
@@ -61,27 +62,23 @@ class ProfileViewModel @Inject constructor(
     fun logout() {
 
         _profileLoading.value = true
+
+        userRepository.removePassword()
+        userRepository.removeCredentials()
         userRepository.logoutObserver().subscribeBy(
-            onComplete = {
-
-                userRepository.removePassword()
-                userRepository.removeCredentials()
-                resetDatabase()
-            },
-            onError = {
-
-                _profileLoading.value = false
-                _profileError.value = Constants.handleError(it)
-                onDestroy()
-            }
+            onComplete = {},
+            onError = {}
         ).addTo(disposables)
+
+        resetDatabase()
     }
 
-    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
+    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?, newSwipeRefresh: Boolean) {
 
         val changePassword = newPassword != userRepository.userData.password
         val changeLanguage = newLanguage != language
         val changeSortParam = newSortParam != sortParam
+        val changeSwipeRefresh = newSwipeRefresh != swipeRefresh
 
         if (changePassword) {
 
@@ -119,6 +116,10 @@ class ProfileViewModel @Inject constructor(
             userRepository.storeSortParam(newSortParam)
         }
 
+        if (changeSwipeRefresh) {
+            userRepository.storeSwipeRefresh(newSwipeRefresh)
+        }
+
         if (changeLanguage) {
 
             userRepository.storeLanguage(newLanguage)
@@ -136,8 +137,7 @@ class ProfileViewModel @Inject constructor(
 
                 userRepository.removeUserData()
                 userRepository.removeCredentials()
-                _profileLoading.value = false
-                _profileRedirection.value = true
+                resetDatabase()
             },
             onError = {
 
@@ -167,20 +167,12 @@ class ProfileViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
 
@@ -188,20 +180,12 @@ class ProfileViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
 
@@ -209,22 +193,23 @@ class ProfileViewModel @Inject constructor(
             onComplete = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             },
             onError = {
 
                 result += 1
-                if (result == 3) {
-
-                    _profileLoading.value = false
-                    _profileRedirection.value = true
-                }
+                checkProgress(result)
             }
         ).addTo(disposables)
+    }
+
+    private fun checkProgress(result: Int) {
+
+        if (result == 3) {
+
+            _profileLoading.value = false
+            _profileRedirection.value = true
+        }
     }
 
     private fun loginObserver(): Completable {

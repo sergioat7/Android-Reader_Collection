@@ -5,17 +5,16 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.app.SearchManager
-import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.*
-import android.widget.*
+import android.widget.AdapterView
 import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ProgressBar
+import android.widget.SearchView
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,6 +42,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     private lateinit var pbLoadingStates: ProgressBar
     private lateinit var spStates: Spinner
     private lateinit var spFavourite: Spinner
+    private lateinit var vwSeparator: View
     private lateinit var srlBooks: SwipeRefreshLayout
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
@@ -53,6 +53,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     private lateinit var formatValues: MutableList<String>
     private lateinit var stateValues: MutableList<String>
     private lateinit var favouriteValues: List<String>
+    private val scrollPosition = MutableLiveData<ScrollPosition>()
 
     //MARK: - Lifecycle methods
 
@@ -128,6 +129,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         pbLoadingStates = progress_bar_loading_states
         spStates = spinner_states
         spFavourite = spinner_favourite
+        vwSeparator = view_separator
         srlBooks = swipe_refresh_layout_books
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
@@ -200,8 +202,11 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 id: Long
             ) {
 
-                val favouriteValue = favouriteValues[position]
-                val isFavourite = if(favouriteValue == resources.getString(R.string.yes)) true else if(favouriteValue == resources.getString(R.string.no)) false else null
+                val isFavourite = when(favouriteValues[position]) {
+                    resources.getString(R.string.yes) -> true
+                    resources.getString(R.string.no) -> false
+                    else -> null
+                }
                 viewModel.setFavourite(isFavourite)
                 viewModel.getBooks()
                 spFavourite.requestLayout()
@@ -210,6 +215,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
+        srlBooks.isEnabled = viewModel.isRefreshEnabled
         srlBooks.setOnRefreshListener {
 
             viewModel.reloadData()
@@ -222,38 +228,30 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                fbStartList.visibility =
-                    if (!recyclerView.canScrollVertically(-1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
-
-                fbEndList.visibility =
-                    if (!recyclerView.canScrollVertically(1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
+                scrollPosition.value =
+                    if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    ScrollPosition.TOP
+                } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    ScrollPosition.END
+                } else {
+                    ScrollPosition.MIDDLE
+                }
             }
         })
 
-        fbStartList.visibility = View.GONE
+        scrollPosition.value = ScrollPosition.TOP
+
         fbStartList.setOnClickListener {
 
             rvBooks.scrollToPosition(0)
-            fbStartList.visibility = View.GONE
-            fbEndList.visibility = View.VISIBLE
+            scrollPosition.value = ScrollPosition.TOP
         }
 
         fbEndList.setOnClickListener {
 
             val position: Int = booksAdapter.itemCount - 1
             rvBooks.scrollToPosition(position)
-            fbStartList.visibility = View.VISIBLE
-            fbEndList.visibility = View.GONE
+            scrollPosition.value = ScrollPosition.END
         }
     }
 
@@ -276,7 +274,8 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 resources.getString(R.string.format)
             )
 
-            val selectedFormatName = getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
+            val selectedFormatName =
+                getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
             spFormats.setSelection(
                 formatValues.indexOf(selectedFormatName)
             )
@@ -291,7 +290,8 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 resources.getString(R.string.state)
             )
 
-            val selectedStateName = getSelectedValue(viewModel.states, viewModel.selectedState)?.name
+            val selectedStateName =
+                getSelectedValue(viewModel.states, viewModel.selectedState)?.name
             spStates.setSelection(
                 stateValues.indexOf(selectedStateName)
             )
@@ -311,6 +311,13 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
 
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
+        })
+
+        scrollPosition.observe(viewLifecycleOwner, {
+
+            vwSeparator.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
+            fbStartList.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
+            fbEndList.visibility = if (it == ScrollPosition.END) View.GONE else View.VISIBLE
         })
     }
 
@@ -361,14 +368,9 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     private fun setupSearchView(menu: Menu) {
 
         val menuItem = menu.findItem(R.id.action_search)
-        val searchView = menuItem.actionView as SearchView
+        this.searchView = menuItem.actionView as SearchView
+        this.searchView?.let { searchView ->
 
-        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager?
-        if (searchManager != null) {
-
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-            searchView.isIconified = false
-            searchView.isIconifiedByDefault = false
             searchView.queryHint = resources.getString(R.string.search_books)
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
@@ -386,42 +388,9 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 }
             })
         }
-
-        val color = ContextCompat.getColor(requireActivity(), R.color.textTertiary)
-
-        val searchIconId = searchView.context.resources.getIdentifier(
-            "android:id/search_mag_icon",
-            null,
-            null
-        )
-        searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList = ColorStateList.valueOf(color)
-
-        val searchPlateId = searchView.context.resources.getIdentifier(
-            "android:id/search_plate",
-            null,
-            null
-        )
-        val searchPlate = searchView.findViewById<View>(searchPlateId)
-        if (searchPlate != null) {
-
-            val searchTextId = searchPlate.context.resources.getIdentifier(
-                "android:id/search_src_text",
-                null,
-                null
-            )
-            val searchText = searchPlate.findViewById<TextView>(searchTextId)
-            if (searchText != null) {
-
-                searchText.setTextColor(color)
-                searchText.setHintTextColor(color)
-            }
-
-            val searchCloseId = searchPlate.context.resources.getIdentifier(
-                "android:id/search_close_btn",
-                null,
-                null
-            )
-            searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
-        }
+        this.setupSearchView("")
     }
+}
+enum class ScrollPosition {
+    TOP, MIDDLE, END
 }

@@ -48,7 +48,7 @@ class RegisterViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).loginComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             return registerViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

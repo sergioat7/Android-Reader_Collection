@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -29,11 +30,13 @@ class ProfileFragment: BaseFragment() {
     //MARK: - Private properties
 
     private lateinit var etUsername: EditText
+    private lateinit var ibInfo: ImageButton
     private lateinit var etPassword: EditText
     private lateinit var ibPassword: ImageButton
     private lateinit var rbEnglish: RadioButton
     private lateinit var rbSpanish: RadioButton
     private lateinit var spSortParams: Spinner
+    private lateinit var swSwipeRefresh: SwitchCompat
     private lateinit var btSave: Button
     private lateinit var viewModel: ProfileViewModel
 
@@ -97,11 +100,13 @@ class ProfileFragment: BaseFragment() {
 
         val application = activity?.application ?: return
         etUsername = edit_text_username
+        ibInfo = image_button_info
         etPassword = edit_text_password
         ibPassword = image_button_password
         rbEnglish = radio_button_en
         rbSpanish = radio_button_es
         spSortParams = spinner_sort_params
+        swSwipeRefresh = switch_swipe_refresh
         btSave = button_save
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
         setupBindings()
@@ -116,13 +121,16 @@ class ProfileFragment: BaseFragment() {
             viewModel.profileDataChanged(it)
         }
 
+        ibInfo.setOnClickListener {
+            showPopupDialog(resources.getString(R.string.username_info))
+        }
+
         ibPassword.setOnClickListener {
             Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
         }
 
         spSortParams.backgroundTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(requireActivity(),
-                R.color.colorPrimary)
+            ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
         )
         spSortParams.adapter = Constants.getAdapter(
             context = requireContext(),
@@ -135,6 +143,8 @@ class ProfileFragment: BaseFragment() {
         }
         spSortParams.setSelection(position)
 
+        swSwipeRefresh.isChecked = viewModel.swipeRefresh
+
         btSave.setOnClickListener {
 
             val language =
@@ -146,7 +156,8 @@ class ProfileFragment: BaseFragment() {
             viewModel.saveData(
                 etPassword.text.toString(),
                 language,
-                sortParam
+                sortParam,
+                swSwipeRefresh.isChecked
             )
         }
     }

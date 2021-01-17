@@ -1,8 +1,13 @@
 <resources>
 
-    <style name="Theme.ReaderCollection" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="Theme" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
+        <item name="colorControlActivated">@color/buttonPrimary</item>
+        <item name="colorSwitchThumbNormal">@color/buttonSecondary</item>
+    </style>
+
+    <style name="Theme.ReaderCollection" parent="Theme">
         <item name="titleTextColor">@color/textTertiary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_light</item>
     </style>

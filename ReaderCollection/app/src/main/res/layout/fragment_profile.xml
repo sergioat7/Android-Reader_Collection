@@ -39,6 +39,15 @@
                 style="@style/UsernameEditText"
                 />
 
+            <ImageButton
+                android:id="@+id/image_button_info"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/edit_text_username"
+                app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+                app:layout_constraintTop_toTopOf="@+id/edit_text_username"
+                style="@style/UsernameInfoButton"
+                />
+
             <EditText
                 android:id="@+id/edit_text_password"
                 android:layout_width="0dp"
@@ -63,10 +72,11 @@
                 android:id="@+id/text_view_language_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@string/app_language"
                 app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
                 app:layout_constraintStart_toStartOf="@+id/radio_group_language"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
-                style="@style/AppLanguageTextView"
+                style="@style/TitleConfigTextView"
                 />
 
             <RadioGroup
@@ -101,22 +111,34 @@
                 android:id="@+id/text_view_sort_param_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:text="@string/sort_books_param"
                 app:layout_constraintBottom_toTopOf="@+id/spinner_sort_params"
                 app:layout_constraintEnd_toEndOf="@+id/spinner_sort_params"
                 app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
                 app:layout_constraintTop_toBottomOf="@+id/radio_group_language"
-                style="@style/SortParamTextView"
+                style="@style/TitleConfigTextView"
                 />
 
             <Spinner
                 android:id="@+id/spinner_sort_params"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
                 app:layout_constraintStart_toStartOf="@+id/radio_group_language"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
                 style="@style/CustomSpinner"
+                />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switch_swipe_refresh"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/enable_list_refresh"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/spinner_sort_params"
+                app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
+                app:layout_constraintTop_toBottomOf="@+id/spinner_sort_params"
+                style="@style/ProfileSwitch"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

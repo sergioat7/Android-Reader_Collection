@@ -20,12 +20,14 @@ import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
+    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
@@ -59,6 +61,8 @@ class BooksViewModel @Inject constructor(
     val selectedFormat: LiveData<String?> = _selectedFormat
     val selectedState: LiveData<String?> = _selectedState
     val isFavourite: LiveData<Boolean?> = _isFavourite
+    val isRefreshEnabled: Boolean
+        get() = sharedPreferencesHandler.getSwipeRefresh()
 
     // MARK: - Lifecycle methods
 
@@ -75,7 +79,7 @@ class BooksViewModel @Inject constructor(
     fun getBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooksObserver(
+        booksRepository.getBooksDatabaseObserver(
             _selectedFormat.value,
             _selectedState.value,
             _isFavourite.value,
@@ -105,7 +109,7 @@ class BooksViewModel @Inject constructor(
     fun getFormats() {
 
         _booksFormatsLoading.value = true
-        formatRepository.getFormatsObserver().subscribeBy(
+        formatRepository.getFormatsDatabaseObserver().subscribeBy(
             onSuccess = {
 
                 _formats.value = it
@@ -123,7 +127,7 @@ class BooksViewModel @Inject constructor(
     fun getStates() {
 
         _booksStatesLoading.value = true
-        stateRepository.getStatesObserver().subscribeBy(
+        stateRepository.getStatesDatabaseObserver().subscribeBy(
             onSuccess = {
 
                 _states.value = it
