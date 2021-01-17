@@ -14,6 +14,7 @@ import android.widget.SearchView
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -41,6 +42,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     private lateinit var pbLoadingStates: ProgressBar
     private lateinit var spStates: Spinner
     private lateinit var spFavourite: Spinner
+    private lateinit var vwSeparator: View
     private lateinit var srlBooks: SwipeRefreshLayout
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
@@ -51,6 +53,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
     private lateinit var formatValues: MutableList<String>
     private lateinit var stateValues: MutableList<String>
     private lateinit var favouriteValues: List<String>
+    private val scrollPosition = MutableLiveData<ScrollPosition>()
 
     //MARK: - Lifecycle methods
 
@@ -126,6 +129,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         pbLoadingStates = progress_bar_loading_states
         spStates = spinner_states
         spFavourite = spinner_favourite
+        vwSeparator = view_separator
         srlBooks = swipe_refresh_layout_books
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
@@ -198,8 +202,11 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 id: Long
             ) {
 
-                val favouriteValue = favouriteValues[position]
-                val isFavourite = if(favouriteValue == resources.getString(R.string.yes)) true else if(favouriteValue == resources.getString(R.string.no)) false else null
+                val isFavourite = when(favouriteValues[position]) {
+                    resources.getString(R.string.yes) -> true
+                    resources.getString(R.string.no) -> false
+                    else -> null
+                }
                 viewModel.setFavourite(isFavourite)
                 viewModel.getBooks()
                 spFavourite.requestLayout()
@@ -208,6 +215,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
+        srlBooks.isEnabled = viewModel.isRefreshEnabled
         srlBooks.setOnRefreshListener {
 
             viewModel.reloadData()
@@ -220,38 +228,30 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
-                fbStartList.visibility =
-                    if (!recyclerView.canScrollVertically(-1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
-
-                fbEndList.visibility =
-                    if (!recyclerView.canScrollVertically(1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
+                scrollPosition.value =
+                    if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    ScrollPosition.TOP
+                } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    ScrollPosition.END
+                } else {
+                    ScrollPosition.MIDDLE
+                }
             }
         })
 
-        fbStartList.visibility = View.GONE
+        scrollPosition.value = ScrollPosition.TOP
+
         fbStartList.setOnClickListener {
 
             rvBooks.scrollToPosition(0)
-            fbStartList.visibility = View.GONE
-            fbEndList.visibility = View.VISIBLE
+            scrollPosition.value = ScrollPosition.TOP
         }
 
         fbEndList.setOnClickListener {
 
             val position: Int = booksAdapter.itemCount - 1
             rvBooks.scrollToPosition(position)
-            fbStartList.visibility = View.VISIBLE
-            fbEndList.visibility = View.GONE
+            scrollPosition.value = ScrollPosition.END
         }
     }
 
@@ -274,7 +274,8 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 resources.getString(R.string.format)
             )
 
-            val selectedFormatName = getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
+            val selectedFormatName =
+                getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
             spFormats.setSelection(
                 formatValues.indexOf(selectedFormatName)
             )
@@ -289,7 +290,8 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 resources.getString(R.string.state)
             )
 
-            val selectedStateName = getSelectedValue(viewModel.states, viewModel.selectedState)?.name
+            val selectedStateName =
+                getSelectedValue(viewModel.states, viewModel.selectedState)?.name
             spStates.setSelection(
                 stateValues.indexOf(selectedStateName)
             )
@@ -309,6 +311,13 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
 
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
+        })
+
+        scrollPosition.observe(viewLifecycleOwner, {
+
+            vwSeparator.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
+            fbStartList.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
+            fbEndList.visibility = if (it == ScrollPosition.END) View.GONE else View.VISIBLE
         })
     }
 
@@ -381,4 +390,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         }
         this.setupSearchView("")
     }
+}
+enum class ScrollPosition {
+    TOP, MIDDLE, END
 }

@@ -48,7 +48,7 @@ class BooksViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BooksViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).loginComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             booksViewModel.getFormats()
             booksViewModel.getStates()
             booksViewModel.getSortParam()
