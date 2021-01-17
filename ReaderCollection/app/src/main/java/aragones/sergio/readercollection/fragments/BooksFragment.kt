@@ -215,6 +215,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
+        srlBooks.isEnabled = viewModel.isRefreshEnabled
         srlBooks.setOnRefreshListener {
 
             viewModel.reloadData()
