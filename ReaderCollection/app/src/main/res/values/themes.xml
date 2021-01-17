@@ -5,6 +5,7 @@
         <item name="android:colorBackground">@color/colorSecondary</item>
         <item name="titleTextColor">@color/textTertiary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_light</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
     <style name="Theme.ReaderCollection.NoActionBar" parent="Theme.AppCompat.NoActionBar">
