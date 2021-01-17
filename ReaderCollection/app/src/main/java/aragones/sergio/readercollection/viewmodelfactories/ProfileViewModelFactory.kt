@@ -54,7 +54,7 @@ class ProfileViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).loginComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             return profileViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
