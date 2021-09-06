@@ -62,6 +62,7 @@
     </style>
 
     <style name="BookReadMoreButton">
+        <item name="android:minHeight">0dp</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:gravity">top</item>
         <item name="android:text">@string/read_more</item>
@@ -69,6 +70,12 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">16sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="BookTextCountTextView">
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">12sp</item>
+        <item name="fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="CustomEditText.BookDetails" parent="CustomEditText">
