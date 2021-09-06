@@ -51,9 +51,11 @@ class BookDetailFragment: BaseFragment() {
     private lateinit var llCategories: LinearLayout
     private lateinit var etDescription: EditText
     private lateinit var btReadMoreDescription: Button
+    private lateinit var tvDescriptionCount: TextView
     private lateinit var llSummary: LinearLayout
     private lateinit var etSummary: EditText
     private lateinit var btReadMoreSummary: Button
+    private lateinit var tvSummaryCount: TextView
     private lateinit var llTitles1: LinearLayout
     private lateinit var llValues1: LinearLayout
     private lateinit var pbLoadingFormats: ProgressBar
@@ -165,9 +167,11 @@ class BookDetailFragment: BaseFragment() {
         llCategories = linear_layout_categories
         etDescription = edit_text_description
         btReadMoreDescription = button_read_more_description
+        tvDescriptionCount = text_view_description_count
         llSummary = linear_layout_summary
         etSummary = edit_text_summary
         btReadMoreSummary = button_read_more_summary
+        tvSummaryCount = text_view_summary_count
         llTitles1 = linear_layout_titles_1
         llValues1 = linear_layout_values_1
         pbLoadingFormats = progress_bar_loading_formats
@@ -389,6 +393,8 @@ class BookDetailFragment: BaseFragment() {
         }
         etDescription.setText(description)
 
+        tvDescriptionCount.text = resources.getString(R.string.book_text_count, description.length)
+
         btReadMoreDescription.visibility =
             if(description == Constants.NO_VALUE || etDescription.maxLines == Constants.MAX_LINES) {
                 View.GONE
@@ -401,6 +407,8 @@ class BookDetailFragment: BaseFragment() {
             summary = Constants.NO_VALUE
         }
         etSummary.setText(summary)
+
+        tvSummaryCount.text = resources.getString(R.string.book_text_count, summary.length)
 
         llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
 
