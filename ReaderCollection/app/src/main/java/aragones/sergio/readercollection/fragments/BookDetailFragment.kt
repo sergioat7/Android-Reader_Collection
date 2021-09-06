@@ -12,6 +12,7 @@ import android.text.InputType
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
@@ -206,6 +207,9 @@ class BookDetailFragment: BaseFragment() {
         etAuthor.setReadOnly(true, InputType.TYPE_NULL, 0)
 
         etDescription.setReadOnly(true, InputType.TYPE_NULL, 0)
+        etDescription.doAfterTextChanged {
+            tvDescriptionCount.text = resources.getString(R.string.book_text_count, it?.length)
+        }
 
         btReadMoreDescription.setOnClickListener {
 
@@ -214,6 +218,9 @@ class BookDetailFragment: BaseFragment() {
         }
 
         etSummary.setReadOnly(true, InputType.TYPE_NULL, 0)
+        etSummary.doAfterTextChanged {
+            tvSummaryCount.text = resources.getString(R.string.book_text_count, it?.length)
+        }
 
         btReadMoreSummary.setOnClickListener {
 
