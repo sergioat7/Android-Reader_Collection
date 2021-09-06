@@ -32,7 +32,7 @@ import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.book_detail_fragment.*
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
-class BookDetailFragment: BaseFragment() {
+class BookDetailFragment : BaseFragment() {
 
     //MARK: - Private properties
 
@@ -109,18 +109,19 @@ class BookDetailFragment: BaseFragment() {
         this.menu = menu
         menu.clear()
 
-        val menuRes = if(isGoogleBook) R.menu.google_book_detail_toolbar_menu else R.menu.book_detail_toolbar_menu
+        val menuRes =
+            if (isGoogleBook) R.menu.google_book_detail_toolbar_menu else R.menu.book_detail_toolbar_menu
         inflater.inflate(menuRes, menu)
         menu.findItem(R.id.action_save).isVisible = isGoogleBook
-        if(!isGoogleBook) {
+        if (!isGoogleBook) {
             menu.findItem(R.id.action_cancel).isVisible = false
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when(item.itemId) {
-            R.id.action_save ->  {
+        when (item.itemId) {
+            R.id.action_save -> {
                 if (isGoogleBook) {
                     viewModel.createBook(getBookData())
                 } else {
@@ -187,14 +188,17 @@ class BookDetailFragment: BaseFragment() {
         llValues4 = linear_layout_values_4
         etReadingDate = edit_text_reading_date
         val application = activity?.application ?: return
-        viewModel = ViewModelProvider(this, BookDetailViewModelFactory(application, bookId, isGoogleBook)).get(BookDetailViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            BookDetailViewModelFactory(application, bookId, isGoogleBook)
+        ).get(BookDetailViewModel::class.java)
         setupBindings()
         formats = listOf()
         formatValues = mutableListOf()
         states = listOf()
         stateValues = mutableListOf()
 
-        fbFavourite.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        fbFavourite.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
         pbLoadingFavourite.visibility = View.GONE
         fbFavourite.setOnClickListener {
             viewModel.setFavourite(!isFavourite)
@@ -307,17 +311,17 @@ class BookDetailFragment: BaseFragment() {
         })
 
         viewModel.bookDetailFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingFormats.visibility = if(isLoading) View.VISIBLE else View.GONE
+            pbLoadingFormats.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
 
         viewModel.bookDetailStatesLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingStates.visibility = if(isLoading) View.VISIBLE else View.GONE
+            pbLoadingStates.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
 
         viewModel.bookDetailFavouriteLoading.observe(viewLifecycleOwner, { isLoading ->
 
-            fbFavourite.visibility = if(isLoading) View.INVISIBLE else View.VISIBLE
-            pbLoadingFavourite.visibility = if(isLoading) View.VISIBLE else View.GONE
+            fbFavourite.visibility = if (isLoading) View.INVISIBLE else View.VISIBLE
+            pbLoadingFavourite.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
 
         viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner, {
@@ -338,8 +342,7 @@ class BookDetailFragment: BaseFragment() {
     private fun showData(book: BookResponse) {
 
         val image =
-            book.image?.replace("http", "https") ?:
-            book.thumbnail?.replace("http", "https") ?: "-"
+            book.image?.replace("http", "https") ?: book.thumbnail?.replace("http", "https") ?: "-"
         Picasso
             .get()
             .load(image)
@@ -373,7 +376,7 @@ class BookDetailFragment: BaseFragment() {
 
         val authors = book.authors?.joinToString(separator = ", ") ?: ""
         etAuthor.setText(
-            if(authors.isNotBlank()) resources.getString(R.string.authors_text, authors)
+            if (authors.isNotBlank()) resources.getString(R.string.authors_text, authors)
             else Constants.NO_VALUE
         )
 
@@ -403,7 +406,7 @@ class BookDetailFragment: BaseFragment() {
         tvDescriptionCount.text = resources.getString(R.string.book_text_count, description.length)
 
         btReadMoreDescription.visibility =
-            if(description == Constants.NO_VALUE || etDescription.maxLines == Constants.MAX_LINES) {
+            if (description == Constants.NO_VALUE || etDescription.maxLines == Constants.MAX_LINES) {
                 View.GONE
             } else {
                 View.VISIBLE
@@ -417,10 +420,10 @@ class BookDetailFragment: BaseFragment() {
 
         tvSummaryCount.text = resources.getString(R.string.book_text_count, summary.length)
 
-        llSummary.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llSummary.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
 
         btReadMoreSummary.visibility =
-            if(summary == Constants.NO_VALUE || etSummary.maxLines == Constants.MAX_LINES) {
+            if (summary == Constants.NO_VALUE || etSummary.maxLines == Constants.MAX_LINES) {
                 View.GONE
             } else {
                 View.VISIBLE
@@ -430,8 +433,8 @@ class BookDetailFragment: BaseFragment() {
 
         setState(book)
 
-        llTitles1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-        llValues1.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llTitles1.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
+        llValues1.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
 
         var isbn = Constants.NO_VALUE
         if (book.isbn != null && book.isbn.isNotBlank()) {
@@ -467,8 +470,8 @@ class BookDetailFragment: BaseFragment() {
         }
         etReadingDate.setText(readingDate)
 
-        llTitles4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
-        llValues4.visibility = if(isGoogleBook) View.GONE else View.VISIBLE
+        llTitles4.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
+        llValues4.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
     }
 
     private fun setFormat(book: BookResponse) {
@@ -478,7 +481,7 @@ class BookDetailFragment: BaseFragment() {
 
             val formatName = formats.firstOrNull { it.id == formatId }?.name
             val pos = formatValues.indexOf(formatName)
-            formatPosition = if(pos > 0) pos else 0
+            formatPosition = if (pos > 0) pos else 0
         }
         spFormats.setSelection(formatPosition)
     }
@@ -490,7 +493,7 @@ class BookDetailFragment: BaseFragment() {
 
             val stateName = states.firstOrNull { it.id == stateId }?.name
             val pos = stateValues.indexOf(stateName)
-            statePosition = if(pos > 0) pos else 0
+            statePosition = if (pos > 0) pos else 0
         }
         spStates.setSelection(statePosition)
     }
@@ -514,11 +517,13 @@ class BookDetailFragment: BaseFragment() {
         )
         val pageCountText = etPageCount.getValue()
         val pageCount =
-            if(pageCountText.isNotBlank()) pageCountText.toInt()
+            if (pageCountText.isNotBlank()) pageCountText.toInt()
             else 0
         val rating = rbStars.rating.toDouble() * 2
-        val format = viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
-        val state = viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
+        val format =
+            viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
+        val state =
+            viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
 
         return BookResponse(
             id = book?.id ?: "",
@@ -547,8 +552,13 @@ class BookDetailFragment: BaseFragment() {
     private fun setEdition(editable: Boolean) {
 
         val backgroundTint =
-            if(editable) {
-                ColorStateList.valueOf(ContextCompat.getColor(requireActivity(), R.color.colorPrimary))
+            if (editable) {
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        requireActivity(),
+                        R.color.colorPrimary
+                    )
+                )
             } else {
                 ColorStateList.valueOf(Color.TRANSPARENT)
             }
@@ -628,15 +638,17 @@ class BookDetailFragment: BaseFragment() {
         etReadingDate.backgroundTintList = backgroundTint
     }
 
-    private fun setEditTextEdition(editText: EditText,
-                                   editable: Boolean,
-                                   inputType: Int,
-                                   backgroundTint: ColorStateList?) {
+    private fun setEditTextEdition(
+        editText: EditText,
+        editable: Boolean,
+        inputType: Int,
+        backgroundTint: ColorStateList?
+    ) {
 
         if (editText.text.toString() == Constants.NO_VALUE) {
             editText.text = null
         }
-        editText.setReadOnly(!editable, if(editable) inputType else InputType.TYPE_NULL, 0)
+        editText.setReadOnly(!editable, if (editable) inputType else InputType.TYPE_NULL, 0)
         editText.backgroundTintList = backgroundTint
     }
 }
