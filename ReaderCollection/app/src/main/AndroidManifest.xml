@@ -27,7 +27,8 @@
             android:theme="@style/Theme.ReaderCollection.NoActionBar" />
         <activity
             android:name=".activities.LandingActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar">
+            android:theme="@style/Theme.ReaderCollection.NoActionBar"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
