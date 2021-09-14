@@ -34,14 +34,14 @@ class LoginViewModel @Inject constructor(
 
     private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginLoading = MutableLiveData<Boolean>()
-    private val _loginError = MutableLiveData<ErrorResponse>()
+    private val _loginError = MutableLiveData<ErrorResponse?>()
 
     //MARK: - Public properties
 
     val username: String = userRepository.username
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
-    val loginError: LiveData<ErrorResponse> = _loginError
+    val loginError: LiveData<ErrorResponse?> = _loginError
 
     // MARK: - Lifecycle methods
 
