@@ -31,11 +31,11 @@ class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
     //MARK: - Private properties
 
-    private val _originalbooks = MutableLiveData<List<BookResponse>>()
+    private val _originalBooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
@@ -87,14 +87,14 @@ class BooksViewModel @Inject constructor(
         ).subscribeBy(
             onComplete = {
 
-                _originalbooks.value = listOf()
+                _originalBooks.value = listOf()
                 _books.value = listOf()
                 _booksLoading.value = false
             },
             onSuccess = {
 
-                _originalbooks.value = if(_sortDescending.value == true) it.reversed() else it
-                _books.value = if(_sortDescending.value == true) it.reversed() else it
+                _originalBooks.value = if (_sortDescending.value == true) it.reversed() else it
+                _books.value = if (_sortDescending.value == true) it.reversed() else it
                 _booksLoading.value = false
             },
             onError = {
@@ -178,7 +178,7 @@ class BooksViewModel @Inject constructor(
         )
         val sortOrdersPicker = Constants.getPicker(context, values)
         _sortDescending.value?.let {
-            sortOrdersPicker.value = if(it) 1 else 0
+            sortOrdersPicker.value = if (it) 1 else 0
         }
 
         val params = LinearLayout.LayoutParams(50, 50)
@@ -208,7 +208,7 @@ class BooksViewModel @Inject constructor(
 
     fun searchBooks(query: String) {
 
-        _books.value = _originalbooks.value?.filter { book ->
+        _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
     }

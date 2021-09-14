@@ -41,7 +41,7 @@ import kotlinx.android.synthetic.main.fragment_books.*
 import kotlin.math.max
 import kotlin.math.min
 
-class BooksFragment: BaseFragment(), OnItemClickListener {
+class BooksFragment : BaseFragment(), OnItemClickListener {
 
     //MARK: - Private properties
 
@@ -74,8 +74,8 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         return inflater.inflate(R.layout.fragment_books, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
 
@@ -99,7 +99,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when(item.itemId) {
+        when (item.itemId) {
             R.id.action_synchronize -> {
 
                 openSyncPopup()
@@ -144,7 +144,10 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         fbStartList = floating_action_button_start_list
         fbEndList = floating_action_button_end_list
         val application = activity?.application ?: return
-        viewModel = ViewModelProvider(this, BooksViewModelFactory(application)).get(BooksViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            BooksViewModelFactory(application)
+        ).get(BooksViewModel::class.java)
         booksAdapter = BooksAdapter(
             viewModel.books.value?.toMutableList() ?: mutableListOf(),
             false,
@@ -154,7 +157,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         favouriteValues = resources.getStringArray(R.array.favourites).toList()
         setupBindings()
 
-        spFormats.onItemSelectedListener = object: OnItemSelectedListener {
+        spFormats.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
                 selectedItemView: View?,
@@ -172,7 +175,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
-        spStates.onItemSelectedListener = object: OnItemSelectedListener {
+        spStates.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
                 selectedItemView: View?,
@@ -196,13 +199,13 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             resources.getString(R.string.favourite)
         )
 
-        val pos = when(viewModel.isFavourite.value) {
+        val pos = when (viewModel.isFavourite.value) {
             true -> 1
             false -> 2
             else -> 0
         }
         spFavourite.setSelection(pos)
-        spFavourite.onItemSelectedListener = object: OnItemSelectedListener {
+        spFavourite.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
                 parentView: AdapterView<*>?,
                 selectedItemView: View?,
@@ -210,7 +213,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 id: Long
             ) {
 
-                val isFavourite = when(favouriteValues[position]) {
+                val isFavourite = when (favouriteValues[position]) {
                     resources.getString(R.string.yes) -> true
                     resources.getString(R.string.no) -> false
                     else -> null
@@ -231,19 +234,19 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
-        rvBooks.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 scrollPosition.value =
                     if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    ScrollPosition.TOP
-                } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    ScrollPosition.END
-                } else {
-                    ScrollPosition.MIDDLE
-                }
+                        ScrollPosition.TOP
+                    } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        ScrollPosition.END
+                    } else {
+                        ScrollPosition.MIDDLE
+                    }
             }
         })
         ItemTouchHelper(SwipeController()).attachToRecyclerView(rvBooks)
@@ -348,26 +351,31 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         }
     }
 
-    private fun createSpinner(spinner: Spinner,
-                              values: List<String>,
-                              title: String) {
+    private fun createSpinner(
+        spinner: Spinner,
+        values: List<String>,
+        title: String
+    ) {
 
         spinner.adapter = Constants.getAdapter(
             context = requireContext(),
             data = values,
             firstOptionEnabled = true,
             rounded = true,
-            title = title)
+            title = title
+        )
     }
 
-    private fun <T: BaseModel<String>> getSelectedValue(values: LiveData<List<T>>,
-                                                        selectedValue: LiveData<String?>): T? {
+    private fun <T : BaseModel<String>> getSelectedValue(
+        values: LiveData<List<T>>,
+        selectedValue: LiveData<String?>
+    ): T? {
         return values.value?.firstOrNull { it.id == selectedValue.value }
     }
 
     private fun setTitle(booksCount: Int) {
 
-        val title = when(booksCount) {
+        val title = when (booksCount) {
             1 -> resources.getString(R.string.title_book_count, booksCount)
             else -> resources.getString(R.string.title_books_count, booksCount)
         }
@@ -381,7 +389,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
         this.searchView?.let { searchView ->
 
             searchView.queryHint = resources.getString(R.string.search_books)
-            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
 
@@ -398,6 +406,10 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             })
         }
         this.setupSearchView("")
+    }
+
+    enum class ScrollPosition {
+        TOP, MIDDLE, END
     }
 
     inner class SwipeController :
@@ -500,7 +512,4 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             super.onChildDraw(c, recyclerView, viewHolder, x, dY, actionState, isCurrentlyActive)
         }
     }
-}
-enum class ScrollPosition {
-    TOP, MIDDLE, END
 }
