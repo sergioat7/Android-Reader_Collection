@@ -42,6 +42,8 @@ class BooksViewModel @Inject constructor(
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksFormatsLoading = MutableLiveData<Boolean>()
     private val _booksStatesLoading = MutableLiveData<Boolean>()
+    private val _bookSet = MutableLiveData<Int?>()
+    private val _bookDeleted = MutableLiveData<Int?>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private var _selectedFormat = MutableLiveData<String?>()
     private var _selectedState = MutableLiveData<String?>()
@@ -57,6 +59,8 @@ class BooksViewModel @Inject constructor(
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksFormatsLoading: LiveData<Boolean> = _booksFormatsLoading
     val booksStatesLoading: LiveData<Boolean> = _booksStatesLoading
+    val bookSet: LiveData<Int?> = _bookSet
+    val bookDeleted: LiveData<Int?> = _bookDeleted
     val booksError: LiveData<ErrorResponse> = _booksError
     val selectedFormat: LiveData<String?> = _selectedFormat
     val selectedState: LiveData<String?> = _selectedState
@@ -211,5 +215,49 @@ class BooksViewModel @Inject constructor(
         _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
+    }
+
+    fun setBookFavourite(position: Int) {
+        _books.value?.get(position)?.let { book ->
+
+            _booksLoading.value = true
+            booksRepository.setFavouriteBookObserver(book.id, !book.isFavourite).subscribeBy(
+                onSuccess = {
+
+                    _booksLoading.value = false
+                    _books.value?.first { it.id == book.id }?.isFavourite = !book.isFavourite
+                    _bookSet.value = position
+                    _bookSet.value = null
+                },
+                onError = {
+
+                    _booksLoading.value = false
+                    _bookSet.value = null
+                    onDestroy()
+                }
+            ).addTo(disposables)
+        }
+    }
+
+    fun deleteBook(position: Int) {
+        _books.value?.get(position)?.let { book ->
+
+            _booksLoading.value = true
+            booksRepository.deleteBookObserver(book.id).subscribeBy(
+                onComplete = {
+
+                    _booksLoading.value = false
+                    _bookDeleted.value = position
+                    _bookDeleted.value = null
+                },
+                onError = {
+
+                    _booksLoading.value = false
+                    _bookDeleted.value = null
+                    onDestroy()
+                }
+            ).addTo(disposables)
+
+        }
     }
 }

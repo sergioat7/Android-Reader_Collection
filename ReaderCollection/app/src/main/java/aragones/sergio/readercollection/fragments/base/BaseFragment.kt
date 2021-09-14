@@ -97,7 +97,7 @@ open class BaseFragment: Fragment() {
         loadingFragment = null
     }
 
-    fun showPopupConfirmationDialog(messageId: Int, acceptHandler: () -> Unit) {
+    fun showPopupConfirmationDialog(messageId: Int, acceptHandler: () -> Unit, cancelHandler: (() -> Unit)? = null) {
 
         AlertDialog.Builder(context)
             .setMessage(resources.getString(messageId))
@@ -108,6 +108,7 @@ open class BaseFragment: Fragment() {
                 dialog.dismiss()
             }
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                cancelHandler?.invoke()
                 dialog.dismiss()
             }
             .show()

@@ -321,6 +321,18 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             pbLoadingStates.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
 
+        viewModel.bookSet.observe(viewLifecycleOwner, { id ->
+            id?.let {
+                booksAdapter.notifyItemChanged(it)
+            }
+        })
+
+        viewModel.bookDeleted.observe(viewLifecycleOwner, { id ->
+            id?.let {
+                booksAdapter.notifyItemRemoved(it)
+            }
+        })
+
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
@@ -427,7 +439,13 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
             val position = viewHolder.adapterPosition
             if (direction == ItemTouchHelper.LEFT) {
+                showPopupConfirmationDialog(R.string.book_remove_confirmation, acceptHandler = {
+                    viewModel.deleteBook(position)
+                }, {
+                    booksAdapter.notifyItemChanged(position)
+                })
             } else {
+                viewModel.setBookFavourite(position)
             }
         }
 
