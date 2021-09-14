@@ -57,6 +57,7 @@ class BooksAdapter(
         if (holder is BooksViewHolder) {
 
             val book = books[position]
+            holder.isFavourite = book.isFavourite
             holder.fillData(
                 book,
                 isGoogleBook,

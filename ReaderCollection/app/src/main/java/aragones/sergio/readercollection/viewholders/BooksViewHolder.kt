@@ -19,6 +19,8 @@ class BooksViewHolder(
 itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
+    var isFavourite = false
+
     //MARK: - Public methods
 
     fun fillData(book: BookResponse, isGoogleBook: Boolean, context: Context) {
