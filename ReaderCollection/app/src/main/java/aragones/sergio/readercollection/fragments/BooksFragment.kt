@@ -5,6 +5,9 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
@@ -13,9 +16,11 @@ import android.widget.ProgressBar
 import android.widget.SearchView
 import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -28,10 +33,13 @@ import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.viewholders.BooksViewHolder
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_books.*
+import kotlin.math.max
+import kotlin.math.min
 
 class BooksFragment: BaseFragment(), OnItemClickListener {
 
@@ -238,6 +246,7 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
                 }
             }
         })
+        ItemTouchHelper(SwipeController()).attachToRecyclerView(rvBooks)
 
         scrollPosition.value = ScrollPosition.TOP
 
@@ -389,6 +398,107 @@ class BooksFragment: BaseFragment(), OnItemClickListener {
             })
         }
         this.setupSearchView("")
+    }
+
+    inner class SwipeController :
+        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+
+        private val paint = Paint()
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ) = false
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            val position = viewHolder.adapterPosition
+            if (direction == ItemTouchHelper.LEFT) {
+            } else {
+            }
+        }
+
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+
+            var x = dX
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                val itemView = viewHolder.itemView
+                val context = recyclerView.context
+
+                val height = itemView.bottom - itemView.top
+                val width = height / 3
+                val maxX = itemView.width.toFloat() * 0.6F
+
+                val isFavourite = (viewHolder as BooksViewHolder).isFavourite
+                val leftId =
+                    when {
+                        isFavourite && Constants.isDarkMode(context) -> R.drawable.ic_favourite_empty_dark
+                        isFavourite && !Constants.isDarkMode(context) -> R.drawable.ic_favourite_empty_light
+                        !isFavourite && Constants.isDarkMode(context) -> R.drawable.ic_favourite_full_dark
+                        else -> R.drawable.ic_favourite_full_light
+                    }
+                val rightId =
+                    if (Constants.isDarkMode(context)) R.drawable.ic_remove_book_dark
+                    else R.drawable.ic_remove_book_light
+
+                when {
+                    dX > 0 -> {// Swiping to the right
+                        paint.color = ContextCompat.getColor(context, R.color.colorPrimary)
+                        val background = RectF(
+                            itemView.left.toFloat(),
+                            itemView.top.toFloat(),
+                            dX,
+                            itemView.bottom.toFloat()
+                        )
+                        c.drawRect(background, paint)
+                        val icon = ContextCompat.getDrawable(context, leftId)
+                        icon?.setBounds(
+                            itemView.left + width,
+                            itemView.top + width,
+                            itemView.left + 2 * width,
+                            itemView.bottom - width
+                        )
+                        icon?.draw(c)
+                        x = min(dX, maxX)
+                    }
+                    dX < 0 -> {// Swiping to the left
+                        paint.color = ContextCompat.getColor(context, R.color.colorTertiary)
+                        val background = RectF(
+                            itemView.right.toFloat() + dX,
+                            itemView.top.toFloat(),
+                            itemView.right.toFloat(),
+                            itemView.bottom.toFloat()
+                        )
+                        c.drawRect(background, paint)
+
+                        val icon = ContextCompat.getDrawable(context, rightId)
+                        icon?.setBounds(
+                            itemView.right - 2 * width,
+                            itemView.top + width,
+                            itemView.right - width,
+                            itemView.bottom - width
+                        )
+                        icon?.draw(c)
+                        x = max(dX, -maxX)
+                    }
+                    else -> {// view is unSwiped
+                        val background = RectF(0F, 0F, 0F, 0F)
+                        c.drawRect(background, paint)
+                    }
+                }
+            }
+            super.onChildDraw(c, recyclerView, viewHolder, x, dY, actionState, isCurrentlyActive)
+        }
     }
 }
 enum class ScrollPosition {
