@@ -387,10 +387,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     private fun setTitle(booksCount: Int) {
 
-        val title = when (booksCount) {
-            1 -> resources.getString(R.string.title_book_count, booksCount)
-            else -> resources.getString(R.string.title_books_count, booksCount)
-        }
+        val title = resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
         (activity as AppCompatActivity?)?.supportActionBar?.title = title
     }
 
