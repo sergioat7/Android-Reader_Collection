@@ -246,6 +246,9 @@ class BooksViewModel @Inject constructor(
             booksRepository.deleteBookObserver(book.id).subscribeBy(
                 onComplete = {
 
+                    _books.value?.first { it.id == book.id }?.let { removed ->
+                        _books.value = _books.value?.minus(removed)
+                    }
                     _bookDeleted.value = position
                     _bookDeleted.value = null
                     _booksLoading.value = false
