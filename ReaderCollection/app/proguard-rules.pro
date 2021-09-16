@@ -14,8 +14,37 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#Remove login functions, so logging is disable
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int v(...);
+    public static int i(...);
+    public static int w(...);
+    public static int d(...);
+    public static int e(...);
+}
+
+-keep public class * extends java.lang.Exception    # Optional: Keep custom exceptions
+
+##---------------------Begin: proguard configuration for Gson ------------------------
+
+#-keepattributes Signature
+
+#-keep class aragones.sergio.readercollection.models.** { <fields>; }
+
+#-keep class * extends com.google.gson.TypeAdapter
+#-keep class * implements com.google.gson.TypeAdapterFactory
+#-keep class * implements com.google.gson.JsonSerializer
+#-keep class * implements com.google.gson.JsonDeserializer
+
+-keepclassmembers,allowobfuscation class * {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
+##---------------------End: proguard configuration for Gson --------------------------

@@ -8,7 +8,6 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/book_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.BookDetailFragment"
@@ -106,7 +105,6 @@
                     />
 
                 <ImageView
-                    android:id="@+id/image_view_rating_count"
                     android:layout_height="match_parent"
                     style="@style/RatingCountImageView"
                     />
@@ -128,6 +126,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
                 android:hint="@string/add_title"
+                android:inputType="textMultiLine"
                 style="@style/BookTitleEditText"
                 />
 
@@ -139,6 +138,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
                 android:hint="@string/add_author"
+                android:inputType="textMultiLine"
                 style="@style/BookAuthorsEditText"
                 />
 
@@ -180,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/add_description"
                 android:maxLength="10240"
+                android:inputType="textMultiLine"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/text_view_description_title"
@@ -217,7 +218,6 @@
                 >
 
                 <TextView
-                    android:id="@+id/text_view_summary_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/summary"
@@ -230,6 +230,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/add_summary"
                     android:maxLength="10240"
+                    android:inputType="textMultiLine"
                     style="@style/BookDetailEditText"
                     />
 
@@ -409,6 +410,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/add_isbn"
+                    android:inputType="number"
                     style="@style/CustomEditText.BookDetails.Left"
                     />
 
@@ -418,6 +420,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/add_pages"
+                    android:inputType="number"
                     style="@style/CustomEditText.BookDetails.Right"
                     />
 
@@ -471,6 +474,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="@string/add_publisher"
+                    android:inputType="textMultiLine"
                     style="@style/CustomEditText.BookDetails.Left"
                     />
 

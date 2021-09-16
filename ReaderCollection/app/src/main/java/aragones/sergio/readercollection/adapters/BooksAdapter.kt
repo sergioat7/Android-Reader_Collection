@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.adapters
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -74,6 +75,7 @@ class BooksAdapter(
 
     //MARK: - Public methods
 
+    @SuppressLint("NotifyDataSetChanged")
     fun setBooks(newBooks: MutableList<BookResponse>) {
 
         val position = this.books.size
@@ -85,6 +87,7 @@ class BooksAdapter(
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun resetList() {
 
         this.books = ArrayList<BookResponse>()

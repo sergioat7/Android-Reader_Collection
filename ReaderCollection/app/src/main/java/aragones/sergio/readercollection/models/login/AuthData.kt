@@ -5,6 +5,9 @@
 
 package aragones.sergio.readercollection.models.login
 
+import com.google.gson.annotations.SerializedName
+
 data class AuthData(
+    @SerializedName("token")
     var token: String
 )

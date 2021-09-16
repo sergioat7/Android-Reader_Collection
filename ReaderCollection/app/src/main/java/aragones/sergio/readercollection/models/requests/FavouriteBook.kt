@@ -5,6 +5,9 @@
 
 package aragones.sergio.readercollection.models.requests
 
+import com.google.gson.annotations.SerializedName
+
 data class FavouriteBook(
+    @SerializedName("isFavourite")
     val isFavourite: Boolean
 )
