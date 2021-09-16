@@ -5,6 +5,13 @@
 
 package aragones.sergio.readercollection.models.login
 
-data class LoginFormState(val usernameError: Int? = null,
-                          val passwordError: Int? = null,
-                          val isDataValid: Boolean = false)
+import com.google.gson.annotations.SerializedName
+
+data class LoginFormState(
+    @SerializedName("usernameError")
+    val usernameError: Int? = null,
+    @SerializedName("passwordError")
+    val passwordError: Int? = null,
+    @SerializedName("isDataValid")
+    val isDataValid: Boolean = false
+)

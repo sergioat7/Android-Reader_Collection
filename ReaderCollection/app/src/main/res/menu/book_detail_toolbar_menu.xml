@@ -6,13 +6,16 @@
 
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
 
     <item
         android:id="@+id/action_edit"
         android:icon="@drawable/ic_edit_book_light"
         android:title=""
         app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"
         />
 
     <item
@@ -20,6 +23,7 @@
         android:icon="@drawable/ic_remove_book_light"
         android:title=""
         app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"
         />
 
     <item
@@ -27,6 +31,7 @@
         android:icon="@drawable/ic_cancel_changes_light"
         android:title=""
         app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"
         />
 
     <item
@@ -34,6 +39,7 @@
         android:icon="@drawable/ic_save_changes_light"
         android:title=""
         app:showAsAction="always"
+        tools:ignore="AlwaysShowAction"
         />
 
 </menu>
