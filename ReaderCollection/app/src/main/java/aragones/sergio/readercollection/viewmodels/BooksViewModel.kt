@@ -224,10 +224,10 @@ class BooksViewModel @Inject constructor(
             booksRepository.setFavouriteBookObserver(book.id, !book.isFavourite).subscribeBy(
                 onSuccess = {
 
-                    _booksLoading.value = false
                     _books.value?.first { it.id == book.id }?.isFavourite = !book.isFavourite
                     _bookSet.value = position
                     _bookSet.value = null
+                    _booksLoading.value = false
                 },
                 onError = {
 
@@ -246,9 +246,12 @@ class BooksViewModel @Inject constructor(
             booksRepository.deleteBookObserver(book.id).subscribeBy(
                 onComplete = {
 
-                    _booksLoading.value = false
+                    _books.value?.first { it.id == book.id }?.let { removed ->
+                        _books.value = _books.value?.minus(removed)
+                    }
                     _bookDeleted.value = position
                     _bookDeleted.value = null
+                    _booksLoading.value = false
                 },
                 onError = {
 
@@ -257,7 +260,6 @@ class BooksViewModel @Inject constructor(
                     onDestroy()
                 }
             ).addTo(disposables)
-
         }
     }
 }
