@@ -263,6 +263,7 @@ class BookDetailFragment : BaseFragment() {
 
             book = it
             showData(it)
+            makeFieldsEditable(isGoogleBook || it == null)
         })
 
         viewModel.isFavourite.observe(viewLifecycleOwner, {
@@ -420,8 +421,6 @@ class BookDetailFragment : BaseFragment() {
 
         tvSummaryCount.text = resources.getString(R.string.book_text_count, summary.length)
 
-        llSummary.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
-
         btReadMoreSummary.visibility =
             if (summary == Constants.NO_VALUE || etSummary.maxLines == Constants.MAX_LINES) {
                 View.GONE
@@ -432,9 +431,6 @@ class BookDetailFragment : BaseFragment() {
         setFormat(book)
 
         setState(book)
-
-        llTitles1.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
-        llValues1.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
 
         var isbn = Constants.NO_VALUE
         if (book.isbn != null && book.isbn.isNotBlank()) {
@@ -469,9 +465,6 @@ class BookDetailFragment : BaseFragment() {
             readingDate = Constants.NO_VALUE
         }
         etReadingDate.setText(readingDate)
-
-        llTitles4.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
-        llValues4.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
     }
 
     private fun setFormat(book: BookResponse) {
@@ -551,6 +544,32 @@ class BookDetailFragment : BaseFragment() {
 
     private fun setEdition(editable: Boolean) {
 
+        menu.apply {
+            findItem(R.id.action_edit).isVisible = !editable
+            findItem(R.id.action_remove).isVisible = !editable
+            findItem(R.id.action_save).isVisible = editable
+            findItem(R.id.action_cancel).isVisible = editable
+        }
+
+        makeFieldsEditable(editable)
+    }
+
+    private fun setEditTextEdition(
+        editText: EditText,
+        editable: Boolean,
+        inputType: Int,
+        backgroundTint: ColorStateList?
+    ) {
+
+        if (editText.text.toString() == Constants.NO_VALUE) {
+            editText.text = null
+        }
+        editText.setReadOnly(!editable, if (editable) inputType else InputType.TYPE_NULL, 0)
+        editText.backgroundTintList = backgroundTint
+    }
+
+    private fun makeFieldsEditable(editable: Boolean) {
+
         val backgroundTint =
             if (editable) {
                 ColorStateList.valueOf(
@@ -562,11 +581,6 @@ class BookDetailFragment : BaseFragment() {
             } else {
                 ColorStateList.valueOf(Color.TRANSPARENT)
             }
-
-        menu.findItem(R.id.action_edit).isVisible = !editable
-        menu.findItem(R.id.action_remove).isVisible = !editable
-        menu.findItem(R.id.action_save).isVisible = editable
-        menu.findItem(R.id.action_cancel).isVisible = editable
 
         rbStars.setIsIndicator(!editable)
 
@@ -636,19 +650,5 @@ class BookDetailFragment : BaseFragment() {
         }
         etReadingDate.isEnabled = editable
         etReadingDate.backgroundTintList = backgroundTint
-    }
-
-    private fun setEditTextEdition(
-        editText: EditText,
-        editable: Boolean,
-        inputType: Int,
-        backgroundTint: ColorStateList?
-    ) {
-
-        if (editText.text.toString() == Constants.NO_VALUE) {
-            editText.text = null
-        }
-        editText.setReadOnly(!editable, if (editable) inputType else InputType.TYPE_NULL, 0)
-        editText.backgroundTintList = backgroundTint
     }
 }
