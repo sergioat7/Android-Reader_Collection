@@ -321,15 +321,15 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             pbLoadingStates.visibility = if (isLoading) View.VISIBLE else View.GONE
         })
 
-        viewModel.bookSet.observe(viewLifecycleOwner, { id ->
-            id?.let {
-                booksAdapter.notifyItemChanged(it)
+        viewModel.bookSet.observe(viewLifecycleOwner, { position ->
+            position?.let {
+                booksAdapter.notifyItemChanged(position)
             }
         })
 
-        viewModel.bookDeleted.observe(viewLifecycleOwner, { id ->
-            id?.let {
-                booksAdapter.notifyItemRemoved(it)
+        viewModel.bookDeleted.observe(viewLifecycleOwner, { position ->
+            position?.let {
+                booksAdapter.notifyItemRemoved(position)
             }
         })
 
