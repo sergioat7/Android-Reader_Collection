@@ -27,11 +27,11 @@ class PopupSyncAppViewModel @Inject constructor(
 
     //MARK: - Private properties
 
-    private val _loginError = MutableLiveData<ErrorResponse>()
+    private val _loginError = MutableLiveData<ErrorResponse?>()
 
     //MARK: - Public properties
 
-    val loginError: LiveData<ErrorResponse> = _loginError
+    val loginError: LiveData<ErrorResponse?> = _loginError
 
     // MARK: - Lifecycle methods
 

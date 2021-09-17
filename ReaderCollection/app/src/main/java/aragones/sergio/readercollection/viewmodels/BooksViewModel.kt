@@ -31,17 +31,19 @@ class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
     //MARK: - Private properties
 
-    private val _originalbooks = MutableLiveData<List<BookResponse>>()
+    private val _originalBooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksFormatsLoading = MutableLiveData<Boolean>()
     private val _booksStatesLoading = MutableLiveData<Boolean>()
+    private val _bookSet = MutableLiveData<Int?>()
+    private val _bookDeleted = MutableLiveData<Int?>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private var _selectedFormat = MutableLiveData<String?>()
     private var _selectedState = MutableLiveData<String?>()
@@ -57,6 +59,8 @@ class BooksViewModel @Inject constructor(
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksFormatsLoading: LiveData<Boolean> = _booksFormatsLoading
     val booksStatesLoading: LiveData<Boolean> = _booksStatesLoading
+    val bookSet: LiveData<Int?> = _bookSet
+    val bookDeleted: LiveData<Int?> = _bookDeleted
     val booksError: LiveData<ErrorResponse> = _booksError
     val selectedFormat: LiveData<String?> = _selectedFormat
     val selectedState: LiveData<String?> = _selectedState
@@ -87,14 +91,14 @@ class BooksViewModel @Inject constructor(
         ).subscribeBy(
             onComplete = {
 
-                _originalbooks.value = listOf()
+                _originalBooks.value = listOf()
                 _books.value = listOf()
                 _booksLoading.value = false
             },
             onSuccess = {
 
-                _originalbooks.value = if(_sortDescending.value == true) it.reversed() else it
-                _books.value = if(_sortDescending.value == true) it.reversed() else it
+                _originalBooks.value = if (_sortDescending.value == true) it.reversed() else it
+                _books.value = if (_sortDescending.value == true) it.reversed() else it
                 _booksLoading.value = false
             },
             onError = {
@@ -178,7 +182,7 @@ class BooksViewModel @Inject constructor(
         )
         val sortOrdersPicker = Constants.getPicker(context, values)
         _sortDescending.value?.let {
-            sortOrdersPicker.value = if(it) 1 else 0
+            sortOrdersPicker.value = if (it) 1 else 0
         }
 
         val params = LinearLayout.LayoutParams(50, 50)
@@ -208,8 +212,54 @@ class BooksViewModel @Inject constructor(
 
     fun searchBooks(query: String) {
 
-        _books.value = _originalbooks.value?.filter { book ->
+        _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
+    }
+
+    fun setBookFavourite(position: Int) {
+        _books.value?.get(position)?.let { book ->
+
+            _booksLoading.value = true
+            booksRepository.setFavouriteBookObserver(book.id, !book.isFavourite).subscribeBy(
+                onSuccess = {
+
+                    _books.value?.first { it.id == book.id }?.isFavourite = !book.isFavourite
+                    _bookSet.value = position
+                    _bookSet.value = null
+                    _booksLoading.value = false
+                },
+                onError = {
+
+                    _booksLoading.value = false
+                    _bookSet.value = null
+                    onDestroy()
+                }
+            ).addTo(disposables)
+        }
+    }
+
+    fun deleteBook(position: Int) {
+        _books.value?.get(position)?.let { book ->
+
+            _booksLoading.value = true
+            booksRepository.deleteBookObserver(book.id).subscribeBy(
+                onComplete = {
+
+                    _books.value?.first { it.id == book.id }?.let { removed ->
+                        _books.value = _books.value?.minus(removed)
+                    }
+                    _bookDeleted.value = position
+                    _bookDeleted.value = null
+                    _booksLoading.value = false
+                },
+                onError = {
+
+                    _booksLoading.value = false
+                    _bookDeleted.value = null
+                    onDestroy()
+                }
+            ).addTo(disposables)
+        }
     }
 }
