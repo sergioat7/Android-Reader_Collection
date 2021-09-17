@@ -53,7 +53,7 @@ data class BookResponse(
     @SerializedName("state")
     val state: String?,
     @SerializedName("isFavourite")
-    val isFavourite: Boolean
+    var isFavourite: Boolean
 ): BaseModel<String> {
     constructor(id: String): this(
         id,
