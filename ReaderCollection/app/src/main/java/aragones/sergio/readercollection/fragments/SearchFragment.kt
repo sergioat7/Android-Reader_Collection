@@ -54,7 +54,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.onDestroy()
+        if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
 
     //MARK: - Interface methods
