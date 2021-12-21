@@ -81,7 +81,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getBooks()
+        if (this::viewModel.isInitialized) viewModel.getBooks()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -94,7 +94,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.onDestroy()
+        if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

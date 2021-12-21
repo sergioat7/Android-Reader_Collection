@@ -91,7 +91,7 @@ class ProfileFragment: BaseFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.onDestroy()
+        if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
 
     //MARK: - Private methods
