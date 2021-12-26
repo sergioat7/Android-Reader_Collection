@@ -76,15 +76,6 @@
             android:paddingEnd="20dp"
             >
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floating_action_button_favourite"
-                style="@style/FavouriteFloatingButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
             <TextView
                 android:id="@+id/text_view_no_ratings"
                 android:layout_width="0dp"
@@ -551,12 +542,27 @@
 
     </androidx.core.widget.NestedScrollView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button_favourite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="-24dp"
+        android:layout_marginEnd="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        style="@style/FavouriteFloatingButton"
+        />
+
     <ProgressBar
         android:id="@+id/progress_bar_loading_favourite"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="-24dp"
+        android:layout_marginEnd="20dp"
         android:background="@drawable/circular_background_progress_bar"
         android:indeterminateTint="@color/colorSecondary"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
