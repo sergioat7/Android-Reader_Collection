@@ -98,8 +98,8 @@ class BookDetailFragment : BaseFragment() {
         return inflater.inflate(R.layout.book_detail_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
 
@@ -191,7 +191,7 @@ class BookDetailFragment : BaseFragment() {
         viewModel = ViewModelProvider(
             this,
             BookDetailViewModelFactory(application, bookId, isGoogleBook)
-        ).get(BookDetailViewModel::class.java)
+        )[BookDetailViewModel::class.java]
         setupBindings()
         formats = listOf()
         formatValues = mutableListOf()
