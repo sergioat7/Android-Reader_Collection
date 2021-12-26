@@ -26,18 +26,21 @@ import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.book_detail_fragment.*
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
+import kotlin.math.abs
 
-class BookDetailFragment : BaseFragment() {
+class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
 
     //MARK: - Private properties
 
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
+    private lateinit var ablBook: AppBarLayout
     private lateinit var ivBook: ImageView
     private lateinit var pbLoadingImage: ProgressBar
     private lateinit var fbFavourite: FloatingActionButton
@@ -151,10 +154,21 @@ class BookDetailFragment : BaseFragment() {
         viewModel.onDestroy()
     }
 
+    //MARK: - Interface methods
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+
+        val maxScroll = appBarLayout?.totalScrollRange ?: 0
+        val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
+
+        ivBook.alpha = 1 - percentage
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {
 
+        ablBook = app_bar_layout_book_detail
         ivBook = image_view_book
         pbLoadingImage = progress_bar_loading_image
         fbFavourite = floating_action_button_favourite
@@ -197,6 +211,8 @@ class BookDetailFragment : BaseFragment() {
         formatValues = mutableListOf()
         states = listOf()
         stateValues = mutableListOf()
+
+        ablBook.addOnOffsetChangedListener(this)
 
         fbFavourite.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
         pbLoadingFavourite.visibility = View.GONE
