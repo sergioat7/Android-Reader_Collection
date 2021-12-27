@@ -165,7 +165,10 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         val maxScroll = appBarLayout?.totalScrollRange ?: 0
         val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
 
-        ivBook.alpha = 1 - percentage
+        for (view in arrayOf(clImageToolbar, fbFavourite, pbLoadingFavourite)) {
+            view.scaleX = 1 - percentage
+            view.scaleY = 1 - percentage
+        }
     }
 
     //MARK: - Private methods
