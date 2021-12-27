@@ -12,11 +12,12 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_dark</item>
     </style>
 
-    <style name="FavouriteFloatingButton">
-        <item name="android:layout_marginEnd">40dp</item>
-        <item name="android:backgroundTint">@color/colorPrimary</item>
-        <item name="android:focusable">true</item>
-        <item name="android:clickable">true</item>
+    <style name="FloatingButton.AddPhoto">
+        <item name="android:src">@drawable/ic_add_camera_photo_dark</item>
+        <item name="fabSize">mini</item>
+    </style>
+
+    <style name="FloatingButton.Favourite">
         <item name="android:src">@drawable/ic_favourite_empty_dark</item>
     </style>
 

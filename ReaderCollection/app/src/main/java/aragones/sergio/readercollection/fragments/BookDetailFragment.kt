@@ -11,11 +11,13 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setReadOnly
 import aragones.sergio.readercollection.extensions.showDatePicker
@@ -26,20 +28,26 @@ import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.book_detail_fragment.*
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
+import kotlin.math.abs
 
-class BookDetailFragment : BaseFragment() {
+class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
 
     //MARK: - Private properties
 
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
+    private lateinit var ablBook: AppBarLayout
+    private lateinit var clImageToolbar: ConstraintLayout
     private lateinit var ivBook: ImageView
     private lateinit var pbLoadingImage: ProgressBar
+    private lateinit var fbAddPhoto: FloatingActionButton
     private lateinit var fbFavourite: FloatingActionButton
     private lateinit var pbLoadingFavourite: ProgressBar
     private lateinit var llRating: LinearLayout
@@ -98,8 +106,8 @@ class BookDetailFragment : BaseFragment() {
         return inflater.inflate(R.layout.book_detail_fragment, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
 
@@ -151,12 +159,28 @@ class BookDetailFragment : BaseFragment() {
         viewModel.onDestroy()
     }
 
+    //MARK: - Interface methods
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+
+        val maxScroll = appBarLayout?.totalScrollRange ?: 0
+        val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
+
+        for (view in arrayOf(clImageToolbar, fbAddPhoto, fbFavourite, pbLoadingFavourite)) {
+            view.scaleX = 1 - percentage
+            view.scaleY = 1 - percentage
+        }
+    }
+
     //MARK: - Private methods
 
     private fun initializeUI() {
 
+        ablBook = app_bar_layout_book_detail
+        clImageToolbar = constraint_layout_image_toolbar
         ivBook = image_view_book
         pbLoadingImage = progress_bar_loading_image
+        fbAddPhoto = floating_action_button_add_photo
         fbFavourite = floating_action_button_favourite
         pbLoadingFavourite = progress_bar_loading_favourite
         llRating = linear_layout_rating
@@ -191,12 +215,25 @@ class BookDetailFragment : BaseFragment() {
         viewModel = ViewModelProvider(
             this,
             BookDetailViewModelFactory(application, bookId, isGoogleBook)
-        ).get(BookDetailViewModel::class.java)
+        )[BookDetailViewModel::class.java]
         setupBindings()
         formats = listOf()
         formatValues = mutableListOf()
         states = listOf()
         stateValues = mutableListOf()
+
+        ablBook.addOnOffsetChangedListener(this)
+
+        val screenSize = Constants.getScreenSize(requireContext() as BookDetailActivity)
+        clImageToolbar.layoutParams = CollapsingToolbarLayout.LayoutParams(
+            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+            (screenSize.second * 0.5).toInt(),
+            Gravity.CENTER
+        )
+
+        fbAddPhoto.setOnClickListener {
+            //TODO: implement action
+        }
 
         fbFavourite.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
         pbLoadingFavourite.visibility = View.GONE
@@ -343,12 +380,10 @@ class BookDetailFragment : BaseFragment() {
     private fun showData(book: BookResponse) {
 
         val image =
-            book.image?.replace("http", "https") ?: book.thumbnail?.replace("http", "https") ?: "-"
+            book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https") ?: "-"
         Picasso
             .get()
             .load(image)
-            .fit()
-            .centerCrop()
             .into(ivBook, object : Callback {
 
                 override fun onSuccess() {
