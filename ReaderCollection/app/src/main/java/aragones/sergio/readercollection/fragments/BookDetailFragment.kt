@@ -231,6 +231,10 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             Gravity.CENTER
         )
 
+        fbAddPhoto.setOnClickListener {
+            //TODO: implement action
+        }
+
         fbFavourite.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
         pbLoadingFavourite.visibility = View.GONE
         fbFavourite.setOnClickListener {
