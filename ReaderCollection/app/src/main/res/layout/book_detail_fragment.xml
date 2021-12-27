@@ -24,7 +24,7 @@
             android:id="@+id/collapsing_toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             >
 
             <androidx.appcompat.widget.Toolbar
@@ -34,28 +34,39 @@
                 android:layout_marginBottom="8dp"
                 />
 
-            <View
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/constraint_layout_image_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                />
-
-            <ImageView
-                android:id="@+id/image_view_book"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center|bottom"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp"
-                />
-
-            <ProgressBar
-                android:id="@+id/progress_bar_loading_image"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:indeterminateTint="@color/colorSecondary"
-                />
+                >
+
+                <ImageView
+                    android:id="@+id/image_view_book"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_margin="24dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@tools:sample/avatars"
+                    tools:scaleType="centerCrop"
+                    />
+
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:indeterminateTint="@color/colorSecondary"
+                    app:layout_constraintBottom_toBottomOf="@id/image_view_book"
+                    app:layout_constraintEnd_toEndOf="@id/image_view_book"
+                    app:layout_constraintStart_toStartOf="@id/image_view_book"
+                    app:layout_constraintTop_toTopOf="@id/image_view_book"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -64,7 +75,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bordered_scroll_view"
+        android:background="@color/colorPrimary"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         >
 
@@ -74,6 +85,7 @@
             android:paddingStart="20dp"
             android:paddingTop="40dp"
             android:paddingEnd="20dp"
+            android:background="@drawable/bordered_scroll_view"
             >
 
             <TextView

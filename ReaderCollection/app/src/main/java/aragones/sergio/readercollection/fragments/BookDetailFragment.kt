@@ -11,11 +11,13 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setReadOnly
 import aragones.sergio.readercollection.extensions.showDatePicker
@@ -27,6 +29,7 @@ import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
@@ -41,6 +44,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private lateinit var ablBook: AppBarLayout
+    private lateinit var clImageToolbar: ConstraintLayout
     private lateinit var ivBook: ImageView
     private lateinit var pbLoadingImage: ProgressBar
     private lateinit var fbFavourite: FloatingActionButton
@@ -169,6 +173,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private fun initializeUI() {
 
         ablBook = app_bar_layout_book_detail
+        clImageToolbar = constraint_layout_image_toolbar
         ivBook = image_view_book
         pbLoadingImage = progress_bar_loading_image
         fbFavourite = floating_action_button_favourite
@@ -213,6 +218,13 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         stateValues = mutableListOf()
 
         ablBook.addOnOffsetChangedListener(this)
+
+        val screenSize = Constants.getScreenSize(requireContext() as BookDetailActivity)
+        clImageToolbar.layoutParams = CollapsingToolbarLayout.LayoutParams(
+            CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
+            (screenSize.second * 0.5).toInt(),
+            Gravity.CENTER
+        )
 
         fbFavourite.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
         pbLoadingFavourite.visibility = View.GONE
@@ -363,8 +375,6 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         Picasso
             .get()
             .load(image)
-            .fit()
-            .centerCrop()
             .into(ivBook, object : Callback {
 
                 override fun onSuccess() {

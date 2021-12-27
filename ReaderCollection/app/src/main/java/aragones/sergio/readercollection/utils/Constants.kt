@@ -11,6 +11,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -44,6 +45,13 @@ class Constants {
             } else {
                 ArrayList()
             }
+        }
+
+        fun getScreenSize(activity: Activity): Pair<Int, Int> {
+
+            val displayMetrics = DisplayMetrics()
+            activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+            return Pair(displayMetrics.widthPixels, displayMetrics.heightPixels)
         }
 
         // MARK: - Retrofit constants
