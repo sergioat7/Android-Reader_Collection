@@ -12,6 +12,11 @@
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_dark</item>
     </style>
 
+    <style name="FloatingButton.AddPhoto">
+        <item name="android:src">@drawable/ic_add_camera_photo_dark</item>
+        <item name="fabSize">mini</item>
+    </style>
+
     <style name="FloatingButton.Favourite">
         <item name="android:src">@drawable/ic_favourite_empty_dark</item>
     </style>

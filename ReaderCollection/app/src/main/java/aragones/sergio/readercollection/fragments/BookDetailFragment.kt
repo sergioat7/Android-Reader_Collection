@@ -47,6 +47,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private lateinit var clImageToolbar: ConstraintLayout
     private lateinit var ivBook: ImageView
     private lateinit var pbLoadingImage: ProgressBar
+    private lateinit var fbAddPhoto: FloatingActionButton
     private lateinit var fbFavourite: FloatingActionButton
     private lateinit var pbLoadingFavourite: ProgressBar
     private lateinit var llRating: LinearLayout
@@ -165,7 +166,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         val maxScroll = appBarLayout?.totalScrollRange ?: 0
         val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
 
-        for (view in arrayOf(clImageToolbar, fbFavourite, pbLoadingFavourite)) {
+        for (view in arrayOf(clImageToolbar, fbAddPhoto, fbFavourite, pbLoadingFavourite)) {
             view.scaleX = 1 - percentage
             view.scaleY = 1 - percentage
         }
@@ -179,6 +180,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         clImageToolbar = constraint_layout_image_toolbar
         ivBook = image_view_book
         pbLoadingImage = progress_bar_loading_image
+        fbAddPhoto = floating_action_button_add_photo
         fbFavourite = floating_action_button_favourite
         pbLoadingFavourite = progress_bar_loading_favourite
         llRating = linear_layout_rating
