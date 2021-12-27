@@ -374,7 +374,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private fun showData(book: BookResponse) {
 
         val image =
-            book.image?.replace("http", "https") ?: book.thumbnail?.replace("http", "https") ?: "-"
+            book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https") ?: "-"
         Picasso
             .get()
             .load(image)
