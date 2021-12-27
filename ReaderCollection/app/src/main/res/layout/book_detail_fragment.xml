@@ -562,7 +562,7 @@
         android:layout_marginTop="-24dp"
         android:layout_marginEnd="20dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        style="@style/FavouriteFloatingButton"
+        style="@style/FloatingButton.Favourite"
         />
 
     <ProgressBar
