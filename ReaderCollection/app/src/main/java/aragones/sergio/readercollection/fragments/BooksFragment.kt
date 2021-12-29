@@ -70,7 +70,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_books, container, false)
     }
 
@@ -81,41 +80,18 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     override fun onResume() {
         super.onResume()
+        (activity as? AppCompatActivity)?.supportActionBar?.hide()
         if (this::viewModel.isInitialized) viewModel.getBooks()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.books_toolbar_menu, menu)
-        setupSearchView(menu)
+    override fun onStop() {
+        super.onStop()
+        (activity as? AppCompatActivity)?.supportActionBar?.show()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.action_synchronize -> {
-
-                openSyncPopup()
-                return true
-            }
-            R.id.action_sort -> {
-
-                viewModel.sort(
-                    requireContext(),
-                    resources.getStringArray(R.array.sorting_keys_ids),
-                    resources.getStringArray(R.array.sorting_keys)
-                )
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     //MARK: - Interface methods
@@ -147,7 +123,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         viewModel = ViewModelProvider(
             this,
             BooksViewModelFactory(application)
-        ).get(BooksViewModel::class.java)
+        )[BooksViewModel::class.java]
         booksAdapter = BooksAdapter(
             viewModel.books.value?.toMutableList() ?: mutableListOf(),
             false,
@@ -388,7 +364,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private fun setTitle(booksCount: Int) {
 
         val title = resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
-        (activity as AppCompatActivity?)?.supportActionBar?.title = title
     }
 
     private fun setupSearchView(menu: Menu) {
