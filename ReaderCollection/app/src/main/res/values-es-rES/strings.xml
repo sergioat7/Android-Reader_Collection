@@ -12,8 +12,8 @@
     <string name="title_search">Búsqueda</string>
     <string name="title_profile">Perfil</string>
     <plurals name="title_books_count">
-        <item quantity="one">%s libro</item>
-        <item quantity="other">%s libros</item>
+        <item quantity="one">%s libro disponible</item>
+        <item quantity="other">%s libros disponible</item>
     </plurals>
 
     //LOGIN &amp; REGISTRATION
