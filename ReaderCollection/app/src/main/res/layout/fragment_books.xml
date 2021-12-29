@@ -14,6 +14,78 @@
     >
 
     <LinearLayout
+        android:id="@+id/linear_layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/title_books"
+            android:textColor="@color/textPrimary"
+            android:textSize="24sp"
+            />
+
+        <ImageButton
+            android:id="@+id/image_button_synchronize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_synchronize"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
+
+        <ImageButton
+            android:id="@+id/image_button_sort"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:src="@drawable/ic_sort_books"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_view_subtitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:textColor="@color/textSecondary"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linear_layout_top"
+        tools:text="158 libros disponibles"
+        />
+
+    <SearchView
+        android:id="@+id/search_view_books"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:iconifiedByDefault="false"
+        android:queryHint="@string/search_books"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_subtitle"
+        />
+
+    <LinearLayout
         android:id="@+id/linear_layout_values"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -23,7 +95,7 @@
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_view_books"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout

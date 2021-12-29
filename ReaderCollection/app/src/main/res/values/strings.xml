@@ -6,8 +6,8 @@
     <string name="title_search">Search</string>
     <string name="title_profile">Profile</string>
     <plurals name="title_books_count">
-        <item quantity="one">%s book</item>
-        <item quantity="other">%s books</item>
+        <item quantity="one">%s available book</item>
+        <item quantity="other">%s available books</item>
     </plurals>
     <string name="book_text_count" translatable="false">%d / 10240</string>
 

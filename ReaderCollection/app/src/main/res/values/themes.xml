@@ -86,4 +86,11 @@
         <item name="android:indeterminateTint">@color/colorPrimary</item>
     </style>
 
+    <style name="Widget.ReaderCollection.ImageButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
+        <item name="rippleColor">@null</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:minWidth">@null</item>
+        <item name="android:minHeight">@null</item>
+    </style>
+
 </resources>

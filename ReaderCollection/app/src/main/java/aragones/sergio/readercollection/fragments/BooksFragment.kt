@@ -9,12 +9,11 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
 import android.os.Bundle
-import android.view.*
-import android.widget.AdapterView
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ProgressBar
-import android.widget.SearchView
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
@@ -45,6 +44,10 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     //MARK: - Private properties
 
+    private lateinit var ibSynchronize: ImageButton
+    private lateinit var ibSort: ImageButton
+    private lateinit var tvSubtitle: TextView
+    private lateinit var svBooks: SearchView
     private lateinit var pbLoadingFormats: ProgressBar
     private lateinit var spFormats: Spinner
     private lateinit var pbLoadingStates: ProgressBar
@@ -82,6 +85,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         super.onResume()
         (activity as? AppCompatActivity)?.supportActionBar?.hide()
         if (this::viewModel.isInitialized) viewModel.getBooks()
+        svBooks.clearFocus()
     }
 
     override fun onStop() {
@@ -108,6 +112,10 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     private fun initializeUI() {
 
+        ibSynchronize = image_button_synchronize
+        ibSort = image_button_sort
+        tvSubtitle = text_view_subtitle
+        svBooks = search_view_books
         pbLoadingFormats = progress_bar_loading_formats
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
@@ -132,6 +140,20 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         )
         favouriteValues = resources.getStringArray(R.array.favourites).toList()
         setupBindings()
+
+        ibSynchronize.setOnClickListener {
+            openSyncPopup()
+        }
+
+        ibSort.setOnClickListener {
+            viewModel.sort(
+                requireContext(),
+                resources.getStringArray(R.array.sorting_keys_ids),
+                resources.getStringArray(R.array.sorting_keys)
+            )
+        }
+
+        setupSearchView()
 
         spFormats.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(
@@ -364,32 +386,26 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private fun setTitle(booksCount: Int) {
 
         val title = resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
+        tvSubtitle.text = title
+        (activity as AppCompatActivity?)?.supportActionBar?.title = ""
     }
 
-    private fun setupSearchView(menu: Menu) {
+    private fun setupSearchView() {
+        svBooks.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-        val menuItem = menu.findItem(R.id.action_search)
-        this.searchView = menuItem.actionView as SearchView
-        this.searchView?.let { searchView ->
+            override fun onQueryTextChange(newText: String): Boolean {
 
-            searchView.queryHint = resources.getString(R.string.search_books)
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                viewModel.searchBooks(newText)
+                return true
+            }
 
-                override fun onQueryTextChange(newText: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
 
-                    viewModel.searchBooks(newText)
-                    return true
-                }
-
-                override fun onQueryTextSubmit(query: String): Boolean {
-
-                    menuItem.collapseActionView()
-                    Constants.hideSoftKeyboard(requireActivity())
-                    return true
-                }
-            })
-        }
-        this.setupSearchView("")
+                Constants.hideSoftKeyboard(requireActivity())
+                svBooks.clearFocus()
+                return true
+            }
+        })
     }
 
     enum class ScrollPosition {
