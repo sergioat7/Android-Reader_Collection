@@ -66,11 +66,6 @@ class ProfileFragment: BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId) {
-            R.id.action_synchronize -> {
-
-                openSyncPopup()
-                return true
-            }
             R.id.action_delete -> {
 
                 showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
