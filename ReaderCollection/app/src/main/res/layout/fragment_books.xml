@@ -26,13 +26,11 @@
             android:layout_marginTop="8dp"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:fontFamily="@font/roboto_bold"
             android:text="@string/title_books"
-            android:textColor="@color/textPrimary"
-            android:textSize="24sp"
             app:layout_constraintEnd_toStartOf="@id/image_button_synchronize"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.ReaderCollection.TextView.Title.Main"
             />
 
         <ImageButton
@@ -65,12 +63,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:textColor="@color/textSecondary"
-            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_title"
             tools:text="158 libros disponibles"
+            style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
             />
 
         <SearchView
@@ -115,22 +112,32 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/textPrimary"
-            android:textSize="20sp"
             android:text="@string/pending"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+            style="@style/Widget.ReaderCollection.TextView.Title.Section"
             />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_pending_books"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_pending_books"
+            />
+
+        <View
+            android:id="@+id/view_separator_pending_read"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_pending_books"
+            style="@style/SeparatorLineView"
             />
 
         <TextView
@@ -138,13 +145,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:fontFamily="@font/roboto_bold"
-            android:textColor="@color/textPrimary"
-            android:textSize="20sp"
+            android:layout_marginTop="8dp"
             android:text="@string/read"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_pending_books"
+            app:layout_constraintTop_toBottomOf="@id/view_separator_pending_read"
+            style="@style/Widget.ReaderCollection.TextView.Title.Section"
             />
 
         <LinearLayout
@@ -249,6 +255,7 @@
             android:id="@+id/recycler_view_books"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
