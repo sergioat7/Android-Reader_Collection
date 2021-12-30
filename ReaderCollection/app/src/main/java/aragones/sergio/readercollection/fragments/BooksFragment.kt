@@ -37,6 +37,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var ibSort: ImageButton
     private lateinit var tvSubtitle: TextView
     private lateinit var svBooks: SearchView
+    private lateinit var rvReadingBooks: RecyclerView
     private lateinit var pbLoadingFormats: ProgressBar
     private lateinit var spFormats: Spinner
     private lateinit var pbLoadingStates: ProgressBar
@@ -47,6 +48,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var ivNoResults: View
 
     private lateinit var viewModel: BooksViewModel
+    private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
     private lateinit var formatValues: MutableList<String>
     private lateinit var stateValues: MutableList<String>
@@ -102,6 +104,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         ibSort = image_button_sort
         tvSubtitle = text_view_subtitle
         svBooks = search_view_books
+        rvReadingBooks = recycler_view_reading_books
         pbLoadingFormats = progress_bar_loading_formats
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
@@ -116,6 +119,12 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             this,
             BooksViewModelFactory(application)
         )[BooksViewModel::class.java]
+        readingBooksAdapter = BooksAdapter(
+            viewModel.books.value?.filter { it.state == Constants.READING_STATE }?.toMutableList() ?: mutableListOf(),
+            false,
+            requireContext(),
+            this
+        )
         booksAdapter = BooksAdapter(
             viewModel.books.value?.toMutableList() ?: mutableListOf(),
             false,
@@ -208,14 +217,20 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
+        rvReadingBooks.layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        rvReadingBooks.adapter = readingBooksAdapter
+
+
         rvBooks.layoutManager = LinearLayoutManager(
             requireContext(),
             LinearLayoutManager.HORIZONTAL,
             false
         )
         rvBooks.adapter = booksAdapter
-
-
     }
 
     private fun setupBindings() {
@@ -226,6 +241,11 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             booksAdapter.resetList()
             booksAdapter.setBooks(booksResponse.toMutableList())
             setTitle(booksResponse.size)
+
+            val readingBooks = booksResponse.filter { it.state == Constants.READING_STATE }.toMutableList()
+            readingBooksAdapter.resetList()
+            readingBooksAdapter.setBooks(readingBooks)
+            rvReadingBooks.visibility = if(readingBooks.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->

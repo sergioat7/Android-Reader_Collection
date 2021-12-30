@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
 import aragones.sergio.readercollection.viewholders.LoadMoreItemsViewHolder
 import java.util.*
@@ -28,10 +29,11 @@ class BooksAdapter(
 
     override fun getItemViewType(position: Int): Int {
 
-        return if (books[position].id.isNotBlank()) {
-            R.layout.book_item
-        } else {
-            R.layout.load_more_items_item
+        val book = books[position]
+        return when {
+            book.state == Constants.READING_STATE -> R.layout.reading_book_item
+            book.id.isNotBlank() -> R.layout.book_item
+            else -> R.layout.load_more_items_item
         }
     }
 
@@ -42,10 +44,9 @@ class BooksAdapter(
             parent,
             false
         )
-        return if (viewType == R.layout.book_item) {
-            BooksViewHolder(itemView)
-        } else {
-            LoadMoreItemsViewHolder(itemView)
+        return when (viewType) {
+            R.layout.book_item, R.layout.reading_book_item -> BooksViewHolder(itemView)
+            else -> LoadMoreItemsViewHolder(itemView)
         }
     }
 
@@ -59,11 +60,20 @@ class BooksAdapter(
 
             val book = books[position]
             holder.isFavourite = book.isFavourite
-            holder.fillData(
-                book,
-                isGoogleBook,
-                context
-            )
+            if (book.state == Constants.READING_STATE) {
+
+                holder.fillReadingData(
+                    book,
+                    context
+                )
+            } else {
+
+                holder.fillData(
+                    book,
+                    isGoogleBook,
+                    context
+                )
+            }
 
             holder.itemView.setOnClickListener {
                 onItemClickListener.onItemClick(book.id)
