@@ -109,6 +109,30 @@
             style="@style/SeparatorLineView"
             />
 
+        <TextView
+            android:id="@+id/text_view_pending_books"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/roboto_bold"
+            android:textColor="@color/textPrimary"
+            android:textSize="20sp"
+            android:text="@string/pending"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_pending_books"
+            android:layout_width="0dp"
+            android:layout_height="220dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_pending_books"
+            />
+
         <LinearLayout
             android:id="@+id/linear_layout_values"
             android:layout_width="0dp"
@@ -119,7 +143,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_pending_books"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout

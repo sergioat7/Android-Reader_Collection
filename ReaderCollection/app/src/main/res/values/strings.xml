@@ -35,6 +35,7 @@
     <string name="load_more">Load more</string>
     <string name="synchronize">Synchronize</string>
     <string name="sort">Sort</string>
+    <string name="pending">Pending</string>
 
     //SEARCH
     <string name="title_search">Search</string>
