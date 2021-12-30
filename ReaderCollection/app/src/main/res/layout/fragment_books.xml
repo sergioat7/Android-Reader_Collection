@@ -17,6 +17,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="24dp"
         >
 
         <TextView
@@ -123,7 +124,7 @@
             android:id="@+id/recycler_view_pending_books"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_pending_books"
@@ -240,26 +241,15 @@
 
         </LinearLayout>
 
-        <View
-            android:id="@+id/view_separator"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryUltraLight"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linear_layout_values"
-            />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_books"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view_separator"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_read_books"
             />
 
         <include
