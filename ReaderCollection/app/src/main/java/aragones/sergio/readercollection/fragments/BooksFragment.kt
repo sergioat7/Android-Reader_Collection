@@ -50,7 +50,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var pbLoadingStates: ProgressBar
     private lateinit var spStates: Spinner
     private lateinit var spFavourite: Spinner
-    private lateinit var vwSeparator: View
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
 
@@ -121,7 +120,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         pbLoadingStates = progress_bar_loading_states
         spStates = spinner_states
         spFavourite = spinner_favourite
-        vwSeparator = view_separator
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
 
