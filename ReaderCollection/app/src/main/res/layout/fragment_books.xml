@@ -90,6 +90,15 @@
             app:layout_constraintTop_toBottomOf="@+id/text_view_subtitle"
             />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_reading_books"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_view_books"
+            />
+
         <LinearLayout
             android:id="@+id/linear_layout_values"
             android:layout_width="0dp"
@@ -100,7 +109,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/search_view_books"
+            app:layout_constraintTop_toBottomOf="@id/recycler_view_reading_books"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
