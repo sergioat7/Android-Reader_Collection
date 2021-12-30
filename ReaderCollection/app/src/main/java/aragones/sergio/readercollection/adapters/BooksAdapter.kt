@@ -23,7 +23,7 @@ class BooksAdapter(
     private val isGoogleBook: Boolean,
     private val context: Context,
     private var onItemClickListener: OnItemClickListener
-): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
     //MARK: - Lifecycle methods
 
@@ -32,6 +32,7 @@ class BooksAdapter(
         val book = books[position]
         return when {
             book.state == Constants.READING_STATE -> R.layout.reading_book_item
+            isGoogleBook -> R.layout.google_book_item
             book.id.isNotBlank() -> R.layout.book_item
             else -> R.layout.load_more_items_item
         }
@@ -45,7 +46,9 @@ class BooksAdapter(
             false
         )
         return when (viewType) {
-            R.layout.book_item, R.layout.reading_book_item -> BooksViewHolder(itemView)
+            R.layout.reading_book_item, R.layout.google_book_item, R.layout.book_item -> BooksViewHolder(
+                itemView
+            )
             else -> LoadMoreItemsViewHolder(itemView)
         }
     }
@@ -57,22 +60,11 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (holder is BooksViewHolder) {
-
             val book = books[position]
-            holder.isFavourite = book.isFavourite
-            if (book.state == Constants.READING_STATE) {
-
-                holder.fillReadingData(
-                    book,
-                    context
-                )
-            } else {
-
-                holder.fillData(
-                    book,
-                    isGoogleBook,
-                    context
-                )
+            when {
+                book.state == Constants.READING_STATE -> holder.fillReadingData(book, context)
+                isGoogleBook -> holder.fillGoogleData(book, context)
+                else -> holder.fillData(book, context)
             }
 
             holder.itemView.setOnClickListener {

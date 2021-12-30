@@ -15,7 +15,7 @@
     >
 
     <TextView
-        android:id="@+id/text_view_book_title"
+        android:id="@+id/text_view_reading_book_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_bold"
@@ -29,7 +29,7 @@
         />
 
     <TextView
-        android:id="@+id/text_view_book_author"
+        android:id="@+id/text_view_reading_book_author"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/roboto_regular"
@@ -38,12 +38,12 @@
         android:textSize="12sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_book_title"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_title"
         tools:text="J.K. Rowling"
         />
 
     <ImageView
-        android:id="@+id/image_view_book"
+        android:id="@+id/image_view_reading_book"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
@@ -51,19 +51,19 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_book_author"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_author"
         tools:srcCompat="@tools:sample/backgrounds/scenic"
         />
 
     <ProgressBar
-        android:id="@+id/progress_bar_loading"
+        android:id="@+id/progress_bar_reading_image_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:indeterminateTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/image_view_book"
-        app:layout_constraintEnd_toEndOf="@+id/image_view_book"
-        app:layout_constraintStart_toStartOf="@+id/image_view_book"
-        app:layout_constraintTop_toTopOf="@+id/image_view_book"
+        app:layout_constraintBottom_toBottomOf="@+id/image_view_reading_book"
+        app:layout_constraintEnd_toEndOf="@+id/image_view_reading_book"
+        app:layout_constraintStart_toStartOf="@+id/image_view_reading_book"
+        app:layout_constraintTop_toTopOf="@+id/image_view_reading_book"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
