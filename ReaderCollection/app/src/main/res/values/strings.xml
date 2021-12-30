@@ -36,6 +36,7 @@
     <string name="synchronize">Synchronize</string>
     <string name="sort">Sort</string>
     <string name="pending">Pending</string>
+    <string name="read">Read</string>
 
     //SEARCH
     <string name="title_search">Search</string>

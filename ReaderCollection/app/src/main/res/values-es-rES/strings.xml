@@ -41,6 +41,7 @@
     <string name="synchronize">Sincronizar</string>
     <string name="sort">Ordenar</string>
     <string name="pending">Pendientes</string>
+    <string name="read">Leídos</string>
 
     //SEARCH
     <string name="title_search">Búsqueda</string>
