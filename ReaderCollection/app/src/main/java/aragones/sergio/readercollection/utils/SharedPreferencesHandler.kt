@@ -145,18 +145,4 @@ class SharedPreferencesHandler @Inject constructor(
             }
         }
     }
-
-    fun getSwipeRefresh(): Boolean {
-        return sharedPreferences?.getBoolean(Constants.SWIPE_REFRESH_PREFERENCE_NAME, true) ?: true
-    }
-
-    fun setSwipeRefresh(swipeRefresh: Boolean) {
-
-        sharedPreferences?.let {
-            with(it.edit()) {
-                putBoolean(Constants.SWIPE_REFRESH_PREFERENCE_NAME, swipeRefresh)
-                commit()
-            }
-        }
-    }
 }
