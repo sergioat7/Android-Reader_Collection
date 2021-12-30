@@ -13,7 +13,6 @@ import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +27,6 @@ import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_books.*
 
 class BooksFragment : BaseFragment(), OnItemClickListener {
@@ -47,14 +45,12 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var vwSeparator: View
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
-    private lateinit var fbStartList: FloatingActionButton
-    private lateinit var fbEndList: FloatingActionButton
+
     private lateinit var viewModel: BooksViewModel
     private lateinit var booksAdapter: BooksAdapter
     private lateinit var formatValues: MutableList<String>
     private lateinit var stateValues: MutableList<String>
     private lateinit var favouriteValues: List<String>
-    private val scrollPosition = MutableLiveData<ScrollPosition>()
 
     //MARK: - Lifecycle methods
 
@@ -114,8 +110,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         vwSeparator = view_separator
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
-        fbStartList = floating_action_button_start_list
-        fbEndList = floating_action_button_end_list
+
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
@@ -220,20 +215,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         )
         rvBooks.adapter = booksAdapter
 
-        scrollPosition.value = ScrollPosition.TOP
 
-        fbStartList.setOnClickListener {
-
-            rvBooks.scrollToPosition(0)
-            scrollPosition.value = ScrollPosition.TOP
-        }
-
-        fbEndList.setOnClickListener {
-
-            val position: Int = booksAdapter.itemCount - 1
-            rvBooks.scrollToPosition(position)
-            scrollPosition.value = ScrollPosition.END
-        }
     }
 
     private fun setupBindings() {
@@ -301,13 +283,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
-
-        scrollPosition.observe(viewLifecycleOwner, {
-
-            vwSeparator.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
-            fbStartList.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
-            fbEndList.visibility = if (it == ScrollPosition.END) View.GONE else View.VISIBLE
-        })
     }
 
     private fun fillFormats(formatsResponse: List<FormatResponse>?) {
@@ -373,9 +348,5 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
                 return true
             }
         })
-    }
-
-    enum class ScrollPosition {
-        TOP, MIDDLE, END
     }
 }
