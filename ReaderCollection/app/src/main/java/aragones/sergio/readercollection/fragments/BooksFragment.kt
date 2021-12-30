@@ -7,15 +7,18 @@ package aragones.sergio.readercollection.fragments
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.widget.*
 import android.widget.AdapterView.OnItemSelectedListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -78,14 +81,34 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     override fun onResume() {
         super.onResume()
-        (activity as? AppCompatActivity)?.supportActionBar?.hide()
+
+        (activity as? AppCompatActivity)?.apply {
+            window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.setSystemBarsAppearance(
+                    APPEARANCE_LIGHT_STATUS_BARS,
+                    APPEARANCE_LIGHT_STATUS_BARS
+                )
+            } else {
+                WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = false
+            }
+            supportActionBar?.hide()
+        }
         if (this::viewModel.isInitialized) viewModel.getBooks()
         svBooks.clearFocus()
     }
 
     override fun onStop() {
         super.onStop()
-        (activity as? AppCompatActivity)?.supportActionBar?.show()
+        (activity as? AppCompatActivity)?.apply {
+            window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                window.insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
+            } else {
+                WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = true
+            }
+            supportActionBar?.show()
+        }
     }
 
     override fun onDestroy() {
