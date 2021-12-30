@@ -65,8 +65,6 @@ class BooksViewModel @Inject constructor(
     val selectedFormat: LiveData<String?> = _selectedFormat
     val selectedState: LiveData<String?> = _selectedState
     val isFavourite: LiveData<Boolean?> = _isFavourite
-    val isRefreshEnabled: Boolean
-        get() = sharedPreferencesHandler.getSwipeRefresh()
 
     // MARK: - Lifecycle methods
 
@@ -148,10 +146,6 @@ class BooksViewModel @Inject constructor(
 
     fun getSortParam() {
         _sortKey.value = booksRepository.sortParam
-    }
-
-    fun reloadData() {
-        _books.value = mutableListOf()
     }
 
     fun setFormat(format: String?) {

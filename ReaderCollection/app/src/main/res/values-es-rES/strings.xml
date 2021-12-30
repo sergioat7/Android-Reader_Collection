@@ -69,7 +69,6 @@
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
     <string name="sort_books_param">Parámetro de ordenación de libros</string>
-    <string name="enable_list_refresh">Habilitar actualización de lista</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>

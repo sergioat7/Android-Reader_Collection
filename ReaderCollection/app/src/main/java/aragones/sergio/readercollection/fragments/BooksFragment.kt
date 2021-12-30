@@ -54,7 +54,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var spStates: Spinner
     private lateinit var spFavourite: Spinner
     private lateinit var vwSeparator: View
-    private lateinit var srlBooks: SwipeRefreshLayout
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
     private lateinit var fbStartList: FloatingActionButton
@@ -122,7 +121,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         spStates = spinner_states
         spFavourite = spinner_favourite
         vwSeparator = view_separator
-        srlBooks = swipe_refresh_layout_books
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
         fbStartList = floating_action_button_start_list
@@ -224,12 +222,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
-        srlBooks.isEnabled = viewModel.isRefreshEnabled
-        srlBooks.setOnRefreshListener {
-
-            viewModel.reloadData()
-            viewModel.getBooks()
-        }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
         rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -305,10 +297,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             spStates.setSelection(
                 stateValues.indexOf(selectedStateName)
             )
-        })
-
-        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
-            srlBooks.isRefreshing = isLoading
         })
 
         viewModel.booksFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
