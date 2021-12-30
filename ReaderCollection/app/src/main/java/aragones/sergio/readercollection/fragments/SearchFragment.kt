@@ -181,7 +181,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         this.searchView = menuItem.actionView as SearchView
         this.searchView?.let { searchView ->
 
-            searchView.queryHint = resources.getString(R.string.search_books)
+            searchView.queryHint = resources.getString(R.string.search)
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {

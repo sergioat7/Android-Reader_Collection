@@ -10,6 +10,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     tools:context=".fragments.BooksFragment"
     >
 
@@ -18,51 +19,45 @@
         android:layout_height="wrap_content"
         >
 
-        <LinearLayout
-            android:id="@+id/linear_layout_top"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
-            android:gravity="center"
-            android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:fontFamily="@font/roboto_bold"
+            android:text="@string/title_books"
+            android:textColor="@color/textPrimary"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toStartOf="@id/image_button_synchronize"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            >
+            />
 
-            <TextView
-                android:id="@+id/text_view_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/roboto_bold"
-                android:text="@string/title_books"
-                android:textColor="@color/textPrimary"
-                android:textSize="24sp"
-                />
+        <ImageButton
+            android:id="@+id/image_button_synchronize"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/synchronize"
+            android:src="@drawable/ic_synchronize"
+            app:layout_constraintEnd_toStartOf="@id/image_button_sort"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
 
-            <ImageButton
-                android:id="@+id/image_button_synchronize"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_synchronize"
-                style="@style/Widget.ReaderCollection.ImageButton"
-                />
-
-            <ImageButton
-                android:id="@+id/image_button_sort"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_sort_books"
-                style="@style/Widget.ReaderCollection.ImageButton"
-                />
-
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/image_button_sort"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/sort"
+            android:src="@drawable/ic_sort_books"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
 
         <TextView
             android:id="@+id/text_view_subtitle"
@@ -71,20 +66,23 @@
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:textColor="@color/textSecondary"
-            android:textSize="12sp"
+            android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linear_layout_top"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_title"
             tools:text="158 libros disponibles"
             />
 
         <SearchView
             android:id="@+id/search_view_books"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:iconifiedByDefault="false"
-            android:queryHint="@string/search_books"
+            android:queryHint="@string/search"
+            android:background="@drawable/rounded_background_search_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_subtitle"
@@ -94,9 +92,21 @@
             android:id="@+id/recycler_view_reading_books"
             android:layout_width="0dp"
             android:layout_height="250dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_view_books"
+            />
+
+        <View
+            android:id="@+id/view_separator_reading_pending"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_reading_books"
+            style="@style/SeparatorLineView"
             />
 
         <LinearLayout
@@ -109,7 +119,7 @@
             android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recycler_view_reading_books"
+            app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
             >
 
             <androidx.constraintlayout.widget.ConstraintLayout
