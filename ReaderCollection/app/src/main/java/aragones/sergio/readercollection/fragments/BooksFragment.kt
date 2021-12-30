@@ -44,6 +44,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var rvReadingBooks: RecyclerView
     private lateinit var tvPendingBooks: TextView
     private lateinit var rvPendingBooks: RecyclerView
+    private lateinit var tvReadBooks: TextView
     private lateinit var pbLoadingFormats: ProgressBar
     private lateinit var spFormats: Spinner
     private lateinit var pbLoadingStates: ProgressBar
@@ -114,6 +115,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         rvReadingBooks = recycler_view_reading_books
         tvPendingBooks = text_view_pending_books
         rvPendingBooks = recycler_view_pending_books
+        tvReadBooks = text_view_read_books
         pbLoadingFormats = progress_bar_loading_formats
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
@@ -141,7 +143,9 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             this
         )
         booksAdapter = BooksAdapter(
-            viewModel.books.value?.toMutableList() ?: mutableListOf(),
+            viewModel.books.value?.filter {
+                it.state != Constants.READING_STATE && it.state != Constants.PENDING_STATE
+            }?.toMutableList() ?: mutableListOf(),
             false,
             requireContext(),
             this
@@ -259,8 +263,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
             ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
-            booksAdapter.resetList()
-            booksAdapter.setBooks(booksResponse.toMutableList())
             setTitle(booksResponse.size)
 
             val readingBooks = booksResponse.filter { it.state == Constants.READING_STATE }.toMutableList()
@@ -273,6 +275,14 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             pendingBooksAdapter.setBooks(pendingBooks)
             tvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
             rvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
+
+            val readBooks = booksResponse.filter {
+                it.state != Constants.READING_STATE && it.state != Constants.PENDING_STATE
+            }.toMutableList()
+            booksAdapter.resetList()
+            booksAdapter.setBooks(readBooks)
+            tvReadBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
+            rvBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
