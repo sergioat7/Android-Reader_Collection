@@ -60,21 +60,24 @@
                 android:id="@+id/text_view_google_book_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/BookNameTextView"
+                android:layout_marginBottom="10dp"
+                style="@style/Widget.ReaderCollection.TextView.Title.GoogleBook"
                 />
 
             <TextView
                 android:id="@+id/text_view_google_book_author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/BookSecondaryTextView"
+                android:layout_marginBottom="5dp"
+                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
                 />
 
             <TextView
                 android:id="@+id/text_view_google_book_publisher"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/BookSecondaryTextView"
+                android:layout_marginBottom="5dp"
+                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
                 />
 
             <LinearLayout
