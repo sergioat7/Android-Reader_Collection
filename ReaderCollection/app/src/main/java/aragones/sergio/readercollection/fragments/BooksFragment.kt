@@ -42,6 +42,8 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var tvSubtitle: TextView
     private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
+    private lateinit var tvPendingBooks: TextView
+    private lateinit var rvPendingBooks: RecyclerView
     private lateinit var pbLoadingFormats: ProgressBar
     private lateinit var spFormats: Spinner
     private lateinit var pbLoadingStates: ProgressBar
@@ -53,6 +55,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     private lateinit var viewModel: BooksViewModel
     private lateinit var readingBooksAdapter: BooksAdapter
+    private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
     private lateinit var formatValues: MutableList<String>
     private lateinit var stateValues: MutableList<String>
@@ -109,6 +112,8 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         tvSubtitle = text_view_subtitle
         svBooks = search_view_books
         rvReadingBooks = recycler_view_reading_books
+        tvPendingBooks = text_view_pending_books
+        rvPendingBooks = recycler_view_pending_books
         pbLoadingFormats = progress_bar_loading_formats
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
@@ -125,6 +130,12 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         )[BooksViewModel::class.java]
         readingBooksAdapter = BooksAdapter(
             viewModel.books.value?.filter { it.state == Constants.READING_STATE }?.toMutableList() ?: mutableListOf(),
+            false,
+            requireContext(),
+            this
+        )
+        pendingBooksAdapter = BooksAdapter(
+            viewModel.books.value?.filter { it.state == Constants.PENDING_STATE }?.toMutableList() ?: mutableListOf(),
             false,
             requireContext(),
             this
@@ -228,6 +239,12 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         )
         rvReadingBooks.adapter = readingBooksAdapter
 
+        rvPendingBooks.layoutManager = LinearLayoutManager(
+            requireContext(),
+            LinearLayoutManager.HORIZONTAL,
+            false
+        )
+        rvPendingBooks.adapter = pendingBooksAdapter
 
         rvBooks.layoutManager = LinearLayoutManager(
             requireContext(),
@@ -250,6 +267,12 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(readingBooks)
             rvReadingBooks.visibility = if(readingBooks.isEmpty()) View.GONE else View.VISIBLE
+
+            val pendingBooks = booksResponse.filter { it.state == Constants.PENDING_STATE }.toMutableList()
+            pendingBooksAdapter.resetList()
+            pendingBooksAdapter.setBooks(pendingBooks)
+            tvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
+            rvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->

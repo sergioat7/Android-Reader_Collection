@@ -222,6 +222,7 @@ class Constants {
         // MARK: - Books constants
 
         const val READING_STATE = "READING"
+        const val PENDING_STATE = "PENDING"
         const val IMAGE_CORNER = 20F
 
         fun getPicker(context: Context, values: Array<String>): NumberPicker {
