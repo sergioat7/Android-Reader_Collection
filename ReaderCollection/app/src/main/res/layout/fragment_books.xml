@@ -191,7 +191,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_books"
             android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_height="220dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -202,8 +202,8 @@
             android:id="@+id/floating_action_button_start_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
-            app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
+            app:layout_constraintTop_toTopOf="@id/recycler_view_books"
+            app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
             style="@style/StartListButton.Image"
             />
 
@@ -211,8 +211,8 @@
             android:id="@+id/floating_action_button_end_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@id/swipe_refresh_layout_books"
-            app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_view_books"
+            app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
             style="@style/EndListButton.Image"
             />
 
