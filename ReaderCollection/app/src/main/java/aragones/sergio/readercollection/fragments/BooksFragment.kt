@@ -13,13 +13,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-import android.widget.*
-import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,9 +29,6 @@ import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.models.base.BaseModel
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
@@ -52,11 +50,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var vwSeparatorPendingRead: View
     private lateinit var tvReadBooks: TextView
     private lateinit var btSeeMoreReadBooks: Button
-    private lateinit var pbLoadingFormats: ProgressBar
-    private lateinit var spFormats: Spinner
-    private lateinit var pbLoadingStates: ProgressBar
-    private lateinit var spStates: Spinner
-    private lateinit var spFavourite: Spinner
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
 
@@ -64,9 +57,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
-    private lateinit var formatValues: MutableList<String>
-    private lateinit var stateValues: MutableList<String>
-    private lateinit var favouriteValues: List<String>
 
     //MARK: - Lifecycle methods
 
@@ -146,11 +136,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         vwSeparatorPendingRead = view_separator_pending_read
         tvReadBooks = text_view_read_books
         btSeeMoreReadBooks = button_see_more_read
-        pbLoadingFormats = progress_bar_loading_formats
-        spFormats = spinner_formats
-        pbLoadingStates = progress_bar_loading_states
-        spStates = spinner_states
-        spFavourite = spinner_favourite
         rvBooks = recycler_view_books
         ivNoResults = image_view_no_results
 
@@ -179,7 +164,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             requireContext(),
             this
         )
-        favouriteValues = resources.getStringArray(R.array.favourites).toList()
         setupBindings()
 
         ibSynchronize.setOnClickListener {
@@ -202,75 +186,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
         btSeeMoreReadBooks.setOnClickListener {
             //TODO: implement
-        }
-
-        spFormats.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                val formatName = formatValues[position]
-                val formatId = viewModel.formats.value?.firstOrNull { it.name == formatName }?.id
-                viewModel.setFormat(formatId)
-                viewModel.getBooks()
-                spFormats.requestLayout()
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
-        }
-
-        spStates.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                val stateName = stateValues[position]
-                val stateId = viewModel.states.value?.firstOrNull { it.name == stateName }?.id
-                viewModel.setState(stateId)
-                viewModel.getBooks()
-                spStates.requestLayout()
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
-        }
-
-        createSpinner(
-            spFavourite,
-            favouriteValues,
-            resources.getString(R.string.favourite)
-        )
-
-        val pos = when (viewModel.isFavourite.value) {
-            true -> 1
-            false -> 2
-            else -> 0
-        }
-        spFavourite.setSelection(pos)
-        spFavourite.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                val isFavourite = when (favouriteValues[position]) {
-                    resources.getString(R.string.yes) -> true
-                    resources.getString(R.string.no) -> false
-                    else -> null
-                }
-                viewModel.setFavourite(isFavourite)
-                viewModel.getBooks()
-                spFavourite.requestLayout()
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
         }
 
         rvReadingBooks.layoutManager = LinearLayoutManager(
@@ -324,101 +239,9 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             rvBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
         })
 
-        viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
-
-            fillFormats(formatsResponse)
-            createSpinner(
-                spFormats,
-                formatValues,
-                resources.getString(R.string.format)
-            )
-
-            val selectedFormatName =
-                getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
-            spFormats.setSelection(
-                formatValues.indexOf(selectedFormatName)
-            )
-        })
-
-        viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
-
-            fillStates(statesResponse)
-            createSpinner(
-                spStates,
-                stateValues,
-                resources.getString(R.string.state)
-            )
-
-            val selectedStateName =
-                getSelectedValue(viewModel.states, viewModel.selectedState)?.name
-            spStates.setSelection(
-                stateValues.indexOf(selectedStateName)
-            )
-        })
-
-        viewModel.booksFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingFormats.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-
-        viewModel.booksStatesLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingStates.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-
-        viewModel.bookSet.observe(viewLifecycleOwner, { position ->
-            position?.let {
-                booksAdapter.notifyItemChanged(position)
-            }
-        })
-
-        viewModel.bookDeleted.observe(viewLifecycleOwner, { position ->
-            position?.let {
-                booksAdapter.notifyItemRemoved(position)
-            }
-        })
-
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
-    }
-
-    private fun fillFormats(formatsResponse: List<FormatResponse>?) {
-
-        formatValues = mutableListOf()
-        formatValues.add(resources.getString((R.string.anything)))
-        formatsResponse?.let {
-            formatValues.addAll(formatsResponse.map { it.name })
-        }
-    }
-
-    private fun fillStates(statesResponse: List<StateResponse>?) {
-
-        stateValues = mutableListOf()
-        stateValues.add(resources.getString((R.string.anything)))
-        statesResponse?.let {
-            stateValues.addAll(statesResponse.map { it.name })
-        }
-    }
-
-    private fun createSpinner(
-        spinner: Spinner,
-        values: List<String>,
-        title: String
-    ) {
-
-        spinner.adapter = Constants.getAdapter(
-            context = requireContext(),
-            data = values,
-            firstOptionEnabled = true,
-            rounded = true,
-            title = title
-        )
-    }
-
-    private fun <T : BaseModel<String>> getSelectedValue(
-        values: LiveData<List<T>>,
-        selectedValue: LiveData<String?>
-    ): T? {
-        return values.value?.firstOrNull { it.id == selectedValue.value }
     }
 
     private fun setTitle(booksCount: Int) {

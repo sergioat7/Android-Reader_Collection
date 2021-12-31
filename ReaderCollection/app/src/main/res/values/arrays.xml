@@ -6,12 +6,6 @@
 
 <resources>
 
-    <string-array name="favourites">
-        <item>@string/anything</item>
-        <item>@string/yes</item>
-        <item>@string/no</item>
-    </string-array>
-
     <string-array name="sorting_keys">
         <item>@string/none</item>
         <item>@string/title_sorting_key</item>
