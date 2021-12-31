@@ -13,10 +13,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.SearchView
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -44,7 +41,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
     private lateinit var vwSeparatorReadingPending: View
-    private lateinit var ivNoReadingBooks: View
+    private lateinit var ivNoReadingBooks: ImageView
     private lateinit var tvPendingBooks: TextView
     private lateinit var btSeeMorePendingBooks: Button
     private lateinit var rvPendingBooks: RecyclerView

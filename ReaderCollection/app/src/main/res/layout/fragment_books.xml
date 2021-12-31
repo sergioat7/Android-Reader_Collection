@@ -96,15 +96,16 @@
             app:layout_constraintTop_toBottomOf="@id/search_view_books"
             />
 
-        <include
+        <ImageView
             android:id="@+id/image_view_no_reading_results"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:src="@drawable/image_user_reading"
             app:layout_constraintBottom_toBottomOf="@+id/recycler_view_reading_books"
             app:layout_constraintEnd_toEndOf="@+id/recycler_view_reading_books"
             app:layout_constraintStart_toStartOf="@+id/recycler_view_reading_books"
             app:layout_constraintTop_toTopOf="@+id/recycler_view_reading_books"
-            layout="@layout/content_no_books"
+            app:layout_constraintWidth_percent="0.5"
             />
 
         <View
