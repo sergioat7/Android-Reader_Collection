@@ -26,10 +26,6 @@
     <string name="new_book">New</string>
     <string name="format">Format</string>
     <string name="state">State</string>
-    <string name="favourite">Favourite</string>
-    <string name="anything">Anything</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="publisher_text">Pub. %s</string>
     <string name="query_title" translatable="false">\"%s\"</string>
     <string name="load_more">Load more</string>
