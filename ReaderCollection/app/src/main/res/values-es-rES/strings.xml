@@ -27,7 +27,7 @@
     <string name="title_books">Librería</string>
     <plurals name="title_books_count">
         <item quantity="one">%s libro disponible</item>
-        <item quantity="other">%s libros disponible</item>
+        <item quantity="other">%s libros disponibles</item>
     </plurals>
     <string name="new_book">Nuevo</string>
     <string name="format">Formato</string>
