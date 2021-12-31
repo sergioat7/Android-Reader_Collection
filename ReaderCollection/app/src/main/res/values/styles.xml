@@ -64,6 +64,26 @@
         <item name="android:maxLines">1</item>
     </style>
 
+    <!--  TextButton  -->
+
+    <style name="Widget.ReaderCollection.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="textAllCaps">false</item>
+        <item name="rippleColor">@null</item>
+        <item name="iconPadding">8dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextButton.Link">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
     <!--  ImageButton  -->
 
     <style name="Widget.ReaderCollection.ImageButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">

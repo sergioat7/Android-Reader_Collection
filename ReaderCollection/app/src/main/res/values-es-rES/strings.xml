@@ -42,6 +42,7 @@
     <string name="sort">Ordenar</string>
     <string name="pending">Pendientes</string>
     <string name="read">Leídos</string>
+    <string name="see_more">See more</string>
 
     //SEARCH
     <string name="title_search">Búsqueda</string>
