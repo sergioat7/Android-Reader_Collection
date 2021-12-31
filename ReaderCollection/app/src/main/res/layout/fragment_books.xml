@@ -96,6 +96,17 @@
             app:layout_constraintTop_toBottomOf="@id/search_view_books"
             />
 
+        <include
+            android:id="@+id/image_view_no_reading_results"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="@+id/recycler_view_reading_books"
+            app:layout_constraintEnd_toEndOf="@+id/recycler_view_reading_books"
+            app:layout_constraintStart_toStartOf="@+id/recycler_view_reading_books"
+            app:layout_constraintTop_toTopOf="@+id/recycler_view_reading_books"
+            layout="@layout/content_no_books"
+            />
+
         <View
             android:id="@+id/view_separator_reading_pending"
             android:layout_width="0dp"
@@ -191,23 +202,21 @@
             android:clipToPadding="false"
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_read_books"
             />
 
         <include
-            android:id="@+id/image_view_no_results"
+            android:id="@+id/content_view_no_results"
             android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginEnd="24dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            layout="@layout/image_view_no_results"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_books"
+            layout="@layout/content_no_results"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

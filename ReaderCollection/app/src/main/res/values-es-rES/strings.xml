@@ -39,6 +39,8 @@
     <string name="pending">Pendientes</string>
     <string name="read">Leídos</string>
     <string name="see_more">See more</string>
+    <string name="no_reading_books_text">¿No estás leyendo nada aún?</string>
+    <string name="no_results_text">No hemos encontrado resultados</string>
 
     //SEARCH
     <string name="title_search">Búsqueda</string>
