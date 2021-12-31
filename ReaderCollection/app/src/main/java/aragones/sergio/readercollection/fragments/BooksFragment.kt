@@ -44,6 +44,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
     private lateinit var vwSeparatorReadingPending: View
+    private lateinit var ivNoReadingBooks: View
     private lateinit var tvPendingBooks: TextView
     private lateinit var btSeeMorePendingBooks: Button
     private lateinit var rvPendingBooks: RecyclerView
@@ -51,7 +52,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var tvReadBooks: TextView
     private lateinit var btSeeMoreReadBooks: Button
     private lateinit var rvBooks: RecyclerView
-    private lateinit var ivNoResults: View
+    private lateinit var vwNoResults: View
 
     private lateinit var viewModel: BooksViewModel
     private lateinit var readingBooksAdapter: BooksAdapter
@@ -130,6 +131,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         svBooks = search_view_books
         rvReadingBooks = recycler_view_reading_books
         vwSeparatorReadingPending = view_separator_reading_pending
+        ivNoReadingBooks = image_view_no_reading_results
         tvPendingBooks = text_view_pending_books
         btSeeMorePendingBooks = button_see_more_pending
         rvPendingBooks = recycler_view_pending_books
@@ -137,7 +139,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         tvReadBooks = text_view_read_books
         btSeeMoreReadBooks = button_see_more_read
         rvBooks = recycler_view_books
-        ivNoResults = image_view_no_results
+        vwNoResults = content_view_no_results
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -214,21 +216,21 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
-            ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
             setTitle(booksResponse.size)
 
             val readingBooks = booksResponse.filter { it.state == Constants.READING_STATE }.toMutableList()
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(readingBooks)
-            rvReadingBooks.visibility = if(readingBooks.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorReadingPending.visibility = if(readingBooks.isEmpty()) View.GONE else View.VISIBLE
+            val hideReadingSection = booksResponse.isEmpty() || readingBooks.isEmpty() && viewModel.query.isNotBlank()
+            rvReadingBooks.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
+            ivNoReadingBooks.visibility = if(hideReadingSection || readingBooks.isNotEmpty()) View.GONE else View.VISIBLE
 
             val pendingBooks = booksResponse.filter { it.state == Constants.PENDING_STATE }.toMutableList()
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(pendingBooks)
             tvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
             rvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorPendingRead.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorReadingPending.visibility = if(pendingBooks.isEmpty() || hideReadingSection) View.GONE else View.VISIBLE
 
             val readBooks = booksResponse.filter {
                 it.state != Constants.READING_STATE && it.state != Constants.PENDING_STATE
@@ -237,6 +239,9 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             booksAdapter.setBooks(readBooks)
             tvReadBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
             rvBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorPendingRead.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
+
+            vwNoResults.visibility = if(booksResponse.isEmpty()) View.VISIBLE else View.GONE
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
