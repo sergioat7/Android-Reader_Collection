@@ -13,9 +13,9 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.book_item.view.*
-import kotlinx.android.synthetic.main.google_book_item.view.*
-import kotlinx.android.synthetic.main.reading_book_item.view.*
+import kotlinx.android.synthetic.main.item_book.view.*
+import kotlinx.android.synthetic.main.item_google_book.view.*
+import kotlinx.android.synthetic.main.item_reading_book.view.*
 
 class BooksViewHolder(
     itemView: View

@@ -31,10 +31,10 @@ class BooksAdapter(
 
         val book = books[position]
         return when {
-            book.state == Constants.READING_STATE -> R.layout.reading_book_item
-            isGoogleBook -> R.layout.google_book_item
-            book.id.isNotBlank() -> R.layout.book_item
-            else -> R.layout.load_more_items_item
+            book.state == Constants.READING_STATE -> R.layout.item_reading_book
+            isGoogleBook -> R.layout.item_google_book
+            book.id.isNotBlank() -> R.layout.item_book
+            else -> R.layout.item_load_more_items
         }
     }
 
@@ -46,7 +46,7 @@ class BooksAdapter(
             false
         )
         return when (viewType) {
-            R.layout.reading_book_item, R.layout.google_book_item, R.layout.book_item -> BooksViewHolder(
+            R.layout.item_reading_book, R.layout.item_google_book, R.layout.item_book -> BooksViewHolder(
                 itemView
             )
             else -> LoadMoreItemsViewHolder(itemView)

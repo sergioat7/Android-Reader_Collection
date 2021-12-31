@@ -22,7 +22,7 @@ import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
-import kotlinx.android.synthetic.main.register_fragment.*
+import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment: BaseFragment() {
 
@@ -48,7 +48,7 @@ class RegisterFragment: BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.register_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

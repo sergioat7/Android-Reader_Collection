@@ -21,7 +21,7 @@ import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
-import kotlinx.android.synthetic.main.login_fragment.*
+import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment: BaseFragment() {
 
@@ -45,7 +45,7 @@ class LoginFragment: BaseFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.login_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
