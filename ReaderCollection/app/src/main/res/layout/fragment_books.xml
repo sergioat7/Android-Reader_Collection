@@ -123,7 +123,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_pending_books"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_marginTop="8dp"
             android:clipToPadding="false"
             android:paddingStart="12dp"
@@ -247,7 +247,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_books"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="300dp"
             android:layout_marginTop="8dp"
             android:clipToPadding="false"
             android:paddingStart="12dp"
