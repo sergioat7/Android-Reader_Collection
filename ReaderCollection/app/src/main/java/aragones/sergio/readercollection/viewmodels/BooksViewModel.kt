@@ -40,6 +40,7 @@ class BooksViewModel @Inject constructor(
 
     //MARK: - Public properties
 
+    var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
@@ -74,7 +75,7 @@ class BooksViewModel @Inject constructor(
             onSuccess = {
 
                 _originalBooks.value = if (_sortDescending.value == true) it.reversed() else it
-                _books.value = if (_sortDescending.value == true) it.reversed() else it
+                searchBooks(query)
                 _booksLoading.value = false
             },
             onError = {
@@ -136,6 +137,7 @@ class BooksViewModel @Inject constructor(
 
     fun searchBooks(query: String) {
 
+        this.query = query
         _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
