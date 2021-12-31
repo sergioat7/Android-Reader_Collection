@@ -132,7 +132,7 @@ open class BaseFragment: Fragment() {
 
             searchView.isIconified = false
             searchView.isIconifiedByDefault = false
-            searchView.queryHint = resources.getString(R.string.search_books)
+            searchView.queryHint = resources.getString(R.string.search)
             if (query.isNotBlank()) {
                 searchView.setQuery(query, false)
             }

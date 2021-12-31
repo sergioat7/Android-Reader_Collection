@@ -33,7 +33,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.book_detail_fragment.*
+import kotlinx.android.synthetic.main.fragment_book_detail.*
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
 import kotlin.math.abs
 
@@ -103,7 +103,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         setHasOptionsMenu(true)
         bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
         isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
-        return inflater.inflate(R.layout.book_detail_fragment, container, false)
+        return inflater.inflate(R.layout.fragment_book_detail, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

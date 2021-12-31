@@ -9,6 +9,8 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
 import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.util.DisplayMetrics
@@ -16,6 +18,8 @@ import android.util.Log
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.SpinnerAdapter
 import aragones.sergio.readercollection.models.base.BaseModel
@@ -108,7 +112,6 @@ class Constants {
         const val SPANISH_LANGUAGE_KEY = "es"
         const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
         const val VERSION_PREFERENCE_NAME = "version"
-        const val SWIPE_REFRESH_PREFERENCE_NAME = "swipeRefreshEnabled"
 
         // MARK: - Database constants
 
@@ -218,6 +221,10 @@ class Constants {
 
         // MARK: - Books constants
 
+        const val READING_STATE = "READING"
+        const val PENDING_STATE = "PENDING"
+        const val IMAGE_CORNER = 20F
+
         fun getPicker(context: Context, values: Array<String>): NumberPicker {
 
             val picker = NumberPicker(context)
@@ -249,6 +256,15 @@ class Constants {
                 i++
             }
             return i % values.size
+        }
+
+        fun getRoundImageView(image: Drawable, context: Context, radius: Float): RoundedBitmapDrawable {
+
+            val imageBitmap = (image as BitmapDrawable).bitmap
+            val imageDrawable = RoundedBitmapDrawableFactory.create(context.resources, imageBitmap)
+            imageDrawable.isCircular = true
+            imageDrawable.cornerRadius = radius
+            return imageDrawable
         }
 
         // MARK: - Search books constants
@@ -378,7 +394,7 @@ class Constants {
                 firstOptionEnabled,
                 rounded,
                 title)
-            spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
             return spinnerAdapter
         }
     }

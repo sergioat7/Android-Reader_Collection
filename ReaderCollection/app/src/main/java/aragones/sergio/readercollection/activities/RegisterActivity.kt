@@ -16,7 +16,7 @@ class RegisterActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.register_activity)
+        setContentView(R.layout.activity_register)
 
         if (savedInstanceState == null) {
             supportFragmentManager

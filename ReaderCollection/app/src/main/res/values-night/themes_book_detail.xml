@@ -6,12 +6,6 @@
 
 <resources>
 
-    <style name="Theme.ReaderCollection.NoActionBar.BookDetail" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:minHeight">?attr/actionBarSize</item>
-        <item name="android:background">@android:color/transparent</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_dark</item>
-    </style>
-
     <style name="FloatingButton.AddPhoto">
         <item name="android:src">@drawable/ic_add_camera_photo_dark</item>
         <item name="fabSize">mini</item>

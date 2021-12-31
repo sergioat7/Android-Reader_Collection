@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -36,7 +35,6 @@ class ProfileFragment: BaseFragment() {
     private lateinit var rbEnglish: RadioButton
     private lateinit var rbSpanish: RadioButton
     private lateinit var spSortParams: Spinner
-    private lateinit var swSwipeRefresh: SwitchCompat
     private lateinit var btSave: Button
     private lateinit var viewModel: ProfileViewModel
 
@@ -66,11 +64,6 @@ class ProfileFragment: BaseFragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when(item.itemId) {
-            R.id.action_synchronize -> {
-
-                openSyncPopup()
-                return true
-            }
             R.id.action_delete -> {
 
                 showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
@@ -106,9 +99,8 @@ class ProfileFragment: BaseFragment() {
         rbEnglish = radio_button_en
         rbSpanish = radio_button_es
         spSortParams = spinner_sort_params
-        swSwipeRefresh = switch_swipe_refresh
         btSave = button_save
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(application))[ProfileViewModel::class.java]
         setupBindings()
 
         etUsername.setText(viewModel.userData.username)
@@ -143,8 +135,6 @@ class ProfileFragment: BaseFragment() {
         }
         spSortParams.setSelection(position)
 
-        swSwipeRefresh.isChecked = viewModel.swipeRefresh
-
         btSave.setOnClickListener {
 
             val language =
@@ -156,8 +146,7 @@ class ProfileFragment: BaseFragment() {
             viewModel.saveData(
                 etPassword.text.toString(),
                 language,
-                sortParam,
-                swSwipeRefresh.isChecked
+                sortParam
             )
         }
     }

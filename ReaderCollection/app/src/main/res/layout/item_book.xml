@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 30/12/2021
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:layout_height="300dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginStart="12dp"
+    >
+
+    <ImageView
+        android:id="@+id/image_view_book"
+        android:layout_width="0dp"
+        android:layout_height="240dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:scaleType="centerCrop"
+        tools:src="@tools:sample/avatars"
+        />
+
+    <ProgressBar
+        android:id="@+id/progress_bar_image_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateTint="@color/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="@+id/image_view_book"
+        app:layout_constraintEnd_toEndOf="@+id/image_view_book"
+        app:layout_constraintStart_toStartOf="@+id/image_view_book"
+        app:layout_constraintTop_toTopOf="@+id/image_view_book"
+        />
+
+    <TextView
+        android:id="@+id/text_view_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_view_book"
+        tools:text="Harry Potter y la Piedra Filosofal"
+        style="@style/Widget.ReaderCollection.TextView.Title.Book"
+        />
+
+    <TextView
+        android:id="@+id/text_view_author"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+        tools:text="J.K.Rowling"
+        style="@style/Widget.ReaderCollection.TextView.Subtitle.Book"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

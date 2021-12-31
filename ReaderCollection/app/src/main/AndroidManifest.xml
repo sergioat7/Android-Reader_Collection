@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="aragones.sergio.readercollection">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -10,14 +11,15 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true">
+        android:supportsRtl="true"
+        tools:ignore="AllowBackup">
         <activity
             android:name=".activities.BookDetailActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar"
+            android:theme="@style/Theme.ReaderCollection.NoActionBar.BookDetail"
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/Theme.ReaderCollection"
+            android:theme="@style/Theme.ReaderCollection.ActionBar"
             android:launchMode="singleTask" />
         <activity
             android:name=".activities.RegisterActivity"

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
 import aragones.sergio.readercollection.viewholders.LoadMoreItemsViewHolder
 import java.util.*
@@ -22,16 +23,18 @@ class BooksAdapter(
     private val isGoogleBook: Boolean,
     private val context: Context,
     private var onItemClickListener: OnItemClickListener
-): RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
     //MARK: - Lifecycle methods
 
     override fun getItemViewType(position: Int): Int {
 
-        return if (books[position].id.isNotBlank()) {
-            R.layout.book_item
-        } else {
-            R.layout.load_more_items_item
+        val book = books[position]
+        return when {
+            book.state == Constants.READING_STATE -> R.layout.item_reading_book
+            isGoogleBook -> R.layout.item_google_book
+            book.id.isNotBlank() -> R.layout.item_book
+            else -> R.layout.item_load_more_items
         }
     }
 
@@ -42,10 +45,11 @@ class BooksAdapter(
             parent,
             false
         )
-        return if (viewType == R.layout.book_item) {
-            BooksViewHolder(itemView)
-        } else {
-            LoadMoreItemsViewHolder(itemView)
+        return when (viewType) {
+            R.layout.item_reading_book, R.layout.item_google_book, R.layout.item_book -> BooksViewHolder(
+                itemView
+            )
+            else -> LoadMoreItemsViewHolder(itemView)
         }
     }
 
@@ -56,14 +60,12 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (holder is BooksViewHolder) {
-
             val book = books[position]
-            holder.isFavourite = book.isFavourite
-            holder.fillData(
-                book,
-                isGoogleBook,
-                context
-            )
+            when {
+                book.state == Constants.READING_STATE -> holder.fillReadingData(book, context)
+                isGoogleBook -> holder.fillGoogleData(book, context)
+                else -> holder.fillData(book, context)
+            }
 
             holder.itemView.setOnClickListener {
                 onItemClickListener.onItemClick(book.id)

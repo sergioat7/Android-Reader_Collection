@@ -40,7 +40,6 @@ class ProfileViewModel @Inject constructor(
 
     val language: String = userRepository.language
     val sortParam: String? = userRepository.sortParam
-    val swipeRefresh: Boolean = userRepository.swipeRefresh
     val userData: UserData = userRepository.userData
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
@@ -73,12 +72,11 @@ class ProfileViewModel @Inject constructor(
         resetDatabase()
     }
 
-    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?, newSwipeRefresh: Boolean) {
+    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?) {
 
         val changePassword = newPassword != userRepository.userData.password
         val changeLanguage = newLanguage != language
         val changeSortParam = newSortParam != sortParam
-        val changeSwipeRefresh = newSwipeRefresh != swipeRefresh
 
         if (changePassword) {
 
@@ -114,10 +112,6 @@ class ProfileViewModel @Inject constructor(
 
         if (changeSortParam) {
             userRepository.storeSortParam(newSortParam)
-        }
-
-        if (changeSwipeRefresh) {
-            userRepository.storeSwipeRefresh(newSwipeRefresh)
         }
 
         if (changeLanguage) {

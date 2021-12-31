@@ -20,13 +20,13 @@ class SpinnerAdapter(
     private val firstOptionEnabled: Boolean,
     private val rounded: Boolean,
     private val title: String?
-): ArrayAdapter<Any?>(ctx, R.layout.spinner_dropdown_item, values) {
+): ArrayAdapter<Any?>(ctx, R.layout.item_spinner_dropdown, values) {
 
     //MARK: - Lifecycle methods
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
-        val layout = if (rounded) R.layout.spinner_rounded_item else R.layout.spinner_item
+        val layout = if (rounded) R.layout.item_spinner_rounded else R.layout.item_spinner
         val listItem = convertView ?: LayoutInflater.from(ctx).inflate(
             layout,
             parent,
