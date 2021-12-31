@@ -394,7 +394,7 @@ class Constants {
                 firstOptionEnabled,
                 rounded,
                 title)
-            spinnerAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item)
+            spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
             return spinnerAdapter
         }
     }
