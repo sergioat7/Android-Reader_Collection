@@ -8,13 +8,7 @@
 
     //GENERAL
     <string name="app_name">Reader Collection</string>
-    <string name="title_books">Libros</string>
-    <string name="title_search">Búsqueda</string>
-    <string name="title_profile">Perfil</string>
-    <plurals name="title_books_count">
-        <item quantity="one">%s libro</item>
-        <item quantity="other">%s libros</item>
-    </plurals>
+    <string name="search">Buscar</string>
 
     //LOGIN &amp; REGISTRATION
     <string name="invalid_username">Usuario no válido</string>
@@ -30,16 +24,25 @@
     <string name="username_info">El usuario sólo es necesario para identificarte y poder diferenciar tus libros de los de otro usuario.\n\nSin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla.\n\nSi esto pasa, contacta con el desarrollador de la aplicación, puedes encontrar su correo electrónico en la ficha de la aplicación en Google Play Store.</string>
 
     //BOOKS
+    <string name="title_books">Librería</string>
+    <plurals name="title_books_count">
+        <item quantity="one">%s libro disponible</item>
+        <item quantity="other">%s libros disponibles</item>
+    </plurals>
     <string name="new_book">Nuevo</string>
     <string name="format">Formato</string>
     <string name="state">Estado</string>
-    <string name="favourite">Favorito</string>
-    <string name="anything">Cualquiera</string>
-    <string name="yes">Sí</string>
-    <string name="no">No</string>
     <string name="publisher_text">Ed. %s</string>
-    <string name="search_books">Buscar libros</string>
     <string name="load_more">Cargar más</string>
+    <string name="synchronize">Sincronizar</string>
+    <string name="sort">Ordenar</string>
+    <string name="pending">Pendientes</string>
+    <string name="read">Leídos</string>
+    <string name="see_more">See more</string>
+    <string name="no_results_text">No hemos encontrado resultados</string>
+
+    //SEARCH
+    <string name="title_search">Búsqueda</string>
 
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>
@@ -64,12 +67,12 @@
     <string name="book_removed">¡Libro eliminado!</string>
 
     //PROFILE
+    <string name="title_profile">Perfil</string>
     <string name="save">Guardar</string>
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
     <string name="sort_books_param">Parámetro de ordenación de libros</string>
-    <string name="enable_list_refresh">Habilitar actualización de lista</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>

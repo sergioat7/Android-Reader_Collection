@@ -14,20 +14,16 @@ import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
@@ -37,36 +33,17 @@ class BooksViewModel @Inject constructor(
 
     private val _originalBooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
-    private val _formats = MutableLiveData<List<FormatResponse>>()
-    private val _states = MutableLiveData<List<StateResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
-    private val _booksFormatsLoading = MutableLiveData<Boolean>()
-    private val _booksStatesLoading = MutableLiveData<Boolean>()
-    private val _bookSet = MutableLiveData<Int?>()
-    private val _bookDeleted = MutableLiveData<Int?>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private var _selectedFormat = MutableLiveData<String?>()
-    private var _selectedState = MutableLiveData<String?>()
-    private var _isFavourite = MutableLiveData<Boolean?>()
     private var _sortKey = MutableLiveData<String?>()
     private var _sortDescending = MutableLiveData<Boolean?>()
 
     //MARK: - Public properties
 
+    var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
-    val formats: LiveData<List<FormatResponse>> = _formats
-    val states: LiveData<List<StateResponse>> = _states
     val booksLoading: LiveData<Boolean> = _booksLoading
-    val booksFormatsLoading: LiveData<Boolean> = _booksFormatsLoading
-    val booksStatesLoading: LiveData<Boolean> = _booksStatesLoading
-    val bookSet: LiveData<Int?> = _bookSet
-    val bookDeleted: LiveData<Int?> = _bookDeleted
     val booksError: LiveData<ErrorResponse> = _booksError
-    val selectedFormat: LiveData<String?> = _selectedFormat
-    val selectedState: LiveData<String?> = _selectedState
-    val isFavourite: LiveData<Boolean?> = _isFavourite
-    val isRefreshEnabled: Boolean
-        get() = sharedPreferencesHandler.getSwipeRefresh()
 
     // MARK: - Lifecycle methods
 
@@ -84,9 +61,9 @@ class BooksViewModel @Inject constructor(
 
         _booksLoading.value = true
         booksRepository.getBooksDatabaseObserver(
-            _selectedFormat.value,
-            _selectedState.value,
-            _isFavourite.value,
+            null,
+            null,
+            null,
             _sortKey.value
         ).subscribeBy(
             onComplete = {
@@ -98,7 +75,7 @@ class BooksViewModel @Inject constructor(
             onSuccess = {
 
                 _originalBooks.value = if (_sortDescending.value == true) it.reversed() else it
-                _books.value = if (_sortDescending.value == true) it.reversed() else it
+                searchBooks(query)
                 _booksLoading.value = false
             },
             onError = {
@@ -110,60 +87,8 @@ class BooksViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun getFormats() {
-
-        _booksFormatsLoading.value = true
-        formatRepository.getFormatsDatabaseObserver().subscribeBy(
-            onSuccess = {
-
-                _formats.value = it
-                _booksFormatsLoading.value = false
-            },
-            onError = {
-
-                _formats.value = listOf()
-                _booksFormatsLoading.value = false
-                onDestroy()
-            }
-        ).addTo(disposables)
-    }
-
-    fun getStates() {
-
-        _booksStatesLoading.value = true
-        stateRepository.getStatesDatabaseObserver().subscribeBy(
-            onSuccess = {
-
-                _states.value = it
-                _booksStatesLoading.value = false
-            },
-            onError = {
-
-                _states.value = listOf()
-                _booksStatesLoading.value = false
-                onDestroy()
-            }
-        ).addTo(disposables)
-    }
-
     fun getSortParam() {
         _sortKey.value = booksRepository.sortParam
-    }
-
-    fun reloadData() {
-        _books.value = mutableListOf()
-    }
-
-    fun setFormat(format: String?) {
-        _selectedFormat.value = format
-    }
-
-    fun setState(state: String?) {
-        _selectedState.value = state
-    }
-
-    fun setFavourite(isFavourite: Boolean?) {
-        _isFavourite.value = isFavourite
     }
 
     fun sort(context: Context, sortingKeys: Array<String>, sortingValues: Array<String>) {
@@ -212,54 +137,9 @@ class BooksViewModel @Inject constructor(
 
     fun searchBooks(query: String) {
 
+        this.query = query
         _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
-    }
-
-    fun setBookFavourite(position: Int) {
-        _books.value?.get(position)?.let { book ->
-
-            _booksLoading.value = true
-            booksRepository.setFavouriteBookObserver(book.id, !book.isFavourite).subscribeBy(
-                onSuccess = {
-
-                    _books.value?.first { it.id == book.id }?.isFavourite = !book.isFavourite
-                    _bookSet.value = position
-                    _bookSet.value = null
-                    _booksLoading.value = false
-                },
-                onError = {
-
-                    _booksLoading.value = false
-                    _bookSet.value = null
-                    onDestroy()
-                }
-            ).addTo(disposables)
-        }
-    }
-
-    fun deleteBook(position: Int) {
-        _books.value?.get(position)?.let { book ->
-
-            _booksLoading.value = true
-            booksRepository.deleteBookObserver(book.id).subscribeBy(
-                onComplete = {
-
-                    _books.value?.first { it.id == book.id }?.let { removed ->
-                        _books.value = _books.value?.minus(removed)
-                    }
-                    _bookDeleted.value = position
-                    _bookDeleted.value = null
-                    _booksLoading.value = false
-                },
-                onError = {
-
-                    _booksLoading.value = false
-                    _bookDeleted.value = null
-                    onDestroy()
-                }
-            ).addTo(disposables)
-        }
     }
 }

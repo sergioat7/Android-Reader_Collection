@@ -4,160 +4,222 @@
   ~ Created by Sergio Aragonés on 18/10/2020
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:scrollbars="none"
     tools:context=".fragments.BooksFragment"
     >
 
-    <LinearLayout
-        android:id="@+id/linear_layout_values"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:paddingBottom="24dp"
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="10dp"
-            >
-
-            <Spinner
-                android:id="@+id/spinner_formats"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/CustomSpinner.Rounded"
-                />
-
-            <ProgressBar
-                android:id="@+id/progress_bar_loading_formats"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:indeterminateTint="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            >
-
-            <Spinner
-                android:id="@+id/spinner_states"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/CustomSpinner.Rounded"
-                />
-
-            <ProgressBar
-                android:id="@+id/progress_bar_loading_states"
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
-                android:indeterminateTint="@color/colorPrimary"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Spinner
-            android:id="@+id/spinner_favourite"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="10dp"
-            style="@style/CustomSpinner.Rounded"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            android:text="@string/title_books"
+            app:layout_constraintEnd_toStartOf="@id/image_button_synchronize"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.ReaderCollection.TextView.Title.Main"
             />
 
-    </LinearLayout>
+        <ImageButton
+            android:id="@+id/image_button_synchronize"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/synchronize"
+            android:src="@drawable/ic_synchronize"
+            app:layout_constraintEnd_toStartOf="@id/image_button_sort"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
 
-    <View
-        android:id="@+id/view_separator"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/colorPrimaryUltraLight"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linear_layout_values"
-        />
+        <ImageButton
+            android:id="@+id/image_button_sort"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/sort"
+            android:src="@drawable/ic_sort_books"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_books"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view_separator"
-        >
+        <TextView
+            android:id="@+id/text_view_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginEnd="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+            tools:text="158 libros disponibles"
+            style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+            />
+
+        <SearchView
+            android:id="@+id/search_view_books"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:iconifiedByDefault="false"
+            android:queryHint="@string/search"
+            android:background="@drawable/rounded_background_search_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_subtitle"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_reading_books"
+            android:layout_width="0dp"
+            android:layout_height="250dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/search_view_books"
+            />
+
+        <ImageView
+            android:id="@+id/image_view_no_reading_results"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/image_user_reading"
+            app:layout_constraintBottom_toBottomOf="@+id/recycler_view_reading_books"
+            app:layout_constraintEnd_toEndOf="@+id/recycler_view_reading_books"
+            app:layout_constraintStart_toStartOf="@+id/recycler_view_reading_books"
+            app:layout_constraintTop_toTopOf="@+id/recycler_view_reading_books"
+            app:layout_constraintWidth_percent="0.5"
+            />
+
+        <View
+            android:id="@+id/view_separator_reading_pending"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_reading_books"
+            style="@style/SeparatorLineView"
+            />
+
+        <TextView
+            android:id="@+id/text_view_pending_books"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/pending"
+            app:layout_constraintEnd_toStartOf="@+id/button_see_more_pending"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+            style="@style/Widget.ReaderCollection.TextView.Title.Section"
+            />
+
+        <Button
+            android:id="@+id/button_see_more_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="@string/see_more"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_pending_books"
+            style="@style/Widget.ReaderCollection.TextButton.Link"
+            />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_pending_books"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_pending_books"
+            />
+
+        <View
+            android:id="@+id/view_separator_pending_read"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_pending_books"
+            style="@style/SeparatorLineView"
+            />
+
+        <TextView
+            android:id="@+id/text_view_read_books"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/read"
+            app:layout_constraintEnd_toStartOf="@+id/button_see_more_read"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/view_separator_pending_read"
+            style="@style/Widget.ReaderCollection.TextView.Title.Section"
+            />
+
+        <Button
+            android:id="@+id/button_see_more_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="@string/see_more"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_read_books"
+            style="@style/Widget.ReaderCollection.TextButton.Link"
+            />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_books"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="300dp"
+            android:layout_marginTop="8dp"
+            android:clipToPadding="false"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_read_books"
             />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <include
+            android:id="@+id/content_view_no_results"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycler_view_books"
+            layout="@layout/content_no_results"
+            />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_start_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
-        app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
-        style="@style/StartListButton.Image"
-        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_end_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/swipe_refresh_layout_books"
-        app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
-        style="@style/EndListButton.Image"
-        />
-
-    <include
-        android:id="@+id/image_view_no_results"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linear_layout_values"
-        layout="@layout/image_view_no_results"
-        />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -34,9 +34,6 @@ class UserRepository @Inject constructor(
     val sortParam: String?
         get() = sharedPreferencesHandler.getSortParam()
 
-    val swipeRefresh: Boolean
-        get() = sharedPreferencesHandler.getSwipeRefresh()
-
     //MARK: - Public methods
 
     fun registerObserver(username: String, password: String): Completable {
@@ -91,9 +88,5 @@ class UserRepository @Inject constructor(
 
         sharedPreferencesHandler.storeUserData(userData)
         sharedPreferencesHandler.storeCredentials(authData)
-    }
-
-    fun storeSwipeRefresh(swipeRefresh: Boolean) {
-        sharedPreferencesHandler.setSwipeRefresh(swipeRefresh)
     }
 }

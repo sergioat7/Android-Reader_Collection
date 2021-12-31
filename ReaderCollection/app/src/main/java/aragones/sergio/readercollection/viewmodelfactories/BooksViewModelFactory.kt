@@ -49,8 +49,6 @@ class BooksViewModelFactory(
         if (modelClass.isAssignableFrom(BooksViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            booksViewModel.getFormats()
-            booksViewModel.getStates()
             booksViewModel.getSortParam()
             return booksViewModel as T
         }

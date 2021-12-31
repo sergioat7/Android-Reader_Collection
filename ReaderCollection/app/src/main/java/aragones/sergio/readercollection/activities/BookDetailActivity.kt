@@ -10,7 +10,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import aragones.sergio.readercollection.fragments.BookDetailFragment
 import aragones.sergio.readercollection.utils.Constants
-import kotlinx.android.synthetic.main.book_detail_activity.*
+import kotlinx.android.synthetic.main.activity_book_detail.*
 
 class BookDetailActivity: BaseActivity() {
 
@@ -18,7 +18,7 @@ class BookDetailActivity: BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.book_detail_activity)
+        setContentView(R.layout.activity_book_detail)
 
         title = ""
         setSupportActionBar(toolbar)

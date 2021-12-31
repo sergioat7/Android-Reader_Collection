@@ -33,6 +33,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
     private lateinit var ivNoResults: View
     private lateinit var fbStartList: FloatingActionButton
     private lateinit var fbEndList: FloatingActionButton
+
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
 
@@ -79,18 +80,6 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         setupSearchView(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when(item.itemId) {
-            R.id.action_synchronize -> {
-
-                openSyncPopup()
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     //MARK: - Private methods
 
     private fun initializeUI() {
@@ -101,7 +90,8 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         ivNoResults = image_view_no_results
         fbStartList = floating_action_button_start_list
         fbEndList = floating_action_button_end_list
-        viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
+
+        viewModel = ViewModelProvider(this, SearchViewModelFactory(application))[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
             true,
@@ -193,7 +183,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         this.searchView = menuItem.actionView as SearchView
         this.searchView?.let { searchView ->
 
-            searchView.queryHint = resources.getString(R.string.search_books)
+            searchView.queryHint = resources.getString(R.string.search)
             searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
