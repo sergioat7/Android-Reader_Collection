@@ -46,8 +46,10 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
     private lateinit var tvPendingBooks: TextView
+    private lateinit var btSeeMorePendingBooks: Button
     private lateinit var rvPendingBooks: RecyclerView
     private lateinit var tvReadBooks: TextView
+    private lateinit var btSeeMoreReadBooks: Button
     private lateinit var pbLoadingFormats: ProgressBar
     private lateinit var spFormats: Spinner
     private lateinit var pbLoadingStates: ProgressBar
@@ -136,8 +138,10 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         svBooks = search_view_books
         rvReadingBooks = recycler_view_reading_books
         tvPendingBooks = text_view_pending_books
+        btSeeMorePendingBooks = button_see_more_pending
         rvPendingBooks = recycler_view_pending_books
         tvReadBooks = text_view_read_books
+        btSeeMoreReadBooks = button_see_more_read
         pbLoadingFormats = progress_bar_loading_formats
         spFormats = spinner_formats
         pbLoadingStates = progress_bar_loading_states
@@ -187,6 +191,14 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         }
 
         setupSearchView()
+
+        btSeeMorePendingBooks.setOnClickListener {
+            //TODO: implement
+        }
+
+        btSeeMoreReadBooks.setOnClickListener {
+            //TODO: implement
+        }
 
         spFormats.onItemSelectedListener = object : OnItemSelectedListener {
             override fun onItemSelected(

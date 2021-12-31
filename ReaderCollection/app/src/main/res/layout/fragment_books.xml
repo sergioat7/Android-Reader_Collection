@@ -114,10 +114,23 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/pending"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_see_more_pending"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
             style="@style/Widget.ReaderCollection.TextView.Title.Section"
+            />
+
+        <Button
+            android:id="@+id/button_see_more_pending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="@string/see_more"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_pending_books"
+            style="@style/Widget.ReaderCollection.TextButton.Link"
             />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -151,10 +164,23 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/read"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/button_see_more_read"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/view_separator_pending_read"
             style="@style/Widget.ReaderCollection.TextView.Title.Section"
+            />
+
+        <Button
+            android:id="@+id/button_see_more_read"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="24dp"
+            android:text="@string/see_more"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/text_view_read_books"
+            style="@style/Widget.ReaderCollection.TextButton.Link"
             />
 
         <LinearLayout
