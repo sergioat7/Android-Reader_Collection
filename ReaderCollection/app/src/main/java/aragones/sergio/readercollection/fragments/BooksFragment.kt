@@ -45,9 +45,11 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var tvSubtitle: TextView
     private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
+    private lateinit var vwSeparatorReadingPending: View
     private lateinit var tvPendingBooks: TextView
     private lateinit var btSeeMorePendingBooks: Button
     private lateinit var rvPendingBooks: RecyclerView
+    private lateinit var vwSeparatorPendingRead: View
     private lateinit var tvReadBooks: TextView
     private lateinit var btSeeMoreReadBooks: Button
     private lateinit var pbLoadingFormats: ProgressBar
@@ -137,9 +139,11 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         tvSubtitle = text_view_subtitle
         svBooks = search_view_books
         rvReadingBooks = recycler_view_reading_books
+        vwSeparatorReadingPending = view_separator_reading_pending
         tvPendingBooks = text_view_pending_books
         btSeeMorePendingBooks = button_see_more_pending
         rvPendingBooks = recycler_view_pending_books
+        vwSeparatorPendingRead = view_separator_pending_read
         tvReadBooks = text_view_read_books
         btSeeMoreReadBooks = button_see_more_read
         pbLoadingFormats = progress_bar_loading_formats
@@ -302,12 +306,14 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(readingBooks)
             rvReadingBooks.visibility = if(readingBooks.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorReadingPending.visibility = if(readingBooks.isEmpty()) View.GONE else View.VISIBLE
 
             val pendingBooks = booksResponse.filter { it.state == Constants.PENDING_STATE }.toMutableList()
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(pendingBooks)
             tvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
             rvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorPendingRead.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
 
             val readBooks = booksResponse.filter {
                 it.state != Constants.READING_STATE && it.state != Constants.PENDING_STATE
