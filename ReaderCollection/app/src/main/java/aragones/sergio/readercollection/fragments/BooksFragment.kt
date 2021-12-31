@@ -239,6 +239,15 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             rvBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
         })
 
+        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })

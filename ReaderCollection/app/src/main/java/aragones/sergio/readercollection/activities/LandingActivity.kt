@@ -34,7 +34,7 @@ class LandingActivity: BaseActivity() {
     //MARK: - Private methods
 
     private fun initializeUI() {
-        viewModel = ViewModelProvider(this, LandingViewModelFactory(application)).get(LandingViewModel::class.java)
+        viewModel = ViewModelProvider(this, LandingViewModelFactory(application))[LandingViewModel::class.java]
         setupBindings()
 
         configLanguage()
