@@ -11,7 +11,7 @@ import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
 import aragones.sergio.readercollection.injection.modules.GoogleAPIClientModule
 import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 
-class ReaderCollectionApplication: Application() {
+class ReaderCollectionApplication : Application() {
 
     //MARK: - Public properties
 

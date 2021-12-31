@@ -33,6 +33,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
     private lateinit var ivNoResults: View
     private lateinit var fbStartList: FloatingActionButton
     private lateinit var fbEndList: FloatingActionButton
+
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
 
@@ -89,7 +90,8 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         ivNoResults = image_view_no_results
         fbStartList = floating_action_button_start_list
         fbEndList = floating_action_button_end_list
-        viewModel = ViewModelProvider(this, SearchViewModelFactory(application)).get(SearchViewModel::class.java)
+
+        viewModel = ViewModelProvider(this, SearchViewModelFactory(application))[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
             true,

@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -101,7 +100,7 @@ class ProfileFragment: BaseFragment() {
         rbSpanish = radio_button_es
         spSortParams = spinner_sort_params
         btSave = button_save
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
+        viewModel = ViewModelProvider(this, ProfileViewModelFactory(application))[ProfileViewModel::class.java]
         setupBindings()
 
         etUsername.setText(viewModel.userData.username)

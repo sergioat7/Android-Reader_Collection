@@ -73,9 +73,7 @@ class RegisterFragment: BaseFragment() {
         etConfirmPassword = edit_text_confirm_password
         ibConfirmPassword = image_button_confirm_password
         btRegister = button_register
-        viewModel = ViewModelProvider(this, RegisterViewModelFactory(application)).get(
-            RegisterViewModel::class.java
-        )
+        viewModel = ViewModelProvider(this, RegisterViewModelFactory(application))[RegisterViewModel::class.java]
 
         etUsername.afterTextChanged {
             registerDataChanged()

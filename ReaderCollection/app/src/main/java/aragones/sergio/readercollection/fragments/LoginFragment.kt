@@ -68,7 +68,7 @@ class LoginFragment: BaseFragment() {
         ibPassword = image_button_password
         btLogin = button_login
         btRegister = button_register
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(application)).get(LoginViewModel::class.java)
+        viewModel = ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
         setupBindings()
 
         etUsername.setText(viewModel.username)
