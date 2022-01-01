@@ -145,4 +145,18 @@ class SharedPreferencesHandler @Inject constructor(
             }
         }
     }
+
+    fun getThemeMode(): Int {
+        return sharedPreferences?.getInt(Constants.THEME_MODE_PREFERENCE_NAME, 0) ?: 0
+    }
+
+    fun setThemeMode(themeMode: Int) {
+
+        sharedPreferences?.let {
+            with(it.edit()) {
+                putInt(Constants.THEME_MODE_PREFERENCE_NAME, themeMode)
+                commit()
+            }
+        }
+    }
 }

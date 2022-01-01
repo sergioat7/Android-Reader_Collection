@@ -76,29 +76,19 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
         (activity as? AppCompatActivity)?.apply {
             window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                window.insetsController?.setSystemBarsAppearance(
-                    APPEARANCE_LIGHT_STATUS_BARS,
-                    APPEARANCE_LIGHT_STATUS_BARS
-                )
-            } else {
-                WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = false
-            }
+            WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = !Constants.isDarkMode(context)
             supportActionBar?.hide()
         }
         if (this::viewModel.isInitialized) viewModel.getBooks()
         svBooks.clearFocus()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
+
         (activity as? AppCompatActivity)?.apply {
             window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                window.insetsController?.setSystemBarsAppearance(0, APPEARANCE_LIGHT_STATUS_BARS)
-            } else {
-                WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = true
-            }
+            WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = Constants.isDarkMode(context)
             supportActionBar?.show()
         }
     }

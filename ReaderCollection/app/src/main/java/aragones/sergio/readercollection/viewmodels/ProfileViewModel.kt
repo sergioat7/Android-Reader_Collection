@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
@@ -41,6 +42,7 @@ class ProfileViewModel @Inject constructor(
     val userData: UserData = userRepository.userData
     val language: String = userRepository.language
     var sortParam: String? = userRepository.sortParam
+    var themeMode: Int = userRepository.themeMode
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
@@ -75,12 +77,14 @@ class ProfileViewModel @Inject constructor(
     fun save(
         newPassword: String,
         newLanguage: String,
-        newSortParam: String?
+        newSortParam: String?,
+        newThemeMode: Int
     ) {
 
         val changePassword = newPassword != userRepository.userData.password
         val changeLanguage = newLanguage != language
         val changeSortParam = newSortParam != sortParam
+        val changeThemeMode = newThemeMode != themeMode
 
         if (changePassword) {
 
@@ -124,6 +128,17 @@ class ProfileViewModel @Inject constructor(
             userRepository.storeLanguage(newLanguage)
             if (!changePassword) {
                 _profileRedirection.value = true
+            }
+        }
+
+        if (changeThemeMode) {
+
+            userRepository.storeThemeMode(newThemeMode)
+            themeMode = newThemeMode
+            when (newThemeMode) {
+                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
     }

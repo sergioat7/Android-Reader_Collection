@@ -34,6 +34,9 @@ class UserRepository @Inject constructor(
     val sortParam: String?
         get() = sharedPreferencesHandler.getSortParam()
 
+    val themeMode: Int
+        get() = sharedPreferencesHandler.getThemeMode()
+
     //MARK: - Public methods
 
     fun registerObserver(username: String, password: String): Completable {
@@ -88,5 +91,9 @@ class UserRepository @Inject constructor(
 
         sharedPreferencesHandler.storeUserData(userData)
         sharedPreferencesHandler.storeCredentials(authData)
+    }
+
+    fun storeThemeMode(themeMode: Int) {
+        sharedPreferencesHandler.setThemeMode(themeMode)
     }
 }
