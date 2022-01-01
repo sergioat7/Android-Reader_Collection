@@ -12,9 +12,11 @@ import aragones.sergio.readercollection.injection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
+import aragones.sergio.readercollection.network.apiclient.UserAPIClient
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import javax.inject.Inject
@@ -34,11 +36,15 @@ class BooksViewModelFactory(
     @Inject
     lateinit var stateAPIClient: StateAPIClient
     @Inject
+    lateinit var userAPIClient: UserAPIClient
+    @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
     lateinit var formatRepository: FormatRepository
     @Inject
     lateinit var stateRepository: StateRepository
+    @Inject
+    lateinit var userRepository: UserRepository
     @Inject
     lateinit var booksViewModel: BooksViewModel
 
@@ -49,7 +55,6 @@ class BooksViewModelFactory(
         if (modelClass.isAssignableFrom(BooksViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            booksViewModel.getSortParam()
             return booksViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
