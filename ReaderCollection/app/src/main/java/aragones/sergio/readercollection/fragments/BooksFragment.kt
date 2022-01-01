@@ -218,6 +218,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             val readingBooks = booksResponse.filter { it.state == Constants.READING_STATE }.toMutableList()
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(readingBooks)
+            rvReadingBooks.scrollToPosition(0)
             val hideReadingSection = booksResponse.isEmpty() || readingBooks.isEmpty() && viewModel.query.isNotBlank()
             rvReadingBooks.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
             ivNoReadingBooks.visibility = if(hideReadingSection || readingBooks.isNotEmpty()) View.GONE else View.VISIBLE
@@ -225,6 +226,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             val pendingBooks = booksResponse.filter { it.state == Constants.PENDING_STATE }.toMutableList()
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(pendingBooks)
+            rvPendingBooks.scrollToPosition(0)
             tvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
             rvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
             vwSeparatorReadingPending.visibility = if(pendingBooks.isEmpty() || hideReadingSection) View.GONE else View.VISIBLE
@@ -234,6 +236,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             }.toMutableList()
             booksAdapter.resetList()
             booksAdapter.setBooks(readBooks)
+            rvBooks.scrollToPosition(0)
             tvReadBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
             rvBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
             vwSeparatorPendingRead.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
