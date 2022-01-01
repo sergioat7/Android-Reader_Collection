@@ -20,6 +20,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setReadOnly
+import aragones.sergio.readercollection.extensions.setup
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -319,7 +320,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
                 this.add(resources.getString((R.string.select_format)))
                 this.addAll(formatsResponse.map { it.name })
             }
-            spFormats.adapter = Constants.getAdapter(requireContext(), formatValues)
+            spFormats.setup(formatValues, 0)
             book?.let {
                 setFormat(it)
             }
@@ -334,7 +335,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
                 this.add(resources.getString((R.string.select_state)))
                 this.addAll(statesResponse.map { it.name })
             }
-            spStates.adapter = Constants.getAdapter(requireContext(), stateValues)
+            spStates.setup(stateValues, 0)
             book?.let {
                 setState(it)
             }

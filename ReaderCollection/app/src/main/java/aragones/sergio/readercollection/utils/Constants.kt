@@ -21,7 +21,6 @@ import android.widget.*
 import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.adapters.SpinnerAdapter
 import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.*
 import aragones.sergio.readercollection.network.apiclient.APIClient
@@ -382,22 +381,6 @@ class Constants {
             } else {
                 R.drawable.ic_favourite_empty_light
             }
-        }
-
-        fun getAdapter(context: Context,
-                       data: List<String>,
-                       firstOptionEnabled: Boolean = false,
-                       rounded: Boolean = false,
-                       title: String? = null): SpinnerAdapter {
-
-            val spinnerAdapter = SpinnerAdapter(
-                context,
-                data,
-                firstOptionEnabled,
-                rounded,
-                title)
-            spinnerAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown)
-            return spinnerAdapter
         }
     }
 }
