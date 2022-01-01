@@ -39,7 +39,7 @@ class BooksViewModel @Inject constructor(
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private var sortParam = userRepository.sortParam
-    private var _sortDescending = MutableLiveData<Boolean?>()
+    private var isSortDescending = userRepository.isSortDescending
 
     //MARK: - Public properties
 
@@ -83,7 +83,7 @@ class BooksViewModel @Inject constructor(
             },
             onSuccess = {
 
-                _originalBooks.value = if (_sortDescending.value == true) it.reversed() else it
+                _originalBooks.value = if (isSortDescending) it.reversed() else it
                 searchBooks(query)
                 _booksLoading.value = false
             },
@@ -111,9 +111,7 @@ class BooksViewModel @Inject constructor(
             context.resources.getString(R.string.descending)
         )
         val sortOrdersPicker = Constants.getPicker(context, values)
-        _sortDescending.value?.let {
-            sortOrdersPicker.value = if (it) 1 else 0
-        }
+        sortOrdersPicker.value = if (isSortDescending) 1 else 0
 
         val params = LinearLayout.LayoutParams(50, 50)
         params.gravity = Gravity.CENTER
@@ -130,7 +128,7 @@ class BooksViewModel @Inject constructor(
 
                 val sort = sortingKeys[sortKeysPicker.value]
                 sortParam = if (sort.isNotBlank()) sort else null
-                _sortDescending.value = sortOrdersPicker.value == 1
+                isSortDescending = sortOrdersPicker.value == 1
                 getBooks()
                 dialog.dismiss()
             }

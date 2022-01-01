@@ -42,6 +42,7 @@ class ProfileViewModel @Inject constructor(
     val userData: UserData = userRepository.userData
     val language: String = userRepository.language
     var sortParam: String? = userRepository.sortParam
+    var isSortDescending: Boolean = userRepository.isSortDescending
     var themeMode: Int = userRepository.themeMode
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
@@ -78,13 +79,15 @@ class ProfileViewModel @Inject constructor(
         newPassword: String,
         newLanguage: String,
         newSortParam: String?,
+        newIsSortDescending: Boolean,
         newThemeMode: Int
     ) {
 
-        val changePassword = newPassword != userRepository.userData.password
-        val changeLanguage = newLanguage != language
-        val changeSortParam = newSortParam != sortParam
-        val changeThemeMode = newThemeMode != themeMode
+        val changePassword =            newPassword != userRepository.userData.password
+        val changeLanguage =            newLanguage != language
+        val changeSortParam =           newSortParam != sortParam
+        val changeIsSortDescending =    newIsSortDescending != isSortDescending
+        val changeThemeMode =           newThemeMode != themeMode
 
         if (changePassword) {
 
@@ -123,12 +126,9 @@ class ProfileViewModel @Inject constructor(
             sortParam = newSortParam
         }
 
-        if (changeLanguage) {
-
-            userRepository.storeLanguage(newLanguage)
-            if (!changePassword) {
-                _profileRedirection.value = true
-            }
+        if (changeIsSortDescending) {
+            userRepository.storeIsSortDescending(newIsSortDescending)
+            isSortDescending = newIsSortDescending
         }
 
         if (changeThemeMode) {
@@ -139,6 +139,14 @@ class ProfileViewModel @Inject constructor(
                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
                 else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            }
+        }
+
+        if (changeLanguage) {
+
+            userRepository.storeLanguage(newLanguage)
+            if (!changePassword) {
+                _profileRedirection.value = true
             }
         }
     }

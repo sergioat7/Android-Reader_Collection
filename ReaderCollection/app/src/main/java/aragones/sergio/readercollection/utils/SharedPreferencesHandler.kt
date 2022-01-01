@@ -159,4 +159,18 @@ class SharedPreferencesHandler @Inject constructor(
             }
         }
     }
+
+    fun isSortDescending(): Boolean {
+        return sharedPreferences?.getBoolean(Constants.SORT_ORDER_PREFERENCE_NAME, false) ?: false
+    }
+
+    fun setIsSortDescending(isSortDescending: Boolean) {
+
+        sharedPreferences?.let {
+            with(it.edit()) {
+                putBoolean(Constants.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
+                commit()
+            }
+        }
+    }
 }
