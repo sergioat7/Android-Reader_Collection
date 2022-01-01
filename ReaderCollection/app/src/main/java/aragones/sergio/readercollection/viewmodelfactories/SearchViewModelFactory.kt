@@ -9,8 +9,11 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.injection.ReaderCollectionApplication
+import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
+import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import javax.inject.Inject
 
@@ -20,6 +23,12 @@ class SearchViewModelFactory(
 
     //MARK: - Public properties
 
+    @Inject
+    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
+    @Inject
+    lateinit var bookAPIClient: BookAPIClient
+    @Inject
+    lateinit var booksRepository: BooksRepository
     @Inject
     lateinit var googleAPIClient: GoogleAPIClient
     @Inject
@@ -33,7 +42,7 @@ class SearchViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).googleApiClientComponent.inject(this)
+            (application as ReaderCollectionApplication).booksComponent.inject(this)
             return searchViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
