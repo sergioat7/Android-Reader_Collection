@@ -5,11 +5,16 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.graphics.Canvas
+import android.graphics.Paint
+import android.graphics.RectF
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,6 +28,7 @@ import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactor
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_search.*
+import kotlin.math.max
 
 class SearchFragment: BaseFragment(), OnItemClickListener {
 
@@ -129,6 +135,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
                     }
             }
         })
+        ItemTouchHelper(SwipeController()).attachToRecyclerView(rvBooks)
 
         fbStartList.visibility = View.GONE
         fbStartList.setOnClickListener {
@@ -208,5 +215,77 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         viewModel.searchBooks()
         Constants.hideSoftKeyboard(requireActivity())
         (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, query)
+    }
+
+    inner class SwipeController :
+        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+
+        private val paint = Paint()
+
+        override fun onMove(
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            target: RecyclerView.ViewHolder
+        ) = false
+
+        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+            val position = viewHolder.adapterPosition
+            booksAdapter.notifyItemChanged(position)
+        }
+
+        override fun onChildDraw(
+            c: Canvas,
+            recyclerView: RecyclerView,
+            viewHolder: RecyclerView.ViewHolder,
+            dX: Float,
+            dY: Float,
+            actionState: Int,
+            isCurrentlyActive: Boolean
+        ) {
+
+            var x = dX
+            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                val itemView = viewHolder.itemView
+                val context = recyclerView.context
+
+                val height = itemView.bottom - itemView.top
+                val width = height / 3
+                val maxX = itemView.width.toFloat() * 0.6F
+
+                val iconId =
+                    if (Constants.isDarkMode(context)) R.drawable.ic_save_book_dark
+                    else R.drawable.ic_save_book_light
+
+                when {
+                    dX < 0 -> {// Swiping to the left
+                        paint.color = ContextCompat.getColor(context, R.color.colorTertiary)
+                        val background = RectF(
+                            itemView.right.toFloat() + dX,
+                            itemView.top.toFloat(),
+                            itemView.right.toFloat(),
+                            itemView.bottom.toFloat()
+                        )
+                        c.drawRect(background, paint)
+
+                        val icon = ContextCompat.getDrawable(context, iconId)
+                        icon?.setBounds(
+                            itemView.right - 2 * width,
+                            itemView.top + width,
+                            itemView.right - width,
+                            itemView.bottom - width
+                        )
+                        icon?.draw(c)
+                        x = max(dX, -maxX)
+                    }
+                    else -> {// view is unSwiped
+                        val background = RectF(0F, 0F, 0F, 0F)
+                        c.drawRect(background, paint)
+                    }
+                }
+            }
+            super.onChildDraw(c, recyclerView, viewHolder, x, dY, actionState, isCurrentlyActive)
+        }
     }
 }
