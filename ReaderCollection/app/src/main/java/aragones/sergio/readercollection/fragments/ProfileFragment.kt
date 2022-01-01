@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.extensions.clearErrors
 import aragones.sergio.readercollection.extensions.setReadOnly
+import aragones.sergio.readercollection.extensions.setup
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
@@ -125,29 +126,23 @@ class ProfileFragment: BaseFragment() {
             Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
         }
 
-        spSortParams.backgroundTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-        )
-        spSortParams.adapter = Constants.getAdapter(
-            context = requireContext(),
-            data = resources.getStringArray(R.array.sorting_keys).toList(),
-            firstOptionEnabled = true
-        )
         var position = 0
         viewModel.sortParam?.let { sortParam ->
             position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
         }
-        spSortParams.setSelection(position)
+        spSortParams.setup(
+            resources.getStringArray(R.array.sorting_keys).toList(),
+            position,
+            true
+        )
 
-        spAppTheme.backgroundTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
         )
-        spAppTheme.adapter = Constants.getAdapter(
-            context = requireContext(),
-            data = resources.getStringArray(R.array.app_theme_values).toList(),
-            firstOptionEnabled = true
+
+        spAppTheme.setup(
+            resources.getStringArray(R.array.app_theme_values).toList(),
+            viewModel.themeMode,
+            true
         )
-        spAppTheme.setSelection(viewModel.themeMode)
 
         btSave.setOnClickListener {
 
