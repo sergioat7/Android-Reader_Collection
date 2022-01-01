@@ -214,6 +214,10 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
             setTitle(booksResponse.size)
+            if(booksResponse.isEmpty()) {
+                ivNoReadingBooks.visibility = View.GONE
+                vwSeparatorReadingPending.visibility = View.GONE
+            }
             vwNoResults.visibility = if(booksResponse.isEmpty()) View.VISIBLE else View.GONE
         })
 
@@ -222,7 +226,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(booksResponse.toMutableList())
             rvReadingBooks.scrollToPosition(0)
-            val hideReadingSection = booksResponse.isEmpty() && viewModel.query.isNotBlank()
+            val hideReadingSection = (booksResponse.isEmpty() && viewModel.query.isNotBlank()) || viewModel.books.value?.isEmpty() == true
             rvReadingBooks.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
             ivNoReadingBooks.visibility = if(hideReadingSection || booksResponse.isNotEmpty()) View.GONE else View.VISIBLE
             vwSeparatorReadingPending.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
@@ -235,6 +239,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             rvPendingBooks.scrollToPosition(0)
             tvPendingBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
             rvPendingBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorPendingRead.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
@@ -244,7 +249,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             rvBooks.scrollToPosition(0)
             tvReadBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
             rvBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorPendingRead.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
