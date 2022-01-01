@@ -214,34 +214,37 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
             setTitle(booksResponse.size)
-
-            val readingBooks = booksResponse.filter { it.state == Constants.READING_STATE }.toMutableList()
-            readingBooksAdapter.resetList()
-            readingBooksAdapter.setBooks(readingBooks)
-            rvReadingBooks.scrollToPosition(0)
-            val hideReadingSection = booksResponse.isEmpty() || readingBooks.isEmpty() && viewModel.query.isNotBlank()
-            rvReadingBooks.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
-            ivNoReadingBooks.visibility = if(hideReadingSection || readingBooks.isNotEmpty()) View.GONE else View.VISIBLE
-
-            val pendingBooks = booksResponse.filter { it.state == Constants.PENDING_STATE }.toMutableList()
-            pendingBooksAdapter.resetList()
-            pendingBooksAdapter.setBooks(pendingBooks)
-            rvPendingBooks.scrollToPosition(0)
-            tvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
-            rvPendingBooks.visibility = if(pendingBooks.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorReadingPending.visibility = if(pendingBooks.isEmpty() || hideReadingSection) View.GONE else View.VISIBLE
-
-            val readBooks = booksResponse.filter {
-                it.state != Constants.READING_STATE && it.state != Constants.PENDING_STATE
-            }.toMutableList()
-            booksAdapter.resetList()
-            booksAdapter.setBooks(readBooks)
-            rvBooks.scrollToPosition(0)
-            tvReadBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
-            rvBooks.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorPendingRead.visibility = if(readBooks.isEmpty()) View.GONE else View.VISIBLE
-
             vwNoResults.visibility = if(booksResponse.isEmpty()) View.VISIBLE else View.GONE
+        })
+
+        viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
+
+            readingBooksAdapter.resetList()
+            readingBooksAdapter.setBooks(booksResponse.toMutableList())
+            rvReadingBooks.scrollToPosition(0)
+            val hideReadingSection = booksResponse.isEmpty() && viewModel.query.isNotBlank()
+            rvReadingBooks.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
+            ivNoReadingBooks.visibility = if(hideReadingSection || booksResponse.isNotEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorReadingPending.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
+        })
+
+        viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
+
+            pendingBooksAdapter.resetList()
+            pendingBooksAdapter.setBooks(booksResponse.toMutableList())
+            rvPendingBooks.scrollToPosition(0)
+            tvPendingBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            rvPendingBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+        })
+
+        viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
+
+            booksAdapter.resetList()
+            booksAdapter.setBooks(booksResponse.toMutableList())
+            rvBooks.scrollToPosition(0)
+            tvReadBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            rvBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorPendingRead.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
