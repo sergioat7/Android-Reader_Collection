@@ -85,6 +85,7 @@ class SearchViewModel @Inject constructor(
     fun addBook(position: Int) {
         _books.value?.get(position)?.let { book ->
 
+            book.state = Constants.PENDING_STATE
             _searchLoading.value = true
             booksRepository.createBookObserver(book).subscribeBy(
                 onComplete = {
