@@ -382,9 +382,12 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
 
         val image =
             book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https") ?: "-"
+        val errorImage =
+            if (Constants.isDarkMode(context)) R.drawable.ic_default_book_cover_light else R.drawable.ic_default_book_cover_dark
         Picasso
             .get()
             .load(image)
+            .error(errorImage)
             .into(ivBook, object : Callback {
 
                 override fun onSuccess() {

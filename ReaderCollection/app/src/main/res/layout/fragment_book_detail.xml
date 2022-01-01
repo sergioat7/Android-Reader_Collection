@@ -83,20 +83,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="20dp"
-            android:paddingTop="40dp"
+            android:paddingTop="20dp"
             android:paddingEnd="20dp"
             android:background="@drawable/bordered_scroll_view"
             >
+
+            <View
+                android:id="@+id/view_scrolling_indicator"
+                android:layout_width="100dp"
+                android:layout_height="5dp"
+                android:background="@drawable/rounded_background_search_view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                />
 
             <TextView
                 android:id="@+id/text_view_no_ratings"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
                 style="@style/NoRatingTextView"
                 />
 
@@ -104,11 +115,12 @@
                 android:id="@+id/linear_layout_rating"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
                 >
 
                 <me.zhanghai.android.materialratingbar.MaterialRatingBar
