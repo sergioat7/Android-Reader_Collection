@@ -36,6 +36,7 @@ class ProfileFragment: BaseFragment() {
     private lateinit var rbSpanish: RadioButton
     private lateinit var spSortParams: Spinner
     private lateinit var btSave: Button
+
     private lateinit var viewModel: ProfileViewModel
 
     //MARK: - Lifecycle methods
@@ -49,8 +50,8 @@ class ProfileFragment: BaseFragment() {
         return inflater.inflate(R.layout.fragment_profile, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
 
@@ -100,6 +101,7 @@ class ProfileFragment: BaseFragment() {
         rbSpanish = radio_button_es
         spSortParams = spinner_sort_params
         btSave = button_save
+
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(application))[ProfileViewModel::class.java]
         setupBindings()
 
@@ -143,7 +145,7 @@ class ProfileFragment: BaseFragment() {
             val sortParam =
                 if (spSortParams.selectedItemPosition == 0) null
                 else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]
-            viewModel.saveData(
+            viewModel.save(
                 etPassword.text.toString(),
                 language,
                 sortParam

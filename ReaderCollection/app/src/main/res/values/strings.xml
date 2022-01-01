@@ -78,12 +78,22 @@
     <string name="profile_delete_confirmation">Are you sure you want to delete your user? You will lose all your stored information about the books.</string>
     <string name="profile_logout_confirmation">Are you sure you want to exit?</string>
     <string name="order_by">Order by</string>
-    <string name="none">None</string>
-    <string name="title_sorting_key">Title</string>
-    <string name="published_date_sorting_key">Published date</string>
-    <string name="reading_date_sorting_key">Reading date</string>
-    <string name="page_count_sorting_key">Page count</string>
-    <string name="rating_sorting_key">Rating</string>
+    <string-array name="sorting_keys">
+        <item>None</item>
+        <item>Title</item>
+        <item>Published date</item>
+        <item>Reading date</item>
+        <item>Page count</item>
+        <item>Rating</item>
+    </string-array>
+    <string-array name="sorting_keys_ids" translatable="false">
+        <item />
+        <item>title</item>
+        <item>publishedDate</item>
+        <item>readingDate</item>
+        <item>pageCount</item>
+        <item>rating</item>
+    </string-array>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="sync_title">Synchronizing…</string>

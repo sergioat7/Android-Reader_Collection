@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -27,7 +28,8 @@ import javax.inject.Inject
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository
+    private val stateRepository: StateRepository,
+    userRepository: UserRepository
 ) : BaseViewModel() {
 
     //MARK: - Private properties
@@ -36,7 +38,7 @@ class BooksViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private var _sortKey = MutableLiveData<String?>()
+    private var sortParam = userRepository.sortParam
     private var _sortDescending = MutableLiveData<Boolean?>()
 
     //MARK: - Public properties
@@ -71,7 +73,7 @@ class BooksViewModel @Inject constructor(
             null,
             null,
             null,
-            _sortKey.value
+            sortParam
         ).subscribeBy(
             onComplete = {
 
@@ -94,17 +96,13 @@ class BooksViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun getSortParam() {
-        _sortKey.value = booksRepository.sortParam
-    }
-
     fun sort(context: Context, sortingKeys: Array<String>, sortingValues: Array<String>) {
 
         val dialogView = LinearLayout(context)
         dialogView.orientation = LinearLayout.HORIZONTAL
 
         val sortKeysPicker = Constants.getPicker(context, sortingValues)
-        _sortKey.value?.let {
+        sortParam?.let {
             sortKeysPicker.value = Constants.getValuePositionInArray(it, sortingKeys)
         }
 
@@ -131,7 +129,7 @@ class BooksViewModel @Inject constructor(
             .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, _ ->
 
                 val sort = sortingKeys[sortKeysPicker.value]
-                _sortKey.value = if (sort.isNotBlank()) sort else null
+                sortParam = if (sort.isNotBlank()) sort else null
                 _sortDescending.value = sortOrdersPicker.value == 1
                 getBooks()
                 dialog.dismiss()

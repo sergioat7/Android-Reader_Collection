@@ -11,7 +11,6 @@ import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -22,14 +21,8 @@ import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
     private val bookAPIClient: BookAPIClient,
-    private val database: AppDatabase,
-    private val sharedPreferencesHandler: SharedPreferencesHandler
-): BaseRepository() {
-
-    //MARK: - Public properties
-
-    val sortParam: String?
-        get() = sharedPreferencesHandler.getSortParam()
+    private val database: AppDatabase
+) : BaseRepository() {
 
     //MARK: - Public methods
 
@@ -50,7 +43,10 @@ class BooksRepository @Inject constructor(
                                 },
                                 onSuccess = { currentBooks ->
 
-                                    val booksToRemove = Constants.getDisabledContent(currentBooks, newBooks) as List<BookResponse>
+                                    val booksToRemove = Constants.getDisabledContent(
+                                        currentBooks,
+                                        newBooks
+                                    ) as List<BookResponse>
                                     deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
                                         onComplete = {
                                             emitter.onComplete()
@@ -79,10 +75,12 @@ class BooksRepository @Inject constructor(
             .observeOn(Constants.OBSERVER_SCHEDULER)
     }
 
-    fun getBooksDatabaseObserver(format: String? = null,
-                         state: String? = null,
-                         isFavourite: Boolean? = null,
-                         sortParam: String? = null): Maybe<List<BookResponse>> {
+    fun getBooksDatabaseObserver(
+        format: String? = null,
+        state: String? = null,
+        isFavourite: Boolean? = null,
+        sortParam: String? = null
+    ): Maybe<List<BookResponse>> {
 
         var queryString = "SELECT * FROM Book"
         var queryConditions = ""
