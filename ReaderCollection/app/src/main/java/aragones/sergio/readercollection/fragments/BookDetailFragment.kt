@@ -35,6 +35,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_book_detail.*
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
+import java.util.*
 import kotlin.math.abs
 
 class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
@@ -538,7 +539,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
             viewModel.sharedPreferencesHandler.getLanguage()
         )
-        val readingDate = Constants.stringToDate(
+        var readingDate = Constants.stringToDate(
             etReadingDate.text.toString(),
             Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
             viewModel.sharedPreferencesHandler.getLanguage()
@@ -552,6 +553,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
         val state =
             viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
+        if (readingDate == null && state == Constants.READ_STATE) readingDate = Date()
 
         return BookResponse(
             id = book?.id ?: "",
