@@ -11,6 +11,7 @@ import android.view.Gravity
 import android.widget.LinearLayout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
@@ -42,6 +43,12 @@ class BooksViewModel @Inject constructor(
 
     var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
+    val readingBooks: LiveData<List<BookResponse>> =
+        _books.map { it.filter { book -> book.state == Constants.READING_STATE } }
+    val pendingBooks: LiveData<List<BookResponse>> =
+        _books.map { it.filter { book -> book.state == Constants.PENDING_STATE } }
+    val readBooks: LiveData<List<BookResponse>> =
+        _books.map { it.filter { book -> book.state != Constants.READING_STATE && book.state != Constants.PENDING_STATE } }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
 
