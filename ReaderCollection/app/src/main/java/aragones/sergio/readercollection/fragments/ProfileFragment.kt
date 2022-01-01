@@ -36,6 +36,7 @@ class ProfileFragment: BaseFragment() {
     private lateinit var rbEnglish: RadioButton
     private lateinit var rbSpanish: RadioButton
     private lateinit var spSortParams: Spinner
+    private lateinit var spSortOrders: Spinner
     private lateinit var spAppTheme: Spinner
     private lateinit var btSave: Button
 
@@ -102,6 +103,7 @@ class ProfileFragment: BaseFragment() {
         rbEnglish = radio_button_en
         rbSpanish = radio_button_es
         spSortParams = spinner_sort_params
+        spSortOrders = spinner_sort_orders
         spAppTheme = spinner_app_theme
         btSave = button_save
 
@@ -136,6 +138,10 @@ class ProfileFragment: BaseFragment() {
             true
         )
 
+        spSortOrders.setup(
+            listOf(resources.getString(R.string.ascending), resources.getString(R.string.descending)),
+            if(viewModel.isSortDescending) 1 else 0,
+            true
         )
 
         spAppTheme.setup(
@@ -152,11 +158,13 @@ class ProfileFragment: BaseFragment() {
             val sortParam =
                 if (spSortParams.selectedItemPosition == 0) null
                 else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]
+            val isSortDescending = spSortOrders.selectedItemPosition == 1
             val themeMode = spAppTheme.selectedItemPosition
             viewModel.save(
                 etPassword.text.toString(),
                 language,
                 sortParam,
+                isSortDescending,
                 themeMode
             )
         }

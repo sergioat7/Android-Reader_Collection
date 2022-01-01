@@ -112,6 +112,7 @@ class Constants {
         const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
         const val VERSION_PREFERENCE_NAME = "version"
         const val THEME_MODE_PREFERENCE_NAME = "themeMode"
+        const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
 
         // MARK: - Database constants
 

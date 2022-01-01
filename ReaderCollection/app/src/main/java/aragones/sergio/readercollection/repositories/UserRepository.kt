@@ -34,6 +34,9 @@ class UserRepository @Inject constructor(
     val sortParam: String?
         get() = sharedPreferencesHandler.getSortParam()
 
+    val isSortDescending: Boolean
+        get() = sharedPreferencesHandler.isSortDescending()
+
     val themeMode: Int
         get() = sharedPreferencesHandler.getThemeMode()
 
@@ -59,8 +62,10 @@ class UserRepository @Inject constructor(
         return userAPIClient.updatePasswordObserver(newPassword)
     }
 
-    fun storeLanguage(language: String) {
-        sharedPreferencesHandler.setLanguage(language)
+    fun storeLoginData(userData: UserData, authData: AuthData) {
+
+        sharedPreferencesHandler.storeUserData(userData)
+        sharedPreferencesHandler.storeCredentials(authData)
     }
 
     fun storeCredentials(authData: AuthData) {
@@ -83,14 +88,16 @@ class UserRepository @Inject constructor(
         sharedPreferencesHandler.removePassword()
     }
 
+    fun storeLanguage(language: String) {
+        sharedPreferencesHandler.setLanguage(language)
+    }
+
     fun storeSortParam(sortParam: String?) {
         sharedPreferencesHandler.setSortParam(sortParam)
     }
 
-    fun storeLoginData(userData: UserData, authData: AuthData) {
-
-        sharedPreferencesHandler.storeUserData(userData)
-        sharedPreferencesHandler.storeCredentials(authData)
+    fun storeIsSortDescending(isSortDescending: Boolean) {
+        sharedPreferencesHandler.setIsSortDescending(isSortDescending)
     }
 
     fun storeThemeMode(themeMode: Int) {
