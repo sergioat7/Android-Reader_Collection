@@ -35,6 +35,7 @@ class ProfileFragment: BaseFragment() {
     private lateinit var rbEnglish: RadioButton
     private lateinit var rbSpanish: RadioButton
     private lateinit var spSortParams: Spinner
+    private lateinit var spAppTheme: Spinner
     private lateinit var btSave: Button
 
     private lateinit var viewModel: ProfileViewModel
@@ -100,6 +101,7 @@ class ProfileFragment: BaseFragment() {
         rbEnglish = radio_button_en
         rbSpanish = radio_button_es
         spSortParams = spinner_sort_params
+        spAppTheme = spinner_app_theme
         btSave = button_save
 
         viewModel = ViewModelProvider(this, ProfileViewModelFactory(application))[ProfileViewModel::class.java]
@@ -137,6 +139,16 @@ class ProfileFragment: BaseFragment() {
         }
         spSortParams.setSelection(position)
 
+        spAppTheme.backgroundTintList = ColorStateList.valueOf(
+            ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
+        )
+        spAppTheme.adapter = Constants.getAdapter(
+            context = requireContext(),
+            data = resources.getStringArray(R.array.app_theme_values).toList(),
+            firstOptionEnabled = true
+        )
+        spAppTheme.setSelection(viewModel.themeMode)
+
         btSave.setOnClickListener {
 
             val language =
@@ -145,10 +157,12 @@ class ProfileFragment: BaseFragment() {
             val sortParam =
                 if (spSortParams.selectedItemPosition == 0) null
                 else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]
+            val themeMode = spAppTheme.selectedItemPosition
             viewModel.save(
                 etPassword.text.toString(),
                 language,
-                sortParam
+                sortParam,
+                themeMode
             )
         }
     }

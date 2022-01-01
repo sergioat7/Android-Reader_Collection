@@ -39,6 +39,7 @@ class LandingActivity: BaseActivity() {
 
         configLanguage()
         viewModel.checkVersion()
+        viewModel.checkTheme()
     }
 
     private fun setupBindings() {

@@ -70,6 +70,12 @@
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
     <string name="sort_books_param">Sort books param</string>
+    <string name="app_theme">App theme</string>
+    <string-array name="app_theme_values">
+        <item>System default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
 
     //POPUPS
     <string name="accept">Accept</string>

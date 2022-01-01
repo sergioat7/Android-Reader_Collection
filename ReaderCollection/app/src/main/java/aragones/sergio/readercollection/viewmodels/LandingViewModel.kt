@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.activities.LoginActivity
@@ -64,6 +65,15 @@ class LandingViewModel @Inject constructor(
             } else {
                 LoginActivity::class.java
             }
+        }
+    }
+
+    fun checkTheme() {
+
+        when (sharedPreferencesHandler.getThemeMode()) {
+            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
 
