@@ -516,7 +516,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
 
     private fun setState(book: BookResponse) {
 
-        var statePosition = 0
+        var statePosition = if (isGoogleBook) 1 else 0
         book.state?.let { stateId ->
 
             val stateName = states.firstOrNull { it.id == stateId }?.name
