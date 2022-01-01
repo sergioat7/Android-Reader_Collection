@@ -7,17 +7,14 @@ package aragones.sergio.readercollection.fragments
 
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
-import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -25,6 +22,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
+import aragones.sergio.readercollection.extensions.handleStatusBar
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
@@ -74,11 +72,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     override fun onResume() {
         super.onResume()
 
-        (activity as? AppCompatActivity)?.apply {
-            window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
-            WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = !Constants.isDarkMode(context)
-            supportActionBar?.hide()
-        }
+        activity?.handleStatusBar(requireView(), true, Constants.isDarkMode(context))
         if (this::viewModel.isInitialized) viewModel.getBooks()
         svBooks.clearFocus()
     }
@@ -86,11 +80,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     override fun onPause() {
         super.onPause()
 
-        (activity as? AppCompatActivity)?.apply {
-            window.statusBarColor = ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-            WindowInsetsControllerCompat(window, requireView()).isAppearanceLightStatusBars = Constants.isDarkMode(context)
-            supportActionBar?.show()
-        }
+        activity?.handleStatusBar(requireView(), false, !Constants.isDarkMode(context))
     }
 
     override fun onDestroy() {
@@ -134,13 +124,15 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             BooksViewModelFactory(application)
         )[BooksViewModel::class.java]
         readingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == Constants.READING_STATE }?.toMutableList() ?: mutableListOf(),
+            viewModel.books.value?.filter { it.state == Constants.READING_STATE }?.toMutableList()
+                ?: mutableListOf(),
             false,
             requireContext(),
             this
         )
         pendingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == Constants.PENDING_STATE }?.toMutableList() ?: mutableListOf(),
+            viewModel.books.value?.filter { it.state == Constants.PENDING_STATE }?.toMutableList()
+                ?: mutableListOf(),
             false,
             requireContext(),
             this
@@ -204,11 +196,11 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
             setTitle(booksResponse.size)
-            if(booksResponse.isEmpty()) {
+            if (booksResponse.isEmpty()) {
                 ivNoReadingBooks.visibility = View.GONE
                 vwSeparatorReadingPending.visibility = View.GONE
             }
-            vwNoResults.visibility = if(booksResponse.isEmpty()) View.VISIBLE else View.GONE
+            vwNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
         })
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
@@ -216,10 +208,13 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(booksResponse.toMutableList())
             rvReadingBooks.scrollToPosition(0)
-            val hideReadingSection = (booksResponse.isEmpty() && viewModel.query.isNotBlank()) || viewModel.books.value?.isEmpty() == true
-            rvReadingBooks.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
-            ivNoReadingBooks.visibility = if(hideReadingSection || booksResponse.isNotEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorReadingPending.visibility = if(hideReadingSection) View.GONE else View.VISIBLE
+            val hideReadingSection =
+                (booksResponse.isEmpty() && viewModel.query.isNotBlank()) || viewModel.books.value?.isEmpty() == true
+            rvReadingBooks.visibility = if (hideReadingSection) View.GONE else View.VISIBLE
+            ivNoReadingBooks.visibility =
+                if (hideReadingSection || booksResponse.isNotEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorReadingPending.visibility =
+                if (hideReadingSection) View.GONE else View.VISIBLE
         })
 
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
@@ -227,9 +222,10 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(booksResponse.toMutableList())
             rvPendingBooks.scrollToPosition(0)
-            tvPendingBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            rvPendingBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorPendingRead.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            tvPendingBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            rvPendingBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            vwSeparatorPendingRead.visibility =
+                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
@@ -237,8 +233,8 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             booksAdapter.resetList()
             booksAdapter.setBooks(booksResponse.toMutableList())
             rvBooks.scrollToPosition(0)
-            tvReadBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            rvBooks.visibility = if(booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            tvReadBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            rvBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
@@ -273,7 +269,8 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             null
         )
         val color = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
-        svBooks.findViewById<AppCompatImageView>(searchIconId)?.imageTintList = ColorStateList.valueOf(color)
+        svBooks.findViewById<AppCompatImageView>(searchIconId)?.imageTintList =
+            ColorStateList.valueOf(color)
 
         val searchPlateId = svBooks.context.resources.getIdentifier(
             "android:id/search_plate",
@@ -301,7 +298,8 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
                 null,
                 null
             )
-            searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
+            searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList =
+                ColorStateList.valueOf(color)
         }
 
         svBooks.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
