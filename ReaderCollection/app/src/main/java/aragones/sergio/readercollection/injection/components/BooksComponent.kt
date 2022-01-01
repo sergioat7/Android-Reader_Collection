@@ -9,6 +9,7 @@ import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
 import aragones.sergio.readercollection.injection.modules.GoogleAPIClientModule
 import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
+import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import dagger.Component
 
 @Component(modules = [
@@ -18,4 +19,5 @@ import dagger.Component
 ])
 interface BooksComponent {
     fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
+    fun inject(searchViewModelFactory: SearchViewModelFactory)
 }

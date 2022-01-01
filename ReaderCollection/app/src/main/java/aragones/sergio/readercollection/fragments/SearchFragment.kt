@@ -179,6 +179,14 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
             srlBooks.isRefreshing = isLoading
         })
 
+        viewModel.bookAdded.observe(viewLifecycleOwner, { position ->
+            position?.let {
+
+                val message = resources.getString(R.string.book_saved)
+                showPopupDialog(message)
+            }
+        })
+
         viewModel.searchError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
@@ -231,6 +239,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
             val position = viewHolder.adapterPosition
+            viewModel.addBook(position)
             booksAdapter.notifyItemChanged(position)
         }
 
