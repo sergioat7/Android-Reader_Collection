@@ -17,7 +17,7 @@
             >
 
             <corners
-                android:radius="15dp"
+                android:radius="@dimen/radius_15dp"
                 />
 
             <solid
@@ -37,7 +37,7 @@
             >
 
             <corners
-                android:radius="15dp"
+                android:radius="@dimen/radius_15dp"
                 />
 
             <solid
@@ -55,7 +55,7 @@
             >
 
             <corners
-                android:radius="15dp"
+                android:radius="@dimen/radius_15dp"
                 />
 
             <solid

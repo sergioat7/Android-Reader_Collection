@@ -7,12 +7,12 @@
 <resources>
 
     <style name="SynchronizeTitleTextView">
-        <item name="android:layout_marginStart">100dp</item>
-        <item name="android:layout_marginEnd">100dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_100dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_100dp</item>
         <item name="android:text">@string/sync_title</item>
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
     </style>
 
     <style name="LineView">
@@ -20,16 +20,16 @@
     </style>
 
     <style name="LineView.Up">
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_12dp</item>
     </style>
 
     <style name="LineView.Down">
-        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
     </style>
 
     <style name="SynchronizeProgressBar">
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_20dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_20dp</item>
         <item name="android:indeterminate">true</item>
         <item name="android:indeterminateTint">@color/colorPrimary</item>
     </style>
