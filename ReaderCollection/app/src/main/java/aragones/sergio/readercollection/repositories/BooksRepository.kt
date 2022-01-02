@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.repositories
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
@@ -71,8 +72,8 @@ class BooksRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getBooksDatabaseObserver(
@@ -105,8 +106,8 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .getBooksObserver(query)
             .`as`(RxJavaBridge.toV3Maybe())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {
@@ -114,8 +115,8 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .getBookObserver(googleId)
             .`as`(RxJavaBridge.toV3Single())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun createBookObserver(book: BookResponse): Completable {
@@ -139,8 +140,8 @@ class BooksRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun updateBookObserver(book: BookResponse): Single<BookResponse> {
@@ -164,7 +165,7 @@ class BooksRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-        observer.subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
+        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
 
         return observer
     }
@@ -196,8 +197,8 @@ class BooksRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun setFavouriteBookObserver(googleId: String, isFavourite: Boolean): Single<BookResponse> {
@@ -220,7 +221,7 @@ class BooksRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-        observer.subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
+        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
 
         return observer
     }
@@ -248,8 +249,8 @@ class BooksRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     //MARK: - Private methods
@@ -259,8 +260,8 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .insertBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun updateBooksDatabaseObserver(books: List<BookResponse>): Completable {
@@ -268,8 +269,8 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .updateBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun deleteBooksDatabaseObserver(books: List<BookResponse>): Completable {
@@ -277,7 +278,7 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

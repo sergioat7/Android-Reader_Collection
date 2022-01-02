@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.network.apiclient
 
 import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.StateAPIService
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -16,12 +16,13 @@ class StateAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
-    private val api = APIClient.retrofit.create(StateAPIService::class.java)
+    private val api = ApiManager.retrofit.create(StateAPIService::class.java)
 
     fun getStatesObserver(): Single<List<StateResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
-        headers[Constants.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
-        return api.getStates(headers).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
+        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
+        return api.getStates(headers).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

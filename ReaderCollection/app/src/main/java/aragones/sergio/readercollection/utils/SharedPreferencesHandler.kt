@@ -24,7 +24,7 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun getLanguage(): String {
 
-        sharedPreferences?.getString(Constants.LANGUAGE_PREFERENCE_NAME, null)?.let {
+        sharedPreferences?.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
             return it
         } ?: run {
 
@@ -39,7 +39,7 @@ class SharedPreferencesHandler @Inject constructor(
         if (sharedPreferences != null) {
             with (sharedPreferences.edit()) {
 
-                putString(Constants.LANGUAGE_PREFERENCE_NAME, language)
+                putString(Preferences.LANGUAGE_PREFERENCE_NAME, language)
                 commit()
             }
         }
@@ -47,7 +47,7 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun getCredentials(): AuthData {
 
-        val authDataJson = sharedPreferences?.getString(Constants.AUTH_DATA_PREFERENCES_NAME,null)
+        val authDataJson = sharedPreferences?.getString(Preferences.AUTH_DATA_PREFERENCES_NAME,null)
         return if (authDataJson != null) {
             gson.fromJson(authDataJson, AuthData::class.java)
         } else {
@@ -60,14 +60,14 @@ class SharedPreferencesHandler @Inject constructor(
         if (sharedPreferences != null) {
             with (sharedPreferences.edit()) {
                 val authDataJson = gson.toJson(authData)
-                putString(Constants.AUTH_DATA_PREFERENCES_NAME, authDataJson)
+                putString(Preferences.AUTH_DATA_PREFERENCES_NAME, authDataJson)
                 commit()
             }
         }
     }
 
     fun removeCredentials() {
-        sharedPreferences?.edit()?.remove(Constants.AUTH_DATA_PREFERENCES_NAME)?.apply()
+        sharedPreferences?.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun isLoggedIn(): Boolean {
@@ -79,7 +79,7 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun getUserData(): UserData {
 
-        val userDataJson = sharedPreferences?.getString(Constants.USER_DATA_PREFERENCES_NAME,null)
+        val userDataJson = sharedPreferences?.getString(Preferences.USER_DATA_PREFERENCES_NAME,null)
         return if (userDataJson != null) {
             gson.fromJson(userDataJson, UserData::class.java)
         } else {
@@ -92,7 +92,7 @@ class SharedPreferencesHandler @Inject constructor(
         if (sharedPreferences != null) {
             with (sharedPreferences.edit()) {
                 val userDataJson = gson.toJson(userData)
-                putString(Constants.USER_DATA_PREFERENCES_NAME, userDataJson)
+                putString(Preferences.USER_DATA_PREFERENCES_NAME, userDataJson)
                 commit()
             }
         }
@@ -106,7 +106,7 @@ class SharedPreferencesHandler @Inject constructor(
     }
 
     fun removeUserData() {
-        sharedPreferences?.edit()?.remove(Constants.USER_DATA_PREFERENCES_NAME)?.apply()
+        sharedPreferences?.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun removePassword() {
@@ -118,7 +118,7 @@ class SharedPreferencesHandler @Inject constructor(
     }
 
     fun getSortParam(): String? {
-        return sharedPreferences?.getString(Constants.SORT_PARAM_PREFERENCE_NAME, null)
+        return sharedPreferences?.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
     }
 
     fun setSortParam(sortParam: String?) {
@@ -126,51 +126,59 @@ class SharedPreferencesHandler @Inject constructor(
         if (sharedPreferences != null) {
             with (sharedPreferences.edit()) {
 
-                putString(Constants.SORT_PARAM_PREFERENCE_NAME, sortParam)
+                putString(Preferences.SORT_PARAM_PREFERENCE_NAME, sortParam)
                 commit()
             }
         }
     }
 
     fun getVersion(): Int {
-        return sharedPreferences?.getInt(Constants.VERSION_PREFERENCE_NAME, 0) ?: 0
+        return sharedPreferences?.getInt(Preferences.VERSION_PREFERENCE_NAME, 0) ?: 0
     }
 
     fun setVersion(version: Int) {
 
         sharedPreferences?.let {
             with(it.edit()) {
-                putInt(Constants.VERSION_PREFERENCE_NAME, version)
+                putInt(Preferences.VERSION_PREFERENCE_NAME, version)
                 commit()
             }
         }
     }
 
     fun getThemeMode(): Int {
-        return sharedPreferences?.getInt(Constants.THEME_MODE_PREFERENCE_NAME, 0) ?: 0
+        return sharedPreferences?.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0) ?: 0
     }
 
     fun setThemeMode(themeMode: Int) {
 
         sharedPreferences?.let {
             with(it.edit()) {
-                putInt(Constants.THEME_MODE_PREFERENCE_NAME, themeMode)
+                putInt(Preferences.THEME_MODE_PREFERENCE_NAME, themeMode)
                 commit()
             }
         }
     }
 
     fun isSortDescending(): Boolean {
-        return sharedPreferences?.getBoolean(Constants.SORT_ORDER_PREFERENCE_NAME, false) ?: false
+        return sharedPreferences?.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false) ?: false
     }
 
     fun setIsSortDescending(isSortDescending: Boolean) {
 
         sharedPreferences?.let {
             with(it.edit()) {
-                putBoolean(Constants.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
+                putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
                 commit()
             }
+        }
+    }
+
+    fun getDateFormatToShow(): String {
+
+        return when (getLanguage()) {
+            "es" -> "d MMMM yyyy"
+            else -> "MMMM d, yyyy"
         }
     }
 }

@@ -7,27 +7,33 @@ package aragones.sergio.readercollection.network.apiclient
 
 import aragones.sergio.readercollection.models.responses.GoogleBookListResponse
 import aragones.sergio.readercollection.models.responses.GoogleBookResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.GooglePIService
-import aragones.sergio.readercollection.utils.Constants
 import io.reactivex.rxjava3.core.Single
 
 class GoogleAPIClient {
 
-    private val api = APIClient.googleRetrofit.create(GooglePIService::class.java)
+    private val api = ApiManager.googleRetrofit.create(GooglePIService::class.java)
 
-    fun searchGoogleBooksObserver(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
+    fun searchGoogleBooksObserver(
+        query: String,
+        page: Int,
+        order: String?
+    ): Single<GoogleBookListResponse> {
 
         val params: MutableMap<String, String> = HashMap()
-        params[Constants.SEARCH_PARAM] = query
-        params[Constants.PAGE_PARAM] = ((page - 1) * Constants.RESULTS).toString()
-        params[Constants.RESULTS_PARAM] = Constants.RESULTS.toString()
+        params[ApiManager.SEARCH_PARAM] = query
+        params[ApiManager.PAGE_PARAM] = ((page - 1) * ApiManager.RESULTS).toString()
+        params[ApiManager.RESULTS_PARAM] = ApiManager.RESULTS.toString()
         if (order != null) {
-            params[Constants.ORDER_PARAM] = order
+            params[ApiManager.ORDER_PARAM] = order
         }
-        return api.searchGoogleBooks(params).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
+        return api.searchGoogleBooks(params).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getGoogleBookObserver(volumeId: String): Single<GoogleBookResponse> {
-        return api.getGoogleBook(volumeId).subscribeOn(Constants.SUBSCRIBER_SCHEDULER).observeOn(Constants.OBSERVER_SCHEDULER)
+        return api.getGoogleBook(volumeId).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

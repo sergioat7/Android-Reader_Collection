@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.repositories
 
 import aragones.sergio.readercollection.models.responses.FormatResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
@@ -60,8 +61,8 @@ class FormatRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getFormatsDatabaseObserver(): Single<List<FormatResponse>> {
@@ -69,8 +70,8 @@ class FormatRepository @Inject constructor(
             .formatDao()
             .getFormatsObserver()
             .`as`(RxJavaBridge.toV3Single())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun resetTableObserver(): Completable {
@@ -93,8 +94,8 @@ class FormatRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     //MARK: - Private methods
@@ -104,8 +105,8 @@ class FormatRepository @Inject constructor(
             .formatDao()
             .insertFormatsObserver(formats)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun deleteFormatsDatabaseObserver(formats: List<FormatResponse>): Completable {
@@ -113,7 +114,7 @@ class FormatRepository @Inject constructor(
             .formatDao()
             .deleteFormatsObserver(formats)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

@@ -11,14 +11,19 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.widget.EditText
+import android.widget.ImageButton
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import java.util.*
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 
-    this.addTextChangedListener(object: TextWatcher {
+    this.addTextChangedListener(object : TextWatcher {
 
         override fun afterTextChanged(editable: Editable?) {
             afterTextChanged.invoke(editable.toString())
@@ -49,7 +54,8 @@ fun EditText.setReadOnly(value: Boolean, inputType: Int, lineColor: Int) {
     isFocusableInTouchMode = !value
     isEnabled = !value
     this.setRawInputType(inputType)
-    this.backgroundTintList = if (value) ColorStateList.valueOf(Color.TRANSPARENT) else ColorStateList.valueOf(lineColor)
+    this.backgroundTintList =
+        if (value) ColorStateList.valueOf(Color.TRANSPARENT) else ColorStateList.valueOf(lineColor)
 }
 
 fun EditText.showDatePicker(context: Context) {
@@ -70,6 +76,23 @@ fun EditText.getValue(): String {
     return this.text.toString().trimStart().trimEnd()
 }
 
+fun EditText.showOrHidePassword(imageButton: ImageButton, isDarkMode: Boolean) {
+
+    if (this.transformationMethod is HideReturnsTransformationMethod) {
+
+        val image =
+            if (isDarkMode) R.drawable.ic_show_password_dark else R.drawable.ic_show_password_light
+        imageButton.setImageResource(image)
+        this.transformationMethod = PasswordTransformationMethod.getInstance()
+    } else {
+
+        val image =
+            if (isDarkMode) R.drawable.ic_hide_password_dark else R.drawable.ic_hide_password_light
+        imageButton.setImageResource(image)
+        this.transformationMethod = HideReturnsTransformationMethod.getInstance()
+    }
+}
+
 // MARK - Private functions
 
 private fun getPicker(editText: EditText, context: Context): DatePickerDialog {
@@ -85,20 +108,12 @@ private fun getPicker(editText: EditText, context: Context): DatePickerDialog {
         val newDate = "${year}-${newMonth}-${newDay}"
 
         val sharedPreferencesHandler = SharedPreferencesHandler(
-            context.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
+            context.getSharedPreferences(Preferences.PREFERENCES_NAME, Context.MODE_PRIVATE)
         )
         val language = sharedPreferencesHandler.getLanguage()
 
-        val date = Constants.stringToDate(
-            newDate,
-            Constants.DATE_FORMAT,
-            language
-        )
-        val dateString = Constants.dateToString(
-            date,
-            Constants.getDateFormatToShow(sharedPreferencesHandler),
-            language
-        )
+        val date = newDate.toDate(Constants.DATE_FORMAT, language)
+        val dateString = date.toString(sharedPreferencesHandler.getDateFormatToShow(), language)
 
         editText.setText(dateString)
     }, currentYear, currentMonth, currentDay)

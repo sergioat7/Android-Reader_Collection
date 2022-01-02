@@ -9,17 +9,22 @@ import android.app.AlertDialog
 import android.content.Context
 import android.view.Gravity
 import android.widget.LinearLayout
+import android.widget.NumberPicker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.getPickerParams
+import aragones.sergio.readercollection.extensions.setup
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -46,11 +51,11 @@ class BooksViewModel @Inject constructor(
     var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state == Constants.READING_STATE } }
+        _books.map { it.filter { book -> book.state == State.READING } }
     val pendingBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state == Constants.PENDING_STATE } }
+        _books.map { it.filter { book -> book.state == State.PENDING } }
     val readBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state != Constants.READING_STATE && book.state != Constants.PENDING_STATE } }
+        _books.map { it.filter { book -> book.state != State.READING && book.state != State.PENDING } }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
 
@@ -90,7 +95,7 @@ class BooksViewModel @Inject constructor(
             onError = {
 
                 _booksLoading.value = false
-                _booksError.value = Constants.handleError(it)
+                _booksError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -101,24 +106,27 @@ class BooksViewModel @Inject constructor(
         val dialogView = LinearLayout(context)
         dialogView.orientation = LinearLayout.HORIZONTAL
 
-        val sortKeysPicker = Constants.getPicker(context, sortingValues)
+        val sortKeysPicker = NumberPicker(context)
+        sortKeysPicker.setup(sortingValues)
         sortParam?.let {
             sortKeysPicker.value = Constants.getValuePositionInArray(it, sortingKeys)
         }
 
-        val values = arrayOf(
-            context.resources.getString(R.string.ascending),
-            context.resources.getString(R.string.descending)
+        val sortOrdersPicker = NumberPicker(context)
+        sortOrdersPicker.setup(
+            arrayOf(
+                context.resources.getString(R.string.ascending),
+                context.resources.getString(R.string.descending)
+            )
         )
-        val sortOrdersPicker = Constants.getPicker(context, values)
         sortOrdersPicker.value = if (isSortDescending) 1 else 0
 
         val params = LinearLayout.LayoutParams(50, 50)
         params.gravity = Gravity.CENTER
 
         dialogView.layoutParams = params
-        dialogView.addView(sortKeysPicker, Constants.getPickerParams())
-        dialogView.addView(sortOrdersPicker, Constants.getPickerParams())
+        dialogView.addView(sortKeysPicker, getPickerParams())
+        dialogView.addView(sortOrdersPicker, getPickerParams())
 
         AlertDialog.Builder(context)
             .setTitle(context.resources.getString(R.string.order_by))

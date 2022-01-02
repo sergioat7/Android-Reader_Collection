@@ -15,11 +15,8 @@ import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.extensions.clearErrors
-import aragones.sergio.readercollection.extensions.onFocusChange
+import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -94,7 +91,7 @@ class RegisterFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
+            etPassword.showOrHidePassword(ibPassword, activity?.isDarkMode() == true)
         }
 
         etConfirmPassword.afterTextChanged {
@@ -105,7 +102,7 @@ class RegisterFragment: BaseFragment() {
         }
 
         ibConfirmPassword.setOnClickListener {
-            Constants.showOrHidePassword(etConfirmPassword, ibConfirmPassword, Constants.isDarkMode(context))
+            etConfirmPassword.showOrHidePassword(ibConfirmPassword, activity?.isDarkMode() == true)
         }
 
         btRegister.setOnClickListener {
