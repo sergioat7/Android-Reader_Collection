@@ -10,7 +10,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class GoogleAPIClientModule {
+class GoogleApiClientModule {
 
     @Provides
     fun provideGoogleApiClient() = GoogleAPIClient()

@@ -7,8 +7,7 @@ package aragones.sergio.readercollection.network.apiclient
 
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.FormatAPIService
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.network.apiservice.FormatApiService
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -17,7 +16,7 @@ class FormatAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
-    private val api = ApiManager.retrofit.create(FormatAPIService::class.java)
+    private val api = ApiManager.retrofit.create(FormatApiService::class.java)
 
     fun getFormatsObserver(): Single<List<FormatResponse>> {
 

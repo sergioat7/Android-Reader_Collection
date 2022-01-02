@@ -8,12 +8,12 @@ package aragones.sergio.readercollection.network.apiclient
 import aragones.sergio.readercollection.models.responses.GoogleBookListResponse
 import aragones.sergio.readercollection.models.responses.GoogleBookResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.GooglePIService
+import aragones.sergio.readercollection.network.apiservice.GoogleApiService
 import io.reactivex.rxjava3.core.Single
 
 class GoogleAPIClient {
 
-    private val api = ApiManager.googleRetrofit.create(GooglePIService::class.java)
+    private val api = ApiManager.googleRetrofit.create(GoogleApiService::class.java)
 
     fun searchGoogleBooksObserver(
         query: String,

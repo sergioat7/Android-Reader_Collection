@@ -8,7 +8,7 @@ package aragones.sergio.readercollection.network.apiclient
 import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.BookAPIService
+import aragones.sergio.readercollection.network.apiservice.BookApiService
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -19,7 +19,7 @@ class BookAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
-    private val api = ApiManager.retrofit.create(BookAPIService::class.java)
+    private val api = ApiManager.retrofit.create(BookApiService::class.java)
 
     fun getBooksObserver(): Maybe<List<BookResponse>> {
 

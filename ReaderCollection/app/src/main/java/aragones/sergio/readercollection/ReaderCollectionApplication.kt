@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 20/10/2020
  */
 
-package aragones.sergio.readercollection.injection
+package aragones.sergio.readercollection
 
 import android.app.Application
 import aragones.sergio.readercollection.injection.components.AppComponent
@@ -11,7 +11,7 @@ import aragones.sergio.readercollection.injection.components.BooksComponent
 import aragones.sergio.readercollection.injection.components.DaggerAppComponent
 import aragones.sergio.readercollection.injection.components.DaggerBooksComponent
 import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
-import aragones.sergio.readercollection.injection.modules.GoogleAPIClientModule
+import aragones.sergio.readercollection.injection.modules.GoogleApiClientModule
 import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 
 class ReaderCollectionApplication : Application() {
@@ -27,23 +27,23 @@ class ReaderCollectionApplication : Application() {
         super.onCreate()
 
         appComponent = DaggerAppComponent.builder()
-            .sharedPreferencesModule(
-                SharedPreferencesModule(applicationContext)
-            )
             .appDatabaseModule(
                 AppDatabaseModule(applicationContext)
+            )
+            .sharedPreferencesModule(
+                SharedPreferencesModule(applicationContext)
             )
             .build()
 
         booksComponent = DaggerBooksComponent.builder()
-            .sharedPreferencesModule(
-                SharedPreferencesModule(applicationContext)
-            )
-            .googleAPIClientModule(
-                GoogleAPIClientModule()
-            )
             .appDatabaseModule(
                 AppDatabaseModule(applicationContext)
+            )
+            .googleApiClientModule(
+                GoogleApiClientModule()
+            )
+            .sharedPreferencesModule(
+                SharedPreferencesModule(applicationContext)
             )
             .build()
     }
