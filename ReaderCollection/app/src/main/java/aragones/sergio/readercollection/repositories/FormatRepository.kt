@@ -10,7 +10,6 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.FormatApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -28,40 +27,43 @@ class FormatRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            getFormatsObserver().subscribeBy(
-                onSuccess = { newFormats ->
-                    insertFormatsDatabaseObserver(newFormats).subscribeBy(
-                        onComplete = {
-                            getFormatsDatabaseObserver().subscribeBy(
-                                onSuccess = { currentFormats ->
+            api.getFormats()
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onSuccess = { newFormats ->
+                        insertFormatsDatabaseObserver(newFormats).subscribeBy(
+                            onComplete = {
+                                getFormatsDatabaseObserver().subscribeBy(
+                                    onSuccess = { currentFormats ->
 
-                                    val formatsToRemove = AppDatabase.getDisabledContent(
-                                        currentFormats,
-                                        newFormats
-                                    ) as List<FormatResponse>
-                                    deleteFormatsDatabaseObserver(formatsToRemove).subscribeBy(
-                                        onComplete = {
-                                            emitter.onComplete()
-                                        },
-                                        onError = {
-                                            emitter.onError(it)
-                                        }
-                                    ).addTo(disposables)
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                }
-                            ).addTo(disposables)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+                                        val formatsToRemove = AppDatabase.getDisabledContent(
+                                            currentFormats,
+                                            newFormats
+                                        ) as List<FormatResponse>
+                                        deleteFormatsDatabaseObserver(formatsToRemove).subscribeBy(
+                                            onComplete = {
+                                                emitter.onComplete()
+                                            },
+                                            onError = {
+                                                emitter.onError(it)
+                                            }
+                                        ).addTo(disposables)
+                                    },
+                                    onError = {
+                                        emitter.onError(it)
+                                    }
+                                ).addTo(disposables)
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -103,16 +105,6 @@ class FormatRepository @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun getFormatsObserver(): Single<List<FormatResponse>> {
-
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        return api
-            .getFormats(headers)
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
     private fun insertFormatsDatabaseObserver(formats: List<FormatResponse>): Completable {
         return database
             .formatDao()

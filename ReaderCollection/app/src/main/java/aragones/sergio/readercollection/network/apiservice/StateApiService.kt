@@ -8,7 +8,6 @@ package aragones.sergio.readercollection.network.apiservice
 import aragones.sergio.readercollection.models.responses.StateResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
-import retrofit2.http.HeaderMap
 import retrofit2.http.Headers
 
 interface StateApiService {
@@ -17,5 +16,5 @@ interface StateApiService {
         "Accept:application/json"
     )
     @GET("states")
-    fun getStates(@HeaderMap headers: Map<String, String>): Single<List<StateResponse>>
+    fun getStates(): Single<List<StateResponse>>
 }

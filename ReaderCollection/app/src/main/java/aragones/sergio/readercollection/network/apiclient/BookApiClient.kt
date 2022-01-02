@@ -9,7 +9,6 @@ import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.BookApiService
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -21,57 +20,40 @@ class BookApiClient @Inject constructor(
 
     fun getBooksObserver(): Maybe<List<BookResponse>> {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
-
         return api
-            .getBooks(headers)
+            .getBooks()
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun createBookObserver(book: BookResponse): Completable {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
         return api
-            .createBook(headers, book)
+            .createBook(book)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun setBookObserver(book: BookResponse): Single<BookResponse> {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
         return api
-            .setBook(headers, book.id, book)
+            .setBook(book.id, book)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun deleteBookObserver(googleId: String): Completable {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
         return api
-            .deleteBook(headers, googleId)
+            .deleteBook(googleId)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun setFavouriteBookObserver(googleId: String, isFavourite: Boolean): Single<BookResponse> {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
-        val body = FavouriteBook(isFavourite)
         return api
-            .setFavouriteBook(headers, googleId, body)
+            .setFavouriteBook(googleId, FavouriteBook(isFavourite))
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }

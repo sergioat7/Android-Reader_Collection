@@ -10,7 +10,6 @@ import aragones.sergio.readercollection.models.requests.NewPassword
 import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.UserApiService
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
@@ -21,56 +20,40 @@ class UserApiClient @Inject constructor(
 
     fun registerObserver(username: String, password: String): Completable {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        val body = LoginCredentials(username, password)
         return api
-            .register(headers, body)
+            .register(LoginCredentials(username, password))
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun deleteUserObserver(): Completable {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
         return api
-            .deleteUser(headers)
+            .deleteUser()
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun loginObserver(username: String, password: String): Single<LoginResponse> {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        val body = LoginCredentials(username, password)
         return api
-            .login(headers, body)
+            .login(LoginCredentials(username, password))
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun logoutObserver(): Completable {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
         return api
-            .logout(headers)
+            .logout()
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun updatePasswordObserver(password: String): Completable {
 
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = SharedPreferencesHandler.getCredentials().token
-        val body = NewPassword(password)
         return api
-            .updatePassword(headers, body)
+            .updatePassword(NewPassword(password))
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
