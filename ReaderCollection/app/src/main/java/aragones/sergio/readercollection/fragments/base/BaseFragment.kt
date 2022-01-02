@@ -27,16 +27,15 @@ import java.io.Serializable
 
 open class BaseFragment: Fragment() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var loadingFragment: PopupLoadingDialogFragment? = null
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     var searchView: SearchView? = null
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun manageError(errorResponse: ErrorResponse) {
 
         val error = StringBuilder()
@@ -175,9 +174,9 @@ open class BaseFragment: Fragment() {
             }
         }
     }
+    //endregion
 
-    //MARK - Private methods
-
+    //region Private methods
     private fun showSyncPopup() {
 
         val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
@@ -190,4 +189,5 @@ open class BaseFragment: Fragment() {
         dialogFragment.isCancelable = false
         dialogFragment.show(ft, "syncDialog")
     }
+    //endregion
 }

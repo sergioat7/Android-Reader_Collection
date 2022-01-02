@@ -16,8 +16,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity: BaseActivity() {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -38,4 +37,5 @@ class MainActivity: BaseActivity() {
     override fun onBackPressed() {
         moveTaskToBack(true)
     }
+    //endregion
 }

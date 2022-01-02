@@ -31,15 +31,14 @@ class ProfileViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val userData: UserData = userRepository.userData
     val language: String = userRepository.language
     var sortParam: String? = userRepository.sortParam
@@ -49,9 +48,9 @@ class ProfileViewModel @Inject constructor(
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse> = _profileError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -59,9 +58,9 @@ class ProfileViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun logout() {
 
         _profileLoading.value = true
@@ -179,9 +178,9 @@ class ProfileViewModel @Inject constructor(
         }
         _profileForm.value = passwordError
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun resetDatabase() {
 
         var result = 0
@@ -256,4 +255,5 @@ class ProfileViewModel @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

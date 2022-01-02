@@ -26,17 +26,16 @@ import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment: BaseFragment() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
     private lateinit var ibPassword: ImageButton
     private lateinit var btLogin: Button
     private lateinit var btRegister: Button
     private lateinit var viewModel: LoginViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     companion object {
         fun newInstance() = LoginFragment()
     }
@@ -58,9 +57,9 @@ class LoginFragment: BaseFragment() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         val application = activity?.application ?: return
@@ -143,4 +142,5 @@ class LoginFragment: BaseFragment() {
             etPassword.text.toString()
         )
     }
+    //endregion
 }

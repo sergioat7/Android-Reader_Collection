@@ -20,8 +20,11 @@ import aragones.sergio.readercollection.viewmodels.PopupSyncAppViewModel
 
 class PopupSyncAppDialogFragment: DialogFragment() {
 
+    //region Private properties
     private lateinit var viewModel: PopupSyncAppViewModel
+    //endregion
 
+    //region Lifecycle methods
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,9 +41,9 @@ class PopupSyncAppDialogFragment: DialogFragment() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private functions
-
+    //region Private functions
     private fun initializeUI() {
 
         val application = activity?.application ?: return
@@ -81,4 +84,5 @@ class PopupSyncAppDialogFragment: DialogFragment() {
         val dialogFragment = PopupErrorDialogFragment(message)
         dialogFragment.show(ft, "popupDialog")
     }
+    //endregion
 }

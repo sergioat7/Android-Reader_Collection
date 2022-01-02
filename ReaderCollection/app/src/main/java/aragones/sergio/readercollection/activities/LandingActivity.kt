@@ -15,12 +15,11 @@ import java.util.*
 
 class LandingActivity: BaseActivity() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var viewModel: LandingViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initializeUI()
@@ -30,9 +29,9 @@ class LandingActivity: BaseActivity() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
         viewModel = ViewModelProvider(this, LandingViewModelFactory(application))[LandingViewModel::class.java]
         setupBindings()
@@ -58,4 +57,5 @@ class LandingActivity: BaseActivity() {
         conf.setLocale(Locale(language))
         resources.updateConfiguration(conf, resources.displayMetrics)
     }
+    //endregion
 }

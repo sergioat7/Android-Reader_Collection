@@ -34,8 +34,7 @@ import kotlin.math.max
 
 class SearchFragment: BaseFragment(), OnItemClickListener {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var srlBooks: SwipeRefreshLayout
     private lateinit var rvBooks: RecyclerView
     private lateinit var ivNoResults: View
@@ -44,9 +43,9 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
 
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -65,9 +64,9 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Interface methods
-
+    //region Interface methods
     override fun onItemClick(bookId: String) {
 
         val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to true)
@@ -77,9 +76,9 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
     override fun onLoadMoreItemsClick() {
         viewModel.searchBooks()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
@@ -87,9 +86,9 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         inflater.inflate(R.menu.search_toolbar_menu, menu)
         setupSearchView(menu)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         val application = activity?.application ?: return
@@ -226,7 +225,9 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         requireActivity().hideSoftKeyboard()
         (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, query)
     }
+    //endregion
 
+    //region SwipeController
     inner class SwipeController :
         ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
 
@@ -299,4 +300,5 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
             super.onChildDraw(c, recyclerView, viewHolder, x, dY, actionState, isCurrentlyActive)
         }
     }
+    //endregion
 }

@@ -38,8 +38,7 @@ import kotlin.math.abs
 
 class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private lateinit var ablBook: AppBarLayout
@@ -77,6 +76,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private lateinit var llTitles4: LinearLayout
     private lateinit var llValues4: LinearLayout
     private lateinit var etReadingDate: EditText
+
     private lateinit var viewModel: BookDetailViewModel
     private var isFavourite: Boolean = false
     private var book: BookResponse? = null
@@ -86,9 +86,9 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private lateinit var stateValues: MutableList<String>
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     companion object {
         fun newInstance() = BookDetailFragment()
     }
@@ -157,9 +157,9 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Interface methods
-
+    //region Interface methods
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
 
         val maxScroll = appBarLayout?.totalScrollRange ?: 0
@@ -170,9 +170,9 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             view.scaleY = 1 - percentage
         }
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         ablBook = app_bar_layout_book_detail
@@ -210,6 +210,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         llTitles4 = linear_layout_titles_4
         llValues4 = linear_layout_values_4
         etReadingDate = edit_text_reading_date
+
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
@@ -685,4 +686,5 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         etReadingDate.isEnabled = editable
         etReadingDate.backgroundTintList = backgroundTint
     }
+    //endregion
 }

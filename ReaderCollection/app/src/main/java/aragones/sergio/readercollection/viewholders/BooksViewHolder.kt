@@ -24,8 +24,7 @@ class BooksViewHolder(
     itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun fillReadingData(book: BookResponse, context: Context) {
 
         val image = book.thumbnail?.replace("http", "https") ?: "-"
@@ -147,4 +146,5 @@ class BooksViewHolder(
         itemView.text_view_author.visibility =
             if (authors.isBlank()) View.GONE else View.VISIBLE
     }
+    //endregion
 }

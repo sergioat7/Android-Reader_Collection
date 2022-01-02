@@ -34,8 +34,7 @@ import kotlinx.android.synthetic.main.fragment_books.*
 
 class BooksFragment : BaseFragment(), OnItemClickListener {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var ibSynchronize: ImageButton
     private lateinit var ibSort: ImageButton
     private lateinit var tvSubtitle: TextView
@@ -56,9 +55,9 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -90,9 +89,9 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Interface methods
-
+    //region Interface methods
     override fun onItemClick(bookId: String) {
 
         val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to false)
@@ -100,9 +99,9 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     }
 
     override fun onLoadMoreItemsClick() {}
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         ibSynchronize = image_button_synchronize
@@ -321,4 +320,5 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             }
         })
     }
+    //endregion
 }

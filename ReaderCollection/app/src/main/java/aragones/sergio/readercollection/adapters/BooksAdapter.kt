@@ -25,8 +25,7 @@ class BooksAdapter(
     private var onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun getItemViewType(position: Int): Int {
 
         val book = books[position]
@@ -74,9 +73,9 @@ class BooksAdapter(
             (holder as LoadMoreItemsViewHolder).setItem(onItemClickListener)
         }
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     @SuppressLint("NotifyDataSetChanged")
     fun setBooks(newBooks: MutableList<BookResponse>) {
 
@@ -95,4 +94,5 @@ class BooksAdapter(
         this.books = ArrayList<BookResponse>()
         notifyDataSetChanged()
     }
+    //endregion
 }

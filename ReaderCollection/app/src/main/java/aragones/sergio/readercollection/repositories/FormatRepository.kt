@@ -24,8 +24,7 @@ class FormatRepository @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) : BaseRepository() {
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun loadFormatsObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -102,9 +101,9 @@ class FormatRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun getFormatsObserver(): Single<List<FormatResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
@@ -132,4 +131,5 @@ class FormatRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

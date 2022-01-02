@@ -25,24 +25,23 @@ class SearchViewModel @Inject constructor(
     private val googleBookRepository: GoogleBookRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var page: Int = 1
     private val _books = MutableLiveData<MutableList<BookResponse>>()
     private val _searchLoading = MutableLiveData<Boolean>()
     private val _bookAdded = MutableLiveData<Int?>()
     private val _searchError = MutableLiveData<ErrorResponse>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     var query: String = ""
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
     val bookAdded: LiveData<Int?> = _bookAdded
     val searchError: LiveData<ErrorResponse> = _searchError
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun searchBooks() {
 
         _searchLoading.value = true
@@ -106,4 +105,5 @@ class SearchViewModel @Inject constructor(
             ).addTo(disposables)
         }
     }
+    //endregion
 }
