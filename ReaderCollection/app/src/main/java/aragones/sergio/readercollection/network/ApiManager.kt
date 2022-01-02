@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.network
 
+import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.toDate
 import aragones.sergio.readercollection.models.responses.ErrorResponse
@@ -17,6 +18,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
@@ -64,14 +66,14 @@ object ApiManager {
     inline fun <reified T : Any> getRetrofit(url: String): Retrofit {
         return retrofits[T::class] as Retrofit? ?: run {
 
-//            val logInterceptor = HttpLoggingInterceptor()
-//            logInterceptor.level =
-//                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.HEADERS
-//                else HttpLoggingInterceptor.Level.NONE
+            val logInterceptor = HttpLoggingInterceptor()
+            logInterceptor.level =
+                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.HEADERS
+                else HttpLoggingInterceptor.Level.NONE
 
             val clientBuilder =
                 OkHttpClient.Builder()
-//                    .addInterceptor(logInterceptor)
+                    .addInterceptor(logInterceptor)
                     .addInterceptor(TokenInterceptor())
                     .connectTimeout(2, TimeUnit.MINUTES)
                     .readTimeout(60, TimeUnit.SECONDS)
