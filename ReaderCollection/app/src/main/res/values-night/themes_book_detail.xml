@@ -16,8 +16,8 @@
     </style>
 
     <style name="RatingCountImageView">
-        <item name="android:layout_width">20dp</item>
-        <item name="android:layout_marginStart">10dp</item>
+        <item name="android:layout_width">@dimen/size_20dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_12dp</item>
         <item name="android:src">@drawable/ic_person_dark</item>
     </style>
 

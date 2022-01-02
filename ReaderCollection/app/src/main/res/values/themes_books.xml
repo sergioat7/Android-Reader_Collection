@@ -10,7 +10,7 @@
         <item name="android:background">@drawable/spinner_background</item>
         <item name="android:gravity">center</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:minHeight">30dp</item>
+        <item name="android:minHeight">@dimen/size_30dp</item>
     </style>
 
     <style name="CustomRatingBar" parent="Widget.MaterialRatingBar.RatingBar">
@@ -27,18 +27,18 @@
     </style>
 
     <style name="RatingTextView">
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginBottom">3dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_12dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_3dp</item>
         <item name="android:gravity">bottom</item>
         <item name="android:textColor">@color/colorTertiary</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">@dimen/text_size_18sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
     <style name="NoRatingTextView">
         <item name="android:text">@string/new_book</item>
         <item name="android:textColor">@color/colorTertiary</item>
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/text_size_24sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
@@ -48,12 +48,12 @@
         <item name="android:textColor">@color/textTertiary</item>
         <item name="android:maxLines">1</item>
         <item name="fontFamily">@font/roboto_bold</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <style name="SeparatorLineView">
-        <item name="android:layout_marginStart">24dp</item>
-        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_24dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_24dp</item>
         <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
@@ -63,14 +63,14 @@
         <item name="android:scaleType">center</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
-        <item name="borderWidth">0dp</item>
-        <item name="maxImageSize">10dp</item>
+        <item name="borderWidth">@dimen/no_size</item>
+        <item name="maxImageSize">@dimen/size_10dp</item>
         <item name="fabSize">mini</item>
     </style>
 
     <style name="StartListButton" parent="PositionListButton">
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_12dp</item>
     </style>
 
     <style name="StartListButton.Image">
@@ -78,8 +78,8 @@
     </style>
 
     <style name="EndListButton" parent="PositionListButton">
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_12dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_12dp</item>
     </style>
 
     <style name="EndListButton.Image">
@@ -87,10 +87,10 @@
     </style>
 
     <style name="LoadMoreButton" parent="RoundedButton.Action">
-        <item name="android:layout_margin">10dp</item>
-        <item name="android:paddingStart">10dp</item>
-        <item name="android:paddingEnd">10dp</item>
-        <item name="android:drawablePadding">10dp</item>
+        <item name="android:layout_margin">@dimen/margin_12dp</item>
+        <item name="android:paddingStart">@dimen/padding_12dp</item>
+        <item name="android:paddingEnd">@dimen/padding_12dp</item>
+        <item name="android:drawablePadding">@dimen/padding_12dp</item>
     </style>
 
     <style name="LoadMoreButton.Image">

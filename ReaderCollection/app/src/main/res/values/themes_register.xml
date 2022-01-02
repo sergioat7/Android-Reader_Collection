@@ -7,15 +7,15 @@
 <resources>
 
     <style name="RegisterButton" parent="RoundedButton.Action">
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_12dp</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:text">@string/sign_up</item>
     </style>
 
     <style name="TitleConfigTextView">
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_20dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_5dp</item>
         <item name="android:textColor">@color/textSecondary</item>
     </style>
 

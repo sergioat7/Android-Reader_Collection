@@ -44,7 +44,7 @@
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/size_1dp"
                 app:layout_constraintBottom_toTopOf="@+id/title_text_view"
                 app:layout_constraintEnd_toEndOf="@+id/title_text_view"
                 app:layout_constraintStart_toStartOf="@+id/title_text_view"
@@ -54,7 +54,7 @@
             <View
                 android:id="@+id/line_view_down"
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/size_1dp"
                 app:layout_constraintEnd_toEndOf="@+id/title_text_view"
                 app:layout_constraintStart_toStartOf="@+id/title_text_view"
                 app:layout_constraintTop_toBottomOf="@+id/title_text_view"

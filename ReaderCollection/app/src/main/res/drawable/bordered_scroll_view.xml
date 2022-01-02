@@ -14,8 +14,8 @@
             >
 
             <corners
-                android:topLeftRadius="20dp"
-                android:topRightRadius="20dp"
+                android:topLeftRadius="@dimen/radius_20dp"
+                android:topRightRadius="@dimen/radius_20dp"
                 />
 
             <solid
@@ -27,7 +27,7 @@
     </item>
 
     <item
-        android:top="1dp"
+        android:top="@dimen/size_1dp"
         >
 
         <shape
@@ -35,8 +35,8 @@
             >
 
             <corners
-                android:topLeftRadius="20dp"
-                android:topRightRadius="20dp"
+                android:topLeftRadius="@dimen/radius_20dp"
+                android:topRightRadius="@dimen/radius_20dp"
                 />
 
             <solid

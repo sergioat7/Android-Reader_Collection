@@ -7,8 +7,8 @@
 <resources>
 
     <style name="LoginImage">
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_20dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_20dp</item>
         <item name="android:src">@drawable/login_register_image</item>
         <item name="android:contentDescription">@string/password</item>
     </style>
@@ -19,22 +19,22 @@
     </style>
 
     <style name="UsernameEditText" parent="CredentialsEditText">
-        <item name="android:layout_marginStart">24dp</item>
-        <item name="android:layout_marginEnd">24dp</item>
+        <item name="android:layout_marginStart">@dimen/margin_24dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_24dp</item>
         <item name="android:hint">@string/username</item>
         <item name="android:inputType">text</item>
     </style>
 
     <style name="PasswordEditText" parent="CredentialsEditText">
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_8dp</item>
         <item name="android:inputType">textPassword</item>
     </style>
 
     <style name="EditTextButton">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_width">@dimen/size_48dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_12dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_20dp</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:scaleType">fitCenter</item>
     </style>
@@ -48,14 +48,14 @@
     </style>
 
     <style name="LoginButton" parent="RoundedButton.Action">
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
+        <item name="android:layout_marginBottom">@dimen/margin_12dp</item>
         <item name="android:layout_gravity">start</item>
         <item name="android:text">@string/sign_in</item>
     </style>
 
     <style name="NoAccountText">
-        <item name="android:layout_marginEnd">5dp</item>
+        <item name="android:layout_marginEnd">@dimen/margin_5dp</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:text">@string/not_account</item>
