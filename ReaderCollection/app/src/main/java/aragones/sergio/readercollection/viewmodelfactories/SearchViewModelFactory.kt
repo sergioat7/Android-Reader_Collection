@@ -12,7 +12,6 @@ import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.BookApiClient
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import javax.inject.Inject
 
@@ -21,8 +20,6 @@ class SearchViewModelFactory(
 ): ViewModelProvider.Factory {
 
     //region Public properties
-    @Inject
-    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
     lateinit var bookApiClient: BookApiClient
     @Inject

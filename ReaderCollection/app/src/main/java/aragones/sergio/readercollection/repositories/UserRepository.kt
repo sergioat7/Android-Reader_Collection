@@ -16,28 +16,27 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val userApiClient: UserApiClient
 ): BaseRepository() {
 
     //region Public properties
     val username: String
-        get() = sharedPreferencesHandler.getUserData().username
+        get() = SharedPreferencesHandler.getUserData().username
 
     val userData: UserData
-        get() = sharedPreferencesHandler.getUserData()
+        get() = SharedPreferencesHandler.getUserData()
 
     val language: String
-        get() = sharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.getLanguage()
 
     val sortParam: String?
-        get() = sharedPreferencesHandler.getSortParam()
+        get() = SharedPreferencesHandler.getSortParam()
 
     val isSortDescending: Boolean
-        get() = sharedPreferencesHandler.isSortDescending()
+        get() = SharedPreferencesHandler.isSortDescending()
 
     val themeMode: Int
-        get() = sharedPreferencesHandler.getThemeMode()
+        get() = SharedPreferencesHandler.getThemeMode()
     //endregion
 
     //region Public methods
@@ -63,44 +62,44 @@ class UserRepository @Inject constructor(
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
 
-        sharedPreferencesHandler.storeUserData(userData)
-        sharedPreferencesHandler.storeCredentials(authData)
+        SharedPreferencesHandler.storeUserData(userData)
+        SharedPreferencesHandler.storeCredentials(authData)
     }
 
     fun storeCredentials(authData: AuthData) {
-        sharedPreferencesHandler.storeCredentials(authData)
+        SharedPreferencesHandler.storeCredentials(authData)
     }
 
     fun removeCredentials() {
-        sharedPreferencesHandler.removeCredentials()
+        SharedPreferencesHandler.removeCredentials()
     }
 
     fun storePassword(newPassword: String) {
-        sharedPreferencesHandler.storePassword(newPassword)
+        SharedPreferencesHandler.storePassword(newPassword)
     }
 
     fun removeUserData() {
-        sharedPreferencesHandler.removeUserData()
+        SharedPreferencesHandler.removeUserData()
     }
 
     fun removePassword() {
-        sharedPreferencesHandler.removePassword()
+        SharedPreferencesHandler.removePassword()
     }
 
     fun storeLanguage(language: String) {
-        sharedPreferencesHandler.setLanguage(language)
+        SharedPreferencesHandler.setLanguage(language)
     }
 
     fun storeSortParam(sortParam: String?) {
-        sharedPreferencesHandler.setSortParam(sortParam)
+        SharedPreferencesHandler.setSortParam(sortParam)
     }
 
     fun storeIsSortDescending(isSortDescending: Boolean) {
-        sharedPreferencesHandler.setIsSortDescending(isSortDescending)
+        SharedPreferencesHandler.setIsSortDescending(isSortDescending)
     }
 
     fun storeThemeMode(themeMode: Int) {
-        sharedPreferencesHandler.setThemeMode(themeMode)
+        SharedPreferencesHandler.setThemeMode(themeMode)
     }
     //endregion
 }

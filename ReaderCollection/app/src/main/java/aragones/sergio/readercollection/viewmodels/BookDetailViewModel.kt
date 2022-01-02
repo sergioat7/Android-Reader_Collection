@@ -18,14 +18,12 @@ import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
-    val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val googleBookRepository: GoogleBookRepository,

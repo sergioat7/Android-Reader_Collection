@@ -7,15 +7,13 @@ package aragones.sergio.readercollection.injection.components
 
 import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
 import aragones.sergio.readercollection.injection.modules.NetworkModule
-import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 import aragones.sergio.readercollection.viewmodelfactories.*
 import dagger.Component
 
 @Component(
     modules = [
         AppDatabaseModule::class,
-        NetworkModule::class,
-        SharedPreferencesModule::class
+        NetworkModule::class
     ]
 )
 interface AppComponent {

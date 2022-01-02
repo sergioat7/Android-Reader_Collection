@@ -17,7 +17,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import java.util.*
 
@@ -107,13 +106,10 @@ private fun getPicker(editText: EditText, context: Context): DatePickerDialog {
         val newMonth = if (month < 9) "0${month + 1}" else (month + 1).toString()
         val newDate = "${year}-${newMonth}-${newDay}"
 
-        val sharedPreferencesHandler = SharedPreferencesHandler(
-            context.getSharedPreferences(Preferences.PREFERENCES_NAME, Context.MODE_PRIVATE)
-        )
-        val language = sharedPreferencesHandler.getLanguage()
+        val language = SharedPreferencesHandler.getLanguage()
 
         val date = newDate.toDate(Constants.DATE_FORMAT, language)
-        val dateString = date.toString(sharedPreferencesHandler.getDateFormatToShow(), language)
+        val dateString = date.toString(SharedPreferencesHandler.getDateFormatToShow(), language)
 
         editText.setText(dateString)
     }, currentYear, currentMonth, currentDay)
