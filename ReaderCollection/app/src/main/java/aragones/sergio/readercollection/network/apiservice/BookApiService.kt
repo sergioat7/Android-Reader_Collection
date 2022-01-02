@@ -5,8 +5,9 @@
 
 package aragones.sergio.readercollection.network.apiservice
 
-import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.requests.FavouriteBook
+import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.network.ApiManager
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
@@ -15,29 +16,42 @@ import retrofit2.http.*
 interface BookApiService {
 
     @Headers(
-        "Accept:application/json"
+        "Accept:application/json",
+        "${ApiManager.AUTHORIZATION_HEADER}:_"
     )
     @GET("books")
-    fun getBooks(@HeaderMap headers: Map<String, String>): Maybe<List<BookResponse>>
+    fun getBooks(): Maybe<List<BookResponse>>
 
     @Headers(
-        "Content-Type:application/json"
+        "Content-Type:application/json",
+        "${ApiManager.AUTHORIZATION_HEADER}:_"
     )
     @POST("book")
-    fun createBook(@HeaderMap headers: Map<String, String>, @Body body: BookResponse): Completable
+    fun createBook(@Body body: BookResponse): Completable
 
     @Headers(
-        "Content-Type:application/json"
+        "Content-Type:application/json",
+        "${ApiManager.AUTHORIZATION_HEADER}:_"
     )
     @PATCH("book/{googleId}")
-    fun setBook(@HeaderMap headers: Map<String, String>, @Path(value = "googleId") googleId: String, @Body body: BookResponse): Single<BookResponse>
-
-    @DELETE("book/{googleId}")
-    fun deleteBook(@HeaderMap headers: Map<String, String>, @Path(value = "googleId") googleId: String): Completable
+    fun setBook(
+        @Path(value = "googleId") googleId: String,
+        @Body body: BookResponse
+    ): Single<BookResponse>
 
     @Headers(
-        "Content-Type:application/json"
+        "${ApiManager.AUTHORIZATION_HEADER}:_"
+    )
+    @DELETE("book/{googleId}")
+    fun deleteBook(@Path(value = "googleId") googleId: String): Completable
+
+    @Headers(
+        "Content-Type:application/json",
+        "${ApiManager.AUTHORIZATION_HEADER}:_"
     )
     @PATCH("book/{googleId}/favourite")
-    fun setFavouriteBook(@HeaderMap headers: Map<String, String>, @Path(value = "googleId") googleId: String, @Body body: FavouriteBook): Single<BookResponse>
+    fun setFavouriteBook(
+        @Path(value = "googleId") googleId: String,
+        @Body body: FavouriteBook
+    ): Single<BookResponse>
 }

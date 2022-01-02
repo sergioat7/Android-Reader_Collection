@@ -9,6 +9,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.toDate
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import com.google.gson.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
@@ -71,7 +72,7 @@ object ApiManager {
             val clientBuilder =
                 OkHttpClient.Builder()
 //                    .addInterceptor(logInterceptor)
-//                    .addInterceptor(TokenInterceptor())
+                    .addInterceptor(TokenInterceptor())
                     .connectTimeout(2, TimeUnit.MINUTES)
                     .readTimeout(60, TimeUnit.SECONDS)
                     .writeTimeout(30, TimeUnit.SECONDS)
@@ -127,28 +128,28 @@ object ApiManager {
     }
     //endregion
 
-//    //region TokenInterceptor
-//    class TokenInterceptor : Interceptor {
-//        override fun intercept(chain: Interceptor.Chain): Response {
-//
-//            val authRequirement = chain.request().header(AUTHORIZATION_HEADER)
-//            val original = chain.request()
-//
-//            val request = if (authRequirement != null) {
-//
-//                val accessToken = SharedPreferencesHelper.getCredentials().token
-//                original.newBuilder()
-//                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHelper.getLanguage())
-//                    .header(AUTHORIZATION_HEADER, accessToken)
-//                    .build()
-//            } else {
-//                original.newBuilder()
-//                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHelper.getLanguage())
-//                    .build()
-//            }
-//
-//            return chain.proceed(request)
-//        }
-//    }
-//    //endregion
+    //region TokenInterceptor
+    class TokenInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+
+            val authRequirement = chain.request().header(AUTHORIZATION_HEADER)
+            val original = chain.request()
+
+            val request = if (authRequirement != null) {
+
+                val accessToken = SharedPreferencesHandler.getCredentials().token
+                original.newBuilder()
+                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.getLanguage())
+                    .header(AUTHORIZATION_HEADER, accessToken)
+                    .build()
+            } else {
+                original.newBuilder()
+                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.getLanguage())
+                    .build()
+            }
+
+            return chain.proceed(request)
+        }
+    }
+    //endregion
 }

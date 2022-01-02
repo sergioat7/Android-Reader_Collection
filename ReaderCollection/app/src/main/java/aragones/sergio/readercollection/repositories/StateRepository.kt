@@ -10,7 +10,6 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.StateApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -28,40 +27,43 @@ class StateRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            getStatesObserver().subscribeBy(
-                onSuccess = { newStates ->
-                    insertStatesDatabaseObserver(newStates).subscribeBy(
-                        onComplete = {
-                            getStatesDatabaseObserver().subscribeBy(
-                                onSuccess = { currentStates ->
+            api.getStates()
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onSuccess = { newStates ->
+                        insertStatesDatabaseObserver(newStates).subscribeBy(
+                            onComplete = {
+                                getStatesDatabaseObserver().subscribeBy(
+                                    onSuccess = { currentStates ->
 
-                                    val statesToRemove = AppDatabase.getDisabledContent(
-                                        currentStates,
-                                        newStates
-                                    ) as List<StateResponse>
-                                    deleteStatesDatabaseObserver(statesToRemove).subscribeBy(
-                                        onComplete = {
-                                            emitter.onComplete()
-                                        },
-                                        onError = {
-                                            emitter.onError(it)
-                                        }
-                                    ).addTo(disposables)
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                }
-                            ).addTo(disposables)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+                                        val statesToRemove = AppDatabase.getDisabledContent(
+                                            currentStates,
+                                            newStates
+                                        ) as List<StateResponse>
+                                        deleteStatesDatabaseObserver(statesToRemove).subscribeBy(
+                                            onComplete = {
+                                                emitter.onComplete()
+                                            },
+                                            onError = {
+                                                emitter.onError(it)
+                                            }
+                                        ).addTo(disposables)
+                                    },
+                                    onError = {
+                                        emitter.onError(it)
+                                    }
+                                ).addTo(disposables)
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -102,15 +104,6 @@ class StateRepository @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun getStatesObserver(): Single<List<StateResponse>> {
-
-        val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
-        return api
-            .getStates(headers)
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
 
     private fun insertStatesDatabaseObserver(states: List<StateResponse>): Completable {
         return database
