@@ -13,16 +13,17 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class StateAPIClient @Inject constructor(
+    private val api: StateApiService,
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
-
-    private val api = ApiManager.retrofit.create(StateApiService::class.java)
 
     fun getStatesObserver(): Single<List<StateResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
-        return api.getStates(headers).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .getStates(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

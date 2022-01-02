@@ -16,10 +16,9 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class BookAPIClient @Inject constructor(
+    private val api: BookApiService,
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
-
-    private val api = ApiManager.retrofit.create(BookApiService::class.java)
 
     fun getBooksObserver(): Maybe<List<BookResponse>> {
 

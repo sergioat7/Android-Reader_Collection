@@ -53,7 +53,7 @@ class BookDetailViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BookDetailViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).booksComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             bookDetailViewModel.setBookId(bookId)
             bookDetailViewModel.setIsGoogleBook(isGoogleBook)
             bookDetailViewModel.getBook()

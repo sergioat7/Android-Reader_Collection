@@ -10,10 +10,11 @@ import aragones.sergio.readercollection.models.responses.GoogleBookResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiservice.GoogleApiService
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 
-class GoogleAPIClient {
-
-    private val api = ApiManager.googleRetrofit.create(GoogleApiService::class.java)
+class GoogleApiClient @Inject constructor(
+    private val api: GoogleApiService
+) {
 
     fun searchGoogleBooksObserver(
         query: String,
