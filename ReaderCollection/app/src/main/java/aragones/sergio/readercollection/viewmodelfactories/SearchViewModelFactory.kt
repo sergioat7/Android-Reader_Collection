@@ -42,7 +42,7 @@ class SearchViewModelFactory(
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).booksComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             return searchViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

@@ -16,17 +16,18 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class UserAPIClient @Inject constructor(
+    private val api: UserApiService,
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
-
-    private val api = ApiManager.retrofit.create(UserApiService::class.java)
 
     fun registerObserver(username: String, password: String): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         val body = LoginCredentials(username, password)
-        return api.register(headers, body).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .register(headers, body)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -35,7 +36,9 @@ class UserAPIClient @Inject constructor(
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        return api.deleteUser(headers).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .deleteUser(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -44,7 +47,9 @@ class UserAPIClient @Inject constructor(
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         val body = LoginCredentials(username, password)
-        return api.login(headers, body).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .login(headers, body)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -53,7 +58,9 @@ class UserAPIClient @Inject constructor(
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        return api.logout(headers).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .logout(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -63,7 +70,9 @@ class UserAPIClient @Inject constructor(
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
         val body = NewPassword(password)
-        return api.updatePassword(headers, body).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .updatePassword(headers, body)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

@@ -21,6 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.lang.reflect.Type
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.reflect.KClass
 
 object ApiManager {
 
@@ -29,9 +30,6 @@ object ApiManager {
     const val BASE_GOOGLE_ENDPOINT = "https://www.googleapis.com/books/v1/"
     const val ACCEPT_LANGUAGE_HEADER = "Accept-Language"
     const val AUTHORIZATION_HEADER = "Authorization"
-    const val CONNECT_TIMEOUT: Long = 60
-    const val READ_TIMEOUT: Long = 30
-    const val WRITE_TIMEOUT: Long = 15
     const val SEARCH_PARAM = "q"
     const val PAGE_PARAM = "startIndex"
     const val RESULTS_PARAM = "maxResults"
@@ -54,35 +52,45 @@ object ApiManager {
             .serializeNulls()
             .create()
 
-    private val okHttpClient: OkHttpClient =
-        OkHttpClient
-            .Builder()
-            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-            .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-            .followRedirects(false)
-            .build()
+    var retrofits: MutableMap<KClass<*>, Any> = mutableMapOf()
 
-    val retrofit: Retrofit =
-        Retrofit
-            .Builder()
-            .baseUrl(BASE_ENDPOINT)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .build()
-
-    val googleRetrofit: Retrofit =
-        Retrofit
-            .Builder()
-            .baseUrl(BASE_GOOGLE_ENDPOINT)
-            .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
-            .build()
+    var apis: MutableMap<KClass<*>, Any> = mutableMapOf()
     //endregion
 
     //region Public methods
+    inline fun <reified T : Any> getRetrofit(url: String): Retrofit {
+        return retrofits[T::class] as Retrofit? ?: run {
+
+
+            val clientBuilder =
+                OkHttpClient.Builder()
+                    .connectTimeout(2, TimeUnit.MINUTES)
+                    .readTimeout(60, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .followRedirects(false)
+
+            val retrofit =
+                Retrofit.Builder()
+                    .baseUrl(url)
+                    .client(clientBuilder.build())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+                    .build()
+
+            retrofits[T::class] = retrofit
+            retrofit
+        }
+    }
+
+    inline fun <reified T : Any> getService(url: String): T {
+        return apis[T::class] as? T ?: run {
+
+            val ret = getRetrofit<T>(url).create(T::class.java)
+            apis[T::class] = ret
+            ret
+        }
+    }
+
     fun handleError(error: Throwable): ErrorResponse {
 
         lateinit var errorResponse: ErrorResponse

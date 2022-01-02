@@ -13,10 +13,9 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class FormatAPIClient @Inject constructor(
+    private val api: FormatApiService,
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
-
-    private val api = ApiManager.retrofit.create(FormatApiService::class.java)
 
     fun getFormatsObserver(): Single<List<FormatResponse>> {
 
