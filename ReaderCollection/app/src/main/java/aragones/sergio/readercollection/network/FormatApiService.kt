@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 17/10/2020
  */
 
-package aragones.sergio.readercollection.network.apiservice
+package aragones.sergio.readercollection.network
 
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import io.reactivex.rxjava3.core.Single
