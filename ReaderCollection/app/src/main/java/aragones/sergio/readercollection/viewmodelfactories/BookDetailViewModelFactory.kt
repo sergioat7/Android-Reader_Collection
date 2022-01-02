@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
-import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
+import aragones.sergio.readercollection.network.apiclient.GoogleApiClient
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.repositories.*
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
@@ -33,7 +33,7 @@ class BookDetailViewModelFactory(
     @Inject
     lateinit var formatAPIClient: FormatAPIClient
     @Inject
-    lateinit var googleAPIClient: GoogleAPIClient
+    lateinit var googleApiClient: GoogleApiClient
     @Inject
     lateinit var stateAPIClient: StateAPIClient
     @Inject

@@ -27,7 +27,9 @@ class BookAPIClient @Inject constructor(
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
 
-        return api.getBooks(headers).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .getBooks(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -36,7 +38,9 @@ class BookAPIClient @Inject constructor(
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        return api.createBook(headers, book).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .createBook(headers, book)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -45,7 +49,9 @@ class BookAPIClient @Inject constructor(
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        return api.setBook(headers, book.id, book).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .setBook(headers, book.id, book)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -54,7 +60,9 @@ class BookAPIClient @Inject constructor(
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        return api.deleteBook(headers, googleId).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .deleteBook(headers, googleId)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
@@ -64,7 +72,9 @@ class BookAPIClient @Inject constructor(
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
         val body = FavouriteBook(isFavourite)
-        return api.setFavouriteBook(headers, googleId, body)
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
+        return api
+            .setFavouriteBook(headers, googleId, body)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

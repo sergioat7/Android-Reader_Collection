@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.isDarkMode
-import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.GoogleBookResponse
 import aragones.sergio.readercollection.models.responses.GoogleImageLinksResponse
@@ -38,21 +37,6 @@ object Constants {
     const val IS_GOOGLE_BOOK = "isGoogleBook"
     const val MAX_LINES = Int.MAX_VALUE
     const val NO_VALUE = "-"
-
-    fun <T> getDisabledContent(
-        currentValues: List<BaseModel<T>>,
-        newValues: List<BaseModel<T>>
-    ): List<BaseModel<T>> {
-
-        val disabledContent = arrayListOf<BaseModel<T>>()
-        for (currentValue in currentValues) {
-
-            if (newValues.firstOrNull { it.id == currentValue.id } == null) {
-                disabledContent.add(currentValue)
-            }
-        }
-        return disabledContent
-    }
 
     fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()

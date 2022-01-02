@@ -28,12 +28,16 @@ class GoogleAPIClient {
         if (order != null) {
             params[ApiManager.ORDER_PARAM] = order
         }
-        return api.searchGoogleBooks(params).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .searchGoogleBooks(params)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getGoogleBookObserver(volumeId: String): Single<GoogleBookResponse> {
-        return api.getGoogleBook(volumeId).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .getGoogleBook(volumeId)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

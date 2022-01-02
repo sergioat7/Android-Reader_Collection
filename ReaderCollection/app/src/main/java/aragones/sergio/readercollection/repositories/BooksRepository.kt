@@ -11,7 +11,6 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiclient.BookAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
-import aragones.sergio.readercollection.utils.Constants
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -44,7 +43,7 @@ class BooksRepository @Inject constructor(
                                 },
                                 onSuccess = { currentBooks ->
 
-                                    val booksToRemove = Constants.getDisabledContent(
+                                    val booksToRemove = AppDatabase.getDisabledContent(
                                         currentBooks,
                                         newBooks
                                     ) as List<BookResponse>

@@ -10,7 +10,6 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
-import aragones.sergio.readercollection.utils.Constants
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -21,7 +20,7 @@ import javax.inject.Inject
 class FormatRepository @Inject constructor(
     private val database: AppDatabase,
     private val formatAPIClient: FormatAPIClient
-): BaseRepository() {
+) : BaseRepository() {
 
     //MARK: - Public methods
 
@@ -36,7 +35,10 @@ class FormatRepository @Inject constructor(
                             getFormatsDatabaseObserver().subscribeBy(
                                 onSuccess = { currentFormats ->
 
-                                    val formatsToRemove = Constants.getDisabledContent(currentFormats, newFormats) as List<FormatResponse>
+                                    val formatsToRemove = AppDatabase.getDisabledContent(
+                                        currentFormats,
+                                        newFormats
+                                    ) as List<FormatResponse>
                                     deleteFormatsDatabaseObserver(formatsToRemove).subscribeBy(
                                         onComplete = {
                                             emitter.onComplete()
