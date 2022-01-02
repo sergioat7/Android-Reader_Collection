@@ -8,7 +8,7 @@ package aragones.sergio.readercollection.repositories
 import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiclient.BookAPIClient
+import aragones.sergio.readercollection.network.apiclient.BookApiClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -20,7 +20,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
-    private val bookAPIClient: BookAPIClient,
+    private val bookApiClient: BookApiClient,
     private val database: AppDatabase
 ) : BaseRepository() {
 
@@ -30,7 +30,7 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookAPIClient.getBooksObserver().subscribeBy(
+            bookApiClient.getBooksObserver().subscribeBy(
                 onComplete = {
                     emitter.onComplete()
                 },
@@ -122,7 +122,7 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookAPIClient.createBookObserver(book).subscribeBy(
+            bookApiClient.createBookObserver(book).subscribeBy(
                 onComplete = {
 
                     loadBooksObserver().subscribeBy(
@@ -147,7 +147,7 @@ class BooksRepository @Inject constructor(
 
         val observer: Single<BookResponse> = Single.create { emitter ->
 
-            bookAPIClient.setBookObserver(book).subscribeBy(
+            bookApiClient.setBookObserver(book).subscribeBy(
                 onSuccess = {
 
                     updateBooksDatabaseObserver(listOf(book)).subscribeBy(
@@ -173,7 +173,7 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookAPIClient.deleteBookObserver(googleId).subscribeBy(
+            bookApiClient.deleteBookObserver(googleId).subscribeBy(
                 onComplete = {
                     getBookDatabaseObserver(googleId).subscribeBy(
                         onSuccess = { book ->
@@ -204,7 +204,7 @@ class BooksRepository @Inject constructor(
 
         val observer: Single<BookResponse> = Single.create { emitter ->
 
-            bookAPIClient.setFavouriteBookObserver(googleId, isFavourite).subscribeBy(
+            bookApiClient.setFavouriteBookObserver(googleId, isFavourite).subscribeBy(
                 onSuccess = { book ->
                     updateBooksDatabaseObserver(listOf(book)).subscribeBy(
                         onComplete = {

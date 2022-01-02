@@ -9,7 +9,7 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
-import aragones.sergio.readercollection.network.apiclient.BookAPIClient
+import aragones.sergio.readercollection.network.apiclient.BookApiClient
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
@@ -26,7 +26,7 @@ class LandingViewModelFactory(
     @Inject
     lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
-    lateinit var bookAPIClient: BookAPIClient
+    lateinit var bookApiClient: BookApiClient
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
