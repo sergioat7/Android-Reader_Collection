@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
-interface BookAPIService {
+interface BookApiService {
 
     @Headers(
         "Accept:application/json"

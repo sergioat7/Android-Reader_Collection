@@ -12,7 +12,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
-interface UserAPIService {
+interface UserApiService {
 
     @Headers(
         "Content-Type:application/json"

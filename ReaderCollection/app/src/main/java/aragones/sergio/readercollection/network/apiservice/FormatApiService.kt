@@ -5,17 +5,17 @@
 
 package aragones.sergio.readercollection.network.apiservice
 
-import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.models.responses.FormatResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.HeaderMap
 import retrofit2.http.Headers
 
-interface StateAPIService {
+interface FormatApiService {
 
     @Headers(
         "Accept:application/json"
     )
-    @GET("states")
-    fun getStates(@HeaderMap headers: Map<String, String>): Single<List<StateResponse>>
+    @GET("formats")
+    fun getFormats(@HeaderMap headers: Map<String, String>): Single<List<FormatResponse>>
 }

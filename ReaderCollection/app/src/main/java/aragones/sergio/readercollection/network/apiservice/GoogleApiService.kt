@@ -10,7 +10,7 @@ import aragones.sergio.readercollection.models.responses.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 
-interface GooglePIService {
+interface GoogleApiService {
 
     @GET("volumes")
     fun searchGoogleBooks(@QueryMap queryParams: Map<String, String>): Single<GoogleBookListResponse>

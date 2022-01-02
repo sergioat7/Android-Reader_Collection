@@ -9,7 +9,7 @@ import aragones.sergio.readercollection.models.requests.LoginCredentials
 import aragones.sergio.readercollection.models.requests.NewPassword
 import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.UserAPIService
+import aragones.sergio.readercollection.network.apiservice.UserApiService
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -19,7 +19,7 @@ class UserAPIClient @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
-    private val api = ApiManager.retrofit.create(UserAPIService::class.java)
+    private val api = ApiManager.retrofit.create(UserApiService::class.java)
 
     fun registerObserver(username: String, password: String): Completable {
 
