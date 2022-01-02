@@ -5,8 +5,7 @@
 
 package aragones.sergio.readercollection.injection.modules
 
-import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.*
+import aragones.sergio.readercollection.network.*
 import dagger.Module
 import dagger.Provides
 

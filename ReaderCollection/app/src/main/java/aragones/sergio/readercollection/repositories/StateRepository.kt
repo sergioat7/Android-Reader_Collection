@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.repositories
 
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.StateApiService
+import aragones.sergio.readercollection.network.StateApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge

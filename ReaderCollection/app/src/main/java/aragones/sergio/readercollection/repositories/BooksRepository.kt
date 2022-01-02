@@ -6,9 +6,10 @@
 package aragones.sergio.readercollection.repositories
 
 import androidx.sqlite.db.SimpleSQLiteQuery
+import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiclient.BookApiClient
+import aragones.sergio.readercollection.network.BookApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -20,7 +21,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
-    private val bookApiClient: BookApiClient,
+    private val api: BookApiService,
     private val database: AppDatabase
 ) : BaseRepository() {
 
@@ -29,46 +30,49 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookApiClient.getBooksObserver().subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onSuccess = { newBooks ->
-                    insertBooksDatabaseObserver(newBooks).subscribeBy(
-                        onComplete = {
-                            getBooksDatabaseObserver().subscribeBy(
-                                onComplete = {
-                                    emitter.onComplete()
-                                },
-                                onSuccess = { currentBooks ->
+            api.getBooks()
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onSuccess = { newBooks ->
+                        insertBooksDatabaseObserver(newBooks).subscribeBy(
+                            onComplete = {
+                                getBooksDatabaseObserver().subscribeBy(
+                                    onComplete = {
+                                        emitter.onComplete()
+                                    },
+                                    onSuccess = { currentBooks ->
 
-                                    val booksToRemove = AppDatabase.getDisabledContent(
-                                        currentBooks,
-                                        newBooks
-                                    ) as List<BookResponse>
-                                    deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
-                                        onComplete = {
-                                            emitter.onComplete()
-                                        },
-                                        onError = {
-                                            emitter.onError(it)
-                                        }
-                                    ).addTo(disposables)
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                }
-                            ).addTo(disposables)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+                                        val booksToRemove = AppDatabase.getDisabledContent(
+                                            currentBooks,
+                                            newBooks
+                                        ) as List<BookResponse>
+                                        deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
+                                            onComplete = {
+                                                emitter.onComplete()
+                                            },
+                                            onError = {
+                                                emitter.onError(it)
+                                            }
+                                        ).addTo(disposables)
+                                    },
+                                    onError = {
+                                        emitter.onError(it)
+                                    }
+                                ).addTo(disposables)
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -109,6 +113,7 @@ class BooksRepository @Inject constructor(
     }
 
     fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {
+
         return database
             .bookDao()
             .getBookObserver(googleId)
@@ -121,22 +126,25 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookApiClient.createBookObserver(book).subscribeBy(
-                onComplete = {
+            api.createBook(book)
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onComplete = {
 
-                    loadBooksObserver().subscribeBy(
-                        onComplete = {
-                            emitter.onComplete()
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+                        loadBooksObserver().subscribeBy(
+                            onComplete = {
+                                emitter.onComplete()
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -146,24 +154,28 @@ class BooksRepository @Inject constructor(
 
         val observer: Single<BookResponse> = Single.create { emitter ->
 
-            bookApiClient.setBookObserver(book).subscribeBy(
-                onSuccess = {
+            api.setBook(book.id, book)
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onSuccess = {
 
-                    updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                        onComplete = {
-                            emitter.onSuccess(book)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+                            onComplete = {
+                                emitter.onSuccess(book)
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
-        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
+        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
 
         return observer
     }
@@ -172,28 +184,31 @@ class BooksRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            bookApiClient.deleteBookObserver(googleId).subscribeBy(
-                onComplete = {
-                    getBookDatabaseObserver(googleId).subscribeBy(
-                        onSuccess = { book ->
-                            deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
-                                onComplete = {
-                                    emitter.onComplete()
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                }
-                            ).addTo(disposables)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+            api.deleteBook(googleId)
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onComplete = {
+                        getBookDatabaseObserver(googleId).subscribeBy(
+                            onSuccess = { book ->
+                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
+                                    onComplete = {
+                                        emitter.onComplete()
+                                    },
+                                    onError = {
+                                        emitter.onError(it)
+                                    }
+                                ).addTo(disposables)
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -203,23 +218,27 @@ class BooksRepository @Inject constructor(
 
         val observer: Single<BookResponse> = Single.create { emitter ->
 
-            bookApiClient.setFavouriteBookObserver(googleId, isFavourite).subscribeBy(
-                onSuccess = { book ->
-                    updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                        onComplete = {
-                            emitter.onSuccess(book)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+            api.setFavouriteBook(googleId, FavouriteBook(isFavourite))
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onSuccess = { book ->
+                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+                            onComplete = {
+                                emitter.onSuccess(book)
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
-        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
+        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
 
         return observer
     }

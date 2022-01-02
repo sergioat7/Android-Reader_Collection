@@ -9,7 +9,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
-import aragones.sergio.readercollection.network.apiclient.BookApiClient
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
@@ -20,8 +19,6 @@ class SearchViewModelFactory(
 ): ViewModelProvider.Factory {
 
     //region Public properties
-    @Inject
-    lateinit var bookApiClient: BookApiClient
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject

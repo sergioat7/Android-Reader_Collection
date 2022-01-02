@@ -9,7 +9,6 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
-import aragones.sergio.readercollection.network.apiclient.UserApiClient
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
@@ -21,8 +20,6 @@ class RegisterViewModelFactory(
 ): ViewModelProvider.Factory {
 
     //region Public properties
-    @Inject
-    lateinit var userApiClient: UserApiClient
     @Inject
     lateinit var formatRepository: FormatRepository
     @Inject
