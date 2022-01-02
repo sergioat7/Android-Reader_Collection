@@ -5,22 +5,17 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.LandingActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.extensions.clearErrors
-import aragones.sergio.readercollection.extensions.setReadOnly
-import aragones.sergio.readercollection.extensions.setup
+import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -113,8 +108,8 @@ class ProfileFragment: BaseFragment() {
         etUsername.setText(viewModel.userData.username)
         etUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
         etPassword.setText(viewModel.userData.password)
-        rbEnglish.isChecked = viewModel.language == Constants.ENGLISH_LANGUAGE_KEY
-        rbSpanish.isChecked = viewModel.language == Constants.SPANISH_LANGUAGE_KEY
+        rbEnglish.isChecked = viewModel.language == Preferences.ENGLISH_LANGUAGE_KEY
+        rbSpanish.isChecked = viewModel.language == Preferences.SPANISH_LANGUAGE_KEY
 
         etPassword.afterTextChanged {
             viewModel.profileDataChanged(it)
@@ -125,7 +120,7 @@ class ProfileFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
+            etPassword.showOrHidePassword(ibPassword, activity?.isDarkMode() == true)
         }
 
         var position = 0
@@ -153,8 +148,8 @@ class ProfileFragment: BaseFragment() {
         btSave.setOnClickListener {
 
             val language =
-                if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY
-                else Constants.SPANISH_LANGUAGE_KEY
+                if (rbEnglish.isChecked) Preferences.ENGLISH_LANGUAGE_KEY
+                else Preferences.SPANISH_LANGUAGE_KEY
             val sortParam =
                 if (spSortParams.selectedItemPosition == 0) null
                 else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]

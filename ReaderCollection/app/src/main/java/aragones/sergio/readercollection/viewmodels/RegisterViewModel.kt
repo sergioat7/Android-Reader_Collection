@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
@@ -71,7 +72,7 @@ class RegisterViewModel @Inject constructor(
             onError = {
 
                 _registerLoading.value = false
-                _registerError.value = Constants.handleError(it)
+                _registerError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -132,8 +133,8 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun loadFormatsObserver(): Completable {
@@ -149,8 +150,8 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun loadStatesObserver(): Completable {
@@ -166,8 +167,8 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun login(username: String, password: String) {
@@ -184,7 +185,7 @@ class RegisterViewModel @Inject constructor(
             onError = {
 
                 _registerLoading.value = false
-                _registerError.value = Constants.handleError(it)
+                _registerError.value = ApiManager.handleError(it)
             }
         )
     }

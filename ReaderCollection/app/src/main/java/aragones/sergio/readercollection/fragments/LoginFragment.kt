@@ -17,8 +17,9 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
+import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.showOrHidePassword
 import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -82,7 +83,7 @@ class LoginFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
+            etPassword.showOrHidePassword(ibPassword, activity?.isDarkMode() == true)
         }
 
         btLogin.setOnClickListener {

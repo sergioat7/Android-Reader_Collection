@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
@@ -156,7 +157,7 @@ class BookDetailViewModel @Inject constructor(
             onError = {
 
                 _bookDetailLoading.value = false
-                _bookDetailError.value = Constants.handleError(it)
+                _bookDetailError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -174,7 +175,7 @@ class BookDetailViewModel @Inject constructor(
             onError = {
 
                 _bookDetailLoading.value = false
-                _bookDetailError.value = Constants.handleError(it)
+                _bookDetailError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -192,7 +193,7 @@ class BookDetailViewModel @Inject constructor(
             onError = {
 
                 _bookDetailLoading.value = false
-                _bookDetailError.value = Constants.handleError(it)
+                _bookDetailError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)

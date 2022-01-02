@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.injection.modules
 
 import android.content.Context
 import android.content.SharedPreferences
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.Preferences
 import dagger.Module
 import dagger.Provides
 
@@ -15,5 +15,5 @@ import dagger.Provides
 class SharedPreferencesModule (private val context: Context?) {
 
     @Provides
-    fun provideSharedPreferences(): SharedPreferences? = context?.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE)
+    fun provideSharedPreferences(): SharedPreferences? = context?.getSharedPreferences(Preferences.PREFERENCES_NAME, Context.MODE_PRIVATE)
 }

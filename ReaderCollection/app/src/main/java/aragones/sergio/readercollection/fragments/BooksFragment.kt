@@ -23,8 +23,11 @@ import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.extensions.handleStatusBar
+import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import kotlinx.android.synthetic.main.fragment_books.*
@@ -72,7 +75,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     override fun onResume() {
         super.onResume()
 
-        activity?.handleStatusBar(requireView(), true, Constants.isDarkMode(context))
+        activity?.handleStatusBar(requireView(), true, activity?.isDarkMode() == true)
         if (this::viewModel.isInitialized) viewModel.getBooks()
         svBooks.clearFocus()
     }
@@ -80,7 +83,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     override fun onPause() {
         super.onPause()
 
-        activity?.handleStatusBar(requireView(), false, !Constants.isDarkMode(context))
+        activity?.handleStatusBar(requireView(), false, activity?.isDarkMode() == false)
     }
 
     override fun onDestroy() {
@@ -124,14 +127,14 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             BooksViewModelFactory(application)
         )[BooksViewModel::class.java]
         readingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == Constants.READING_STATE }?.toMutableList()
+            viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
                 ?: mutableListOf(),
             false,
             requireContext(),
             this
         )
         pendingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == Constants.PENDING_STATE }?.toMutableList()
+            viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
                 ?: mutableListOf(),
             false,
             requireContext(),
@@ -139,7 +142,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         )
         booksAdapter = BooksAdapter(
             viewModel.books.value?.filter {
-                it.state != Constants.READING_STATE && it.state != Constants.PENDING_STATE
+                it.state != State.READING && it.state != State.PENDING
             }?.toMutableList() ?: mutableListOf(),
             false,
             requireContext(),
@@ -312,7 +315,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
             override fun onQueryTextSubmit(query: String): Boolean {
 
-                Constants.hideSoftKeyboard(requireActivity())
+                requireActivity().hideSoftKeyboard()
                 svBooks.clearFocus()
                 return true
             }

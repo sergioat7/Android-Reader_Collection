@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.repositories
 
 import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
@@ -60,8 +61,8 @@ class StateRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getStatesDatabaseObserver(): Single<List<StateResponse>> {
@@ -69,8 +70,8 @@ class StateRepository @Inject constructor(
             .stateDao()
             .getStatesObserver()
             .`as`(RxJavaBridge.toV3Single())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun resetTableObserver(): Completable {
@@ -93,8 +94,8 @@ class StateRepository @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     //MARK: - Private methods
@@ -104,8 +105,8 @@ class StateRepository @Inject constructor(
             .stateDao()
             .insertStatesObserver(states)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun deleteStatesDatabaseObserver(states: List<StateResponse>): Completable {
@@ -113,7 +114,7 @@ class StateRepository @Inject constructor(
             .stateDao()
             .deleteStatesObserver(states)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

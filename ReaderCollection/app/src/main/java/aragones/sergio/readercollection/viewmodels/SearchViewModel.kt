@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -85,7 +86,7 @@ class SearchViewModel @Inject constructor(
     fun addBook(position: Int) {
         _books.value?.get(position)?.let { book ->
 
-            book.state = Constants.PENDING_STATE
+            book.state = State.PENDING
             _searchLoading.value = true
             booksRepository.createBookObserver(book).subscribeBy(
                 onComplete = {

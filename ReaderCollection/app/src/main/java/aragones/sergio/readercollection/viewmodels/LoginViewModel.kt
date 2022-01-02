@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
@@ -68,7 +69,7 @@ class LoginViewModel @Inject constructor(
             onError = {
 
                 _loginLoading.value = false
-                _loginError.value = Constants.handleError(it)
+                _loginError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -145,8 +146,8 @@ class LoginViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun loadStatesObserver(): Completable {
@@ -162,8 +163,8 @@ class LoginViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun loadBooks() {
