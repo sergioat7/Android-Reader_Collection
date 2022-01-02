@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.network.apiclient.BookAPIClient
-import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
-import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.network.apiclient.UserAPIClient
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
@@ -31,10 +29,6 @@ class ProfileViewModelFactory(
     lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
     lateinit var bookAPIClient: BookAPIClient
-    @Inject
-    lateinit var formatAPIClient: FormatAPIClient
-    @Inject
-    lateinit var stateAPIClient: StateAPIClient
     @Inject
     lateinit var userAPIClient: UserAPIClient
     @Inject

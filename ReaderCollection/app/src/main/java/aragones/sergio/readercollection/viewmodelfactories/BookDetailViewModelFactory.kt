@@ -9,11 +9,10 @@ import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
-import aragones.sergio.readercollection.network.apiclient.BookAPIClient
-import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
-import aragones.sergio.readercollection.network.apiclient.GoogleApiClient
-import aragones.sergio.readercollection.network.apiclient.StateAPIClient
-import aragones.sergio.readercollection.repositories.*
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.FormatRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
@@ -28,14 +27,6 @@ class BookDetailViewModelFactory(
 
     @Inject
     lateinit var sharedPreferencesHandler: SharedPreferencesHandler
-    @Inject
-    lateinit var bookAPIClient: BookAPIClient
-    @Inject
-    lateinit var formatAPIClient: FormatAPIClient
-    @Inject
-    lateinit var googleApiClient: GoogleApiClient
-    @Inject
-    lateinit var stateAPIClient: StateAPIClient
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject

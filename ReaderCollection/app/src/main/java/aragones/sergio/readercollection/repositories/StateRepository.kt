@@ -7,9 +7,10 @@ package aragones.sergio.readercollection.repositories
 
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiclient.StateAPIClient
+import aragones.sergio.readercollection.network.apiservice.StateApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -18,8 +19,9 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class StateRepository @Inject constructor(
+    private val api: StateApiService,
     private val database: AppDatabase,
-    private val stateAPIClient: StateAPIClient
+    private val sharedPreferencesHandler: SharedPreferencesHandler
 ) : BaseRepository() {
 
     //MARK: - Public methods
@@ -28,7 +30,7 @@ class StateRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            stateAPIClient.getStatesObserver().subscribeBy(
+            getStatesObserver().subscribeBy(
                 onSuccess = { newStates ->
                     insertStatesDatabaseObserver(newStates).subscribeBy(
                         onComplete = {
@@ -101,6 +103,16 @@ class StateRepository @Inject constructor(
     }
 
     //MARK: - Private methods
+
+    private fun getStatesObserver(): Single<List<StateResponse>> {
+
+        val headers: MutableMap<String, String> = HashMap()
+        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
+        return api
+            .getStates(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
 
     private fun insertStatesDatabaseObserver(states: List<StateResponse>): Completable {
         return database
