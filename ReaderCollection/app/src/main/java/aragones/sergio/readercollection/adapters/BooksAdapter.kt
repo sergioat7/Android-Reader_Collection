@@ -31,7 +31,7 @@ class BooksAdapter(
         val book = books[position]
         return when {
             book.state == State.READING -> R.layout.item_reading_book
-            isGoogleBook -> R.layout.item_google_book
+            isGoogleBook && book.id.isNotBlank() -> R.layout.item_google_book
             book.id.isNotBlank() -> R.layout.item_book
             else -> R.layout.item_load_more_items
         }
