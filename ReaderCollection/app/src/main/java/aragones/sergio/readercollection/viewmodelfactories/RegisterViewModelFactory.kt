@@ -21,8 +21,7 @@ class RegisterViewModelFactory(
     private val application: Application
 ): ViewModelProvider.Factory {
 
-    //MARK: - Public properties
-
+    //region Public properties
     @Inject
     lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
@@ -35,9 +34,9 @@ class RegisterViewModelFactory(
     lateinit var userRepository: UserRepository
     @Inject
     lateinit var registerViewModel: RegisterViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
@@ -47,4 +46,5 @@ class RegisterViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+    //endregion
 }

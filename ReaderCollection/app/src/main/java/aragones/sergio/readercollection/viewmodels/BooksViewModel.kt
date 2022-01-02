@@ -37,17 +37,16 @@ class BooksViewModel @Inject constructor(
     userRepository: UserRepository
 ) : BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _originalBooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private var sortParam = userRepository.sortParam
     private var isSortDescending = userRepository.isSortDescending
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> =
@@ -58,9 +57,9 @@ class BooksViewModel @Inject constructor(
         _books.map { it.filter { book -> book.state != State.READING && book.state != State.PENDING } }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -68,9 +67,9 @@ class BooksViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun getBooks() {
 
         _booksLoading.value = true
@@ -153,4 +152,5 @@ class BooksViewModel @Inject constructor(
             book.title?.contains(query, true) ?: false
         } ?: listOf()
     }
+    //endregion
 }

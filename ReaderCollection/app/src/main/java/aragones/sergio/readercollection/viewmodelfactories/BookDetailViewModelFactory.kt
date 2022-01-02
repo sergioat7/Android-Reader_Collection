@@ -23,8 +23,7 @@ class BookDetailViewModelFactory(
     private val isGoogleBook: Boolean
 ): ViewModelProvider.Factory {
 
-    //MARK: - Public properties
-
+    //region Public properties
     @Inject
     lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
@@ -37,9 +36,9 @@ class BookDetailViewModelFactory(
     lateinit var stateRepository: StateRepository
     @Inject
     lateinit var bookDetailViewModel: BookDetailViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BookDetailViewModel::class.java)) {
@@ -54,4 +53,5 @@ class BookDetailViewModelFactory(
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+    //endregion
 }

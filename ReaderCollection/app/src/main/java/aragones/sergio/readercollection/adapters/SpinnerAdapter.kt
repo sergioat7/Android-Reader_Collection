@@ -22,8 +22,7 @@ class SpinnerAdapter(
     private val title: String?
 ): ArrayAdapter<Any?>(ctx, R.layout.item_spinner_dropdown, values) {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val layout = if (rounded) R.layout.item_spinner_rounded else R.layout.item_spinner
@@ -62,4 +61,5 @@ class SpinnerAdapter(
         tvValue.setTextColor(ContextCompat.getColor(ctx, colorId))
         return tvValue
     }
+    //endregion
 }

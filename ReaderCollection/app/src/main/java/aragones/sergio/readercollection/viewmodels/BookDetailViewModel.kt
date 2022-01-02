@@ -32,8 +32,7 @@ class BookDetailViewModel @Inject constructor(
     private val stateRepository: StateRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private val _book = MutableLiveData<BookResponse>()
@@ -46,9 +45,9 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val book: LiveData<BookResponse> = _book
     val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
@@ -59,9 +58,9 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -69,9 +68,9 @@ class BookDetailViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun getBook() {
 
         _bookDetailLoading.value = true
@@ -223,4 +222,5 @@ class BookDetailViewModel @Inject constructor(
     fun setIsGoogleBook(isGoogleBook: Boolean) {
         this.isGoogleBook = isGoogleBook
     }
+    //endregion
 }

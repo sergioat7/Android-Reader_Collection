@@ -22,8 +22,7 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment: BaseFragment() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var etUsername: EditText
     private lateinit var ibInfo: ImageButton
     private lateinit var etPassword: EditText
@@ -36,9 +35,9 @@ class ProfileFragment: BaseFragment() {
     private lateinit var btSave: Button
 
     private lateinit var viewModel: ProfileViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -85,9 +84,9 @@ class ProfileFragment: BaseFragment() {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         val application = activity?.application ?: return
@@ -196,4 +195,5 @@ class ProfileFragment: BaseFragment() {
             manageError(error)
         })
     }
+    //endregion
 }

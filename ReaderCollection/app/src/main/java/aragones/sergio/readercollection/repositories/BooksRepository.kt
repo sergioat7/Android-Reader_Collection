@@ -24,8 +24,7 @@ class BooksRepository @Inject constructor(
     private val database: AppDatabase
 ) : BaseRepository() {
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun loadBooksObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -251,9 +250,9 @@ class BooksRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun insertBooksDatabaseObserver(books: List<BookResponse>): Completable {
         return database
             .bookDao()
@@ -280,4 +279,5 @@ class BooksRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

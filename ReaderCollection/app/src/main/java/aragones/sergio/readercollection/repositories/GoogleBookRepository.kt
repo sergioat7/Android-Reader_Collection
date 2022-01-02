@@ -17,8 +17,7 @@ class GoogleBookRepository @Inject constructor(
     private val api: GoogleApiService
 ) : BaseRepository() {
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun searchBooksObserver(
         query: String,
         page: Int,
@@ -45,4 +44,5 @@ class GoogleBookRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

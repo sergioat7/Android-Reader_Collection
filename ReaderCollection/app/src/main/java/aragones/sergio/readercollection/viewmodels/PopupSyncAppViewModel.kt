@@ -25,16 +25,15 @@ class PopupSyncAppViewModel @Inject constructor(
     private val stateRepository: StateRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _loginError = MutableLiveData<ErrorResponse?>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val loginError: LiveData<ErrorResponse?> = _loginError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -42,9 +41,9 @@ class PopupSyncAppViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun loadContent() {
 
         var result = 0
@@ -88,9 +87,9 @@ class PopupSyncAppViewModel @Inject constructor(
             }
         ).addTo(disposables)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun checkProgress(result: Int) {
 
         if (result == 3) {
@@ -148,4 +147,5 @@ class PopupSyncAppViewModel @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

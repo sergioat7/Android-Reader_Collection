@@ -26,18 +26,17 @@ class LandingViewModel @Inject constructor(
     private val stateRepository: StateRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _landingClassToStart = MutableLiveData<Class<*>>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val language: String
         get() = sharedPreferencesHandler.getLanguage()
     val landingClassToStart = _landingClassToStart
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -45,9 +44,9 @@ class LandingViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun checkVersion() {
 
         val currentVersion = sharedPreferencesHandler.getVersion()
@@ -76,9 +75,9 @@ class LandingViewModel @Inject constructor(
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun resetDatabase() {
 
         var result = 0
@@ -129,4 +128,5 @@ class LandingViewModel @Inject constructor(
             _landingClassToStart.value = LoginActivity::class.java
         }
     }
+    //endregion
 }

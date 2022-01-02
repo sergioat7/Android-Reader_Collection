@@ -16,12 +16,11 @@ class SharedPreferencesHandler @Inject constructor(
     private val sharedPreferences: SharedPreferences?
 ) {
 
-    //MARK: Private properties
-
+    //region Private properties
     private val gson = Gson()
+    //endregion
 
-    //MARK: Public methods
-
+    //region Public methods
     fun getLanguage(): String {
 
         sharedPreferences?.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {

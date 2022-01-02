@@ -29,29 +29,28 @@ class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _registerForm = MutableLiveData<LoginFormState>()
     private val _registerLoading = MutableLiveData<Boolean>()
     private val _registerError = MutableLiveData<ErrorResponse?>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val registerFormState: LiveData<LoginFormState> = _registerForm
     val registerLoading: LiveData<Boolean> = _registerLoading
     val registerError: LiveData<ErrorResponse?> = _registerError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun register(username: String, password: String) {
 
         _registerLoading.value = true
@@ -98,9 +97,9 @@ class RegisterViewModel @Inject constructor(
         }
         _registerForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun loadContentObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -189,4 +188,5 @@ class RegisterViewModel @Inject constructor(
             }
         )
     }
+    //endregion
 }

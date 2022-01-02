@@ -20,8 +20,7 @@ class UserRepository @Inject constructor(
     private val userApiClient: UserApiClient
 ): BaseRepository() {
 
-    //MARK: - Public properties
-
+    //region Public properties
     val username: String
         get() = sharedPreferencesHandler.getUserData().username
 
@@ -39,9 +38,9 @@ class UserRepository @Inject constructor(
 
     val themeMode: Int
         get() = sharedPreferencesHandler.getThemeMode()
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun registerObserver(username: String, password: String): Completable {
         return userApiClient.registerObserver(username, password)
     }
@@ -103,4 +102,5 @@ class UserRepository @Inject constructor(
     fun storeThemeMode(themeMode: Int) {
         sharedPreferencesHandler.setThemeMode(themeMode)
     }
+    //endregion
 }

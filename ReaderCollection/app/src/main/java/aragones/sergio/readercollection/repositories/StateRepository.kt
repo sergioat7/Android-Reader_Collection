@@ -24,8 +24,7 @@ class StateRepository @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) : BaseRepository() {
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun loadStatesObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -101,9 +100,9 @@ class StateRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun getStatesObserver(): Single<List<StateResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
@@ -131,4 +130,5 @@ class StateRepository @Inject constructor(
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

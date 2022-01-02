@@ -31,21 +31,20 @@ class LoginViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginLoading = MutableLiveData<Boolean>()
     private val _loginError = MutableLiveData<ErrorResponse?>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val username: String = userRepository.username
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse?> = _loginError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -53,9 +52,9 @@ class LoginViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun login(username: String, password: String) {
 
         _loginLoading.value = true
@@ -91,9 +90,9 @@ class LoginViewModel @Inject constructor(
         }
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun loadContent(userData: UserData, authData: AuthData) {
 
         var result = 0
@@ -182,4 +181,5 @@ class LoginViewModel @Inject constructor(
             }
         ).addTo(disposables)
     }
+    //endregion
 }
