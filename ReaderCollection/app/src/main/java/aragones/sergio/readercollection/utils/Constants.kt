@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.models.responses.GoogleIsbnResponse
 
 object Preferences {
     const val PREFERENCES_NAME = "preferences"
+    const val ENCRYPTED_PREFERENCES_NAME = "encryptedPreferences"
     const val LANGUAGE_PREFERENCE_NAME = "language"
     const val AUTH_DATA_PREFERENCES_NAME = "authData"
     const val USER_DATA_PREFERENCES_NAME = "userData"

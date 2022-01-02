@@ -6,13 +6,13 @@
 package aragones.sergio.readercollection.utils
 
 import android.content.Context
-import android.content.SharedPreferences
+import androidx.security.crypto.EncryptedSharedPreferences
+import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import com.google.gson.Gson
 import java.util.*
-import javax.inject.Inject
 
 object SharedPreferencesHandler {
 
@@ -20,6 +20,13 @@ object SharedPreferencesHandler {
     private val appPreferences = ReaderCollectionApplication.context.getSharedPreferences(
         Preferences.PREFERENCES_NAME,
         Context.MODE_PRIVATE
+    )
+    private val appEncryptedPreferences = EncryptedSharedPreferences.create(
+        Preferences.ENCRYPTED_PREFERENCES_NAME,
+        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+        ReaderCollectionApplication.context,
+        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
     private val gson = Gson()
     //endregion
@@ -39,7 +46,7 @@ object SharedPreferencesHandler {
 
     fun setLanguage(language: String) {
 
-        with (appPreferences.edit()) {
+        with(appPreferences.edit()) {
             putString(Preferences.LANGUAGE_PREFERENCE_NAME, language)
             commit()
         }
@@ -47,7 +54,8 @@ object SharedPreferencesHandler {
 
     fun getCredentials(): AuthData {
 
-        val authDataJson = appPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME,null)
+        val authDataJson =
+            appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
         return if (authDataJson != null) {
             gson.fromJson(authDataJson, AuthData::class.java)
         } else {
@@ -57,7 +65,7 @@ object SharedPreferencesHandler {
 
     fun storeCredentials(authData: AuthData) {
 
-        with (appPreferences.edit()) {
+        with(appEncryptedPreferences.edit()) {
             val authDataJson = gson.toJson(authData)
             putString(Preferences.AUTH_DATA_PREFERENCES_NAME, authDataJson)
             commit()
@@ -65,7 +73,7 @@ object SharedPreferencesHandler {
     }
 
     fun removeCredentials() {
-        appPreferences.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
+        appEncryptedPreferences.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun isLoggedIn(): Boolean {
@@ -77,7 +85,8 @@ object SharedPreferencesHandler {
 
     fun getUserData(): UserData {
 
-        val userDataJson = appPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME,null)
+        val userDataJson =
+            appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
         return if (userDataJson != null) {
             gson.fromJson(userDataJson, UserData::class.java)
         } else {
@@ -87,7 +96,7 @@ object SharedPreferencesHandler {
 
     fun storeUserData(userData: UserData) {
 
-        with (appPreferences.edit()) {
+        with(appEncryptedPreferences.edit()) {
             val userDataJson = gson.toJson(userData)
             putString(Preferences.USER_DATA_PREFERENCES_NAME, userDataJson)
             commit()
@@ -102,7 +111,7 @@ object SharedPreferencesHandler {
     }
 
     fun removeUserData() {
-        appPreferences.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
+        appEncryptedPreferences.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun removePassword() {
@@ -119,7 +128,7 @@ object SharedPreferencesHandler {
 
     fun setSortParam(sortParam: String?) {
 
-        with (appPreferences.edit()) {
+        with(appPreferences.edit()) {
             putString(Preferences.SORT_PARAM_PREFERENCE_NAME, sortParam)
             commit()
         }
