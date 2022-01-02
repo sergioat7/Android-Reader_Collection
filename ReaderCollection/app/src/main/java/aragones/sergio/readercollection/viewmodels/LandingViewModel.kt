@@ -20,7 +20,6 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LandingViewModel @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
@@ -32,7 +31,7 @@ class LandingViewModel @Inject constructor(
 
     //region Public properties
     val language: String
-        get() = sharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.getLanguage()
     val landingClassToStart = _landingClassToStart
     //endregion
 
@@ -49,17 +48,17 @@ class LandingViewModel @Inject constructor(
     //region Public methods
     fun checkVersion() {
 
-        val currentVersion = sharedPreferencesHandler.getVersion()
+        val currentVersion = SharedPreferencesHandler.getVersion()
         val newVersion = BuildConfig.VERSION_CODE
         if (newVersion > currentVersion) {
 
-            sharedPreferencesHandler.setVersion(newVersion)
-            sharedPreferencesHandler.removePassword()
-            sharedPreferencesHandler.removeCredentials()
+            SharedPreferencesHandler.setVersion(newVersion)
+            SharedPreferencesHandler.removePassword()
+            SharedPreferencesHandler.removeCredentials()
             resetDatabase()
         } else {
 
-            _landingClassToStart.value = if (sharedPreferencesHandler.isLoggedIn()) {
+            _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn()) {
                 MainActivity::class.java
             } else {
                 LoginActivity::class.java
@@ -69,7 +68,7 @@ class LandingViewModel @Inject constructor(
 
     fun checkTheme() {
 
-        when (sharedPreferencesHandler.getThemeMode()) {
+        when (SharedPreferencesHandler.getThemeMode()) {
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)

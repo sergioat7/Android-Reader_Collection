@@ -20,8 +20,7 @@ import javax.inject.Inject
 
 class StateRepository @Inject constructor(
     private val api: StateApiService,
-    private val database: AppDatabase,
-    private val sharedPreferencesHandler: SharedPreferencesHandler
+    private val database: AppDatabase
 ) : BaseRepository() {
 
     //region Public methods
@@ -106,7 +105,7 @@ class StateRepository @Inject constructor(
     private fun getStatesObserver(): Single<List<StateResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
+        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
         return api
             .getStates(headers)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)

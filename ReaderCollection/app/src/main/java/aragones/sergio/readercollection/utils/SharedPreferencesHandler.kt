@@ -5,25 +5,29 @@
 
 package aragones.sergio.readercollection.utils
 
+import android.content.Context
 import android.content.SharedPreferences
+import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import com.google.gson.Gson
 import java.util.*
 import javax.inject.Inject
 
-class SharedPreferencesHandler @Inject constructor(
-    private val sharedPreferences: SharedPreferences?
-) {
+object SharedPreferencesHandler {
 
     //region Private properties
+    private val appPreferences = ReaderCollectionApplication.context.getSharedPreferences(
+        Preferences.PREFERENCES_NAME,
+        Context.MODE_PRIVATE
+    )
     private val gson = Gson()
     //endregion
 
     //region Public methods
     fun getLanguage(): String {
 
-        sharedPreferences?.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
+        appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
             return it
         } ?: run {
 
@@ -35,18 +39,15 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun setLanguage(language: String) {
 
-        if (sharedPreferences != null) {
-            with (sharedPreferences.edit()) {
-
-                putString(Preferences.LANGUAGE_PREFERENCE_NAME, language)
-                commit()
-            }
+        with (appPreferences.edit()) {
+            putString(Preferences.LANGUAGE_PREFERENCE_NAME, language)
+            commit()
         }
     }
 
     fun getCredentials(): AuthData {
 
-        val authDataJson = sharedPreferences?.getString(Preferences.AUTH_DATA_PREFERENCES_NAME,null)
+        val authDataJson = appPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME,null)
         return if (authDataJson != null) {
             gson.fromJson(authDataJson, AuthData::class.java)
         } else {
@@ -56,17 +57,15 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun storeCredentials(authData: AuthData) {
 
-        if (sharedPreferences != null) {
-            with (sharedPreferences.edit()) {
-                val authDataJson = gson.toJson(authData)
-                putString(Preferences.AUTH_DATA_PREFERENCES_NAME, authDataJson)
-                commit()
-            }
+        with (appPreferences.edit()) {
+            val authDataJson = gson.toJson(authData)
+            putString(Preferences.AUTH_DATA_PREFERENCES_NAME, authDataJson)
+            commit()
         }
     }
 
     fun removeCredentials() {
-        sharedPreferences?.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
+        appPreferences.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun isLoggedIn(): Boolean {
@@ -78,7 +77,7 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun getUserData(): UserData {
 
-        val userDataJson = sharedPreferences?.getString(Preferences.USER_DATA_PREFERENCES_NAME,null)
+        val userDataJson = appPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME,null)
         return if (userDataJson != null) {
             gson.fromJson(userDataJson, UserData::class.java)
         } else {
@@ -88,12 +87,10 @@ class SharedPreferencesHandler @Inject constructor(
 
     fun storeUserData(userData: UserData) {
 
-        if (sharedPreferences != null) {
-            with (sharedPreferences.edit()) {
-                val userDataJson = gson.toJson(userData)
-                putString(Preferences.USER_DATA_PREFERENCES_NAME, userDataJson)
-                commit()
-            }
+        with (appPreferences.edit()) {
+            val userDataJson = gson.toJson(userData)
+            putString(Preferences.USER_DATA_PREFERENCES_NAME, userDataJson)
+            commit()
         }
     }
 
@@ -105,7 +102,7 @@ class SharedPreferencesHandler @Inject constructor(
     }
 
     fun removeUserData() {
-        sharedPreferences?.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
+        appPreferences.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun removePassword() {
@@ -117,59 +114,50 @@ class SharedPreferencesHandler @Inject constructor(
     }
 
     fun getSortParam(): String? {
-        return sharedPreferences?.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
+        return appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
     }
 
     fun setSortParam(sortParam: String?) {
 
-        if (sharedPreferences != null) {
-            with (sharedPreferences.edit()) {
-
-                putString(Preferences.SORT_PARAM_PREFERENCE_NAME, sortParam)
-                commit()
-            }
+        with (appPreferences.edit()) {
+            putString(Preferences.SORT_PARAM_PREFERENCE_NAME, sortParam)
+            commit()
         }
     }
 
     fun getVersion(): Int {
-        return sharedPreferences?.getInt(Preferences.VERSION_PREFERENCE_NAME, 0) ?: 0
+        return appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
     }
 
     fun setVersion(version: Int) {
 
-        sharedPreferences?.let {
-            with(it.edit()) {
-                putInt(Preferences.VERSION_PREFERENCE_NAME, version)
-                commit()
-            }
+        with(appPreferences.edit()) {
+            putInt(Preferences.VERSION_PREFERENCE_NAME, version)
+            commit()
         }
     }
 
     fun getThemeMode(): Int {
-        return sharedPreferences?.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0) ?: 0
+        return appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
     }
 
     fun setThemeMode(themeMode: Int) {
 
-        sharedPreferences?.let {
-            with(it.edit()) {
-                putInt(Preferences.THEME_MODE_PREFERENCE_NAME, themeMode)
-                commit()
-            }
+        with(appPreferences.edit()) {
+            putInt(Preferences.THEME_MODE_PREFERENCE_NAME, themeMode)
+            commit()
         }
     }
 
     fun isSortDescending(): Boolean {
-        return sharedPreferences?.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false) ?: false
+        return appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
     }
 
     fun setIsSortDescending(isSortDescending: Boolean) {
 
-        sharedPreferences?.let {
-            with(it.edit()) {
-                putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
-                commit()
-            }
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
+            commit()
         }
     }
 

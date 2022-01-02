@@ -23,6 +23,7 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
@@ -485,8 +486,8 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         etPublisher.setText(publisher)
 
         var publishedDate = book.publishedDate.toString(
-            viewModel.sharedPreferencesHandler.getDateFormatToShow(),
-            viewModel.sharedPreferencesHandler.getLanguage()
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         if (publishedDate == null || publishedDate.isBlank()) {
             publishedDate = Constants.NO_VALUE
@@ -494,8 +495,8 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         etPublishedDate.setText(publishedDate)
 
         var readingDate = book.readingDate.toString(
-            viewModel.sharedPreferencesHandler.getDateFormatToShow(),
-            viewModel.sharedPreferencesHandler.getLanguage()
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         if (readingDate == null || readingDate.isBlank()) {
             readingDate = Constants.NO_VALUE
@@ -535,12 +536,12 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             it.trimStart().trimEnd()
         }
         val publishedDate = etPublishedDate.text.toString().toDate(
-            viewModel.sharedPreferencesHandler.getDateFormatToShow(),
-            viewModel.sharedPreferencesHandler.getLanguage()
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         var readingDate = etReadingDate.text.toString().toDate(
-            viewModel.sharedPreferencesHandler.getDateFormatToShow(),
-            viewModel.sharedPreferencesHandler.getLanguage()
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         val pageCountText = etPageCount.getValue()
         val pageCount =

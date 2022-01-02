@@ -20,8 +20,7 @@ import javax.inject.Inject
 
 class FormatRepository @Inject constructor(
     private val api: FormatApiService,
-    private val database: AppDatabase,
-    private val sharedPreferencesHandler: SharedPreferencesHandler
+    private val database: AppDatabase
 ) : BaseRepository() {
 
     //region Public methods
@@ -107,7 +106,7 @@ class FormatRepository @Inject constructor(
     private fun getFormatsObserver(): Single<List<FormatResponse>> {
 
         val headers: MutableMap<String, String> = HashMap()
-        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
+        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = SharedPreferencesHandler.getLanguage()
         return api
             .getFormats(headers)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)

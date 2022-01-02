@@ -5,14 +5,22 @@
 
 package aragones.sergio.readercollection
 
+import android.annotation.SuppressLint
 import android.app.Application
+import android.content.Context
 import aragones.sergio.readercollection.injection.components.AppComponent
 import aragones.sergio.readercollection.injection.components.DaggerAppComponent
 import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
 import aragones.sergio.readercollection.injection.modules.NetworkModule
-import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
 
 class ReaderCollectionApplication : Application() {
+
+    //region Static properties
+    companion object {
+        @SuppressLint("StaticFieldLeak")
+        lateinit var context: Context
+    }
+    //endregion
 
     //region Public properties
     lateinit var appComponent: AppComponent
@@ -27,10 +35,9 @@ class ReaderCollectionApplication : Application() {
                 AppDatabaseModule(applicationContext)
             )
             .networkModule(NetworkModule())
-            .sharedPreferencesModule(
-                SharedPreferencesModule(applicationContext)
-            )
             .build()
+
+        context = applicationContext
     }
     //endregion
 }

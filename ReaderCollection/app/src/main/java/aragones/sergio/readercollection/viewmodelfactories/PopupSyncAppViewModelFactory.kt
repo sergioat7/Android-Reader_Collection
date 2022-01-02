@@ -13,7 +13,6 @@ import aragones.sergio.readercollection.network.apiclient.BookApiClient
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.PopupSyncAppViewModel
 import javax.inject.Inject
 
@@ -22,8 +21,6 @@ class PopupSyncAppViewModelFactory(
 ): ViewModelProvider.Factory {
 
     //region Public properties
-    @Inject
-    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
     lateinit var bookApiClient: BookApiClient
     @Inject

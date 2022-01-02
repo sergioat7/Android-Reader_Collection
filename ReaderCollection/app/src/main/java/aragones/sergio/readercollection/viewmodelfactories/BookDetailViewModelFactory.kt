@@ -13,7 +13,6 @@ import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.StateRepository
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
 
@@ -24,8 +23,6 @@ class BookDetailViewModelFactory(
 ): ViewModelProvider.Factory {
 
     //region Public properties
-    @Inject
-    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
