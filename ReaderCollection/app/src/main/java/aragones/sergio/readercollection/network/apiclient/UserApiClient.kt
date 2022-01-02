@@ -1,78 +1,77 @@
 /*
  * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 18/10/2020
+ * Created by Sergio Aragonés on 17/10/2020
  */
 
 package aragones.sergio.readercollection.network.apiclient
 
-import aragones.sergio.readercollection.models.requests.FavouriteBook
-import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.models.requests.LoginCredentials
+import aragones.sergio.readercollection.models.requests.NewPassword
+import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiservice.BookApiService
+import aragones.sergio.readercollection.network.apiservice.UserApiService
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
-class BookAPIClient @Inject constructor(
-    private val api: BookApiService,
+class UserApiClient @Inject constructor(
+    private val api: UserApiService,
     private val sharedPreferencesHandler: SharedPreferencesHandler
 ) {
 
-    fun getBooksObserver(): Maybe<List<BookResponse>> {
+    fun registerObserver(username: String, password: String): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-
+        val body = LoginCredentials(username, password)
         return api
-            .getBooks(headers)
+            .register(headers, body)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun createBookObserver(book: BookResponse): Completable {
+    fun deleteUserObserver(): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
         return api
-            .createBook(headers, book)
+            .deleteUser(headers)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun setBookObserver(book: BookResponse): Single<BookResponse> {
+    fun loginObserver(username: String, password: String): Single<LoginResponse> {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
-        headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
+        val body = LoginCredentials(username, password)
         return api
-            .setBook(headers, book.id, book)
+            .login(headers, body)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun deleteBookObserver(googleId: String): Completable {
+    fun logoutObserver(): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
         return api
-            .deleteBook(headers, googleId)
+            .logout(headers)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun setFavouriteBookObserver(googleId: String, isFavourite: Boolean): Single<BookResponse> {
+    fun updatePasswordObserver(password: String): Completable {
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
         headers[ApiManager.AUTHORIZATION_HEADER] = sharedPreferencesHandler.getCredentials().token
-        val body = FavouriteBook(isFavourite)
+        val body = NewPassword(password)
         return api
-            .setFavouriteBook(headers, googleId, body)
+            .updatePassword(headers, body)
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }

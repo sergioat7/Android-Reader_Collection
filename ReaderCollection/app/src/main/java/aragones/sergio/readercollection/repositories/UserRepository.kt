@@ -8,7 +8,7 @@ package aragones.sergio.readercollection.repositories
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.LoginResponse
-import aragones.sergio.readercollection.network.apiclient.UserAPIClient
+import aragones.sergio.readercollection.network.apiclient.UserApiClient
 import aragones.sergio.readercollection.repositories.base.BaseRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val sharedPreferencesHandler: SharedPreferencesHandler,
-    private val userAPIClient: UserAPIClient
+    private val userApiClient: UserApiClient
 ): BaseRepository() {
 
     //MARK: - Public properties
@@ -43,23 +43,23 @@ class UserRepository @Inject constructor(
     //MARK: - Public methods
 
     fun registerObserver(username: String, password: String): Completable {
-        return userAPIClient.registerObserver(username, password)
+        return userApiClient.registerObserver(username, password)
     }
 
     fun deleteUserObserver(): Completable {
-        return userAPIClient.deleteUserObserver()
+        return userApiClient.deleteUserObserver()
     }
 
     fun loginObserver(username: String, password: String): Single<LoginResponse> {
-        return userAPIClient.loginObserver(username, password)
+        return userApiClient.loginObserver(username, password)
     }
 
     fun logoutObserver(): Completable {
-        return userAPIClient.logoutObserver()
+        return userApiClient.logoutObserver()
     }
 
     fun updatePasswordObserver(newPassword: String): Completable {
-        return userAPIClient.updatePasswordObserver(newPassword)
+        return userApiClient.updatePasswordObserver(newPassword)
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
