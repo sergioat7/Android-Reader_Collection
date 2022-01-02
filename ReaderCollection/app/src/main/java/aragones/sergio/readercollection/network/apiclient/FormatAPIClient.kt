@@ -22,7 +22,9 @@ class FormatAPIClient @Inject constructor(
 
         val headers: MutableMap<String, String> = HashMap()
         headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
-        return api.getFormats(headers).subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+        return api
+            .getFormats(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 }

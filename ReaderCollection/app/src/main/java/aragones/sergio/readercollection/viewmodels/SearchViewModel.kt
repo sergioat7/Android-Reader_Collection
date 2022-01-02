@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.utils.Constants
@@ -99,6 +100,7 @@ class SearchViewModel @Inject constructor(
 
                     _searchLoading.value = false
                     _bookAdded.value = null
+                    _searchError.value = ApiManager.handleError(it)
                     onDestroy()
                 }
             ).addTo(disposables)

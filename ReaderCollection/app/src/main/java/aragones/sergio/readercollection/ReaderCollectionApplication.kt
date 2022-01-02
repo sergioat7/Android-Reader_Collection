@@ -16,13 +16,12 @@ import aragones.sergio.readercollection.injection.modules.SharedPreferencesModul
 
 class ReaderCollectionApplication : Application() {
 
-    //MARK: - Public properties
-
+    //region Public properties
     lateinit var appComponent: AppComponent
     lateinit var booksComponent: BooksComponent
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate() {
         super.onCreate()
 
@@ -47,4 +46,5 @@ class ReaderCollectionApplication : Application() {
             )
             .build()
     }
+    //endregion
 }

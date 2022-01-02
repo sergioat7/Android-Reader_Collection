@@ -10,7 +10,6 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.apiclient.StateAPIClient
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
-import aragones.sergio.readercollection.utils.Constants
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -21,7 +20,7 @@ import javax.inject.Inject
 class StateRepository @Inject constructor(
     private val database: AppDatabase,
     private val stateAPIClient: StateAPIClient
-): BaseRepository() {
+) : BaseRepository() {
 
     //MARK: - Public methods
 
@@ -36,7 +35,10 @@ class StateRepository @Inject constructor(
                             getStatesDatabaseObserver().subscribeBy(
                                 onSuccess = { currentStates ->
 
-                                    val statesToRemove = Constants.getDisabledContent(currentStates, newStates) as List<StateResponse>
+                                    val statesToRemove = AppDatabase.getDisabledContent(
+                                        currentStates,
+                                        newStates
+                                    ) as List<StateResponse>
                                     deleteStatesDatabaseObserver(statesToRemove).subscribeBy(
                                         onComplete = {
                                             emitter.onComplete()
