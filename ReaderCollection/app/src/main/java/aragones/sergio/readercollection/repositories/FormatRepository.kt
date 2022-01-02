@@ -7,9 +7,10 @@ package aragones.sergio.readercollection.repositories
 
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
+import aragones.sergio.readercollection.network.apiservice.FormatApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.repositories.base.BaseRepository
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -18,8 +19,9 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class FormatRepository @Inject constructor(
+    private val api: FormatApiService,
     private val database: AppDatabase,
-    private val formatAPIClient: FormatAPIClient
+    private val sharedPreferencesHandler: SharedPreferencesHandler
 ) : BaseRepository() {
 
     //MARK: - Public methods
@@ -28,7 +30,7 @@ class FormatRepository @Inject constructor(
 
         return Completable.create { emitter ->
 
-            formatAPIClient.getFormatsObserver().subscribeBy(
+            getFormatsObserver().subscribeBy(
                 onSuccess = { newFormats ->
                     insertFormatsDatabaseObserver(newFormats).subscribeBy(
                         onComplete = {
@@ -68,6 +70,7 @@ class FormatRepository @Inject constructor(
     }
 
     fun getFormatsDatabaseObserver(): Single<List<FormatResponse>> {
+
         return database
             .formatDao()
             .getFormatsObserver()
@@ -101,6 +104,16 @@ class FormatRepository @Inject constructor(
     }
 
     //MARK: - Private methods
+
+    private fun getFormatsObserver(): Single<List<FormatResponse>> {
+
+        val headers: MutableMap<String, String> = HashMap()
+        headers[ApiManager.ACCEPT_LANGUAGE_HEADER] = sharedPreferencesHandler.getLanguage()
+        return api
+            .getFormats(headers)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
 
     private fun insertFormatsDatabaseObserver(formats: List<FormatResponse>): Completable {
         return database

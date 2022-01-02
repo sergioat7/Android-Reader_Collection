@@ -77,7 +77,7 @@ class BookDetailViewModel @Inject constructor(
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            googleBookRepository.getGoogleBookObserver(bookId).subscribeBy(
+            googleBookRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = Constants.mapGoogleBook(it)
