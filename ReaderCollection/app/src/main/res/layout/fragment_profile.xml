@@ -167,13 +167,14 @@
 
     <Button
         android:id="@+id/button_save"
+        android:layout_width="@dimen/size_200dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_24dp"
         android:text="@string/save"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        style="@style/RoundedButton.Action"
+        style="@style/Widget.ReaderCollection.Button.Main"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

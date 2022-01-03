@@ -6,16 +6,9 @@
 
 <resources>
 
-    <style name="Theme.ReaderCollection.ActionBar">
-        <item name="titleTextColor">@color/colorSecondary</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
-        <item name="android:windowLightStatusBar">true</item>
-    </style>
-
-    <style name="Theme.ReaderCollection.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.ReaderCollection.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorSecondary</item>
-        <item name="android:colorBackground">@color/colorSecondary</item>
         <item name="colorControlActivated">@color/buttonPrimary</item>
         <item name="colorSwitchThumbNormal">@color/buttonSecondary</item>
         <item name="android:windowLightStatusBar">false</item>
