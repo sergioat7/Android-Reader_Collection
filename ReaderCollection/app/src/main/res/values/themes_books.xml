@@ -74,7 +74,7 @@
     </style>
 
     <style name="StartListButton.Image">
-        <item name="android:src">@drawable/ic_double_arrow_up_light</item>
+        <item name="android:src">@drawable/ic_double_arrow_up</item>
     </style>
 
     <style name="EndListButton" parent="PositionListButton">
@@ -83,7 +83,7 @@
     </style>
 
     <style name="EndListButton.Image">
-        <item name="android:src">@drawable/ic_double_arrow_down_light</item>
+        <item name="android:src">@drawable/ic_double_arrow_down</item>
     </style>
 
     <style name="LoadMoreButton" parent="RoundedButton.Action">
@@ -94,7 +94,7 @@
     </style>
 
     <style name="LoadMoreButton.Image">
-        <item name="android:drawableStart">@drawable/ic_add_circle_outline_light</item>
+        <item name="android:drawableStart">@drawable/ic_add_circle_outline</item>
     </style>
 
 </resources>

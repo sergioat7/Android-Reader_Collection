@@ -5,12 +5,10 @@
 
 package aragones.sergio.readercollection.utils
 
-import android.app.Activity
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.TextView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.GoogleBookResponse
 import aragones.sergio.readercollection.models.responses.GoogleImageLinksResponse
@@ -110,19 +108,6 @@ object Constants {
             null,
             false
         )
-    }
-
-    fun getFavouriteImage(isFavourite: Boolean, activity: Activity?): Int {
-
-        return if (isFavourite && activity?.isDarkMode() == true) {
-            R.drawable.ic_favourite_full_dark
-        } else if (isFavourite && activity?.isDarkMode() == false) {
-            R.drawable.ic_favourite_full_light
-        } else if (!isFavourite && activity?.isDarkMode() == true) {
-            R.drawable.ic_favourite_empty_dark
-        } else {
-            R.drawable.ic_favourite_empty_light
-        }
     }
 
     private fun getGoogleBookIsbn(industryIdentifiers: List<GoogleIsbnResponse>?): String? {

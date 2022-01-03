@@ -307,7 +307,10 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         viewModel.isFavourite.observe(viewLifecycleOwner, {
 
             isFavourite = it
-            fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, activity))
+            fbFavourite.setImageResource(
+                if (it) R.drawable.ic_favourite_full
+                else R.drawable.ic_favourite_empty
+            )
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -382,12 +385,10 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
 
         val image =
             book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https") ?: "-"
-        val errorImage =
-            if (activity?.isDarkMode() == true) R.drawable.ic_default_book_cover_light else R.drawable.ic_default_book_cover_dark
         Picasso
             .get()
             .load(image)
-            .error(errorImage)
+            .error(R.drawable.ic_default_book_cover)
             .into(ivBook, object : Callback {
 
                 override fun onSuccess() {

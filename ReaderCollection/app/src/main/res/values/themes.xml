@@ -12,7 +12,7 @@
 
     <style name="Theme.ReaderCollection.ActionBar">
         <item name="titleTextColor">@color/textTertiary</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_light</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
 
@@ -30,7 +30,7 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:background">@android:color/transparent</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_light</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
     </style>
 
     <style name="Theme.ReaderCollection.DialogTransparent" parent="Theme.AppCompat.Light.Dialog">

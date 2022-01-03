@@ -61,9 +61,9 @@ class BooksAdapter(
         if (holder is BooksViewHolder) {
             val book = books[position]
             when {
-                book.state == State.READING -> holder.fillReadingData(book, context)
+                book.state == State.READING -> holder.fillReadingData(book)
                 isGoogleBook -> holder.fillGoogleData(book, context)
-                else -> holder.fillData(book, context)
+                else -> holder.fillData(book)
             }
 
             holder.itemView.setOnClickListener {

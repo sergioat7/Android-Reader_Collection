@@ -90,7 +90,7 @@ class RegisterFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            etPassword.showOrHidePassword(ibPassword, activity?.isDarkMode() == true)
+            etPassword.showOrHidePassword(ibPassword)
         }
 
         etConfirmPassword.afterTextChanged {
@@ -101,7 +101,7 @@ class RegisterFragment: BaseFragment() {
         }
 
         ibConfirmPassword.setOnClickListener {
-            etConfirmPassword.showOrHidePassword(ibConfirmPassword, activity?.isDarkMode() == true)
+            etConfirmPassword.showOrHidePassword(ibConfirmPassword)
         }
 
         btRegister.setOnClickListener {

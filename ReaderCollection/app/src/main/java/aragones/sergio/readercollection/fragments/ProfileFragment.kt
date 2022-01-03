@@ -119,7 +119,7 @@ class ProfileFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            etPassword.showOrHidePassword(ibPassword, activity?.isDarkMode() == true)
+            etPassword.showOrHidePassword(ibPassword)
         }
 
         var position = 0
