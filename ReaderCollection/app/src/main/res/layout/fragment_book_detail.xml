@@ -17,6 +17,7 @@
         android:id="@+id/app_bar_layout_book_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         app:elevation="0dp"
         >
 
@@ -129,15 +130,19 @@
                     />
 
                 <ImageView
+                    android:layout_width="@dimen/size_20dp"
                     android:layout_height="match_parent"
-                    style="@style/RatingCountImageView"
+                    android:layout_marginStart="@dimen/margin_12dp"
+                    android:src="@drawable/ic_person"
                     />
 
                 <TextView
                     android:id="@+id/text_view_rating_count"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    style="@style/RatingCountTextView"
+                    android:gravity="center_vertical"
+                    tools:text="18"
+                    style="@style/Widget.ReaderCollection.TextView.Title.RatingCount"
                     />
 
             </LinearLayout>
@@ -569,8 +574,10 @@
         android:layout_gravity="top|center"
         android:layout_marginTop="@dimen/margin_20dp_negative"
         android:visibility="invisible"
+        app:fabSize="mini"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        style="@style/FloatingButton.AddPhoto"
+        app:srcCompat="@drawable/ic_add_camera_photo"
+        style="@style/Widget.ReaderCollection.FloatingActionButton"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -581,7 +588,8 @@
         android:layout_marginTop="@dimen/margin_24dp_negative"
         android:layout_marginEnd="@dimen/margin_20dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        style="@style/FloatingButton.Favourite"
+        app:srcCompat="@drawable/ic_favourite_empty"
+        style="@style/Widget.ReaderCollection.FloatingActionButton"
         />
 
     <ProgressBar

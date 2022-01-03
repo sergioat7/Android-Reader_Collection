@@ -91,13 +91,17 @@
 
     <Button
         android:id="@+id/button_register"
+        android:layout_width="@dimen/size_200dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:layout_marginBottom="@dimen/margin_12dp"
         android:enabled="false"
+        android:text="@string/sign_up"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_text_confirm_password"
-        style="@style/RegisterButton"
+        style="@style/Widget.ReaderCollection.Button.Main"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

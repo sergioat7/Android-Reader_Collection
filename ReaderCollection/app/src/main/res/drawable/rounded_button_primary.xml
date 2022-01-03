@@ -9,61 +9,17 @@
     >
 
     <item
+        android:color="@color/colorPrimaryLight"
         android:state_pressed="true"
-        >
-
-        <shape
-            android:shape="rectangle"
-            >
-
-            <corners
-                android:radius="@dimen/radius_15dp"
-                />
-
-            <solid
-                android:color="@color/colorPrimaryLight"
-                />
-
-        </shape>
-
-    </item>
+        />
 
     <item
+        android:color="@color/colorPrimaryLight"
         android:state_enabled="false"
-        >
+        />
 
-        <shape
-            android:shape="rectangle"
-            >
-
-            <corners
-                android:radius="@dimen/radius_15dp"
-                />
-
-            <solid
-                android:color="@color/colorPrimaryLight"
-                />
-
-        </shape>
-
-    </item>
-
-    <item>
-
-        <shape
-            android:shape="rectangle"
-            >
-
-            <corners
-                android:radius="@dimen/radius_15dp"
-                />
-
-            <solid
-                android:color="@color/colorPrimary"
-                />
-
-        </shape>
-
-    </item>
+    <item
+        android:color="@color/colorPrimary"
+        />
 
 </selector>

@@ -15,12 +15,14 @@
         android:id="@+id/button_load_more_items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_12dp"
         android:text="@string/load_more"
+        app:icon="@drawable/ic_add_circle_outline"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/LoadMoreButton.Image"
+        style="@style/Widget.ReaderCollection.Button.Main.Icon"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,22 +34,27 @@
                 android:id="@+id/text_view_error"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_20dp"
+                android:textAlignment="center"
+                android:textColor="@color/textPrimary"
                 app:layout_constraintBottom_toTopOf="@+id/button_accept"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                style="@style/PopupErrorTextView"
                 />
 
             <Button
                 android:id="@+id/button_accept"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:text="@string/accept"
+                android:textAllCaps="false"
+                android:textColor="@color/textTertiary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                style="@style/PopupErrorButton"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
