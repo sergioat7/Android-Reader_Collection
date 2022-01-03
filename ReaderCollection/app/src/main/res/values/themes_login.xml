@@ -40,11 +40,11 @@
     </style>
 
     <style name="UsernameInfoButton" parent="EditTextButton">
-        <item name="android:src">@drawable/ic_show_info_light</item>
+        <item name="android:src">@drawable/ic_show_info</item>
     </style>
 
     <style name="PasswordEyeButton" parent="EditTextButton">
-        <item name="android:src">@drawable/ic_show_password_light</item>
+        <item name="android:src">@drawable/ic_show_password</item>
     </style>
 
     <style name="LoginButton" parent="RoundedButton.Action">

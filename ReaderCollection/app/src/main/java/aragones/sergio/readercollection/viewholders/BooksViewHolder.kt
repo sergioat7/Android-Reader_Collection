@@ -25,12 +25,9 @@ class BooksViewHolder(
 ) : RecyclerView.ViewHolder(itemView) {
 
     //region Public methods
-    fun fillReadingData(book: BookResponse, context: Context) {
+    fun fillReadingData(book: BookResponse) {
 
         val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val errorImage =
-            if ((context as Activity).isDarkMode()) R.drawable.ic_default_book_cover_dark
-            else R.drawable.ic_default_book_cover_light//TODO: change cover
         val loading = itemView.progress_bar_reading_image_loading
         loading.visibility = View.VISIBLE
         Picasso
@@ -38,7 +35,7 @@ class BooksViewHolder(
             .load(image)
             .fit()
             .centerCrop()
-            .error(errorImage)
+            .error(R.drawable.ic_default_book_cover)//TODO: change cover
             .into(itemView.image_view_reading_book, object : Callback {
 
                 override fun onSuccess() {
@@ -64,9 +61,6 @@ class BooksViewHolder(
     fun fillGoogleData(book: BookResponse, context: Context) {
 
         val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val errorImage =
-            if ((context as Activity).isDarkMode()) R.drawable.ic_default_book_cover_dark
-            else R.drawable.ic_default_book_cover_light
         val loading = itemView.progress_bar_google_image_loading
         loading.visibility = View.VISIBLE
         Picasso
@@ -74,7 +68,7 @@ class BooksViewHolder(
             .load(image)
             .fit()
             .centerCrop()
-            .error(errorImage)
+            .error(R.drawable.ic_default_book_cover)
             .into(itemView.image_view_google_book, object : Callback {
 
                 override fun onSuccess() {
@@ -111,12 +105,9 @@ class BooksViewHolder(
         itemView.text_view_google_book_new.visibility = if (rating > 0) View.GONE else View.VISIBLE
     }
 
-    fun fillData(book: BookResponse, context: Context) {
+    fun fillData(book: BookResponse) {
 
         val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val errorImage =
-            if ((context as Activity).isDarkMode()) R.drawable.ic_default_book_cover_dark
-            else R.drawable.ic_default_book_cover_light
         val loading = itemView.progress_bar_image_loading
         loading.visibility = View.VISIBLE
         Picasso
@@ -124,7 +115,7 @@ class BooksViewHolder(
             .load(image)
             .fit()
             .centerCrop()
-            .error(errorImage)
+            .error(R.drawable.ic_default_book_cover)
             .into(itemView.image_view_book, object : Callback {
 
                 override fun onSuccess() {

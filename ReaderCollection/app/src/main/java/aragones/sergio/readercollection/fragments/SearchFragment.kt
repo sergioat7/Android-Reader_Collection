@@ -23,7 +23,6 @@ import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
@@ -266,10 +265,6 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
                 val width = height / 3
                 val maxX = itemView.width.toFloat() * 0.6F
 
-                val iconId =
-                    if (activity?.isDarkMode() == true) R.drawable.ic_save_book_dark
-                    else R.drawable.ic_save_book_light
-
                 when {
                     dX < 0 -> {// Swiping to the left
                         paint.color = ContextCompat.getColor(context, R.color.colorTertiary)
@@ -281,7 +276,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
                         )
                         c.drawRect(background, paint)
 
-                        val icon = ContextCompat.getDrawable(context, iconId)
+                        val icon = ContextCompat.getDrawable(context, R.drawable.ic_save_book)
                         icon?.setBounds(
                             itemView.right - 2 * width,
                             itemView.top + width,

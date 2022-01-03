@@ -17,7 +17,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.showOrHidePassword
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
@@ -82,7 +81,7 @@ class LoginFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            etPassword.showOrHidePassword(ibPassword, activity?.isDarkMode() == true)
+            etPassword.showOrHidePassword(ibPassword)
         }
 
         btLogin.setOnClickListener {

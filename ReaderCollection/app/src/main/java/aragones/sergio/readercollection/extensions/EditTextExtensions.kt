@@ -75,19 +75,15 @@ fun EditText.getValue(): String {
     return this.text.toString().trimStart().trimEnd()
 }
 
-fun EditText.showOrHidePassword(imageButton: ImageButton, isDarkMode: Boolean) {
+fun EditText.showOrHidePassword(imageButton: ImageButton) {
 
     if (this.transformationMethod is HideReturnsTransformationMethod) {
 
-        val image =
-            if (isDarkMode) R.drawable.ic_show_password_dark else R.drawable.ic_show_password_light
-        imageButton.setImageResource(image)
+        imageButton.setImageResource(R.drawable.ic_show_password)
         this.transformationMethod = PasswordTransformationMethod.getInstance()
     } else {
 
-        val image =
-            if (isDarkMode) R.drawable.ic_hide_password_dark else R.drawable.ic_hide_password_light
-        imageButton.setImageResource(image)
+        imageButton.setImageResource(R.drawable.ic_hide_password)
         this.transformationMethod = HideReturnsTransformationMethod.getInstance()
     }
 }
