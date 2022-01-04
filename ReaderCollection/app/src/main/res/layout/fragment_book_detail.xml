@@ -105,10 +105,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_24dp"
                 android:visibility="gone"
+                android:text="@string/new_book"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
-                style="@style/NoRatingTextView"
+                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
                 />
 
             <LinearLayout
@@ -126,7 +127,7 @@
                     android:id="@+id/rating_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/size_30dp"
-                    style="@style/CustomRatingBar"
+                    style="@style/Widget.ReaderCollection.RatingBar"
                     />
 
                 <ImageView
@@ -142,7 +143,7 @@
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     tools:text="18"
-                    style="@style/Widget.ReaderCollection.TextView.Title.RatingCount"
+                    style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                     />
 
             </LinearLayout>
@@ -200,7 +201,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view_categories"
-                style="@style/BookDataTitleTextView"
+                style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                 />
 
             <EditText
@@ -220,9 +221,10 @@
                 android:id="@+id/button_read_more_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="@string/read_more"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
-                style="@style/BookReadMoreButton"
+                style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                 />
 
             <TextView
@@ -233,7 +235,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/edit_text_description"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
                 tools:text="128/10240"
-                style="@style/BookTextCountTextView"
+                style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                 />
 
             <LinearLayout
@@ -251,7 +253,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/summary"
-                    style="@style/BookDataTitleTextView"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
                 <EditText
@@ -274,7 +276,8 @@
                         android:id="@+id/button_read_more_summary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@style/BookReadMoreButton"
+                        android:text="@string/read_more"
+                        style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                         />
 
                     <TextView
@@ -283,7 +286,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="end"
                         tools:text="128/10240"
-                        style="@style/BookTextCountTextView"
+                        style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                         />
 
                 </LinearLayout>
@@ -304,17 +307,19 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:text="@string/format"
-                    style="@style/BookDataTitleTextView.Left"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:text="@string/state"
-                    style="@style/BookDataTitleTextView.Right"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
             </LinearLayout>
@@ -340,12 +345,13 @@
                         android:id="@+id/spinner_formats"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_5dp"
                         android:layout_weight="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        style="@style/CustomSpinner.Left"
+                        style="@style/Widget.ReaderCollection.Spinner"
                         />
 
                     <ProgressBar
@@ -373,12 +379,13 @@
                         android:id="@+id/spinner_states"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_5dp"
                         android:layout_weight="1"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        style="@style/CustomSpinner.Right"
+                        style="@style/Widget.ReaderCollection.Spinner"
                         />
 
                     <ProgressBar
@@ -412,9 +419,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:text="@string/isbn"
-                    style="@style/BookDataTitleTextView.Left"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
                 <TextView
@@ -422,7 +430,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/pages"
-                    style="@style/BookDataTitleTextView.Right"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
             </LinearLayout>
@@ -441,20 +449,22 @@
                     android:id="@+id/edit_text_isbn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:hint="@string/add_isbn"
                     android:inputType="number"
-                    style="@style/CustomEditText.BookDetails.Left"
+                    style="@style/CustomEditText.BookDetails"
                     />
 
                 <EditText
                     android:id="@+id/edit_text_page_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:hint="@string/add_pages"
                     android:inputType="number"
-                    style="@style/CustomEditText.BookDetails.Right"
+                    style="@style/CustomEditText.BookDetails"
                     />
 
             </LinearLayout>
@@ -473,9 +483,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:text="@string/publisher"
-                    style="@style/BookDataTitleTextView.Left"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
                 <TextView
@@ -483,7 +494,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/published_date"
-                    style="@style/BookDataTitleTextView.Right"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
             </LinearLayout>
@@ -503,10 +514,11 @@
                     android:id="@+id/edit_text_publisher"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
                     android:layout_weight="1"
                     android:hint="@string/add_publisher"
                     android:inputType="textMultiLine"
-                    style="@style/CustomEditText.BookDetails.Left"
+                    style="@style/CustomEditText.BookDetails"
                     />
 
                 <EditText
@@ -536,7 +548,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/reading_date"
-                    style="@style/BookDataTitleTextView"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                     />
 
             </LinearLayout>

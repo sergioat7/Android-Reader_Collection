@@ -35,18 +35,28 @@
         android:id="@+id/floating_action_button_start_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
+        android:layout_marginTop="@dimen/margin_12dp"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        app:fabSize="mini"
         app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
-        style="@style/StartListButton.Image"
+        app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
+        app:maxImageSize="@dimen/size_10dp"
+        app:srcCompat="@drawable/ic_double_arrow_up"
+        style="@style/Widget.ReaderCollection.FloatingActionButton"
         />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_action_button_end_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        android:layout_marginBottom="@dimen/margin_12dp"
+        app:fabSize="mini"
         app:layout_constraintBottom_toBottomOf="@id/swipe_refresh_layout_books"
         app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
-        style="@style/EndListButton.Image"
+        app:maxImageSize="@dimen/size_10dp"
+        app:srcCompat="@drawable/ic_double_arrow_down"
+        style="@style/Widget.ReaderCollection.FloatingActionButton"
         />
 
     <include

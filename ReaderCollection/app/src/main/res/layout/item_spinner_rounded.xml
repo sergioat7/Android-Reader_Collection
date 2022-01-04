@@ -18,7 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/BookDataTitleTextView"
+        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
         />
 
     <LinearLayout
