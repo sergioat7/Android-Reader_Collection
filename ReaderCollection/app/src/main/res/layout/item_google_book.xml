@@ -94,14 +94,18 @@
                     android:layout_width="0dp"
                     android:layout_height="@dimen/size_30dp"
                     android:layout_weight="1"
-                    style="@style/CustomRatingBar.Indicator"
+                    android:isIndicator="true"
+                    style="@style/Widget.ReaderCollection.RatingBar"
                     />
 
                 <TextView
                     android:id="@+id/text_view_google_book_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    style="@style/RatingTextView"
+                    android:layout_marginStart="@dimen/margin_12dp"
+                    android:layout_marginBottom="@dimen/margin_3dp"
+                    android:gravity="bottom"
+                    style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Section"
                     />
 
             </LinearLayout>
@@ -112,7 +116,8 @@
                 android:layout_height="match_parent"
                 android:gravity="bottom"
                 android:visibility="gone"
-                style="@style/NoRatingTextView"
+                android:text="@string/new_book"
+                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
                 />
 
         </LinearLayout>
@@ -123,11 +128,13 @@
         android:id="@+id/view_separator_google_book"
         android:layout_width="0dp"
         android:layout_height="@dimen/size_1dp"
+        android:layout_marginStart="@dimen/margin_24dp"
+        android:layout_marginEnd="@dimen/margin_24dp"
+        android:background="@color/colorPrimaryLight"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/constraint_layout"
         app:layout_constraintStart_toStartOf="@+id/constraint_layout"
         app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
-        style="@style/SeparatorLineView"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

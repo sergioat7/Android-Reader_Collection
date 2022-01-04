@@ -112,11 +112,13 @@
             android:id="@+id/view_separator_reading_pending"
             android:layout_width="0dp"
             android:layout_height="@dimen/size_1dp"
+            android:layout_marginStart="@dimen/margin_24dp"
             android:layout_marginTop="@dimen/margin_16dp"
+            android:layout_marginEnd="@dimen/margin_24dp"
+            android:background="@color/colorPrimaryLight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recycler_view_reading_books"
-            style="@style/SeparatorLineView"
             />
 
         <TextView
@@ -142,7 +144,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_view_pending_books"
-            style="@style/Widget.ReaderCollection.TextButton.Link"
+            style="@style/Widget.ReaderCollection.TextButton.Main.Link"
             />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -162,11 +164,13 @@
             android:id="@+id/view_separator_pending_read"
             android:layout_width="0dp"
             android:layout_height="@dimen/size_1dp"
+            android:layout_marginStart="@dimen/margin_24dp"
             android:layout_marginTop="@dimen/margin_16dp"
+            android:layout_marginEnd="@dimen/margin_24dp"
+            android:background="@color/colorPrimaryLight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recycler_view_pending_books"
-            style="@style/SeparatorLineView"
             />
 
         <TextView
@@ -192,7 +196,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/text_view_read_books"
-            style="@style/Widget.ReaderCollection.TextButton.Link"
+            style="@style/Widget.ReaderCollection.TextButton.Main.Link"
             />
 
         <androidx.recyclerview.widget.RecyclerView

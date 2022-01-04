@@ -14,5 +14,6 @@
     <color name="textSecondaryLight">#75585858</color>
     <color name="textTertiary">#FFFFFF</color>
     <color name="textTertiaryLight">#75FFFFFF</color>
+    <color name="textQuaternary">#F9B197</color>
 
 </resources>
