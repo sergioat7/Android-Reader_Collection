@@ -5,8 +5,6 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
@@ -14,8 +12,6 @@ import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.AppCompatImageView
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -34,7 +30,6 @@ import kotlinx.android.synthetic.main.fragment_books.*
 class BooksFragment : BaseFragment(), OnItemClickListener {
 
     //region Private properties
-    private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
     private lateinit var vwSeparatorReadingPending: View
     private lateinit var ivNoReadingBooks: ImageView
@@ -100,13 +95,13 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         super.onResume()
 
         if (this::viewModel.isInitialized) viewModel.getBooks()
-        svBooks.clearFocus()
+        this.searchView?.clearFocus()
     }
 
     override fun onPause() {
         super.onPause()
 
-        (activity as AppCompatActivity?)?.supportActionBar?.subtitle = ""
+        setSubtitle("")
     }
 
     override fun onDestroy() {
@@ -129,7 +124,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     //region Private methods
     private fun initializeUI() {
 
-        svBooks = search_view_books
         rvReadingBooks = recycler_view_reading_books
         vwSeparatorReadingPending = view_separator_reading_pending
         ivNoReadingBooks = image_view_no_reading_results
@@ -264,70 +258,31 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     }
 
     private fun setTitle(booksCount: Int) {
-
-        (activity as AppCompatActivity?)?.supportActionBar?.subtitle =
-            resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
+        setSubtitle(resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount))
     }
 
     private fun setupSearchView() {
 
-        svBooks.isIconified = false
-        svBooks.isIconifiedByDefault = false
+        this.searchView = search_view_books
+        this.searchView?.let { searchView ->
 
-        val searchIconId = svBooks.context.resources.getIdentifier(
-            "android:id/search_mag_icon",
-            null,
-            null
-        )
-        val color = ContextCompat.getColor(requireActivity(), R.color.colorSecondary)
-        svBooks.findViewById<AppCompatImageView>(searchIconId)?.imageTintList =
-            ColorStateList.valueOf(color)
+            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
 
-        val searchPlateId = svBooks.context.resources.getIdentifier(
-            "android:id/search_plate",
-            null,
-            null
-        )
-        val searchPlate = svBooks.findViewById<View>(searchPlateId)
-        if (searchPlate != null) {
+                override fun onQueryTextChange(newText: String): Boolean {
 
-            searchPlate.setBackgroundColor(Color.TRANSPARENT)
-            val searchTextId = searchPlate.context.resources.getIdentifier(
-                "android:id/search_src_text",
-                null,
-                null
-            )
-            val searchText = searchPlate.findViewById<TextView>(searchTextId)
-            if (searchText != null) {
+                    viewModel.searchBooks(newText)
+                    return true
+                }
 
-                searchText.setTextColor(color)
-                searchText.setHintTextColor(color)
-            }
+                override fun onQueryTextSubmit(query: String): Boolean {
 
-            val searchCloseId = searchPlate.context.resources.getIdentifier(
-                "android:id/search_close_btn",
-                null,
-                null
-            )
-            searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList =
-                ColorStateList.valueOf(color)
+                    requireActivity().hideSoftKeyboard()
+                    searchView.clearFocus()
+                    return true
+                }
+            })
         }
-
-        svBooks.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-            override fun onQueryTextChange(newText: String): Boolean {
-
-                viewModel.searchBooks(newText)
-                return true
-            }
-
-            override fun onQueryTextSubmit(query: String): Boolean {
-
-                requireActivity().hideSoftKeyboard()
-                svBooks.clearFocus()
-                return true
-            }
-        })
+        this.setupSearchView(R.color.colorSecondary, "")
     }
     //endregion
 }

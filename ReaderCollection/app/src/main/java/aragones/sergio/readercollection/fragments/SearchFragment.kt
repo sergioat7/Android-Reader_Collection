@@ -31,7 +31,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlin.math.max
 
-class SearchFragment: BaseFragment(), OnItemClickListener {
+class SearchFragment : BaseFragment(), OnItemClickListener {
 
     //region Private properties
     private lateinit var srlBooks: SwipeRefreshLayout
@@ -97,7 +97,10 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         fbStartList = floating_action_button_start_list
         fbEndList = floating_action_button_end_list
 
-        viewModel = ViewModelProvider(this, SearchViewModelFactory(application))[SearchViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            SearchViewModelFactory(application)
+        )[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
             true,
@@ -113,14 +116,15 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         }
         rvBooks.layoutManager = LinearLayoutManager(requireContext())
         rvBooks.adapter = booksAdapter
-        rvBooks.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+        rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
 
                 fbStartList.visibility =
                     if (!recyclerView.canScrollVertically(-1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        && newState == RecyclerView.SCROLL_STATE_IDLE
+                    ) {
                         View.GONE
                     } else {
                         View.VISIBLE
@@ -128,7 +132,8 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
 
                 fbEndList.visibility =
                     if (!recyclerView.canScrollVertically(1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        && newState == RecyclerView.SCROLL_STATE_IDLE
+                    ) {
                         View.GONE
                     } else {
                         View.VISIBLE
@@ -155,7 +160,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         }
 
         if (viewModel.query.isNotBlank()) {
-            (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, viewModel.query)
+            setTitle(resources.getString(R.string.query_title, viewModel.query))
         }
     }
 
@@ -198,8 +203,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         this.searchView = menuItem.actionView as SearchView
         this.searchView?.let { searchView ->
 
-            searchView.queryHint = resources.getString(R.string.search)
-            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
                     return true
@@ -213,7 +217,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
                 }
             })
         }
-        this.setupSearchView(viewModel.query)
+        this.setupSearchView(R.color.colorPrimary, viewModel.query)
     }
 
     private fun searchBooks(query: String) {
@@ -222,7 +226,7 @@ class SearchFragment: BaseFragment(), OnItemClickListener {
         viewModel.reloadData()
         viewModel.searchBooks()
         requireActivity().hideSoftKeyboard()
-        (activity as AppCompatActivity?)?.supportActionBar?.title = resources.getString(R.string.query_title, query)
+        setTitle(resources.getString(R.string.query_title, query))
     }
     //endregion
 

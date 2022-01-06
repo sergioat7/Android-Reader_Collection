@@ -13,6 +13,7 @@ import android.content.res.ColorStateList
 import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -120,7 +121,9 @@ open class BaseFragment: Fragment() {
         })
     }
 
-    fun setupSearchView(query: String) {
+    fun setupSearchView(colorId: Int, query: String) {
+
+        val color = ContextCompat.getColor(requireActivity(), colorId)
 
         searchView?.let { searchView ->
 
@@ -135,8 +138,6 @@ open class BaseFragment: Fragment() {
             if (query.isNotBlank()) {
                 searchView.setQuery(query, false)
             }
-
-            val color = ContextCompat.getColor(requireActivity(), R.color.textTertiary)
 
             val searchIconId = searchView.context.resources.getIdentifier(
                 "android:id/search_mag_icon",
@@ -173,6 +174,14 @@ open class BaseFragment: Fragment() {
                 searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
             }
         }
+    }
+
+    fun setTitle(title: String) {
+        (activity as AppCompatActivity?)?.supportActionBar?.title = title
+    }
+
+    fun setSubtitle(subtitle: String) {
+        (activity as AppCompatActivity?)?.supportActionBar?.subtitle = subtitle
     }
     //endregion
 
