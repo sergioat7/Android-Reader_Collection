@@ -14,66 +14,13 @@
     tools:context=".fragments.BooksFragment"
     >
 
-    <TextView
-        android:id="@+id/text_view_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_8dp"
-        android:layout_marginStart="@dimen/margin_24dp"
-        android:layout_marginEnd="@dimen/margin_24dp"
-        android:text="@string/title_books"
-        app:layout_constraintEnd_toStartOf="@id/image_button_synchronize"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        style="@style/Widget.ReaderCollection.TextView.Title.Main"
-        />
-
-    <ImageButton
-        android:id="@+id/image_button_synchronize"
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="@dimen/size_48dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/synchronize"
-        android:src="@drawable/ic_synchronize"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_subtitle"
-        app:layout_constraintEnd_toStartOf="@id/image_button_sort"
-        app:layout_constraintTop_toTopOf="@+id/text_view_title"
-        style="@style/Widget.ReaderCollection.ImageButton"
-        />
-
-    <ImageButton
-        android:id="@+id/image_button_sort"
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="@dimen/size_48dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/sort"
-        android:src="@drawable/ic_sort_books"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_subtitle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/text_view_title"
-        style="@style/Widget.ReaderCollection.ImageButton"
-        />
-
-    <TextView
-        android:id="@+id/text_view_subtitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_24dp"
-        android:layout_marginEnd="@dimen/margin_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-        tools:text="158 libros disponibles"
-        style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-        />
-
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/margin_16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_subtitle"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         >
 
@@ -112,6 +59,7 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:src="@drawable/image_user_reading"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/recycler_view_reading_books"
                 app:layout_constraintEnd_toEndOf="@+id/recycler_view_reading_books"
                 app:layout_constraintStart_toStartOf="@+id/recycler_view_reading_books"

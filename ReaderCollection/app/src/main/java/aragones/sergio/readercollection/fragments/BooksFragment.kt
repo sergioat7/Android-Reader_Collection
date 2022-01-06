@@ -8,10 +8,11 @@ package aragones.sergio.readercollection.fragments
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.*
+import android.view.*
+import android.widget.Button
+import android.widget.ImageView
+import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
@@ -22,9 +23,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
-import aragones.sergio.readercollection.extensions.handleStatusBar
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
@@ -35,9 +34,6 @@ import kotlinx.android.synthetic.main.fragment_books.*
 class BooksFragment : BaseFragment(), OnItemClickListener {
 
     //region Private properties
-    private lateinit var ibSynchronize: ImageButton
-    private lateinit var ibSort: ImageButton
-    private lateinit var tvSubtitle: TextView
     private lateinit var svBooks: SearchView
     private lateinit var rvReadingBooks: RecyclerView
     private lateinit var vwSeparatorReadingPending: View
@@ -63,6 +59,7 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_books, container, false)
     }
 
@@ -71,10 +68,37 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
         initializeUI()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.books_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_synchronize -> {
+
+                openSyncPopup()
+                return true
+            }
+            R.id.action_sort -> {
+
+                viewModel.sort(
+                    requireContext(),
+                    resources.getStringArray(R.array.sorting_keys_ids),
+                    resources.getStringArray(R.array.sorting_keys)
+                )
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onResume() {
         super.onResume()
 
-        activity?.handleStatusBar(requireView(), true, activity?.isDarkMode() == true)
         if (this::viewModel.isInitialized) viewModel.getBooks()
         svBooks.clearFocus()
     }
@@ -82,11 +106,12 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     override fun onPause() {
         super.onPause()
 
-        activity?.handleStatusBar(requireView(), false, activity?.isDarkMode() == false)
+        (activity as AppCompatActivity?)?.supportActionBar?.subtitle = ""
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
     //endregion
@@ -104,9 +129,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
     //region Private methods
     private fun initializeUI() {
 
-        ibSynchronize = image_button_synchronize
-        ibSort = image_button_sort
-        tvSubtitle = text_view_subtitle
         svBooks = search_view_books
         rvReadingBooks = recycler_view_reading_books
         vwSeparatorReadingPending = view_separator_reading_pending
@@ -148,18 +170,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             this
         )
         setupBindings()
-
-        ibSynchronize.setOnClickListener {
-            openSyncPopup()
-        }
-
-        ibSort.setOnClickListener {
-            viewModel.sort(
-                requireContext(),
-                resources.getStringArray(R.array.sorting_keys_ids),
-                resources.getStringArray(R.array.sorting_keys)
-            )
-        }
 
         setupSearchView()
 
@@ -255,9 +265,8 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
     private fun setTitle(booksCount: Int) {
 
-        val title = resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
-        tvSubtitle.text = title
-        (activity as AppCompatActivity?)?.supportActionBar?.title = ""
+        (activity as AppCompatActivity?)?.supportActionBar?.subtitle =
+            resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
     }
 
     private fun setupSearchView() {
