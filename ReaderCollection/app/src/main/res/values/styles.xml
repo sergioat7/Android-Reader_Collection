@@ -191,11 +191,8 @@
 
     <!--  BottomNavigationView  -->
 
-    <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView">
-        <item name="itemTextColor">@color/textTertiary</item>
+    <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="labelVisibilityMode">labeled</item>
-        <item name="menu">@menu/bottom_nav_menu</item>
-        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <!--  ShapeAppearance  -->
