@@ -172,7 +172,7 @@
     <!--  Spinner  -->
 
     <style name="Widget.ReaderCollection.Spinner" parent="Widget.AppCompat.Spinner.Underlined">
-        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:backgroundTint">@android:color/transparent</item>
         <item name="android:spinnerMode">dropdown</item>
         <item name="android:minHeight">@dimen/size_30dp</item>
@@ -213,7 +213,7 @@
         <item name="android:background">@drawable/rounded_text_view</item>
         <item name="android:textColor">@color/textTertiary</item>
         <item name="android:maxLines">1</item>
-        <item name="fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
