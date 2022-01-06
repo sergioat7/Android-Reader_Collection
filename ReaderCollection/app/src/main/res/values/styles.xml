@@ -189,18 +189,18 @@
         <item name="android:secondaryProgressTint">@color/colorTertiaryLight</item>
     </style>
 
-    <!--  BottomNavigationView  -->
-
-    <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
-        <item name="labelVisibilityMode">labeled</item>
-    </style>
-
     <!--  ShapeAppearance  -->
 
     <style name="ShapeAppearance.ReaderCollection.Rounded" parent="ShapeAppearance.MaterialComponents" />
 
     <style name="ShapeAppearance.ReaderCollection.Rounded.15">
         <item name="cornerSize">@dimen/radius_15dp</item>
+    </style>
+
+    <!--  BottomNavigationView  -->
+
+    <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="labelVisibilityMode">labeled</item>
     </style>
 
     <!--  Others  -->

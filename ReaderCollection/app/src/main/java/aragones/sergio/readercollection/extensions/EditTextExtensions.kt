@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.extensions
 
-import android.app.DatePickerDialog
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -15,13 +14,13 @@ import android.text.method.HideReturnsTransformationMethod
 import android.text.method.PasswordTransformationMethod
 import android.widget.EditText
 import android.widget.ImageButton
+import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
 
 fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-
     this.addTextChangedListener(object : TextWatcher {
 
         override fun afterTextChanged(editable: Editable?) {
@@ -35,8 +34,8 @@ fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
 }
 
 fun EditText.onFocusChange(onFocusChange: () -> Unit) {
-
     this.setOnFocusChangeListener { _, hasFocus ->
+
         if (!hasFocus) {
             onFocusChange()
         }
@@ -57,17 +56,17 @@ fun EditText.setReadOnly(value: Boolean, inputType: Int, lineColor: Int) {
         if (value) ColorStateList.valueOf(Color.TRANSPARENT) else ColorStateList.valueOf(lineColor)
 }
 
-fun EditText.showDatePicker(context: Context) {
+fun EditText.showDatePicker(activity: FragmentActivity) {
 
     this.setOnFocusChangeListener { _, hasFocus ->
         if (hasFocus) {
-            val picker = getPicker(this, context)
-            picker.show()
+            val datePicker = getPicker(this, activity)
+            datePicker.show(activity.supportFragmentManager, "")
         }
     }
     this.setOnClickListener {
-        val picker = getPicker(this, context)
-        picker.show()
+        val datePicker = getPicker(this, context)
+        datePicker.show(activity.supportFragmentManager, "")
     }
 }
 
@@ -88,25 +87,26 @@ fun EditText.showOrHidePassword(imageButton: ImageButton) {
     }
 }
 
-// MARK - Private functions
+//region Private functions
+private fun getPicker(editText: EditText, context: Context): MaterialDatePicker<Long> {
 
-private fun getPicker(editText: EditText, context: Context): DatePickerDialog {
+    return MaterialDatePicker.Builder
+        .datePicker()
+        .setTitleText(context.resources.getString(R.string.select_a_date))
+        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+        .build().apply {
+            addOnPositiveButtonClickListener {
 
-    val calendar = Calendar.getInstance()
-    val currentDay: Int = calendar.get(Calendar.DAY_OF_MONTH)
-    val currentMonth: Int = calendar.get(Calendar.MONTH)
-    val currentYear: Int = calendar.get(Calendar.YEAR)
-    return DatePickerDialog(context, { _, year, month, day ->
+                val calendar = Calendar.getInstance()
+                calendar.timeInMillis = it
 
-        val newDay = if (day < 10) "0${day}" else day.toString()
-        val newMonth = if (month < 9) "0${month + 1}" else (month + 1).toString()
-        val newDate = "${year}-${newMonth}-${newDay}"
+                val dateString = calendar.time.toString(
+                    SharedPreferencesHandler.getDateFormatToShow(),
+                    SharedPreferencesHandler.getLanguage()
+                )
 
-        val language = SharedPreferencesHandler.getLanguage()
-
-        val date = newDate.toDate(Constants.DATE_FORMAT, language)
-        val dateString = date.toString(SharedPreferencesHandler.getDateFormatToShow(), language)
-
-        editText.setText(dateString)
-    }, currentYear, currentMonth, currentDay)
+                editText.setText(dateString)
+            }
+        }
 }
+//endregion
