@@ -13,6 +13,7 @@ import androidx.navigation.ui.setupWithNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.toolbar
 
 class MainActivity: BaseActivity() {
 
@@ -21,6 +22,9 @@ class MainActivity: BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        setSupportActionBar(toolbar)
+        toolbar.setTitleTextAppearance(this, R.style.Widget_ReaderCollection_TextView_Title_Main)
+        toolbar.setSubtitleTextAppearance(this, R.style.Widget_ReaderCollection_TextView_Subtitle_Main)
         nav_view.itemIconTintList = null
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment

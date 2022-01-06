@@ -12,6 +12,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/Theme.ReaderCollection.NoActionBar"
         tools:ignore="AllowBackup">
         <activity
             android:name=".activities.BookDetailActivity"
@@ -19,17 +20,13 @@
             android:parentActivityName=".activities.MainActivity" />
         <activity
             android:name=".activities.MainActivity"
-            android:theme="@style/Theme.ReaderCollection.ActionBar"
             android:launchMode="singleTask" />
         <activity
-            android:name=".activities.RegisterActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar" />
+            android:name=".activities.RegisterActivity" />
         <activity
-            android:name=".activities.LoginActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar" />
+            android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.LandingActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
