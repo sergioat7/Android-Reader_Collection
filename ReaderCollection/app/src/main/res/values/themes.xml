@@ -6,14 +6,15 @@
         <item name="colorControlActivated">@color/buttonPrimary</item>
         <item name="colorSwitchThumbNormal">@color/buttonSecondary</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_blue</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
     <style name="Theme.ReaderCollection.NoActionBar.BookDetail">
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white</item>
         <item name="android:windowLightStatusBar">false</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back</item>
     </style>
 
     <style name="Theme.ReaderCollection.DialogTransparent" parent="Theme.MaterialComponents.DayNight.Dialog">
