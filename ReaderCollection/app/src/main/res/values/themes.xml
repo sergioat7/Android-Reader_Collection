@@ -13,6 +13,7 @@
         <item name="colorPrimaryDark">@color/colorSecondary</item>
         <item name="colorSwitchThumbNormal">@color/colorSecondary</item>
         <item name="bottomNavigationStyle">@style/Widget.ReaderCollection.BottomNavigationView</item>
+        <item name="materialAlertDialogTheme">@style/ThemeOverlay.ReaderCollection.MaterialAlertDialog</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_blue</item>
         <item name="android:windowLightStatusBar">true</item>
@@ -26,6 +27,15 @@
 
     <style name="Theme.ReaderCollection.DialogTransparent" parent="Theme.MaterialComponents.DayNight.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
+    <style name="ThemeOverlay.ReaderCollection.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSurface">@color/colorSecondary</item>
+        <item name="colorOnSurface">@color/colorPrimary</item>
+        <item name="alertDialogStyle">@style/MaterialAlertDialog.ReaderCollection</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.ReaderCollection.Title</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.ReaderCollection.Body</item>
     </style>
 
 </resources>

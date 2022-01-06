@@ -26,6 +26,7 @@ import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -127,7 +128,7 @@ class BooksViewModel @Inject constructor(
         dialogView.addView(sortKeysPicker, getPickerParams())
         dialogView.addView(sortOrdersPicker, getPickerParams())
 
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(context)
             .setTitle(context.resources.getString(R.string.order_by))
             .setView(dialogView)
             .setCancelable(false)

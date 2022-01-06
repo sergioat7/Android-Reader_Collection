@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.fragments.base
 
-import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -24,6 +23,7 @@ import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragmen
 import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 
 open class BaseFragment: Fragment() {
@@ -99,7 +99,7 @@ open class BaseFragment: Fragment() {
 
     fun showPopupConfirmationDialog(messageId: Int, acceptHandler: () -> Unit, cancelHandler: (() -> Unit)? = null) {
 
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog)
             .setMessage(resources.getString(messageId))
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
