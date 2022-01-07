@@ -4,11 +4,16 @@
   ~ Created by Sergio Aragonés on 17/11/2020
   -->
 
-<TextView
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="@dimen/padding_12dp"
-    android:background="@color/colorSecondary"
-    style="@style/Widget.ReaderCollection.TextView.Spinner"
-    />
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_12dp"
+        android:background="@color/colorSecondary"
+        style="@style/Widget.ReaderCollection.TextView.Spinner"
+        />
+
+</layout>

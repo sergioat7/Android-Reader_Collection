@@ -4,71 +4,76 @@
   ~ Created by Sergio Aragonés on 18/10/2020
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.SearchFragment"
     >
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh_layout_books"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.SearchFragment"
         >
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_books"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout_books"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view_books"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_start_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_12dp"
+            android:layout_marginEnd="@dimen/margin_12dp"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
+            app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
+            app:maxImageSize="@dimen/size_10dp"
+            app:srcCompat="@drawable/ic_double_arrow_up"
+            style="@style/Widget.ReaderCollection.FloatingActionButton"
             />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_end_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_12dp"
+            android:layout_marginBottom="@dimen/margin_12dp"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="@id/swipe_refresh_layout_books"
+            app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
+            app:maxImageSize="@dimen/size_10dp"
+            app:srcCompat="@drawable/ic_double_arrow_down"
+            style="@style/Widget.ReaderCollection.FloatingActionButton"
+            />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_start_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_12dp"
-        android:layout_marginEnd="@dimen/margin_12dp"
-        app:fabSize="mini"
-        app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
-        app:layout_constraintTop_toTopOf="@id/swipe_refresh_layout_books"
-        app:maxImageSize="@dimen/size_10dp"
-        app:srcCompat="@drawable/ic_double_arrow_up"
-        style="@style/Widget.ReaderCollection.FloatingActionButton"
-        />
+        <include
+            android:id="@+id/image_view_no_results"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            layout="@layout/content_no_results"
+            />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_end_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/margin_12dp"
-        android:layout_marginBottom="@dimen/margin_12dp"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="@id/swipe_refresh_layout_books"
-        app:layout_constraintEnd_toEndOf="@id/swipe_refresh_layout_books"
-        app:maxImageSize="@dimen/size_10dp"
-        app:srcCompat="@drawable/ic_double_arrow_down"
-        style="@style/Widget.ReaderCollection.FloatingActionButton"
-        />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <include
-        android:id="@+id/image_view_no_results"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintWidth_percent="0.7"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        layout="@layout/content_no_results"
-        />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

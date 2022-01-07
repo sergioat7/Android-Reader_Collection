@@ -4,137 +4,142 @@
   ~ Created by Sergio Aragonés on 9/11/2020
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/size_220dp"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraint_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="@dimen/padding_24dp"
-        android:background="@color/colorSecondary"
-        app:layout_constraintBottom_toTopOf="@+id/view_separator_google_book"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_220dp"
         >
 
-        <ImageView
-            android:id="@+id/image_view_google_book"
-            android:layout_width="@dimen/size_120dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-        <ProgressBar
-            android:id="@+id/progress_bar_google_image_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateTint="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_google_book"
-            app:layout_constraintEnd_toEndOf="@+id/image_view_google_book"
-            app:layout_constraintStart_toStartOf="@+id/image_view_google_book"
-            app:layout_constraintTop_toTopOf="@+id/image_view_google_book"
-            />
-
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_marginStart="@dimen/margin_20dp"
-            android:layout_marginTop="@dimen/margin_5dp"
-            android:layout_marginBottom="@dimen/margin_5dp"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:padding="@dimen/padding_24dp"
+            android:background="@color/colorSecondary"
+            app:layout_constraintBottom_toTopOf="@+id/view_separator_google_book"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/image_view_google_book"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             >
 
-            <TextView
-                android:id="@+id/text_view_google_book_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_12dp"
-                style="@style/Widget.ReaderCollection.TextView.Title.GoogleBook"
+            <ImageView
+                android:id="@+id/image_view_google_book"
+                android:layout_width="@dimen/size_120dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 />
 
-            <TextView
-                android:id="@+id/text_view_google_book_author"
-                android:layout_width="match_parent"
+            <ProgressBar
+                android:id="@+id/progress_bar_google_image_loading"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_5dp"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
-                />
-
-            <TextView
-                android:id="@+id/text_view_google_book_publisher"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_5dp"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
+                android:indeterminateTint="@color/colorPrimary"
+                app:layout_constraintBottom_toBottomOf="@+id/image_view_google_book"
+                app:layout_constraintEnd_toEndOf="@+id/image_view_google_book"
+                app:layout_constraintStart_toStartOf="@+id/image_view_google_book"
+                app:layout_constraintTop_toTopOf="@+id/image_view_google_book"
                 />
 
             <LinearLayout
-                android:id="@+id/linear_layout_google_book_rating"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:gravity="bottom"
-                android:visibility="visible"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:layout_marginBottom="@dimen/margin_5dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_view_google_book"
+                app:layout_constraintTop_toTopOf="parent"
                 >
 
-                <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                    android:id="@+id/rating_bar_google_book"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/size_30dp"
-                    android:layout_weight="1"
-                    android:isIndicator="true"
-                    style="@style/Widget.ReaderCollection.RatingBar"
+                <TextView
+                    android:id="@+id/text_view_google_book_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_12dp"
+                    style="@style/Widget.ReaderCollection.TextView.Title.GoogleBook"
                     />
 
                 <TextView
-                    android:id="@+id/text_view_google_book_rating"
+                    android:id="@+id/text_view_google_book_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_google_book_publisher"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_google_book_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_12dp"
-                    android:layout_marginBottom="@dimen/margin_3dp"
+                    android:orientation="horizontal"
                     android:gravity="bottom"
-                    style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Section"
+                    android:visibility="visible"
+                    >
+
+                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/rating_bar_google_book"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/size_30dp"
+                        android:layout_weight="1"
+                        android:isIndicator="true"
+                        style="@style/Widget.ReaderCollection.RatingBar"
+                        />
+
+                    <TextView
+                        android:id="@+id/text_view_google_book_rating"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_12dp"
+                        android:layout_marginBottom="@dimen/margin_3dp"
+                        android:gravity="bottom"
+                        style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Section"
+                        />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/text_view_google_book_new"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:visibility="gone"
+                    android:text="@string/new_book"
+                    style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
                     />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/text_view_google_book_new"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="bottom"
-                android:visibility="gone"
-                android:text="@string/new_book"
-                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
-                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
+        <View
+            android:id="@+id/view_separator_google_book"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/size_1dp"
+            android:layout_marginStart="@dimen/margin_24dp"
+            android:layout_marginEnd="@dimen/margin_24dp"
+            android:background="@color/colorPrimaryLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/constraint_layout"
+            app:layout_constraintStart_toStartOf="@+id/constraint_layout"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/view_separator_google_book"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/size_1dp"
-        android:layout_marginStart="@dimen/margin_24dp"
-        android:layout_marginEnd="@dimen/margin_24dp"
-        android:background="@color/colorPrimaryLight"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/constraint_layout"
-        app:layout_constraintStart_toStartOf="@+id/constraint_layout"
-        app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
-        />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
