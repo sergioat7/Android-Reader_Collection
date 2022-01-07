@@ -20,15 +20,15 @@ import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
+    //region Protected properties
+    override val hasOptionsMenu = false
+    //endregion
+
     //region Private properties
     private lateinit var viewModel: LoginViewModel
     //endregion
 
     //region Lifecycle methods
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()

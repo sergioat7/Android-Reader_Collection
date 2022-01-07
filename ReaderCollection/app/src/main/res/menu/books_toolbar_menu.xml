@@ -12,14 +12,14 @@
     <item
         android:id="@+id/action_synchronize"
         android:icon="@drawable/ic_synchronize"
-        android:title=""
+        android:title="@string/synchronize"
         app:showAsAction="ifRoom"
         />
 
     <item
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort_books"
-        android:title=""
+        android:title="@string/sort"
         app:showAsAction="always"
         />
 

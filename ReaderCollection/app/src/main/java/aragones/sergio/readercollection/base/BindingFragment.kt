@@ -39,6 +39,8 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     //region Protected properties
     protected lateinit var binding: Binding
         private set
+
+    protected abstract val hasOptionsMenu: Boolean
     //endregion
 
     //region Private properties
@@ -51,6 +53,8 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        setHasOptionsMenu(hasOptionsMenu)
         val bindingType =
             (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
                 .firstOrNull {

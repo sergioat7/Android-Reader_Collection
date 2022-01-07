@@ -51,7 +51,6 @@
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
-    <dimen name="text_size_10sp">10sp</dimen>
 
     <!--  radius  -->
     <dimen name="radius_100dp">100dp</dimen>

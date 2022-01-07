@@ -62,6 +62,8 @@
     <string name="book_saved">Book saved!</string>
     <string name="book_removed">Book removed!</string>
     <string name="book_text_count" translatable="false">%d / 10240</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
 
     //PROFILE
     <string name="title_profile">Profile</string>
@@ -76,6 +78,8 @@
         <item>Light</item>
         <item>Dark</item>
     </string-array>
+    <string name="delete">Delete</string>
+    <string name="logout">Logout</string>
 
     //POPUPS
     <string name="accept">Accept</string>

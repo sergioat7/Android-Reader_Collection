@@ -65,6 +65,8 @@
     <string name="reading_date">Fecha de lectura</string>
     <string name="book_saved">¡Libro guardado!</string>
     <string name="book_removed">¡Libro eliminado!</string>
+    <string name="edit">Editar</string>
+    <string name="remove">Eliminar</string>
 
     //PROFILE
     <string name="title_profile">Perfil</string>
@@ -79,6 +81,8 @@
         <item>Claro</item>
         <item>Oscuro</item>
     </string-array>
+    <string name="delete">Borrar</string>
+    <string name="logout">Salir</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>

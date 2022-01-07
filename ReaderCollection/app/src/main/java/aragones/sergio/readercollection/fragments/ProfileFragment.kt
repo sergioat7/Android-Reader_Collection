@@ -23,20 +23,15 @@ import kotlinx.android.synthetic.main.fragment_profile.*
 
 class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
+    //region Protected properties
+    override val hasOptionsMenu = true
+    //endregion
+
     //region Private properties
     private lateinit var viewModel: ProfileViewModel
     //endregion
 
     //region Lifecycle methods
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()

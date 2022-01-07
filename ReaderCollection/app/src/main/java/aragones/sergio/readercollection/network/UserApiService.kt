@@ -6,9 +6,8 @@
 package aragones.sergio.readercollection.network
 
 import aragones.sergio.readercollection.models.requests.LoginCredentials
-import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.models.requests.NewPassword
-import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.models.responses.LoginResponse
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*

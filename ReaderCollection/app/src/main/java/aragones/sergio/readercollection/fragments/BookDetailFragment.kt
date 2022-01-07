@@ -38,6 +38,10 @@ import kotlin.math.abs
 class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     AppBarLayout.OnOffsetChangedListener {
 
+    //region Protected properties
+    override val hasOptionsMenu = true
+    //endregion
+
     //region Private properties
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
@@ -55,18 +59,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //region Lifecycle methods
     companion object {
         fun newInstance() = BookDetailFragment()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-
-        setHasOptionsMenu(true)
-        bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
-        isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
-        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -120,7 +112,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.onDestroy()
+
+        if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
     //endregion
 
@@ -146,6 +139,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     //region Private methods
     private fun initializeUI() {
+
+        bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
+        isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(

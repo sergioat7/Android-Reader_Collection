@@ -6,7 +6,10 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +27,10 @@ import aragones.sergio.readercollection.viewmodels.BooksViewModel
 
 class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
 
+    //region Protected properties
+    override val hasOptionsMenu = true
+    //endregion
+
     //region Private properties
     private lateinit var viewModel: BooksViewModel
     private lateinit var readingBooksAdapter: BooksAdapter
@@ -32,15 +39,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //endregion
 
     //region Lifecycle methods
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()

@@ -36,7 +36,7 @@ class BookDetailActivity: BaseActivity() {
 
             supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.container, bookDetailFragment)
+                .replace(R.id.fragment_book_detail, bookDetailFragment)
                 .commitNow()
         }
     }

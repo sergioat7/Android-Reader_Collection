@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.network
 
 import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.network.ApiManager
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
