@@ -9,7 +9,7 @@ import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.FormatApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
-import aragones.sergio.readercollection.repositories.base.BaseRepository
+import aragones.sergio.readercollection.base.BaseRepository
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single

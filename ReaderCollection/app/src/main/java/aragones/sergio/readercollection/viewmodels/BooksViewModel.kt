@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.viewmodels
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -25,7 +24,7 @@ import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import aragones.sergio.readercollection.base.BaseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy

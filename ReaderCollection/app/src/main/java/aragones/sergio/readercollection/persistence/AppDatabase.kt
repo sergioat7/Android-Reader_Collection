@@ -13,7 +13,7 @@ import androidx.room.TypeConverters
 import aragones.sergio.readercollection.daos.BookDao
 import aragones.sergio.readercollection.daos.FormatDao
 import aragones.sergio.readercollection.daos.StateDao
-import aragones.sergio.readercollection.models.base.BaseModel
+import aragones.sergio.readercollection.base.BaseModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse

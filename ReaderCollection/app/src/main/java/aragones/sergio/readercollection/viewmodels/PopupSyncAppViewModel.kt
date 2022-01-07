@@ -13,7 +13,7 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
-import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy

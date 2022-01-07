@@ -11,7 +11,6 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -23,7 +22,7 @@ import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel

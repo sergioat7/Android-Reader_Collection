@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,7 +19,7 @@ import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.base.BaseFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory

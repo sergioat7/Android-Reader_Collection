@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.activities
 
 import android.os.Bundle
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.base.BaseActivity
+import aragones.sergio.readercollection.base.BaseActivity
 import aragones.sergio.readercollection.fragments.LoginFragment
 
 class LoginActivity: BaseActivity() {

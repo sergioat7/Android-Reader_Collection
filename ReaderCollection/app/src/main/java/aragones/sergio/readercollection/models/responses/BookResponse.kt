@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.models.responses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import aragones.sergio.readercollection.models.base.BaseModel
+import aragones.sergio.readercollection.base.BaseModel
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
