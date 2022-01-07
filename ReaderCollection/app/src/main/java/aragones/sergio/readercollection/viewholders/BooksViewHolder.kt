@@ -5,13 +5,11 @@
 
 package aragones.sergio.readercollection.viewholders
 
-import android.app.Activity
 import android.content.Context
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.getRoundImageView
-import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import com.squareup.picasso.Callback

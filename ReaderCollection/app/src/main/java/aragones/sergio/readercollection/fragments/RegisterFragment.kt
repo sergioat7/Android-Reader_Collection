@@ -6,9 +6,7 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
@@ -21,15 +19,15 @@ import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
+    //region Protected properties
+    override val hasOptionsMenu = false
+    //endregion
+
     //region Private properties
     private lateinit var viewModel: RegisterViewModel
     //endregion
 
     //region Lifecycle methods
-    companion object {
-        fun newInstance() = RegisterFragment()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()
