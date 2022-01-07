@@ -16,12 +16,13 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.extensions.*
-import aragones.sergio.readercollection.base.BaseFragment
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 
-class RegisterFragment: BaseFragment() {
+class RegisterFragment: BindingFragment<FragmentRegisterBinding>() {
 
     //region Private properties
     private lateinit var etUsername: EditText

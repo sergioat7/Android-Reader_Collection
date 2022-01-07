@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 19/10/2020
+ * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 7/1/2022
  */
 
 package aragones.sergio.readercollection.base
@@ -9,12 +9,16 @@ import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
+import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
@@ -24,15 +28,49 @@ import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragm
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
+import java.lang.reflect.ParameterizedType
 
-open class BaseFragment : Fragment() {
+abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
+
+    //region Public properties
+    var searchView: SearchView? = null
+    //endregion
+
+    //region Protected properties
+    protected lateinit var binding: Binding
+        private set
+    //endregion
 
     //region Private properties
     private var loadingFragment: PopupLoadingDialogFragment? = null
     //endregion
 
-    //region Public properties
-    var searchView: SearchView? = null
+    //region Lifecycle methods
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val bindingType =
+            (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
+                .firstOrNull {
+                    (it as? Class<*>)?.let { clazz ->
+                        ViewDataBinding::class.java.isAssignableFrom(
+                            clazz
+                        )
+                    } == true
+                }
+                ?: error("Class is not parametrized with ViewDataBinding subclass")
+        val inflateMethod = (bindingType as Class<*>).getMethod(
+            "inflate",
+            LayoutInflater::class.java,
+            ViewGroup::class.java,
+            Boolean::class.javaPrimitiveType
+        )
+        @Suppress("UNCHECKED_CAST")
+        binding = inflateMethod.invoke(null, inflater, container, false) as Binding
+        return binding.root
+    }
     //endregion
 
     //region Public methods
