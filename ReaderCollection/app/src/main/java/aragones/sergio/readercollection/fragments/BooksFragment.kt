@@ -7,13 +7,9 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
-import android.widget.ImageView
 import android.widget.SearchView
-import android.widget.TextView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
@@ -25,23 +21,10 @@ import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
-import kotlinx.android.synthetic.main.fragment_books.*
 
 class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
 
     //region Private properties
-    private lateinit var rvReadingBooks: RecyclerView
-    private lateinit var vwSeparatorReadingPending: View
-    private lateinit var ivNoReadingBooks: ImageView
-    private lateinit var tvPendingBooks: TextView
-    private lateinit var btSeeMorePendingBooks: Button
-    private lateinit var rvPendingBooks: RecyclerView
-    private lateinit var vwSeparatorPendingRead: View
-    private lateinit var tvReadBooks: TextView
-    private lateinit var btSeeMoreReadBooks: Button
-    private lateinit var rvBooks: RecyclerView
-    private lateinit var vwNoResults: View
-
     private lateinit var viewModel: BooksViewModel
     private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var pendingBooksAdapter: BooksAdapter
@@ -55,7 +38,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_books, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -124,18 +107,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //region Private methods
     private fun initializeUI() {
 
-        rvReadingBooks = recycler_view_reading_books
-        vwSeparatorReadingPending = view_separator_reading_pending
-        ivNoReadingBooks = image_view_no_reading_results
-        tvPendingBooks = text_view_pending_books
-        btSeeMorePendingBooks = button_see_more_pending
-        rvPendingBooks = recycler_view_pending_books
-        vwSeparatorPendingRead = view_separator_pending_read
-        tvReadBooks = text_view_read_books
-        btSeeMoreReadBooks = button_see_more_read
-        rvBooks = recycler_view_books
-        vwNoResults = content_view_no_results
-
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
@@ -165,36 +136,38 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         )
         setupBindings()
 
+        with(binding) {
+
+            buttonSeeMorePending.setOnClickListener {
+                //TODO: implement
+            }
+
+            buttonSeeMoreRead.setOnClickListener {
+                //TODO: implement
+            }
+
+            recyclerViewReadingBooks.layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerViewReadingBooks.adapter = readingBooksAdapter
+
+            recyclerViewPendingBooks.layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerViewPendingBooks.adapter = pendingBooksAdapter
+
+            recyclerViewBooks.layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerViewBooks.adapter = booksAdapter
+        }
         setupSearchView()
-
-        btSeeMorePendingBooks.setOnClickListener {
-            //TODO: implement
-        }
-
-        btSeeMoreReadBooks.setOnClickListener {
-            //TODO: implement
-        }
-
-        rvReadingBooks.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        rvReadingBooks.adapter = readingBooksAdapter
-
-        rvPendingBooks.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        rvPendingBooks.adapter = pendingBooksAdapter
-
-        rvBooks.layoutManager = LinearLayoutManager(
-            requireContext(),
-            LinearLayoutManager.HORIZONTAL,
-            false
-        )
-        rvBooks.adapter = booksAdapter
     }
 
     private fun setupBindings() {
@@ -203,23 +176,25 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
             setTitle(booksResponse.size)
             if (booksResponse.isEmpty()) {
-                ivNoReadingBooks.visibility = View.GONE
-                vwSeparatorReadingPending.visibility = View.GONE
+                binding.imageViewNoReadingResults.visibility = View.GONE
+                binding.viewSeparatorReadingPending.visibility = View.GONE
             }
-            vwNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
+            binding.contentViewNoResults.root.visibility =
+                if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
         })
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(booksResponse.toMutableList())
-            rvReadingBooks.scrollToPosition(0)
+            binding.recyclerViewReadingBooks.scrollToPosition(0)
             val hideReadingSection =
                 (booksResponse.isEmpty() && viewModel.query.isNotBlank()) || viewModel.books.value?.isEmpty() == true
-            rvReadingBooks.visibility = if (hideReadingSection) View.GONE else View.VISIBLE
-            ivNoReadingBooks.visibility =
+            binding.recyclerViewReadingBooks.visibility =
+                if (hideReadingSection) View.GONE else View.VISIBLE
+            binding.imageViewNoReadingResults.visibility =
                 if (hideReadingSection || booksResponse.isNotEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorReadingPending.visibility =
+            binding.viewSeparatorReadingPending.visibility =
                 if (hideReadingSection) View.GONE else View.VISIBLE
         })
 
@@ -227,10 +202,12 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(booksResponse.toMutableList())
-            rvPendingBooks.scrollToPosition(0)
-            tvPendingBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            rvPendingBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            vwSeparatorPendingRead.visibility =
+            binding.recyclerViewPendingBooks.scrollToPosition(0)
+            binding.textViewPendingBooks.visibility =
+                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            binding.recyclerViewPendingBooks.visibility =
+                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            binding.viewSeparatorPendingRead.visibility =
                 if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
@@ -238,9 +215,11 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
             booksAdapter.resetList()
             booksAdapter.setBooks(booksResponse.toMutableList())
-            rvBooks.scrollToPosition(0)
-            tvReadBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            rvBooks.visibility = if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            binding.recyclerViewBooks.scrollToPosition(0)
+            binding.textViewReadBooks.visibility =
+                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
+            binding.recyclerViewBooks.visibility =
+                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
@@ -258,15 +237,22 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     }
 
     private fun setTitle(booksCount: Int) {
-        setSubtitle(resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount))
+        setSubtitle(
+            resources.getQuantityString(
+                R.plurals.title_books_count,
+                booksCount,
+                booksCount
+            )
+        )
     }
 
     private fun setupSearchView() {
 
-        this.searchView = search_view_books
+        this.searchView = binding.searchViewBooks
         this.searchView?.let { searchView ->
 
-            searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            searchView.clearFocus()
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
                 override fun onQueryTextChange(newText: String): Boolean {
 
