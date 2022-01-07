@@ -214,7 +214,7 @@
     </style>
 
     <style name="MaterialAlertDialog.ReaderCollection.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorSecondary</item>
         <item name="android:textSize">@dimen/text_size_20sp</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
         <item name="android:maxLines">@null</item>
@@ -222,7 +222,7 @@
     </style>
 
     <style name="MaterialAlertDialog.ReaderCollection.Body" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorSecondary</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:maxLines">@null</item>

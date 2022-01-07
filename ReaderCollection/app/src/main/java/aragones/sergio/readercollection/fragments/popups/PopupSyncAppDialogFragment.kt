@@ -18,7 +18,7 @@ import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.viewmodelfactories.PopupSyncAppViewModelFactory
 import aragones.sergio.readercollection.viewmodels.PopupSyncAppViewModel
 
-class PopupSyncAppDialogFragment: DialogFragment() {
+class PopupSyncAppDialogFragment : DialogFragment() {
 
     //region Private properties
     private lateinit var viewModel: PopupSyncAppViewModel
@@ -47,7 +47,10 @@ class PopupSyncAppDialogFragment: DialogFragment() {
     private fun initializeUI() {
 
         val application = activity?.application ?: return
-        viewModel = ViewModelProvider(this, PopupSyncAppViewModelFactory(application))[PopupSyncAppViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            PopupSyncAppViewModelFactory(application)
+        )[PopupSyncAppViewModel::class.java]
         setupBindings()
 
         viewModel.loadContent()

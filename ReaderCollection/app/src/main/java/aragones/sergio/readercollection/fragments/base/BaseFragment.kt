@@ -26,7 +26,7 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 
-open class BaseFragment: Fragment() {
+open class BaseFragment : Fragment() {
 
     //region Private properties
     private var loadingFragment: PopupLoadingDialogFragment? = null
@@ -97,9 +97,16 @@ open class BaseFragment: Fragment() {
         loadingFragment = null
     }
 
-    fun showPopupConfirmationDialog(messageId: Int, acceptHandler: () -> Unit, cancelHandler: (() -> Unit)? = null) {
+    fun showPopupConfirmationDialog(
+        messageId: Int,
+        acceptHandler: () -> Unit,
+        cancelHandler: (() -> Unit)? = null
+    ) {
 
-        MaterialAlertDialogBuilder(requireContext(), R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog)
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
             .setMessage(resources.getString(messageId))
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
@@ -144,7 +151,8 @@ open class BaseFragment: Fragment() {
                 null,
                 null
             )
-            searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList = ColorStateList.valueOf(color)
+            searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList =
+                ColorStateList.valueOf(color)
 
             val searchPlateId = searchView.context.resources.getIdentifier(
                 "android:id/search_plate",
@@ -171,7 +179,8 @@ open class BaseFragment: Fragment() {
                     null,
                     null
                 )
-                searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
+                searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList =
+                    ColorStateList.valueOf(color)
             }
         }
     }
