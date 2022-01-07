@@ -11,12 +11,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.viewmodelfactories.PopupSyncAppViewModelFactory
 import aragones.sergio.readercollection.viewmodels.PopupSyncAppViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class PopupSyncAppDialogFragment : DialogFragment() {
 
@@ -78,14 +78,16 @@ class PopupSyncAppDialogFragment : DialogFragment() {
 
     private fun showPopupDialog(message: String) {
 
-        val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
-        val prev = activity?.supportFragmentManager?.findFragmentByTag("popupDialog")
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-        val dialogFragment = PopupErrorDialogFragment(message)
-        dialogFragment.show(ft, "popupDialog")
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
     }
     //endregion
 }

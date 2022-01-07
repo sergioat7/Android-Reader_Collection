@@ -19,7 +19,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
@@ -50,15 +49,20 @@ open class BaseFragment : Fragment() {
 
     fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
 
-        val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
-        val prev = activity?.supportFragmentManager?.findFragmentByTag("popupDialog")
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-        val dialogFragment = PopupErrorDialogFragment(message, goBack)
-        dialogFragment.isCancelable = false
-        dialogFragment.show(ft, "popupDialog")
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                dialog.dismiss()
+                goBack?.let {
+                    it.value = true
+                }
+            }
+            .show()
     }
 
     fun <T> launchActivity(activity: Class<T>) {
