@@ -4,60 +4,65 @@
   ~ Created by Sergio Aragonés on 29/12/2021
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/size_250dp"
-    android:paddingStart="@dimen/padding_24dp"
-    android:paddingEnd="@dimen/padding_24dp"
     >
 
-    <TextView
-        android:id="@+id/text_view_reading_book_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Harry Potter y la Piedra Filosofal"
-        style="@style/Widget.ReaderCollection.TextView.Title.ReadingBook"
-        />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_250dp"
+        android:paddingStart="@dimen/padding_24dp"
+        android:paddingEnd="@dimen/padding_24dp"
+        >
 
-    <TextView
-        android:id="@+id/text_view_reading_book_author"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_title"
-        tools:text="J.K. Rowling"
-        style="@style/Widget.ReaderCollection.TextView.Subtitle.ReadingBook"
-        />
+        <TextView
+            android:id="@+id/text_view_reading_book_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Harry Potter y la Piedra Filosofal"
+            style="@style/Widget.ReaderCollection.TextView.Title.ReadingBook"
+            />
 
-    <ImageView
-        android:id="@+id/image_view_reading_book"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_8dp"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_author"
-        tools:srcCompat="@tools:sample/backgrounds/scenic"
-        />
+        <TextView
+            android:id="@+id/text_view_reading_book_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_title"
+            tools:text="J.K. Rowling"
+            style="@style/Widget.ReaderCollection.TextView.Subtitle.ReadingBook"
+            />
 
-    <ProgressBar
-        android:id="@+id/progress_bar_reading_image_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:indeterminateTint="@color/colorPrimary"
-        app:layout_constraintBottom_toBottomOf="@+id/image_view_reading_book"
-        app:layout_constraintEnd_toEndOf="@+id/image_view_reading_book"
-        app:layout_constraintStart_toStartOf="@+id/image_view_reading_book"
-        app:layout_constraintTop_toTopOf="@+id/image_view_reading_book"
-        />
+        <ImageView
+            android:id="@+id/image_view_reading_book"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_author"
+            tools:srcCompat="@tools:sample/backgrounds/scenic"
+            />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <ProgressBar
+            android:id="@+id/progress_bar_reading_image_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateTint="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/image_view_reading_book"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_reading_book"
+            app:layout_constraintStart_toStartOf="@+id/image_view_reading_book"
+            app:layout_constraintTop_toTopOf="@+id/image_view_reading_book"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

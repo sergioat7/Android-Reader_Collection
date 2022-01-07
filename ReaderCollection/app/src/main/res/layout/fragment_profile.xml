@@ -4,201 +4,206 @@
   ~ Created by Sergio Aragonés on 18/10/2020
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.ProfileFragment"
     >
 
-    <ScrollView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/margin_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/button_save"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.ProfileFragment"
         >
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             >
 
-            <EditText
-                android:id="@+id/edit_text_username"
-                android:layout_width="0dp"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/margin_24dp"
-                android:layout_marginTop="@dimen/margin_48dp"
-                android:layout_marginEnd="@dimen/margin_24dp"
-                android:hint="@string/username"
-                android:inputType="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                style="@style/CredentialsEditText"
-                />
-
-            <ImageButton
-                android:id="@+id/image_button_info"
-                android:layout_width="@dimen/size_48dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_12dp"
-                android:layout_marginBottom="@dimen/margin_12dp"
-                android:layout_marginEnd="@dimen/margin_20dp"
-                android:src="@drawable/ic_show_info"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_text_username"
-                app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
-                app:layout_constraintTop_toTopOf="@+id/edit_text_username"
-                style="@style/Widget.ReaderCollection.ImageButton"
-                />
-
-            <EditText
-                android:id="@+id/edit_text_password"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_8dp"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
-                app:layout_constraintStart_toStartOf="@+id/edit_text_username"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_username"
-                style="@style/CredentialsEditText"
-                />
-
-            <ImageButton
-                android:id="@+id/image_button_password"
-                android:layout_width="@dimen/size_48dp"
-                android:layout_height="0dp"
-                android:layout_marginTop="@dimen/margin_12dp"
-                android:layout_marginBottom="@dimen/margin_12dp"
-                android:layout_marginEnd="@dimen/margin_20dp"
-                android:src="@drawable/ic_show_password"
-                app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
-                app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
-                app:layout_constraintTop_toTopOf="@+id/edit_text_password"
-                style="@style/Widget.ReaderCollection.ImageButton"
-                />
-
-            <TextView
-                android:id="@+id/text_view_language_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_20dp"
-                android:layout_marginBottom="@dimen/margin_5dp"
-                android:text="@string/app_language"
-                app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
-                app:layout_constraintStart_toStartOf="@+id/radio_group_language"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                />
-
-            <RadioGroup
-                android:id="@+id/radio_group_language"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
-                app:layout_constraintStart_toStartOf="@+id/edit_text_password"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_language_title"
                 >
 
-                <RadioButton
-                    android:id="@+id/radio_button_en"
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/edit_text_username"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/english"
-                    style="@style/Widget.ReaderCollection.RadioButton"
+                    android:layout_marginStart="@dimen/margin_24dp"
+                    android:layout_marginTop="@dimen/margin_48dp"
+                    android:layout_marginEnd="@dimen/margin_24dp"
+                    android:hint="@string/username"
+                    android:inputType="text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    style="@style/CredentialsEditText"
                     />
 
-                <RadioButton
-                    android:id="@+id/radio_button_es"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/spanish"
-                    style="@style/Widget.ReaderCollection.RadioButton"
+                <ImageButton
+                    android:id="@+id/image_button_info"
+                    android:layout_width="@dimen/size_48dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:layout_marginBottom="@dimen/margin_12dp"
+                    android:layout_marginEnd="@dimen/margin_20dp"
+                    android:src="@drawable/ic_show_info"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_text_username"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+                    app:layout_constraintTop_toTopOf="@+id/edit_text_username"
+                    style="@style/Widget.ReaderCollection.ImageButton"
                     />
 
-            </RadioGroup>
+                <EditText
+                    android:id="@+id/edit_text_password"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:hint="@string/password"
+                    android:inputType="textPassword"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+                    app:layout_constraintStart_toStartOf="@+id/edit_text_username"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_username"
+                    style="@style/CredentialsEditText"
+                    />
 
-            <TextView
-                android:id="@+id/text_view_sort_param_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_20dp"
-                android:layout_marginBottom="@dimen/margin_5dp"
-                android:text="@string/sort_books_param"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_sort_params"
-                app:layout_constraintEnd_toEndOf="@+id/spinner_sort_orders"
-                app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
-                app:layout_constraintTop_toBottomOf="@+id/radio_group_language"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                />
+                <ImageButton
+                    android:id="@+id/image_button_password"
+                    android:layout_width="@dimen/size_48dp"
+                    android:layout_height="0dp"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:layout_marginBottom="@dimen/margin_12dp"
+                    android:layout_marginEnd="@dimen/margin_20dp"
+                    android:src="@drawable/ic_show_password"
+                    app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
+                    app:layout_constraintTop_toTopOf="@+id/edit_text_password"
+                    style="@style/Widget.ReaderCollection.ImageButton"
+                    />
 
-            <Spinner
-                android:id="@+id/spinner_sort_params"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toStartOf="@+id/spinner_sort_orders"
-                app:layout_constraintStart_toStartOf="@+id/radio_group_language"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
-                style="@style/Widget.ReaderCollection.Spinner"
-                />
+                <TextView
+                    android:id="@+id/text_view_language_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@string/app_language"
+                    app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
+                    app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                    />
 
-            <Spinner
-                android:id="@+id/spinner_sort_orders"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
-                app:layout_constraintStart_toEndOf="@+id/spinner_sort_params"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
-                style="@style/Widget.ReaderCollection.Spinner"
-                />
+                <RadioGroup
+                    android:id="@+id/radio_group_language"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
+                    app:layout_constraintStart_toStartOf="@+id/edit_text_password"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_language_title"
+                    >
 
-            <TextView
-                android:id="@+id/text_view_app_theme_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_20dp"
-                android:layout_marginBottom="@dimen/margin_5dp"
-                android:text="@string/app_theme"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_app_theme"
-                app:layout_constraintEnd_toEndOf="@+id/spinner_app_theme"
-                app:layout_constraintStart_toStartOf="@+id/spinner_app_theme"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_sort_params"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                />
+                    <RadioButton
+                        android:id="@+id/radio_button_en"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/english"
+                        style="@style/Widget.ReaderCollection.RadioButton"
+                        />
 
-            <Spinner
-                android:id="@+id/spinner_app_theme"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/spinner_sort_orders"
-                app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_app_theme_title"
-                style="@style/Widget.ReaderCollection.Spinner"
-                />
+                    <RadioButton
+                        android:id="@+id/radio_button_es"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/spanish"
+                        style="@style/Widget.ReaderCollection.RadioButton"
+                        />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+                </RadioGroup>
 
-    </ScrollView>
+                <TextView
+                    android:id="@+id/text_view_sort_param_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@string/sort_books_param"
+                    app:layout_constraintBottom_toTopOf="@+id/spinner_sort_params"
+                    app:layout_constraintEnd_toEndOf="@+id/spinner_sort_orders"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
+                    app:layout_constraintTop_toBottomOf="@+id/radio_group_language"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                    />
 
-    <Button
-        android:id="@+id/button_save"
-        android:layout_width="@dimen/size_200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_24dp"
-        android:text="@string/save"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        style="@style/Widget.ReaderCollection.Button.Main"
-        />
+                <Spinner
+                    android:id="@+id/spinner_sort_params"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@+id/spinner_sort_orders"
+                    app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
+                    style="@style/Widget.ReaderCollection.Spinner"
+                    />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <Spinner
+                    android:id="@+id/spinner_sort_orders"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
+                    app:layout_constraintStart_toEndOf="@+id/spinner_sort_params"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
+                    style="@style/Widget.ReaderCollection.Spinner"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_app_theme_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@string/app_theme"
+                    app:layout_constraintBottom_toTopOf="@+id/spinner_app_theme"
+                    app:layout_constraintEnd_toEndOf="@+id/spinner_app_theme"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_app_theme"
+                    app:layout_constraintTop_toBottomOf="@+id/spinner_sort_params"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                    />
+
+                <Spinner
+                    android:id="@+id/spinner_app_theme"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toEndOf="@+id/spinner_sort_orders"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_app_theme_title"
+                    style="@style/Widget.ReaderCollection.Spinner"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="@dimen/size_200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            android:text="@string/save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/Widget.ReaderCollection.Button.Main"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

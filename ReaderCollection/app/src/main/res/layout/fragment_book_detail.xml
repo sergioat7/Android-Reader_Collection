@@ -4,616 +4,621 @@
   ~ Created by Sergio Aragonés on 11/11/2020
   -->
 
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.BookDetailFragment"
     >
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar_layout_book_detail"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        app:elevation="0dp"
+        android:layout_height="match_parent"
+        tools:context=".fragments.BookDetailFragment"
         >
 
-        <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsing_toolbar_layout"
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout_book_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            android:background="@color/colorPrimary"
+            app:elevation="0dp"
             >
 
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_48dp"
-                app:layout_collapseMode="pin"
-                android:layout_marginBottom="@dimen/margin_8dp"
-                />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/constraint_layout_image_toolbar"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 >
 
-                <ImageView
-                    android:id="@+id/image_view_book"
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_margin="@dimen/margin_24dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                <androidx.appcompat.widget.Toolbar
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_48dp"
+                    app:layout_collapseMode="pin"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    />
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_image_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <ImageView
+                        android:id="@+id/image_view_book"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_margin="@dimen/margin_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@tools:sample/avatars"
+                        tools:scaleType="centerCrop"
+                        />
+
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar_loading_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:indeterminateTint="@color/colorSecondary"
+                        app:layout_constraintBottom_toBottomOf="@id/image_view_book"
+                        app:layout_constraintEnd_toEndOf="@id/image_view_book"
+                        app:layout_constraintStart_toStartOf="@id/image_view_book"
+                        app:layout_constraintTop_toTopOf="@id/image_view_book"
+                        />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/padding_24dp"
+                android:paddingTop="@dimen/padding_24dp"
+                android:paddingEnd="@dimen/padding_24dp"
+                android:background="@drawable/bordered_scroll_view"
+                >
+
+                <View
+                    android:id="@+id/view_scrolling_indicator"
+                    android:layout_width="@dimen/size_100dp"
+                    android:layout_height="@dimen/size_5dp"
+                    android:background="@drawable/rounded_background_search_view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@tools:sample/avatars"
-                    tools:scaleType="centerCrop"
-                    />
-
-
-                <ProgressBar
-                    android:id="@+id/progress_bar_loading_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminateTint="@color/colorSecondary"
-                    app:layout_constraintBottom_toBottomOf="@id/image_view_book"
-                    app:layout_constraintEnd_toEndOf="@id/image_view_book"
-                    app:layout_constraintStart_toStartOf="@id/image_view_book"
-                    app:layout_constraintTop_toTopOf="@id/image_view_book"
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.core.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_24dp"
-            android:paddingTop="@dimen/padding_24dp"
-            android:paddingEnd="@dimen/padding_24dp"
-            android:background="@drawable/bordered_scroll_view"
-            >
-
-            <View
-                android:id="@+id/view_scrolling_indicator"
-                android:layout_width="@dimen/size_100dp"
-                android:layout_height="@dimen/size_5dp"
-                android:background="@drawable/rounded_background_search_view"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                />
-
-            <TextView
-                android:id="@+id/text_view_no_ratings"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24dp"
-                android:visibility="gone"
-                android:text="@string/new_book"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
-                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
-                />
-
-            <LinearLayout
-                android:id="@+id/linear_layout_rating"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_24dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
-                >
-
-                <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                    android:id="@+id/rating_bar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="@dimen/size_30dp"
-                    style="@style/Widget.ReaderCollection.RatingBar"
-                    />
-
-                <ImageView
-                    android:layout_width="@dimen/size_20dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/margin_12dp"
-                    android:src="@drawable/ic_person"
                     />
 
                 <TextView
-                    android:id="@+id/text_view_rating_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    tools:text="18"
-                    style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
-                    />
-
-            </LinearLayout>
-
-            <EditText
-                android:id="@+id/edit_text_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
-                android:hint="@string/add_title"
-                android:inputType="textMultiLine"
-                style="@style/BookTitleEditText"
-                />
-
-            <EditText
-                android:id="@+id/edit_text_author"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
-                android:hint="@string/add_author"
-                android:inputType="textMultiLine"
-                style="@style/BookAuthorsEditText"
-                />
-
-            <HorizontalScrollView
-                android:id="@+id/horizontal_scroll_view_categories"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/size_30dp"
-                android:layout_marginTop="@dimen/margin_32dp"
-                android:scrollbars="none"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_author"
-                >
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_categories"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    />
-
-            </HorizontalScrollView>
-
-            <TextView
-                android:id="@+id/text_view_description_title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_32dp"
-                android:text="@string/description"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view_categories"
-                style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                />
-
-            <EditText
-                android:id="@+id/edit_text_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:hint="@string/add_description"
-                android:maxLength="10240"
-                android:inputType="textMultiLine"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_description_title"
-                style="@style/BookDetailEditText"
-                />
-
-            <Button
-                android:id="@+id/button_read_more_description"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/read_more"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
-                style="@style/Widget.ReaderCollection.TextButton.Main.Action"
-                />
-
-            <TextView
-                android:id="@+id/text_view_description_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                app:layout_constraintEnd_toEndOf="@+id/edit_text_description"
-                app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
-                tools:text="128/10240"
-                style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
-                />
-
-            <LinearLayout
-                android:id="@+id/linear_layout_summary"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_32dp"
-                android:orientation="vertical"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/button_read_more_description"
-                >
-
-                <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/text_view_no_ratings"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/summary"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                    />
-
-                <EditText
-                    android:id="@+id/edit_text_summary"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/add_summary"
-                    android:maxLength="10240"
-                    android:inputType="textMultiLine"
-                    style="@style/BookDetailEditText"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    android:visibility="gone"
+                    android:text="@string/new_book"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
+                    style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
                     />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/linear_layout_rating"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_24dp"
                     android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
                     >
 
-                    <Button
-                        android:id="@+id/button_read_more_summary"
+                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/rating_bar"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/read_more"
-                        style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+                        android:layout_height="@dimen/size_30dp"
+                        style="@style/Widget.ReaderCollection.RatingBar"
+                        />
+
+                    <ImageView
+                        android:layout_width="@dimen/size_20dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/margin_12dp"
+                        android:src="@drawable/ic_person"
                         />
 
                     <TextView
-                        android:id="@+id/text_view_summary_count"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="end"
-                        tools:text="128/10240"
+                        android:id="@+id/text_view_rating_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center_vertical"
+                        tools:text="18"
                         style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                         />
 
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_titles_1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_32dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_summary"
-                >
-
-                <TextView
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/edit_text_title"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:text="@string/format"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
+                    android:hint="@string/add_title"
+                    android:inputType="textMultiLine"
+                    style="@style/BookTitleEditText"
                     />
 
-                <TextView
-                    android:layout_width="match_parent"
+                <EditText
+                    android:id="@+id/edit_text_author"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:text="@string/state"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
+                    android:hint="@string/add_author"
+                    android:inputType="textMultiLine"
+                    style="@style/BookAuthorsEditText"
                     />
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_values_1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_1"
-                android:baselineAligned="false"
-                >
-
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <HorizontalScrollView
+                    android:id="@+id/horizontal_scroll_view_categories"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="@dimen/size_30dp"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    android:scrollbars="none"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_author"
                     >
 
-                    <Spinner
-                        android:id="@+id/spinner_formats"
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:id="@+id/linear_layout_categories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        />
+
+                </HorizontalScrollView>
+
+                <TextView
+                    android:id="@+id/text_view_description_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    android:text="@string/description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view_categories"
+                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_text_description"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_description"
+                    android:maxLength="10240"
+                    android:inputType="textMultiLine"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_description_title"
+                    style="@style/BookDetailEditText"
+                    />
+
+                <Button
+                    android:id="@+id/button_read_more_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/read_more"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_description_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="@+id/edit_text_description"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
+                    tools:text="128/10240"
+                    style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_description"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/summary"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                        />
+
+                    <EditText
+                        android:id="@+id/edit_text_summary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/add_summary"
+                        android:maxLength="10240"
+                        android:inputType="textMultiLine"
+                        style="@style/BookDetailEditText"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        >
+
+                        <Button
+                            android:id="@+id/button_read_more_summary"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/read_more"
+                            style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_view_summary_count"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="end"
+                            tools:text="128/10240"
+                            style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
+                            />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_titles_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_summary"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/margin_5dp"
                         android:layout_weight="1"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        style="@style/Widget.ReaderCollection.Spinner"
+                        android:text="@string/format"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                         />
 
-                    <ProgressBar
-                        android:id="@+id/progress_bar_loading_formats"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/size_20dp"
-                        android:layout_weight="1"
-                        android:indeterminateTint="@color/colorPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    >
-
-                    <Spinner
-                        android:id="@+id/spinner_states"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_5dp"
                         android:layout_weight="1"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        style="@style/Widget.ReaderCollection.Spinner"
+                        android:text="@string/state"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                         />
 
-                    <ProgressBar
-                        android:id="@+id/progress_bar_loading_states"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/size_20dp"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_values_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_1"
+                    android:baselineAligned="false"
+                    >
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:indeterminateTint="@color/colorPrimary"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
+                        >
+
+                        <Spinner
+                            android:id="@+id/spinner_formats"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/margin_5dp"
+                            android:layout_weight="1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@style/Widget.ReaderCollection.Spinner"
+                            />
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar_loading_formats"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/size_20dp"
+                            android:layout_weight="1"
+                            android:indeterminateTint="@color/colorPrimary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        >
+
+                        <Spinner
+                            android:id="@+id/spinner_states"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/margin_5dp"
+                            android:layout_weight="1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            style="@style/Widget.ReaderCollection.Spinner"
+                            />
+
+                        <ProgressBar
+                            android:id="@+id/progress_bar_loading_states"
+                            android:layout_width="wrap_content"
+                            android:layout_height="@dimen/size_20dp"
+                            android:layout_weight="1"
+                            android:indeterminateTint="@color/colorPrimary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_titles_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_1"
+                    >
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_5dp"
+                        android:layout_weight="1"
+                        android:text="@string/isbn"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
                         />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/pages"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                        />
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linear_layout_titles_2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_12dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_1"
-                >
-
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linear_layout_values_2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:text="@string/isbn"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                    />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_2"
+                    >
 
-                <TextView
+                    <EditText
+                        android:id="@+id/edit_text_isbn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_5dp"
+                        android:layout_weight="1"
+                        android:hint="@string/add_isbn"
+                        android:inputType="number"
+                        style="@style/CustomEditText.BookDetails"
+                        />
+
+                    <EditText
+                        android:id="@+id/edit_text_page_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/margin_5dp"
+                        android:layout_weight="1"
+                        android:hint="@string/add_pages"
+                        android:inputType="number"
+                        style="@style/CustomEditText.BookDetails"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_titles_3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/pages"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                    />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_2"
+                    >
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_5dp"
+                        android:layout_weight="1"
+                        android:text="@string/publisher"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                        />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_values_2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_2"
-                >
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/published_date"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                        />
 
-                <EditText
-                    android:id="@+id/edit_text_isbn"
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_values_3"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:hint="@string/add_isbn"
-                    android:inputType="number"
-                    style="@style/CustomEditText.BookDetails"
-                    />
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_3"
+                    app:layout_constraintVertical_bias="0.0"
+                    >
 
-                <EditText
-                    android:id="@+id/edit_text_page_count"
+                    <EditText
+                        android:id="@+id/edit_text_publisher"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/margin_5dp"
+                        android:layout_weight="1"
+                        android:hint="@string/add_publisher"
+                        android:inputType="textMultiLine"
+                        style="@style/CustomEditText.BookDetails"
+                        />
+
+                    <EditText
+                        android:id="@+id/edit_text_published_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/margin_5dp"
+                        android:hint="@string/select_a_date"
+                        style="@style/CustomEditText.BookDetails.Date"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/linear_layout_titles_4"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:hint="@string/add_pages"
-                    android:inputType="number"
-                    style="@style/CustomEditText.BookDetails"
-                    />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_3"
+                    >
 
-            </LinearLayout>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/reading_date"
+                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                        />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_titles_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_12dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_2"
-                >
+                </LinearLayout>
 
-                <TextView
+                <LinearLayout
+                    android:id="@+id/linear_layout_values_4"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:text="@string/publisher"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                    />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/margin_32dp"
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_4"
+                    >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/published_date"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                    />
+                    <EditText
+                        android:id="@+id/edit_text_reading_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/select_a_date"
+                        style="@style/CustomEditText.BookDetails.Date"
+                        />
 
-            </LinearLayout>
+                </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/linear_layout_values_3"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_3"
-                app:layout_constraintVertical_bias="0.0"
-                >
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <EditText
-                    android:id="@+id/edit_text_publisher"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_5dp"
-                    android:layout_weight="1"
-                    android:hint="@string/add_publisher"
-                    android:inputType="textMultiLine"
-                    style="@style/CustomEditText.BookDetails"
-                    />
+        </androidx.core.widget.NestedScrollView>
 
-                <EditText
-                    android:id="@+id/edit_text_published_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:hint="@string/select_a_date"
-                    style="@style/CustomEditText.BookDetails.Date"
-                    />
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_add_photo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|center"
+            android:layout_marginTop="@dimen/margin_20dp_negative"
+            android:visibility="invisible"
+            app:fabSize="mini"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:srcCompat="@drawable/ic_add_camera_photo"
+            style="@style/Widget.ReaderCollection.FloatingActionButton"
+            />
 
-            </LinearLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/margin_24dp_negative"
+            android:layout_marginEnd="@dimen/margin_20dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:srcCompat="@drawable/ic_favourite_empty"
+            style="@style/Widget.ReaderCollection.FloatingActionButton"
+            />
 
-            <LinearLayout
-                android:id="@+id/linear_layout_titles_4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/margin_12dp"
-                android:orientation="horizontal"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_3"
-                >
+        <ProgressBar
+            android:id="@+id/progress_bar_loading_favourite"
+            android:layout_width="@dimen/size_56dp"
+            android:layout_height="@dimen/size_56dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/margin_24dp_negative"
+            android:layout_marginEnd="@dimen/margin_20dp"
+            android:background="@drawable/circular_background_progress_bar"
+            android:indeterminateTint="@color/colorSecondary"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reading_date"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                    />
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/linear_layout_values_4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/margin_32dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_4"
-                >
-
-                <EditText
-                    android:id="@+id/edit_text_reading_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/select_a_date"
-                    style="@style/CustomEditText.BookDetails.Date"
-                    />
-
-            </LinearLayout>
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_add_photo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
-        android:layout_marginTop="@dimen/margin_20dp_negative"
-        android:visibility="invisible"
-        app:fabSize="mini"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:srcCompat="@drawable/ic_add_camera_photo"
-        style="@style/Widget.ReaderCollection.FloatingActionButton"
-        />
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floating_action_button_favourite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="@dimen/margin_24dp_negative"
-        android:layout_marginEnd="@dimen/margin_20dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:srcCompat="@drawable/ic_favourite_empty"
-        style="@style/Widget.ReaderCollection.FloatingActionButton"
-        />
-
-    <ProgressBar
-        android:id="@+id/progress_bar_loading_favourite"
-        android:layout_width="@dimen/size_56dp"
-        android:layout_height="@dimen/size_56dp"
-        android:layout_gravity="top|end"
-        android:layout_marginTop="@dimen/margin_24dp_negative"
-        android:layout_marginEnd="@dimen/margin_20dp"
-        android:background="@drawable/circular_background_progress_bar"
-        android:indeterminateTint="@color/colorSecondary"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>
