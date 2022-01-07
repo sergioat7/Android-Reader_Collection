@@ -18,7 +18,7 @@ import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.extensions.showOrHidePassword
-import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*

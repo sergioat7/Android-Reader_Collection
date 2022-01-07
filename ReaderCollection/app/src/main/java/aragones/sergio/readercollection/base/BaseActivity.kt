@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 18/10/2020
  */
 
-package aragones.sergio.readercollection.activities.base
+package aragones.sergio.readercollection.base
 
 import androidx.appcompat.app.AppCompatActivity
 

@@ -3,11 +3,12 @@
  * Created by Sergio Aragonés on 9/1/2021
  */
 
-package aragones.sergio.readercollection.repositories.base
+package aragones.sergio.readercollection.base
 
+import androidx.lifecycle.ViewModel
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
-open class BaseRepository {
+open class BaseViewModel: ViewModel() {
 
     val disposables = CompositeDisposable()
 

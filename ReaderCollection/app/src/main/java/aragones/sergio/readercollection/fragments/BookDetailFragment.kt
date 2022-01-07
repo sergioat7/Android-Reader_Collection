@@ -18,7 +18,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.*
-import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse

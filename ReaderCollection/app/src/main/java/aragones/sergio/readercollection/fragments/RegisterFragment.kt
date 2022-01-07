@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.extensions.*
-import aragones.sergio.readercollection.fragments.base.BaseFragment
+import aragones.sergio.readercollection.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*

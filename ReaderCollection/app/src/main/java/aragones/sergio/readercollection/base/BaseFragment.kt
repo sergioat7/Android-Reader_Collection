@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 19/10/2020
  */
 
-package aragones.sergio.readercollection.fragments.base
+package aragones.sergio.readercollection.base
 
 import android.app.SearchManager
 import android.content.Context

@@ -8,7 +8,7 @@ package aragones.sergio.readercollection.activities
 import android.content.Intent
 import android.os.Bundle
 import androidx.lifecycle.ViewModelProvider
-import aragones.sergio.readercollection.activities.base.BaseActivity
+import aragones.sergio.readercollection.base.BaseActivity
 import aragones.sergio.readercollection.viewmodelfactories.LandingViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LandingViewModel
 import java.util.*
