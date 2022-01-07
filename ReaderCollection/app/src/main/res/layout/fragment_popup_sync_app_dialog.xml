@@ -29,47 +29,55 @@
             app:layout_constraintTop_toTopOf="parent"
             >
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="@dimen/size_1dp"
+                android:layout_marginBottom="@dimen/margin_12dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintBottom_toTopOf="@+id/title_text_view"
+                app:layout_constraintEnd_toEndOf="@+id/title_text_view"
+                app:layout_constraintStart_toStartOf="@+id/title_text_view"
+                />
+
             <TextView
                 android:id="@+id/title_text_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_100dp"
+                android:layout_marginEnd="@dimen/margin_100dp"
+                android:text="@string/sync_title"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.4"
-                style="@style/SynchronizeTitleTextView"
-                />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                app:layout_constraintBottom_toTopOf="@+id/title_text_view"
-                app:layout_constraintEnd_toEndOf="@+id/title_text_view"
-                app:layout_constraintStart_toStartOf="@+id/title_text_view"
-                style="@style/LineView.Up"
+                style="@style/Widget.ReaderCollection.TextView.Title.Section"
                 />
 
             <View
                 android:id="@+id/line_view_down"
                 android:layout_width="0dp"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/size_1dp"
+                android:layout_marginTop="@dimen/margin_12dp"
+                android:background="@color/colorPrimary"
                 app:layout_constraintEnd_toEndOf="@+id/title_text_view"
                 app:layout_constraintStart_toStartOf="@+id/title_text_view"
                 app:layout_constraintTop_toBottomOf="@+id/title_text_view"
-                style="@style/LineView.Down"
                 />
 
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_20dp"
+                android:layout_marginBottom="@dimen/margin_20dp"
+                android:indeterminate="true"
+                android:indeterminateTint="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/line_view_down"
-                style="@style/SynchronizeProgressBar"
                 />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

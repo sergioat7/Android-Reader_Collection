@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
@@ -28,29 +29,28 @@ class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _registerForm = MutableLiveData<LoginFormState>()
     private val _registerLoading = MutableLiveData<Boolean>()
     private val _registerError = MutableLiveData<ErrorResponse?>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val registerFormState: LiveData<LoginFormState> = _registerForm
     val registerLoading: LiveData<Boolean> = _registerLoading
     val registerError: LiveData<ErrorResponse?> = _registerError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun register(username: String, password: String) {
 
         _registerLoading.value = true
@@ -71,7 +71,7 @@ class RegisterViewModel @Inject constructor(
             onError = {
 
                 _registerLoading.value = false
-                _registerError.value = Constants.handleError(it)
+                _registerError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -97,9 +97,9 @@ class RegisterViewModel @Inject constructor(
         }
         _registerForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun loadContentObserver(): Completable {
 
         return Completable.create { emitter ->
@@ -132,8 +132,8 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun loadFormatsObserver(): Completable {
@@ -149,8 +149,8 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun loadStatesObserver(): Completable {
@@ -166,8 +166,8 @@ class RegisterViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun login(username: String, password: String) {
@@ -184,8 +184,9 @@ class RegisterViewModel @Inject constructor(
             onError = {
 
                 _registerLoading.value = false
-                _registerError.value = Constants.handleError(it)
+                _registerError.value = ApiManager.handleError(it)
             }
         )
     }
+    //endregion
 }

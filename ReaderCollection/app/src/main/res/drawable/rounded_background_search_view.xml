@@ -10,7 +10,7 @@
     >
 
     <corners
-        android:radius="10dp"
+        android:radius="@dimen/radius_10dp"
         />
 
     <solid

@@ -14,8 +14,7 @@ import kotlinx.android.synthetic.main.activity_book_detail.*
 
 class BookDetailActivity: BaseActivity() {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_book_detail)
@@ -41,4 +40,5 @@ class BookDetailActivity: BaseActivity() {
                 .commitNow()
         }
     }
+    //endregion
 }

@@ -12,27 +12,25 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
-    val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val googleBookRepository: GoogleBookRepository,
     private val stateRepository: StateRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private val _book = MutableLiveData<BookResponse>()
@@ -45,9 +43,9 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val book: LiveData<BookResponse> = _book
     val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
@@ -58,9 +56,9 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -68,15 +66,15 @@ class BookDetailViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun getBook() {
 
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            googleBookRepository.getGoogleBookObserver(bookId).subscribeBy(
+            googleBookRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = Constants.mapGoogleBook(it)
@@ -156,7 +154,7 @@ class BookDetailViewModel @Inject constructor(
             onError = {
 
                 _bookDetailLoading.value = false
-                _bookDetailError.value = Constants.handleError(it)
+                _bookDetailError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -174,7 +172,7 @@ class BookDetailViewModel @Inject constructor(
             onError = {
 
                 _bookDetailLoading.value = false
-                _bookDetailError.value = Constants.handleError(it)
+                _bookDetailError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -192,7 +190,7 @@ class BookDetailViewModel @Inject constructor(
             onError = {
 
                 _bookDetailLoading.value = false
-                _bookDetailError.value = Constants.handleError(it)
+                _bookDetailError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -222,4 +220,5 @@ class BookDetailViewModel @Inject constructor(
     fun setIsGoogleBook(isGoogleBook: Boolean) {
         this.isGoogleBook = isGoogleBook
     }
+    //endregion
 }

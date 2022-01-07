@@ -7,8 +7,11 @@ package aragones.sergio.readercollection.repositories
 
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
+import aragones.sergio.readercollection.models.requests.LoginCredentials
+import aragones.sergio.readercollection.models.requests.NewPassword
 import aragones.sergio.readercollection.models.responses.LoginResponse
-import aragones.sergio.readercollection.network.apiclient.UserAPIClient
+import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.network.UserApiService
 import aragones.sergio.readercollection.repositories.base.BaseRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
@@ -16,77 +19,110 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
-    private val userAPIClient: UserAPIClient
-): BaseRepository() {
+    private val api: UserApiService
+) : BaseRepository() {
 
-    //MARK: - Public properties
-
+    //region Public properties
     val username: String
-        get() = sharedPreferencesHandler.getUserData().username
+        get() = SharedPreferencesHandler.getUserData().username
 
     val userData: UserData
-        get() = sharedPreferencesHandler.getUserData()
+        get() = SharedPreferencesHandler.getUserData()
 
     val language: String
-        get() = sharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.getLanguage()
 
     val sortParam: String?
-        get() = sharedPreferencesHandler.getSortParam()
+        get() = SharedPreferencesHandler.getSortParam()
 
-    //MARK: - Public methods
+    val isSortDescending: Boolean
+        get() = SharedPreferencesHandler.isSortDescending()
 
+    val themeMode: Int
+        get() = SharedPreferencesHandler.getThemeMode()
+    //endregion
+
+    //region Public methods
     fun registerObserver(username: String, password: String): Completable {
-        return userAPIClient.registerObserver(username, password)
+
+        return api
+            .register(LoginCredentials(username, password))
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun deleteUserObserver(): Completable {
-        return userAPIClient.deleteUserObserver()
+
+        return api
+            .deleteUser()
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun loginObserver(username: String, password: String): Single<LoginResponse> {
-        return userAPIClient.loginObserver(username, password)
+
+        return api
+            .login(LoginCredentials(username, password))
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun logoutObserver(): Completable {
-        return userAPIClient.logoutObserver()
+
+        return api
+            .logout()
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun updatePasswordObserver(newPassword: String): Completable {
-        return userAPIClient.updatePasswordObserver(newPassword)
-    }
 
-    fun storeLanguage(language: String) {
-        sharedPreferencesHandler.setLanguage(language)
-    }
-
-    fun storeCredentials(authData: AuthData) {
-        sharedPreferencesHandler.storeCredentials(authData)
-    }
-
-    fun removeCredentials() {
-        sharedPreferencesHandler.removeCredentials()
-    }
-
-    fun storePassword(newPassword: String) {
-        sharedPreferencesHandler.storePassword(newPassword)
-    }
-
-    fun removeUserData() {
-        sharedPreferencesHandler.removeUserData()
-    }
-
-    fun removePassword() {
-        sharedPreferencesHandler.removePassword()
-    }
-
-    fun storeSortParam(sortParam: String?) {
-        sharedPreferencesHandler.setSortParam(sortParam)
+        return api
+            .updatePassword(NewPassword(newPassword))
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
 
-        sharedPreferencesHandler.storeUserData(userData)
-        sharedPreferencesHandler.storeCredentials(authData)
+        SharedPreferencesHandler.storeUserData(userData)
+        SharedPreferencesHandler.storeCredentials(authData)
     }
+
+    fun storeCredentials(authData: AuthData) {
+        SharedPreferencesHandler.storeCredentials(authData)
+    }
+
+    fun removeCredentials() {
+        SharedPreferencesHandler.removeCredentials()
+    }
+
+    fun storePassword(newPassword: String) {
+        SharedPreferencesHandler.storePassword(newPassword)
+    }
+
+    fun removeUserData() {
+        SharedPreferencesHandler.removeUserData()
+    }
+
+    fun removePassword() {
+        SharedPreferencesHandler.removePassword()
+    }
+
+    fun storeLanguage(language: String) {
+        SharedPreferencesHandler.setLanguage(language)
+    }
+
+    fun storeSortParam(sortParam: String?) {
+        SharedPreferencesHandler.setSortParam(sortParam)
+    }
+
+    fun storeIsSortDescending(isSortDescending: Boolean) {
+        SharedPreferencesHandler.setIsSortDescending(isSortDescending)
+    }
+
+    fun storeThemeMode(themeMode: Int) {
+        SharedPreferencesHandler.setThemeMode(themeMode)
+    }
+    //endregion
 }

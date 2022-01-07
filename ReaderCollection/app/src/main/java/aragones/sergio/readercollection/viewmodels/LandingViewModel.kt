@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.activities.LoginActivity
@@ -19,24 +20,22 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LandingViewModel @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
     private val booksRepository: BooksRepository,
     private val formatRepository: FormatRepository,
     private val stateRepository: StateRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _landingClassToStart = MutableLiveData<Class<*>>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val language: String
-        get() = sharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.getLanguage()
     val landingClassToStart = _landingClassToStart
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
 
@@ -44,22 +43,22 @@ class LandingViewModel @Inject constructor(
         formatRepository.onDestroy()
         stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun checkVersion() {
 
-        val currentVersion = sharedPreferencesHandler.getVersion()
+        val currentVersion = SharedPreferencesHandler.getVersion()
         val newVersion = BuildConfig.VERSION_CODE
         if (newVersion > currentVersion) {
 
-            sharedPreferencesHandler.setVersion(newVersion)
-            sharedPreferencesHandler.removePassword()
-            sharedPreferencesHandler.removeCredentials()
+            SharedPreferencesHandler.setVersion(newVersion)
+            SharedPreferencesHandler.removePassword()
+            SharedPreferencesHandler.removeCredentials()
             resetDatabase()
         } else {
 
-            _landingClassToStart.value = if (sharedPreferencesHandler.isLoggedIn()) {
+            _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn()) {
                 MainActivity::class.java
             } else {
                 LoginActivity::class.java
@@ -67,8 +66,17 @@ class LandingViewModel @Inject constructor(
         }
     }
 
-    //MARK: - Private methods
+    fun checkTheme() {
 
+        when (SharedPreferencesHandler.getThemeMode()) {
+            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
+    //endregion
+
+    //region Private methods
     private fun resetDatabase() {
 
         var result = 0
@@ -119,4 +127,5 @@ class LandingViewModel @Inject constructor(
             _landingClassToStart.value = LoginActivity::class.java
         }
     }
+    //endregion
 }

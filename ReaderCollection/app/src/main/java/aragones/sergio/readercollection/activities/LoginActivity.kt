@@ -12,8 +12,7 @@ import aragones.sergio.readercollection.fragments.LoginFragment
 
 class LoginActivity: BaseActivity() {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -29,4 +28,5 @@ class LoginActivity: BaseActivity() {
     override fun onBackPressed() {
         moveTaskToBack(true)
     }
+    //endregion
 }

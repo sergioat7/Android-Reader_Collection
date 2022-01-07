@@ -18,26 +18,30 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.Main">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/text_size_24sp</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.Section">
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">@dimen/text_size_20sp</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.Book">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:maxLines">2</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.ReadingBook">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:maxLines">1</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.GoogleBook">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/text_size_24sp</item>
         <item name="android:maxLines">2</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextView.Title.TextCount">
+        <item name="android:textSize">@dimen/text_size_12sp</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Subtitle">
@@ -46,22 +50,44 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Subtitle.Main">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Subtitle.Book">
-        <item name="android:textSize">10sp</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
         <item name="android:maxLines">1</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Subtitle.ReadingBook">
-        <item name="android:textSize">12sp</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
         <item name="android:maxLines">1</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Subtitle.GoogleBook">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextView.TitleSpecial">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textColor">@color/textQuaternary</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextView.TitleSpecial.Main">
+        <item name="android:textSize">@dimen/text_size_24sp</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextView.TitleSpecial.Section">
+        <item name="android:textSize">@dimen/text_size_18sp</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextView.Spinner">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextView.Spinner.Header">
+        <item name="android:textColor">@color/textPrimaryLight</item>
     </style>
 
     <!--  TextButton  -->
@@ -70,18 +96,51 @@
         <item name="textAllCaps">false</item>
         <item name="rippleColor">@null</item>
         <item name="iconPadding">8dp</item>
-        <item name="android:padding">0dp</item>
-        <item name="android:insetTop">0dp</item>
-        <item name="android:insetBottom">0dp</item>
-        <item name="android:minHeight">0dp</item>
-        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">@dimen/no_padding</item>
+        <item name="android:insetTop">@dimen/no_padding</item>
+        <item name="android:insetBottom">@dimen/no_padding</item>
+        <item name="android:minHeight">@dimen/no_size</item>
+        <item name="android:minWidth">@dimen/no_size</item>
     </style>
 
-    <style name="Widget.ReaderCollection.TextButton.Link">
-        <item name="fontFamily">@font/roboto_regular</item>
+    <style name="Widget.ReaderCollection.TextButton.Main">
         <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">16sp</item>
         <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextButton.Main.Action">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.TextButton.Main.Link">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+    </style>
+
+    <!--  Button  -->
+
+    <style name="Widget.ReaderCollection.Button" parent="Widget.MaterialComponents.Button">
+        <item name="textAllCaps">false</item>
+        <item name="rippleColor">@null</item>
+        <item name="iconPadding">@dimen/padding_8dp</item>
+        <item name="android:insetTop">@dimen/no_padding</item>
+        <item name="android:insetBottom">@dimen/no_padding</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.Button.Main">
+        <item name="backgroundTint">@drawable/rounded_button_primary</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.ReaderCollection.Rounded.15</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textColor">@color/textTertiary</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:maxLines">1</item>
+    </style>
+
+    <style name="Widget.ReaderCollection.Button.Main.Icon">
+        <item name="android:paddingStart">@dimen/padding_12dp</item>
+        <item name="android:paddingEnd">@dimen/padding_12dp</item>
     </style>
 
     <!--  ImageButton  -->
@@ -93,27 +152,92 @@
         <item name="android:minHeight">@null</item>
     </style>
 
+    <!--  FloatingActionButton  -->
+
+    <style name="Widget.ReaderCollection.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
+        <item name="backgroundTint">@color/colorSecondary</item>
+        <item name="tint">@color/colorSecondary</item>
+        <item name="android:backgroundTint">@color/colorPrimary</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <!--  RadioButton  -->
+
+    <style name="Widget.ReaderCollection.RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:buttonTint">@color/colorPrimary</item>
+        <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <!--  Spinner  -->
+
+    <style name="Widget.ReaderCollection.Spinner" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:backgroundTint">@android:color/transparent</item>
+        <item name="android:spinnerMode">dropdown</item>
+        <item name="android:minHeight">@dimen/size_30dp</item>
+    </style>
+
+    <!--  RatingBar  -->
+
+    <style name="Widget.ReaderCollection.RatingBar" parent="Widget.MaterialRatingBar.RatingBar">
+        <item name="mrb_fillBackgroundStars">false</item>
+        <item name="android:numStars">5</item>
+        <item name="android:stepSize">0.5</item>
+        <item name="android:progressTint">@color/colorTertiary</item>
+        <item name="android:progressBackgroundTint">@color/colorTertiaryLight</item>
+        <item name="android:secondaryProgressTint">@color/colorTertiaryLight</item>
+    </style>
+
+    <!--  ShapeAppearance  -->
+
+    <style name="ShapeAppearance.ReaderCollection.Rounded" parent="ShapeAppearance.MaterialComponents" />
+
+    <style name="ShapeAppearance.ReaderCollection.Rounded.10">
+        <item name="cornerSize">@dimen/radius_10dp</item>
+    </style>
+
+    <style name="ShapeAppearance.ReaderCollection.Rounded.15">
+        <item name="cornerSize">@dimen/radius_15dp</item>
+    </style>
+
+    <!--  BottomNavigationView  -->
+
+    <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <!--  MaterialAlertDialog  -->
+
+    <style name="MaterialAlertDialog.ReaderCollection" parent="MaterialAlertDialog.MaterialComponents">
+        <item name="shapeAppearance">@style/ShapeAppearance.ReaderCollection.Rounded.10</item>
+    </style>
+
+    <style name="MaterialAlertDialog.ReaderCollection.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_20sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:maxLines">@null</item>
+        <item name="android:singleLine">false</item>
+    </style>
+
+    <style name="MaterialAlertDialog.ReaderCollection.Body" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:maxLines">@null</item>
+        <item name="android:singleLine">false</item>
+    </style>
+
     <!--  Others  -->
 
-    <style name="BottomMenu">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="itemTextColor">@color/textTertiary</item>
-        <item name="labelVisibilityMode">labeled</item>
-        <item name="menu">@menu/bottom_nav_menu</item>
-    </style>
-
-    <style name="RoundedButton" parent="android:style/Widget.Button">
-        <item name="android:layout_width">200dp</item>
-        <item name="android:textColor">@color/textTertiary</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:maxLines">1</item>
+    <style name="RoundedTextView">
         <item name="android:gravity">center</item>
-    </style>
-
-    <style name="RoundedButton.Action">
-        <item name="android:background">@drawable/rounded_button_primary</item>
+        <item name="android:background">@drawable/rounded_text_view</item>
+        <item name="android:textColor">@color/textTertiary</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <style name="CustomEditText" parent="Widget.AppCompat.EditText">
@@ -123,41 +247,42 @@
         <item name="android:textIsSelectable">true</item>
     </style>
 
-    <style name="PopupErrorTextView">
-        <item name="android:layout_marginStart">20dp</item>
-        <item name="android:layout_marginEnd">20dp</item>
-        <item name="android:layout_marginTop">20dp</item>
-        <item name="android:layout_marginBottom">20dp</item>
-        <item name="android:textAlignment">center</item>
-        <item name="android:textColor">@color/textPrimary</item>
-    </style>
-
-    <style name="PopupErrorButton">
-        <item name="android:background">@color/colorPrimary</item>
-        <item name="android:text">@string/accept</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textColor">@color/textTertiary</item>
-    </style>
-
-    <style name="CustomSpinner" parent="Widget.AppCompat.Spinner.Underlined">
-        <item name="android:spinnerMode">dropdown</item>
-        <item name="android:backgroundTint">@android:color/transparent</item>
-        <item name="android:minHeight">30dp</item>
-        <item name="fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="SpinnerTextView">
+    <style name="CustomEditText.BookDetails" parent="CustomEditText">
+        <item name="android:textColorHint">@color/textSecondaryLight</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">16sp</item>
     </style>
 
-    <style name="LoadingProgressBar">
-        <item name="android:layout_marginStart">10dp</item>
-        <item name="android:layout_marginTop">10dp</item>
-        <item name="android:layout_marginEnd">10dp</item>
-        <item name="android:layout_marginBottom">10dp</item>
-        <item name="android:indeterminate">true</item>
-        <item name="android:indeterminateTint">@color/colorPrimary</item>
+    <style name="BookDetailEditText" parent="CustomEditText.BookDetails">
+        <item name="android:lineSpacingExtra">@dimen/margin_5dp</item>
+        <item name="android:maxLines">7</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="CustomEditText.BookDetails.Date" parent="CustomEditText.BookDetails">
+        <item name="android:inputType">date</item>
+        <item name="android:focusable">false</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="BookTitleEditText" parent="CustomEditText">
+        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
+        <item name="android:textColor">@color/textPrimary</item>
+        <item name="android:textSize">@dimen/text_size_24sp</item>
+        <item name="android:fontFamily">@font/roboto_bold</item>
+    </style>
+
+    <style name="BookAuthorsEditText" parent="CustomEditText">
+        <item name="android:layout_marginTop">@dimen/margin_5dp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+
+    <style name="CredentialsEditText" parent="CustomEditText">
+        <item name="android:ems">10</item>
+        <item name="android:selectAllOnFocus">true</item>
     </style>
 
 </resources>

@@ -9,9 +9,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
-    android:paddingStart="24dp"
-    android:paddingEnd="24dp"
+    android:layout_height="@dimen/size_250dp"
+    android:paddingStart="@dimen/padding_24dp"
+    android:paddingEnd="@dimen/padding_24dp"
     >
 
     <TextView
@@ -40,7 +40,7 @@
         android:id="@+id/image_view_reading_book"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/margin_8dp"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

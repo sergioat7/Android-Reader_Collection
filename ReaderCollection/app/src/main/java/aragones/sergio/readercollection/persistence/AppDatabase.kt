@@ -13,15 +13,16 @@ import androidx.room.TypeConverters
 import aragones.sergio.readercollection.daos.BookDao
 import aragones.sergio.readercollection.daos.FormatDao
 import aragones.sergio.readercollection.daos.StateDao
+import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 
 @Database(entities = [
+    BookResponse::class,
     FormatResponse::class,
-    StateResponse::class,
-    BookResponse::class], version = 1)
+    StateResponse::class], version = 1)
 @TypeConverters(ListConverter::class, DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
@@ -31,8 +32,11 @@ abstract class AppDatabase : RoomDatabase() {
 
     companion object {
 
+        //region Private properties
         private var instance: AppDatabase? = null
+        //endregion
 
+        //region Public methods
         fun getAppDatabase(context: Context): AppDatabase {
 
             if (instance == null) {
@@ -47,5 +51,21 @@ abstract class AppDatabase : RoomDatabase() {
             }
             return instance!!
         }
+
+        fun <T> getDisabledContent(
+            currentValues: List<BaseModel<T>>,
+            newValues: List<BaseModel<T>>
+        ): List<BaseModel<T>> {
+
+            val disabledContent = arrayListOf<BaseModel<T>>()
+            for (currentValue in currentValues) {
+
+                if (newValues.firstOrNull { it.id == currentValue.id } == null) {
+                    disabledContent.add(currentValue)
+                }
+            }
+            return disabledContent
+        }
+        //endregion
     }
 }
