@@ -14,13 +14,14 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.extensions.*
-import aragones.sergio.readercollection.base.BaseFragment
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentProfileBinding
 import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 
-class ProfileFragment: BaseFragment() {
+class ProfileFragment: BindingFragment<FragmentProfileBinding>() {
 
     //region Private properties
     private lateinit var etUsername: EditText

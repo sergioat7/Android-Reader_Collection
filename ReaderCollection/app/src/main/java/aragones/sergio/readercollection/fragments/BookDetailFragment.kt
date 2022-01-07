@@ -18,7 +18,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.*
-import aragones.sergio.readercollection.base.BaseFragment
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
@@ -37,7 +38,7 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar
 import java.util.*
 import kotlin.math.abs
 
-class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
+class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(), AppBarLayout.OnOffsetChangedListener {
 
     //region Private properties
     private var bookId: String = ""
