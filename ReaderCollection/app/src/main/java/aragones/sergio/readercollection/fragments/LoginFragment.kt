@@ -17,25 +17,24 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.extensions.afterTextChanged
+import aragones.sergio.readercollection.extensions.showOrHidePassword
 import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment: BaseFragment() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var etUsername: EditText
     private lateinit var etPassword: EditText
     private lateinit var ibPassword: ImageButton
     private lateinit var btLogin: Button
     private lateinit var btRegister: Button
     private lateinit var viewModel: LoginViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     companion object {
         fun newInstance() = LoginFragment()
     }
@@ -48,8 +47,8 @@ class LoginFragment: BaseFragment() {
         return inflater.inflate(R.layout.fragment_login, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
 
@@ -57,9 +56,9 @@ class LoginFragment: BaseFragment() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         val application = activity?.application ?: return
@@ -82,7 +81,7 @@ class LoginFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
+            etPassword.showOrHidePassword(ibPassword)
         }
 
         btLogin.setOnClickListener {
@@ -142,4 +141,5 @@ class LoginFragment: BaseFragment() {
             etPassword.text.toString()
         )
     }
+    //endregion
 }

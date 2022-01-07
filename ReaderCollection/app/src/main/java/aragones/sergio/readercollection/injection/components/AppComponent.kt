@@ -6,20 +6,24 @@
 package aragones.sergio.readercollection.injection.components
 
 import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
-import aragones.sergio.readercollection.injection.modules.SharedPreferencesModule
+import aragones.sergio.readercollection.injection.modules.NetworkModule
 import aragones.sergio.readercollection.viewmodelfactories.*
 import dagger.Component
 
-@Component(modules = [
-    AppDatabaseModule::class,
-    SharedPreferencesModule::class
-])
+@Component(
+    modules = [
+        AppDatabaseModule::class,
+        NetworkModule::class
+    ]
+)
 interface AppComponent {
 
+    fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
     fun inject(booksViewModelFactory: BooksViewModelFactory)
     fun inject(landingViewModelFactory: LandingViewModelFactory)
     fun inject(loginViewModelFactory: LoginViewModelFactory)
     fun inject(popupSyncAppViewModelFactory: PopupSyncAppViewModelFactory)
     fun inject(profileViewModelFactory: ProfileViewModelFactory)
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
+    fun inject(searchViewModelFactory: SearchViewModelFactory)
 }

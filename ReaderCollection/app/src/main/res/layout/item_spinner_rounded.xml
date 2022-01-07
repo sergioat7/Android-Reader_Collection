@@ -18,17 +18,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        style="@style/BookDataTitleTextView"
+        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
         />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/spinner_background"
+        android:gravity="center"
+        android:minHeight="@dimen/size_30dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-        style="@style/SpinnerRoundedItem"
         >
 
         <TextView
@@ -37,15 +40,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.1"
             android:maxLines="1"
-            style="@style/SpinnerTextView"
+            style="@style/Widget.ReaderCollection.TextView.Spinner"
             />
 
-        <include
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:layout_weight="1"
-            layout="@layout/image_view_arrow_dropdown"
+            android:src="@drawable/ic_arrow_dropdown"
             />
 
     </LinearLayout>

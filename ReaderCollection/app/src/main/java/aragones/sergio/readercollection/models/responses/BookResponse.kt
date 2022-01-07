@@ -51,7 +51,7 @@ data class BookResponse(
     @SerializedName("format")
     val format: String?,
     @SerializedName("state")
-    val state: String?,
+    var state: String?,
     @SerializedName("isFavourite")
     var isFavourite: Boolean
 ): BaseModel<String> {

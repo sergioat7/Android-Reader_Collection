@@ -73,6 +73,12 @@
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
     <string name="sort_books_param">Parámetro de ordenación de libros</string>
+    <string name="app_theme">Tema</string>
+    <string-array name="app_theme_values">
+        <item>Predeterminado por el sistema</item>
+        <item>Claro</item>
+        <item>Oscuro</item>
+    </string-array>
 
     //POPUPS
     <string name="accept">Aceptar</string>
@@ -81,12 +87,14 @@
     <string name="profile_delete_confirmation">¿Estás seguro de que quieres borrar tu usuario? Perderás toda la información almacenada sobre los libros.</string>
     <string name="profile_logout_confirmation">¿Estás seguro de que quieres salir?</string>
     <string name="order_by">Ordenar por</string>
-    <string name="none">Nada</string>
-    <string name="title_sorting_key">Título</string>
-    <string name="published_date_sorting_key">Fecha de publicación</string>
-    <string name="reading_date_sorting_key">Fecha de lectura</string>
-    <string name="page_count_sorting_key">Nº de páginas</string>
-    <string name="rating_sorting_key">Puntuación</string>
+    <string-array name="sorting_keys">
+        <item>Nada</item>
+        <item>Título</item>
+        <item>Fecha de publicación</item>
+        <item>Fecha de lectura</item>
+        <item>Nº de páginas</item>
+        <item>Puntuación</item>
+    </string-array>
     <string name="ascending">Ascendente</string>
     <string name="descending">Descendente</string>
     <string name="sync_title">Sincronizando…</string>

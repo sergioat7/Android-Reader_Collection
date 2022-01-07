@@ -8,8 +8,8 @@ package aragones.sergio.readercollection.viewmodelfactories
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import aragones.sergio.readercollection.injection.ReaderCollectionApplication
-import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
+import aragones.sergio.readercollection.ReaderCollectionApplication
+import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import javax.inject.Inject
@@ -18,24 +18,24 @@ class SearchViewModelFactory(
     private val application: Application
 ): ViewModelProvider.Factory {
 
-    //MARK: - Public properties
-
+    //region Public properties
     @Inject
-    lateinit var googleAPIClient: GoogleAPIClient
+    lateinit var booksRepository: BooksRepository
     @Inject
     lateinit var googleBookRepository: GoogleBookRepository
     @Inject
     lateinit var searchViewModel: SearchViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(SearchViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).googleApiClientComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             return searchViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+    //endregion
 }

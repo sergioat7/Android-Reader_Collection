@@ -17,15 +17,14 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.BookDetailActivity
-import aragones.sergio.readercollection.extensions.getValue
-import aragones.sergio.readercollection.extensions.setReadOnly
-import aragones.sergio.readercollection.extensions.showDatePicker
+import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
@@ -35,12 +34,12 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_book_detail.*
 import me.zhanghai.android.materialratingbar.MaterialRatingBar
+import java.util.*
 import kotlin.math.abs
 
 class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var bookId: String = ""
     private var isGoogleBook: Boolean = false
     private lateinit var ablBook: AppBarLayout
@@ -78,6 +77,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private lateinit var llTitles4: LinearLayout
     private lateinit var llValues4: LinearLayout
     private lateinit var etReadingDate: EditText
+
     private lateinit var viewModel: BookDetailViewModel
     private var isFavourite: Boolean = false
     private var book: BookResponse? = null
@@ -87,9 +87,9 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private lateinit var stateValues: MutableList<String>
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     companion object {
         fun newInstance() = BookDetailFragment()
     }
@@ -158,9 +158,9 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Interface methods
-
+    //region Interface methods
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
 
         val maxScroll = appBarLayout?.totalScrollRange ?: 0
@@ -171,9 +171,9 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             view.scaleY = 1 - percentage
         }
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         ablBook = app_bar_layout_book_detail
@@ -211,6 +211,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         llTitles4 = linear_layout_titles_4
         llValues4 = linear_layout_values_4
         etReadingDate = edit_text_reading_date
+
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
@@ -224,7 +225,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
 
         ablBook.addOnOffsetChangedListener(this)
 
-        val screenSize = Constants.getScreenSize(requireContext() as BookDetailActivity)
+        val screenSize = requireActivity().getScreenSize()
         clImageToolbar.layoutParams = CollapsingToolbarLayout.LayoutParams(
             CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
             (screenSize.second * 0.5).toInt(),
@@ -306,7 +307,10 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         viewModel.isFavourite.observe(viewLifecycleOwner, {
 
             isFavourite = it
-            fbFavourite.setImageResource(Constants.getFavouriteImage(isFavourite, context))
+            fbFavourite.setImageResource(
+                if (it) R.drawable.ic_favourite_full
+                else R.drawable.ic_favourite_empty
+            )
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -318,7 +322,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
                 this.add(resources.getString((R.string.select_format)))
                 this.addAll(formatsResponse.map { it.name })
             }
-            spFormats.adapter = Constants.getAdapter(requireContext(), formatValues)
+            spFormats.setup(formatValues, 0)
             book?.let {
                 setFormat(it)
             }
@@ -333,7 +337,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
                 this.add(resources.getString((R.string.select_state)))
                 this.addAll(statesResponse.map { it.name })
             }
-            spStates.adapter = Constants.getAdapter(requireContext(), stateValues)
+            spStates.setup(stateValues, 0)
             book?.let {
                 setState(it)
             }
@@ -384,6 +388,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         Picasso
             .get()
             .load(image)
+            .error(R.drawable.ic_default_book_cover)
             .into(ivBook, object : Callback {
 
                 override fun onSuccess() {
@@ -481,20 +486,18 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         }
         etPublisher.setText(publisher)
 
-        var publishedDate = Constants.dateToString(
-            book.publishedDate,
-            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
-            viewModel.sharedPreferencesHandler.getLanguage()
+        var publishedDate = book.publishedDate.toString(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         if (publishedDate == null || publishedDate.isBlank()) {
             publishedDate = Constants.NO_VALUE
         }
         etPublishedDate.setText(publishedDate)
 
-        var readingDate = Constants.dateToString(
-            book.readingDate,
-            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
-            viewModel.sharedPreferencesHandler.getLanguage()
+        var readingDate = book.readingDate.toString(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         if (readingDate == null || readingDate.isBlank()) {
             readingDate = Constants.NO_VALUE
@@ -516,7 +519,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
 
     private fun setState(book: BookResponse) {
 
-        var statePosition = 0
+        var statePosition = if (isGoogleBook) 1 else 0
         book.state?.let { stateId ->
 
             val stateName = states.firstOrNull { it.id == stateId }?.name
@@ -529,19 +532,17 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
     private fun getBookData(): BookResponse {
 
         val prefix = resources.getString(R.string.authors_text).split(" ")[0]
-        val authorsValue = etAuthor.getValue().removePrefix(prefix).trimStart().trimEnd()
-        val authors = Constants.stringToList<String>(authorsValue).map {
+        val authorsValue = etAuthor.getValue().removePrefix(prefix)
+        val authors = authorsValue.toList<String>().map {
             it.trimStart().trimEnd()
         }
-        val publishedDate = Constants.stringToDate(
-            etPublishedDate.text.toString(),
-            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
-            viewModel.sharedPreferencesHandler.getLanguage()
+        val publishedDate = etPublishedDate.text.toString().toDate(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
-        val readingDate = Constants.stringToDate(
-            etReadingDate.text.toString(),
-            Constants.getDateFormatToShow(viewModel.sharedPreferencesHandler),
-            viewModel.sharedPreferencesHandler.getLanguage()
+        var readingDate = etReadingDate.text.toString().toDate(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
         )
         val pageCountText = etPageCount.getValue()
         val pageCount =
@@ -552,6 +553,7 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
             viewModel.formats.value?.firstOrNull { it.name == spFormats.selectedItem.toString() }?.id
         val state =
             viewModel.states.value?.firstOrNull { it.name == spStates.selectedItem.toString() }?.id
+        if (readingDate == null && state == State.READ) readingDate = Date()
 
         return BookResponse(
             id = book?.id ?: "",
@@ -686,4 +688,5 @@ class BookDetailFragment : BaseFragment(), AppBarLayout.OnOffsetChangedListener 
         etReadingDate.isEnabled = editable
         etReadingDate.backgroundTintList = backgroundTint
     }
+    //endregion
 }

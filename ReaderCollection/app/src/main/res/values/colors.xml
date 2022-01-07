@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="colorPrimary">#0D1A5E</color>
-    <color name="colorPrimaryLight">#750D1A5E</color>
+    <color name="colorPrimary">#2C2C42</color>
+    <color name="colorPrimaryLight">#752C2C42</color>
     <color name="colorSecondary">#FFFFFF</color>
     <color name="colorTertiary">#F9B197</color>
     <color name="colorTertiaryLight">#75F9B197</color>
-    <color name="buttonPrimary">#0D1A5E</color>
+    <color name="buttonPrimary">#2C2C42</color>
     <color name="buttonSecondary">#ECECE7</color>
-    <color name="textPrimary">#0D1A5E</color>
-    <color name="textPrimaryLight">#750D1A5E</color>
+    <color name="textPrimary">#2C2C42</color>
+    <color name="textPrimaryLight">#752C2C42</color>
     <color name="textSecondary">#585858</color>
     <color name="textSecondaryLight">#75585858</color>
     <color name="textTertiary">#FFFFFF</color>
     <color name="textTertiaryLight">#75FFFFFF</color>
+    <color name="textQuaternary">#F9B197</color>
 
 </resources>

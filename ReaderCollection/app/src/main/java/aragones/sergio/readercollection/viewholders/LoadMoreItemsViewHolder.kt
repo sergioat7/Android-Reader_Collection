@@ -15,8 +15,7 @@ class LoadMoreItemsViewHolder(
     itemView: View
 ) : RecyclerView.ViewHolder(itemView) {
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun setItem(onItemClickListener: OnItemClickListener) {
 
         val btLoadMoreItems = itemView.findViewById<Button>(R.id.button_load_more_items)
@@ -24,4 +23,5 @@ class LoadMoreItemsViewHolder(
             onItemClickListener.onLoadMoreItemsClick()
         }
     }
+    //endregion
 }

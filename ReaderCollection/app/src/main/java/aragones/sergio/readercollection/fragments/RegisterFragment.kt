@@ -15,19 +15,15 @@ import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.extensions.clearErrors
-import aragones.sergio.readercollection.extensions.onFocusChange
+import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment: BaseFragment() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private lateinit var etUsername: EditText
     private lateinit var ibInfo: ImageButton
     private lateinit var etPassword: EditText
@@ -36,9 +32,9 @@ class RegisterFragment: BaseFragment() {
     private lateinit var ibConfirmPassword: ImageButton
     private lateinit var btRegister: Button
     private lateinit var viewModel: RegisterViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     companion object {
         fun newInstance() = RegisterFragment()
     }
@@ -51,8 +47,8 @@ class RegisterFragment: BaseFragment() {
         return inflater.inflate(R.layout.fragment_register, container, false)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
 
@@ -60,9 +56,9 @@ class RegisterFragment: BaseFragment() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun initializeUI() {
 
         val application = activity?.application ?: return
@@ -94,7 +90,7 @@ class RegisterFragment: BaseFragment() {
         }
 
         ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
+            etPassword.showOrHidePassword(ibPassword)
         }
 
         etConfirmPassword.afterTextChanged {
@@ -105,7 +101,7 @@ class RegisterFragment: BaseFragment() {
         }
 
         ibConfirmPassword.setOnClickListener {
-            Constants.showOrHidePassword(etConfirmPassword, ibConfirmPassword, Constants.isDarkMode(context))
+            etConfirmPassword.showOrHidePassword(ibConfirmPassword)
         }
 
         btRegister.setOnClickListener {
@@ -167,4 +163,5 @@ class RegisterFragment: BaseFragment() {
             etPassword.text.toString()
         )
     }
+    //endregion
 }

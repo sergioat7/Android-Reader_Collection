@@ -15,16 +15,16 @@
             >
 
             <padding
-                android:left="10dp"
-                android:right="10dp"
+                android:left="@dimen/padding_12dp"
+                android:right="@dimen/padding_12dp"
                 />
 
             <corners
-                android:radius="36dp"
+                android:radius="@dimen/radius_36dp"
                 />
 
             <solid
-                android:color="@color/colorPrimaryLight"
+                android:color="@color/colorPrimary"
                 />
 
         </shape>

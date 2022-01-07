@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.fragments.base
 
-import android.app.AlertDialog
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
@@ -13,30 +12,30 @@ import android.content.res.ColorStateList
 import android.view.View
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.fragments.popups.PopupErrorDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 
-open class BaseFragment: Fragment() {
+open class BaseFragment : Fragment() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var loadingFragment: PopupLoadingDialogFragment? = null
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     var searchView: SearchView? = null
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun manageError(errorResponse: ErrorResponse) {
 
         val error = StringBuilder()
@@ -50,15 +49,20 @@ open class BaseFragment: Fragment() {
 
     fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
 
-        val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
-        val prev = activity?.supportFragmentManager?.findFragmentByTag("popupDialog")
-        if (prev != null) {
-            ft.remove(prev)
-        }
-        ft.addToBackStack(null)
-        val dialogFragment = PopupErrorDialogFragment(message, goBack)
-        dialogFragment.isCancelable = false
-        dialogFragment.show(ft, "popupDialog")
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                dialog.dismiss()
+                goBack?.let {
+                    it.value = true
+                }
+            }
+            .show()
     }
 
     fun <T> launchActivity(activity: Class<T>) {
@@ -97,9 +101,16 @@ open class BaseFragment: Fragment() {
         loadingFragment = null
     }
 
-    fun showPopupConfirmationDialog(messageId: Int, acceptHandler: () -> Unit, cancelHandler: (() -> Unit)? = null) {
+    fun showPopupConfirmationDialog(
+        messageId: Int,
+        acceptHandler: () -> Unit,
+        cancelHandler: (() -> Unit)? = null
+    ) {
 
-        AlertDialog.Builder(context)
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
             .setMessage(resources.getString(messageId))
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
@@ -121,7 +132,9 @@ open class BaseFragment: Fragment() {
         })
     }
 
-    fun setupSearchView(query: String) {
+    fun setupSearchView(colorId: Int, query: String) {
+
+        val color = ContextCompat.getColor(requireActivity(), colorId)
 
         searchView?.let { searchView ->
 
@@ -137,14 +150,13 @@ open class BaseFragment: Fragment() {
                 searchView.setQuery(query, false)
             }
 
-            val color = ContextCompat.getColor(requireActivity(), R.color.textTertiary)
-
             val searchIconId = searchView.context.resources.getIdentifier(
                 "android:id/search_mag_icon",
                 null,
                 null
             )
-            searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList = ColorStateList.valueOf(color)
+            searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList =
+                ColorStateList.valueOf(color)
 
             val searchPlateId = searchView.context.resources.getIdentifier(
                 "android:id/search_plate",
@@ -171,13 +183,22 @@ open class BaseFragment: Fragment() {
                     null,
                     null
                 )
-                searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList = ColorStateList.valueOf(color)
+                searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList =
+                    ColorStateList.valueOf(color)
             }
         }
     }
 
-    //MARK - Private methods
+    fun setTitle(title: String) {
+        (activity as AppCompatActivity?)?.supportActionBar?.title = title
+    }
 
+    fun setSubtitle(subtitle: String) {
+        (activity as AppCompatActivity?)?.supportActionBar?.subtitle = subtitle
+    }
+    //endregion
+
+    //region Private methods
     private fun showSyncPopup() {
 
         val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
@@ -190,4 +211,5 @@ open class BaseFragment: Fragment() {
         dialogFragment.isCancelable = false
         dialogFragment.show(ft, "syncDialog")
     }
+    //endregion
 }

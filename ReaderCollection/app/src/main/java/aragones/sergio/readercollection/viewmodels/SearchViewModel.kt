@@ -10,33 +10,38 @@ import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
+    private val booksRepository: BooksRepository,
     private val googleBookRepository: GoogleBookRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private var page: Int = 1
     private val _books = MutableLiveData<MutableList<BookResponse>>()
     private val _searchLoading = MutableLiveData<Boolean>()
+    private val _bookAdded = MutableLiveData<Int?>()
     private val _searchError = MutableLiveData<ErrorResponse>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     var query: String = ""
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
+    val bookAdded: LiveData<Int?> = _bookAdded
     val searchError: LiveData<ErrorResponse> = _searchError
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun searchBooks() {
 
         _searchLoading.value = true
@@ -77,4 +82,28 @@ class SearchViewModel @Inject constructor(
     fun setSearch(query: String) {
         this.query = query
     }
+
+    fun addBook(position: Int) {
+        _books.value?.get(position)?.let { book ->
+
+            book.state = State.PENDING
+            _searchLoading.value = true
+            booksRepository.createBookObserver(book).subscribeBy(
+                onComplete = {
+
+                    _bookAdded.value = position
+                    _bookAdded.value = null
+                    _searchLoading.value = false
+                },
+                onError = {
+
+                    _searchLoading.value = false
+                    _bookAdded.value = null
+                    _searchError.value = ApiManager.handleError(it)
+                    onDestroy()
+                }
+            ).addTo(disposables)
+        }
+    }
+    //endregion
 }

@@ -12,8 +12,7 @@ import aragones.sergio.readercollection.fragments.RegisterFragment
 
 class RegisterActivity: BaseActivity() {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
@@ -25,4 +24,5 @@ class RegisterActivity: BaseActivity() {
                 .commitNow()
         }
     }
+    //endregion
 }
