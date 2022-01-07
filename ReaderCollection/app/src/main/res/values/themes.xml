@@ -30,9 +30,9 @@
     </style>
 
     <style name="ThemeOverlay.ReaderCollection.MaterialAlertDialog" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
-        <item name="colorPrimary">@color/colorSecondary</item>
-        <item name="colorSurface">@color/colorPrimary</item>
-        <item name="colorOnSurface">@color/colorSecondary</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorSurface">@color/colorSecondary</item>
+        <item name="colorOnSurface">@color/colorPrimary</item>
         <item name="alertDialogStyle">@style/MaterialAlertDialog.ReaderCollection</item>
         <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.ReaderCollection.Title</item>
         <item name="materialAlertDialogBodyTextStyle">@style/MaterialAlertDialog.ReaderCollection.Body</item>
