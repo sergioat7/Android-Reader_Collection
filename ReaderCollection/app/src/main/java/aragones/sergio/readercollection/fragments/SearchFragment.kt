@@ -16,7 +16,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
@@ -27,19 +26,11 @@ import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_search.*
 import kotlin.math.max
 
 class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickListener {
 
     //region Private properties
-    private lateinit var srlBooks: SwipeRefreshLayout
-    private lateinit var rvBooks: RecyclerView
-    private lateinit var ivNoResults: View
-    private lateinit var fbStartList: FloatingActionButton
-    private lateinit var fbEndList: FloatingActionButton
-
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
     //endregion
@@ -51,7 +42,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_search, container, false)
+        return super.onCreateView(inflater, container, savedInstanceState)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,12 +82,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     private fun initializeUI() {
 
         val application = activity?.application ?: return
-        srlBooks = swipe_refresh_layout_books
-        rvBooks = recycler_view_books
-        ivNoResults = image_view_no_results
-        fbStartList = floating_action_button_start_list
-        fbEndList = floating_action_button_end_list
-
         viewModel = ViewModelProvider(
             this,
             SearchViewModelFactory(application)
@@ -109,58 +94,61 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         )
         setupBindings()
 
-        srlBooks.setOnRefreshListener {
+        with(binding) {
 
-            viewModel.reloadData()
-            viewModel.searchBooks()
-        }
-        rvBooks.layoutManager = LinearLayoutManager(requireContext())
-        rvBooks.adapter = booksAdapter
-        rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            swipeRefreshLayoutBooks.setOnRefreshListener {
 
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                fbStartList.visibility =
-                    if (!recyclerView.canScrollVertically(-1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE
-                    ) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
-
-                fbEndList.visibility =
-                    if (!recyclerView.canScrollVertically(1)
-                        && newState == RecyclerView.SCROLL_STATE_IDLE
-                    ) {
-                        View.GONE
-                    } else {
-                        View.VISIBLE
-                    }
+                viewModel.reloadData()
+                viewModel.searchBooks()
             }
-        })
-        ItemTouchHelper(SwipeController()).attachToRecyclerView(rvBooks)
+            recyclerViewBooks.layoutManager = LinearLayoutManager(requireContext())
+            recyclerViewBooks.adapter = booksAdapter
+            recyclerViewBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
-        fbStartList.visibility = View.GONE
-        fbStartList.setOnClickListener {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
 
-            rvBooks.scrollToPosition(0)
-            fbStartList.visibility = View.GONE
-            fbEndList.visibility = View.VISIBLE
-        }
+                    floatingActionButtonStartList.visibility =
+                        if (!recyclerView.canScrollVertically(-1)
+                            && newState == RecyclerView.SCROLL_STATE_IDLE
+                        ) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
 
-        fbEndList.visibility = View.GONE
-        fbEndList.setOnClickListener {
+                    floatingActionButtonEndList.visibility =
+                        if (!recyclerView.canScrollVertically(1)
+                            && newState == RecyclerView.SCROLL_STATE_IDLE
+                        ) {
+                            View.GONE
+                        } else {
+                            View.VISIBLE
+                        }
+                }
+            })
+            ItemTouchHelper(SwipeController()).attachToRecyclerView(recyclerViewBooks)
 
-            val position: Int = booksAdapter.itemCount - 1
-            rvBooks.scrollToPosition(position)
-            fbStartList.visibility = View.VISIBLE
-            fbEndList.visibility = View.GONE
-        }
+            floatingActionButtonStartList.visibility = View.GONE
+            floatingActionButtonStartList.setOnClickListener {
 
-        if (viewModel.query.isNotBlank()) {
-            setTitle(resources.getString(R.string.query_title, viewModel.query))
+                recyclerViewBooks.scrollToPosition(0)
+                floatingActionButtonStartList.visibility = View.GONE
+                floatingActionButtonEndList.visibility = View.VISIBLE
+            }
+
+            floatingActionButtonEndList.visibility = View.GONE
+            floatingActionButtonEndList.setOnClickListener {
+
+                val position: Int = booksAdapter.itemCount - 1
+                recyclerViewBooks.scrollToPosition(position)
+                floatingActionButtonStartList.visibility = View.VISIBLE
+                floatingActionButtonEndList.visibility = View.GONE
+            }
+
+            if (viewModel.query.isNotBlank()) {
+                setTitle(resources.getString(R.string.query_title, viewModel.query))
+            }
         }
     }
 
@@ -171,17 +159,17 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             if (booksResponse.isEmpty()) {
 
                 booksAdapter.resetList()
-                ivNoResults.visibility = View.VISIBLE
+                binding.imageViewNoResults.root.visibility = View.VISIBLE
             } else {
 
                 booksAdapter.setBooks(booksResponse)
-                ivNoResults.visibility = View.GONE
-                fbEndList.visibility = View.VISIBLE
+                binding.imageViewNoResults.root.visibility = View.GONE
+                binding.floatingActionButtonEndList.visibility = View.VISIBLE
             }
         })
 
         viewModel.searchLoading.observe(viewLifecycleOwner, { isLoading ->
-            srlBooks.isRefreshing = isLoading
+            binding.swipeRefreshLayoutBooks.isRefreshing = isLoading
         })
 
         viewModel.bookAdded.observe(viewLifecycleOwner, { position ->
@@ -201,22 +189,19 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
         val menuItem = menu.findItem(R.id.action_search)
         this.searchView = menuItem.actionView as SearchView
-        this.searchView?.let { searchView ->
+        this.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
+                return true
+            }
 
-                override fun onQueryTextChange(newText: String): Boolean {
-                    return true
-                }
+            override fun onQueryTextSubmit(query: String): Boolean {
 
-                override fun onQueryTextSubmit(query: String): Boolean {
-
-                    searchBooks(query)
-                    menuItem.collapseActionView()
-                    return true
-                }
-            })
-        }
+                searchBooks(query)
+                menuItem.collapseActionView()
+                return true
+            }
+        })
         this.setupSearchView(R.color.colorPrimary, viewModel.query)
     }
 
