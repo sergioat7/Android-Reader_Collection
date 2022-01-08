@@ -9,9 +9,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
+    <data>
+
+        <import
+            type="android.view.View"
+            />
+
+        <variable
+            name="book"
+            type="aragones.sergio.readercollection.models.responses.BookResponse"
+            />
+
+        <variable
+            name="onItemClickListener"
+            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_220dp"
+        android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -64,6 +83,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_12dp"
+                    android:text="@{book.title}"
                     style="@style/Widget.ReaderCollection.TextView.Title.GoogleBook"
                     />
 
@@ -80,6 +100,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@{@string/publisher_text(book.publisher)}"
+                    android:visibility="@{book.publisher != null ? View.VISIBLE : View.GONE}"
                     style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
                     />
 
@@ -87,9 +109,9 @@
                     android:id="@+id/linear_layout_google_book_rating"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
                     android:gravity="bottom"
-                    android:visibility="visible"
+                    android:orientation="horizontal"
+                    android:visibility="@{book.averageRating > 0 ? View.VISIBLE : View.GONE}"
                     >
 
                     <me.zhanghai.android.materialratingbar.MaterialRatingBar
@@ -118,8 +140,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:gravity="bottom"
-                    android:visibility="gone"
                     android:text="@string/new_book"
+                    android:visibility="@{book.averageRating > 0 ? View.GONE : View.VISIBLE}"
                     style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
                     />
 

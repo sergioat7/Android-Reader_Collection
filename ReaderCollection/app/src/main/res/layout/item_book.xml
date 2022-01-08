@@ -10,11 +10,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
+    <data>
+
+        <import
+            type="android.view.View"
+            />
+
+        <variable
+            name="book"
+            type="aragones.sergio.readercollection.models.responses.BookResponse"
+            />
+
+        <variable
+            name="onItemClickListener"
+            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="@dimen/size_150dp"
         android:layout_height="@dimen/size_320dp"
-        android:layout_marginEnd="@dimen/margin_12dp"
         android:layout_marginStart="@dimen/margin_12dp"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
         >
 
         <ImageView
@@ -44,6 +63,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8dp"
+            android:text="@{book.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_book"

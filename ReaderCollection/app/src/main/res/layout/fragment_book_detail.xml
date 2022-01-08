@@ -10,6 +10,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
+    <data>
+
+        <import
+            type="android.view.View"
+            />
+
+        <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.BookDetailFragment"
+            />
+
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.BookDetailViewModel"
+            />
+
+    </data>
+
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -363,6 +381,7 @@
                             android:layout_height="@dimen/size_20dp"
                             android:layout_weight="1"
                             android:indeterminateTint="@color/colorPrimary"
+                            android:visibility="@{viewModel.bookDetailFormatsLoading ? View.VISIBLE : View.GONE}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
@@ -397,6 +416,7 @@
                             android:layout_height="@dimen/size_20dp"
                             android:layout_weight="1"
                             android:indeterminateTint="@color/colorPrimary"
+                            android:visibility="@{viewModel.bookDetailStatesLoading ? View.VISIBLE : View.GONE}"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintHorizontal_bias="0.0"
@@ -602,6 +622,9 @@
             android:layout_gravity="top|end"
             android:layout_marginTop="@dimen/margin_24dp_negative"
             android:layout_marginEnd="@dimen/margin_20dp"
+            android:src="@{viewModel.isFavourite() ? @drawable/ic_favourite_full : @drawable/ic_favourite_empty}"
+            android:onClick="@{() -> viewModel.setFavourite(!viewModel.isFavourite)}"
+            android:visibility="@{viewModel.bookDetailFavouriteLoading || viewModel.isGoogleBook ? View.GONE : View.VISIBLE}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:srcCompat="@drawable/ic_favourite_empty"
             style="@style/Widget.ReaderCollection.FloatingActionButton"
@@ -616,6 +639,7 @@
             android:layout_marginEnd="@dimen/margin_20dp"
             android:background="@drawable/circular_background_progress_bar"
             android:indeterminateTint="@color/colorSecondary"
+            android:visibility="@{viewModel.bookDetailFavouriteLoading ? View.VISIBLE : View.GONE}"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             />
 

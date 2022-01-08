@@ -12,7 +12,6 @@ import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentLoginBinding
-import aragones.sergio.readercollection.extensions.afterTextChanged
 import aragones.sergio.readercollection.extensions.showOrHidePassword
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
@@ -40,6 +39,24 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     }
     //endregion
 
+    //region Public methods
+    fun loginDataChanged() {
+
+        viewModel.loginDataChanged(
+            binding.editTextUsername.text.toString(),
+            binding.editTextPassword.text.toString()
+        )
+    }
+
+    fun login() {
+
+        viewModel.login(
+            binding.editTextUsername.text.toString(),
+            binding.editTextPassword.text.toString()
+        )
+    }
+    //endregion
+
     //region Private methods
     private fun initializeUI() {
 
@@ -49,31 +66,18 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         setupBindings()
 
         with(binding) {
-            editTextUsername.setText(viewModel.username)
-
-            editTextUsername.afterTextChanged {
-                loginDataChanged()
-            }
-
-            editTextPassword.afterTextChanged {
-                loginDataChanged()
-            }
 
             imageButtonPassword.setOnClickListener {
                 editTextPassword.showOrHidePassword(imageButtonPassword)
             }
 
-            buttonLogin.setOnClickListener {
-
-                viewModel.login(
-                    editTextUsername.text.toString(),
-                    editTextPassword.text.toString()
-                )
-            }
-
             buttonRegister.setOnClickListener {
                 launchActivity(RegisterActivity::class.java)
             }
+
+            fragment = this@LoginFragment
+            viewModel = this@LoginFragment.viewModel
+            lifecycleOwner = this@LoginFragment
         }
     }
 
@@ -114,14 +118,6 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                 manageError(error)
             }
         })
-    }
-
-    private fun loginDataChanged() {
-
-        viewModel.loginDataChanged(
-            binding.editTextUsername.text.toString(),
-            binding.editTextPassword.text.toString()
-        )
     }
     //endregion
 }

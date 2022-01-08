@@ -10,9 +10,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
+    <data>
+
+        <variable
+            name="book"
+            type="aragones.sergio.readercollection.models.responses.BookResponse"
+            />
+
+        <variable
+            name="onItemClickListener"
+            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_250dp"
+        android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
         android:paddingStart="@dimen/padding_24dp"
         android:paddingEnd="@dimen/padding_24dp"
         >
@@ -21,6 +36,7 @@
             android:id="@+id/text_view_reading_book_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:text="@{book.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

@@ -32,7 +32,6 @@ class BookDetailViewModel @Inject constructor(
 
     //region Private properties
     private var bookId: String = ""
-    private var isGoogleBook: Boolean = false
     private val _book = MutableLiveData<BookResponse>()
     private val _isFavourite = MutableLiveData<Boolean>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
@@ -46,6 +45,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public properties
+    var isGoogleBook: Boolean = false
     val book: LiveData<BookResponse> = _book
     val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
