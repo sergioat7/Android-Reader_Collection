@@ -57,7 +57,6 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     textViewReadingBookAuthor.text = authors
                     textViewReadingBookAuthor.visibility =
                         if (authors.isBlank()) View.GONE else View.VISIBLE
-
                 }
 
                 is ItemGoogleBookBinding -> {
@@ -92,10 +91,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     textViewGoogleBookAuthor.visibility =
                         if (authors.isBlank()) View.GONE else View.VISIBLE
 
-                    val rating = book.averageRating
-                    ratingBarGoogleBook.rating = rating.toFloat() / 2
-                    textViewGoogleBookRating.text = rating.toInt().toString()
-
+                    textViewGoogleBookRating.text = book.averageRating.toInt().toString()
                 }
 
                 is ItemBookBinding -> {

@@ -194,12 +194,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 buttonReadMoreSummary.visibility = View.GONE
             }
 
-            spinnerFormats.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
-            spinnerFormats.isEnabled = false
-
-            spinnerStates.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
-            spinnerStates.isEnabled = false
-
             editTextIsbn.setReadOnly(true, InputType.TYPE_NULL, 0)
 
             editTextPageCount.setReadOnly(true, InputType.TYPE_NULL, 0)
@@ -309,9 +303,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                         progressBarLoadingImage.visibility = View.GONE
                     }
                 })
-
-            val rating = if (this@BookDetailFragment.viewModel.isGoogleBook) book.averageRating else book.rating
-            ratingBar.rating = rating.toFloat() / 2
 
             val authors = book.authors?.joinToString(separator = ", ") ?: ""
             editTextAuthor.setText(
@@ -502,12 +493,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             if (editTextAuthor.text.toString() == Constants.NO_VALUE) {
                 editTextAuthor.text = null
             }
-
-            spinnerFormats.backgroundTintList = backgroundTint
-            spinnerFormats.isEnabled = editable
-
-            spinnerStates.backgroundTintList = backgroundTint
-            spinnerStates.isEnabled = editable
 
             if (editTextPublishedDate.text.toString() == Constants.NO_VALUE) {
                 editTextPublishedDate.text = null
