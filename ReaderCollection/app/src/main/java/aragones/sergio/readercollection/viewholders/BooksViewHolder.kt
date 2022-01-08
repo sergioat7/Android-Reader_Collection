@@ -52,11 +52,6 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                                 progressBarReadingImageLoading.visibility = View.GONE
                             }
                         })
-
-                    val authors = book.authors?.joinToString(separator = ", ") ?: ""
-                    textViewReadingBookAuthor.text = authors
-                    textViewReadingBookAuthor.visibility =
-                        if (authors.isBlank()) View.GONE else View.VISIBLE
                 }
 
                 is ItemGoogleBookBinding -> {
@@ -84,13 +79,6 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                                 progressBarGoogleImageLoading.visibility = View.GONE
                             }
                         })
-
-                    val authors = book.authors?.joinToString(separator = ", ") ?: ""
-                    textViewGoogleBookAuthor.text =
-                        binding.root.context.resources.getString(R.string.authors_text, authors)
-                    textViewGoogleBookAuthor.visibility =
-                        if (authors.isBlank()) View.GONE else View.VISIBLE
-
                     textViewGoogleBookRating.text = book.averageRating.toInt().toString()
                 }
 
@@ -119,12 +107,6 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                                 progressBarImageLoading.visibility = View.GONE
                             }
                         })
-
-                    val authors = book.authors?.joinToString(separator = ", ") ?: ""
-                    textViewAuthor.text = authors
-                    textViewAuthor.visibility =
-                        if (authors.isBlank()) View.GONE else View.VISIBLE
-
                 }
                 else -> Unit
             }

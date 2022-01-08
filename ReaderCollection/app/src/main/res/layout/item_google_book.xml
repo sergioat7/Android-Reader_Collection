@@ -92,6 +92,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@{book.authorsToString()}"
+                    android:visibility='@{book.authorsToString().equals("") ? View.GONE : View.VISIBLE}'
                     style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
                     />
 

@@ -76,4 +76,8 @@ data class BookResponse(
         null,
         null,
         false)
+
+    fun authorsToString(): String {
+        return authors?.joinToString(separator = ", ") ?: ""
+    }
 }

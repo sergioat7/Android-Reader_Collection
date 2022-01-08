@@ -206,6 +206,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/add_author"
                     android:inputType="textMultiLine"
+                    android:text='@{!book.authorsToString().equals("") ? book.authorsToString() : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
