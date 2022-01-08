@@ -166,8 +166,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 //TODO: implement action
             }
 
-            ratingBar.setIsIndicator(true)
-
             editTextTitle.setReadOnly(true, InputType.TYPE_NULL, 0)
 
             editTextAuthor.setReadOnly(true, InputType.TYPE_NULL, 0)
@@ -223,6 +221,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             fragment = this@BookDetailFragment
             viewModel = this@BookDetailFragment.viewModel
             lifecycleOwner = this@BookDetailFragment
+            editable = false
         }
     }
 
@@ -291,6 +290,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun showData(book: BookResponse) {
         with(binding) {
+            this.book = book
 
             val image =
                 book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https")
@@ -313,18 +313,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             val rating = if (this@BookDetailFragment.viewModel.isGoogleBook) book.averageRating else book.rating
             ratingBar.rating = rating.toFloat() / 2
 
-            textViewRatingCount.text = book.ratingsCount.toString()
-
-            val hideRating = rating == 0.0 && this@BookDetailFragment.viewModel.isGoogleBook
-            linearLayoutRating.visibility = if (hideRating) View.INVISIBLE else View.VISIBLE
-            textViewNoRatings.visibility = if (hideRating) View.VISIBLE else View.GONE
-
-            val title = book.title ?: ""
-            editTextTitle.setText(
-                if (title.isNotBlank()) title
-                else Constants.NO_VALUE
-            )
-
             val authors = book.authors?.joinToString(separator = ", ") ?: ""
             editTextAuthor.setText(
                 if (authors.isNotBlank()) resources.getString(R.string.authors_text, authors)
@@ -346,36 +334,16 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     linearLayoutCategories.addView(view)
                 }
             }
-            horizontalScrollViewCategories.visibility =
-                if (linearLayoutCategories.childCount > 0) View.VISIBLE else View.GONE
-
-            var description = Constants.NO_VALUE
-            if (book.description != null && book.description.isNotBlank()) {
-                description = book.description
-            }
-            editTextDescription.setText(description)
-
-            textViewDescriptionCount.text =
-                resources.getString(R.string.book_text_count, description.length)
 
             buttonReadMoreDescription.visibility =
-                if (description == Constants.NO_VALUE || editTextDescription.maxLines == Constants.MAX_LINES) {
+                if (book.description == null || book.description.isBlank() || editTextDescription.maxLines == Constants.MAX_LINES) {
                     View.GONE
                 } else {
                     View.VISIBLE
                 }
 
-            var summary = book.summary
-            if (summary == null || summary.isBlank()) {
-                summary = Constants.NO_VALUE
-            }
-            editTextSummary.setText(summary)
-
-            textViewSummaryCount.text =
-                resources.getString(R.string.book_text_count, summary.length)
-
             buttonReadMoreSummary.visibility =
-                if (summary == Constants.NO_VALUE || editTextSummary.maxLines == Constants.MAX_LINES) {
+                if (book.summary == null || book.summary.isBlank() || editTextDescription.maxLines == Constants.MAX_LINES) {
                     View.GONE
                 } else {
                     View.VISIBLE
@@ -384,20 +352,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             setFormat(book)
 
             setState(book)
-
-            var isbn = Constants.NO_VALUE
-            if (book.isbn != null && book.isbn.isNotBlank()) {
-                isbn = book.isbn
-            }
-            editTextIsbn.setText(isbn)
-
-            editTextPageCount.setText(book.pageCount.toString())
-
-            var publisher = Constants.NO_VALUE
-            if (book.publisher != null && book.publisher.isNotBlank()) {
-                publisher = book.publisher
-            }
-            editTextPublisher.setText(publisher)
 
             var publishedDate = book.publishedDate.toString(
                 SharedPreferencesHandler.getDateFormatToShow(),
@@ -508,23 +462,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         makeFieldsEditable(editable)
     }
 
-    private fun setEditTextEdition(
-        editText: EditText,
-        editable: Boolean,
-        inputType: Int,
-        backgroundTint: ColorStateList?
-    ) {
-
-        if (editText.text.toString() == Constants.NO_VALUE) {
-            editText.text = null
-        }
-        editText.setReadOnly(!editable, if (editable) inputType else InputType.TYPE_NULL, 0)
-        editText.backgroundTintList = backgroundTint
-    }
-
     private fun makeFieldsEditable(editable: Boolean) {
         with(binding) {
+            this.editable = editable
 
+            val inputTypeText = if (editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
+            val inputTypeNumber = if (editable) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_NULL
             val backgroundTint =
                 if (editable) {
                     ColorStateList.valueOf(
@@ -537,35 +480,28 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     ColorStateList.valueOf(Color.TRANSPARENT)
                 }
 
-            ratingBar.setIsIndicator(!editable)
-
-            setEditTextEdition(
+            for (editText in listOf(
                 editTextTitle,
-                editable,
-                InputType.TYPE_CLASS_TEXT,
-                backgroundTint
-            )
-
-            setEditTextEdition(
                 editTextAuthor,
-                editable,
-                InputType.TYPE_CLASS_TEXT,
-                backgroundTint
-            )
-
-            setEditTextEdition(
                 editTextDescription,
-                editable,
-                InputType.TYPE_CLASS_TEXT,
-                backgroundTint
-            )
-
-            setEditTextEdition(
                 editTextSummary,
-                editable,
-                InputType.TYPE_CLASS_TEXT,
-                backgroundTint
-            )
+                editTextPublisher
+            )) {
+                editText.setReadOnly(!editable, inputTypeText, 0)
+                editText.backgroundTintList = backgroundTint
+            }
+
+            for (editText in listOf(
+                editTextIsbn,
+                editTextPageCount
+            )) {
+                editText.setReadOnly(!editable, inputTypeNumber, 0)
+                editText.backgroundTintList = backgroundTint
+            }
+
+            if (editTextAuthor.text.toString() == Constants.NO_VALUE) {
+                editTextAuthor.text = null
+            }
 
             spinnerFormats.backgroundTintList = backgroundTint
             spinnerFormats.isEnabled = editable
@@ -573,37 +509,14 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             spinnerStates.backgroundTintList = backgroundTint
             spinnerStates.isEnabled = editable
 
-            setEditTextEdition(
-                editTextIsbn,
-                editable,
-                InputType.TYPE_CLASS_NUMBER,
-                backgroundTint
-            )
-
-            setEditTextEdition(
-                editTextPageCount,
-                editable,
-                InputType.TYPE_CLASS_NUMBER,
-                backgroundTint
-            )
-
-            setEditTextEdition(
-                editTextPublisher,
-                editable,
-                InputType.TYPE_CLASS_TEXT,
-                backgroundTint
-            )
-
             if (editTextPublishedDate.text.toString() == Constants.NO_VALUE) {
                 editTextPublishedDate.text = null
             }
-            editTextPublishedDate.isEnabled = editable
             editTextPublishedDate.backgroundTintList = backgroundTint
 
             if (editTextReadingDate.text.toString() == Constants.NO_VALUE) {
                 editTextReadingDate.text = null
             }
-            editTextReadingDate.isEnabled = editable
             editTextReadingDate.backgroundTintList = backgroundTint
         }
     }

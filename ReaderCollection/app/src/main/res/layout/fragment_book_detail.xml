@@ -16,6 +16,10 @@
             type="android.view.View"
             />
 
+        <import
+            type="aragones.sergio.readercollection.utils.Constants"
+            />
+
         <variable
             name="fragment"
             type="aragones.sergio.readercollection.fragments.BookDetailFragment"
@@ -24,6 +28,16 @@
         <variable
             name="viewModel"
             type="aragones.sergio.readercollection.viewmodels.BookDetailViewModel"
+            />
+
+        <variable
+            name="book"
+            type="aragones.sergio.readercollection.models.responses.BookResponse"
+            />
+
+        <variable
+            name="editable"
+            type="Boolean"
             />
 
     </data>
@@ -125,8 +139,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_24dp"
-                    android:visibility="gone"
                     android:text="@string/new_book"
+                    android:visibility="@{book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
@@ -139,6 +153,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_24dp"
                     android:orientation="horizontal"
+                    android:visibility="@{book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
@@ -148,6 +163,7 @@
                         android:id="@+id/rating_bar"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/size_30dp"
+                        android:isIndicator="@{!editable}"
                         style="@style/Widget.ReaderCollection.RatingBar"
                         />
 
@@ -163,6 +179,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
+                        android:text="@{String.valueOf(book.ratingsCount)}"
                         tools:text="18"
                         style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                         />
@@ -173,11 +190,12 @@
                     android:id="@+id/edit_text_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:hint="@string/add_title"
+                    android:inputType="textMultiLine"
+                    android:text='@{!book.title.equals("") ? book.title : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
-                    android:hint="@string/add_title"
-                    android:inputType="textMultiLine"
                     style="@style/BookTitleEditText"
                     />
 
@@ -199,6 +217,7 @@
                     android:layout_height="@dimen/size_30dp"
                     android:layout_marginTop="@dimen/margin_32dp"
                     android:scrollbars="none"
+                    android:visibility="@{book.categories.size() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_author"
@@ -230,8 +249,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:hint="@string/add_description"
-                    android:maxLength="10240"
                     android:inputType="textMultiLine"
+                    android:maxLength="10240"
+                    android:text='@{!book.description.equals("") ? book.description : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_description_title"
@@ -252,6 +272,7 @@
                     android:id="@+id/text_view_description_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@{@string/book_text_count(book.description.length())}"
                     android:textColor="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="@+id/edit_text_description"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
@@ -282,8 +303,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/add_summary"
-                        android:maxLength="10240"
                         android:inputType="textMultiLine"
+                        android:maxLength="10240"
+                        android:text='@{!book.summary.equals("") ? book.summary : editable ? null : Constants.NO_VALUE}'
                         style="@style/BookDetailEditText"
                         />
 
@@ -306,6 +328,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
+                            android:text="@{@string/book_text_count(book.summary.length())}"
                             tools:text="128/10240"
                             style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                             />
@@ -476,6 +499,7 @@
                         android:layout_weight="1"
                         android:hint="@string/add_isbn"
                         android:inputType="number"
+                        android:text='@{!book.isbn.equals("") ? book.isbn : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails"
                         />
 
@@ -487,6 +511,7 @@
                         android:layout_weight="1"
                         android:hint="@string/add_pages"
                         android:inputType="number"
+                        android:text="@{book.pageCount > 0 ? String.valueOf(book.pageCount) : editable ? null : Constants.NO_VALUE}"
                         style="@style/CustomEditText.BookDetails"
                         />
 
@@ -541,6 +566,7 @@
                         android:layout_weight="1"
                         android:hint="@string/add_publisher"
                         android:inputType="textMultiLine"
+                        android:text='@{!book.publisher.equals("") ? book.publisher : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails"
                         />
 
@@ -548,8 +574,9 @@
                         android:id="@+id/edit_text_published_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:layout_marginStart="@dimen/margin_5dp"
+                        android:layout_weight="1"
+                        android:enabled="@{editable}"
                         android:hint="@string/select_a_date"
                         style="@style/CustomEditText.BookDetails.Date"
                         />
@@ -592,6 +619,7 @@
                         android:id="@+id/edit_text_reading_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:enabled="@{editable}"
                         android:hint="@string/select_a_date"
                         style="@style/CustomEditText.BookDetails.Date"
                         />
