@@ -120,6 +120,7 @@
                         android:layout_height="@dimen/size_30dp"
                         android:layout_weight="1"
                         android:isIndicator="true"
+                        rating="@{book.averageRating / 2}"
                         style="@style/Widget.ReaderCollection.RatingBar"
                         />
 
