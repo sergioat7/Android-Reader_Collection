@@ -203,13 +203,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             editTextPublishedDate.setOnClickListener {
                 editTextPublishedDate.showDatePicker(requireActivity())
             }
-            editTextPublishedDate.isEnabled = false
             editTextPublishedDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
 
             editTextReadingDate.setOnClickListener {
                 editTextReadingDate.showDatePicker(requireActivity())
             }
-            editTextReadingDate.isEnabled = false
             editTextReadingDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
 
             fragment = this@BookDetailFragment
@@ -337,24 +335,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             setFormat(book)
 
             setState(book)
-
-            var publishedDate = book.publishedDate.toString(
-                SharedPreferencesHandler.getDateFormatToShow(),
-                SharedPreferencesHandler.getLanguage()
-            )
-            if (publishedDate == null || publishedDate.isBlank()) {
-                publishedDate = Constants.NO_VALUE
-            }
-            editTextPublishedDate.setText(publishedDate)
-
-            var readingDate = book.readingDate.toString(
-                SharedPreferencesHandler.getDateFormatToShow(),
-                SharedPreferencesHandler.getLanguage()
-            )
-            if (readingDate == null || readingDate.isBlank()) {
-                readingDate = Constants.NO_VALUE
-            }
-            editTextReadingDate.setText(readingDate)
         }
     }
 
@@ -482,18 +462,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 editText.backgroundTintList = backgroundTint
             }
 
-            if (editTextAuthor.text.toString() == Constants.NO_VALUE) {
-                editTextAuthor.text = null
-            }
-
-            if (editTextPublishedDate.text.toString() == Constants.NO_VALUE) {
-                editTextPublishedDate.text = null
-            }
             editTextPublishedDate.backgroundTintList = backgroundTint
 
-            if (editTextReadingDate.text.toString() == Constants.NO_VALUE) {
-                editTextReadingDate.text = null
-            }
             editTextReadingDate.backgroundTintList = backgroundTint
         }
     }
