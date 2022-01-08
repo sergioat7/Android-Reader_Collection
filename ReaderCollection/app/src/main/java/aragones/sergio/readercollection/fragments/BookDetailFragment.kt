@@ -44,9 +44,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     //region Private properties
     private var bookId: String = ""
-    private var isGoogleBook: Boolean = false
     private lateinit var viewModel: BookDetailViewModel
-    private var isFavourite: Boolean = false
     private var book: BookResponse? = null
     private lateinit var formats: List<FormatResponse>
     private lateinit var formatValues: MutableList<String>
@@ -73,11 +71,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         menu.clear()
 
         val menuRes =
-            if (isGoogleBook) R.menu.google_book_detail_toolbar_menu
+            if (viewModel.isGoogleBook) R.menu.google_book_detail_toolbar_menu
             else R.menu.book_detail_toolbar_menu
         inflater.inflate(menuRes, menu)
-        menu.findItem(R.id.action_save).isVisible = isGoogleBook
-        if (!isGoogleBook) {
+        menu.findItem(R.id.action_save).isVisible = viewModel.isGoogleBook
+        if (!viewModel.isGoogleBook) {
             menu.findItem(R.id.action_cancel).isVisible = false
         }
     }
@@ -86,7 +84,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
         when (item.itemId) {
             R.id.action_save -> {
-                if (isGoogleBook) {
+                if (viewModel.isGoogleBook) {
                     viewModel.createBook(getBookData())
                 } else {
 
@@ -141,7 +139,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private fun initializeUI() {
 
         bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
-        isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
+        val isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -166,12 +164,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             floatingActionButtonAddPhoto.setOnClickListener {
                 //TODO: implement action
-            }
-
-            floatingActionButtonFavourite.visibility = if (isGoogleBook) View.GONE else View.VISIBLE
-            progressBarLoadingFavourite.visibility = View.GONE
-            floatingActionButtonFavourite.setOnClickListener {
-                viewModel.setFavourite(!isFavourite)
             }
 
             ratingBar.setIsIndicator(true)
@@ -227,6 +219,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
             editTextReadingDate.isEnabled = false
             editTextReadingDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
+
+            fragment = this@BookDetailFragment
+            viewModel = this@BookDetailFragment.viewModel
+            lifecycleOwner = this@BookDetailFragment
         }
     }
 
@@ -236,16 +232,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             book = it
             showData(it)
-            makeFieldsEditable(isGoogleBook || it == null)
-        })
-
-        viewModel.isFavourite.observe(viewLifecycleOwner, {
-
-            isFavourite = it
-            binding.floatingActionButtonFavourite.setImageResource(
-                if (it) R.drawable.ic_favourite_full
-                else R.drawable.ic_favourite_empty
-            )
+            makeFieldsEditable(viewModel.isGoogleBook || it == null)
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -287,23 +274,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
         })
 
-        viewModel.bookDetailFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
-            binding.progressBarLoadingFormats.visibility =
-                if (isLoading) View.VISIBLE else View.GONE
-        })
-
-        viewModel.bookDetailStatesLoading.observe(viewLifecycleOwner, { isLoading ->
-            binding.progressBarLoadingStates.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-
-        viewModel.bookDetailFavouriteLoading.observe(viewLifecycleOwner, { isLoading ->
-
-            binding.floatingActionButtonFavourite.visibility =
-                if (isLoading) View.INVISIBLE else View.VISIBLE
-            binding.progressBarLoadingFavourite.visibility =
-                if (isLoading) View.VISIBLE else View.GONE
-        })
-
         viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner, {
 
             val message = resources.getString(it)
@@ -340,12 +310,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     }
                 })
 
-            val rating = if (isGoogleBook) book.averageRating else book.rating
+            val rating = if (this@BookDetailFragment.viewModel.isGoogleBook) book.averageRating else book.rating
             ratingBar.rating = rating.toFloat() / 2
 
             textViewRatingCount.text = book.ratingsCount.toString()
 
-            val hideRating = rating == 0.0 && isGoogleBook
+            val hideRating = rating == 0.0 && this@BookDetailFragment.viewModel.isGoogleBook
             linearLayoutRating.visibility = if (hideRating) View.INVISIBLE else View.VISIBLE
             textViewNoRatings.visibility = if (hideRating) View.VISIBLE else View.GONE
 
@@ -463,7 +433,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun setState(book: BookResponse) {
 
-        var statePosition = if (isGoogleBook) 1 else 0
+        var statePosition = if (viewModel.isGoogleBook) 1 else 0
         book.state?.let { stateId ->
 
             val stateName = states.firstOrNull { it.id == stateId }?.name
@@ -495,10 +465,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 else 0
             val rating = ratingBar.rating.toDouble() * 2
             val format =
-                viewModel.formats.value?.firstOrNull { it.name == spinnerFormats.selectedItem.toString() }?.id
+                this@BookDetailFragment.viewModel.formats.value?.firstOrNull { it.name == spinnerFormats.selectedItem.toString() }?.id
             val state =
-                viewModel.states.value?.firstOrNull { it.name == spinnerStates.selectedItem.toString() }?.id
+                this@BookDetailFragment.viewModel.states.value?.firstOrNull { it.name == spinnerStates.selectedItem.toString() }?.id
             if (readingDate == null && state == State.READ) readingDate = Date()
+            val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
             return BookResponse(
                 id = book?.id ?: "",

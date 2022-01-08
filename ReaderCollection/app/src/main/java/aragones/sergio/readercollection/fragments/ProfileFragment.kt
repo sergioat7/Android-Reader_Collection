@@ -83,14 +83,10 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
         with(binding) {
 
-            editTextUsername.setText(viewModel.userData.username)
             editTextUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
-            editTextPassword.setText(viewModel.userData.password)
-            radioButtonEn.isChecked = viewModel.language == Preferences.ENGLISH_LANGUAGE_KEY
-            radioButtonEs.isChecked = viewModel.language == Preferences.SPANISH_LANGUAGE_KEY
 
             editTextPassword.afterTextChanged {
-                viewModel.profileDataChanged(it)
+                this@ProfileFragment.viewModel.profileDataChanged(it)
             }
 
             imageButtonInfo.setOnClickListener {
@@ -102,7 +98,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             }
 
             var position = 0
-            viewModel.sortParam?.let { sortParam ->
+            this@ProfileFragment.viewModel.sortParam?.let { sortParam ->
                 position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
             }
             spinnerSortParams.setup(
@@ -116,13 +112,13 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                     resources.getString(R.string.ascending),
                     resources.getString(R.string.descending)
                 ),
-                if (viewModel.isSortDescending) 1 else 0,
+                if (this@ProfileFragment.viewModel.isSortDescending) 1 else 0,
                 true
             )
 
             spinnerAppTheme.setup(
                 resources.getStringArray(R.array.app_theme_values).toList(),
-                viewModel.themeMode,
+                this@ProfileFragment.viewModel.themeMode,
                 true
             )
 
@@ -136,7 +132,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                     else resources.getStringArray(R.array.sorting_keys_ids)[spinnerSortParams.selectedItemPosition]
                 val isSortDescending = spinnerSortOrders.selectedItemPosition == 1
                 val themeMode = spinnerAppTheme.selectedItemPosition
-                viewModel.save(
+                this@ProfileFragment.viewModel.save(
                     editTextPassword.text.toString(),
                     language,
                     sortParam,
@@ -144,6 +140,9 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                     themeMode
                 )
             }
+
+            viewModel = this@ProfileFragment.viewModel
+            lifecycleOwner = this@ProfileFragment
         }
     }
 

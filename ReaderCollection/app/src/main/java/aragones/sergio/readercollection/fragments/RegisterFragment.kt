@@ -39,6 +39,16 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     }
     //endregion
 
+    //region Public methods
+    fun register() {
+
+        viewModel.register(
+            binding.editTextUsername.text.toString(),
+            binding.editTextPassword.text.toString()
+        )
+    }
+    //endregion
+
     //region Private methods
     private fun initializeUI() {
 
@@ -81,10 +91,6 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
             imageButtonConfirmPassword.setOnClickListener {
                 editTextConfirmPassword.showOrHidePassword(imageButtonConfirmPassword)
-            }
-
-            buttonRegister.setOnClickListener {
-                register()
             }
         }
 
@@ -135,14 +141,6 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
             binding.editTextUsername.text.toString(),
             binding.editTextPassword.text.toString(),
             binding.editTextConfirmPassword.text.toString()
-        )
-    }
-
-    private fun register() {
-
-        viewModel.register(
-            binding.editTextUsername.text.toString(),
-            binding.editTextPassword.text.toString()
         )
     }
     //endregion

@@ -5,135 +5,134 @@
 
 package aragones.sergio.readercollection.viewholders
 
-import android.content.Context
 import android.view.View
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.adapters.OnItemClickListener
+import aragones.sergio.readercollection.databinding.ItemBookBinding
+import aragones.sergio.readercollection.databinding.ItemGoogleBookBinding
+import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
 import aragones.sergio.readercollection.extensions.getRoundImageView
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.item_book.view.*
-import kotlinx.android.synthetic.main.item_google_book.view.*
-import kotlinx.android.synthetic.main.item_reading_book.view.*
 
-class BooksViewHolder(
-    itemView: View
-) : RecyclerView.ViewHolder(itemView) {
+class BooksViewHolder(private val binding: ViewDataBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
     //region Public methods
-    fun fillReadingData(book: BookResponse) {
+    fun bind(book: BookResponse, onItemClickListener: OnItemClickListener) {
+        binding.apply {
+            when (this) {
 
-        val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val loading = itemView.progress_bar_reading_image_loading
-        loading.visibility = View.VISIBLE
-        Picasso
-            .get()
-            .load(image)
-            .fit()
-            .centerCrop()
-            .error(R.drawable.ic_default_book_cover)//TODO: change cover
-            .into(itemView.image_view_reading_book, object : Callback {
+                is ItemReadingBookBinding -> {
+                    this.book = book
+                    this.onItemClickListener = onItemClickListener
 
-                override fun onSuccess() {
-                    itemView.image_view_reading_book.apply {
-                        this.setImageDrawable(this.getRoundImageView(Constants.IMAGE_CORNER))
-                    }
-                    loading.visibility = View.GONE
+                    val image = book.thumbnail?.replace("http", "https") ?: "-"
+                    progressBarReadingImageLoading.visibility = View.VISIBLE
+                    Picasso
+                        .get()
+                        .load(image)
+                        .fit()
+                        .centerCrop()
+                        .error(R.drawable.ic_default_book_cover)//TODO: change cover
+                        .into(imageViewReadingBook, object : Callback {
+
+                            override fun onSuccess() {
+                                imageViewReadingBook.apply {
+                                    this.setImageDrawable(this.getRoundImageView(Constants.IMAGE_CORNER))
+                                }
+                                progressBarReadingImageLoading.visibility = View.GONE
+                            }
+
+                            override fun onError(e: Exception) {
+                                progressBarReadingImageLoading.visibility = View.GONE
+                            }
+                        })
+
+                    val authors = book.authors?.joinToString(separator = ", ") ?: ""
+                    textViewReadingBookAuthor.text = authors
+                    textViewReadingBookAuthor.visibility =
+                        if (authors.isBlank()) View.GONE else View.VISIBLE
+
                 }
 
-                override fun onError(e: Exception) {
-                    loading.visibility = View.GONE
-                }
-            })
+                is ItemGoogleBookBinding -> {
+                    this.book = book
+                    this.onItemClickListener = onItemClickListener
 
-        itemView.text_view_reading_book_title.text = book.title
+                    val image = book.thumbnail?.replace("http", "https") ?: "-"
+                    progressBarGoogleImageLoading.visibility = View.VISIBLE
+                    Picasso
+                        .get()
+                        .load(image)
+                        .fit()
+                        .centerCrop()
+                        .error(R.drawable.ic_default_book_cover)
+                        .into(imageViewGoogleBook, object : Callback {
 
-        val authors = book.authors?.joinToString(separator = ", ") ?: ""
-        itemView.text_view_reading_book_author.text = authors
-        itemView.text_view_reading_book_author.visibility =
-            if (authors.isBlank()) View.GONE else View.VISIBLE
-    }
+                            override fun onSuccess() {
+                                imageViewGoogleBook.apply {
+                                    this.setImageDrawable(this.getRoundImageView(Constants.IMAGE_CORNER))
+                                }
+                                progressBarGoogleImageLoading.visibility = View.GONE
+                            }
 
-    fun fillGoogleData(book: BookResponse, context: Context) {
+                            override fun onError(e: Exception) {
+                                progressBarGoogleImageLoading.visibility = View.GONE
+                            }
+                        })
 
-        val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val loading = itemView.progress_bar_google_image_loading
-        loading.visibility = View.VISIBLE
-        Picasso
-            .get()
-            .load(image)
-            .fit()
-            .centerCrop()
-            .error(R.drawable.ic_default_book_cover)
-            .into(itemView.image_view_google_book, object : Callback {
+                    val authors = book.authors?.joinToString(separator = ", ") ?: ""
+                    textViewGoogleBookAuthor.text =
+                        binding.root.context.resources.getString(R.string.authors_text, authors)
+                    textViewGoogleBookAuthor.visibility =
+                        if (authors.isBlank()) View.GONE else View.VISIBLE
 
-                override fun onSuccess() {
-                    itemView.image_view_google_book.apply {
-                        this.setImageDrawable(this.getRoundImageView(Constants.IMAGE_CORNER))
-                    }
-                    loading.visibility = View.GONE
-                }
+                    val rating = book.averageRating
+                    ratingBarGoogleBook.rating = rating.toFloat() / 2
+                    textViewGoogleBookRating.text = rating.toInt().toString()
 
-                override fun onError(e: Exception) {
-                    loading.visibility = View.GONE
-                }
-            })
-
-        itemView.text_view_google_book_title.text = book.title
-
-        val authors = book.authors?.joinToString(separator = ", ") ?: ""
-        itemView.text_view_google_book_author.text =
-            context.resources.getString(R.string.authors_text, authors)
-        itemView.text_view_google_book_author.visibility =
-            if (authors.isBlank()) View.GONE else View.VISIBLE
-
-        val publisher = book.publisher ?: ""
-        itemView.text_view_google_book_publisher.text =
-            context.resources.getString(R.string.publisher_text, publisher)
-        itemView.text_view_google_book_publisher.visibility =
-            if (publisher.isBlank()) View.GONE else View.VISIBLE
-
-        val rating = book.averageRating
-        itemView.rating_bar_google_book.rating = rating.toFloat() / 2
-        itemView.text_view_google_book_rating.text = rating.toInt().toString()
-        itemView.linear_layout_google_book_rating.visibility =
-            if (rating > 0) View.VISIBLE else View.GONE
-        itemView.text_view_google_book_new.visibility = if (rating > 0) View.GONE else View.VISIBLE
-    }
-
-    fun fillData(book: BookResponse) {
-
-        val image = book.thumbnail?.replace("http", "https") ?: "-"
-        val loading = itemView.progress_bar_image_loading
-        loading.visibility = View.VISIBLE
-        Picasso
-            .get()
-            .load(image)
-            .fit()
-            .centerCrop()
-            .error(R.drawable.ic_default_book_cover)
-            .into(itemView.image_view_book, object : Callback {
-
-                override fun onSuccess() {
-                    itemView.image_view_book.apply {
-                        this.setImageDrawable(this.getRoundImageView(Constants.IMAGE_CORNER))
-                    }
-                    loading.visibility = View.GONE
                 }
 
-                override fun onError(e: Exception) {
-                    loading.visibility = View.GONE
+                is ItemBookBinding -> {
+                    this.book = book
+                    this.onItemClickListener = onItemClickListener
+
+                    val image = book.thumbnail?.replace("http", "https") ?: "-"
+                    progressBarImageLoading.visibility = View.VISIBLE
+                    Picasso
+                        .get()
+                        .load(image)
+                        .fit()
+                        .centerCrop()
+                        .error(R.drawable.ic_default_book_cover)
+                        .into(imageViewBook, object : Callback {
+
+                            override fun onSuccess() {
+                                imageViewBook.apply {
+                                    this.setImageDrawable(this.getRoundImageView(Constants.IMAGE_CORNER))
+                                }
+                                progressBarImageLoading.visibility = View.GONE
+                            }
+
+                            override fun onError(e: Exception) {
+                                progressBarImageLoading.visibility = View.GONE
+                            }
+                        })
+
+                    val authors = book.authors?.joinToString(separator = ", ") ?: ""
+                    textViewAuthor.text = authors
+                    textViewAuthor.visibility =
+                        if (authors.isBlank()) View.GONE else View.VISIBLE
+
                 }
-            })
-
-        itemView.text_view_title.text = book.title
-
-        val authors = book.authors?.joinToString(separator = ", ") ?: ""
-        itemView.text_view_author.text = authors
-        itemView.text_view_author.visibility =
-            if (authors.isBlank()) View.GONE else View.VISIBLE
+                else -> Unit
+            }
+        }
     }
     //endregion
 }

@@ -10,6 +10,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
+    <data>
+
+        <import
+            type="android.view.View"
+            />
+
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.BooksViewModel"
+            />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -178,11 +191,12 @@
                     android:id="@+id/content_view_no_results"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintWidth_percent="0.7"
+                    android:visibility="@{viewModel.books.empty ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_view_books"
+                    app:layout_constraintWidth_percent="0.7"
                     layout="@layout/content_no_results"
                     />
 

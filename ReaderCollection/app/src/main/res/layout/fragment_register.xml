@@ -10,6 +10,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
+    <data>
+
+        <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.RegisterFragment"
+            />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -125,6 +134,7 @@
             android:layout_marginBottom="@dimen/margin_12dp"
             android:enabled="false"
             android:text="@string/sign_up"
+            android:onClick="@{() -> fragment.register()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

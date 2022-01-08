@@ -20,6 +20,10 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
+enum class ScrollPosition {
+    TOP, MIDDLE, END
+}
+
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val googleBookRepository: GoogleBookRepository
@@ -27,10 +31,11 @@ class SearchViewModel @Inject constructor(
 
     //region Private properties
     private var page: Int = 1
-    private val _books = MutableLiveData<MutableList<BookResponse>>()
+    private val _books = MutableLiveData<MutableList<BookResponse>>(mutableListOf())
     private val _searchLoading = MutableLiveData<Boolean>()
     private val _bookAdded = MutableLiveData<Int?>()
     private val _searchError = MutableLiveData<ErrorResponse>()
+    private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
     //endregion
 
     //region Public properties
@@ -39,6 +44,7 @@ class SearchViewModel @Inject constructor(
     val searchLoading: LiveData<Boolean> = _searchLoading
     val bookAdded: LiveData<Int?> = _bookAdded
     val searchError: LiveData<ErrorResponse> = _searchError
+    val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     //endregion
 
     //region Public methods
@@ -104,6 +110,10 @@ class SearchViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
+    }
+
+    fun setPosition(newPosition: ScrollPosition) {
+        _scrollPosition.value = newPosition
     }
     //endregion
 }

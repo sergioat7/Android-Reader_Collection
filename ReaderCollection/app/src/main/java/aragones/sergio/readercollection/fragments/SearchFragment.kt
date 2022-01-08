@@ -16,7 +16,6 @@ import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.BookDetailActivity
@@ -27,6 +26,7 @@ import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
+import aragones.sergio.readercollection.viewmodels.ScrollPosition
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import kotlin.math.max
 
@@ -73,6 +73,14 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         inflater.inflate(R.menu.search_toolbar_menu, menu)
         setupSearchView(menu)
     }
+
+    fun goToStartEndList(view: View) {
+
+        when (view) {
+            binding.floatingActionButtonStartList -> viewModel.setPosition(ScrollPosition.TOP)
+            binding.floatingActionButtonEndList -> viewModel.setPosition(ScrollPosition.END)
+        }
+    }
     //endregion
 
     //region Private methods
@@ -86,7 +94,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         booksAdapter = BooksAdapter(
             viewModel.books.value ?: mutableListOf(),
             true,
-            requireContext(),
             this
         )
         setupBindings()
@@ -95,57 +102,40 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
             swipeRefreshLayoutBooks.setOnRefreshListener {
 
-                viewModel.reloadData()
-                viewModel.searchBooks()
+                this@SearchFragment.viewModel.reloadData()
+                this@SearchFragment.viewModel.searchBooks()
             }
-            recyclerViewBooks.layoutManager = LinearLayoutManager(requireContext())
             recyclerViewBooks.adapter = booksAdapter
             recyclerViewBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     super.onScrollStateChanged(recyclerView, newState)
 
-                    floatingActionButtonStartList.visibility =
-                        if (!recyclerView.canScrollVertically(-1)
-                            && newState == RecyclerView.SCROLL_STATE_IDLE
-                        ) {
-                            View.GONE
+                    val position =
+                        if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ScrollPosition.TOP
+                        } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ScrollPosition.END
                         } else {
-                            View.VISIBLE
+                            ScrollPosition.MIDDLE
                         }
-
-                    floatingActionButtonEndList.visibility =
-                        if (!recyclerView.canScrollVertically(1)
-                            && newState == RecyclerView.SCROLL_STATE_IDLE
-                        ) {
-                            View.GONE
-                        } else {
-                            View.VISIBLE
-                        }
+                    this@SearchFragment.viewModel.setPosition(position)
                 }
             })
             ItemTouchHelper(SwipeController()).attachToRecyclerView(recyclerViewBooks)
 
-            floatingActionButtonStartList.visibility = View.GONE
-            floatingActionButtonStartList.setOnClickListener {
-
-                recyclerViewBooks.scrollToPosition(0)
-                floatingActionButtonStartList.visibility = View.GONE
-                floatingActionButtonEndList.visibility = View.VISIBLE
+            if (this@SearchFragment.viewModel.query.isNotBlank()) {
+                setTitle(
+                    resources.getString(
+                        R.string.query_title,
+                        this@SearchFragment.viewModel.query
+                    )
+                )
             }
 
-            floatingActionButtonEndList.visibility = View.GONE
-            floatingActionButtonEndList.setOnClickListener {
-
-                val position: Int = booksAdapter.itemCount - 1
-                recyclerViewBooks.scrollToPosition(position)
-                floatingActionButtonStartList.visibility = View.VISIBLE
-                floatingActionButtonEndList.visibility = View.GONE
-            }
-
-            if (viewModel.query.isNotBlank()) {
-                setTitle(resources.getString(R.string.query_title, viewModel.query))
-            }
+            fragment = this@SearchFragment
+            viewModel = this@SearchFragment.viewModel
+            lifecycleOwner = this@SearchFragment
         }
     }
 
@@ -154,14 +144,13 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
             if (booksResponse.isEmpty()) {
-
                 booksAdapter.resetList()
-                binding.imageViewNoResults.root.visibility = View.VISIBLE
             } else {
-
+                viewModel.setPosition(
+                    if (booksAdapter.itemCount == 0) ScrollPosition.TOP
+                    else ScrollPosition.MIDDLE
+                )
                 booksAdapter.setBooks(booksResponse)
-                binding.imageViewNoResults.root.visibility = View.GONE
-                binding.floatingActionButtonEndList.visibility = View.VISIBLE
             }
         })
 
@@ -179,6 +168,15 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
         viewModel.searchError.observe(viewLifecycleOwner, { error ->
             manageError(error)
+        })
+
+        viewModel.scrollPosition.observe(viewLifecycleOwner, {
+            when (it) {
+
+                ScrollPosition.TOP -> binding.recyclerViewBooks.scrollToPosition(0)
+                ScrollPosition.END -> binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
+                else -> Unit
+            }
         })
     }
 

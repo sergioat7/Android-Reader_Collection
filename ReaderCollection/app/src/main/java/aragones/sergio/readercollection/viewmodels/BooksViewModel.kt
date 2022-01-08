@@ -70,7 +70,7 @@ class BooksViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun getBooks() {
+    fun fetchBooks() {
 
         _booksLoading.value = true
         booksRepository.getBooksDatabaseObserver(
@@ -136,7 +136,7 @@ class BooksViewModel @Inject constructor(
                 val sort = sortingKeys[sortKeysPicker.value]
                 sortParam = if (sort.isNotBlank()) sort else null
                 isSortDescending = sortOrdersPicker.value == 1
-                getBooks()
+                fetchBooks()
                 dialog.dismiss()
             }
             .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->

@@ -75,7 +75,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     override fun onResume() {
         super.onResume()
 
-        if (this::viewModel.isInitialized) viewModel.getBooks()
+        if (this::viewModel.isInitialized) viewModel.fetchBooks()
         this.searchView?.clearFocus()
     }
 
@@ -114,14 +114,12 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
                 ?: mutableListOf(),
             false,
-            requireContext(),
             this
         )
         pendingBooksAdapter = BooksAdapter(
             viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
                 ?: mutableListOf(),
             false,
-            requireContext(),
             this
         )
         booksAdapter = BooksAdapter(
@@ -129,7 +127,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 it.state != State.READING && it.state != State.PENDING
             }?.toMutableList() ?: mutableListOf(),
             false,
-            requireContext(),
             this
         )
         setupBindings()
@@ -164,6 +161,9 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 false
             )
             recyclerViewBooks.adapter = booksAdapter
+
+            viewModel = this@BooksFragment.viewModel
+            lifecycleOwner = this@BooksFragment
         }
         setupSearchView()
     }
@@ -172,13 +172,17 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
 
-            setTitle(booksResponse.size)
+            setSubtitle(
+                resources.getQuantityString(
+                    R.plurals.title_books_count,
+                    booksResponse.size,
+                    booksResponse.size
+                )
+            )
             if (booksResponse.isEmpty()) {
                 binding.imageViewNoReadingResults.visibility = View.GONE
                 binding.viewSeparatorReadingPending.visibility = View.GONE
             }
-            binding.contentViewNoResults.root.visibility =
-                if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
         })
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
@@ -232,16 +236,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
-    }
-
-    private fun setTitle(booksCount: Int) {
-        setSubtitle(
-            resources.getQuantityString(
-                R.plurals.title_books_count,
-                booksCount,
-                booksCount
-            )
-        )
     }
 
     private fun setupSearchView() {

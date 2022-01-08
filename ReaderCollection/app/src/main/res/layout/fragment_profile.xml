@@ -10,6 +10,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     >
 
+    <data>
+
+        <import
+            type="aragones.sergio.readercollection.utils.Preferences"
+            />
+
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.ProfileViewModel"
+            />
+
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -40,6 +53,7 @@
                     android:layout_marginEnd="@dimen/margin_24dp"
                     android:hint="@string/username"
                     android:inputType="text"
+                    android:text="@{viewModel.userData.username}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -67,6 +81,7 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     android:hint="@string/password"
                     android:inputType="textPassword"
+                    android:text="@{viewModel.userData.password}"
                     app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
                     app:layout_constraintStart_toStartOf="@+id/edit_text_username"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_username"
@@ -115,6 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:checked="@{viewModel.language == Preferences.ENGLISH_LANGUAGE_KEY}"
                         android:text="@string/english"
                         style="@style/Widget.ReaderCollection.RadioButton"
                         />
@@ -124,6 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:checked="@{viewModel.language == Preferences.SPANISH_LANGUAGE_KEY}"
                         android:text="@string/spanish"
                         style="@style/Widget.ReaderCollection.RadioButton"
                         />

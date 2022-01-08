@@ -8,10 +8,13 @@ package aragones.sergio.readercollection.adapters
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.databinding.ItemBookBinding
+import aragones.sergio.readercollection.databinding.ItemGoogleBookBinding
+import aragones.sergio.readercollection.databinding.ItemLoadMoreItemsBinding
+import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
@@ -21,7 +24,6 @@ import java.util.*
 class BooksAdapter(
     private var books: MutableList<BookResponse>,
     private val isGoogleBook: Boolean,
-    private val context: Context,
     private var onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
 
@@ -39,16 +41,43 @@ class BooksAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
 
-        val itemView: View = LayoutInflater.from(parent.context).inflate(
-            viewType,
-            parent,
-            false
-        )
         return when (viewType) {
-            R.layout.item_reading_book, R.layout.item_google_book, R.layout.item_book -> BooksViewHolder(
-                itemView
-            )
-            else -> LoadMoreItemsViewHolder(itemView)
+            R.layout.item_reading_book -> {
+                BooksViewHolder(
+                    ItemReadingBookBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
+            R.layout.item_google_book -> {
+                BooksViewHolder(
+                    ItemGoogleBookBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
+            R.layout.item_book -> {
+                BooksViewHolder(
+                    ItemBookBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
+            else -> {
+                LoadMoreItemsViewHolder(
+                    ItemLoadMoreItemsBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
         }
     }
 
@@ -58,19 +87,9 @@ class BooksAdapter(
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
-        if (holder is BooksViewHolder) {
-            val book = books[position]
-            when {
-                book.state == State.READING -> holder.fillReadingData(book)
-                isGoogleBook -> holder.fillGoogleData(book, context)
-                else -> holder.fillData(book)
-            }
-
-            holder.itemView.setOnClickListener {
-                onItemClickListener.onItemClick(book.id)
-            }
-        } else {
-            (holder as LoadMoreItemsViewHolder).setItem(onItemClickListener)
+        when (holder) {
+            is BooksViewHolder -> holder.bind(books[position], onItemClickListener)
+            else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
     }
     //endregion
