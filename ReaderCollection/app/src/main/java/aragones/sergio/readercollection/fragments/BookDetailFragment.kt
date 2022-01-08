@@ -304,12 +304,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     }
                 })
 
-            val authors = book.authors?.joinToString(separator = ", ") ?: ""
-            editTextAuthor.setText(
-                if (authors.isNotBlank()) resources.getString(R.string.authors_text, authors)
-                else Constants.NO_VALUE
-            )
-
             linearLayoutCategories.removeAllViews()
             book.categories?.let { categories ->
                 for (category in categories) {
@@ -391,9 +385,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private fun getBookData(): BookResponse {
         with(binding) {
 
-            val prefix = resources.getString(R.string.authors_text).split(" ")[0]
-            val authorsValue = editTextAuthor.getValue().removePrefix(prefix)
-            val authors = authorsValue.toList<String>().map {
+            val authors = editTextAuthor.getValue().toList<String>().map {
                 it.trimStart().trimEnd()
             }
             val publishedDate = editTextPublishedDate.text.toString().toDate(

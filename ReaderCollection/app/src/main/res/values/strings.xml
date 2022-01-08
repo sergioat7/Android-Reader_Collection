@@ -42,7 +42,6 @@
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
     <string name="add_author">Add the author(s)</string>
-    <string name="authors_text">By %s</string>
     <string name="description">Description</string>
     <string name="add_description">Add a description</string>
     <string name="read_more">Read more</string>
