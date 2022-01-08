@@ -584,6 +584,7 @@
                         android:layout_weight="1"
                         android:enabled="@{editable}"
                         android:hint="@string/select_a_date"
+                        android:text='@{!book.publishedDateAsHumanReadable().equals("") ? book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails.Date"
                         />
 
@@ -627,6 +628,7 @@
                         android:layout_height="wrap_content"
                         android:enabled="@{editable}"
                         android:hint="@string/select_a_date"
+                        android:text='@{!book.readingDateAsHumanReadable().equals("") ? book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails.Date"
                         />
 
