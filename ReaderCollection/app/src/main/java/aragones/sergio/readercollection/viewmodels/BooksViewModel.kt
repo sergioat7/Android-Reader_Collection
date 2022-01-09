@@ -13,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.extensions.getPickerParams
 import aragones.sergio.readercollection.extensions.setup
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -24,7 +25,6 @@ import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.base.BaseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
