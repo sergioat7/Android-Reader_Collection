@@ -66,6 +66,11 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                     resources.getStringArray(R.array.sorting_keys_ids),
                     resources.getStringArray(R.array.sorting_keys)
                 )
+                binding.apply {
+                    recyclerViewReadingBooks.scrollToPosition(0)
+                    recyclerViewPendingBooks.scrollToPosition(0)
+                    recyclerViewBooks.scrollToPosition(0)
+                }
                 return true
             }
         }
@@ -189,7 +194,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(booksResponse.toMutableList())
-            binding.recyclerViewReadingBooks.scrollToPosition(0)
             val hideReadingSection =
                 (booksResponse.isEmpty() && viewModel.query.isNotBlank()) || viewModel.books.value?.isEmpty() == true
             binding.recyclerViewReadingBooks.visibility =
@@ -204,7 +208,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(booksResponse.toMutableList())
-            binding.recyclerViewPendingBooks.scrollToPosition(0)
             binding.textViewPendingBooks.visibility =
                 if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
             binding.recyclerViewPendingBooks.visibility =
@@ -217,7 +220,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
             booksAdapter.resetList()
             booksAdapter.setBooks(booksResponse.toMutableList())
-            binding.recyclerViewBooks.scrollToPosition(0)
             binding.textViewReadBooks.visibility =
                 if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
             binding.recyclerViewBooks.visibility =
@@ -249,6 +251,11 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 override fun onQueryTextChange(newText: String): Boolean {
 
                     viewModel.searchBooks(newText)
+                    binding.apply {
+                        recyclerViewReadingBooks.scrollToPosition(0)
+                        recyclerViewPendingBooks.scrollToPosition(0)
+                        recyclerViewBooks.scrollToPosition(0)
+                    }
                     return true
                 }
 
