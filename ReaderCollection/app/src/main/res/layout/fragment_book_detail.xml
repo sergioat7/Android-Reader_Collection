@@ -130,45 +130,44 @@
                     style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
                     />
 
-                <LinearLayout
-                    android:id="@+id/linear_layout_rating"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_30dp"
                     android:layout_marginTop="@dimen/margin_24dp"
-                    android:orientation="horizontal"
+                    android:isIndicator="@{!editable}"
                     android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
-                    >
+                    rating="@{viewModel.isGoogleBook ? viewModel.book.averageRating / 2 : viewModel.book.rating / 2}"
+                    style="@style/Widget.ReaderCollection.RatingBar"
+                    />
 
-                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                        android:id="@+id/rating_bar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/size_30dp"
-                        android:isIndicator="@{!editable}"
-                        rating="@{viewModel.isGoogleBook ? viewModel.book.averageRating / 2 : viewModel.book.rating / 2}"
-                        style="@style/Widget.ReaderCollection.RatingBar"
-                        />
+                <ImageView
+                    android:id="@+id/image_view_rating_count"
+                    android:layout_width="@dimen/size_20dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="@dimen/margin_12dp"
+                    android:src="@drawable/ic_person"
+                    android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@id/rating_bar"
+                    app:layout_constraintStart_toEndOf="@id/rating_bar"
+                    app:layout_constraintTop_toTopOf="@id/rating_bar"
+                    />
 
-                    <ImageView
-                        android:layout_width="@dimen/size_20dp"
-                        android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/margin_12dp"
-                        android:src="@drawable/ic_person"
-                        />
-
-                    <TextView
-                        android:id="@+id/text_view_rating_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:text="@{String.valueOf(viewModel.book.ratingsCount)}"
-                        tools:text="18"
-                        style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
-                        />
-
-                </LinearLayout>
+                <TextView
+                    android:id="@+id/text_view_rating_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:gravity="center_vertical"
+                    android:text="@{String.valueOf(viewModel.book.ratingsCount)}"
+                    android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="@id/rating_bar"
+                    app:layout_constraintStart_toEndOf="@id/image_view_rating_count"
+                    app:layout_constraintTop_toTopOf="@id/rating_bar"
+                    tools:text="18"
+                    style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
+                    />
 
                 <EditText
                     android:id="@+id/edit_text_title"
@@ -179,7 +178,7 @@
                     android:text='@{!viewModel.book.title.equals("") ? viewModel.book.title : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
+                    app:layout_constraintTop_toBottomOf="@+id/rating_bar"
                     style="@style/BookTitleEditText"
                     />
 
@@ -226,7 +225,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view_categories"
-                    style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
                     />
 
                 <EditText
@@ -260,366 +259,319 @@
                     android:layout_height="wrap_content"
                     android:text="@{@string/book_text_count(viewModel.book.description.length())}"
                     android:textColor="@color/colorPrimary"
-                    app:layout_constraintEnd_toEndOf="@+id/edit_text_description"
-                    app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_read_more_description"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/button_read_more_description"
                     tools:text="128/10240"
                     style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                     />
 
-                <LinearLayout
-                    android:id="@+id/linear_layout_summary"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/text_view_summary_title"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_32dp"
-                    android:orientation="vertical"
+                    android:text="@string/summary"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/button_read_more_description"
-                    >
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/summary"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
+                <EditText
+                    android:id="@+id/edit_text_summary"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/add_summary"
+                    android:inputType="textMultiLine"
+                    android:maxLength="10240"
+                    android:text='@{!viewModel.book.summary.equals("") ? viewModel.book.summary : editable ? null : Constants.NO_VALUE}'
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_summary_title"
+                    style="@style/BookDetailEditText"
+                    />
 
-                    <EditText
-                        android:id="@+id/edit_text_summary"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="@string/add_summary"
-                        android:inputType="textMultiLine"
-                        android:maxLength="10240"
-                        android:text='@{!viewModel.book.summary.equals("") ? viewModel.book.summary : editable ? null : Constants.NO_VALUE}'
-                        style="@style/BookDetailEditText"
-                        />
+                <Button
+                    android:id="@+id/button_read_more_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{fragment.readMore}"
+                    android:text="@string/read_more"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/edit_text_summary"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+                    />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        >
+                <TextView
+                    android:id="@+id/text_view_summary_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{@string/book_text_count(viewModel.book.summary.length())}"
+                    android:textColor="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_read_more_summary"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/button_read_more_summary"
+                    tools:text="128/10240"
+                    style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
+                    />
 
-                        <Button
-                            android:id="@+id/button_read_more_summary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:onClick="@{fragment.readMore}"
-                            android:text="@string/read_more"
-                            style="@style/Widget.ReaderCollection.TextButton.Main.Action"
-                            />
-
-                        <TextView
-                            android:id="@+id/text_view_summary_count"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="end"
-                            android:text="@{@string/book_text_count(viewModel.book.summary.length())}"
-                            tools:text="128/10240"
-                            style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
-                            />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_titles_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/text_view_format_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_32dp"
-                    android:orientation="horizontal"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    android:text="@string/format"
+                    app:layout_constraintEnd_toStartOf="@+id/text_view_state_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_state_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:text="@string/state"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/text_view_format_title"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
+
+                <Spinner
+                    android:id="@+id/spinner_formats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    app:layout_constraintBottom_toBottomOf="@id/barrier1"
+                    app:layout_constraintEnd_toStartOf="@id/spinner_states"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_format_title"
+                    app:layout_constraintVertical_bias="1.0"
+                    isEnabled="@{editable}"
+                    backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
+                    style="@style/Widget.ReaderCollection.Spinner"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_formats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_20dp"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:visibility="@{viewModel.bookDetailFormatsLoading ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinner_formats"
+                    app:layout_constraintEnd_toEndOf="@+id/spinner_formats"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_formats"
+                    app:layout_constraintTop_toTopOf="@+id/spinner_formats"
+                    />
+
+                <Spinner
+                    android:id="@+id/spinner_states"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    app:layout_constraintBottom_toBottomOf="@id/barrier1"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/spinner_formats"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_state_title"
+                    app:layout_constraintVertical_bias="1.0"
+                    isEnabled="@{editable}"
+                    backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
+                    style="@style/Widget.ReaderCollection.Spinner"
+                    />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_states"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_20dp"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:visibility="@{viewModel.bookDetailStatesLoading ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinner_states"
+                    app:layout_constraintEnd_toEndOf="@+id/spinner_states"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_states"
+                    app:layout_constraintTop_toTopOf="@+id/spinner_states"
+                    />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier1"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_summary"
-                    >
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="spinner_formats, spinner_states"
+                    />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:text="@string/format"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:text="@string/state"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_values_1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_1"
-                    android:baselineAligned="false"
-                    >
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        >
-
-                        <Spinner
-                            android:id="@+id/spinner_formats"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/margin_5dp"
-                            android:layout_weight="1"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            isEnabled="@{editable}"
-                            backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                            style="@style/Widget.ReaderCollection.Spinner"
-                            />
-
-                        <ProgressBar
-                            android:id="@+id/progress_bar_loading_formats"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/size_20dp"
-                            android:layout_weight="1"
-                            android:indeterminateTint="@color/colorPrimary"
-                            android:visibility="@{viewModel.bookDetailFormatsLoading ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        >
-
-                        <Spinner
-                            android:id="@+id/spinner_states"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/margin_5dp"
-                            android:layout_weight="1"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            isEnabled="@{editable}"
-                            backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                            style="@style/Widget.ReaderCollection.Spinner"
-                            />
-
-                        <ProgressBar
-                            android:id="@+id/progress_bar_loading_states"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/size_20dp"
-                            android:layout_weight="1"
-                            android:indeterminateTint="@color/colorPrimary"
-                            android:visibility="@{viewModel.bookDetailStatesLoading ? View.VISIBLE : View.GONE}"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_titles_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/text_view_isbn_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    android:text="@string/isbn"
+                    app:layout_constraintEnd_toStartOf="@+id/text_view_pages_title"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_1"
-                    >
+                    app:layout_constraintTop_toBottomOf="@+id/barrier1"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:text="@string/isbn"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/pages"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_values_2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_2"
-                    >
-
-                    <EditText
-                        android:id="@+id/edit_text_isbn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:hint="@string/add_isbn"
-                        android:inputType="number"
-                        android:text='@{!viewModel.book.isbn.equals("") ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
-                        style="@style/CustomEditText.BookDetails"
-                        />
-
-                    <EditText
-                        android:id="@+id/edit_text_page_count"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:hint="@string/add_pages"
-                        android:inputType="number"
-                        android:text="@{viewModel.book.pageCount > 0 ? String.valueOf(viewModel.book.pageCount) : editable ? null : Constants.NO_VALUE}"
-                        style="@style/CustomEditText.BookDetails"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_titles_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/text_view_pages_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
-                    android:orientation="horizontal"
+                    android:text="@string/pages"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/text_view_isbn_title"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier1"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_text_isbn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    android:layout_weight="1"
+                    android:hint="@string/add_isbn"
+                    android:inputType="number"
+                    android:text='@{!viewModel.book.isbn.equals("") ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
+                    app:layout_constraintBottom_toBottomOf="@id/barrier2"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_text_page_count"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_isbn_title"
+                    app:layout_constraintVertical_bias="1.0"
+                    style="@style/CustomEditText.BookDetails"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_text_page_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:layout_weight="1"
+                    android:hint="@string/add_pages"
+                    android:inputType="number"
+                    android:text="@{viewModel.book.pageCount > 0 ? String.valueOf(viewModel.book.pageCount) : editable ? null : Constants.NO_VALUE}"
+                    app:layout_constraintBottom_toBottomOf="@id/barrier2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/edit_text_isbn"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_pages_title"
+                    app:layout_constraintVertical_bias="1.0"
+                    style="@style/CustomEditText.BookDetails"
+                    />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier2"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_2"
-                    >
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="edit_text_isbn, edit_text_page_count"
+                    />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:text="@string/publisher"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/published_date"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_values_3"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_3"
-                    app:layout_constraintVertical_bias="0.0"
-                    >
-
-                    <EditText
-                        android:id="@+id/edit_text_publisher"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:hint="@string/add_publisher"
-                        android:inputType="textMultiLine"
-                        android:text='@{!viewModel.book.publisher.equals("") ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
-                        style="@style/CustomEditText.BookDetails"
-                        />
-
-                    <EditText
-                        android:id="@+id/edit_text_published_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/margin_5dp"
-                        android:layout_weight="1"
-                        android:backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                        android:enabled="@{editable}"
-                        android:hint="@string/select_a_date"
-                        android:text='@{!viewModel.book.publishedDateAsHumanReadable().equals("") ? viewModel.book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
-                        style="@style/CustomEditText.BookDetails.Date"
-                        />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_titles_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/text_view_publisher_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
-                    android:orientation="horizontal"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    android:text="@string/publisher"
+                    app:layout_constraintEnd_toStartOf="@+id/text_view_published_date_title"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier2"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_published_date_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:text="@string/published_date"
+                    app:layout_constraintStart_toEndOf="@+id/text_view_publisher_title"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier2"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_text_publisher"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    android:hint="@string/add_publisher"
+                    android:inputType="textMultiLine"
+                    android:text='@{!viewModel.book.publisher.equals("") ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
+                    app:layout_constraintBottom_toBottomOf="@id/barrier3"
+                    app:layout_constraintEnd_toStartOf="@+id/edit_text_published_date"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_publisher_title"
+                    app:layout_constraintVertical_bias="1.0"
+                    style="@style/CustomEditText.BookDetails"
+                    />
+
+                <EditText
+                    android:id="@+id/edit_text_published_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
+                    android:enabled="@{editable}"
+                    android:hint="@string/select_a_date"
+                    android:text='@{!viewModel.book.publishedDateAsHumanReadable().equals("") ? viewModel.book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:layout_constraintBottom_toBottomOf="@id/barrier3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/edit_text_publisher"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_published_date_title"
+                    app:layout_constraintVertical_bias="1.0"
+                    style="@style/CustomEditText.BookDetails.Date"
+                    />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier3"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_values_3"
-                    >
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="edit_text_publisher, edit_text_published_date"
+                    />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/reading_date"
-                        style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
-                        />
+                <TextView
+                    android:id="@+id/text_view_reading_date_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:text="@string/reading_date"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier3"
+                    style="@style/Widget.ReaderCollection.TextView.Header"
+                    />
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/linear_layout_values_4"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <EditText
+                    android:id="@+id/edit_text_reading_date"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_32dp"
-                    android:orientation="horizontal"
+                    android:backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
+                    android:enabled="@{editable}"
+                    android:hint="@string/select_a_date"
+                    android:text='@{!viewModel.book.readingDateAsHumanReadable().equals("") ? viewModel.book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linear_layout_titles_4"
-                    >
-
-                    <EditText
-                        android:id="@+id/edit_text_reading_date"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                        android:enabled="@{editable}"
-                        android:hint="@string/select_a_date"
-                        android:text='@{!viewModel.book.readingDateAsHumanReadable().equals("") ? viewModel.book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
-                        style="@style/CustomEditText.BookDetails.Date"
-                        />
-
-                </LinearLayout>
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_reading_date_title"
+                    style="@style/CustomEditText.BookDetails.Date"
+                    />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -7,6 +7,7 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +22,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            tools:text="Header"
             style="@style/Widget.ReaderCollection.TextView.Spinner.Header"
             />
 
@@ -43,6 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:maxLines="1"
+                tools:text="Value"
                 style="@style/Widget.ReaderCollection.TextView.Spinner"
                 />
 
