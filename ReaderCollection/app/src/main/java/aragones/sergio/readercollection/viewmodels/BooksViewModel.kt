@@ -49,14 +49,30 @@ class BooksViewModel @Inject constructor(
     //region Public properties
     var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
-    val readingBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state == State.READING } }
-    val pendingBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state == State.PENDING } }
-    val readBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state != State.READING && book.state != State.PENDING } }
+    val readingBooks: LiveData<List<BookResponse>> = _books.map {
+        it.filter { book -> book.state == State.READING }
+    }
+    val pendingBooks: LiveData<List<BookResponse>> = _books.map {
+        it.filter { book -> book.state == State.PENDING }
+    }
+    val readBooks: LiveData<List<BookResponse>> = _books.map {
+        it.filter { book -> book.state != State.READING && book.state != State.PENDING }
+    }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
+
+    val readingBooksVisible: LiveData<Boolean> = readingBooks.map {
+        !((it.isEmpty() && query.isNotBlank()) || books.value?.isEmpty() == true)
+    }
+    val pendingBooksVisible: LiveData<Boolean> = pendingBooks.map {
+        it.isNotEmpty()
+    }
+    val readBooksVisible: LiveData<Boolean> = readBooks.map {
+        it.isNotEmpty()
+    }
+    val noResultsVisible: LiveData<Boolean> = _books.map {
+        it.isEmpty()
+    }
     //endregion
 
     //region Lifecycle methods

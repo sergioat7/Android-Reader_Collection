@@ -187,46 +187,24 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                     booksResponse.size
                 )
             )
-            if (booksResponse.isEmpty()) {
-                binding.imageViewNoReadingResults.visibility = View.GONE
-                binding.viewSeparatorReadingPending.visibility = View.GONE
-            }
         })
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             readingBooksAdapter.resetList()
             readingBooksAdapter.setBooks(booksResponse.toMutableList())
-            val hideReadingSection =
-                (booksResponse.isEmpty() && viewModel.query.isNotBlank()) || viewModel.books.value?.isEmpty() == true
-            binding.recyclerViewReadingBooks.visibility =
-                if (hideReadingSection) View.GONE else View.VISIBLE
-            binding.imageViewNoReadingResults.visibility =
-                if (hideReadingSection || booksResponse.isNotEmpty()) View.GONE else View.VISIBLE
-            binding.viewSeparatorReadingPending.visibility =
-                if (hideReadingSection) View.GONE else View.VISIBLE
         })
 
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(booksResponse.toMutableList())
-            binding.textViewPendingBooks.visibility =
-                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            binding.recyclerViewPendingBooks.visibility =
-                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            binding.viewSeparatorPendingRead.visibility =
-                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             booksAdapter.resetList()
             booksAdapter.setBooks(booksResponse.toMutableList())
-            binding.textViewReadBooks.visibility =
-                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
-            binding.recyclerViewBooks.visibility =
-                if (booksResponse.isEmpty()) View.GONE else View.VISIBLE
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
