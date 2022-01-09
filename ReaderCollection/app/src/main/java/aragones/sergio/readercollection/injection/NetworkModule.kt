@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 2/1/2022
  */
 
-package aragones.sergio.readercollection.injection.modules
+package aragones.sergio.readercollection.injection
 
 import aragones.sergio.readercollection.network.*
 import dagger.Module
@@ -11,6 +11,7 @@ import dagger.Provides
 
 @Module
 class NetworkModule {
+
     @Provides
     fun providesBookApiService(): BookApiService = ApiManager.getService(
         ApiManager.BASE_ENDPOINT
