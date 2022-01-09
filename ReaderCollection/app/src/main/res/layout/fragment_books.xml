@@ -17,6 +17,11 @@
             />
 
         <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.BooksFragment"
+            />
+
+        <variable
             name="viewModel"
             type="aragones.sergio.readercollection.viewmodels.BooksViewModel"
             />
@@ -114,6 +119,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_24dp"
+                    android:onClick="@{fragment::seeMoreBooks}"
                     android:text="@string/see_more"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
@@ -166,6 +172,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/margin_24dp"
+                    android:onClick="@{fragment::seeMoreBooks}"
                     android:text="@string/see_more"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"

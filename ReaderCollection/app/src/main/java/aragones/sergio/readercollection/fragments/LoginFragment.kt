@@ -87,15 +87,11 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
             val loginState = it ?: return@observe
 
-            with(binding) {
-                buttonLogin.isEnabled = loginState.isDataValid
-
-                if (loginState.usernameError != null) {
-                    editTextUsername.error = getString(loginState.usernameError)
-                }
-                if (loginState.passwordError != null) {
-                    editTextPassword.error = getString(loginState.passwordError)
-                }
+            if (loginState.usernameError != null) {
+                binding.editTextUsername.error = getString(loginState.usernameError)
+            }
+            if (loginState.passwordError != null) {
+                binding.editTextPassword.error = getString(loginState.passwordError)
             }
         })
 
