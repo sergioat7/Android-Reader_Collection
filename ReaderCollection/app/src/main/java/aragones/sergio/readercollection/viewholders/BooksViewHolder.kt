@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
+import kotlin.math.ceil
 
 class BooksViewHolder(private val binding: ViewDataBinding) :
     RecyclerView.ViewHolder(binding.root) {
@@ -79,7 +80,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                                 progressBarGoogleImageLoading.visibility = View.GONE
                             }
                         })
-                    textViewGoogleBookRating.text = book.averageRating.toInt().toString()
+                    textViewGoogleBookRating.text = ceil(book.averageRating).toInt().toString()
                 }
 
                 is ItemBookBinding -> {
