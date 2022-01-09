@@ -130,7 +130,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@{viewModel.language == Preferences.ENGLISH_LANGUAGE_KEY}"
+                        android:checked="@{viewModel.language.equals(Preferences.ENGLISH_LANGUAGE_KEY)}"
                         android:text="@string/english"
                         style="@style/Widget.ReaderCollection.RadioButton"
                         />
@@ -140,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:checked="@{viewModel.language == Preferences.SPANISH_LANGUAGE_KEY}"
+                        android:checked="@{viewModel.language.equals(Preferences.SPANISH_LANGUAGE_KEY)}"
                         android:text="@string/spanish"
                         style="@style/Widget.ReaderCollection.RadioButton"
                         />
