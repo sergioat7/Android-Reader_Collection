@@ -71,7 +71,7 @@
                     android:layout_height="wrap_content"
                     >
 
-                    <ImageView
+                    <aragones.sergio.readercollection.customview.ImageViewWithLoading
                         android:id="@+id/image_view_book"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
@@ -80,21 +80,9 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@tools:sample/avatars"
-                        tools:scaleType="centerCrop"
-                        />
-
-
-                    <ProgressBar
-                        android:id="@+id/progress_bar_loading_image"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:indeterminateTint="@color/colorSecondary"
-                        app:layout_constraintBottom_toBottomOf="@id/image_view_book"
-                        app:layout_constraintEnd_toEndOf="@id/image_view_book"
-                        app:layout_constraintStart_toStartOf="@id/image_view_book"
-                        app:layout_constraintTop_toTopOf="@id/image_view_book"
+                        src="@{viewModel.book.thumbnail ?? viewModel.book.image}"
+                        placeholder="@{@drawable/ic_default_book_cover}"
+                        loadingColor="@{@color/colorSecondary}"
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

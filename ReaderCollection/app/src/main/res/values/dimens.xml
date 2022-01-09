@@ -58,5 +58,7 @@
     <dimen name="radius_20dp">20dp</dimen>
     <dimen name="radius_15dp">15dp</dimen>
     <dimen name="radius_10dp">10dp</dimen>
+    <dimen name="radius_5dp">5dp</dimen>
+    <dimen name="radius_2dp">2dp</dimen>
 
 </resources>
