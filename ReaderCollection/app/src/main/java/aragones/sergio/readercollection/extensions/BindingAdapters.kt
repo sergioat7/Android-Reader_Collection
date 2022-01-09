@@ -20,5 +20,5 @@ fun setEnabled(spinner: Spinner, isEnabled: Boolean?, backgroundTint: Int?) {
 
 @BindingAdapter("rating")
 fun setRating(ratingBar: MaterialRatingBar, rating: Double?) {
-    ratingBar.rating = rating?.toInt()?.toFloat() ?: 0F
+    ratingBar.rating = rating?.toFloat() ?: 0F
 }
