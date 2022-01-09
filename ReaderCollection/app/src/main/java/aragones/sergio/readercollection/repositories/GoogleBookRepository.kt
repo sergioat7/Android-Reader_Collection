@@ -9,7 +9,7 @@ import aragones.sergio.readercollection.models.responses.GoogleBookListResponse
 import aragones.sergio.readercollection.models.responses.GoogleBookResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.GoogleApiService
-import aragones.sergio.readercollection.repositories.base.BaseRepository
+import aragones.sergio.readercollection.base.BaseRepository
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 

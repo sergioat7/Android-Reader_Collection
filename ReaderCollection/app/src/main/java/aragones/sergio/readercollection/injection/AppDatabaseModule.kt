@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 5/1/2021
  */
 
-package aragones.sergio.readercollection.injection.modules
+package aragones.sergio.readercollection.injection
 
 import android.content.Context
 import aragones.sergio.readercollection.persistence.AppDatabase

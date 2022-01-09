@@ -31,7 +31,6 @@ object Preferences {
 object Constants {
     const val DATABASE_NAME = "ReaderCollection"
     const val DATE_FORMAT = "yyyy-MM-dd"
-    const val IMAGE_CORNER = 20F
     const val BOOK_ID = "bookId"
     const val IS_GOOGLE_BOOK = "isGoogleBook"
     const val MAX_LINES = Int.MAX_VALUE

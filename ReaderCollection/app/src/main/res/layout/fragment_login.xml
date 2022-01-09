@@ -4,117 +4,140 @@
   ~ Created by Sergio Aragonés on 19/10/2020
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".fragments.LoginFragment"
     >
 
-    <ImageView
-        android:id="@+id/image_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_20dp"
-        android:layout_marginBottom="@dimen/margin_20dp"
-        android:src="@drawable/login_register_image"
-        app:layout_constraintBottom_toTopOf="@+id/edit_text_username"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        />
+    <data>
 
-    <EditText
-        android:id="@+id/edit_text_username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_24dp"
-        android:layout_marginEnd="@dimen/margin_24dp"
-        android:hint="@string/username"
-        android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45"
-        style="@style/CredentialsEditText"
-        />
+        <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.LoginFragment"
+            />
 
-    <EditText
-        android:id="@+id/edit_text_password"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_8dp"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
-        app:layout_constraintStart_toStartOf="@+id/edit_text_username"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_username"
-        style="@style/CredentialsEditText"
-        />
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.LoginViewModel"
+            />
 
-    <ImageButton
-        android:id="@+id/image_button_password"
-        android:layout_width="@dimen/size_48dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="@dimen/margin_12dp"
-        android:layout_marginBottom="@dimen/margin_12dp"
-        android:layout_marginEnd="@dimen/margin_20dp"
-        android:src="@drawable/ic_show_password"
-        app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
-        app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
-        app:layout_constraintTop_toTopOf="@+id/edit_text_password"
-        style="@style/Widget.ReaderCollection.ImageButton"
-        />
+    </data>
 
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="@dimen/size_200dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_24dp"
-        android:layout_marginBottom="@dimen/margin_24dp"
-        android:enabled="false"
-        android:text="@string/sign_in"
-        app:layout_constraintBottom_toTopOf="@+id/linear_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
-        app:layout_constraintVertical_bias="1.0"
-        style="@style/Widget.ReaderCollection.Button.Main"
-        />
-
-    <LinearLayout
-        android:id="@+id/linear_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_24dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.LoginFragment"
         >
 
-        <TextView
-            android:layout_width="wrap_content"
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:src="@drawable/login_register_image"
+            app:layout_constraintBottom_toTopOf="@+id/edit_text_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <EditText
+            android:id="@+id/edit_text_username"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/margin_5dp"
-            android:text="@string/not_account"
-            style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+            android:layout_marginStart="@dimen/margin_24dp"
+            android:layout_marginEnd="@dimen/margin_24dp"
+            android:afterTextChanged="@{() -> fragment.loginDataChanged()}"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:text="@{viewModel.username}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.45"
+            style="@style/CredentialsEditText"
+            />
+
+        <EditText
+            android:id="@+id/edit_text_password"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:afterTextChanged="@{() -> fragment.loginDataChanged()}"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@+id/edit_text_username"
+            app:layout_constraintStart_toStartOf="@+id/edit_text_username"
+            app:layout_constraintTop_toBottomOf="@+id/edit_text_username"
+            style="@style/CredentialsEditText"
+            />
+
+        <ImageButton
+            android:id="@+id/image_button_password"
+            android:layout_width="@dimen/size_48dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_12dp"
+            android:layout_marginBottom="@dimen/margin_12dp"
+            android:layout_marginEnd="@dimen/margin_20dp"
+            android:src="@drawable/ic_show_password"
+            app:layout_constraintBottom_toBottomOf="@+id/edit_text_password"
+            app:layout_constraintEnd_toEndOf="@+id/edit_text_password"
+            app:layout_constraintTop_toTopOf="@+id/edit_text_password"
+            style="@style/Widget.ReaderCollection.ImageButton"
             />
 
         <Button
-            android:id="@+id/button_register"
-            android:layout_width="wrap_content"
+            android:id="@+id/button_login"
+            android:layout_width="@dimen/size_200dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/create_account"
-            style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+            android:layout_marginTop="@dimen/margin_24dp"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            android:enabled="@{viewModel.loginFormState.isDataValid}"
+            android:onClick="@{() -> fragment.login()}"
+            android:text="@string/sign_in"
+            app:layout_constraintBottom_toTopOf="@+id/linear_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_text_password"
+            app:layout_constraintVertical_bias="1.0"
+            style="@style/Widget.ReaderCollection.Button.Main"
             />
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/linear_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            >
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/margin_5dp"
+                android:text="@string/not_account"
+                style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                />
+
+            <Button
+                android:id="@+id/button_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/create_account"
+                style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+                />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

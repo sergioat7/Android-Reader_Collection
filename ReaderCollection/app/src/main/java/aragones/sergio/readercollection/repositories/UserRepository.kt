@@ -12,7 +12,7 @@ import aragones.sergio.readercollection.models.requests.NewPassword
 import aragones.sergio.readercollection.models.responses.LoginResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.UserApiService
-import aragones.sergio.readercollection.repositories.base.BaseRepository
+import aragones.sergio.readercollection.base.BaseRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
