@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.viewmodels
 
-import android.app.AlertDialog
 import android.content.Context
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -14,6 +13,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.extensions.getPickerParams
 import aragones.sergio.readercollection.extensions.setup
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -25,7 +25,6 @@ import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -50,14 +49,30 @@ class BooksViewModel @Inject constructor(
     //region Public properties
     var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
-    val readingBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state == State.READING } }
-    val pendingBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state == State.PENDING } }
-    val readBooks: LiveData<List<BookResponse>> =
-        _books.map { it.filter { book -> book.state != State.READING && book.state != State.PENDING } }
+    val readingBooks: LiveData<List<BookResponse>> = _books.map {
+        it.filter { book -> book.state == State.READING }
+    }
+    val pendingBooks: LiveData<List<BookResponse>> = _books.map {
+        it.filter { book -> book.state == State.PENDING }
+    }
+    val readBooks: LiveData<List<BookResponse>> = _books.map {
+        it.filter { book -> book.state != State.READING && book.state != State.PENDING }
+    }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
+
+    val readingBooksVisible: LiveData<Boolean> = readingBooks.map {
+        !((it.isEmpty() && query.isNotBlank()) || books.value?.isEmpty() == true)
+    }
+    val pendingBooksVisible: LiveData<Boolean> = pendingBooks.map {
+        it.isNotEmpty()
+    }
+    val readBooksVisible: LiveData<Boolean> = readBooks.map {
+        it.isNotEmpty()
+    }
+    val noResultsVisible: LiveData<Boolean> = _books.map {
+        it.isEmpty()
+    }
     //endregion
 
     //region Lifecycle methods
@@ -71,7 +86,7 @@ class BooksViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun getBooks() {
+    fun fetchBooks() {
 
         _booksLoading.value = true
         booksRepository.getBooksDatabaseObserver(
@@ -137,7 +152,7 @@ class BooksViewModel @Inject constructor(
                 val sort = sortingKeys[sortKeysPicker.value]
                 sortParam = if (sort.isNotBlank()) sort else null
                 isSortDescending = sortOrdersPicker.value == 1
-                getBooks()
+                fetchBooks()
                 dialog.dismiss()
             }
             .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->

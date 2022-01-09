@@ -7,7 +7,9 @@ package aragones.sergio.readercollection.models.responses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import aragones.sergio.readercollection.models.base.BaseModel
+import aragones.sergio.readercollection.base.BaseModel
+import aragones.sergio.readercollection.extensions.toString
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -54,8 +56,8 @@ data class BookResponse(
     var state: String?,
     @SerializedName("isFavourite")
     var isFavourite: Boolean
-): BaseModel<String> {
-    constructor(id: String): this(
+) : BaseModel<String> {
+    constructor(id: String) : this(
         id,
         null,
         null,
@@ -75,5 +77,26 @@ data class BookResponse(
         null,
         null,
         null,
-        false)
+        false
+    )
+
+    fun authorsToString(): String {
+        return authors?.joinToString(separator = ", ") ?: ""
+    }
+
+    fun publishedDateAsHumanReadable(): String {
+
+        return publishedDate.toString(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
+        ) ?: ""
+    }
+
+    fun readingDateAsHumanReadable(): String {
+
+        return readingDate.toString(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
+        ) ?: ""
+    }
 }

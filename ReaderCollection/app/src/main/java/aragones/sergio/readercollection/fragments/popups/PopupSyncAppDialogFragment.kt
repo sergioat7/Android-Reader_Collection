@@ -29,7 +29,7 @@ class PopupSyncAppDialogFragment : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_popup_sync_app_dialog, container, false)
+        return inflater.inflate(R.layout.dialog_fragment_popup_sync_app, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

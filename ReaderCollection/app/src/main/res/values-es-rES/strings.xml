@@ -47,7 +47,6 @@
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>
     <string name="add_author">Añade el autor(es)</string>
-    <string name="authors_text">Por %s</string>
     <string name="description">Descripción</string>
     <string name="add_description">Añade una descripción</string>
     <string name="read_more">Leer más</string>
@@ -65,6 +64,8 @@
     <string name="reading_date">Fecha de lectura</string>
     <string name="book_saved">¡Libro guardado!</string>
     <string name="book_removed">¡Libro eliminado!</string>
+    <string name="edit">Editar</string>
+    <string name="remove">Eliminar</string>
 
     //PROFILE
     <string name="title_profile">Perfil</string>
@@ -79,6 +80,8 @@
         <item>Claro</item>
         <item>Oscuro</item>
     </string-array>
+    <string name="delete">Borrar</string>
+    <string name="logout">Salir</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>

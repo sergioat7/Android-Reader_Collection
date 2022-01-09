@@ -4,11 +4,16 @@
   ~ Created by Sergio Aragonés on 17/11/2020
   -->
 
-<TextView
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/text_view_value"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:fontFamily="@font/roboto_regular"
-    android:textSize="@dimen/text_size_16sp"
-    />
+    >
+
+    <TextView
+        android:id="@+id/text_view_value"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:textSize="@dimen/text_size_16sp"
+        />
+
+</layout>

@@ -6,47 +6,28 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentLoginBinding
 import aragones.sergio.readercollection.extensions.showOrHidePassword
-import aragones.sergio.readercollection.fragments.base.BaseFragment
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
 
-class LoginFragment: BaseFragment() {
+class LoginFragment : BindingFragment<FragmentLoginBinding>() {
+
+    //region Protected properties
+    override val hasOptionsMenu = false
+    //endregion
 
     //region Private properties
-    private lateinit var etUsername: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var ibPassword: ImageButton
-    private lateinit var btLogin: Button
-    private lateinit var btRegister: Button
     private lateinit var viewModel: LoginViewModel
     //endregion
 
     //region Lifecycle methods
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.fragment_login, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()
@@ -58,42 +39,45 @@ class LoginFragment: BaseFragment() {
     }
     //endregion
 
+    //region Public methods
+    fun loginDataChanged() {
+
+        viewModel.loginDataChanged(
+            binding.editTextUsername.text.toString(),
+            binding.editTextPassword.text.toString()
+        )
+    }
+
+    fun login() {
+
+        viewModel.login(
+            binding.editTextUsername.text.toString(),
+            binding.editTextPassword.text.toString()
+        )
+    }
+    //endregion
+
     //region Private methods
     private fun initializeUI() {
 
         val application = activity?.application ?: return
-        etUsername = edit_text_username
-        etPassword = edit_text_password
-        ibPassword = image_button_password
-        btLogin = button_login
-        btRegister = button_register
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
         setupBindings()
 
-        etUsername.setText(viewModel.username)
+        with(binding) {
 
-        etUsername.afterTextChanged {
-            loginDataChanged()
-        }
+            imageButtonPassword.setOnClickListener {
+                editTextPassword.showOrHidePassword(imageButtonPassword)
+            }
 
-        etPassword.afterTextChanged {
-            loginDataChanged()
-        }
+            buttonRegister.setOnClickListener {
+                launchActivity(RegisterActivity::class.java)
+            }
 
-        ibPassword.setOnClickListener {
-            etPassword.showOrHidePassword(ibPassword)
-        }
-
-        btLogin.setOnClickListener {
-
-            viewModel.login(
-                etUsername.text.toString(),
-                etPassword.text.toString()
-            )
-        }
-
-        btRegister.setOnClickListener {
-            launchActivity(RegisterActivity::class.java)
+            fragment = this@LoginFragment
+            viewModel = this@LoginFragment.viewModel
+            lifecycleOwner = this@LoginFragment
         }
     }
 
@@ -103,13 +87,11 @@ class LoginFragment: BaseFragment() {
 
             val loginState = it ?: return@observe
 
-            btLogin.isEnabled = loginState.isDataValid
-
             if (loginState.usernameError != null) {
-                etUsername.error = getString(loginState.usernameError)
+                binding.editTextUsername.error = getString(loginState.usernameError)
             }
             if (loginState.passwordError != null) {
-                etPassword.error = getString(loginState.passwordError)
+                binding.editTextPassword.error = getString(loginState.passwordError)
             }
         })
 
@@ -132,14 +114,6 @@ class LoginFragment: BaseFragment() {
                 manageError(error)
             }
         })
-    }
-
-    private fun loginDataChanged() {
-
-        viewModel.loginDataChanged(
-            etUsername.text.toString(),
-            etPassword.text.toString()
-        )
     }
     //endregion
 }

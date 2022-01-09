@@ -3,10 +3,8 @@
  * Created by Sergio Aragonés on 17/1/2021
  */
 
-package aragones.sergio.readercollection.injection.components
+package aragones.sergio.readercollection.injection
 
-import aragones.sergio.readercollection.injection.modules.AppDatabaseModule
-import aragones.sergio.readercollection.injection.modules.NetworkModule
 import aragones.sergio.readercollection.viewmodelfactories.*
 import dagger.Component
 

@@ -18,7 +18,7 @@ import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -32,7 +32,6 @@ class BookDetailViewModel @Inject constructor(
 
     //region Private properties
     private var bookId: String = ""
-    private var isGoogleBook: Boolean = false
     private val _book = MutableLiveData<BookResponse>()
     private val _isFavourite = MutableLiveData<Boolean>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
@@ -46,6 +45,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public properties
+    var isGoogleBook: Boolean = false
     val book: LiveData<BookResponse> = _book
     val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
@@ -69,7 +69,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun getBook() {
+    fun fetchBook() {
 
         _bookDetailLoading.value = true
         if (isGoogleBook) {
@@ -106,7 +106,7 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
-    fun getFormats() {
+    fun fetchFormats() {
 
         _bookDetailFormatsLoading.value = true
         formatRepository.getFormatsDatabaseObserver().subscribeBy(
@@ -124,7 +124,7 @@ class BookDetailViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun getStates() {
+    fun fetchStates() {
 
         _bookDetailStatesLoading.value = true
         stateRepository.getStatesDatabaseObserver().subscribeBy(

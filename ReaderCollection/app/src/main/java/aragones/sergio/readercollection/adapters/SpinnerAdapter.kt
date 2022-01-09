@@ -20,7 +20,7 @@ class SpinnerAdapter(
     private val firstOptionEnabled: Boolean,
     private val rounded: Boolean,
     private val title: String?
-): ArrayAdapter<Any?>(ctx, R.layout.item_spinner_dropdown, values) {
+) : ArrayAdapter<Any?>(ctx, R.layout.item_spinner_dropdown, values) {
 
     //region Lifecycle methods
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -41,9 +41,9 @@ class SpinnerAdapter(
         tvValue.text = values[position]
 
         val colorId = if (rounded) {
-            if(position == 0 && !firstOptionEnabled) R.color.textTertiaryLight else R.color.textTertiary
+            if (position == 0 && !firstOptionEnabled) R.color.textTertiaryLight else R.color.textTertiary
         } else {
-            if(position == 0 && !firstOptionEnabled) R.color.textSecondaryLight else R.color.textSecondary
+            if (position == 0 && !firstOptionEnabled) R.color.textSecondaryLight else R.color.textSecondary
         }
         tvValue.setTextColor(ContextCompat.getColor(ctx, colorId))
 
@@ -57,7 +57,8 @@ class SpinnerAdapter(
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
 
         val tvValue = super.getDropDownView(position, convertView, parent) as TextView
-        val colorId = if(position == 0 && !firstOptionEnabled) R.color.textSecondaryLight else R.color.textSecondary
+        val colorId =
+            if (position == 0 && !firstOptionEnabled) R.color.textSecondaryLight else R.color.textSecondary
         tvValue.setTextColor(ContextCompat.getColor(ctx, colorId))
         return tvValue
     }

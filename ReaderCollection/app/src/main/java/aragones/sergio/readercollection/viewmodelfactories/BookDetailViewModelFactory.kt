@@ -43,9 +43,9 @@ class BookDetailViewModelFactory(
             (application as ReaderCollectionApplication).appComponent.inject(this)
             bookDetailViewModel.setBookId(bookId)
             bookDetailViewModel.setIsGoogleBook(isGoogleBook)
-            bookDetailViewModel.getBook()
-            bookDetailViewModel.getFormats()
-            bookDetailViewModel.getStates()
+            bookDetailViewModel.fetchBook()
+            bookDetailViewModel.fetchFormats()
+            bookDetailViewModel.fetchStates()
             return bookDetailViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
