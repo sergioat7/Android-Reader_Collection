@@ -61,28 +61,19 @@
             style="@style/Widget.ReaderCollection.TextView.Subtitle.ReadingBook"
             />
 
-        <ImageView
+        <aragones.sergio.readercollection.customview.ImageViewWithLoading
             android:id="@+id/image_view_reading_book"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/margin_8dp"
-            android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_author"
-            tools:srcCompat="@tools:sample/backgrounds/scenic"
-            />
-
-        <ProgressBar
-            android:id="@+id/progress_bar_reading_image_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateTint="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_reading_book"
-            app:layout_constraintEnd_toEndOf="@+id/image_view_reading_book"
-            app:layout_constraintStart_toStartOf="@+id/image_view_reading_book"
-            app:layout_constraintTop_toTopOf="@+id/image_view_reading_book"
+            src="@{book.thumbnail}"
+            center="@{true}"
+            placeholder="@{@drawable/ic_default_book_cover}"
+            radius="@{@dimen/radius_5dp}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

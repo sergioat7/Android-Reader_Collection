@@ -29,8 +29,6 @@ import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFa
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.squareup.picasso.Callback
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_book_detail.*
 import java.util.*
 import kotlin.math.abs
@@ -282,24 +280,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun showData(book: BookResponse) {
         with(binding) {
-
-            val image =
-                book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https")
-                ?: "-"
-            Picasso
-                .get()
-                .load(image)
-                .error(R.drawable.ic_default_book_cover)
-                .into(imageViewBook, object : Callback {
-
-                    override fun onSuccess() {
-                        progressBarLoadingImage.visibility = View.GONE
-                    }
-
-                    override fun onError(e: Exception) {
-                        progressBarLoadingImage.visibility = View.GONE
-                    }
-                })
 
             linearLayoutCategories.removeAllViews()
             book.categories?.let { categories ->

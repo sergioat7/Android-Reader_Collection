@@ -36,26 +36,17 @@
         android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
         >
 
-        <ImageView
+        <aragones.sergio.readercollection.customview.ImageViewWithLoading
             android:id="@+id/image_view_book"
             android:layout_width="0dp"
             android:layout_height="@dimen/size_250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:scaleType="centerCrop"
-            tools:src="@tools:sample/avatars"
-            />
-
-        <ProgressBar
-            android:id="@+id/progress_bar_image_loading"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminateTint="@color/colorPrimary"
-            app:layout_constraintBottom_toBottomOf="@+id/image_view_book"
-            app:layout_constraintEnd_toEndOf="@+id/image_view_book"
-            app:layout_constraintStart_toStartOf="@+id/image_view_book"
-            app:layout_constraintTop_toTopOf="@+id/image_view_book"
+            src="@{book.thumbnail}"
+            center="@{true}"
+            placeholder="@{@drawable/ic_default_book_cover}"
+            radius="@{@dimen/radius_5dp}"
             />
 
         <TextView
