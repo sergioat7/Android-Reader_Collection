@@ -133,6 +133,24 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     }
     //endregion
 
+    //region Public methods
+    fun readMore(view: View) {
+        with(binding) {
+
+            when (view) {
+                buttonReadMoreDescription -> {
+                    editTextDescription.maxLines = Constants.MAX_LINES
+                    buttonReadMoreDescription.visibility = View.GONE
+                }
+                buttonReadMoreSummary -> {
+                    editTextSummary.maxLines = Constants.MAX_LINES
+                    buttonReadMoreSummary.visibility = View.GONE
+                }
+            }
+        }
+    }
+    //endregion
+
     //region Private methods
     private fun initializeUI() {
 
@@ -174,22 +192,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     resources.getString(R.string.book_text_count, it?.length)
             }
 
-            buttonReadMoreDescription.setOnClickListener {
 
-                editTextDescription.maxLines = Constants.MAX_LINES
-                buttonReadMoreDescription.visibility = View.GONE
-            }
 
             editTextSummary.setReadOnly(true, InputType.TYPE_NULL, 0)
             editTextSummary.doAfterTextChanged {
                 textViewSummaryCount.text =
                     resources.getString(R.string.book_text_count, it?.length)
-            }
-
-            buttonReadMoreSummary.setOnClickListener {
-
-                editTextSummary.maxLines = Constants.MAX_LINES
-                buttonReadMoreSummary.visibility = View.GONE
             }
 
             editTextIsbn.setReadOnly(true, InputType.TYPE_NULL, 0)
@@ -201,12 +209,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             editTextPublishedDate.setOnClickListener {
                 editTextPublishedDate.showDatePicker(requireActivity())
             }
-            editTextPublishedDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
 
             editTextReadingDate.setOnClickListener {
                 editTextReadingDate.showDatePicker(requireActivity())
             }
-            editTextReadingDate.backgroundTintList = ColorStateList.valueOf(Color.TRANSPARENT)
 
             fragment = this@BookDetailFragment
             viewModel = this@BookDetailFragment.viewModel
@@ -440,10 +446,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 editText.setReadOnly(!editable, inputTypeNumber, 0)
                 editText.backgroundTintList = backgroundTint
             }
-
-            editTextPublishedDate.backgroundTintList = backgroundTint
-
-            editTextReadingDate.backgroundTintList = backgroundTint
         }
     }
     //endregion

@@ -71,6 +71,29 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
     }
     //endregion
 
+    //region Public methods
+    fun save() {
+        with(binding) {
+
+            val language =
+                if (radioButtonEn.isChecked) Preferences.ENGLISH_LANGUAGE_KEY
+                else Preferences.SPANISH_LANGUAGE_KEY
+            val sortParam =
+                if (spinnerSortParams.selectedItemPosition == 0) null
+                else resources.getStringArray(R.array.sorting_keys_ids)[spinnerSortParams.selectedItemPosition]
+            val isSortDescending = spinnerSortOrders.selectedItemPosition == 1
+            val themeMode = spinnerAppTheme.selectedItemPosition
+            this@ProfileFragment.viewModel.save(
+                editTextPassword.text.toString(),
+                language,
+                sortParam,
+                isSortDescending,
+                themeMode
+            )
+        }
+    }
+    //endregion
+
     //region Private methods
     private fun initializeUI() {
 
@@ -122,25 +145,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                 true
             )
 
-            buttonSave.setOnClickListener {
-
-                val language =
-                    if (radioButtonEn.isChecked) Preferences.ENGLISH_LANGUAGE_KEY
-                    else Preferences.SPANISH_LANGUAGE_KEY
-                val sortParam =
-                    if (spinnerSortParams.selectedItemPosition == 0) null
-                    else resources.getStringArray(R.array.sorting_keys_ids)[spinnerSortParams.selectedItemPosition]
-                val isSortDescending = spinnerSortOrders.selectedItemPosition == 1
-                val themeMode = spinnerAppTheme.selectedItemPosition
-                this@ProfileFragment.viewModel.save(
-                    editTextPassword.text.toString(),
-                    language,
-                    sortParam,
-                    isSortDescending,
-                    themeMode
-                )
-            }
-
+            fragment = this@ProfileFragment
             viewModel = this@ProfileFragment.viewModel
             lifecycleOwner = this@ProfileFragment
         }
@@ -151,7 +156,6 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
 
             binding.editTextPassword.clearErrors()
-            binding.buttonSave.isEnabled = it == null
 
             val passwordError = it ?: return@Observer
             binding.editTextPassword.error = getString(passwordError)

@@ -97,6 +97,16 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     }
     //endregion
 
+    //region Public methods
+    fun seeMoreBooks(view: View) {
+
+        when (view) {
+            binding.buttonSeeMorePending -> Unit//TODO: implement action
+            binding.buttonSeeMoreRead -> Unit//TODO: implement action
+        }
+    }
+    //endregion
+
     //region Interface methods
     override fun onItemClick(bookId: String) {
 
@@ -138,14 +148,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
         with(binding) {
 
-            buttonSeeMorePending.setOnClickListener {
-                //TODO: implement
-            }
-
-            buttonSeeMoreRead.setOnClickListener {
-                //TODO: implement
-            }
-
             recyclerViewReadingBooks.layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
@@ -167,6 +169,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             )
             recyclerViewBooks.adapter = booksAdapter
 
+            fragment = this@BooksFragment
             viewModel = this@BooksFragment.viewModel
             lifecycleOwner = this@BooksFragment
         }
