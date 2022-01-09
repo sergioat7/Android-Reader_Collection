@@ -31,11 +31,6 @@
             />
 
         <variable
-            name="book"
-            type="aragones.sergio.readercollection.models.responses.BookResponse"
-            />
-
-        <variable
             name="editable"
             type="Boolean"
             />
@@ -140,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_24dp"
                     android:text="@string/new_book"
-                    android:visibility="@{book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
@@ -153,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_24dp"
                     android:orientation="horizontal"
-                    android:visibility="@{book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
+                    android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
@@ -164,7 +159,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/size_30dp"
                         android:isIndicator="@{!editable}"
-                        rating="@{viewModel.isGoogleBook ? book.averageRating / 2 : book.rating / 2}"
+                        rating="@{viewModel.isGoogleBook ? viewModel.book.averageRating / 2 : viewModel.book.rating / 2}"
                         style="@style/Widget.ReaderCollection.RatingBar"
                         />
 
@@ -180,7 +175,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
-                        android:text="@{String.valueOf(book.ratingsCount)}"
+                        android:text="@{String.valueOf(viewModel.book.ratingsCount)}"
                         tools:text="18"
                         style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                         />
@@ -193,7 +188,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/add_title"
                     android:inputType="textMultiLine"
-                    android:text='@{!book.title.equals("") ? book.title : editable ? null : Constants.NO_VALUE}'
+                    android:text='@{!viewModel.book.title.equals("") ? viewModel.book.title : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/linear_layout_rating"
@@ -206,7 +201,7 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/add_author"
                     android:inputType="textMultiLine"
-                    android:text='@{!book.authorsToString().equals("") ? book.authorsToString() : editable ? null : Constants.NO_VALUE}'
+                    android:text='@{!viewModel.book.authorsToString().equals("") ? viewModel.book.authorsToString() : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_title"
@@ -219,7 +214,7 @@
                     android:layout_height="@dimen/size_30dp"
                     android:layout_marginTop="@dimen/margin_32dp"
                     android:scrollbars="none"
-                    android:visibility="@{book.categories.size() > 0 ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{viewModel.book.categories.size() > 0 ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_author"
@@ -253,7 +248,7 @@
                     android:hint="@string/add_description"
                     android:inputType="textMultiLine"
                     android:maxLength="10240"
-                    android:text='@{!book.description.equals("") ? book.description : editable ? null : Constants.NO_VALUE}'
+                    android:text='@{!viewModel.book.description.equals("") ? viewModel.book.description : editable ? null : Constants.NO_VALUE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_description_title"
@@ -274,7 +269,7 @@
                     android:id="@+id/text_view_description_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@{@string/book_text_count(book.description.length())}"
+                    android:text="@{@string/book_text_count(viewModel.book.description.length())}"
                     android:textColor="@color/colorPrimary"
                     app:layout_constraintEnd_toEndOf="@+id/edit_text_description"
                     app:layout_constraintTop_toBottomOf="@+id/edit_text_description"
@@ -307,7 +302,7 @@
                         android:hint="@string/add_summary"
                         android:inputType="textMultiLine"
                         android:maxLength="10240"
-                        android:text='@{!book.summary.equals("") ? book.summary : editable ? null : Constants.NO_VALUE}'
+                        android:text='@{!viewModel.book.summary.equals("") ? viewModel.book.summary : editable ? null : Constants.NO_VALUE}'
                         style="@style/BookDetailEditText"
                         />
 
@@ -330,7 +325,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="end"
-                            android:text="@{@string/book_text_count(book.summary.length())}"
+                            android:text="@{@string/book_text_count(viewModel.book.summary.length())}"
                             tools:text="128/10240"
                             style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                             />
@@ -505,7 +500,7 @@
                         android:layout_weight="1"
                         android:hint="@string/add_isbn"
                         android:inputType="number"
-                        android:text='@{!book.isbn.equals("") ? book.isbn : editable ? null : Constants.NO_VALUE}'
+                        android:text='@{!viewModel.book.isbn.equals("") ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails"
                         />
 
@@ -517,7 +512,7 @@
                         android:layout_weight="1"
                         android:hint="@string/add_pages"
                         android:inputType="number"
-                        android:text="@{book.pageCount > 0 ? String.valueOf(book.pageCount) : editable ? null : Constants.NO_VALUE}"
+                        android:text="@{viewModel.book.pageCount > 0 ? String.valueOf(viewModel.book.pageCount) : editable ? null : Constants.NO_VALUE}"
                         style="@style/CustomEditText.BookDetails"
                         />
 
@@ -572,7 +567,7 @@
                         android:layout_weight="1"
                         android:hint="@string/add_publisher"
                         android:inputType="textMultiLine"
-                        android:text='@{!book.publisher.equals("") ? book.publisher : editable ? null : Constants.NO_VALUE}'
+                        android:text='@{!viewModel.book.publisher.equals("") ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails"
                         />
 
@@ -584,7 +579,7 @@
                         android:layout_weight="1"
                         android:enabled="@{editable}"
                         android:hint="@string/select_a_date"
-                        android:text='@{!book.publishedDateAsHumanReadable().equals("") ? book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                        android:text='@{!viewModel.book.publishedDateAsHumanReadable().equals("") ? viewModel.book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails.Date"
                         />
 
@@ -628,7 +623,7 @@
                         android:layout_height="wrap_content"
                         android:enabled="@{editable}"
                         android:hint="@string/select_a_date"
-                        android:text='@{!book.readingDateAsHumanReadable().equals("") ? book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                        android:text='@{!viewModel.book.readingDateAsHumanReadable().equals("") ? viewModel.book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
                         style="@style/CustomEditText.BookDetails.Date"
                         />
 

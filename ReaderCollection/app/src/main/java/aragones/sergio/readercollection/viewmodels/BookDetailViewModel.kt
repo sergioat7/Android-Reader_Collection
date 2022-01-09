@@ -69,7 +69,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun getBook() {
+    fun fetchBook() {
 
         _bookDetailLoading.value = true
         if (isGoogleBook) {
@@ -106,7 +106,7 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
-    fun getFormats() {
+    fun fetchFormats() {
 
         _bookDetailFormatsLoading.value = true
         formatRepository.getFormatsDatabaseObserver().subscribeBy(
@@ -124,7 +124,7 @@ class BookDetailViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun getStates() {
+    fun fetchStates() {
 
         _bookDetailStatesLoading.value = true
         stateRepository.getStatesDatabaseObserver().subscribeBy(

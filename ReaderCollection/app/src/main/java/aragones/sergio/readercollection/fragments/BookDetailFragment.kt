@@ -282,7 +282,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun showData(book: BookResponse) {
         with(binding) {
-            this.book = book
 
             val image =
                 book.thumbnail?.replace("http", "https") ?: book.image?.replace("http", "https")
