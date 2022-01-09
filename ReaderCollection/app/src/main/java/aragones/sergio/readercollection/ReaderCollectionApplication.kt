@@ -9,8 +9,8 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import aragones.sergio.readercollection.injection.AppComponent
-import aragones.sergio.readercollection.injection.components.DaggerAppComponent
 import aragones.sergio.readercollection.injection.AppDatabaseModule
+import aragones.sergio.readercollection.injection.DaggerAppComponent
 import aragones.sergio.readercollection.injection.NetworkModule
 
 class ReaderCollectionApplication : Application() {
