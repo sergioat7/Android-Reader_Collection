@@ -81,6 +81,12 @@
         <item name="android:textSize">@dimen/text_size_18sp</item>
     </style>
 
+    <style name="Widget.ReaderCollection.TextView.Header">
+        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:textColor">@color/textSecondary</item>
+    </style>
+
     <style name="Widget.ReaderCollection.TextView.Spinner">
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
@@ -101,6 +107,7 @@
         <item name="android:insetBottom">@dimen/no_padding</item>
         <item name="android:minHeight">@dimen/no_size</item>
         <item name="android:minWidth">@dimen/no_size</item>
+        <item name="android:letterSpacing">0</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextButton.Main">
