@@ -325,7 +325,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 }
 
             buttonReadMoreSummary.visibility =
-                if (book.summary == null || book.summary.isBlank() || editTextDescription.maxLines == Constants.MAX_LINES) {
+                if (book.summary == null || book.summary.isBlank() || editTextSummary.maxLines == Constants.MAX_LINES) {
                     View.GONE
                 } else {
                     View.VISIBLE
