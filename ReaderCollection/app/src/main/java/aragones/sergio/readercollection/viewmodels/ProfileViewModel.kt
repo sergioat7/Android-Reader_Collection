@@ -100,7 +100,7 @@ class ProfileViewModel @Inject constructor(
                         onComplete = {
 
                             _profileLoading.value = false
-                            if (changeLanguage) {
+                            if (changeLanguage || changeSortParam || changeIsSortDescending) {
                                 _profileRedirection.value = true
                             }
                         },
@@ -119,6 +119,10 @@ class ProfileViewModel @Inject constructor(
                     onDestroy()
                 }
             ).addTo(disposables)
+        }
+
+        if (changeLanguage) {
+            userRepository.storeLanguage(newLanguage)
         }
 
         if (changeSortParam) {
@@ -142,12 +146,8 @@ class ProfileViewModel @Inject constructor(
             }
         }
 
-        if (changeLanguage) {
-
-            userRepository.storeLanguage(newLanguage)
-            if (!changePassword) {
-                _profileRedirection.value = true
-            }
+        if (!changePassword && (changeLanguage || changeSortParam || changeIsSortDescending)) {
+            _profileRedirection.value = true
         }
     }
 

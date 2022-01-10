@@ -24,8 +24,8 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
-import aragones.sergio.readercollection.viewmodels.ScrollPosition
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import kotlin.math.max
 
@@ -60,7 +60,9 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     }
 
     override fun onLoadMoreItemsClick() {
+
         viewModel.searchBooks()
+        viewModel.setPosition(ScrollPosition.MIDDLE)
     }
     //endregion
 
@@ -145,10 +147,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             if (booksResponse.isEmpty()) {
                 booksAdapter.resetList()
             } else {
-                viewModel.setPosition(
-                    if (booksAdapter.itemCount == 0) ScrollPosition.TOP
-                    else ScrollPosition.MIDDLE
-                )
                 booksAdapter.setBooks(booksResponse)
             }
         })
@@ -166,7 +164,10 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         })
 
         viewModel.searchError.observe(viewLifecycleOwner, { error ->
-            manageError(error)
+            error?.let {
+
+                manageError(it)
+            }
         })
 
         viewModel.scrollPosition.observe(viewLifecycleOwner, {
