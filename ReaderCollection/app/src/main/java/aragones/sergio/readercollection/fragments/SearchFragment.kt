@@ -128,15 +128,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             })
             ItemTouchHelper(SwipeController()).attachToRecyclerView(recyclerViewBooks)
 
-            if (this@SearchFragment.viewModel.query.isNotBlank()) {
-                setTitle(
-                    resources.getString(
-                        R.string.query_title,
-                        this@SearchFragment.viewModel.query
-                    )
-                )
-            }
-
             fragment = this@SearchFragment
             viewModel = this@SearchFragment.viewModel
             lifecycleOwner = this@SearchFragment
@@ -200,7 +191,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
                 return true
             }
         })
-        this.setupSearchView(R.color.colorPrimary, viewModel.query)
+        this.setupSearchView(R.color.colorPrimary, viewModel.query.value ?: "")
     }
 
     private fun searchBooks(query: String) {
@@ -209,7 +200,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.reloadData()
         viewModel.searchBooks()
         requireActivity().hideSoftKeyboard()
-        setTitle(resources.getString(R.string.query_title, query))
     }
     //endregion
 

@@ -28,6 +28,7 @@ class SearchViewModel @Inject constructor(
 
     //region Private properties
     private var page: Int = 1
+    private val _query = MutableLiveData("")
     private val _books = MutableLiveData<MutableList<BookResponse>>(mutableListOf())
     private val _searchLoading = MutableLiveData(false)
     private val _bookAdded = MutableLiveData<Int?>()
@@ -36,7 +37,7 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    var query: String = ""
+    var query: LiveData<String> = _query
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
     val bookAdded: LiveData<Int?> = _bookAdded
@@ -48,7 +49,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        googleBookRepository.searchBooksObserver(query, page, null).subscribeBy(
+        googleBookRepository.searchBooksObserver(_query.value ?: "", page, null).subscribeBy(
             onSuccess = { googleBookListResponse ->
 
                 page++
@@ -84,7 +85,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun setSearch(query: String) {
-        this.query = query
+        _query.value = query
     }
 
     fun addBook(position: Int) {
