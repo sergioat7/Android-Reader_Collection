@@ -136,3 +136,7 @@ object State {
     const val READING = "READING"
     const val READ = "READ"
 }
+
+enum class ScrollPosition {
+    TOP, MIDDLE, END
+}
