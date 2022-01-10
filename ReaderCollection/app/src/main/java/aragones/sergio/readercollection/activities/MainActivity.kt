@@ -36,7 +36,6 @@ class MainActivity : BaseActivity() {
             this,
             R.style.Widget_ReaderCollection_TextView_Subtitle_Main
         )
-        binding.navView.itemIconTintList = null
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
