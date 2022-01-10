@@ -213,30 +213,26 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private fun setupSearchView() {
 
         this.searchView = binding.searchViewBooks
-        this.searchView?.let { searchView ->
+        this.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-            searchView.clearFocus()
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
 
-                override fun onQueryTextChange(newText: String): Boolean {
-
-                    viewModel.searchBooks(newText)
-                    binding.apply {
-                        recyclerViewReadingBooks.scrollToPosition(0)
-                        recyclerViewPendingBooks.scrollToPosition(0)
-                        recyclerViewBooks.scrollToPosition(0)
-                    }
-                    return true
+                viewModel.searchBooks(newText)
+                binding.apply {
+                    recyclerViewReadingBooks.scrollToPosition(0)
+                    recyclerViewPendingBooks.scrollToPosition(0)
+                    recyclerViewBooks.scrollToPosition(0)
                 }
+                return true
+            }
 
-                override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
 
-                    requireActivity().hideSoftKeyboard()
-                    searchView.clearFocus()
-                    return true
-                }
-            })
-        }
+                requireActivity().hideSoftKeyboard()
+                searchView?.clearFocus()
+                return true
+            }
+        })
         this.setupSearchView(R.color.colorSecondary, "")
     }
     //endregion
