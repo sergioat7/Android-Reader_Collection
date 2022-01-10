@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentLoginBinding
 import aragones.sergio.readercollection.extensions.showOrHidePassword
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -21,6 +22,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     //region Protected properties
     override val hasOptionsMenu = false
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties

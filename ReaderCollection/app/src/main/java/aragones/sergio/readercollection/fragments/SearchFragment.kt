@@ -26,6 +26,7 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.utils.ScrollPosition
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import kotlin.math.max
@@ -34,6 +35,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
     //region Protected properties
     override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties

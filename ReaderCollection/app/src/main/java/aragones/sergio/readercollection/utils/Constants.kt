@@ -140,3 +140,8 @@ object State {
 enum class ScrollPosition {
     TOP, MIDDLE, END
 }
+
+enum class StatusBarStyle {
+    PRIMARY,
+    SECONDARY
+}

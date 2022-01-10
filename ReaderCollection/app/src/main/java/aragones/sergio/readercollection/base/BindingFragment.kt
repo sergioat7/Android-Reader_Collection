@@ -22,9 +22,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.setStatusBarStyle
 import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 import java.lang.reflect.ParameterizedType
@@ -40,6 +43,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         private set
 
     protected abstract val hasOptionsMenu: Boolean
+    protected abstract val statusBarStyle: StatusBarStyle
     //endregion
 
     //region Private properties
@@ -73,6 +77,27 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         @Suppress("UNCHECKED_CAST")
         binding = inflateMethod.invoke(null, inflater, container, false) as Binding
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        activity?.let {
+            when (statusBarStyle) {
+                StatusBarStyle.PRIMARY -> {
+                    it.window.setStatusBarStyle(
+                        ContextCompat.getColor(it, R.color.colorSecondary),
+                        !it.isDarkMode()
+                    )
+                }
+                StatusBarStyle.SECONDARY -> {
+                    it.window.setStatusBarStyle(
+                        ContextCompat.getColor(it, R.color.colorPrimary),
+                        it.isDarkMode()
+                    )
+                }
+            }
+        }
     }
     //endregion
 

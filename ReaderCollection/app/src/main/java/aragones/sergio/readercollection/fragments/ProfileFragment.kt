@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentProfileBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.utils.Preferences
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -26,6 +27,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
     //region Protected properties
     override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties
