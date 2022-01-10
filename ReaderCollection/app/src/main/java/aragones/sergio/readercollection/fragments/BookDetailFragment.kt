@@ -30,6 +30,7 @@ import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFa
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.fragment_book_detail.*
 import java.util.*
 import kotlin.math.abs
@@ -105,6 +106,16 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
