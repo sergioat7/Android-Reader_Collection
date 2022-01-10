@@ -59,10 +59,12 @@
                 >
 
                 <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/size_48dp"
-                    app:layout_collapseMode="pin"
                     android:layout_marginBottom="@dimen/margin_8dp"
+                    app:layout_collapseMode="pin"
+                    app:title=" "
                     />
 
                 <androidx.constraintlayout.widget.ConstraintLayout

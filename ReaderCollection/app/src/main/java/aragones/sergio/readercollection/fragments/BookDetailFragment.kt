@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
@@ -31,7 +32,6 @@ import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.android.synthetic.main.fragment_book_detail.*
 import java.util.*
 import kotlin.math.abs
 
@@ -61,6 +61,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
         initializeUI()
     }
 
