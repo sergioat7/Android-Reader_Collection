@@ -32,7 +32,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+        initializeUi()
     }
 
     override fun onDestroy() {
@@ -59,8 +59,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
 
         val application = activity?.application ?: return
         viewModel =
@@ -82,7 +82,9 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             lifecycleOwner = this@LoginFragment
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.loginFormState.observe(viewLifecycleOwner, {

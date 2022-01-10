@@ -32,7 +32,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+        initializeUi()
     }
 
     override fun onDestroy() {
@@ -60,8 +60,9 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(

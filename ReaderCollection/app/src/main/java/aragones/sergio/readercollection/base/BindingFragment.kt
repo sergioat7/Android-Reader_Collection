@@ -15,7 +15,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -44,6 +46,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
 
     protected abstract val hasOptionsMenu: Boolean
     protected abstract val statusBarStyle: StatusBarStyle
+    protected open var toolbar: Toolbar? = null
     //endregion
 
     //region Private properties
@@ -97,6 +100,14 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                     )
                 }
             }
+        }
+    }
+    //endregion
+
+    //region Protected methods
+    protected open fun initializeUi() {
+        toolbar?.let{
+            (activity as? AppCompatActivity)?.setSupportActionBar(it)
         }
     }
     //endregion
