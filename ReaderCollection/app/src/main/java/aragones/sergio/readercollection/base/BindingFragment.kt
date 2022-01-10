@@ -230,7 +230,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
             }
 
-            searchView.isIconified = false
             searchView.isIconifiedByDefault = false
             searchView.queryHint = resources.getString(R.string.search)
             if (query.isNotBlank()) {
