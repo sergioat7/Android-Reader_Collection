@@ -15,16 +15,15 @@ import android.view.View
 import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ScrollPosition
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
@@ -56,8 +55,8 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Interface methods
     override fun onItemClick(bookId: String) {
 
-        val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to true)
-        launchActivityWithExtras(BookDetailActivity::class.java, params)
+        val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(bookId, true)
+        findNavController().navigate(action)
     }
 
     override fun onLoadMoreItemsClick() {

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
@@ -41,7 +42,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //endregion
 
     //region Private properties
-    private var bookId: String = ""
+    private val args: BookDetailFragmentArgs by navArgs()
     private lateinit var viewModel: BookDetailViewModel
     private var book: BookResponse? = null
     private lateinit var formats: List<FormatResponse>
@@ -154,13 +155,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //region Private methods
     private fun initializeUI() {
 
-        bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
-        val isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
-
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
-            BookDetailViewModelFactory(application, bookId, isGoogleBook)
+            BookDetailViewModelFactory(application, args.bookId, args.isGoogleBook)
         )[BookDetailViewModel::class.java]
         setupBindings()
         formats = listOf()
