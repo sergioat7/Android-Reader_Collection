@@ -9,7 +9,6 @@ import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
-import androidx.navigation.ui.setupActionBarWithNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseActivity
 import aragones.sergio.readercollection.databinding.ActivityMainBinding
@@ -27,16 +26,6 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setContentView(binding.root)
-
-        setSupportActionBar(binding.toolbar)
-        binding.toolbar.setTitleTextAppearance(
-            this,
-            R.style.Widget_ReaderCollection_TextView_Title_Main
-        )
-        binding.toolbar.setSubtitleTextAppearance(
-            this,
-            R.style.Widget_ReaderCollection_TextView_Subtitle_Main
-        )
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
@@ -75,11 +64,6 @@ class MainActivity : BaseActivity() {
             containerId = R.id.nav_host_fragment,
             intent = intent
         )
-
-        // Whenever the selected controller changes, setup the action bar.
-        controller.observe(this, { navController ->
-            setupActionBarWithNavController(navController)
-        })
         currentNavController = controller
     }
     //endregion

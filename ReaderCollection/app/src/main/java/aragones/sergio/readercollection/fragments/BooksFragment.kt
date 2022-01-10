@@ -11,6 +11,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +41,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
         initializeUI()
     }
 
@@ -81,12 +84,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
         if (this::viewModel.isInitialized) viewModel.fetchBooks()
         this.searchView?.clearFocus()
-    }
-
-    override fun onPause() {
-        super.onPause()
-
-        setSubtitle("")
     }
 
     override fun onDestroy() {
@@ -176,17 +173,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     }
 
     private fun setupBindings() {
-
-        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
-
-            setSubtitle(
-                resources.getQuantityString(
-                    R.plurals.title_books_count,
-                    booksResponse.size,
-                    booksResponse.size
-                )
-            )
-        })
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
 

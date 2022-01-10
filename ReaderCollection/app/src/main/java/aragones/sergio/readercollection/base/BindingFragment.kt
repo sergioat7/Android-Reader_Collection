@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
@@ -235,14 +234,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                     ColorStateList.valueOf(color)
             }
         }
-    }
-
-    fun setTitle(title: String) {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = title
-    }
-
-    fun setSubtitle(subtitle: String) {
-        (activity as AppCompatActivity?)?.supportActionBar?.subtitle = subtitle
     }
     //endregion
 
