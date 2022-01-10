@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentProfileBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.utils.Preferences
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
@@ -25,6 +26,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
     //region Protected properties
     override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties
@@ -34,7 +36,9 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -94,8 +98,9 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -150,7 +155,9 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             lifecycleOwner = this@ProfileFragment
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
@@ -164,7 +171,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->
 
             if (!redirect) return@Observer
-            launchActivity(LandingActivity::class.java)
+            launchActivity(LandingActivity::class.java, true)
             activity?.finish()
         })
 

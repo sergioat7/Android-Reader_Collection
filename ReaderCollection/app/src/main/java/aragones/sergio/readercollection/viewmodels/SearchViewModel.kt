@@ -16,13 +16,10 @@ import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.base.BaseViewModel
+import aragones.sergio.readercollection.utils.ScrollPosition
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
-
-enum class ScrollPosition {
-    TOP, MIDDLE, END
-}
 
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
@@ -31,19 +28,20 @@ class SearchViewModel @Inject constructor(
 
     //region Private properties
     private var page: Int = 1
+    private val _query = MutableLiveData("")
     private val _books = MutableLiveData<MutableList<BookResponse>>(mutableListOf())
-    private val _searchLoading = MutableLiveData<Boolean>()
+    private val _searchLoading = MutableLiveData(false)
     private val _bookAdded = MutableLiveData<Int?>()
-    private val _searchError = MutableLiveData<ErrorResponse>()
+    private val _searchError = MutableLiveData<ErrorResponse?>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
     //endregion
 
     //region Public properties
-    var query: String = ""
+    var query: LiveData<String> = _query
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
     val bookAdded: LiveData<Int?> = _bookAdded
-    val searchError: LiveData<ErrorResponse> = _searchError
+    val searchError: LiveData<ErrorResponse?> = _searchError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     //endregion
 
@@ -51,7 +49,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        googleBookRepository.searchBooksObserver(query, page, null).subscribeBy(
+        googleBookRepository.searchBooksObserver(_query.value ?: "", page, null).subscribeBy(
             onSuccess = { googleBookListResponse ->
 
                 page++
@@ -74,6 +72,7 @@ class SearchViewModel @Inject constructor(
 
                 _searchLoading.value = false
                 _searchError.value = ErrorResponse("", R.string.error_search)
+                _searchError.value = null
                 onDestroy()
             }
         ).addTo(disposables)
@@ -86,7 +85,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun setSearch(query: String) {
-        this.query = query
+        _query.value = query
     }
 
     fun addBook(position: Int) {
@@ -106,6 +105,7 @@ class SearchViewModel @Inject constructor(
                     _searchLoading.value = false
                     _bookAdded.value = null
                     _searchError.value = ApiManager.handleError(it)
+                    _searchError.value = null
                     onDestroy()
                 }
             ).addTo(disposables)
