@@ -21,14 +21,7 @@
         <item name="bottomNavigationStyle">@style/Widget.ReaderCollection.BottomNavigationView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.ReaderCollection.MaterialAlertDialog</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_white</item>
         <item name="android:windowLightStatusBar">false</item>
-    </style>
-
-    <style name="Theme.ReaderCollection.NoActionBar.BookDetail">
-        <item name="colorPrimaryDark">@color/colorPrimary</item>
-        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_blue</item>
-        <item name="android:windowLightStatusBar">true</item>
     </style>
 
 </resources>

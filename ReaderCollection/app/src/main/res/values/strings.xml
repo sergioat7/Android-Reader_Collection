@@ -1,7 +1,7 @@
 <resources>
 
     //GENERAL
-    <string name="app_name">Reader Collection</string>
+    <string name="app_name" translatable="false">Reader Collection</string>
     <string name="search">Search</string>
 
     //LOGIN &amp; REGISTRATION
