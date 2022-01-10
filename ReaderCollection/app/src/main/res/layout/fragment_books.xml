@@ -70,8 +70,6 @@
                     android:layout_height="@dimen/size_40dp"
                     android:layout_marginStart="@dimen/margin_16dp"
                     android:layout_marginEnd="@dimen/margin_16dp"
-                    android:iconifiedByDefault="false"
-                    android:queryHint="@string/search"
                     android:background="@drawable/rounded_background_search_view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
