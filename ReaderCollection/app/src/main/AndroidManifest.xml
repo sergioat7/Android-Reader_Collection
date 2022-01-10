@@ -14,16 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReaderCollection.NoActionBar"
         tools:ignore="AllowBackup">
-        <activity
-            android:name=".activities.BookDetailActivity"
-            android:theme="@style/Theme.ReaderCollection.NoActionBar.BookDetail"
-            android:parentActivityName=".activities.MainActivity" />
-        <activity
-            android:name=".activities.MainActivity" />
-        <activity
-            android:name=".activities.RegisterActivity" />
-        <activity
-            android:name=".activities.LoginActivity" />
+        <activity android:name=".activities.MainActivity" />
+        <activity android:name=".activities.RegisterActivity" />
+        <activity android:name=".activities.LoginActivity" />
         <activity
             android:name=".activities.LandingActivity"
             android:exported="true">

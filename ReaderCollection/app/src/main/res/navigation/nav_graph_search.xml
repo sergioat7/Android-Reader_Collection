@@ -31,6 +31,19 @@
         android:name="aragones.sergio.readercollection.fragments.BookDetailFragment"
         android:label="BookDetailFragment"
         tools:layout="@layout/fragment_book_detail"
-        />
+        >
+
+        <argument
+            android:name="bookId"
+            app:argType="string"
+            />
+
+        <argument
+            android:name="isGoogleBook"
+            app:argType="boolean"
+            android:defaultValue="false"
+            />
+
+    </fragment>
 
 </navigation>
