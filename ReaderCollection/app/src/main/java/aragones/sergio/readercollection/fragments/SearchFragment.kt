@@ -50,6 +50,14 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         initializeUi()
     }
 
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.search_toolbar_menu, menu)
+        setupSearchView(menu)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
@@ -71,14 +79,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //endregion
 
     //region Public methods
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.search_toolbar_menu, menu)
-        setupSearchView(menu)
-    }
-
     fun goToStartEndList(view: View) {
 
         when (view) {
