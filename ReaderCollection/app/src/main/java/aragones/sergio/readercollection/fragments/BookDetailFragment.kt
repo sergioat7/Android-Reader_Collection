@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
@@ -64,8 +63,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
-        initializeUI()
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -167,8 +166,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -233,7 +233,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             editable = false
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.book.observe(viewLifecycleOwner, {

@@ -9,7 +9,6 @@ import android.os.Bundle
 import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
@@ -38,8 +37,8 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (activity as? AppCompatActivity)?.setSupportActionBar(binding.toolbar)
-        initializeUI()
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -99,8 +98,9 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -155,7 +155,9 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             lifecycleOwner = this@ProfileFragment
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
