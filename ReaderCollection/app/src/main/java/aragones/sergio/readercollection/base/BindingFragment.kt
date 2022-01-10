@@ -107,17 +107,23 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
             .show()
     }
 
-    fun <T> launchActivity(activity: Class<T>) {
+    fun <T> launchActivity(activity: Class<T>, clearStack: Boolean = false) {
 
-        val intent = Intent(context, activity).apply {}
+        val intent = Intent(context, activity)
+        if (clearStack) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
         startActivity(intent)
     }
 
-    fun <T> launchActivityWithExtras(activity: Class<T>, params: Map<String, Serializable>) {
+    fun <T> launchActivityWithExtras(activity: Class<T>, params: Map<String, Serializable>, clearStack: Boolean = false) {
 
-        val intent = Intent(context, activity).apply {}
+        val intent = Intent(context, activity)
         for (param in params) {
             intent.putExtra(param.key, param.value)
+        }
+        if (clearStack) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)
     }

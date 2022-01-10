@@ -19,8 +19,7 @@
             android:theme="@style/Theme.ReaderCollection.NoActionBar.BookDetail"
             android:parentActivityName=".activities.MainActivity" />
         <activity
-            android:name=".activities.MainActivity"
-            android:launchMode="singleTask" />
+            android:name=".activities.MainActivity" />
         <activity
             android:name=".activities.RegisterActivity" />
         <activity
