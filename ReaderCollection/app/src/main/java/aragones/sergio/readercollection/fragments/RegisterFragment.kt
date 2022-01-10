@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
 import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
 import kotlinx.android.synthetic.main.fragment_register.*
@@ -21,6 +22,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
     //region Protected properties
     override val hasOptionsMenu = false
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties

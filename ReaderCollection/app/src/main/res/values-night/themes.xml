@@ -21,7 +21,6 @@
         <item name="bottomNavigationStyle">@style/Widget.ReaderCollection.BottomNavigationView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.ReaderCollection.MaterialAlertDialog</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
-        <item name="android:windowLightStatusBar">false</item>
     </style>
 
 </resources>
