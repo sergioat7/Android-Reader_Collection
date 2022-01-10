@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
@@ -25,11 +26,12 @@ import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.utils.State
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import kotlinx.android.synthetic.main.fragment_book_detail.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.util.*
 import kotlin.math.abs
 
@@ -38,10 +40,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     //region Protected properties
     override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.SECONDARY
     //endregion
 
     //region Private properties
-    private var bookId: String = ""
+    private val args: BookDetailFragmentArgs by navArgs()
     private lateinit var viewModel: BookDetailViewModel
     private var book: BookResponse? = null
     private lateinit var formats: List<FormatResponse>
@@ -59,7 +62,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -104,6 +109,16 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
@@ -151,16 +166,14 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
-
-        bookId = this.arguments?.getString(Constants.BOOK_ID) ?: ""
-        val isGoogleBook = this.arguments?.getBoolean(Constants.IS_GOOGLE_BOOK) ?: false
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
-            BookDetailViewModelFactory(application, bookId, isGoogleBook)
+            BookDetailViewModelFactory(application, args.bookId, args.isGoogleBook)
         )[BookDetailViewModel::class.java]
         setupBindings()
         formats = listOf()
@@ -220,7 +233,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             editable = false
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.book.observe(viewLifecycleOwner, {

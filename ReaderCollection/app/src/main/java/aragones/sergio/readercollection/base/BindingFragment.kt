@@ -17,15 +17,19 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.setStatusBarStyle
 import aragones.sergio.readercollection.fragments.popups.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.fragments.popups.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 import java.lang.reflect.ParameterizedType
@@ -41,6 +45,8 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         private set
 
     protected abstract val hasOptionsMenu: Boolean
+    protected abstract val statusBarStyle: StatusBarStyle
+    protected open var toolbar: Toolbar? = null
     //endregion
 
     //region Private properties
@@ -75,6 +81,35 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         binding = inflateMethod.invoke(null, inflater, container, false) as Binding
         return binding.root
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        activity?.let {
+            when (statusBarStyle) {
+                StatusBarStyle.PRIMARY -> {
+                    it.window.setStatusBarStyle(
+                        ContextCompat.getColor(it, R.color.colorSecondary),
+                        !it.isDarkMode()
+                    )
+                }
+                StatusBarStyle.SECONDARY -> {
+                    it.window.setStatusBarStyle(
+                        ContextCompat.getColor(it, R.color.colorPrimary),
+                        it.isDarkMode()
+                    )
+                }
+            }
+        }
+    }
+    //endregion
+
+    //region Protected methods
+    protected open fun initializeUi() {
+        toolbar?.let{
+            (activity as? AppCompatActivity)?.setSupportActionBar(it)
+        }
+    }
     //endregion
 
     //region Public methods
@@ -107,17 +142,27 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
             .show()
     }
 
-    fun <T> launchActivity(activity: Class<T>) {
+    fun <T> launchActivity(activity: Class<T>, clearStack: Boolean = false) {
 
-        val intent = Intent(context, activity).apply {}
+        val intent = Intent(context, activity)
+        if (clearStack) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
         startActivity(intent)
     }
 
-    fun <T> launchActivityWithExtras(activity: Class<T>, params: Map<String, Serializable>) {
+    fun <T> launchActivityWithExtras(
+        activity: Class<T>,
+        params: Map<String, Serializable>,
+        clearStack: Boolean = false
+    ) {
 
-        val intent = Intent(context, activity).apply {}
+        val intent = Intent(context, activity)
         for (param in params) {
             intent.putExtra(param.key, param.value)
+        }
+        if (clearStack) {
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         startActivity(intent)
     }
@@ -185,7 +230,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
             }
 
-            searchView.isIconified = false
             searchView.isIconifiedByDefault = false
             searchView.queryHint = resources.getString(R.string.search)
             if (query.isNotBlank()) {
@@ -229,14 +273,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                     ColorStateList.valueOf(color)
             }
         }
-    }
-
-    fun setTitle(title: String) {
-        (activity as AppCompatActivity?)?.supportActionBar?.title = title
-    }
-
-    fun setSubtitle(subtitle: String) {
-        (activity as AppCompatActivity?)?.supportActionBar?.subtitle = subtitle
     }
     //endregion
 

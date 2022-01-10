@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentLoginBinding
 import aragones.sergio.readercollection.extensions.showOrHidePassword
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
 import kotlinx.android.synthetic.main.fragment_login.*
@@ -21,6 +22,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     //region Protected properties
     override val hasOptionsMenu = false
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties
@@ -30,7 +32,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+        initializeUi()
     }
 
     override fun onDestroy() {
@@ -57,8 +59,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
 
         val application = activity?.application ?: return
         viewModel =
@@ -80,7 +82,9 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             lifecycleOwner = this@LoginFragment
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.loginFormState.observe(viewLifecycleOwner, {
@@ -107,7 +111,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         viewModel.loginError.observe(viewLifecycleOwner, { error ->
 
             if (error == null) {
-                launchActivity(MainActivity::class.java)
+                launchActivity(MainActivity::class.java, true)
             } else {
 
                 hideLoading()

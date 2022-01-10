@@ -15,18 +15,18 @@ import android.view.View
 import android.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.ScrollPosition
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
-import aragones.sergio.readercollection.viewmodels.ScrollPosition
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
 import kotlin.math.max
 
@@ -34,6 +34,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
     //region Protected properties
     override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties
@@ -44,7 +45,17 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+
+        toolbar = binding.toolbar
+        initializeUi()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.search_toolbar_menu, menu)
+        setupSearchView(menu)
     }
 
     override fun onDestroy() {
@@ -56,24 +67,18 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Interface methods
     override fun onItemClick(bookId: String) {
 
-        val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to true)
-        launchActivityWithExtras(BookDetailActivity::class.java, params)
+        val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(bookId, true)
+        findNavController().navigate(action)
     }
 
     override fun onLoadMoreItemsClick() {
+
         viewModel.searchBooks()
+        viewModel.setPosition(ScrollPosition.MIDDLE)
     }
     //endregion
 
     //region Public methods
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.search_toolbar_menu, menu)
-        setupSearchView(menu)
-    }
-
     fun goToStartEndList(view: View) {
 
         when (view) {
@@ -83,8 +88,9 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -124,21 +130,14 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             })
             ItemTouchHelper(SwipeController()).attachToRecyclerView(recyclerViewBooks)
 
-            if (this@SearchFragment.viewModel.query.isNotBlank()) {
-                setTitle(
-                    resources.getString(
-                        R.string.query_title,
-                        this@SearchFragment.viewModel.query
-                    )
-                )
-            }
-
             fragment = this@SearchFragment
             viewModel = this@SearchFragment.viewModel
             lifecycleOwner = this@SearchFragment
         }
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
@@ -146,10 +145,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             if (booksResponse.isEmpty()) {
                 booksAdapter.resetList()
             } else {
-                viewModel.setPosition(
-                    if (booksAdapter.itemCount == 0) ScrollPosition.TOP
-                    else ScrollPosition.MIDDLE
-                )
                 booksAdapter.setBooks(booksResponse)
             }
         })
@@ -167,7 +162,10 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         })
 
         viewModel.searchError.observe(viewLifecycleOwner, { error ->
-            manageError(error)
+            error?.let {
+
+                manageError(it)
+            }
         })
 
         viewModel.scrollPosition.observe(viewLifecycleOwner, {
@@ -197,7 +195,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
                 return true
             }
         })
-        this.setupSearchView(R.color.colorPrimary, viewModel.query)
+        this.setupSearchView(R.color.colorPrimary, viewModel.query.value ?: "")
     }
 
     private fun searchBooks(query: String) {
@@ -206,7 +204,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.reloadData()
         viewModel.searchBooks()
         requireActivity().hideSoftKeyboard()
-        setTitle(resources.getString(R.string.query_title, query))
     }
     //endregion
 

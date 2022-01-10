@@ -17,7 +17,7 @@
             />
 
         <import
-            type="aragones.sergio.readercollection.viewmodels.ScrollPosition"
+            type="aragones.sergio.readercollection.utils.ScrollPosition"
             />
 
         <variable
@@ -38,6 +38,17 @@
         tools:context=".fragments.SearchFragment"
         >
 
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title='@{viewModel.query.equals("") ? @string/title_search : @string/query_title(viewModel.query)}'
+            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main"
+            />
+
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout_books"
             android:layout_width="0dp"
@@ -45,7 +56,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
             >
 
             <androidx.recyclerview.widget.RecyclerView

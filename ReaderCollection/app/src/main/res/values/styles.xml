@@ -211,6 +211,10 @@
     <!--  BottomNavigationView  -->
 
     <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="itemIconTint">@drawable/bottom_navigation_icon_colors</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_text_colors</item>
+        <item name="itemTextAppearanceInactive">@font/roboto_regular</item>
+        <item name="itemTextAppearanceActive">@font/roboto_bold</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 

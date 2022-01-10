@@ -7,7 +7,6 @@
 <resources>
 
     //GENERAL
-    <string name="app_name">Reader Collection</string>
     <string name="search">Buscar</string>
 
     //LOGIN &amp; REGISTRATION

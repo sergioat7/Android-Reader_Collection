@@ -58,13 +58,6 @@
                 app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 >
 
-                <androidx.appcompat.widget.Toolbar
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/size_48dp"
-                    app:layout_collapseMode="pin"
-                    android:layout_marginBottom="@dimen/margin_8dp"
-                    />
-
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraint_layout_image_toolbar"
                     android:layout_width="match_parent"
@@ -86,6 +79,16 @@
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_48dp"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_arrow_back"
+                    app:title=" "
+                    />
 
             </com.google.android.material.appbar.CollapsingToolbarLayout>
 

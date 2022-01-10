@@ -31,8 +31,6 @@ object Preferences {
 object Constants {
     const val DATABASE_NAME = "ReaderCollection"
     const val DATE_FORMAT = "yyyy-MM-dd"
-    const val BOOK_ID = "bookId"
-    const val IS_GOOGLE_BOOK = "isGoogleBook"
     const val MAX_LINES = Int.MAX_VALUE
     const val NO_VALUE = "-"
 
@@ -137,4 +135,13 @@ object State {
     const val PENDING = "PENDING"
     const val READING = "READING"
     const val READ = "READ"
+}
+
+enum class ScrollPosition {
+    TOP, MIDDLE, END
+}
+
+enum class StatusBarStyle {
+    PRIMARY,
+    SECONDARY
 }

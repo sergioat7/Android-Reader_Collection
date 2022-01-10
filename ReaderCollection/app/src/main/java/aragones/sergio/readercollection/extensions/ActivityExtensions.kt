@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.extensions
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
 
@@ -24,4 +25,8 @@ fun Activity.hideSoftKeyboard() {
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     } ?: return
+}
+
+fun Activity?.isDarkMode(): Boolean {
+    return this?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }

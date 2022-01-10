@@ -12,16 +12,16 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 
@@ -29,6 +29,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
     //region Protected properties
     override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties
@@ -41,7 +42,9 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
+
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -84,12 +87,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         this.searchView?.clearFocus()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        setSubtitle("")
-    }
-
     override fun onDestroy() {
         super.onDestroy()
 
@@ -100,8 +97,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //region Interface methods
     override fun onItemClick(bookId: String) {
 
-        val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to false)
-        launchActivityWithExtras(BookDetailActivity::class.java, params)
+        val action = BooksFragmentDirections.actionBooksFragmentToBookDetailFragment(bookId, false)
+        findNavController().navigate(action)
     }
 
     override fun onLoadMoreItemsClick() {}
@@ -117,8 +114,9 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     }
     //endregion
 
-    //region Private methods
-    private fun initializeUI() {
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -175,19 +173,10 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         }
         setupSearchView()
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
-
-        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
-
-            setSubtitle(
-                resources.getQuantityString(
-                    R.plurals.title_books_count,
-                    booksResponse.size,
-                    booksResponse.size
-                )
-            )
-        })
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
@@ -224,30 +213,26 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private fun setupSearchView() {
 
         this.searchView = binding.searchViewBooks
-        this.searchView?.let { searchView ->
+        this.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
-            searchView.clearFocus()
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(newText: String): Boolean {
 
-                override fun onQueryTextChange(newText: String): Boolean {
-
-                    viewModel.searchBooks(newText)
-                    binding.apply {
-                        recyclerViewReadingBooks.scrollToPosition(0)
-                        recyclerViewPendingBooks.scrollToPosition(0)
-                        recyclerViewBooks.scrollToPosition(0)
-                    }
-                    return true
+                viewModel.searchBooks(newText)
+                binding.apply {
+                    recyclerViewReadingBooks.scrollToPosition(0)
+                    recyclerViewPendingBooks.scrollToPosition(0)
+                    recyclerViewBooks.scrollToPosition(0)
                 }
+                return true
+            }
 
-                override fun onQueryTextSubmit(query: String): Boolean {
+            override fun onQueryTextSubmit(query: String): Boolean {
 
-                    requireActivity().hideSoftKeyboard()
-                    searchView.clearFocus()
-                    return true
-                }
-            })
-        }
+                requireActivity().hideSoftKeyboard()
+                searchView?.clearFocus()
+                return true
+            }
+        })
         this.setupSearchView(R.color.colorSecondary, "")
     }
     //endregion
