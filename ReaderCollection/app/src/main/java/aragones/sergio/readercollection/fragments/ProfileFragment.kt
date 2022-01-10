@@ -164,7 +164,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->
 
             if (!redirect) return@Observer
-            launchActivity(LandingActivity::class.java)
+            launchActivity(LandingActivity::class.java, true)
             activity?.finish()
         })
 
