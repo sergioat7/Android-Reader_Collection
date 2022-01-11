@@ -90,7 +90,7 @@
             android:enabled="@{viewModel.loginFormState.isDataValid}"
             android:onClick="@{() -> fragment.login()}"
             android:text="@string/sign_in"
-            app:layout_constraintBottom_toTopOf="@+id/linear_layout"
+            app:layout_constraintBottom_toTopOf="@+id/button_register"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password"
@@ -98,37 +98,32 @@
             style="@style/Widget.ReaderCollection.Button.Main"
             />
 
-        <LinearLayout
-            android:id="@+id/linear_layout"
+        <TextView
+            android:id="@+id/text_view_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_5dp"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            android:text="@string/not_account"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintEnd_toStartOf="@+id/button_register"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+            />
+
+        <Button
+            android:id="@+id/button_register"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_24dp"
-            android:orientation="horizontal"
+            android:text="@string/create_account"
+            android:onClick="@{() -> fragment.goToRegister()}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="@dimen/margin_5dp"
-                android:text="@string/not_account"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                />
-
-            <Button
-                android:id="@+id/button_register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/create_account"
-                android:onClick="@{() -> fragment.goToRegister()}"
-                style="@style/Widget.ReaderCollection.TextButton.Main.Action"
-                />
-
-        </LinearLayout>
+            app:layout_constraintStart_toEndOf="@+id/text_view_register"
+            style="@style/Widget.ReaderCollection.TextButton.Main.Action"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
