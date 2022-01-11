@@ -145,3 +145,10 @@ enum class StatusBarStyle {
     PRIMARY,
     SECONDARY
 }
+
+enum class CustomInputType {
+    TEXT,
+    MULTI_LINE_TEXT,
+    NUMBER,
+    PASSWORD
+}

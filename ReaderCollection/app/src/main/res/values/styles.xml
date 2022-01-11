@@ -96,6 +96,17 @@
         <item name="android:textColor">@color/textPrimaryLight</item>
     </style>
 
+    <!--  TextInputLayout  -->
+
+    <style name="Widget.ReaderCollection.TextInputLayout.Bordered" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/color_text_input_layout_border</item>
+        <item name="editTextStyle">@style/ThemeOverlay.ReaderCollection.TextInputEditText.Bordered</item>
+        <item name="hintTextAppearance">@style/TextAppearance.ReaderCollection.Hint</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10</item>
+        <item name="android:textColorHint">@color/textPrimaryLight</item>
+        <item name="android:useDefaultMargins">false</item>
+    </style>
+
     <!--  TextButton  -->
 
     <style name="Widget.ReaderCollection.TextButton" parent="Widget.MaterialComponents.Button.TextButton">
@@ -206,6 +217,21 @@
 
     <style name="ShapeAppearance.ReaderCollection.Rounded.15">
         <item name="cornerSize">@dimen/radius_15dp</item>
+    </style>
+
+    <!--  TextAppearance  -->
+
+    <style name="TextAppearance.ReaderCollection.Hint" parent="TextAppearance.Design.Hint">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/text_size_12sp</item>
+    </style>
+
+    <!--  ThemeOverlay  -->
+
+    <style name="ThemeOverlay.ReaderCollection.TextInputEditText.Bordered" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/text_size_16sp</item>
+        <item name="android:textColor">@color/textPrimary</item>
     </style>
 
     <!--  BottomNavigationView  -->
