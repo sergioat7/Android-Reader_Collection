@@ -8,43 +8,12 @@ package aragones.sergio.readercollection.extensions
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.text.Editable
-import android.text.TextWatcher
-import android.text.method.HideReturnsTransformationMethod
-import android.text.method.PasswordTransformationMethod
 import android.widget.EditText
-import android.widget.ImageButton
 import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import com.google.android.material.datepicker.MaterialDatePicker
 import java.util.*
-
-fun EditText.afterTextChanged(afterTextChanged: (String) -> Unit) {
-    this.addTextChangedListener(object : TextWatcher {
-
-        override fun afterTextChanged(editable: Editable?) {
-            afterTextChanged.invoke(editable.toString())
-        }
-
-        override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
-    })
-}
-
-fun EditText.onFocusChange(onFocusChange: () -> Unit) {
-    this.setOnFocusChangeListener { _, hasFocus ->
-
-        if (!hasFocus) {
-            onFocusChange()
-        }
-    }
-}
-
-fun EditText.clearErrors() {
-    this.error = null
-}
 
 fun EditText.setReadOnly(value: Boolean, inputType: Int, lineColor: Int) {
 
@@ -72,19 +41,6 @@ fun EditText.showDatePicker(activity: FragmentActivity) {
 
 fun EditText.getValue(): String {
     return this.text.toString().trimStart().trimEnd()
-}
-
-fun EditText.showOrHidePassword(imageButton: ImageButton) {
-
-    if (this.transformationMethod is HideReturnsTransformationMethod) {
-
-        imageButton.setImageResource(R.drawable.ic_show_password)
-        this.transformationMethod = PasswordTransformationMethod.getInstance()
-    } else {
-
-        imageButton.setImageResource(R.drawable.ic_hide_password)
-        this.transformationMethod = HideReturnsTransformationMethod.getInstance()
-    }
 }
 
 //region Private functions

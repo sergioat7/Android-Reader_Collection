@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentLoginBinding
 import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
@@ -52,8 +53,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         binding.textInputLayoutUsername.textInputEditText.clearFocus()
         binding.textInputLayoutPassword.textInputEditText.clearFocus()
         viewModel.login(
-            binding.textInputLayoutUsername.textInputEditText.text.toString(),
-            binding.textInputLayoutPassword.textInputEditText.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
         )
     }
     //endregion
@@ -124,8 +125,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     private fun loginDataChanged() {
 
         viewModel.loginDataChanged(
-            binding.textInputLayoutUsername.textInputEditText.text.toString(),
-            binding.textInputLayoutPassword.textInputEditText.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
         )
     }
     //endregion

@@ -95,7 +95,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             val isSortDescending = spinnerSortOrders.selectedItemPosition == 1
             val themeMode = spinnerAppTheme.selectedItemPosition
             this@ProfileFragment.viewModel.save(
-                textInputLayoutPassword.textInputEditText.text.toString(),
+                textInputLayoutPassword.getValue(),
                 language,
                 sortParam,
                 isSortDescending,
