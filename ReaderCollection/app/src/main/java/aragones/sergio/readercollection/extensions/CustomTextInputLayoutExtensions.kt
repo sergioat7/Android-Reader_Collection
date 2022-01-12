@@ -26,3 +26,7 @@ inline fun CustomTextInputLayoutBinding.doAfterTextChanged(
 fun CustomTextInputLayoutBinding.setEndIconOnClickListener(endIconOnClickListener: View.OnClickListener) {
     textInputLayout.setEndIconOnClickListener(endIconOnClickListener)
 }
+
+fun CustomTextInputLayoutBinding.getValue(): String {
+    return this.textInputEditText.text.toString().trimStart().trimEnd()
+}

@@ -62,8 +62,8 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
         binding.textInputLayoutPassword.textInputEditText.clearFocus()
         binding.textInputLayoutConfirmPassword.textInputEditText.clearFocus()
         viewModel.register(
-            binding.textInputLayoutUsername.textInputEditText.text.toString(),
-            binding.textInputLayoutPassword.textInputEditText.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
         )
     }
     //endregion
@@ -133,9 +133,9 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     private fun registerDataChanged() {
 
         viewModel.registerDataChanged(
-            binding.textInputLayoutUsername.textInputEditText.text.toString(),
-            binding.textInputLayoutPassword.textInputEditText.text.toString(),
-            binding.textInputLayoutConfirmPassword.textInputEditText.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue(),
+            binding.textInputLayoutConfirmPassword.getValue()
         )
     }
     //endregion
