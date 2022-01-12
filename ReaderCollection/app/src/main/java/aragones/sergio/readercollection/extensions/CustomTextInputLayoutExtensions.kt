@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.extensions
 
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import androidx.core.widget.doAfterTextChanged
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 
@@ -21,3 +22,7 @@ fun CustomTextInputLayoutBinding.setError(text: String?) {
 inline fun CustomTextInputLayoutBinding.doAfterTextChanged(
     crossinline action: (text: Editable?) -> Unit
 ): TextWatcher = textInputEditText.doAfterTextChanged(action)
+
+fun CustomTextInputLayoutBinding.setEndIconOnClickListener(endIconOnClickListener: View.OnClickListener) {
+    textInputLayout.setEndIconOnClickListener(endIconOnClickListener)
+}
