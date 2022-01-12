@@ -6,7 +6,6 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
 import android.widget.*
 import androidx.lifecycle.Observer
@@ -69,6 +68,14 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.textInputLayoutPassword.doAfterTextChanged {
+            viewModel.profileDataChanged(it.toString())
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
@@ -88,7 +95,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             val isSortDescending = spinnerSortOrders.selectedItemPosition == 1
             val themeMode = spinnerAppTheme.selectedItemPosition
             this@ProfileFragment.viewModel.save(
-                editTextPassword.text.toString(),
+                textInputLayoutPassword.textInputEditText.text.toString(),
                 language,
                 sortParam,
                 isSortDescending,
@@ -109,51 +116,38 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         )[ProfileViewModel::class.java]
         setupBindings()
 
-        with(binding) {
-
-            editTextUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextPassword.afterTextChanged {
-                this@ProfileFragment.viewModel.profileDataChanged(it)
-            }
-
-            imageButtonInfo.setOnClickListener {
-                showPopupDialog(resources.getString(R.string.username_info))
-            }
-
-            imageButtonPassword.setOnClickListener {
-                editTextPassword.showOrHidePassword(imageButtonPassword)
-            }
-
-            var position = 0
-            this@ProfileFragment.viewModel.sortParam?.let { sortParam ->
-                position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
-            }
-            spinnerSortParams.setup(
-                resources.getStringArray(R.array.sorting_keys).toList(),
-                position,
-                true
-            )
-
-            spinnerSortOrders.setup(
-                listOf(
-                    resources.getString(R.string.ascending),
-                    resources.getString(R.string.descending)
-                ),
-                if (this@ProfileFragment.viewModel.isSortDescending) 1 else 0,
-                true
-            )
-
-            spinnerAppTheme.setup(
-                resources.getStringArray(R.array.app_theme_values).toList(),
-                this@ProfileFragment.viewModel.themeMode,
-                true
-            )
-
-            fragment = this@ProfileFragment
-            viewModel = this@ProfileFragment.viewModel
-            lifecycleOwner = this@ProfileFragment
+        binding.textInputLayoutUsername.setEndIconOnClickListener {
+            showPopupDialog(resources.getString(R.string.username_info))
         }
+
+        var position = 0
+        viewModel.sortParam?.let { sortParam ->
+            position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
+        }
+        binding.spinnerSortParams.setup(
+            resources.getStringArray(R.array.sorting_keys).toList(),
+            position,
+            true
+        )
+
+        binding.spinnerSortOrders.setup(
+            listOf(
+                resources.getString(R.string.ascending),
+                resources.getString(R.string.descending)
+            ),
+            if (viewModel.isSortDescending) 1 else 0,
+            true
+        )
+
+        binding.spinnerAppTheme.setup(
+            resources.getStringArray(R.array.app_theme_values).toList(),
+            viewModel.themeMode,
+            true
+        )
+
+        binding.fragment = this
+        binding.viewModel = this.viewModel
+        binding.lifecycleOwner = this
     }
     //endregion
 
@@ -162,10 +156,10 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
 
-            binding.editTextPassword.clearErrors()
+            binding.textInputLayoutPassword.setError("")
 
             val passwordError = it ?: return@Observer
-            binding.editTextPassword.error = getString(passwordError)
+            binding.textInputLayoutPassword.setError(getString(passwordError))
         })
 
         viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->

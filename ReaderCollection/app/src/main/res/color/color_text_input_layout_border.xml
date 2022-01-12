@@ -13,13 +13,8 @@
         />
 
     <item
-        android:state_enabled="false"
-        android:color="@android:color/transparent"
-        />
-
-    <item
         android:state_hovered="true"
-        android:color="@color/colorTertiary"
+        android:color="@color/colorSecondary"
         />
 
     <item
