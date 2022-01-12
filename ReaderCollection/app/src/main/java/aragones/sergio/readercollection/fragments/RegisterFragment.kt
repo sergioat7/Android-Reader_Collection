@@ -96,9 +96,9 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
             val registerState = it ?: return@observe
 
             with(binding) {
-                binding.textInputLayoutUsername.setError("")
-                binding.textInputLayoutPassword.setError("")
-                binding.textInputLayoutConfirmPassword.setError("")
+                textInputLayoutUsername.setError("")
+                textInputLayoutPassword.setError("")
+                textInputLayoutConfirmPassword.setError("")
 
                 if (registerState.usernameError != null) {
                     textInputLayoutUsername.setError(getString(registerState.usernameError))
