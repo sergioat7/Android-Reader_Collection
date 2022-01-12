@@ -35,6 +35,20 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
         initializeUi()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.textInputLayoutUsername.doAfterTextChanged {
+            registerDataChanged()
+        }
+        binding.textInputLayoutPassword.doAfterTextChanged {
+            registerDataChanged()
+        }
+        binding.textInputLayoutConfirmPassword.doAfterTextChanged {
+            registerDataChanged()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
@@ -42,20 +56,14 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     //endregion
 
     //region Public methods
-    fun registerDataChanged() {
-
-        viewModel.registerDataChanged(
-            binding.editTextUsername.text.toString(),
-            binding.editTextPassword.text.toString(),
-            binding.editTextConfirmPassword.text.toString()
-        )
-    }
-
     fun register() {
 
+        binding.textInputLayoutUsername.textInputEditText.clearFocus()
+        binding.textInputLayoutPassword.textInputEditText.clearFocus()
+        binding.textInputLayoutConfirmPassword.textInputEditText.clearFocus()
         viewModel.register(
-            binding.editTextUsername.text.toString(),
-            binding.editTextPassword.text.toString()
+            binding.textInputLayoutUsername.textInputEditText.text.toString(),
+            binding.textInputLayoutPassword.textInputEditText.text.toString()
         )
     }
     //endregion
@@ -69,54 +77,36 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
             this,
             RegisterViewModelFactory(application)
         )[RegisterViewModel::class.java]
+        setupBindings()
 
-        with(binding) {
-
-            editTextUsername.onFocusChange {
-                registerDataChanged()
-            }
-
-            imageButtonInfo.setOnClickListener {
-                showPopupDialog(resources.getString(R.string.username_info))
-            }
-
-            editTextPassword.onFocusChange {
-                registerDataChanged()
-            }
-
-            imageButtonPassword.setOnClickListener {
-                editTextPassword.showOrHidePassword(imageButtonPassword)
-            }
-
-            editTextConfirmPassword.onFocusChange {
-                registerDataChanged()
-            }
-
-            imageButtonConfirmPassword.setOnClickListener {
-                editTextConfirmPassword.showOrHidePassword(imageButtonConfirmPassword)
-            }
-
-            fragment = this@RegisterFragment
-            viewModel = this@RegisterFragment.viewModel
-            lifecycleOwner = this@RegisterFragment
+        binding.textInputLayoutUsername.setEndIconOnClickListener {
+            showPopupDialog(resources.getString(R.string.username_info))
         }
+        binding.fragment = this
+        binding.viewModel = this.viewModel
+        binding.lifecycleOwner = this
+    }
+    //endregion
+
+    //region Private methods
+    private fun setupBindings() {
 
         viewModel.registerFormState.observe(viewLifecycleOwner, {
 
             val registerState = it ?: return@observe
 
             with(binding) {
-                editTextUsername.clearErrors()
-                editTextPassword.clearErrors()
-                editTextConfirmPassword.clearErrors()
+                binding.textInputLayoutUsername.setError("")
+                binding.textInputLayoutPassword.setError("")
+                binding.textInputLayoutConfirmPassword.setError("")
 
                 if (registerState.usernameError != null) {
-                    editTextUsername.error = getString(registerState.usernameError)
+                    textInputLayoutUsername.setError(getString(registerState.usernameError))
                 }
                 if (registerState.passwordError != null) {
 
-                    editTextPassword.error = getString(registerState.passwordError)
-                    editTextConfirmPassword.error = getString(registerState.passwordError)
+                    textInputLayoutPassword.setError(getString(registerState.passwordError))
+                    textInputLayoutConfirmPassword.setError(getString(registerState.passwordError))
                 }
             }
         })
@@ -138,6 +128,15 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
                 manageError(error)
             }
         })
+    }
+
+    private fun registerDataChanged() {
+
+        viewModel.registerDataChanged(
+            binding.textInputLayoutUsername.textInputEditText.text.toString(),
+            binding.textInputLayoutPassword.textInputEditText.text.toString(),
+            binding.textInputLayoutConfirmPassword.textInputEditText.text.toString()
+        )
     }
     //endregion
 }
