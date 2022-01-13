@@ -101,7 +101,7 @@
 
     <style name="Widget.ReaderCollection.TextInputLayout.Bordered" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/color_text_input_layout_border</item>
-        <item name="editTextStyle">@style/ThemeOverlay.ReaderCollection.TextInputEditText.Bordered</item>
+        <item name="editTextStyle">@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox</item>
         <item name="hintTextAppearance">@style/TextAppearance.ReaderCollection.Hint</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10</item>
         <item name="android:textColorHint">@color/textPrimaryLight</item>
@@ -225,14 +225,6 @@
     <style name="TextAppearance.ReaderCollection.Hint" parent="TextAppearance.Design.Hint">
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
-    </style>
-
-    <!--  ThemeOverlay  -->
-
-    <style name="ThemeOverlay.ReaderCollection.TextInputEditText.Bordered" parent="ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox">
-        <item name="fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">@dimen/text_size_16sp</item>
-        <item name="android:textColor">@color/textPrimary</item>
     </style>
 
     <!--  BottomNavigationView  -->

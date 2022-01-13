@@ -10,7 +10,9 @@ import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.view.View
 import android.widget.Spinner
+import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.customview.ImageViewWithLoading
 import aragones.sergio.readercollection.utils.CustomInputType
 import com.google.android.material.textfield.TextInputEditText
@@ -101,5 +103,14 @@ fun setInputType(view: TextInputEditText, inputType: CustomInputType?) {
         CustomInputType.NUMBER -> InputType.TYPE_CLASS_NUMBER
         CustomInputType.PASSWORD -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         else -> InputType.TYPE_NULL
+    }
+}
+
+@BindingAdapter("isBold")
+fun setBold(view: TextInputEditText, isBold: Boolean?) {
+    if (isBold == true) {
+        view.typeface = ResourcesCompat.getFont(view.context, R.font.roboto_bold)
+    } else {
+        view.typeface = ResourcesCompat.getFont(view.context, R.font.roboto_regular)
     }
 }
