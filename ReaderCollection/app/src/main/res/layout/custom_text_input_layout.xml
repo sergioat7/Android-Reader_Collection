@@ -43,11 +43,13 @@
 
         <variable
             name="maxLength"
-            type="int" />
+            type="int"
+            />
 
         <variable
             name="minLines"
-            type="int" />
+            type="int"
+            />
 
         <variable
             name="enabled"
@@ -72,6 +74,7 @@
         app:endIconTint="@color/colorPrimary"
         app:end_icon_mode="@{endIconSrc != null ? (inputType == CustomInputType.PASSWORD ? 1 : -1) : 0}"
         app:expandedHintEnabled="@{inputHintText == null}"
+        tools:expandedHintEnabled="false"
         tools:hint="First name"
         style="@style/Widget.ReaderCollection.TextInputLayout.Bordered"
         >
@@ -80,7 +83,6 @@
             android:id="@+id/text_input_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:customInputType="@{inputType}"
             android:enabled="@{enabled}"
             android:gravity="top|start"
             android:hint="@{inputHintText}"
@@ -88,6 +90,7 @@
             android:minLines="@{minLines == 0 ? 1 : minLines}"
             android:scrollHorizontally="@{inputType != CustomInputType.MULTI_LINE_TEXT}"
             android:text="@{text}"
+            app:customInputType="@{inputType}"
             tools:hint="Please enter"
             style="@style/ThemeOverlay.ReaderCollection.TextInputEditText.Bordered"
             />

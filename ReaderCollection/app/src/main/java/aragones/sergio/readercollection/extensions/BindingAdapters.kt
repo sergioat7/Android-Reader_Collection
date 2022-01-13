@@ -93,7 +93,7 @@ fun setClickable(textInputLayout: TextInputLayout, clickable: Boolean?) {
     textInputLayout.isHovered = clickable != true
 }
 
-@BindingAdapter("android:customInputType")
+@BindingAdapter("customInputType")
 fun setInputType(view: TextInputEditText, inputType: CustomInputType?) {
     view.inputType = when (inputType) {
         CustomInputType.TEXT -> InputType.TYPE_CLASS_TEXT
