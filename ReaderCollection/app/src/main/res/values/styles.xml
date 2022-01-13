@@ -318,9 +318,4 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
-    <style name="CredentialsEditText" parent="CustomEditText">
-        <item name="android:ems">10</item>
-        <item name="android:selectAllOnFocus">true</item>
-    </style>
-
 </resources>
