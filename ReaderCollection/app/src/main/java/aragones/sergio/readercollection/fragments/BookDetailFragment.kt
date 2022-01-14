@@ -213,6 +213,24 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 }
             }
 
+            textInputLayoutDescription.doAfterTextChanged {
+                buttonReadMoreDescription.visibility =
+                    if (textInputLayoutDescription.isBlank() || textInputLayoutDescription.maxLines == Constants.MAX_LINES) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+            }
+
+            textInputLayoutSummary.doAfterTextChanged {
+                buttonReadMoreSummary.visibility =
+                    if (textInputLayoutSummary.isBlank() || textInputLayoutSummary.maxLines == Constants.MAX_LINES) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
+            }
+
             textInputLayoutPublishedDate.setOnClickListener {
                 textInputLayoutPublishedDate.showDatePicker(requireActivity())
             }
@@ -311,20 +329,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     linearLayoutCategories.addView(view)
                 }
             }
-
-            buttonReadMoreDescription.visibility =
-                if (book.description == null || book.description.isBlank() || textInputLayoutDescription.maxLines == Constants.MAX_LINES) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
-
-            buttonReadMoreSummary.visibility =
-                if (book.summary == null || book.summary.isBlank() || textInputLayoutSummary.maxLines == Constants.MAX_LINES) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
 
             setFormat(book)
 
