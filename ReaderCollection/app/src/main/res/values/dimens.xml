@@ -21,6 +21,7 @@
     <dimen name="margin_3dp">3dp</dimen>
 
     <!--  paddings  -->
+    <dimen name="padding_32dp">32dp</dimen>
     <dimen name="padding_24dp">24dp</dimen>
     <dimen name="padding_12dp">12dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>

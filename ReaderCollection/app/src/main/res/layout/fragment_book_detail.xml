@@ -108,10 +108,11 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bordered_scroll_view"
                 android:paddingStart="@dimen/padding_12dp"
                 android:paddingTop="@dimen/padding_24dp"
                 android:paddingEnd="@dimen/padding_12dp"
-                android:background="@drawable/bordered_scroll_view"
+                android:paddingBottom="@dimen/padding_32dp"
                 >
 
                 <View
@@ -328,7 +329,7 @@
                     app:layout_constraintEnd_toStartOf="@id/spinner_states"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_format_title"
-                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintVertical_bias="0.0"
                     isEnabled="@{editable}"
                     backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
                     style="@style/Widget.ReaderCollection.Spinner"
@@ -356,7 +357,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/spinner_formats"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_state_title"
-                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintVertical_bias="0.0"
                     isEnabled="@{editable}"
                     backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
                     style="@style/Widget.ReaderCollection.Spinner"
@@ -401,7 +402,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/text_input_layout_pages"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barrier1"
-                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintVertical_bias="0.0"
                     app:text='@{!viewModel.book.isbn.equals("") ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
@@ -422,7 +423,8 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_input_layout_isbn"
                     app:layout_constraintTop_toBottomOf="@+id/barrier1"
-                    app:layout_constraintVertical_bias="1.0"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:maxLength="@{10}"
                     app:text="@{viewModel.book.pageCount > 0 ? String.valueOf(viewModel.book.pageCount) : editable ? null : Constants.NO_VALUE}"
                     app:textColor="@{@color/textSecondary}"
                     />
@@ -438,44 +440,44 @@
                     />
 
                 <include
-                    android:id="@+id/text_input_layout_publisher"
+                    android:id="@+id/text_input_layout_published_date"
                     layout="@layout/custom_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
                     android:layout_marginEnd="@dimen/margin_5dp"
                     app:enabled="@{editable}"
-                    app:inputHintText="@{@string/add_publisher}"
-                    app:inputHintTextColor="@{@color/textSecondaryLight}"
-                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
-                    app:labelHintText="@{@string/publisher}"
-                    app:layout_constraintBottom_toBottomOf="@id/barrier3"
-                    app:layout_constraintEnd_toStartOf="@+id/text_input_layout_published_date"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/barrier2"
-                    app:layout_constraintVertical_bias="1.0"
-                    app:text='@{!viewModel.book.publisher.equals("") ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
-                    app:textColor="@{@color/textSecondary}"
-                    />
-
-                <include
-                    android:id="@+id/text_input_layout_published_date"
-                    layout="@layout/custom_text_input_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_12dp"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    app:enabled="@{editable}"
                     app:inputHintText="@{@string/select_a_date}"
                     app:inputHintTextColor="@{@color/textSecondaryLight}"
                     app:inputType="@{CustomInputType.DATE}"
                     app:labelHintText="@{@string/published_date}"
                     app:layout_constraintBottom_toBottomOf="@id/barrier3"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/text_input_layout_publisher"
+                    app:layout_constraintEnd_toStartOf="@+id/text_input_layout_reading_date"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barrier2"
                     app:layout_constraintVertical_bias="1.0"
-                    app:text='@{!viewModel.book.publishedDateAsHumanReadable().equals("") ? viewModel.book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:text="@{viewModel.book.publishedDateAsHumanReadable() ?? editable ? null : Constants.NO_VALUE}"
+                    app:textColor="@{@color/textSecondary}"
+                    />
+
+                <include
+                    android:id="@+id/text_input_layout_reading_date"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_a_date}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.DATE}"
+                    app:labelHintText="@{@string/reading_date}"
+                    app:layout_constraintBottom_toBottomOf="@id/barrier3"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/text_input_layout_published_date"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier2"
+                    app:layout_constraintVertical_bias="1.0"
+                    app:text='@{viewModel.book.readingDateAsHumanReadable() ?? editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 
@@ -486,26 +488,25 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="text_input_layout_publisher, text_input_layout_published_date"
+                    app:constraint_referenced_ids="text_input_layout_published_date, text_input_layout_reading_date"
                     />
 
                 <include
-                    android:id="@+id/text_input_layout_reading_date"
+                    android:id="@+id/text_input_layout_publisher"
                     layout="@layout/custom_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
-                    android:layout_marginBottom="@dimen/margin_32dp"
                     app:enabled="@{editable}"
-                    app:inputHintText="@{@string/select_a_date}"
+                    app:inputHintText="@{@string/add_publisher}"
                     app:inputHintTextColor="@{@color/textSecondaryLight}"
-                    app:inputType="@{CustomInputType.DATE}"
-                    app:labelHintText="@{@string/reading_date}"
+                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
+                    app:labelHintText="@{@string/publisher}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barrier3"
-                    app:text='@{!viewModel.book.readingDateAsHumanReadable().equals("") ? viewModel.book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{!viewModel.book.publisher.equals("") ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 

@@ -84,19 +84,19 @@ data class BookResponse(
         return authors?.joinToString(separator = ", ") ?: ""
     }
 
-    fun publishedDateAsHumanReadable(): String {
+    fun publishedDateAsHumanReadable(): String? {
 
         return publishedDate.toString(
             SharedPreferencesHandler.getDateFormatToShow(),
             SharedPreferencesHandler.getLanguage()
-        ) ?: ""
+        )
     }
 
-    fun readingDateAsHumanReadable(): String {
+    fun readingDateAsHumanReadable(): String? {
 
         return readingDate.toString(
             SharedPreferencesHandler.getDateFormatToShow(),
             SharedPreferencesHandler.getLanguage()
-        ) ?: ""
+        )
     }
 }
