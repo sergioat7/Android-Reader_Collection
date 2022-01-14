@@ -12,7 +12,6 @@ import android.text.InputType
 import android.view.*
 import android.widget.*
 import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -154,11 +153,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             when (view) {
                 buttonReadMoreDescription -> {
-                    editTextDescription.maxLines = Constants.MAX_LINES
+                    textInputLayoutDescription.maxLines = Constants.MAX_LINES
                     buttonReadMoreDescription.visibility = View.GONE
                 }
                 buttonReadMoreSummary -> {
-                    editTextSummary.maxLines = Constants.MAX_LINES
+                    textInputLayoutSummary.maxLines = Constants.MAX_LINES
                     buttonReadMoreSummary.visibility = View.GONE
                 }
             }
@@ -195,29 +194,15 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 //TODO: implement action
             }
 
-            editTextTitle.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextAuthor.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextDescription.setReadOnly(true, InputType.TYPE_NULL, 0)
-            editTextDescription.doAfterTextChanged {
-                textViewDescriptionCount.text =
-                    resources.getString(R.string.book_text_count, it?.length)
+            for (view in listOf(
+                textInputLayoutDescription,
+                textInputLayoutSummary,
+                textInputLayoutIsbn,
+                textInputLayoutPages,
+                textInputLayoutPublisher
+            )) {
+                view.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
             }
-
-
-
-            editTextSummary.setReadOnly(true, InputType.TYPE_NULL, 0)
-            editTextSummary.doAfterTextChanged {
-                textViewSummaryCount.text =
-                    resources.getString(R.string.book_text_count, it?.length)
-            }
-
-            editTextIsbn.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextPageCount.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextPublisher.setReadOnly(true, InputType.TYPE_NULL, 0)
 
             editTextPublishedDate.setOnClickListener {
                 editTextPublishedDate.showDatePicker(requireActivity())
@@ -242,7 +227,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             book = it
             showData(it)
-            makeFieldsEditable(viewModel.isGoogleBook || it == null)
+            binding.editable = viewModel.isGoogleBook || it == null
         })
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
@@ -319,14 +304,14 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
 
             buttonReadMoreDescription.visibility =
-                if (book.description == null || book.description.isBlank() || editTextDescription.maxLines == Constants.MAX_LINES) {
+                if (book.description == null || book.description.isBlank() || textInputLayoutDescription.maxLines == Constants.MAX_LINES) {
                     View.GONE
                 } else {
                     View.VISIBLE
                 }
 
             buttonReadMoreSummary.visibility =
-                if (book.summary == null || book.summary.isBlank() || editTextSummary.maxLines == Constants.MAX_LINES) {
+                if (book.summary == null || book.summary.isBlank() || textInputLayoutSummary.maxLines == Constants.MAX_LINES) {
                     View.GONE
                 } else {
                     View.VISIBLE
@@ -365,7 +350,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private fun getBookData(): BookResponse {
         with(binding) {
 
-            val authors = editTextAuthor.getValue().toList<String>().map {
+            val authors = textInputLayoutAuthor.getValue().toList<String>().map {
                 it.trimStart().trimEnd()
             }
             val publishedDate = editTextPublishedDate.text.toString().toDate(
@@ -376,7 +361,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 SharedPreferencesHandler.getDateFormatToShow(),
                 SharedPreferencesHandler.getLanguage()
             )
-            val pageCountText = editTextPageCount.getValue()
+            val pageCountText = textInputLayoutPages.getValue()
             val pageCount =
                 if (pageCountText.isNotBlank()) pageCountText.toInt()
                 else 0
@@ -390,15 +375,15 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             return BookResponse(
                 id = book?.id ?: "",
-                title = editTextTitle.getValue(),
+                title = textInputLayoutTitle.getValue(),
                 subtitle = book?.subtitle,
                 authors = authors,
-                publisher = editTextPublisher.getValue(),
+                publisher = textInputLayoutPublisher.getValue(),
                 publishedDate = publishedDate,
                 readingDate = readingDate,
-                description = editTextDescription.getValue(),
-                summary = editTextSummary.getValue(),
-                isbn = editTextIsbn.getValue(),
+                description = textInputLayoutDescription.getValue(),
+                summary = textInputLayoutSummary.getValue(),
+                isbn = textInputLayoutIsbn.getValue(),
                 pageCount = pageCount,
                 categories = book?.categories,
                 averageRating = book?.averageRating ?: 0.0,
@@ -422,46 +407,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             findItem(R.id.action_cancel).isVisible = editable
         }
 
-        makeFieldsEditable(editable)
-    }
-
-    private fun makeFieldsEditable(editable: Boolean) {
-        with(binding) {
-            this.editable = editable
-
-            val inputTypeText = if (editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
-            val inputTypeNumber = if (editable) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_NULL
-            val backgroundTint =
-                if (editable) {
-                    ColorStateList.valueOf(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            R.color.colorPrimary
-                        )
-                    )
-                } else {
-                    ColorStateList.valueOf(Color.TRANSPARENT)
-                }
-
-            for (editText in listOf(
-                editTextTitle,
-                editTextAuthor,
-                editTextDescription,
-                editTextSummary,
-                editTextPublisher
-            )) {
-                editText.setReadOnly(!editable, inputTypeText, 0)
-                editText.backgroundTintList = backgroundTint
-            }
-
-            for (editText in listOf(
-                editTextIsbn,
-                editTextPageCount
-            )) {
-                editText.setReadOnly(!editable, inputTypeNumber, 0)
-                editText.backgroundTintList = backgroundTint
-            }
-        }
+        binding.editable = editable
     }
     //endregion
 }
