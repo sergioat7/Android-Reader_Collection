@@ -450,7 +450,7 @@
                     app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
                     app:labelHintText="@{@string/publisher}"
                     app:layout_constraintBottom_toBottomOf="@id/barrier3"
-                    app:layout_constraintEnd_toStartOf="@+id/text_view_published_date_title"
+                    app:layout_constraintEnd_toStartOf="@+id/text_input_layout_published_date"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barrier2"
                     app:layout_constraintVertical_bias="1.0"
@@ -458,33 +458,25 @@
                     app:textColor="@{@color/textSecondary}"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_published_date_title"
+                <include
+                    android:id="@+id/text_input_layout_published_date"
+                    layout="@layout/custom_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
-                    android:text="@string/published_date"
-                    app:layout_constraintStart_toEndOf="@+id/text_input_layout_publisher"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/barrier2"
-                    style="@style/Widget.ReaderCollection.TextView.Header"
-                    />
-
-                <EditText
-                    android:id="@+id/edit_text_published_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_5dp"
-                    android:backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                    android:enabled="@{editable}"
-                    android:hint="@string/select_a_date"
-                    android:text='@{!viewModel.book.publishedDateAsHumanReadable().equals("") ? viewModel.book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_a_date}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.DATE}"
+                    app:labelHintText="@{@string/published_date}"
                     app:layout_constraintBottom_toBottomOf="@id/barrier3"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/text_input_layout_publisher"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_published_date_title"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier2"
                     app:layout_constraintVertical_bias="1.0"
-                    style="@style/CustomEditText.BookDetails.Date"
+                    app:text='@{!viewModel.book.publishedDateAsHumanReadable().equals("") ? viewModel.book.publishedDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}"
                     />
 
                 <androidx.constraintlayout.widget.Barrier
@@ -494,35 +486,27 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="text_input_layout_publisher, edit_text_published_date"
+                    app:constraint_referenced_ids="text_input_layout_publisher, text_input_layout_published_date"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_reading_date_title"
+                <include
+                    android:id="@+id/text_input_layout_reading_date"
+                    layout="@layout/custom_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_12dp"
-                    android:text="@string/reading_date"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/barrier3"
-                    style="@style/Widget.ReaderCollection.TextView.Header"
-                    />
-
-                <EditText
-                    android:id="@+id/edit_text_reading_date"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_32dp"
-                    android:backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                    android:enabled="@{editable}"
-                    android:hint="@string/select_a_date"
-                    android:text='@{!viewModel.book.readingDateAsHumanReadable().equals("") ? viewModel.book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_a_date}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.DATE}"
+                    app:labelHintText="@{@string/reading_date}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_reading_date_title"
-                    style="@style/CustomEditText.BookDetails.Date"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier3"
+                    app:text='@{!viewModel.book.readingDateAsHumanReadable().equals("") ? viewModel.book.readingDateAsHumanReadable() : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

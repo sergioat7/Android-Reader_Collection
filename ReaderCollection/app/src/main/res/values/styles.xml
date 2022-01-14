@@ -270,24 +270,4 @@
         <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
-    <style name="CustomEditText" parent="Widget.AppCompat.EditText">
-        <item name="backgroundTint">@color/colorPrimary</item>
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textColorHint">@color/textPrimaryLight</item>
-        <item name="android:textIsSelectable">true</item>
-    </style>
-
-    <style name="CustomEditText.BookDetails" parent="CustomEditText">
-        <item name="android:textColorHint">@color/textSecondaryLight</item>
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">@dimen/text_size_16sp</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-    </style>
-
-    <style name="CustomEditText.BookDetails.Date" parent="CustomEditText.BookDetails">
-        <item name="android:inputType">date</item>
-        <item name="android:focusable">false</item>
-        <item name="android:clickable">true</item>
-    </style>
-
 </resources>
