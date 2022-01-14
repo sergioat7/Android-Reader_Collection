@@ -27,8 +27,28 @@
             />
 
         <variable
+            name="inputHintTextColor"
+            type="int"
+            />
+
+        <variable
             name="text"
             type="String"
+            />
+
+        <variable
+            name="textColor"
+            type="int"
+            />
+
+        <variable
+            name="textSize"
+            type="float"
+            />
+
+        <variable
+            name="isBold"
+            type="Boolean"
             />
 
         <variable
@@ -47,28 +67,13 @@
             />
 
         <variable
-            name="minLines"
+            name="maxLines"
             type="int"
             />
 
         <variable
             name="enabled"
             type="Boolean"
-            />
-
-        <variable
-            name="isBold"
-            type="Boolean"
-            />
-
-        <variable
-            name="textColor"
-            type="int"
-            />
-
-        <variable
-            name="textSize"
-            type="float"
             />
 
     </data>
@@ -84,6 +89,10 @@
         android:hint="@{labelHintText}"
         android:tag="focus"
         app:clickable="@{enabled}"
+        app:counterEnabled="@{maxLength != 0}"
+        app:counterMaxLength="@{maxLength}"
+        app:counterTextAppearance="@style/Widget.ReaderCollection.TextView.Title.TextCount"
+        app:counterTextColor="@color/textPrimary"
         app:endIconDrawable="@{endIconSrc}"
         app:endIconMode="custom"
         app:endIconTint="@color/colorPrimary"
@@ -101,11 +110,13 @@
             android:enabled="@{enabled}"
             android:gravity="top|start"
             android:hint="@{inputHintText}"
+            android:lineSpacingExtra="@dimen/margin_5dp"
             android:maxLength="@{maxLength == 0 ? Integer.MAX_VALUE : maxLength}"
-            android:minLines="@{minLines == 0 ? 1 : minLines}"
+            android:maxLines="@{maxLines == 0 ? Integer.MAX_VALUE : maxLines}"
             android:scrollHorizontally="@{inputType != CustomInputType.MULTI_LINE_TEXT}"
             android:text="@{text}"
             android:textColor="@{textColor == 0 ? @color/textPrimary : textColor}"
+            android:textColorHint="@{inputHintTextColor == 0 ? @color/textPrimaryLight : inputHintTextColor}"
             android:textSize="@{textSize == 0 ? @dimen/text_size_16sp : textSize}"
             app:customInputType="@{inputType}"
             app:isBold="@{isBold}"
