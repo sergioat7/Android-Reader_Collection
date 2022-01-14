@@ -284,30 +284,10 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
-    <style name="BookDetailEditText" parent="CustomEditText.BookDetails">
-        <item name="android:lineSpacingExtra">@dimen/margin_5dp</item>
-        <item name="android:maxLines">7</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
     <style name="CustomEditText.BookDetails.Date" parent="CustomEditText.BookDetails">
         <item name="android:inputType">date</item>
         <item name="android:focusable">false</item>
         <item name="android:clickable">true</item>
-    </style>
-
-    <style name="BookTitleEditText" parent="CustomEditText">
-        <item name="android:layout_marginTop">@dimen/margin_12dp</item>
-        <item name="android:textColor">@color/textPrimary</item>
-        <item name="android:textSize">@dimen/text_size_24sp</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
-    </style>
-
-    <style name="BookAuthorsEditText" parent="CustomEditText">
-        <item name="android:layout_marginTop">@dimen/margin_5dp</item>
-        <item name="android:textColor">@color/textSecondary</item>
-        <item name="android:textSize">@dimen/text_size_16sp</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
 
 </resources>
