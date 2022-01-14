@@ -100,7 +100,7 @@
         app:end_icon_mode="@{endIconSrc != null ? (inputType == CustomInputType.PASSWORD ? 1 : -1) : 0}"
         app:expandedHintEnabled="@{inputHintText == null}"
         tools:expandedHintEnabled="false"
-        tools:hint="First name"
+        tools:hint="Username"
         style="@style/Widget.ReaderCollection.TextInputLayout.Bordered"
         >
 

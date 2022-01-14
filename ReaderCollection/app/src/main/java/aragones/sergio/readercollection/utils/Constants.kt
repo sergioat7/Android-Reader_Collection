@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.utils
 
 import android.content.Context
+import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
 import aragones.sergio.readercollection.R
@@ -56,11 +57,17 @@ object Constants {
 
     fun getRoundedTextView(text: String, context: Context): TextView {
 
-        val tv = TextView(context, null, R.style.RoundedTextView, R.style.RoundedTextView)
+        val tv = TextView(
+            context,
+            null,
+            R.style.Widget_ReaderCollection_RoundedTextView,
+            R.style.Widget_ReaderCollection_RoundedTextView
+        )
         tv.layoutParams = ViewGroup.LayoutParams(
             ViewGroup.LayoutParams.WRAP_CONTENT,
             ViewGroup.LayoutParams.MATCH_PARENT
         )
+        tv.gravity = Gravity.CENTER
         tv.text = text
         return tv
     }

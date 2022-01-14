@@ -6,6 +6,10 @@
 
 <resources>
 
+    <style name="Widget" />
+
+    <style name="Widget.ReaderCollection" />
+
     <!--  TextViews  -->
 
     <style name="Widget.ReaderCollection.TextView" parent="Widget.MaterialComponents.TextView">
@@ -261,8 +265,7 @@
 
     <!--  Others  -->
 
-    <style name="RoundedTextView">
-        <item name="android:gravity">center</item>
+    <style name="Widget.ReaderCollection.RoundedTextView">
         <item name="android:background">@drawable/rounded_text_view</item>
         <item name="android:textColor">@color/textTertiary</item>
         <item name="android:maxLines">1</item>
