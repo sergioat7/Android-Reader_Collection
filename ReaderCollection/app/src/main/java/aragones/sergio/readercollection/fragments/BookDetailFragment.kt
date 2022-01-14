@@ -142,6 +142,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             )) {
                 view.scaleX = 1 - percentage
                 view.scaleY = 1 - percentage
+                view.isEnabled = percentage < 0.75
             }
         }
     }
