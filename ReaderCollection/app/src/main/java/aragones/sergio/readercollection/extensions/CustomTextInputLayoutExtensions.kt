@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.extensions
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 
@@ -29,4 +30,10 @@ fun CustomTextInputLayoutBinding.setEndIconOnClickListener(endIconOnClickListene
 
 fun CustomTextInputLayoutBinding.getValue(): String {
     return this.textInputEditText.text.toString().trimStart().trimEnd()
+}
+
+fun CustomTextInputLayoutBinding.setHintStyle(id: Int) {
+    this.textInputLayout.doOnLayout {
+        this.textInputLayout.setHintTextAppearance(id)
+    }
 }

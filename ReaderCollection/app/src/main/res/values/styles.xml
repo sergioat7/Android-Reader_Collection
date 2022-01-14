@@ -104,7 +104,7 @@
         <item name="editTextStyle">@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox</item>
         <item name="hintTextAppearance">@style/TextAppearance.ReaderCollection.Hint</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10</item>
-        <item name="android:textColorHint">@color/textPrimaryLight</item>
+        <item name="android:textColorHint">@color/textSecondary</item>
         <item name="android:useDefaultMargins">false</item>
     </style>
 

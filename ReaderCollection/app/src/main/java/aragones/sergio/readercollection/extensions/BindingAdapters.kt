@@ -99,7 +99,7 @@ fun setClickable(textInputLayout: TextInputLayout, clickable: Boolean?) {
 fun setInputType(view: TextInputEditText, inputType: CustomInputType?) {
     view.inputType = when (inputType) {
         CustomInputType.TEXT -> InputType.TYPE_CLASS_TEXT
-        CustomInputType.MULTI_LINE_TEXT -> InputType.TYPE_CLASS_TEXT// or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        CustomInputType.MULTI_LINE_TEXT -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
         CustomInputType.NUMBER -> InputType.TYPE_CLASS_NUMBER
         CustomInputType.PASSWORD -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
         else -> InputType.TYPE_NULL
