@@ -191,6 +191,13 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 //TODO: implement action
             }
 
+            textInputLayoutTitle.setEndIconOnClickListener {
+                textInputLayoutTitle.textInputEditText.setText("")
+            }
+            textInputLayoutAuthor.setEndIconOnClickListener {
+                textInputLayoutAuthor.textInputEditText.setText("")
+            }
+
             for (view in listOf(
                 textInputLayoutDescription,
                 textInputLayoutSummary,
@@ -201,6 +208,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 textInputLayoutReadingDate
             )) {
                 view.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
+                view.setEndIconOnClickListener {
+                    view.textInputEditText.setText("")
+                }
             }
 
             textInputLayoutPublishedDate.setOnClickListener {
