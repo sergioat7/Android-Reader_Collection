@@ -14,6 +14,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
@@ -41,6 +42,10 @@ fun CustomTextInputLayoutBinding.setEndIconOnClickListener(endIconOnClickListene
 
 fun CustomTextInputLayoutBinding.getValue(): String {
     return this.textInputEditText.text.toString().trimStart().trimEnd()
+}
+
+fun CustomTextInputLayoutBinding.isBlank(): Boolean {
+    return this.getValue().isBlank() || this.textInputEditText.text.toString() == Constants.NO_VALUE
 }
 
 fun CustomTextInputLayoutBinding.setHintStyle(id: Int) {
