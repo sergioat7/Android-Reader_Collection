@@ -150,5 +150,6 @@ enum class CustomInputType {
     TEXT,
     MULTI_LINE_TEXT,
     NUMBER,
-    PASSWORD
+    PASSWORD,
+    DATE
 }

@@ -5,13 +5,9 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -200,17 +196,19 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 textInputLayoutSummary,
                 textInputLayoutIsbn,
                 textInputLayoutPages,
-                textInputLayoutPublisher
+                textInputLayoutPublisher,
+                textInputLayoutPublishedDate,
+                textInputLayoutReadingDate
             )) {
                 view.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
             }
 
-            editTextPublishedDate.setOnClickListener {
-                editTextPublishedDate.showDatePicker(requireActivity())
+            textInputLayoutPublishedDate.setOnClickListener {
+                textInputLayoutPublishedDate.showDatePicker(requireActivity())
             }
 
-            editTextReadingDate.setOnClickListener {
-                editTextReadingDate.showDatePicker(requireActivity())
+            textInputLayoutReadingDate.setOnClickListener {
+                textInputLayoutReadingDate.showDatePicker(requireActivity())
             }
 
             fragment = this@BookDetailFragment
@@ -354,11 +352,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             val authors = textInputLayoutAuthor.getValue().toList<String>().map {
                 it.trimStart().trimEnd()
             }
-            val publishedDate = editTextPublishedDate.text.toString().toDate(
+            val publishedDate = textInputLayoutPublishedDate.getValue().toDate(
                 SharedPreferencesHandler.getDateFormatToShow(),
                 SharedPreferencesHandler.getLanguage()
             )
-            var readingDate = editTextReadingDate.text.toString().toDate(
+            var readingDate = textInputLayoutReadingDate.getValue().toDate(
                 SharedPreferencesHandler.getDateFormatToShow(),
                 SharedPreferencesHandler.getLanguage()
             )
