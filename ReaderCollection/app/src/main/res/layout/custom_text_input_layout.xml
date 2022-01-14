@@ -96,7 +96,7 @@
         app:endIconDrawable="@{endIconSrc}"
         app:endIconMode="custom"
         app:endIconTint="@color/colorPrimary"
-        app:endIconVisible="@{endIconSrc != null}"
+        app:endIconVisible='@{endIconSrc != null &amp;&amp; text != null}'
         app:end_icon_mode="@{endIconSrc != null ? (inputType == CustomInputType.PASSWORD ? 1 : -1) : 0}"
         app:expandedHintEnabled="@{inputHintText == null}"
         tools:expandedHintEnabled="false"
