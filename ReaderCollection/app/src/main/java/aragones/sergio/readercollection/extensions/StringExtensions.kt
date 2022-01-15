@@ -42,3 +42,7 @@ fun String?.toDate(format: String? = null, language: String? = null): Date? {
         return null
     }
 }
+
+fun String?.isNotBlank(): Boolean {
+    return !this.isNullOrBlank()
+}

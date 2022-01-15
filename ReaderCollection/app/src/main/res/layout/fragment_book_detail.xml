@@ -17,6 +17,10 @@
             />
 
         <import
+            type="aragones.sergio.readercollection.extensions.StringExtensionsKt"
+            />
+
+        <import
             type="aragones.sergio.readercollection.utils.Constants"
             />
 
@@ -191,7 +195,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/rating_bar"
-                    app:text='@{!viewModel.book.title.equals("") ? viewModel.book.title : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.title) ? viewModel.book.title : editable ? null : Constants.NO_VALUE}'
                     app:textSize="@{@dimen/text_size_24sp}"
                     />
 
@@ -207,7 +211,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_title"
-                    app:text='@{!viewModel.book.authorsToString().equals("") ? viewModel.book.authorsToString() : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.authorsToString()) ? viewModel.book.authorsToString() : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 
@@ -249,7 +253,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view_categories"
                     app:maxLength="@{10240}"
                     app:maxLines="@{7}"
-                    app:text='@{!viewModel.book.description.equals("") ? viewModel.book.description : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.description) ? viewModel.book.description : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 
@@ -282,7 +286,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/button_read_more_description"
                     app:maxLength="@{10240}"
                     app:maxLines="@{7}"
-                    app:text='@{!viewModel.book.summary.equals("") ? viewModel.book.summary : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.summary) ? viewModel.book.summary : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 
@@ -408,7 +412,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barrier1"
                     app:layout_constraintVertical_bias="0.0"
-                    app:text='@{!viewModel.book.isbn.equals("") ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.isbn) ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 
@@ -515,7 +519,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/barrier3"
-                    app:text='@{!viewModel.book.publisher.equals("") ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.publisher) ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}"
                     />
 

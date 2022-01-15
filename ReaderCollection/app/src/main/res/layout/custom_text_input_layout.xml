@@ -89,7 +89,7 @@
         android:hint="@{labelHintText}"
         android:tag="focus"
         app:clickable="@{enabled}"
-        app:counterEnabled="@{maxLength != 0}"
+        app:counterEnabled="@{enabled &amp;&amp; maxLength != 0}"
         app:counterMaxLength="@{maxLength}"
         app:counterTextAppearance="@style/Widget.ReaderCollection.TextView.Title.TextCount"
         app:counterTextColor="@color/textPrimary"
