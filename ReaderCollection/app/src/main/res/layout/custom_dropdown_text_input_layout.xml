@@ -48,6 +48,7 @@
             android:id="@+id/material_auto_complete_text_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:focusable="false"
             android:hint="@{inputHintText}"
             android:inputType="none"
             android:textColor="@color/textPrimary"

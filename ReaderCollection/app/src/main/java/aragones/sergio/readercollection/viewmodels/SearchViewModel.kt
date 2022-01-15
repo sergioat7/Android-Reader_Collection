@@ -8,15 +8,14 @@ package aragones.sergio.readercollection.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.utils.ScrollPosition
+import aragones.sergio.readercollection.utils.State
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -24,7 +23,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val googleBookRepository: GoogleBookRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
     //region Private properties
     private var page: Int = 1
@@ -54,7 +53,8 @@ class SearchViewModel @Inject constructor(
 
                 page++
                 val currentValues = _books.value ?: mutableListOf()
-                val newValues = Constants.mapGoogleBooks(googleBookListResponse.items)
+                val newValues =
+                    googleBookListResponse.items?.map { BookResponse(it) } ?: mutableListOf()
 
                 if (currentValues.isEmpty()) {
                     currentValues.add(BookResponse(id = ""))
