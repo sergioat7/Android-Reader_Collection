@@ -60,7 +60,6 @@
     <string name="reading_date">Reading date</string>
     <string name="book_saved">Book saved!</string>
     <string name="book_removed">Book removed!</string>
-    <string name="book_text_count" translatable="false">%d / 10240</string>
     <string name="edit">Edit</string>
     <string name="remove">Remove</string>
 
