@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 14/1/2022
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <variable
+            name="labelHintText"
+            type="String"
+            />
+
+        <variable
+            name="inputHintText"
+            type="String"
+            />
+
+        <variable
+            name="enabled"
+            type="Boolean"
+            />
+
+    </data>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:enabled="@{enabled}"
+        android:fontFamily="@font/roboto_bold"
+        android:hint="@{labelHintText}"
+        android:textColor="@color/textSecondary"
+        android:textSize="@dimen/text_size_16sp"
+        app:expandedHintEnabled="false"
+        app:endIconTint="@{enabled ? @color/colorPrimary : 0}"
+        tools:hint="Format"
+        style="@style/Widget.ReaderCollection.TextInputLayout.BorderedDropdown"
+        >
+
+        <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            android:id="@+id/material_auto_complete_text_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:hint="@{inputHintText}"
+            android:inputType="none"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textPrimaryLight"
+            android:textSize="@dimen/text_size_16sp"
+            tools:hint="Please choose"
+            style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</layout>

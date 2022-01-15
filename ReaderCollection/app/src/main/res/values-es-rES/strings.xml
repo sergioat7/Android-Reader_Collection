@@ -89,7 +89,7 @@
     <string name="profile_delete_confirmation">¿Estás seguro de que quieres borrar tu usuario? Perderás toda la información almacenada sobre los libros.</string>
     <string name="profile_logout_confirmation">¿Estás seguro de que quieres salir?</string>
     <string name="order_by">Ordenar por</string>
-    <string-array name="sorting_keys">
+    <string-array name="sorting_param_values">
         <item>Nada</item>
         <item>Título</item>
         <item>Fecha de publicación</item>
@@ -97,8 +97,10 @@
         <item>Nº de páginas</item>
         <item>Puntuación</item>
     </string-array>
-    <string name="ascending">Ascendente</string>
-    <string name="descending">Descendente</string>
+    <string-array name="sorting_order_values">
+        <item>Ascendente</item>
+        <item>Descendente</item>
+    </string-array>
     <string name="sync_title">Sincronizando…</string>
     <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo.</string>
 

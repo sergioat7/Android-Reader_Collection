@@ -12,7 +12,9 @@ import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentLoginBinding
-import aragones.sergio.readercollection.extensions.showOrHidePassword
+import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getValue
+import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
@@ -42,19 +44,17 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //endregion
 
     //region Public methods
-    fun loginDataChanged() {
-
-        viewModel.loginDataChanged(
-            binding.editTextUsername.text.toString(),
-            binding.editTextPassword.text.toString()
-        )
+    fun goToRegister() {
+        launchActivity(RegisterActivity::class.java)
     }
 
     fun login() {
 
+        binding.textInputLayoutUsername.textInputEditText.clearFocus()
+        binding.textInputLayoutPassword.textInputEditText.clearFocus()
         viewModel.login(
-            binding.editTextUsername.text.toString(),
-            binding.editTextPassword.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
         )
     }
     //endregion
@@ -67,19 +67,19 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
         setupBindings()
 
-        with(binding) {
+        binding.fragment = this
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+    }
 
-            imageButtonPassword.setOnClickListener {
-                editTextPassword.showOrHidePassword(imageButtonPassword)
-            }
+    override fun onResume() {
+        super.onResume()
 
-            buttonRegister.setOnClickListener {
-                launchActivity(RegisterActivity::class.java)
-            }
-
-            fragment = this@LoginFragment
-            viewModel = this@LoginFragment.viewModel
-            lifecycleOwner = this@LoginFragment
+        binding.textInputLayoutUsername.doAfterTextChanged {
+            loginDataChanged()
+        }
+        binding.textInputLayoutPassword.doAfterTextChanged {
+            loginDataChanged()
         }
     }
     //endregion
@@ -89,13 +89,15 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
         viewModel.loginFormState.observe(viewLifecycleOwner, {
 
+            binding.textInputLayoutUsername.setError("")
+            binding.textInputLayoutPassword.setError("")
             val loginState = it ?: return@observe
 
             if (loginState.usernameError != null) {
-                binding.editTextUsername.error = getString(loginState.usernameError)
+                binding.textInputLayoutUsername.setError(getString(loginState.usernameError))
             }
             if (loginState.passwordError != null) {
-                binding.editTextPassword.error = getString(loginState.passwordError)
+                binding.textInputLayoutPassword.setError(getString(loginState.passwordError))
             }
         })
 
@@ -118,6 +120,14 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                 manageError(error)
             }
         })
+    }
+
+    private fun loginDataChanged() {
+
+        viewModel.loginDataChanged(
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
+        )
     }
     //endregion
 }

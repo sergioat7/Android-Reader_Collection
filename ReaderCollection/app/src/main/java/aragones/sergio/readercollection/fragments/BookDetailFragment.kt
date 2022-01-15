@@ -5,14 +5,9 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.core.content.ContextCompat
-import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -21,8 +16,6 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.utils.State
@@ -47,10 +40,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private val args: BookDetailFragmentArgs by navArgs()
     private lateinit var viewModel: BookDetailViewModel
     private var book: BookResponse? = null
-    private lateinit var formats: List<FormatResponse>
-    private lateinit var formatValues: MutableList<String>
-    private lateinit var states: List<StateResponse>
-    private lateinit var stateValues: MutableList<String>
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
     //endregion
@@ -143,6 +132,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             )) {
                 view.scaleX = 1 - percentage
                 view.scaleY = 1 - percentage
+                view.isEnabled = percentage < 0.75
             }
         }
     }
@@ -154,11 +144,11 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             when (view) {
                 buttonReadMoreDescription -> {
-                    editTextDescription.maxLines = Constants.MAX_LINES
+                    textInputLayoutDescription.maxLines = Constants.MAX_LINES
                     buttonReadMoreDescription.visibility = View.GONE
                 }
                 buttonReadMoreSummary -> {
-                    editTextSummary.maxLines = Constants.MAX_LINES
+                    textInputLayoutSummary.maxLines = Constants.MAX_LINES
                     buttonReadMoreSummary.visibility = View.GONE
                 }
             }
@@ -176,10 +166,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             BookDetailViewModelFactory(application, args.bookId, args.isGoogleBook)
         )[BookDetailViewModel::class.java]
         setupBindings()
-        formats = listOf()
-        formatValues = mutableListOf()
-        states = listOf()
-        stateValues = mutableListOf()
 
         with(binding) {
             appBarLayoutBookDetail.addOnOffsetChangedListener(this@BookDetailFragment)
@@ -195,37 +181,57 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 //TODO: implement action
             }
 
-            editTextTitle.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextAuthor.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextDescription.setReadOnly(true, InputType.TYPE_NULL, 0)
-            editTextDescription.doAfterTextChanged {
-                textViewDescriptionCount.text =
-                    resources.getString(R.string.book_text_count, it?.length)
+            textInputLayoutTitle.setEndIconOnClickListener {
+                textInputLayoutTitle.textInputEditText.setText("")
+            }
+            textInputLayoutAuthor.setEndIconOnClickListener {
+                textInputLayoutAuthor.textInputEditText.setText("")
             }
 
-
-
-            editTextSummary.setReadOnly(true, InputType.TYPE_NULL, 0)
-            editTextSummary.doAfterTextChanged {
-                textViewSummaryCount.text =
-                    resources.getString(R.string.book_text_count, it?.length)
+            for (view in listOf(
+                textInputLayoutDescription,
+                textInputLayoutSummary,
+                textInputLayoutIsbn,
+                textInputLayoutPages,
+                textInputLayoutPublisher,
+                textInputLayoutPublishedDate,
+                textInputLayoutReadingDate
+            )) {
+                view.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
+                view.setEndIconOnClickListener {
+                    view.textInputEditText.setText("")
+                }
             }
 
-            editTextIsbn.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextPageCount.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextPublisher.setReadOnly(true, InputType.TYPE_NULL, 0)
-
-            editTextPublishedDate.setOnClickListener {
-                editTextPublishedDate.showDatePicker(requireActivity())
+            textInputLayoutDescription.doAfterTextChanged {
+                buttonReadMoreDescription.visibility =
+                    if (textInputLayoutDescription.isBlank() || textInputLayoutDescription.maxLines == Constants.MAX_LINES) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
             }
 
-            editTextReadingDate.setOnClickListener {
-                editTextReadingDate.showDatePicker(requireActivity())
+            textInputLayoutSummary.doAfterTextChanged {
+                buttonReadMoreSummary.visibility =
+                    if (textInputLayoutSummary.isBlank() || textInputLayoutSummary.maxLines == Constants.MAX_LINES) {
+                        View.GONE
+                    } else {
+                        View.VISIBLE
+                    }
             }
+
+            textInputLayoutPublishedDate.setOnClickListener {
+                textInputLayoutPublishedDate.showDatePicker(requireActivity())
+            }
+
+            textInputLayoutReadingDate.setOnClickListener {
+                textInputLayoutReadingDate.showDatePicker(requireActivity())
+            }
+
+            dropdownTextInputLayoutFormat.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
+
+            dropdownTextInputLayoutState.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
 
             fragment = this@BookDetailFragment
             viewModel = this@BookDetailFragment.viewModel
@@ -242,34 +248,18 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             book = it
             showData(it)
-            makeFieldsEditable(viewModel.isGoogleBook || it == null)
+            binding.editable = viewModel.isGoogleBook || it == null
         })
 
-        viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
+        viewModel.formats.observe(viewLifecycleOwner, {
 
-            formats = formatsResponse
-            formatValues = mutableListOf()
-            formatValues.run {
-
-                this.add(resources.getString((R.string.select_format)))
-                this.addAll(formatsResponse.map { it.name })
-            }
-            binding.spinnerFormats.setup(formatValues, 0)
             book?.let {
                 setFormat(it)
             }
         })
 
-        viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
+        viewModel.states.observe(viewLifecycleOwner, {
 
-            states = statesResponse
-            stateValues = mutableListOf()
-            stateValues.run {
-
-                this.add(resources.getString((R.string.select_state)))
-                this.addAll(statesResponse.map { it.name })
-            }
-            binding.spinnerStates.setup(stateValues, 0)
             book?.let {
                 setState(it)
             }
@@ -318,20 +308,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 }
             }
 
-            buttonReadMoreDescription.visibility =
-                if (book.description == null || book.description.isBlank() || editTextDescription.maxLines == Constants.MAX_LINES) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
-
-            buttonReadMoreSummary.visibility =
-                if (book.summary == null || book.summary.isBlank() || editTextSummary.maxLines == Constants.MAX_LINES) {
-                    View.GONE
-                } else {
-                    View.VISIBLE
-                }
-
             setFormat(book)
 
             setState(book)
@@ -340,65 +316,67 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun setFormat(book: BookResponse) {
 
-        var formatPosition = 0
-        book.format?.let { formatId ->
-
-            val formatName = formats.firstOrNull { it.id == formatId }?.name
-            val pos = formatValues.indexOf(formatName)
-            formatPosition = if (pos > 0) pos else 0
-        }
-        binding.spinnerFormats.setSelection(formatPosition)
+        /*
+        * This works before it's executed AFTER onResume method.
+        * Othwerwise, we must be sure to place it in onResume method.
+        */
+        binding.dropdownTextInputLayoutFormat.setValue(
+            viewModel.formats.value?.map { it.id } ?: listOf(),
+            viewModel.formats.value?.map { it.name } ?: listOf(),
+            book.format
+        )
     }
 
     private fun setState(book: BookResponse) {
 
-        var statePosition = if (viewModel.isGoogleBook) 1 else 0
-        book.state?.let { stateId ->
-
-            val stateName = states.firstOrNull { it.id == stateId }?.name
-            val pos = stateValues.indexOf(stateName)
-            statePosition = if (pos > 0) pos else 0
-        }
-        binding.spinnerStates.setSelection(statePosition)
+        /*
+        * This works before it's executed AFTER onResume method.
+        * Othwerwise, we must be sure to place it in onResume method.
+        */
+        binding.dropdownTextInputLayoutState.setValue(
+            viewModel.states.value?.map { it.id } ?: listOf(),
+            viewModel.states.value?.map { it.name } ?: listOf(),
+            book.state ?: viewModel.states.value?.first()?.id
+        )
     }
 
     private fun getBookData(): BookResponse {
         with(binding) {
 
-            val authors = editTextAuthor.getValue().toList<String>().map {
+            val authors = textInputLayoutAuthor.getValue().toList<String>().map {
                 it.trimStart().trimEnd()
             }
-            val publishedDate = editTextPublishedDate.text.toString().toDate(
+            val publishedDate = textInputLayoutPublishedDate.getValue().toDate(
                 SharedPreferencesHandler.getDateFormatToShow(),
                 SharedPreferencesHandler.getLanguage()
             )
-            var readingDate = editTextReadingDate.text.toString().toDate(
+            var readingDate = textInputLayoutReadingDate.getValue().toDate(
                 SharedPreferencesHandler.getDateFormatToShow(),
                 SharedPreferencesHandler.getLanguage()
             )
-            val pageCountText = editTextPageCount.getValue()
+            val pageCountText = textInputLayoutPages.getValue()
             val pageCount =
                 if (pageCountText.isNotBlank()) pageCountText.toInt()
                 else 0
             val rating = ratingBar.rating.toDouble() * 2
             val format =
-                this@BookDetailFragment.viewModel.formats.value?.firstOrNull { it.name == spinnerFormats.selectedItem.toString() }?.id
+                this@BookDetailFragment.viewModel.formats.value?.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
-                this@BookDetailFragment.viewModel.states.value?.firstOrNull { it.name == spinnerStates.selectedItem.toString() }?.id
+                this@BookDetailFragment.viewModel.states.value?.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
             if (readingDate == null && state == State.READ) readingDate = Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
             return BookResponse(
                 id = book?.id ?: "",
-                title = editTextTitle.getValue(),
+                title = textInputLayoutTitle.getValue(),
                 subtitle = book?.subtitle,
                 authors = authors,
-                publisher = editTextPublisher.getValue(),
+                publisher = textInputLayoutPublisher.getValue(),
                 publishedDate = publishedDate,
                 readingDate = readingDate,
-                description = editTextDescription.getValue(),
-                summary = editTextSummary.getValue(),
-                isbn = editTextIsbn.getValue(),
+                description = textInputLayoutDescription.getValue(),
+                summary = textInputLayoutSummary.getValue(),
+                isbn = textInputLayoutIsbn.getValue(),
                 pageCount = pageCount,
                 categories = book?.categories,
                 averageRating = book?.averageRating ?: 0.0,
@@ -422,46 +400,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             findItem(R.id.action_cancel).isVisible = editable
         }
 
-        makeFieldsEditable(editable)
-    }
-
-    private fun makeFieldsEditable(editable: Boolean) {
-        with(binding) {
-            this.editable = editable
-
-            val inputTypeText = if (editable) InputType.TYPE_CLASS_TEXT else InputType.TYPE_NULL
-            val inputTypeNumber = if (editable) InputType.TYPE_CLASS_NUMBER else InputType.TYPE_NULL
-            val backgroundTint =
-                if (editable) {
-                    ColorStateList.valueOf(
-                        ContextCompat.getColor(
-                            requireActivity(),
-                            R.color.colorPrimary
-                        )
-                    )
-                } else {
-                    ColorStateList.valueOf(Color.TRANSPARENT)
-                }
-
-            for (editText in listOf(
-                editTextTitle,
-                editTextAuthor,
-                editTextDescription,
-                editTextSummary,
-                editTextPublisher
-            )) {
-                editText.setReadOnly(!editable, inputTypeText, 0)
-                editText.backgroundTintList = backgroundTint
-            }
-
-            for (editText in listOf(
-                editTextIsbn,
-                editTextPageCount
-            )) {
-                editText.setReadOnly(!editable, inputTypeNumber, 0)
-                editText.backgroundTintList = backgroundTint
-            }
-        }
+        binding.editable = editable
     }
     //endregion
 }
