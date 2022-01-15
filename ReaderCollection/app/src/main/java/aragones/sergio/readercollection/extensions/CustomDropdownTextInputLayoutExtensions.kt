@@ -10,8 +10,8 @@ import aragones.sergio.readercollection.adapters.MenuAdapter
 import aragones.sergio.readercollection.databinding.CustomDropdownTextInputLayoutBinding
 
 fun CustomDropdownTextInputLayoutBinding.setHintStyle(id: Int) {
-    this.textInputLayout.doOnLayout {
-        this.textInputLayout.setHintTextAppearance(id)
+    textInputLayout.doOnLayout {
+        textInputLayout.setHintTextAppearance(id)
     }
 }
 
@@ -22,7 +22,7 @@ fun CustomDropdownTextInputLayoutBinding.getPosition(): Int {
 }
 
 fun CustomDropdownTextInputLayoutBinding.getValue(): String {
-    return this.materialAutoCompleteTextView.text.toString().trimStart().trimEnd()
+    return materialAutoCompleteTextView.text.toString().trimStart().trimEnd()
 }
 
 fun CustomDropdownTextInputLayoutBinding.setup(values: List<String>) {
