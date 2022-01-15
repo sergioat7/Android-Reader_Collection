@@ -148,33 +148,54 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_20dp"
-                    android:layout_marginBottom="@dimen/margin_5dp"
                     android:text="@string/sort_books_param"
-                    app:layout_constraintBottom_toTopOf="@+id/spinner_sort_params"
-                    app:layout_constraintEnd_toEndOf="@+id/spinner_sort_orders"
-                    app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
+                    app:layout_constraintBottom_toTopOf="@+id/dropdown_text_input_layout_sort_params"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_sort_orders"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_sort_params"
                     app:layout_constraintTop_toBottomOf="@+id/radio_group_language"
                     style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
                     />
 
-                <Spinner
-                    android:id="@+id/spinner_sort_params"
+                <include
+                    android:id="@+id/dropdown_text_input_layout_sort_params"
+                    layout="@layout/custom_dropdown_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toStartOf="@+id/spinner_sort_orders"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:layout_marginEnd="@dimen/margin_5dp"
+                    app:enabled="@{true}"
+                    app:layout_constraintEnd_toStartOf="@+id/dropdown_text_input_layout_sort_orders"
                     app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+                    app:layout_constraintBottom_toBottomOf="@id/barrier"
+                    app:layout_constraintVertical_bias="0.0"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
-                    style="@style/Widget.ReaderCollection.Spinner"
+                    app:showText="true"
                     />
 
-                <Spinner
-                    android:id="@+id/spinner_sort_orders"
+                <include
+                    android:id="@+id/dropdown_text_input_layout_sort_orders"
+                    layout="@layout/custom_dropdown_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    android:layout_marginStart="@dimen/margin_5dp"
+                    app:enabled="@{true}"
                     app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
-                    app:layout_constraintStart_toEndOf="@+id/spinner_sort_params"
+                    app:layout_constraintBottom_toBottomOf="@id/barrier"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintStart_toEndOf="@+id/dropdown_text_input_layout_sort_params"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
-                    style="@style/Widget.ReaderCollection.Spinner"
+                    app:showText="true"
+                    />
+
+                <androidx.constraintlayout.widget.Barrier
+                    android:id="@+id/barrier"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:barrierDirection="bottom"
+                    app:constraint_referenced_ids="dropdown_text_input_layout_sort_params, dropdown_text_input_layout_sort_orders"
                     />
 
                 <TextView
@@ -184,21 +205,23 @@
                     android:layout_marginTop="@dimen/margin_20dp"
                     android:layout_marginBottom="@dimen/margin_5dp"
                     android:text="@string/app_theme"
-                    app:layout_constraintBottom_toTopOf="@+id/spinner_app_theme"
-                    app:layout_constraintEnd_toEndOf="@+id/spinner_app_theme"
-                    app:layout_constraintStart_toStartOf="@+id/spinner_app_theme"
-                    app:layout_constraintTop_toBottomOf="@+id/spinner_sort_params"
+                    app:layout_constraintBottom_toTopOf="@+id/dropdown_text_input_layout_app_theme"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_app_theme"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_app_theme"
+                    app:layout_constraintTop_toBottomOf="@+id/barrier"
                     style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
                     />
 
-                <Spinner
-                    android:id="@+id/spinner_app_theme"
+                <include
+                    android:id="@+id/dropdown_text_input_layout_app_theme"
+                    layout="@layout/custom_dropdown_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintEnd_toEndOf="@+id/spinner_sort_orders"
-                    app:layout_constraintStart_toStartOf="@+id/spinner_sort_params"
+                    app:enabled="@{true}"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_sort_orders"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_sort_params"
                     app:layout_constraintTop_toBottomOf="@+id/text_view_app_theme_title"
-                    style="@style/Widget.ReaderCollection.Spinner"
+                    app:showText="true"
                     />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

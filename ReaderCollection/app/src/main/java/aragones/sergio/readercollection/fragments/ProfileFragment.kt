@@ -90,10 +90,10 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                 if (radioButtonEn.isChecked) Preferences.ENGLISH_LANGUAGE_KEY
                 else Preferences.SPANISH_LANGUAGE_KEY
             val sortParam =
-                if (spinnerSortParams.selectedItemPosition == 0) null
-                else resources.getStringArray(R.array.sorting_keys_ids)[spinnerSortParams.selectedItemPosition]
-            val isSortDescending = spinnerSortOrders.selectedItemPosition == 1
-            val themeMode = spinnerAppTheme.selectedItemPosition
+                if (dropdownTextInputLayoutSortParams.getPosition() == 0) null
+                else resources.getStringArray(R.array.sorting_keys_ids)[dropdownTextInputLayoutSortParams.getPosition()]
+            val isSortDescending = dropdownTextInputLayoutSortOrders.getPosition() == 1
+            val themeMode = dropdownTextInputLayoutAppTheme.getPosition()
             this@ProfileFragment.viewModel.save(
                 textInputLayoutPassword.getValue(),
                 language,
@@ -120,30 +120,26 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             showPopupDialog(resources.getString(R.string.username_info))
         }
 
-        var position = 0
+        val sortParams = resources.getStringArray(R.array.sorting_keys).toList()
+        binding.dropdownTextInputLayoutSortParams.setup(sortParams)
         viewModel.sortParam?.let { sortParam ->
-            position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
+            val currentSortParam = sortParams[resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)]
+            binding.dropdownTextInputLayoutSortParams.setValue(currentSortParam)
+        } ?: run {
+            binding.dropdownTextInputLayoutSortParams.setValue(sortParams[0])
         }
-        binding.spinnerSortParams.setup(
-            resources.getStringArray(R.array.sorting_keys).toList(),
-            position,
-            true
-        )
 
-        binding.spinnerSortOrders.setup(
-            listOf(
-                resources.getString(R.string.ascending),
-                resources.getString(R.string.descending)
-            ),
-            if (viewModel.isSortDescending) 1 else 0,
-            true
+        val sortOrders = listOf(
+            resources.getString(R.string.ascending),
+            resources.getString(R.string.descending)
         )
+        binding.dropdownTextInputLayoutSortOrders.setup(sortOrders)
+        val currentSortOrder = if (viewModel.isSortDescending) sortOrders[1] else sortOrders[0]
+        binding.dropdownTextInputLayoutSortOrders.setValue(currentSortOrder)
 
-        binding.spinnerAppTheme.setup(
-            resources.getStringArray(R.array.app_theme_values).toList(),
-            viewModel.themeMode,
-            true
-        )
+        val appThemes = resources.getStringArray(R.array.app_theme_values).toList()
+        binding.dropdownTextInputLayoutAppTheme.setup(appThemes)
+        binding.dropdownTextInputLayoutAppTheme.setValue(appThemes[viewModel.themeMode])
 
         binding.fragment = this
         binding.viewModel = this.viewModel
