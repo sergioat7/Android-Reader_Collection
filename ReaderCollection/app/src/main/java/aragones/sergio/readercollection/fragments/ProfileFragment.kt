@@ -74,6 +74,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         binding.textInputLayoutPassword.doAfterTextChanged {
             viewModel.profileDataChanged(it.toString())
         }
+        setupDropdowns()
     }
 
     override fun onDestroy() {
@@ -120,27 +121,6 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
             showPopupDialog(resources.getString(R.string.username_info))
         }
 
-        val sortParams = resources.getStringArray(R.array.sorting_keys).toList()
-        binding.dropdownTextInputLayoutSortParams.setup(sortParams)
-        viewModel.sortParam?.let { sortParam ->
-            val currentSortParam = sortParams[resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)]
-            binding.dropdownTextInputLayoutSortParams.setValue(currentSortParam)
-        } ?: run {
-            binding.dropdownTextInputLayoutSortParams.setValue(sortParams[0])
-        }
-
-        val sortOrders = listOf(
-            resources.getString(R.string.ascending),
-            resources.getString(R.string.descending)
-        )
-        binding.dropdownTextInputLayoutSortOrders.setup(sortOrders)
-        val currentSortOrder = if (viewModel.isSortDescending) sortOrders[1] else sortOrders[0]
-        binding.dropdownTextInputLayoutSortOrders.setValue(currentSortOrder)
-
-        val appThemes = resources.getStringArray(R.array.app_theme_values).toList()
-        binding.dropdownTextInputLayoutAppTheme.setup(appThemes)
-        binding.dropdownTextInputLayoutAppTheme.setValue(appThemes[viewModel.themeMode])
-
         binding.fragment = this
         binding.viewModel = this.viewModel
         binding.lifecycleOwner = this
@@ -177,6 +157,30 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         viewModel.profileError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
+    }
+
+    private fun setupDropdowns() {
+
+        val sortParamKeys = resources.getStringArray(R.array.sorting_param_keys).toList()
+        binding.dropdownTextInputLayoutSortParams.setValue(
+            sortParamKeys,
+            resources.getStringArray(R.array.sorting_param_values).toList(),
+            viewModel.sortParam ?: sortParamKeys[0]
+        )
+
+        val sortOrderKeys = resources.getStringArray(R.array.sorting_order_keys).toList()
+        binding.dropdownTextInputLayoutSortOrders.setValue(
+            sortOrderKeys,
+            resources.getStringArray(R.array.sorting_order_values).toList(),
+            if (viewModel.isSortDescending) sortOrderKeys[1] else sortOrderKeys[0]
+        )
+
+        val appThemes = resources.getStringArray(R.array.app_theme_values).toList()
+        binding.dropdownTextInputLayoutAppTheme.setValue(
+            appThemes,
+            appThemes,
+            appThemes[viewModel.themeMode]
+        )
     }
     //endregion
 }
