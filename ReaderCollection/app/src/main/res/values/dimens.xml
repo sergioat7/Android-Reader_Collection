@@ -8,7 +8,6 @@
 
     <!--  margins  -->
     <dimen name="margin_100dp">100dp</dimen>
-    <dimen name="margin_48dp">48dp</dimen>
     <dimen name="margin_32dp">32dp</dimen>
     <dimen name="margin_24dp">24dp</dimen>
     <dimen name="margin_24dp_negative">-24dp</dimen>
@@ -18,9 +17,9 @@
     <dimen name="margin_12dp">12dp</dimen>
     <dimen name="margin_8dp">8dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
-    <dimen name="margin_3dp">3dp</dimen>
 
     <!--  paddings  -->
+    <dimen name="padding_32dp">32dp</dimen>
     <dimen name="padding_24dp">24dp</dimen>
     <dimen name="padding_12dp">12dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>

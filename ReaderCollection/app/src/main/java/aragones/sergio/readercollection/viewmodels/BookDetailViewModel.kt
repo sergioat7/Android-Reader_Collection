@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.models.responses.FormatResponse
@@ -17,8 +18,6 @@ import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.StateRepository
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -28,7 +27,7 @@ class BookDetailViewModel @Inject constructor(
     private val formatRepository: FormatRepository,
     private val googleBookRepository: GoogleBookRepository,
     private val stateRepository: StateRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
     //region Private properties
     private var bookId: String = ""
@@ -77,7 +76,7 @@ class BookDetailViewModel @Inject constructor(
             googleBookRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
-                    _book.value = Constants.mapGoogleBook(it)
+                    _book.value = BookResponse(it)
                     _bookDetailLoading.value = false
                 },
                 onError = {

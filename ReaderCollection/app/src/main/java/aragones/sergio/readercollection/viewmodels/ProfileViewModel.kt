@@ -99,6 +99,7 @@ class ProfileViewModel @Inject constructor(
                     loginObserver().subscribeBy(
                         onComplete = {
 
+                            userData.password = newPassword
                             _profileLoading.value = false
                             if (changeLanguage || changeSortParam || changeIsSortDescending) {
                                 _profileRedirection.value = true

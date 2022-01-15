@@ -23,7 +23,6 @@ import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
@@ -116,7 +115,10 @@ class BooksViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun sort(context: Context, sortingKeys: Array<String>, sortingValues: Array<String>) {
+    fun sort(context: Context) {
+
+        val sortingKeys = context.resources.getStringArray(R.array.sorting_param_keys)
+        val sortingValues = context.resources.getStringArray(R.array.sorting_param_values)
 
         val dialogView = LinearLayout(context)
         dialogView.orientation = LinearLayout.HORIZONTAL
@@ -124,16 +126,11 @@ class BooksViewModel @Inject constructor(
         val sortKeysPicker = NumberPicker(context)
         sortKeysPicker.setup(sortingValues)
         sortParam?.let {
-            sortKeysPicker.value = Constants.getValuePositionInArray(it, sortingKeys)
+            sortKeysPicker.value = sortingKeys.indexOf(it)
         }
 
         val sortOrdersPicker = NumberPicker(context)
-        sortOrdersPicker.setup(
-            arrayOf(
-                context.resources.getString(R.string.ascending),
-                context.resources.getString(R.string.descending)
-            )
-        )
+        sortOrdersPicker.setup(context.resources.getStringArray(R.array.sorting_order_values))
         sortOrdersPicker.value = if (isSortDescending) 1 else 0
 
         val params = LinearLayout.LayoutParams(50, 50)
