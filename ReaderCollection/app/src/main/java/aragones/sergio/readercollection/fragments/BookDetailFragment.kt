@@ -251,17 +251,15 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             binding.editable = viewModel.isGoogleBook || it == null
         })
 
-        viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
+        viewModel.formats.observe(viewLifecycleOwner, {
 
-            binding.dropdownTextInputLayoutFormat.setup(formatsResponse.map { it.name })
             book?.let {
                 setFormat(it)
             }
         })
 
-        viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
+        viewModel.states.observe(viewLifecycleOwner, {
 
-            binding.dropdownTextInputLayoutState.setup(statesResponse.map { it.name })
             book?.let {
                 setState(it)
             }
@@ -318,22 +316,28 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun setFormat(book: BookResponse) {
 
-        var currentValue: String? = null
-        book.format?.let { formatId ->
-
-            currentValue = viewModel.formats.value?.firstOrNull { it.id == formatId }?.name
-        }
-        binding.dropdownTextInputLayoutFormat.setValue(currentValue)
+        /*
+        * This works before it's executed AFTER onResume method.
+        * Othwerwise, we must be sure to place it in onResume method.
+        */
+        binding.dropdownTextInputLayoutFormat.setValue(
+            viewModel.formats.value?.map { it.id } ?: listOf(),
+            viewModel.formats.value?.map { it.name } ?: listOf(),
+            book.format
+        )
     }
 
     private fun setState(book: BookResponse) {
 
-        var currentValue: String? = viewModel.states.value?.first()?.name
-        book.state?.let { stateId ->
-
-            currentValue = viewModel.states.value?.firstOrNull { it.id == stateId }?.name
-        }
-        binding.dropdownTextInputLayoutState.setValue(currentValue)
+        /*
+        * This works before it's executed AFTER onResume method.
+        * Othwerwise, we must be sure to place it in onResume method.
+        */
+        binding.dropdownTextInputLayoutState.setValue(
+            viewModel.states.value?.map { it.id } ?: listOf(),
+            viewModel.states.value?.map { it.name } ?: listOf(),
+            book.state ?: viewModel.states.value?.first()?.id
+        )
     }
 
     private fun getBookData(): BookResponse {

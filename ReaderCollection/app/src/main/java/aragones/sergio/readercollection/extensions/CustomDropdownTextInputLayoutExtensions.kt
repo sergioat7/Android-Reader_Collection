@@ -25,13 +25,19 @@ fun CustomDropdownTextInputLayoutBinding.getValue(): String {
     return materialAutoCompleteTextView.text.toString().trimStart().trimEnd()
 }
 
-fun CustomDropdownTextInputLayoutBinding.setup(values: List<String>) {
+fun CustomDropdownTextInputLayoutBinding.setValue(
+    keys: List<String>,
+    values: List<String>,
+    currentKey: String?
+) {
 
     if (materialAutoCompleteTextView.adapter == null) {
         materialAutoCompleteTextView.setAdapter(MenuAdapter(root.context, values))
     }
-}
 
-fun CustomDropdownTextInputLayoutBinding.setValue(currentValue: String?) {
-    materialAutoCompleteTextView.setText(currentValue, false)
+    currentKey?.let { key ->
+        values.getOrNull(keys.indexOf(key))?.let { value ->
+            materialAutoCompleteTextView.setText(value, false)
+        }
+    }
 }
