@@ -90,6 +90,11 @@ fun setEndIconMode(textInputLayout: TextInputLayout, mode: Int?) {
     }
 }
 
+@BindingAdapter("endIconTint")
+fun setEndIconTint(textInputLayout: TextInputLayout, tint: Int) {
+    textInputLayout.setEndIconTintList(ColorStateList.valueOf(tint))
+}
+
 @BindingAdapter("clickable")
 fun setClickable(textInputLayout: TextInputLayout, clickable: Boolean?) {
     textInputLayout.isHovered = clickable != true
