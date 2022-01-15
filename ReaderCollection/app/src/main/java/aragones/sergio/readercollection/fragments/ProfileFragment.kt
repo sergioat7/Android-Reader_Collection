@@ -91,7 +91,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                 else Preferences.SPANISH_LANGUAGE_KEY
             val sortParam =
                 if (dropdownTextInputLayoutSortParams.getPosition() == 0) null
-                else resources.getStringArray(R.array.sorting_keys_ids)[dropdownTextInputLayoutSortParams.getPosition()]
+                else resources.getStringArray(R.array.sorting_param_keys)[dropdownTextInputLayoutSortParams.getPosition()]
             val isSortDescending = dropdownTextInputLayoutSortOrders.getPosition() == 1
             val themeMode = dropdownTextInputLayoutAppTheme.getPosition()
             this@ProfileFragment.viewModel.save(

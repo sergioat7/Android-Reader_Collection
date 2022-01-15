@@ -10,10 +10,6 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.models.responses.GoogleBookResponse
-import aragones.sergio.readercollection.models.responses.GoogleImageLinksResponse
-import aragones.sergio.readercollection.models.responses.GoogleIsbnResponse
 
 object Preferences {
     const val PREFERENCES_NAME = "preferences"
@@ -43,18 +39,6 @@ object Constants {
         return password.length > 3
     }
 
-    fun getValuePositionInArray(value: String, values: Array<String>): Int {
-
-        var i = 0
-        while (i < values.size) {
-            if (values[i] == value) {
-                break
-            }
-            i++
-        }
-        return i % values.size
-    }
-
     fun getRoundedTextView(text: String, context: Context): TextView {
 
         val tv = TextView(
@@ -70,71 +54,6 @@ object Constants {
         tv.gravity = Gravity.CENTER
         tv.text = text
         return tv
-    }
-
-    fun mapGoogleBooks(googleBooks: List<GoogleBookResponse>?): List<BookResponse> {
-
-        val result = mutableListOf<BookResponse>()
-        googleBooks?.let {
-            for (googleBook in it) {
-                result.add(mapGoogleBook(googleBook))
-            }
-        }
-        return result
-    }
-
-    fun mapGoogleBook(googleBook: GoogleBookResponse): BookResponse {
-
-        val title = StringBuilder()
-            .append(googleBook.volumeInfo.title ?: "")
-            .append(" ")
-            .append(googleBook.volumeInfo.subtitle ?: "")
-            .toString()
-        return BookResponse(
-            googleBook.id,
-            title,
-            null,
-            googleBook.volumeInfo.authors,
-            googleBook.volumeInfo.publisher,
-            googleBook.volumeInfo.publishedDate,
-            null,
-            googleBook.volumeInfo.description,
-            null,
-            getGoogleBookIsbn(googleBook.volumeInfo.industryIdentifiers),
-            googleBook.volumeInfo.pageCount ?: 0,
-            googleBook.volumeInfo.categories,
-            googleBook.volumeInfo.averageRating ?: 0.0,
-            googleBook.volumeInfo.ratingsCount ?: 0,
-            0.0,
-            getGoogleBookThumbnail(googleBook.volumeInfo.imageLinks),
-            getGoogleBookImage(googleBook.volumeInfo.imageLinks),
-            null,
-            null,
-            false
-        )
-    }
-
-    private fun getGoogleBookIsbn(industryIdentifiers: List<GoogleIsbnResponse>?): String? {
-
-        industryIdentifiers?.mapNotNull { if (it.type == "ISBN_13") it.identifier else null }?.let {
-            if (it.isNotEmpty()) return it[0]
-        }
-        industryIdentifiers?.mapNotNull { if (it.type == "ISBN_10") it.identifier else null }?.let {
-            if (it.isNotEmpty()) return it[0]
-        }
-        industryIdentifiers?.mapNotNull { if (it.type == "OTHER") it.identifier else null }?.let {
-            if (it.isNotEmpty()) return it[0]
-        }
-        return null
-    }
-
-    private fun getGoogleBookThumbnail(imageLinks: GoogleImageLinksResponse?): String? {
-        return imageLinks?.thumbnail ?: imageLinks?.smallThumbnail
-    }
-
-    private fun getGoogleBookImage(imageLinks: GoogleImageLinksResponse?): String? {
-        return imageLinks?.extraLarge ?: imageLinks?.large ?: imageLinks?.medium
-        ?: imageLinks?.small
     }
 }
 
