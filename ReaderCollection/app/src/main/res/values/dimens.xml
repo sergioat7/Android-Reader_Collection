@@ -8,7 +8,6 @@
 
     <!--  margins  -->
     <dimen name="margin_100dp">100dp</dimen>
-    <dimen name="margin_48dp">48dp</dimen>
     <dimen name="margin_32dp">32dp</dimen>
     <dimen name="margin_24dp">24dp</dimen>
     <dimen name="margin_24dp_negative">-24dp</dimen>
