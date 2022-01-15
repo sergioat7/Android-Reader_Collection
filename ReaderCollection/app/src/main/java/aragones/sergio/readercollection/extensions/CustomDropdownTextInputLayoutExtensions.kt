@@ -15,6 +15,12 @@ fun CustomDropdownTextInputLayoutBinding.setHintStyle(id: Int) {
     }
 }
 
+fun CustomDropdownTextInputLayoutBinding.getPosition(): Int {
+    return (materialAutoCompleteTextView.adapter as MenuAdapter).values.indexOf(
+        materialAutoCompleteTextView.text.toString()
+    )
+}
+
 fun CustomDropdownTextInputLayoutBinding.getValue(): String {
     return this.materialAutoCompleteTextView.text.toString().trimStart().trimEnd()
 }
