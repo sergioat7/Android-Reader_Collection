@@ -9,7 +9,6 @@ import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
 import android.text.InputType
 import android.view.View
-import android.widget.Spinner
 import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import aragones.sergio.readercollection.R
@@ -65,14 +64,6 @@ fun setImageUri(
                 imageViewWithLoading.binding.progressBarImageLoading.visibility = View.GONE
             }
         })
-}
-
-@BindingAdapter(value = ["isEnabled", "backgroundTint"], requireAll = false)
-fun setEnabled(spinner: Spinner, isEnabled: Boolean?, backgroundTint: Int?) {
-    spinner.isEnabled = isEnabled == true
-    backgroundTint?.let {
-        spinner.backgroundTintList = ColorStateList.valueOf(backgroundTint)
-    }
 }
 
 @BindingAdapter("rating")

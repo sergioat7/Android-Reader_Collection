@@ -302,45 +302,22 @@
                     style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_format_title"
+                <include
+                    android:id="@+id/dropdown_text_input_layout_format"
+                    layout="@layout/custom_dropdown_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_32dp"
                     android:layout_marginEnd="@dimen/margin_5dp"
-                    android:text="@string/format"
-                    app:layout_constraintEnd_toStartOf="@+id/text_view_state_title"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
-                    style="@style/Widget.ReaderCollection.TextView.Header"
-                    />
-
-                <TextView
-                    android:id="@+id/text_view_state_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_32dp"
-                    android:layout_marginStart="@dimen/margin_5dp"
-                    android:text="@string/state"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/text_view_format_title"
-                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
-                    style="@style/Widget.ReaderCollection.TextView.Header"
-                    />
-
-                <Spinner
-                    android:id="@+id/spinner_formats"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_5dp"
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_format}"
+                    app:labelHintText="@{@string/format}"
                     app:layout_constraintBottom_toBottomOf="@id/barrier1"
-                    app:layout_constraintEnd_toStartOf="@id/spinner_states"
+                    app:layout_constraintEnd_toStartOf="@id/dropdown_text_input_layout_state"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_format_title"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
                     app:layout_constraintVertical_bias="0.0"
-                    isEnabled="@{editable}"
-                    backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                    style="@style/Widget.ReaderCollection.Spinner"
+                    app:showText="true"
                     />
 
                 <ProgressBar
@@ -349,26 +326,29 @@
                     android:layout_height="@dimen/size_20dp"
                     android:indeterminateTint="@color/colorPrimary"
                     android:visibility="@{viewModel.bookDetailFormatsLoading ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/spinner_formats"
-                    app:layout_constraintEnd_toEndOf="@+id/spinner_formats"
+                    app:layout_constraintBottom_toBottomOf="@+id/dropdown_text_input_layout_format"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_format"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/spinner_formats"
-                    app:layout_constraintTop_toTopOf="@+id/spinner_formats"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_format"
+                    app:layout_constraintTop_toTopOf="@+id/dropdown_text_input_layout_format"
                     />
 
-                <Spinner
-                    android:id="@+id/spinner_states"
+                <include
+                    android:id="@+id/dropdown_text_input_layout_state"
+                    layout="@layout/custom_dropdown_text_input_layout"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_32dp"
                     android:layout_marginStart="@dimen/margin_5dp"
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_state}"
+                    app:labelHintText="@{@string/state}"
                     app:layout_constraintBottom_toBottomOf="@id/barrier1"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/spinner_formats"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_state_title"
+                    app:layout_constraintStart_toEndOf="@id/dropdown_text_input_layout_format"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
                     app:layout_constraintVertical_bias="0.0"
-                    isEnabled="@{editable}"
-                    backgroundTint="@{editable ? @color/colorPrimary : @android:color/transparent}"
-                    style="@style/Widget.ReaderCollection.Spinner"
+                    app:showText="true"
                     />
 
                 <ProgressBar
@@ -377,11 +357,11 @@
                     android:layout_height="@dimen/size_20dp"
                     android:indeterminateTint="@color/colorPrimary"
                     android:visibility="@{viewModel.bookDetailStatesLoading ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@+id/spinner_states"
-                    app:layout_constraintEnd_toEndOf="@+id/spinner_states"
+                    app:layout_constraintBottom_toBottomOf="@+id/dropdown_text_input_layout_state"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_state"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/spinner_states"
-                    app:layout_constraintTop_toTopOf="@+id/spinner_states"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_state"
+                    app:layout_constraintTop_toTopOf="@+id/dropdown_text_input_layout_state"
                     />
 
                 <androidx.constraintlayout.widget.Barrier
@@ -391,7 +371,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:barrierDirection="bottom"
-                    app:constraint_referenced_ids="spinner_formats, spinner_states"
+                    app:constraint_referenced_ids="dropdown_text_input_layout_format, dropdown_text_input_layout_state"
                     />
 
                 <include

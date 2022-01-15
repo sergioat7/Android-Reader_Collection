@@ -16,8 +16,6 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.utils.State
@@ -42,10 +40,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private val args: BookDetailFragmentArgs by navArgs()
     private lateinit var viewModel: BookDetailViewModel
     private var book: BookResponse? = null
-    private lateinit var formats: List<FormatResponse>
-    private lateinit var formatValues: MutableList<String>
-    private lateinit var states: List<StateResponse>
-    private lateinit var stateValues: MutableList<String>
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
     //endregion
@@ -172,10 +166,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             BookDetailViewModelFactory(application, args.bookId, args.isGoogleBook)
         )[BookDetailViewModel::class.java]
         setupBindings()
-        formats = listOf()
-        formatValues = mutableListOf()
-        states = listOf()
-        stateValues = mutableListOf()
 
         with(binding) {
             appBarLayoutBookDetail.addOnOffsetChangedListener(this@BookDetailFragment)
@@ -239,6 +229,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 textInputLayoutReadingDate.showDatePicker(requireActivity())
             }
 
+            dropdownTextInputLayoutFormat.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
+
+            dropdownTextInputLayoutState.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
+
             fragment = this@BookDetailFragment
             viewModel = this@BookDetailFragment.viewModel
             lifecycleOwner = this@BookDetailFragment
@@ -259,14 +253,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
         viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
 
-            formats = formatsResponse
-            formatValues = mutableListOf()
-            formatValues.run {
-
-                this.add(resources.getString((R.string.select_format)))
-                this.addAll(formatsResponse.map { it.name })
-            }
-            binding.spinnerFormats.setup(formatValues, 0)
+            binding.dropdownTextInputLayoutFormat.setup(formatsResponse.map { it.name })
             book?.let {
                 setFormat(it)
             }
@@ -274,14 +261,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
         viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
 
-            states = statesResponse
-            stateValues = mutableListOf()
-            stateValues.run {
-
-                this.add(resources.getString((R.string.select_state)))
-                this.addAll(statesResponse.map { it.name })
-            }
-            binding.spinnerStates.setup(stateValues, 0)
+            binding.dropdownTextInputLayoutState.setup(statesResponse.map { it.name })
             book?.let {
                 setState(it)
             }
@@ -338,26 +318,22 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun setFormat(book: BookResponse) {
 
-        var formatPosition = 0
+        var currentValue: String? = null
         book.format?.let { formatId ->
 
-            val formatName = formats.firstOrNull { it.id == formatId }?.name
-            val pos = formatValues.indexOf(formatName)
-            formatPosition = if (pos > 0) pos else 0
+            currentValue = viewModel.formats.value?.firstOrNull { it.id == formatId }?.name
         }
-        binding.spinnerFormats.setSelection(formatPosition)
+        binding.dropdownTextInputLayoutFormat.setValue(currentValue)
     }
 
     private fun setState(book: BookResponse) {
 
-        var statePosition = if (viewModel.isGoogleBook) 1 else 0
+        var currentValue: String? = viewModel.states.value?.first()?.name
         book.state?.let { stateId ->
 
-            val stateName = states.firstOrNull { it.id == stateId }?.name
-            val pos = stateValues.indexOf(stateName)
-            statePosition = if (pos > 0) pos else 0
+            currentValue = viewModel.states.value?.firstOrNull { it.id == stateId }?.name
         }
-        binding.spinnerStates.setSelection(statePosition)
+        binding.dropdownTextInputLayoutState.setValue(currentValue)
     }
 
     private fun getBookData(): BookResponse {
@@ -380,9 +356,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 else 0
             val rating = ratingBar.rating.toDouble() * 2
             val format =
-                this@BookDetailFragment.viewModel.formats.value?.firstOrNull { it.name == spinnerFormats.selectedItem.toString() }?.id
+                this@BookDetailFragment.viewModel.formats.value?.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
-                this@BookDetailFragment.viewModel.states.value?.firstOrNull { it.name == spinnerStates.selectedItem.toString() }?.id
+                this@BookDetailFragment.viewModel.states.value?.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
             if (readingDate == null && state == State.READ) readingDate = Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
