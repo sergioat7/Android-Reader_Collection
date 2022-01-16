@@ -10,8 +10,8 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.models.FormatResponse
+import aragones.sergio.readercollection.models.StateResponse
 
 object Preferences {
     const val PREFERENCES_NAME = "preferences"

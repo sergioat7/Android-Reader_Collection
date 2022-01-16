@@ -15,8 +15,8 @@ import aragones.sergio.readercollection.daos.FormatDao
 import aragones.sergio.readercollection.daos.StateDao
 import aragones.sergio.readercollection.base.BaseModel
 import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.models.FormatResponse
+import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 
 @Database(entities = [

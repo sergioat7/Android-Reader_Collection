@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.daos
 
 import androidx.room.*
-import aragones.sergio.readercollection.models.responses.FormatResponse
+import aragones.sergio.readercollection.models.FormatResponse
 import io.reactivex.Completable
 import io.reactivex.Single
 
