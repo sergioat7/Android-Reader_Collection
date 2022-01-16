@@ -81,7 +81,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        src="@{viewModel.book.thumbnail ?? viewModel.book.image}"
+                        src="@{viewModel.bookImage}"
                         placeholder="@{@drawable/ic_default_book_cover}"
                         loadingColor="@{@color/colorSecondary}"
                         />
@@ -97,6 +97,7 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
                         app:srcCompat="@drawable/ic_add_a_photo"
                         style="@style/Widget.ReaderCollection.FloatingActionButton"
                         />

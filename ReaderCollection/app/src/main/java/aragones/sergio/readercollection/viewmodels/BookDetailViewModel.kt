@@ -32,6 +32,7 @@ class BookDetailViewModel @Inject constructor(
     //region Private properties
     private var bookId: String = ""
     private val _book = MutableLiveData<BookResponse>()
+    private val _bookImage = MutableLiveData<String?>()
     private val _isFavourite = MutableLiveData<Boolean>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
@@ -46,6 +47,7 @@ class BookDetailViewModel @Inject constructor(
     //region Public properties
     var isGoogleBook: Boolean = false
     val book: LiveData<BookResponse> = _book
+    val bookImage: LiveData<String?> = _bookImage
     val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
     val states: LiveData<List<StateResponse>> = _states
@@ -76,7 +78,9 @@ class BookDetailViewModel @Inject constructor(
             googleBookRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
-                    _book.value = BookResponse(it)
+                    val mappedBook = BookResponse(it)
+                    _book.value = mappedBook
+                    _bookImage.value = mappedBook.thumbnail ?: mappedBook.image
                     _bookDetailLoading.value = false
                 },
                 onError = {
@@ -92,6 +96,7 @@ class BookDetailViewModel @Inject constructor(
                 onSuccess = {
 
                     _book.value = it
+                    _bookImage.value = it.thumbnail ?: it.image
                     _isFavourite.value = it.isFavourite
                     _bookDetailLoading.value = false
                 },
@@ -193,6 +198,10 @@ class BookDetailViewModel @Inject constructor(
                 onDestroy()
             }
         ).addTo(disposables)
+    }
+
+    fun setBookImage(imageUri: String?) {
+        _bookImage.value = imageUri
     }
 
     fun setFavourite(isFavourite: Boolean) {

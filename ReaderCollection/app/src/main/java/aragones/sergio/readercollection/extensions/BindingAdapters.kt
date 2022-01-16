@@ -37,7 +37,8 @@ fun setImageUri(
         imageViewWithLoading.binding.progressBarImageLoading.indeterminateTintList =
             ColorStateList.valueOf(it)
     }
-    val img = image?.replace("http:", "https:") ?: "-"
+    var img = image?.replace("http:", "https:") ?: "-"
+    if (img.isBlank()) img = "-"
     Picasso
         .get()
         .load(img)

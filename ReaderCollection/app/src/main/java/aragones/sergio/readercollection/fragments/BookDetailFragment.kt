@@ -150,6 +150,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             .setView(dialogBinding.root)
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                val url = dialogBinding.textInputLayoutImage.getValue()
+                if (url.isNotBlank()) viewModel.setBookImage(url)
                 dialog.dismiss()
             }
             .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
@@ -401,7 +404,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 averageRating = book?.averageRating ?: 0.0,
                 ratingsCount = book?.ratingsCount ?: 0,
                 rating = rating,
-                thumbnail = book?.thumbnail,
+                thumbnail = this@BookDetailFragment.viewModel.bookImage.value,
                 image = book?.image,
                 format = format,
                 state = state,
