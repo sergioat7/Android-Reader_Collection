@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentProfileBinding
 import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.utils.CustomDropdownType
 import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
@@ -163,23 +164,20 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
         val sortParamKeys = resources.getStringArray(R.array.sorting_param_keys).toList()
         binding.dropdownTextInputLayoutSortParams.setValue(
-            sortParamKeys,
-            resources.getStringArray(R.array.sorting_param_values).toList(),
-            viewModel.sortParam ?: sortParamKeys[0]
+            viewModel.sortParam ?: sortParamKeys[0],
+            CustomDropdownType.SORT_PARAM
         )
 
         val sortOrderKeys = resources.getStringArray(R.array.sorting_order_keys).toList()
         binding.dropdownTextInputLayoutSortOrders.setValue(
-            sortOrderKeys,
-            resources.getStringArray(R.array.sorting_order_values).toList(),
-            if (viewModel.isSortDescending) sortOrderKeys[1] else sortOrderKeys[0]
+            if (viewModel.isSortDescending) sortOrderKeys[1] else sortOrderKeys[0],
+            CustomDropdownType.SORT_ORDER
         )
 
         val appThemes = resources.getStringArray(R.array.app_theme_values).toList()
         binding.dropdownTextInputLayoutAppTheme.setValue(
-            appThemes,
-            appThemes,
-            appThemes[viewModel.themeMode]
+            appThemes[viewModel.themeMode],
+            CustomDropdownType.APP_THEME
         )
     }
     //endregion

@@ -84,3 +84,11 @@ enum class CustomInputType {
     PASSWORD,
     DATE
 }
+
+enum class CustomDropdownType {
+    FORMAT,
+    STATE,
+    SORT_PARAM,
+    SORT_ORDER,
+    APP_THEME
+}

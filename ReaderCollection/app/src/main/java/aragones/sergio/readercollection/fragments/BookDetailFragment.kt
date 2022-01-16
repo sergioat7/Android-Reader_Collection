@@ -17,10 +17,7 @@ import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
-import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import aragones.sergio.readercollection.utils.*
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
@@ -47,10 +44,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //endregion
 
     //region Lifecycle methods
-    companion object {
-        fun newInstance() = BookDetailFragment()
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -199,10 +192,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 Gravity.CENTER
             )
 
-            floatingActionButtonAddPhoto.setOnClickListener {
-                //TODO: implement action
-            }
-
             textInputLayoutTitle.setEndIconOnClickListener {
                 textInputLayoutTitle.textInputEditText.setText("")
             }
@@ -301,28 +290,26 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     }
 
     private fun showData(book: BookResponse) {
-        with(binding) {
 
-            linearLayoutCategories.removeAllViews()
-            book.categories?.let { categories ->
-                for (category in categories) {
+        binding.linearLayoutCategories.removeAllViews()
+        book.categories?.let { categories ->
+            for (category in categories) {
 
-                    val tv = Constants.getRoundedTextView(category, requireContext())
-                    linearLayoutCategories.addView(tv)
+                val tv = Constants.getRoundedTextView(category, requireContext())
+                binding.linearLayoutCategories.addView(tv)
 
-                    val view = View(context)
-                    view.layoutParams = ViewGroup.LayoutParams(
-                        20,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    linearLayoutCategories.addView(view)
-                }
+                val view = View(context)
+                view.layoutParams = ViewGroup.LayoutParams(
+                    20,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                binding.linearLayoutCategories.addView(view)
             }
-
-            setFormat(book)
-
-            setState(book)
         }
+
+        setFormat(book)
+        setState(book)
+
         viewModel.setBookImage(book.thumbnail ?: book.image)
     }
 
@@ -333,9 +320,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         * Othwerwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutFormat.setValue(
-            Constants.FORMATS.map { it.id },
-            Constants.FORMATS.map { it.name },
-            book.format
+            book.format,
+            CustomDropdownType.FORMAT
         )
     }
 
@@ -346,9 +332,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         * Othwerwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutState.setValue(
-            Constants.STATES.map { it.id },
-            Constants.STATES.map { it.name },
-            book.state ?: Constants.STATES.first().id
+            book.state ?: Constants.STATES.first().id,
+            CustomDropdownType.STATE
         )
     }
 
@@ -371,8 +356,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 if (pageCountText.isNotBlank()) pageCountText.toInt()
                 else 0
             val rating = ratingBar.rating.toDouble() * 2
-            val format = Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
-            val state = Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
+            val format =
+                Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
+            val state =
+                Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
             if (readingDate == null && state == State.READ) readingDate = Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
