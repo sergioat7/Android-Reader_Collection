@@ -5,7 +5,10 @@
 
 package aragones.sergio.readercollection.injection
 
-import aragones.sergio.readercollection.network.*
+import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.network.BookApiService
+import aragones.sergio.readercollection.network.GoogleApiService
+import aragones.sergio.readercollection.network.UserApiService
 import dagger.Module
 import dagger.Provides
 
@@ -18,18 +21,8 @@ class NetworkModule {
     )
 
     @Provides
-    fun providesFormatApiService(): FormatApiService = ApiManager.getService(
-        ApiManager.BASE_ENDPOINT
-    )
-
-    @Provides
     fun providesGoogleApiService(): GoogleApiService = ApiManager.getService(
         ApiManager.BASE_GOOGLE_ENDPOINT
-    )
-
-    @Provides
-    fun providesStateApiService(): StateApiService = ApiManager.getService(
-        ApiManager.BASE_ENDPOINT
     )
 
     @Provides
