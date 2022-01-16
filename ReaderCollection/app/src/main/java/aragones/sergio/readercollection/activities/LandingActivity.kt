@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.base.BaseActivity
 import aragones.sergio.readercollection.models.responses.FormatResponse
 import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LandingViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LandingViewModel
 import com.google.firebase.ktx.Firebase
@@ -81,12 +82,12 @@ class LandingActivity : BaseActivity() {
             )
         }
 
-        setupStates(remoteConfig.getString("formats"))
+        setupFormats(remoteConfig.getString("formats"))
         setupStates(remoteConfig.getString("states"))
 
         remoteConfig.fetchAndActivate().addOnCompleteListener(this) {
 
-            setupStates(remoteConfig.getString("formats"))
+            setupFormats(remoteConfig.getString("formats"))
             setupStates(remoteConfig.getString("states"))
         }
     }
@@ -99,11 +100,12 @@ class LandingActivity : BaseActivity() {
                 val languagedFormats =
                     JSONObject(formatsString).get(viewModel.language).toString()
                 formats =
-                    Gson().fromJson(languagedFormats, mutableListOf<FormatResponse>().javaClass)
+                    Gson().fromJson(languagedFormats, Array<FormatResponse>::class.java).asList()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }
 
+            Constants.FORMATS = formats
         }
     }
 
@@ -115,10 +117,12 @@ class LandingActivity : BaseActivity() {
                 val languagedStates =
                     JSONObject(statesString).get(viewModel.language).toString()
                 states =
-                    Gson().fromJson(languagedStates, mutableListOf<StateResponse>().javaClass)
+                    Gson().fromJson(languagedStates, Array<StateResponse>::class.java).asList()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }
+
+            Constants.STATES = states
         }
     }
     //endregion
