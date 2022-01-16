@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 30/12/2021
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <import
+            type="android.view.View"
+            />
+
+        <variable
+            name="book"
+            type="aragones.sergio.readercollection.models.responses.BookResponse"
+            />
+
+        <variable
+            name="onItemClickListener"
+            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            />
+
+        <variable
+            name="isDarkMode"
+            type="Boolean"
+            />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/size_150dp"
+        android:layout_height="@dimen/size_320dp"
+        android:layout_marginStart="@dimen/margin_12dp"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
+        >
+
+        <aragones.sergio.readercollection.customview.ImageViewWithLoading
+            android:id="@+id/image_view_book"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/size_250dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            src="@{book.thumbnail}"
+            center="@{true}"
+            placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"
+            radius="@{@dimen/radius_5dp}"
+            />
+
+        <TextView
+            android:id="@+id/text_view_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
+            android:text="@{book.title}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_view_book"
+            tools:text="Harry Potter y la Piedra Filosofal"
+            style="@style/Widget.ReaderCollection.TextView.Title.Book"
+            />
+
+        <TextView
+            android:id="@+id/text_view_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@{book.authorsToString()}"
+            android:visibility='@{book.authorsToString().equals("") ? View.GONE : View.VISIBLE}'
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_view_title"
+            tools:text="J.K.Rowling"
+            style="@style/Widget.ReaderCollection.TextView.Subtitle.Book"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

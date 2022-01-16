@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 11/1/2022
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <import
+            type="aragones.sergio.readercollection.utils.CustomInputType"
+            />
+
+        <variable
+            name="labelHintText"
+            type="String"
+            />
+
+        <variable
+            name="inputHintText"
+            type="String"
+            />
+
+        <variable
+            name="inputHintTextColor"
+            type="int"
+            />
+
+        <variable
+            name="text"
+            type="String"
+            />
+
+        <variable
+            name="textColor"
+            type="int"
+            />
+
+        <variable
+            name="textSize"
+            type="float"
+            />
+
+        <variable
+            name="isBold"
+            type="Boolean"
+            />
+
+        <variable
+            name="endIconSrc"
+            type="android.graphics.drawable.Drawable"
+            />
+
+        <variable
+            name="inputType"
+            type="CustomInputType"
+            />
+
+        <variable
+            name="maxLength"
+            type="int"
+            />
+
+        <variable
+            name="maxLines"
+            type="int"
+            />
+
+        <variable
+            name="enabled"
+            type="Boolean"
+            />
+
+    </data>
+
+    <!--
+    As setting the 'custom' icon mode as -1 does not work, we need to set it by default,
+    and then use the binding adapter to set it for the other cases
+    -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@{labelHintText}"
+        android:tag="focus"
+        app:clickable="@{enabled}"
+        app:counterEnabled="@{enabled &amp;&amp; maxLength != 0}"
+        app:counterMaxLength="@{maxLength}"
+        app:counterTextAppearance="@style/Widget.ReaderCollection.TextView.Title.TextCount"
+        app:counterTextColor="@color/textPrimary"
+        app:endIconDrawable="@{endIconSrc}"
+        app:endIconMode="custom"
+        app:endIconTint="@color/colorPrimary"
+        app:endIconVisible='@{endIconSrc != null &amp;&amp; text != null}'
+        app:end_icon_mode="@{endIconSrc != null ? (inputType == CustomInputType.PASSWORD ? 1 : -1) : 0}"
+        app:expandedHintEnabled="@{inputHintText == null}"
+        tools:expandedHintEnabled="false"
+        tools:hint="Username"
+        style="@style/Widget.ReaderCollection.TextInputLayout.Bordered"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/text_input_edit_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="@{enabled}"
+            android:gravity="top|start"
+            android:hint="@{inputHintText}"
+            android:lineSpacingExtra="@dimen/margin_5dp"
+            android:maxLength="@{maxLength == 0 ? Integer.MAX_VALUE : maxLength}"
+            android:maxLines="@{maxLines == 0 ? Integer.MAX_VALUE : maxLines}"
+            android:scrollHorizontally="@{inputType != CustomInputType.MULTI_LINE_TEXT}"
+            android:text="@{text}"
+            android:textColor="@{textColor == 0 ? @color/textPrimary : textColor}"
+            android:textColorHint="@{inputHintTextColor == 0 ? @color/textPrimaryLight : inputHintTextColor}"
+            android:textSize="@{textSize == 0 ? @dimen/text_size_16sp : textSize}"
+            app:customInputType="@{inputType}"
+            app:isBold="@{isBold}"
+            tools:hint="Please enter"
+            style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</layout>

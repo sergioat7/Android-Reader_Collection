@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 16/1/2022
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+
+        <import
+            type="aragones.sergio.readercollection.utils.CustomInputType"
+            />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/padding_24dp"
+        android:paddingEnd="@dimen/padding_24dp"
+        >
+
+        <include
+            android:id="@+id/text_input_layout_image"
+            layout="@layout/custom_text_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:enabled="@{true}"
+            app:inputType="@{CustomInputType.TEXT}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textColor="@{@color/textSecondary}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

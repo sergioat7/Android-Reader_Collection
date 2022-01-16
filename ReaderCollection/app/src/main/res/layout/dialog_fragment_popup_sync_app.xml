@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 10/1/2021
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.popups.PopupSyncAppDialogFragment"
+        >
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorSecondary"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/size_1dp"
+                    android:layout_marginBottom="@dimen/margin_12dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintBottom_toTopOf="@+id/title_text_view"
+                    app:layout_constraintEnd_toEndOf="@+id/title_text_view"
+                    app:layout_constraintStart_toStartOf="@+id/title_text_view"
+                    />
+
+                <TextView
+                    android:id="@+id/title_text_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_100dp"
+                    android:layout_marginEnd="@dimen/margin_100dp"
+                    android:text="@string/sync_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.4"
+                    style="@style/Widget.ReaderCollection.TextView.Title.Section"
+                    />
+
+                <View
+                    android:id="@+id/line_view_down"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/size_1dp"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    android:background="@color/colorPrimary"
+                    app:layout_constraintEnd_toEndOf="@+id/title_text_view"
+                    app:layout_constraintStart_toStartOf="@+id/title_text_view"
+                    app:layout_constraintTop_toBottomOf="@+id/title_text_view"
+                    />
+
+                <ProgressBar
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginBottom="@dimen/margin_20dp"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@color/colorPrimary"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/line_view_down"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+
+</layout>

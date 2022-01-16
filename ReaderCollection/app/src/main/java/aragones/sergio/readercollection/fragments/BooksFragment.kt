@@ -5,83 +5,46 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.RectF
 import android.os.Bundle
-import android.view.*
-import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
-import android.widget.ProgressBar
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import android.widget.SearchView
-import android.widget.Spinner
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.BookDetailActivity
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
-import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.models.base.BaseModel
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.viewholders.BooksViewHolder
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentBooksBinding
+import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.utils.State
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_books.*
-import kotlin.math.max
-import kotlin.math.min
 
-class BooksFragment : BaseFragment(), OnItemClickListener {
+class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
 
-    //MARK: - Private properties
+    //region Protected properties
+    override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
+    //endregion
 
-    private lateinit var pbLoadingFormats: ProgressBar
-    private lateinit var spFormats: Spinner
-    private lateinit var pbLoadingStates: ProgressBar
-    private lateinit var spStates: Spinner
-    private lateinit var spFavourite: Spinner
-    private lateinit var vwSeparator: View
-    private lateinit var srlBooks: SwipeRefreshLayout
-    private lateinit var rvBooks: RecyclerView
-    private lateinit var ivNoResults: View
-    private lateinit var fbStartList: FloatingActionButton
-    private lateinit var fbEndList: FloatingActionButton
+    //region Private properties
     private lateinit var viewModel: BooksViewModel
+    private lateinit var readingBooksAdapter: BooksAdapter
+    private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
-    private lateinit var formatValues: MutableList<String>
-    private lateinit var stateValues: MutableList<String>
-    private lateinit var favouriteValues: List<String>
-    private val scrollPosition = MutableLiveData<ScrollPosition>()
+    //endregion
 
-    //MARK: - Lifecycle methods
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_books, container, false)
-    }
-
+    //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initializeUI()
-    }
 
-    override fun onResume() {
-        super.onResume()
-        if (this::viewModel.isInitialized) viewModel.getBooks()
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -89,12 +52,6 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
 
         menu.clear()
         inflater.inflate(R.menu.books_toolbar_menu, menu)
-        setupSearchView(menu)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -107,424 +64,172 @@ class BooksFragment : BaseFragment(), OnItemClickListener {
             }
             R.id.action_sort -> {
 
-                viewModel.sort(
-                    requireContext(),
-                    resources.getStringArray(R.array.sorting_keys_ids),
-                    resources.getStringArray(R.array.sorting_keys)
-                )
+                viewModel.sort(requireContext())
+                binding.apply {
+                    recyclerViewReadingBooks.scrollToPosition(0)
+                    recyclerViewPendingBooks.scrollToPosition(0)
+                    recyclerViewBooks.scrollToPosition(0)
+                }
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    //MARK: - Interface methods
+    override fun onResume() {
+        super.onResume()
 
+        if (this::viewModel.isInitialized) viewModel.fetchBooks()
+        this.searchView?.clearFocus()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (this::viewModel.isInitialized) viewModel.onDestroy()
+    }
+    //endregion
+
+    //region Interface methods
     override fun onItemClick(bookId: String) {
 
-        val params = mapOf(Constants.BOOK_ID to bookId, Constants.IS_GOOGLE_BOOK to false)
-        launchActivityWithExtras(BookDetailActivity::class.java, params)
+        val action = BooksFragmentDirections.actionBooksFragmentToBookDetailFragment(bookId, false)
+        findNavController().navigate(action)
     }
 
     override fun onLoadMoreItemsClick() {}
+    //endregion
 
-    //MARK: - Private methods
+    //region Public methods
+    fun seeMoreBooks(view: View) {
 
-    private fun initializeUI() {
+        when (view) {
+            binding.buttonSeeMorePending -> Unit//TODO: implement action
+            binding.buttonSeeMoreRead -> Unit//TODO: implement action
+        }
+    }
+    //endregion
 
-        pbLoadingFormats = progress_bar_loading_formats
-        spFormats = spinner_formats
-        pbLoadingStates = progress_bar_loading_states
-        spStates = spinner_states
-        spFavourite = spinner_favourite
-        vwSeparator = view_separator
-        srlBooks = swipe_refresh_layout_books
-        rvBooks = recycler_view_books
-        ivNoResults = image_view_no_results
-        fbStartList = floating_action_button_start_list
-        fbEndList = floating_action_button_end_list
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
+
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
             BooksViewModelFactory(application)
-        ).get(BooksViewModel::class.java)
-        booksAdapter = BooksAdapter(
-            viewModel.books.value?.toMutableList() ?: mutableListOf(),
+        )[BooksViewModel::class.java]
+        readingBooksAdapter = BooksAdapter(
+            viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
+                ?: mutableListOf(),
             false,
-            requireContext(),
             this
         )
-        favouriteValues = resources.getStringArray(R.array.favourites).toList()
+        pendingBooksAdapter = BooksAdapter(
+            viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
+                ?: mutableListOf(),
+            false,
+            this
+        )
+        booksAdapter = BooksAdapter(
+            viewModel.books.value?.filter {
+                it.state != State.READING && it.state != State.PENDING
+            }?.toMutableList() ?: mutableListOf(),
+            false,
+            this
+        )
         setupBindings()
 
-        spFormats.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
+        with(binding) {
 
-                val formatName = formatValues[position]
-                val formatId = viewModel.formats.value?.firstOrNull { it.name == formatName }?.id
-                viewModel.setFormat(formatId)
-                viewModel.getBooks()
-                spFormats.requestLayout()
-            }
+            recyclerViewReadingBooks.layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerViewReadingBooks.adapter = readingBooksAdapter
 
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
+            recyclerViewPendingBooks.layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerViewPendingBooks.adapter = pendingBooksAdapter
+
+            recyclerViewBooks.layoutManager = LinearLayoutManager(
+                requireContext(),
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
+            recyclerViewBooks.adapter = booksAdapter
+
+            fragment = this@BooksFragment
+            viewModel = this@BooksFragment.viewModel
+            lifecycleOwner = this@BooksFragment
         }
-
-        spStates.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                val stateName = stateValues[position]
-                val stateId = viewModel.states.value?.firstOrNull { it.name == stateName }?.id
-                viewModel.setState(stateId)
-                viewModel.getBooks()
-                spStates.requestLayout()
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
-        }
-
-        createSpinner(
-            spFavourite,
-            favouriteValues,
-            resources.getString(R.string.favourite)
-        )
-
-        val pos = when (viewModel.isFavourite.value) {
-            true -> 1
-            false -> 2
-            else -> 0
-        }
-        spFavourite.setSelection(pos)
-        spFavourite.onItemSelectedListener = object : OnItemSelectedListener {
-            override fun onItemSelected(
-                parentView: AdapterView<*>?,
-                selectedItemView: View?,
-                position: Int,
-                id: Long
-            ) {
-
-                val isFavourite = when (favouriteValues[position]) {
-                    resources.getString(R.string.yes) -> true
-                    resources.getString(R.string.no) -> false
-                    else -> null
-                }
-                viewModel.setFavourite(isFavourite)
-                viewModel.getBooks()
-                spFavourite.requestLayout()
-            }
-
-            override fun onNothingSelected(parentView: AdapterView<*>?) {}
-        }
-
-        srlBooks.isEnabled = viewModel.isRefreshEnabled
-        srlBooks.setOnRefreshListener {
-
-            viewModel.reloadData()
-            viewModel.getBooks()
-        }
-        rvBooks.layoutManager = LinearLayoutManager(requireContext())
-        rvBooks.adapter = booksAdapter
-        rvBooks.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                super.onScrollStateChanged(recyclerView, newState)
-
-                scrollPosition.value =
-                    if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        ScrollPosition.TOP
-                    } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
-                        ScrollPosition.END
-                    } else {
-                        ScrollPosition.MIDDLE
-                    }
-            }
-        })
-        ItemTouchHelper(SwipeController()).attachToRecyclerView(rvBooks)
-
-        scrollPosition.value = ScrollPosition.TOP
-
-        fbStartList.setOnClickListener {
-
-            rvBooks.scrollToPosition(0)
-            scrollPosition.value = ScrollPosition.TOP
-        }
-
-        fbEndList.setOnClickListener {
-
-            val position: Int = booksAdapter.itemCount - 1
-            rvBooks.scrollToPosition(position)
-            scrollPosition.value = ScrollPosition.END
-        }
+        setupSearchView()
     }
+    //endregion
 
+    //region Private methods
     private fun setupBindings() {
 
-        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
+        viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
-            ivNoResults.visibility = if (booksResponse.isEmpty()) View.VISIBLE else View.GONE
+            readingBooksAdapter.resetList()
+            readingBooksAdapter.setBooks(booksResponse.toMutableList())
+        })
+
+        viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
+
+            pendingBooksAdapter.resetList()
+            pendingBooksAdapter.setBooks(booksResponse.toMutableList())
+        })
+
+        viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
+
             booksAdapter.resetList()
             booksAdapter.setBooks(booksResponse.toMutableList())
-            setTitle(booksResponse.size)
-        })
-
-        viewModel.formats.observe(viewLifecycleOwner, { formatsResponse ->
-
-            fillFormats(formatsResponse)
-            createSpinner(
-                spFormats,
-                formatValues,
-                resources.getString(R.string.format)
-            )
-
-            val selectedFormatName =
-                getSelectedValue(viewModel.formats, viewModel.selectedFormat)?.name
-            spFormats.setSelection(
-                formatValues.indexOf(selectedFormatName)
-            )
-        })
-
-        viewModel.states.observe(viewLifecycleOwner, { statesResponse ->
-
-            fillStates(statesResponse)
-            createSpinner(
-                spStates,
-                stateValues,
-                resources.getString(R.string.state)
-            )
-
-            val selectedStateName =
-                getSelectedValue(viewModel.states, viewModel.selectedState)?.name
-            spStates.setSelection(
-                stateValues.indexOf(selectedStateName)
-            )
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
-            srlBooks.isRefreshing = isLoading
-        })
 
-        viewModel.booksFormatsLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingFormats.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-
-        viewModel.booksStatesLoading.observe(viewLifecycleOwner, { isLoading ->
-            pbLoadingStates.visibility = if (isLoading) View.VISIBLE else View.GONE
-        })
-
-        viewModel.bookSet.observe(viewLifecycleOwner, { position ->
-            position?.let {
-                booksAdapter.notifyItemChanged(position)
-            }
-        })
-
-        viewModel.bookDeleted.observe(viewLifecycleOwner, { position ->
-            position?.let {
-                booksAdapter.notifyItemRemoved(position)
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
             }
         })
 
         viewModel.booksError.observe(viewLifecycleOwner, { error ->
             manageError(error)
         })
+    }
 
-        scrollPosition.observe(viewLifecycleOwner, {
+    private fun setupSearchView() {
 
-            vwSeparator.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
-            fbStartList.visibility = if (it == ScrollPosition.TOP) View.GONE else View.VISIBLE
-            fbEndList.visibility = if (it == ScrollPosition.END) View.GONE else View.VISIBLE
+        this.searchView = binding.searchViewBooks
+        this.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(newText: String): Boolean {
+
+                viewModel.searchBooks(newText)
+                binding.apply {
+                    recyclerViewReadingBooks.scrollToPosition(0)
+                    recyclerViewPendingBooks.scrollToPosition(0)
+                    recyclerViewBooks.scrollToPosition(0)
+                }
+                return true
+            }
+
+            override fun onQueryTextSubmit(query: String): Boolean {
+
+                requireActivity().hideSoftKeyboard()
+                searchView?.clearFocus()
+                return true
+            }
         })
+        this.setupSearchView(R.color.colorSecondary, "")
     }
-
-    private fun fillFormats(formatsResponse: List<FormatResponse>?) {
-
-        formatValues = mutableListOf()
-        formatValues.add(resources.getString((R.string.anything)))
-        formatsResponse?.let {
-            formatValues.addAll(formatsResponse.map { it.name })
-        }
-    }
-
-    private fun fillStates(statesResponse: List<StateResponse>?) {
-
-        stateValues = mutableListOf()
-        stateValues.add(resources.getString((R.string.anything)))
-        statesResponse?.let {
-            stateValues.addAll(statesResponse.map { it.name })
-        }
-    }
-
-    private fun createSpinner(
-        spinner: Spinner,
-        values: List<String>,
-        title: String
-    ) {
-
-        spinner.adapter = Constants.getAdapter(
-            context = requireContext(),
-            data = values,
-            firstOptionEnabled = true,
-            rounded = true,
-            title = title
-        )
-    }
-
-    private fun <T : BaseModel<String>> getSelectedValue(
-        values: LiveData<List<T>>,
-        selectedValue: LiveData<String?>
-    ): T? {
-        return values.value?.firstOrNull { it.id == selectedValue.value }
-    }
-
-    private fun setTitle(booksCount: Int) {
-
-        val title = resources.getQuantityString(R.plurals.title_books_count, booksCount, booksCount)
-        (activity as AppCompatActivity?)?.supportActionBar?.title = title
-    }
-
-    private fun setupSearchView(menu: Menu) {
-
-        val menuItem = menu.findItem(R.id.action_search)
-        this.searchView = menuItem.actionView as SearchView
-        this.searchView?.let { searchView ->
-
-            searchView.queryHint = resources.getString(R.string.search_books)
-            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-
-                override fun onQueryTextChange(newText: String): Boolean {
-
-                    viewModel.searchBooks(newText)
-                    return true
-                }
-
-                override fun onQueryTextSubmit(query: String): Boolean {
-
-                    menuItem.collapseActionView()
-                    Constants.hideSoftKeyboard(requireActivity())
-                    return true
-                }
-            })
-        }
-        this.setupSearchView("")
-    }
-
-    enum class ScrollPosition {
-        TOP, MIDDLE, END
-    }
-
-    inner class SwipeController :
-        ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-
-        private val paint = Paint()
-
-        override fun onMove(
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            target: RecyclerView.ViewHolder
-        ) = false
-
-        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-
-            val position = viewHolder.adapterPosition
-            if (direction == ItemTouchHelper.LEFT) {
-                showPopupConfirmationDialog(R.string.book_remove_confirmation, acceptHandler = {
-                    viewModel.deleteBook(position)
-                }, {
-                    booksAdapter.notifyItemChanged(position)
-                })
-            } else {
-                viewModel.setBookFavourite(position)
-            }
-        }
-
-        override fun onChildDraw(
-            c: Canvas,
-            recyclerView: RecyclerView,
-            viewHolder: RecyclerView.ViewHolder,
-            dX: Float,
-            dY: Float,
-            actionState: Int,
-            isCurrentlyActive: Boolean
-        ) {
-
-            var x = dX
-            if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-                val itemView = viewHolder.itemView
-                val context = recyclerView.context
-
-                val height = itemView.bottom - itemView.top
-                val width = height / 3
-                val maxX = itemView.width.toFloat() * 0.6F
-
-                val isFavourite = (viewHolder as BooksViewHolder).isFavourite
-                val leftId =
-                    when {
-                        isFavourite && Constants.isDarkMode(context) -> R.drawable.ic_favourite_empty_dark
-                        isFavourite && !Constants.isDarkMode(context) -> R.drawable.ic_favourite_empty_light
-                        !isFavourite && Constants.isDarkMode(context) -> R.drawable.ic_favourite_full_dark
-                        else -> R.drawable.ic_favourite_full_light
-                    }
-                val rightId =
-                    if (Constants.isDarkMode(context)) R.drawable.ic_remove_book_dark
-                    else R.drawable.ic_remove_book_light
-
-                when {
-                    dX > 0 -> {// Swiping to the right
-                        paint.color = ContextCompat.getColor(context, R.color.colorPrimary)
-                        val background = RectF(
-                            itemView.left.toFloat(),
-                            itemView.top.toFloat(),
-                            dX,
-                            itemView.bottom.toFloat()
-                        )
-                        c.drawRect(background, paint)
-                        val icon = ContextCompat.getDrawable(context, leftId)
-                        icon?.setBounds(
-                            itemView.left + width,
-                            itemView.top + width,
-                            itemView.left + 2 * width,
-                            itemView.bottom - width
-                        )
-                        icon?.draw(c)
-                        x = min(dX, maxX)
-                    }
-                    dX < 0 -> {// Swiping to the left
-                        paint.color = ContextCompat.getColor(context, R.color.colorTertiary)
-                        val background = RectF(
-                            itemView.right.toFloat() + dX,
-                            itemView.top.toFloat(),
-                            itemView.right.toFloat(),
-                            itemView.bottom.toFloat()
-                        )
-                        c.drawRect(background, paint)
-
-                        val icon = ContextCompat.getDrawable(context, rightId)
-                        icon?.setBounds(
-                            itemView.right - 2 * width,
-                            itemView.top + width,
-                            itemView.right - width,
-                            itemView.bottom - width
-                        )
-                        icon?.draw(c)
-                        x = max(dX, -maxX)
-                    }
-                    else -> {// view is unSwiped
-                        val background = RectF(0F, 0F, 0F, 0F)
-                        c.drawRect(background, paint)
-                    }
-                }
-            }
-            super.onChildDraw(c, recyclerView, viewHolder, x, dY, actionState, isCurrentlyActive)
-        }
-    }
+    //endregion
 }

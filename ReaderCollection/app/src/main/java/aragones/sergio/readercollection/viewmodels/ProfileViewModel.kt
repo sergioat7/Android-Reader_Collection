@@ -5,18 +5,18 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -24,41 +24,36 @@ import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository,
     private val userRepository: UserRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse>()
+    //endregion
 
-    //MARK: - Public properties
-
-    val language: String = userRepository.language
-    val sortParam: String? = userRepository.sortParam
-    val swipeRefresh: Boolean = userRepository.swipeRefresh
+    //region Public properties
     val userData: UserData = userRepository.userData
+    val language: String = userRepository.language
+    var sortParam: String? = userRepository.sortParam
+    var isSortDescending: Boolean = userRepository.isSortDescending
+    var themeMode: Int = userRepository.themeMode
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse> = _profileError
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun logout() {
 
         _profileLoading.value = true
@@ -73,12 +68,19 @@ class ProfileViewModel @Inject constructor(
         resetDatabase()
     }
 
-    fun saveData(newPassword: String, newLanguage: String, newSortParam: String?, newSwipeRefresh: Boolean) {
+    fun save(
+        newPassword: String,
+        newLanguage: String,
+        newSortParam: String?,
+        newIsSortDescending: Boolean,
+        newThemeMode: Int
+    ) {
 
-        val changePassword = newPassword != userRepository.userData.password
-        val changeLanguage = newLanguage != language
-        val changeSortParam = newSortParam != sortParam
-        val changeSwipeRefresh = newSwipeRefresh != swipeRefresh
+        val changePassword =            newPassword != userRepository.userData.password
+        val changeLanguage =            newLanguage != language
+        val changeSortParam =           newSortParam != sortParam
+        val changeIsSortDescending =    newIsSortDescending != isSortDescending
+        val changeThemeMode =           newThemeMode != themeMode
 
         if (changePassword) {
 
@@ -90,15 +92,16 @@ class ProfileViewModel @Inject constructor(
                     loginObserver().subscribeBy(
                         onComplete = {
 
+                            userData.password = newPassword
                             _profileLoading.value = false
-                            if (changeLanguage) {
+                            if (changeLanguage || changeSortParam || changeIsSortDescending) {
                                 _profileRedirection.value = true
                             }
                         },
                         onError = {
 
                             _profileLoading.value = false
-                            _profileError.value = Constants.handleError(it)
+                            _profileError.value = ApiManager.handleError(it)
                             onDestroy()
                         }
                     ).addTo(disposables)
@@ -106,26 +109,39 @@ class ProfileViewModel @Inject constructor(
                 onError = {
 
                     _profileLoading.value = false
-                    _profileError.value = Constants.handleError(it)
+                    _profileError.value = ApiManager.handleError(it)
                     onDestroy()
                 }
             ).addTo(disposables)
         }
 
+        if (changeLanguage) {
+            userRepository.storeLanguage(newLanguage)
+        }
+
         if (changeSortParam) {
             userRepository.storeSortParam(newSortParam)
+            sortParam = newSortParam
         }
 
-        if (changeSwipeRefresh) {
-            userRepository.storeSwipeRefresh(newSwipeRefresh)
+        if (changeIsSortDescending) {
+            userRepository.storeIsSortDescending(newIsSortDescending)
+            isSortDescending = newIsSortDescending
         }
 
-        if (changeLanguage) {
+        if (changeThemeMode) {
 
-            userRepository.storeLanguage(newLanguage)
-            if (!changePassword) {
-                _profileRedirection.value = true
+            userRepository.storeThemeMode(newThemeMode)
+            themeMode = newThemeMode
+            when (newThemeMode) {
+                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
+        }
+
+        if (!changePassword && (changeLanguage || changeSortParam || changeIsSortDescending)) {
+            _profileRedirection.value = true
         }
     }
 
@@ -142,7 +158,7 @@ class ProfileViewModel @Inject constructor(
             onError = {
 
                 _profileLoading.value = false
-                _profileError.value = Constants.handleError(it)
+                _profileError.value = ApiManager.handleError(it)
                 onDestroy()
             }
         ).addTo(disposables)
@@ -156,60 +172,23 @@ class ProfileViewModel @Inject constructor(
         }
         _profileForm.value = passwordError
     }
+    //endregion
 
-    //MARK: - Private methods
-
+    //region Private methods
     private fun resetDatabase() {
-
-        var result = 0
 
         booksRepository.resetTableObserver().subscribeBy(
             onComplete = {
 
-                result += 1
-                checkProgress(result)
+                _profileLoading.value = false
+                _profileRedirection.value = true
             },
             onError = {
 
-                result += 1
-                checkProgress(result)
+                _profileLoading.value = false
+                _profileRedirection.value = true
             }
         ).addTo(disposables)
-
-        formatRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-
-        stateRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-    }
-
-    private fun checkProgress(result: Int) {
-
-        if (result == 3) {
-
-            _profileLoading.value = false
-            _profileRedirection.value = true
-        }
     }
 
     private fun loginObserver(): Completable {
@@ -230,7 +209,8 @@ class ProfileViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-            .subscribeOn(Constants.SUBSCRIBER_SCHEDULER)
-            .observeOn(Constants.OBSERVER_SCHEDULER)
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
+    //endregion
 }

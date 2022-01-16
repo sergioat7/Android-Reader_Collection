@@ -5,55 +5,40 @@
 
 package aragones.sergio.readercollection.fragments
 
-import android.content.res.ColorStateList
 import android.os.Bundle
-import android.text.InputType
 import android.view.*
 import android.widget.*
-import androidx.appcompat.widget.SwitchCompat
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.LandingActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.extensions.clearErrors
-import aragones.sergio.readercollection.extensions.setReadOnly
-import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentProfileBinding
+import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.utils.CustomDropdownType
+import aragones.sergio.readercollection.utils.Preferences
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
 import aragones.sergio.readercollection.viewmodels.ProfileViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 
-class ProfileFragment: BaseFragment() {
+class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
 
-    //MARK: - Private properties
+    //region Protected properties
+    override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
+    //endregion
 
-    private lateinit var etUsername: EditText
-    private lateinit var ibInfo: ImageButton
-    private lateinit var etPassword: EditText
-    private lateinit var ibPassword: ImageButton
-    private lateinit var rbEnglish: RadioButton
-    private lateinit var rbSpanish: RadioButton
-    private lateinit var spSortParams: Spinner
-    private lateinit var swSwipeRefresh: SwitchCompat
-    private lateinit var btSave: Button
+    //region Private properties
     private lateinit var viewModel: ProfileViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
+    //region Lifecycle methods
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initializeUI()
+        toolbar = binding.toolbar
+        initializeUi()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -65,12 +50,7 @@ class ProfileFragment: BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when(item.itemId) {
-            R.id.action_synchronize -> {
-
-                openSyncPopup()
-                return true
-            }
+        when (item.itemId) {
             R.id.action_delete -> {
 
                 showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
@@ -89,94 +69,80 @@ class ProfileFragment: BaseFragment() {
         return super.onOptionsItemSelected(item)
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        binding.textInputLayoutPassword.doAfterTextChanged {
+            viewModel.profileDataChanged(it.toString())
+        }
+        setupDropdowns()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
-    private fun initializeUI() {
-
-        val application = activity?.application ?: return
-        etUsername = edit_text_username
-        ibInfo = image_button_info
-        etPassword = edit_text_password
-        ibPassword = image_button_password
-        rbEnglish = radio_button_en
-        rbSpanish = radio_button_es
-        spSortParams = spinner_sort_params
-        swSwipeRefresh = switch_swipe_refresh
-        btSave = button_save
-        viewModel = ViewModelProvider(this, ProfileViewModelFactory(application)).get(ProfileViewModel::class.java)
-        setupBindings()
-
-        etUsername.setText(viewModel.userData.username)
-        etUsername.setReadOnly(true, InputType.TYPE_NULL, 0)
-        etPassword.setText(viewModel.userData.password)
-        rbEnglish.isChecked = viewModel.language == Constants.ENGLISH_LANGUAGE_KEY
-        rbSpanish.isChecked = viewModel.language == Constants.SPANISH_LANGUAGE_KEY
-
-        etPassword.afterTextChanged {
-            viewModel.profileDataChanged(it)
-        }
-
-        ibInfo.setOnClickListener {
-            showPopupDialog(resources.getString(R.string.username_info))
-        }
-
-        ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
-        }
-
-        spSortParams.backgroundTintList = ColorStateList.valueOf(
-            ContextCompat.getColor(requireActivity(), R.color.colorPrimary)
-        )
-        spSortParams.adapter = Constants.getAdapter(
-            context = requireContext(),
-            data = resources.getStringArray(R.array.sorting_keys).toList(),
-            firstOptionEnabled = true
-        )
-        var position = 0
-        viewModel.sortParam?.let { sortParam ->
-            position = resources.getStringArray(R.array.sorting_keys_ids).indexOf(sortParam)
-        }
-        spSortParams.setSelection(position)
-
-        swSwipeRefresh.isChecked = viewModel.swipeRefresh
-
-        btSave.setOnClickListener {
+    //region Public methods
+    fun save() {
+        with(binding) {
 
             val language =
-                if (rbEnglish.isChecked) Constants.ENGLISH_LANGUAGE_KEY
-                else Constants.SPANISH_LANGUAGE_KEY
+                if (radioButtonEn.isChecked) Preferences.ENGLISH_LANGUAGE_KEY
+                else Preferences.SPANISH_LANGUAGE_KEY
             val sortParam =
-                if (spSortParams.selectedItemPosition == 0) null
-                else resources.getStringArray(R.array.sorting_keys_ids)[spSortParams.selectedItemPosition]
-            viewModel.saveData(
-                etPassword.text.toString(),
+                if (dropdownTextInputLayoutSortParams.getPosition() == 0) null
+                else resources.getStringArray(R.array.sorting_param_keys)[dropdownTextInputLayoutSortParams.getPosition()]
+            val isSortDescending = dropdownTextInputLayoutSortOrders.getPosition() == 1
+            val themeMode = dropdownTextInputLayoutAppTheme.getPosition()
+            this@ProfileFragment.viewModel.save(
+                textInputLayoutPassword.getValue(),
                 language,
                 sortParam,
-                swSwipeRefresh.isChecked
+                isSortDescending,
+                themeMode
             )
         }
     }
+    //endregion
 
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
+
+        val application = activity?.application ?: return
+        viewModel = ViewModelProvider(
+            this,
+            ProfileViewModelFactory(application)
+        )[ProfileViewModel::class.java]
+        setupBindings()
+
+        binding.textInputLayoutUsername.setEndIconOnClickListener {
+            showPopupDialog(resources.getString(R.string.username_info))
+        }
+
+        binding.fragment = this
+        binding.viewModel = this.viewModel
+        binding.lifecycleOwner = this
+    }
+    //endregion
+
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.profileForm.observe(viewLifecycleOwner, Observer {
 
-            etPassword.clearErrors()
-            btSave.isEnabled = it == null
+            binding.textInputLayoutPassword.setError("")
 
             val passwordError = it ?: return@Observer
-            etPassword.error = getString(passwordError)
+            binding.textInputLayoutPassword.setError(getString(passwordError))
         })
 
         viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->
 
             if (!redirect) return@Observer
-            launchActivity(LandingActivity::class.java)
+            launchActivity(LandingActivity::class.java, true)
             activity?.finish()
         })
 
@@ -193,4 +159,26 @@ class ProfileFragment: BaseFragment() {
             manageError(error)
         })
     }
+
+    private fun setupDropdowns() {
+
+        val sortParamKeys = resources.getStringArray(R.array.sorting_param_keys).toList()
+        binding.dropdownTextInputLayoutSortParams.setValue(
+            viewModel.sortParam ?: sortParamKeys[0],
+            CustomDropdownType.SORT_PARAM
+        )
+
+        val sortOrderKeys = resources.getStringArray(R.array.sorting_order_keys).toList()
+        binding.dropdownTextInputLayoutSortOrders.setValue(
+            if (viewModel.isSortDescending) sortOrderKeys[1] else sortOrderKeys[0],
+            CustomDropdownType.SORT_ORDER
+        )
+
+        val appThemes = resources.getStringArray(R.array.app_theme_values).toList()
+        binding.dropdownTextInputLayoutAppTheme.setValue(
+            appThemes[viewModel.themeMode],
+            CustomDropdownType.APP_THEME
+        )
+    }
+    //endregion
 }

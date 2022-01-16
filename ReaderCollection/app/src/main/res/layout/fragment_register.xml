@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 28/10/2020
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <import
+            type="aragones.sergio.readercollection.utils.CustomInputType"
+            />
+
+        <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.RegisterFragment"
+            />
+
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.RegisterViewModel"
+            />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.RegisterFragment"
+        >
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:layout_marginBottom="@dimen/margin_20dp"
+            android:src="@drawable/login_register_image"
+            app:layout_constraintBottom_toTopOf="@+id/text_input_layout_username"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <include
+            android:id="@+id/text_input_layout_username"
+            layout="@layout/custom_text_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_24dp"
+            android:layout_marginTop="@dimen/margin_20dp"
+            android:layout_marginEnd="@dimen/margin_24dp"
+            android:layout_marginBottom="@dimen/margin_8dp"
+            app:labelHintText="@{@string/username}"
+            app:inputType="@{CustomInputType.TEXT}"
+            app:enabled="@{true}"
+            app:endIconSrc="@{@drawable/ic_show_info}"
+            app:layout_constraintBottom_toTopOf="@+id/text_input_layout_password"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_view"
+            />
+
+        <include
+            android:id="@+id/text_input_layout_password"
+            layout="@layout/custom_text_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
+            app:labelHintText="@{@string/password}"
+            app:inputType="@{CustomInputType.PASSWORD}"
+            app:enabled="@{true}"
+            app:endIconSrc="@{@drawable/ic_show_password}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/text_input_layout_username"
+            app:layout_constraintStart_toStartOf="@+id/text_input_layout_username"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.6"
+            />
+
+        <include
+            android:id="@+id/text_input_layout_confirm_password"
+            layout="@layout/custom_text_input_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
+            app:labelHintText="@{@string/confirm_password}"
+            app:inputType="@{CustomInputType.PASSWORD}"
+            app:enabled="@{true}"
+            app:endIconSrc="@{@drawable/ic_show_password}"
+            app:layout_constraintEnd_toEndOf="@+id/text_input_layout_username"
+            app:layout_constraintStart_toStartOf="@+id/text_input_layout_username"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password"
+            />
+
+        <Button
+            android:id="@+id/button_register"
+            android:layout_width="@dimen/size_200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_12dp"
+            android:layout_marginBottom="@dimen/margin_12dp"
+            android:enabled="@{viewModel.registerFormState.isDataValid}"
+            android:onClick="@{() -> fragment.register()}"
+            android:text="@string/sign_up"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_confirm_password"
+            style="@style/Widget.ReaderCollection.Button.Main"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

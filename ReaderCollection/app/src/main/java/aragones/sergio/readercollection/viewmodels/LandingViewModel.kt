@@ -5,61 +5,53 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.activities.LoginActivity
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
-import aragones.sergio.readercollection.viewmodels.base.BaseViewModel
+import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LandingViewModel @Inject constructor(
-    private val sharedPreferencesHandler: SharedPreferencesHandler,
-    private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository
+    private val booksRepository: BooksRepository
 ): BaseViewModel() {
 
-    //MARK: - Private properties
-
+    //region Private properties
     private val _landingClassToStart = MutableLiveData<Class<*>>()
+    //endregion
 
-    //MARK: - Public properties
-
+    //region Public properties
     val language: String
-        get() = sharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.getLanguage()
     val landingClassToStart = _landingClassToStart
+    //endregion
 
-    // MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
+    //endregion
 
-    //MARK: - Public methods
-
+    //region Public methods
     fun checkVersion() {
 
-        val currentVersion = sharedPreferencesHandler.getVersion()
+        val currentVersion = SharedPreferencesHandler.getVersion()
         val newVersion = BuildConfig.VERSION_CODE
         if (newVersion > currentVersion) {
 
-            sharedPreferencesHandler.setVersion(newVersion)
-            sharedPreferencesHandler.removePassword()
-            sharedPreferencesHandler.removeCredentials()
+            SharedPreferencesHandler.setVersion(newVersion)
+            SharedPreferencesHandler.removePassword()
+            SharedPreferencesHandler.removeCredentials()
             resetDatabase()
         } else {
 
-            _landingClassToStart.value = if (sharedPreferencesHandler.isLoggedIn()) {
+            _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn()) {
                 MainActivity::class.java
             } else {
                 LoginActivity::class.java
@@ -67,56 +59,27 @@ class LandingViewModel @Inject constructor(
         }
     }
 
-    //MARK: - Private methods
+    fun checkTheme() {
 
+        when (SharedPreferencesHandler.getThemeMode()) {
+            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+        }
+    }
+    //endregion
+
+    //region Private methods
     private fun resetDatabase() {
-
-        var result = 0
 
         booksRepository.resetTableObserver().subscribeBy(
             onComplete = {
-
-                result += 1
-                checkProgress(result)
+                _landingClassToStart.value = LoginActivity::class.java
             },
             onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-
-        formatRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-
-        stateRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
+                _landingClassToStart.value = LoginActivity::class.java
             }
         ).addTo(disposables)
     }
-
-    private fun checkProgress(result: Int) {
-
-        if (result == 3) {
-            _landingClassToStart.value = LoginActivity::class.java
-        }
-    }
+    //endregion
 }

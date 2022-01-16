@@ -12,32 +12,32 @@
 
     <item
         android:id="@+id/action_edit"
-        android:icon="@drawable/ic_edit_book_light"
-        android:title=""
+        android:icon="@drawable/ic_edit_book"
+        android:title="@string/edit"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"
         />
 
     <item
         android:id="@+id/action_remove"
-        android:icon="@drawable/ic_remove_book_light"
-        android:title=""
+        android:icon="@drawable/ic_remove_book"
+        android:title="@string/remove"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"
         />
 
     <item
         android:id="@+id/action_cancel"
-        android:icon="@drawable/ic_cancel_changes_light"
-        android:title=""
+        android:icon="@drawable/ic_cancel_changes"
+        android:title="@string/cancel"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"
         />
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_save_changes_light"
-        android:title=""
+        android:icon="@drawable/ic_save_changes"
+        android:title="@string/save"
         app:showAsAction="always"
         tools:ignore="AlwaysShowAction"
         />

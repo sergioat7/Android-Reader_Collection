@@ -8,13 +8,9 @@ package aragones.sergio.readercollection.viewmodelfactories
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import aragones.sergio.readercollection.injection.ReaderCollectionApplication
-import aragones.sergio.readercollection.network.apiclient.BookAPIClient
-import aragones.sergio.readercollection.network.apiclient.FormatAPIClient
-import aragones.sergio.readercollection.network.apiclient.GoogleAPIClient
-import aragones.sergio.readercollection.network.apiclient.StateAPIClient
-import aragones.sergio.readercollection.repositories.*
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import aragones.sergio.readercollection.ReaderCollectionApplication
+import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
 
@@ -24,43 +20,27 @@ class BookDetailViewModelFactory(
     private val isGoogleBook: Boolean
 ): ViewModelProvider.Factory {
 
-    //MARK: - Public properties
-
-    @Inject
-    lateinit var sharedPreferencesHandler: SharedPreferencesHandler
-    @Inject
-    lateinit var bookAPIClient: BookAPIClient
-    @Inject
-    lateinit var formatAPIClient: FormatAPIClient
-    @Inject
-    lateinit var googleAPIClient: GoogleAPIClient
-    @Inject
-    lateinit var stateAPIClient: StateAPIClient
+    //region Public properties
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
-    lateinit var formatRepository: FormatRepository
-    @Inject
     lateinit var googleBookRepository: GoogleBookRepository
     @Inject
-    lateinit var stateRepository: StateRepository
-    @Inject
     lateinit var bookDetailViewModel: BookDetailViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(BookDetailViewModel::class.java)) {
 
-            (application as ReaderCollectionApplication).booksComponent.inject(this)
+            (application as ReaderCollectionApplication).appComponent.inject(this)
             bookDetailViewModel.setBookId(bookId)
             bookDetailViewModel.setIsGoogleBook(isGoogleBook)
-            bookDetailViewModel.getBook()
-            bookDetailViewModel.getFormats()
-            bookDetailViewModel.getStates()
+            bookDetailViewModel.fetchBook()
             return bookDetailViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+    //endregion
 }

@@ -5,23 +5,16 @@
 
 package aragones.sergio.readercollection.viewholders
 
-import android.view.View
-import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.OnItemClickListener
+import aragones.sergio.readercollection.databinding.ItemLoadMoreItemsBinding
 
-class LoadMoreItemsViewHolder(
-    itemView: View
-) : RecyclerView.ViewHolder(itemView) {
+class LoadMoreItemsViewHolder(private val binding: ItemLoadMoreItemsBinding) :
+    RecyclerView.ViewHolder(binding.root) {
 
-    //MARK: - Public methods
-
-    fun setItem(onItemClickListener: OnItemClickListener) {
-
-        val btLoadMoreItems = itemView.findViewById<Button>(R.id.button_load_more_items)
-        btLoadMoreItems.setOnClickListener {
-            onItemClickListener.onLoadMoreItemsClick()
-        }
+    //region Public methods
+    fun bind(onItemClickListener: OnItemClickListener) {
+        binding.onItemClickListener = onItemClickListener
     }
+    //endregion
 }

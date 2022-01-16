@@ -6,111 +6,98 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.activities.RegisterActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentLoginBinding
+import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getValue
+import aragones.sergio.readercollection.extensions.setError
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
-import kotlinx.android.synthetic.main.login_fragment.*
+import kotlinx.android.synthetic.main.fragment_login.*
 
-class LoginFragment: BaseFragment() {
+class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
-    //MARK: - Private properties
+    //region Protected properties
+    override val hasOptionsMenu = false
+    override val statusBarStyle = StatusBarStyle.PRIMARY
+    //endregion
 
-    private lateinit var etUsername: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var ibPassword: ImageButton
-    private lateinit var btLogin: Button
-    private lateinit var btRegister: Button
+    //region Private properties
     private lateinit var viewModel: LoginViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
-    companion object {
-        fun newInstance() = LoginFragment()
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.login_fragment, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initializeUI()
+    //region Lifecycle methods
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeUi()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
-
-    private fun initializeUI() {
-
-        val application = activity?.application ?: return
-        etUsername = edit_text_username
-        etPassword = edit_text_password
-        ibPassword = image_button_password
-        btLogin = button_login
-        btRegister = button_register
-        viewModel = ViewModelProvider(this, LoginViewModelFactory(application)).get(LoginViewModel::class.java)
-        setupBindings()
-
-        etUsername.setText(viewModel.username)
-
-        etUsername.afterTextChanged {
-            loginDataChanged()
-        }
-
-        etPassword.afterTextChanged {
-            loginDataChanged()
-        }
-
-        ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
-        }
-
-        btLogin.setOnClickListener {
-
-            viewModel.login(
-                etUsername.text.toString(),
-                etPassword.text.toString()
-            )
-        }
-
-        btRegister.setOnClickListener {
-            launchActivity(RegisterActivity::class.java)
-        }
+    //region Public methods
+    fun goToRegister() {
+        launchActivity(RegisterActivity::class.java)
     }
 
+    fun login() {
+
+        binding.textInputLayoutUsername.textInputEditText.clearFocus()
+        binding.textInputLayoutPassword.textInputEditText.clearFocus()
+        viewModel.login(
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
+        )
+    }
+    //endregion
+
+    //region Protected methods
+    override fun initializeUi() {
+
+        val application = activity?.application ?: return
+        viewModel =
+            ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
+        setupBindings()
+
+        binding.fragment = this
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.textInputLayoutUsername.doAfterTextChanged {
+            loginDataChanged()
+        }
+        binding.textInputLayoutPassword.doAfterTextChanged {
+            loginDataChanged()
+        }
+    }
+    //endregion
+
+    //region Private methods
     private fun setupBindings() {
 
         viewModel.loginFormState.observe(viewLifecycleOwner, {
 
+            binding.textInputLayoutUsername.setError("")
+            binding.textInputLayoutPassword.setError("")
             val loginState = it ?: return@observe
 
-            btLogin.isEnabled = loginState.isDataValid
-
             if (loginState.usernameError != null) {
-                etUsername.error = getString(loginState.usernameError)
+                binding.textInputLayoutUsername.setError(getString(loginState.usernameError))
             }
             if (loginState.passwordError != null) {
-                etPassword.error = getString(loginState.passwordError)
+                binding.textInputLayoutPassword.setError(getString(loginState.passwordError))
             }
         })
 
@@ -126,7 +113,7 @@ class LoginFragment: BaseFragment() {
         viewModel.loginError.observe(viewLifecycleOwner, { error ->
 
             if (error == null) {
-                launchActivity(MainActivity::class.java)
+                launchActivity(MainActivity::class.java, true)
             } else {
 
                 hideLoading()
@@ -138,8 +125,9 @@ class LoginFragment: BaseFragment() {
     private fun loginDataChanged() {
 
         viewModel.loginDataChanged(
-            etUsername.text.toString(),
-            etPassword.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
         )
     }
+    //endregion
 }
