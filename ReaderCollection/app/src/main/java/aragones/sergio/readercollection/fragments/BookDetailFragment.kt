@@ -259,6 +259,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             viewModel = this@BookDetailFragment.viewModel
             lifecycleOwner = this@BookDetailFragment
             editable = false
+            isDarkMode = context?.isDarkMode()
         }
     }
     //endregion

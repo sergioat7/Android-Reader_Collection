@@ -27,6 +27,6 @@ fun Activity.hideSoftKeyboard() {
     } ?: return
 }
 
-fun Activity?.isDarkMode(): Boolean {
+fun Context?.isDarkMode(): Boolean {
     return this?.resources?.configuration?.uiMode?.and(Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
 }
