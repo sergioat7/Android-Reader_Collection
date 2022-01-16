@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.base.BaseActivity
 import aragones.sergio.readercollection.viewmodelfactories.LandingViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LandingViewModel
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import java.util.*
 
 class LandingActivity: BaseActivity() {
@@ -57,6 +60,26 @@ class LandingActivity: BaseActivity() {
         val conf = resources.configuration
         conf.setLocale(Locale(language))
         resources.updateConfiguration(conf, resources.displayMetrics)
+    }
+
+        val remoteConfig = Firebase.remoteConfig.apply {
+            setConfigSettingsAsync(
+                remoteConfigSettings {
+                    minimumFetchIntervalInSeconds = 3600
+                }
+            )
+        }
+
+        remoteConfig.fetchAndActivate().addOnCompleteListener(this) {
+
+            val formatsString = remoteConfig.getString("formats")
+            if (formatsString.isNotEmpty()) {
+            }
+
+            val statesString = remoteConfig.getString("states")
+            if (statesString.isNotEmpty()) {
+            }
+        }
     }
     //endregion
 }
