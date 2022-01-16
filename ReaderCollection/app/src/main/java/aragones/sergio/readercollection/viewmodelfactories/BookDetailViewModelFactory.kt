@@ -10,9 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
 
@@ -26,11 +24,7 @@ class BookDetailViewModelFactory(
     @Inject
     lateinit var booksRepository: BooksRepository
     @Inject
-    lateinit var formatRepository: FormatRepository
-    @Inject
     lateinit var googleBookRepository: GoogleBookRepository
-    @Inject
-    lateinit var stateRepository: StateRepository
     @Inject
     lateinit var bookDetailViewModel: BookDetailViewModel
     //endregion
@@ -44,8 +38,6 @@ class BookDetailViewModelFactory(
             bookDetailViewModel.setBookId(bookId)
             bookDetailViewModel.setIsGoogleBook(isGoogleBook)
             bookDetailViewModel.fetchBook()
-            bookDetailViewModel.fetchFormats()
-            bookDetailViewModel.fetchStates()
             return bookDetailViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

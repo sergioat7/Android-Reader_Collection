@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.viewmodels.PopupSyncAppViewModel
 import javax.inject.Inject
 
@@ -22,10 +20,6 @@ class PopupSyncAppViewModelFactory(
     //region Public properties
     @Inject
     lateinit var booksRepository: BooksRepository
-    @Inject
-    lateinit var formatRepository: FormatRepository
-    @Inject
-    lateinit var stateRepository: StateRepository
     @Inject
     lateinit var popupSyncAppViewModel: PopupSyncAppViewModel
     //endregion
