@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -25,6 +26,7 @@ import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.util.*
 import kotlin.math.abs
 
@@ -132,13 +134,33 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             )) {
                 view.scaleX = 1 - percentage
                 view.scaleY = 1 - percentage
-                view.isEnabled = percentage < 0.75
+                view.isEnabled = percentage < 0.6
             }
         }
     }
     //endregion
 
     //region Public methods
+    fun setImage() {
+
+        val dialogBinding = DialogSetImageBinding.inflate(layoutInflater)
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(resources.getString(R.string.enter_valid_url))
+            .setView(dialogBinding.root)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                val url = dialogBinding.textInputLayoutImage.getValue()
+                if (url.isNotBlank()) viewModel.setBookImage(url)
+                dialog.dismiss()
+            }
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     fun readMore(view: View) {
         with(binding) {
 
@@ -237,6 +259,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             viewModel = this@BookDetailFragment.viewModel
             lifecycleOwner = this@BookDetailFragment
             editable = false
+            isDarkMode = context?.isDarkMode()
         }
     }
     //endregion
@@ -281,6 +304,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         })
 
         viewModel.bookDetailError.observe(viewLifecycleOwner, {
+
+            book?.let { b -> showData(b) }
             manageError(it)
         })
 
@@ -312,6 +337,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             setState(book)
         }
+        viewModel.setBookImage(book.thumbnail ?: book.image)
     }
 
     private fun setFormat(book: BookResponse) {
@@ -382,7 +408,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 averageRating = book?.averageRating ?: 0.0,
                 ratingsCount = book?.ratingsCount ?: 0,
                 rating = rating,
-                thumbnail = book?.thumbnail,
+                thumbnail = this@BookDetailFragment.viewModel.bookImage.value,
                 image = book?.image,
                 format = format,
                 state = state,
