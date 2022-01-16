@@ -6,8 +6,11 @@
 package aragones.sergio.readercollection.extensions
 
 import androidx.core.view.doOnLayout
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.MenuAdapter
 import aragones.sergio.readercollection.databinding.CustomDropdownTextInputLayoutBinding
+import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.CustomDropdownType
 
 fun CustomDropdownTextInputLayoutBinding.setHintStyle(id: Int) {
     textInputLayout.doOnLayout {
@@ -25,17 +28,34 @@ fun CustomDropdownTextInputLayoutBinding.getValue(): String {
     return materialAutoCompleteTextView.text.toString().trimStart().trimEnd()
 }
 
-fun CustomDropdownTextInputLayoutBinding.setValue(
-    keys: List<String>,
-    values: List<String>,
-    currentKey: String?
-) {
+fun CustomDropdownTextInputLayoutBinding.setValue(currentKey: String?, type: CustomDropdownType) {
+
+    val values = when (type) {
+        CustomDropdownType.FORMAT -> Constants.FORMATS.map { it.name }
+        CustomDropdownType.STATE -> Constants.STATES.map { it.name }
+        CustomDropdownType.SORT_PARAM -> root.context.resources.getStringArray(R.array.sorting_param_values)
+            .toList()
+        CustomDropdownType.SORT_ORDER -> root.context.resources.getStringArray(R.array.sorting_order_values)
+            .toList()
+        CustomDropdownType.APP_THEME -> root.context.resources.getStringArray(R.array.app_theme_values)
+            .toList()
+    }
 
     if (materialAutoCompleteTextView.adapter == null) {
         materialAutoCompleteTextView.setAdapter(MenuAdapter(root.context, values))
     }
 
     currentKey?.let { key ->
+        val keys = when (type) {
+            CustomDropdownType.FORMAT -> Constants.FORMATS.map { it.id }
+            CustomDropdownType.STATE -> Constants.STATES.map { it.id }
+            CustomDropdownType.SORT_PARAM -> root.context.resources.getStringArray(R.array.sorting_param_keys)
+                .toList()
+            CustomDropdownType.SORT_ORDER -> root.context.resources.getStringArray(R.array.sorting_order_keys)
+                .toList()
+            CustomDropdownType.APP_THEME -> root.context.resources.getStringArray(R.array.app_theme_values)
+                .toList()
+        }
         values.getOrNull(keys.indexOf(key))?.let { value ->
             materialAutoCompleteTextView.setText(value, false)
         }

@@ -12,7 +12,6 @@
     <dimen name="margin_24dp">24dp</dimen>
     <dimen name="margin_24dp_negative">-24dp</dimen>
     <dimen name="margin_20dp">20dp</dimen>
-    <dimen name="margin_20dp_negative">-20dp</dimen>
     <dimen name="margin_16dp">16dp</dimen>
     <dimen name="margin_12dp">12dp</dimen>
     <dimen name="margin_8dp">8dp</dimen>
