@@ -6,131 +6,108 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
-import aragones.sergio.readercollection.extensions.afterTextChanged
-import aragones.sergio.readercollection.extensions.clearErrors
-import aragones.sergio.readercollection.extensions.onFocusChange
-import aragones.sergio.readercollection.fragments.base.BaseFragment
-import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
+import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
-import kotlinx.android.synthetic.main.register_fragment.*
+import kotlinx.android.synthetic.main.fragment_register.*
 
-class RegisterFragment: BaseFragment() {
+class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
-    //MARK: - Private properties
+    //region Protected properties
+    override val hasOptionsMenu = false
+    override val statusBarStyle = StatusBarStyle.PRIMARY
+    //endregion
 
-    private lateinit var etUsername: EditText
-    private lateinit var ibInfo: ImageButton
-    private lateinit var etPassword: EditText
-    private lateinit var ibPassword: ImageButton
-    private lateinit var etConfirmPassword: EditText
-    private lateinit var ibConfirmPassword: ImageButton
-    private lateinit var btRegister: Button
+    //region Private properties
     private lateinit var viewModel: RegisterViewModel
+    //endregion
 
-    //MARK: - Lifecycle methods
-
-    companion object {
-        fun newInstance() = RegisterFragment()
+    //region Lifecycle methods
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initializeUi()
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.register_fragment, container, false)
-    }
+    override fun onResume() {
+        super.onResume()
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        initializeUI()
+        binding.textInputLayoutUsername.doAfterTextChanged {
+            registerDataChanged()
+        }
+        binding.textInputLayoutPassword.doAfterTextChanged {
+            registerDataChanged()
+        }
+        binding.textInputLayoutConfirmPassword.doAfterTextChanged {
+            registerDataChanged()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         viewModel.onDestroy()
     }
+    //endregion
 
-    //MARK: - Private methods
+    //region Public methods
+    fun register() {
 
-    private fun initializeUI() {
+        binding.textInputLayoutUsername.textInputEditText.clearFocus()
+        binding.textInputLayoutPassword.textInputEditText.clearFocus()
+        binding.textInputLayoutConfirmPassword.textInputEditText.clearFocus()
+        viewModel.register(
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue()
+        )
+    }
+    //endregion
+
+    //region Protected methods
+    override fun initializeUi() {
+        super.initializeUi()
 
         val application = activity?.application ?: return
-        etUsername = edit_text_username
-        ibInfo = image_button_info
-        etPassword = edit_text_password
-        ibPassword = image_button_password
-        etConfirmPassword = edit_text_confirm_password
-        ibConfirmPassword = image_button_confirm_password
-        btRegister = button_register
-        viewModel = ViewModelProvider(this, RegisterViewModelFactory(application)).get(
-            RegisterViewModel::class.java
-        )
+        viewModel = ViewModelProvider(
+            this,
+            RegisterViewModelFactory(application)
+        )[RegisterViewModel::class.java]
+        setupBindings()
 
-        etUsername.afterTextChanged {
-            registerDataChanged()
-        }
-        etUsername.onFocusChange {
-            registerDataChanged()
-        }
-
-        ibInfo.setOnClickListener {
+        binding.textInputLayoutUsername.setEndIconOnClickListener {
             showPopupDialog(resources.getString(R.string.username_info))
         }
+        binding.fragment = this
+        binding.viewModel = this.viewModel
+        binding.lifecycleOwner = this
+    }
+    //endregion
 
-        etPassword.afterTextChanged {
-            registerDataChanged()
-        }
-        etPassword.onFocusChange {
-            registerDataChanged()
-        }
-
-        ibPassword.setOnClickListener {
-            Constants.showOrHidePassword(etPassword, ibPassword, Constants.isDarkMode(context))
-        }
-
-        etConfirmPassword.afterTextChanged {
-            registerDataChanged()
-        }
-        etConfirmPassword.onFocusChange {
-            registerDataChanged()
-        }
-
-        ibConfirmPassword.setOnClickListener {
-            Constants.showOrHidePassword(etConfirmPassword, ibConfirmPassword, Constants.isDarkMode(context))
-        }
-
-        btRegister.setOnClickListener {
-            register()
-        }
+    //region Private methods
+    private fun setupBindings() {
 
         viewModel.registerFormState.observe(viewLifecycleOwner, {
 
             val registerState = it ?: return@observe
 
-            etUsername.clearErrors()
-            etPassword.clearErrors()
-            etConfirmPassword.clearErrors()
+            with(binding) {
+                textInputLayoutUsername.setError("")
+                textInputLayoutPassword.setError("")
+                textInputLayoutConfirmPassword.setError("")
 
-            btRegister.isEnabled = registerState.isDataValid
+                if (registerState.usernameError != null) {
+                    textInputLayoutUsername.setError(getString(registerState.usernameError))
+                }
+                if (registerState.passwordError != null) {
 
-            if (registerState.usernameError != null) {
-                etUsername.error = getString(registerState.usernameError)
-            }
-            if (registerState.passwordError != null) {
-
-                etPassword.error = getString(registerState.passwordError)
-                etConfirmPassword.error = getString(registerState.passwordError)
+                    textInputLayoutPassword.setError(getString(registerState.passwordError))
+                    textInputLayoutConfirmPassword.setError(getString(registerState.passwordError))
+                }
             }
         })
 
@@ -156,17 +133,10 @@ class RegisterFragment: BaseFragment() {
     private fun registerDataChanged() {
 
         viewModel.registerDataChanged(
-            etUsername.text.toString(),
-            etPassword.text.toString(),
-            etConfirmPassword.text.toString()
+            binding.textInputLayoutUsername.getValue(),
+            binding.textInputLayoutPassword.getValue(),
+            binding.textInputLayoutConfirmPassword.getValue()
         )
     }
-
-    private fun register() {
-
-        viewModel.register(
-            etUsername.text.toString(),
-            etPassword.text.toString()
-        )
-    }
+    //endregion
 }

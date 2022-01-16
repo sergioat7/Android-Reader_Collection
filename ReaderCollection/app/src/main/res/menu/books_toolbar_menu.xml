@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
-  ~ Created by Sergio Aragonés on 28/12/2020
+  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 5/1/2022
   -->
 
 <menu
@@ -11,24 +11,16 @@
 
     <item
         android:id="@+id/action_synchronize"
-        android:icon="@drawable/ic_synchronize_light"
-        android:title=""
+        android:icon="@drawable/ic_synchronize"
+        android:title="@string/synchronize"
         app:showAsAction="ifRoom"
-        />
-
-    <item
-        android:id="@+id/action_search"
-        android:icon="@drawable/ic_search_light"
-        android:title=""
-        app:actionViewClass="android.widget.SearchView"
-        app:showAsAction="collapseActionView|ifRoom"
         />
 
     <item
         android:id="@+id/action_sort"
-        android:icon="@drawable/ic_sort_books_light"
-        android:title=""
-        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_sort_books"
+        android:title="@string/sort"
+        app:showAsAction="always"
         />
 
 </menu>

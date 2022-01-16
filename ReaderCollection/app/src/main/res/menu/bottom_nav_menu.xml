@@ -9,20 +9,20 @@
     >
 
     <item
-        android:id="@+id/navigation_books"
-        android:icon="@drawable/bottom_navigation_books_images"
+        android:id="@+id/nav_graph_books"
+        android:icon="@drawable/ic_bookshelf"
         android:title="@string/title_books"
         />
 
     <item
-        android:id="@+id/navigation_search"
-        android:icon="@drawable/bottom_navigation_book_search_images"
+        android:id="@+id/nav_graph_search"
+        android:icon="@drawable/ic_book_search"
         android:title="@string/title_search"
         />
 
     <item
-        android:id="@+id/navigation_profile"
-        android:icon="@drawable/bottom_navigation_profile_images"
+        android:id="@+id/nav_graph_profile"
+        android:icon="@drawable/ic_profile"
         android:title="@string/title_profile"
         />
 

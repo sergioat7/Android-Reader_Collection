@@ -10,18 +10,23 @@
     >
 
     <corners
-        android:radius="100dp"
+        android:radius="@dimen/radius_100dp"
         />
 
     <padding
-        android:top="10dp"
-        android:bottom="10dp"
-        android:right="10dp"
-        android:left="10dp"
+        android:top="@dimen/padding_12dp"
+        android:bottom="@dimen/padding_12dp"
+        android:right="@dimen/padding_12dp"
+        android:left="@dimen/padding_12dp"
         />
 
     <solid
         android:color="@color/colorPrimary"
+        />
+
+    <stroke
+        android:width="@dimen/size_1dp"
+        android:color="@color/colorSecondary"
         />
 
 </shape>

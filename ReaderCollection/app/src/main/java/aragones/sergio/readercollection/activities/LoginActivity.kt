@@ -7,26 +7,18 @@ package aragones.sergio.readercollection.activities
 
 import android.os.Bundle
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.activities.base.BaseActivity
-import aragones.sergio.readercollection.fragments.LoginFragment
+import aragones.sergio.readercollection.base.BaseActivity
 
-class LoginActivity: BaseActivity() {
+class LoginActivity : BaseActivity() {
 
-    //MARK: - Lifecycle methods
-
+    //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.login_activity)
-
-        if (savedInstanceState == null) {
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.container, LoginFragment.newInstance())
-                .commitNow()
-        }
+        setContentView(R.layout.activity_login)
     }
 
     override fun onBackPressed() {
         moveTaskToBack(true)
     }
+    //endregion
 }

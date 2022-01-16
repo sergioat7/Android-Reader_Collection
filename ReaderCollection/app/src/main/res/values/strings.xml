@@ -1,15 +1,8 @@
 <resources>
 
     //GENERAL
-    <string name="app_name">Reader Collection</string>
-    <string name="title_books">Books</string>
-    <string name="title_search">Search</string>
-    <string name="title_profile">Profile</string>
-    <plurals name="title_books_count">
-        <item quantity="one">%s book</item>
-        <item quantity="other">%s books</item>
-    </plurals>
-    <string name="book_text_count" translatable="false">%d / 10240</string>
+    <string name="app_name" translatable="false">Reader Collection</string>
+    <string name="search">Search</string>
 
     //LOGIN &amp; REGISTRATION
     <string name="invalid_username">Not a valid username</string>
@@ -25,22 +18,30 @@
     <string name="username_info">This username is only needed for identification purposes and to be able to separate your books from another user\'s ones.\n\nHowever, due to any personal information is stored, if you forget your password you won\'t be able to retrieve it.\n\nIf this happens, contact the app\'s developer, you can find his email in the Google Play Store app\'s card</string>
 
     //BOOKS
+    <string name="title_books">Bookshelf</string>
+    <plurals name="title_books_count">
+        <item quantity="one">%s available book</item>
+        <item quantity="other">%s available books</item>
+    </plurals>
     <string name="new_book">New</string>
     <string name="format">Format</string>
     <string name="state">State</string>
-    <string name="favourite">Favourite</string>
-    <string name="anything">Anything</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
     <string name="publisher_text">Pub. %s</string>
-    <string name="search_books">Search books</string>
     <string name="query_title" translatable="false">\"%s\"</string>
     <string name="load_more">Load more</string>
+    <string name="synchronize">Synchronize</string>
+    <string name="sort">Sort</string>
+    <string name="pending">Pending</string>
+    <string name="read">Read</string>
+    <string name="see_more">Ver más</string>
+    <string name="no_results_text">No results found</string>
+
+    //SEARCH
+    <string name="title_search">Search</string>
 
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
     <string name="add_author">Add the author(s)</string>
-    <string name="authors_text">By %s</string>
     <string name="description">Description</string>
     <string name="add_description">Add a description</string>
     <string name="read_more">Read more</string>
@@ -59,14 +60,24 @@
     <string name="reading_date">Reading date</string>
     <string name="book_saved">Book saved!</string>
     <string name="book_removed">Book removed!</string>
+    <string name="edit">Edit</string>
+    <string name="remove">Remove</string>
 
     //PROFILE
+    <string name="title_profile">Profile</string>
     <string name="save">Save</string>
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
     <string name="sort_books_param">Sort books param</string>
-    <string name="enable_list_refresh">Enable list refresh</string>
+    <string name="app_theme">App theme</string>
+    <string-array name="app_theme_values">
+        <item>System default</item>
+        <item>Light</item>
+        <item>Dark</item>
+    </string-array>
+    <string name="delete">Delete</string>
+    <string name="logout">Logout</string>
 
     //POPUPS
     <string name="accept">Accept</string>
@@ -75,16 +86,34 @@
     <string name="profile_delete_confirmation">Are you sure you want to delete your user? You will lose all your stored information about the books.</string>
     <string name="profile_logout_confirmation">Are you sure you want to exit?</string>
     <string name="order_by">Order by</string>
-    <string name="none">None</string>
-    <string name="title_sorting_key">Title</string>
-    <string name="published_date_sorting_key">Published date</string>
-    <string name="reading_date_sorting_key">Reading date</string>
-    <string name="page_count_sorting_key">Page count</string>
-    <string name="rating_sorting_key">Rating</string>
-    <string name="ascending">Ascending</string>
-    <string name="descending">Descending</string>
+    <string-array name="sorting_param_keys" translatable="false">
+        <item />
+        <item>title</item>
+        <item>publishedDate</item>
+        <item>readingDate</item>
+        <item>pageCount</item>
+        <item>rating</item>
+    </string-array>
+    <string-array name="sorting_param_values">
+        <item>None</item>
+        <item>Title</item>
+        <item>Published date</item>
+        <item>Reading date</item>
+        <item>Page count</item>
+        <item>Rating</item>
+    </string-array>
+    <string-array name="sorting_order_keys" translatable="false">
+        <item />
+        <item>ascending</item>
+        <item>descending</item>
+    </string-array>
+    <string-array name="sorting_order_values">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
     <string name="sync_title">Synchronizing…</string>
     <string name="sync_confirmation">Are you sure you want to sync the app? This process could take a while.</string>
+    <string name="enter_valid_url">Enter a valid URL</string>
 
     //ERRORS
     <string name="error_server">There was an error on getting data. Please, try again.</string>

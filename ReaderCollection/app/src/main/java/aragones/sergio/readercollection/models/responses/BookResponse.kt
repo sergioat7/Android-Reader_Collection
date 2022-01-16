@@ -7,7 +7,9 @@ package aragones.sergio.readercollection.models.responses
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import aragones.sergio.readercollection.models.base.BaseModel
+import aragones.sergio.readercollection.base.BaseModel
+import aragones.sergio.readercollection.extensions.toString
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -51,11 +53,11 @@ data class BookResponse(
     @SerializedName("format")
     val format: String?,
     @SerializedName("state")
-    val state: String?,
+    var state: String?,
     @SerializedName("isFavourite")
     var isFavourite: Boolean
-): BaseModel<String> {
-    constructor(id: String): this(
+) : BaseModel<String> {
+    constructor(id: String) : this(
         id,
         null,
         null,
@@ -75,5 +77,50 @@ data class BookResponse(
         null,
         null,
         null,
-        false)
+        false
+    )
+
+    constructor(googleBook: GoogleBookResponse) : this(
+        id = googleBook.id,
+        title = StringBuilder().append(googleBook.volumeInfo.title ?: "").append(" ")
+            .append(googleBook.volumeInfo.subtitle ?: "").toString(),
+        subtitle = null,
+        authors = googleBook.volumeInfo.authors,
+        publisher = googleBook.volumeInfo.publisher,
+        publishedDate = googleBook.volumeInfo.publishedDate,
+        readingDate = null,
+        description = googleBook.volumeInfo.description,
+        summary = null,
+        isbn = googleBook.getGoogleBookIsbn(),
+        pageCount = googleBook.volumeInfo.pageCount ?: 0,
+        categories = googleBook.volumeInfo.categories,
+        averageRating = googleBook.volumeInfo.averageRating ?: 0.0,
+        ratingsCount = googleBook.volumeInfo.ratingsCount ?: 0,
+        rating = 0.0,
+        thumbnail = googleBook.getGoogleBookThumbnail(),
+        image = googleBook.getGoogleBookImage(),
+        format = null,
+        state = null,
+        isFavourite = false
+    )
+
+    fun authorsToString(): String {
+        return authors?.joinToString(separator = ", ") ?: ""
+    }
+
+    fun publishedDateAsHumanReadable(): String? {
+
+        return publishedDate.toString(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
+        )
+    }
+
+    fun readingDateAsHumanReadable(): String? {
+
+        return readingDate.toString(
+            SharedPreferencesHandler.getDateFormatToShow(),
+            SharedPreferencesHandler.getLanguage()
+        )
+    }
 }
