@@ -78,9 +78,7 @@ class BookDetailViewModel @Inject constructor(
             googleBookRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
-                    val mappedBook = BookResponse(it)
-                    _book.value = mappedBook
-                    _bookImage.value = mappedBook.thumbnail ?: mappedBook.image
+                    _book.value = BookResponse(it)
                     _bookDetailLoading.value = false
                 },
                 onError = {
@@ -96,7 +94,6 @@ class BookDetailViewModel @Inject constructor(
                 onSuccess = {
 
                     _book.value = it
-                    _bookImage.value = it.thumbnail ?: it.image
                     _isFavourite.value = it.isFavourite
                     _bookDetailLoading.value = false
                 },
