@@ -8,28 +8,23 @@ package aragones.sergio.readercollection.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.base.BaseViewModel
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository,
     private val userRepository: UserRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
     //region Private properties
     private val _loginForm = MutableLiveData<LoginFormState>()
@@ -47,10 +42,7 @@ class LoginViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
     //endregion
 
@@ -95,79 +87,7 @@ class LoginViewModel @Inject constructor(
     //region Private methods
     private fun loadContent(userData: UserData, authData: AuthData) {
 
-        var result = 0
-
-        loadFormatsObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                if (result == 2) {
-
-                    userRepository.storeLoginData(userData, authData)
-                    loadBooks()
-                }
-            },
-            onError = {
-
-                _loginError.value = ErrorResponse("", R.string.error_database)
-                onDestroy()
-            }
-        ).addTo(disposables)
-
-        loadStatesObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                if (result == 2) {
-
-                    userRepository.storeLoginData(userData, authData)
-                    loadBooks()
-                }
-            },
-            onError = {
-
-                _loginError.value = ErrorResponse("", R.string.error_database)
-                onDestroy()
-            }
-        ).addTo(disposables)
-    }
-
-    private fun loadFormatsObserver(): Completable {
-
-        return Completable.create { emitter ->
-
-            formatRepository.loadFormatsObserver().subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    private fun loadStatesObserver(): Completable {
-
-        return Completable.create { emitter ->
-
-            stateRepository.loadStatesObserver().subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    private fun loadBooks() {
-
+        userRepository.storeLoginData(userData, authData)
         booksRepository.loadBooksObserver().subscribeBy(
             onComplete = {
 

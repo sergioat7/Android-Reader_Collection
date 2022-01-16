@@ -20,8 +20,6 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.State
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -31,8 +29,6 @@ import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository,
     userRepository: UserRepository
 ) : BaseViewModel() {
 
@@ -77,10 +73,7 @@ class BooksViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
     //endregion
 
