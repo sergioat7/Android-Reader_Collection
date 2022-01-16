@@ -10,6 +10,8 @@ import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.TextView
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.models.FormatResponse
+import aragones.sergio.readercollection.models.StateResponse
 
 object Preferences {
     const val PREFERENCES_NAME = "preferences"
@@ -30,6 +32,9 @@ object Constants {
     const val DATE_FORMAT = "yyyy-MM-dd"
     const val MAX_LINES = Int.MAX_VALUE
     const val NO_VALUE = "-"
+
+    var FORMATS = listOf<FormatResponse>()
+    var STATES = listOf<StateResponse>()
 
     fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
@@ -78,4 +83,12 @@ enum class CustomInputType {
     NUMBER,
     PASSWORD,
     DATE
+}
+
+enum class CustomDropdownType {
+    FORMAT,
+    STATE,
+    SORT_PARAM,
+    SORT_ORDER,
+    APP_THEME
 }
