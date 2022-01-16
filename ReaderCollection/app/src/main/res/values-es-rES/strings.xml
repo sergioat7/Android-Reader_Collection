@@ -103,6 +103,7 @@
     </string-array>
     <string name="sync_title">Sincronizando…</string>
     <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo.</string>
+    <string name="enter_valid_url">Introduce un enlace válido</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>

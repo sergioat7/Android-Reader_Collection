@@ -90,6 +90,7 @@
                         android:id="@+id/floating_action_button_add_photo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:onClick="@{() -> fragment.setImage()}"
                         android:visibility="@{editable ? View.VISIBLE : View.GONE}"
                         app:layout_behavior="@string/appbar_scrolling_view_behavior"
                         app:layout_constraintBottom_toBottomOf="parent"
