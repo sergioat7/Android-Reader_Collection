@@ -304,6 +304,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         })
 
         viewModel.bookDetailError.observe(viewLifecycleOwner, {
+
+            book?.let { b -> showData(b) }
             manageError(it)
         })
 
@@ -335,6 +337,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
             setState(book)
         }
+        viewModel.setBookImage(book.thumbnail ?: book.image)
     }
 
     private fun setFormat(book: BookResponse) {
