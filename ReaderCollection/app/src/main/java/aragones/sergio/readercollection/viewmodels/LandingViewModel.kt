@@ -11,8 +11,6 @@ import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.activities.LoginActivity
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -20,9 +18,7 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LandingViewModel @Inject constructor(
-    private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository
+    private val booksRepository: BooksRepository
 ): BaseViewModel() {
 
     //region Private properties
@@ -38,10 +34,7 @@ class LandingViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
     //endregion
 
@@ -79,53 +72,14 @@ class LandingViewModel @Inject constructor(
     //region Private methods
     private fun resetDatabase() {
 
-        var result = 0
-
         booksRepository.resetTableObserver().subscribeBy(
             onComplete = {
-
-                result += 1
-                checkProgress(result)
+                _landingClassToStart.value = LoginActivity::class.java
             },
             onError = {
-
-                result += 1
-                checkProgress(result)
+                _landingClassToStart.value = LoginActivity::class.java
             }
         ).addTo(disposables)
-
-        formatRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-
-        stateRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-    }
-
-    private fun checkProgress(result: Int) {
-
-        if (result == 3) {
-            _landingClassToStart.value = LoginActivity::class.java
-        }
     }
     //endregion
 }

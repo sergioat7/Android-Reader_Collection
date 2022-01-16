@@ -9,16 +9,14 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -26,8 +24,6 @@ import javax.inject.Inject
 
 class ProfileViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val stateRepository: StateRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
@@ -53,10 +49,7 @@ class ProfileViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
     //endregion
 
@@ -184,55 +177,18 @@ class ProfileViewModel @Inject constructor(
     //region Private methods
     private fun resetDatabase() {
 
-        var result = 0
-
         booksRepository.resetTableObserver().subscribeBy(
             onComplete = {
 
-                result += 1
-                checkProgress(result)
+                _profileLoading.value = false
+                _profileRedirection.value = true
             },
             onError = {
 
-                result += 1
-                checkProgress(result)
+                _profileLoading.value = false
+                _profileRedirection.value = true
             }
         ).addTo(disposables)
-
-        formatRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-
-        stateRepository.resetTableObserver().subscribeBy(
-            onComplete = {
-
-                result += 1
-                checkProgress(result)
-            },
-            onError = {
-
-                result += 1
-                checkProgress(result)
-            }
-        ).addTo(disposables)
-    }
-
-    private fun checkProgress(result: Int) {
-
-        if (result == 3) {
-
-            _profileLoading.value = false
-            _profileRedirection.value = true
-        }
     }
 
     private fun loginObserver(): Completable {
