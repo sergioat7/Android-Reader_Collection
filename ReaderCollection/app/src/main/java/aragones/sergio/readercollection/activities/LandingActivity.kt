@@ -7,13 +7,18 @@ package aragones.sergio.readercollection.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.base.BaseActivity
+import aragones.sergio.readercollection.models.responses.FormatResponse
+import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.viewmodelfactories.LandingViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LandingViewModel
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
+import com.google.gson.Gson
+import org.json.JSONObject
 import java.util.*
 
 class LandingActivity : BaseActivity() {
@@ -89,6 +94,14 @@ class LandingActivity : BaseActivity() {
     private fun setupFormats(formatsString: String) {
 
         if (formatsString.isNotEmpty()) {
+            var formats = listOf<FormatResponse>()
+            try {
+                val languagedFormats =
+                    JSONObject(formatsString).get(viewModel.language).toString()
+                formats =
+                    Gson().fromJson(languagedFormats, mutableListOf<FormatResponse>().javaClass)
+            } catch (e: Exception) {
+                Log.e("LandingActivity", e.message ?: "")
             }
 
         }
@@ -97,6 +110,14 @@ class LandingActivity : BaseActivity() {
     private fun setupStates(statesString: String) {
 
         if (statesString.isNotEmpty()) {
+            var states = listOf<StateResponse>()
+            try {
+                val languagedStates =
+                    JSONObject(statesString).get(viewModel.language).toString()
+                states =
+                    Gson().fromJson(languagedStates, mutableListOf<StateResponse>().javaClass)
+            } catch (e: Exception) {
+                Log.e("LandingActivity", e.message ?: "")
             }
         }
     }
