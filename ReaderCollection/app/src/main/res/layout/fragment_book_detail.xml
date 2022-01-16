@@ -43,6 +43,11 @@
             type="Boolean"
             />
 
+        <variable
+            name="isDarkMode"
+            type="Boolean"
+            />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -82,7 +87,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         src="@{viewModel.bookImage}"
-                        placeholder="@{@drawable/ic_default_book_cover}"
+                        placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_blue : @drawable/ic_default_book_cover_white}"
                         loadingColor="@{@color/colorSecondary}"
                         />
 
