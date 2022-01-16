@@ -43,6 +43,11 @@
             type="Boolean"
             />
 
+        <variable
+            name="isDarkMode"
+            type="Boolean"
+            />
+
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -81,9 +86,25 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        src="@{viewModel.book.thumbnail ?? viewModel.book.image}"
-                        placeholder="@{@drawable/ic_default_book_cover}"
+                        src="@{viewModel.bookImage}"
+                        placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_blue : @drawable/ic_default_book_cover_white}"
                         loadingColor="@{@color/colorSecondary}"
+                        />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floating_action_button_add_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> fragment.setImage()}"
+                        android:visibility="@{editable ? View.VISIBLE : View.GONE}"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        app:srcCompat="@drawable/ic_add_a_photo"
+                        style="@style/Widget.ReaderCollection.FloatingActionButton"
                         />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -458,19 +479,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button_add_photo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="top|center"
-            android:layout_marginTop="@dimen/margin_20dp_negative"
-            android:visibility="invisible"
-            app:fabSize="mini"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:srcCompat="@drawable/ic_add_camera_photo"
-            style="@style/Widget.ReaderCollection.FloatingActionButton"
-            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_action_button_favourite"

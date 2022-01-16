@@ -32,6 +32,7 @@ class BookDetailViewModel @Inject constructor(
     //region Private properties
     private var bookId: String = ""
     private val _book = MutableLiveData<BookResponse>()
+    private val _bookImage = MutableLiveData<String?>()
     private val _isFavourite = MutableLiveData<Boolean>()
     private val _formats = MutableLiveData<List<FormatResponse>>()
     private val _states = MutableLiveData<List<StateResponse>>()
@@ -46,6 +47,7 @@ class BookDetailViewModel @Inject constructor(
     //region Public properties
     var isGoogleBook: Boolean = false
     val book: LiveData<BookResponse> = _book
+    val bookImage: LiveData<String?> = _bookImage
     val isFavourite: LiveData<Boolean> = _isFavourite
     val formats: LiveData<List<FormatResponse>> = _formats
     val states: LiveData<List<StateResponse>> = _states
@@ -193,6 +195,10 @@ class BookDetailViewModel @Inject constructor(
                 onDestroy()
             }
         ).addTo(disposables)
+    }
+
+    fun setBookImage(imageUri: String?) {
+        _bookImage.value = imageUri
     }
 
     fun setFavourite(isFavourite: Boolean) {

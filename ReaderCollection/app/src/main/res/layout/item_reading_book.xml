@@ -26,6 +26,11 @@
             type="aragones.sergio.readercollection.adapters.OnItemClickListener"
             />
 
+        <variable
+            name="isDarkMode"
+            type="Boolean"
+            />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -72,7 +77,7 @@
             app:layout_constraintTop_toBottomOf="@+id/text_view_reading_book_author"
             src="@{book.thumbnail}"
             center="@{true}"
-            placeholder="@{@drawable/ic_default_book_cover}"
+            placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"
             radius="@{@dimen/radius_5dp}"
             />
 
