@@ -11,24 +11,18 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import aragones.sergio.readercollection.daos.BookDao
-import aragones.sergio.readercollection.daos.FormatDao
-import aragones.sergio.readercollection.daos.StateDao
 import aragones.sergio.readercollection.base.BaseModel
 import aragones.sergio.readercollection.models.responses.BookResponse
-import aragones.sergio.readercollection.models.FormatResponse
-import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 
-@Database(entities = [
-    BookResponse::class,
-    FormatResponse::class,
-    StateResponse::class], version = 1)
+@Database(
+    entities = [BookResponse::class],
+    version = 2
+)
 @TypeConverters(ListConverter::class, DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun bookDao(): BookDao
-    abstract fun formatDao(): FormatDao
-    abstract fun stateDao(): StateDao
 
     companion object {
 
