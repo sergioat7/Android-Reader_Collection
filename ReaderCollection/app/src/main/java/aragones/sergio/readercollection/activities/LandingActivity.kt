@@ -10,8 +10,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.base.BaseActivity
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
+import aragones.sergio.readercollection.models.FormatResponse
+import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LandingViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LandingViewModel
