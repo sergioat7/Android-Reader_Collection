@@ -22,7 +22,9 @@ import aragones.sergio.readercollection.utils.Constants
 @TypeConverters(ListConverter::class, DateConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
+    //region Public properties
     abstract fun bookDao(): BookDao
+    //endregion
 
     companion object {
 
@@ -36,11 +38,13 @@ abstract class AppDatabase : RoomDatabase() {
             if (instance == null) {
                 synchronized(AppDatabase::class) {
 
-                    instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        AppDatabase::class.java,
-                        Constants.DATABASE_NAME
-                    ).build()
+                    instance = Room
+                        .databaseBuilder(
+                            context.applicationContext,
+                            AppDatabase::class.java,
+                            Constants.DATABASE_NAME
+                        )
+                        .build()
                 }
             }
             return instance!!
