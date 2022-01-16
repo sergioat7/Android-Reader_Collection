@@ -274,20 +274,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             binding.editable = viewModel.isGoogleBook || it == null
         })
 
-        viewModel.formats.observe(viewLifecycleOwner, {
-
-            book?.let {
-                setFormat(it)
-            }
-        })
-
-        viewModel.states.observe(viewLifecycleOwner, {
-
-            book?.let {
-                setState(it)
-            }
-        })
-
         viewModel.bookDetailLoading.observe(viewLifecycleOwner, { isLoading ->
 
             if (isLoading) {
@@ -347,8 +333,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         * Othwerwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutFormat.setValue(
-            viewModel.formats.value?.map { it.id } ?: listOf(),
-            viewModel.formats.value?.map { it.name } ?: listOf(),
+            Constants.FORMATS.map { it.id },
+            Constants.FORMATS.map { it.name },
             book.format
         )
     }
@@ -360,9 +346,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         * Othwerwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutState.setValue(
-            viewModel.states.value?.map { it.id } ?: listOf(),
-            viewModel.states.value?.map { it.name } ?: listOf(),
-            book.state ?: viewModel.states.value?.first()?.id
+            Constants.STATES.map { it.id },
+            Constants.STATES.map { it.name },
+            book.state ?: Constants.STATES.first().id
         )
     }
 
@@ -385,10 +371,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 if (pageCountText.isNotBlank()) pageCountText.toInt()
                 else 0
             val rating = ratingBar.rating.toDouble() * 2
-            val format =
-                this@BookDetailFragment.viewModel.formats.value?.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
-            val state =
-                this@BookDetailFragment.viewModel.states.value?.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
+            val format = Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
+            val state = Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
             if (readingDate == null && state == State.READ) readingDate = Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 

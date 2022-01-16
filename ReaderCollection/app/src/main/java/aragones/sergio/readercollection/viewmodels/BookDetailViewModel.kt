@@ -11,22 +11,16 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.models.responses.FormatResponse
-import aragones.sergio.readercollection.models.responses.StateResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
-import aragones.sergio.readercollection.repositories.FormatRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
-import aragones.sergio.readercollection.repositories.StateRepository
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val formatRepository: FormatRepository,
-    private val googleBookRepository: GoogleBookRepository,
-    private val stateRepository: StateRepository
+    private val googleBookRepository: GoogleBookRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -34,8 +28,6 @@ class BookDetailViewModel @Inject constructor(
     private val _book = MutableLiveData<BookResponse>()
     private val _bookImage = MutableLiveData<String?>()
     private val _isFavourite = MutableLiveData<Boolean>()
-    private val _formats = MutableLiveData<List<FormatResponse>>()
-    private val _states = MutableLiveData<List<StateResponse>>()
     private val _bookDetailLoading = MutableLiveData<Boolean>()
     private val _bookDetailFormatsLoading = MutableLiveData<Boolean>()
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
@@ -49,8 +41,6 @@ class BookDetailViewModel @Inject constructor(
     val book: LiveData<BookResponse> = _book
     val bookImage: LiveData<String?> = _bookImage
     val isFavourite: LiveData<Boolean> = _isFavourite
-    val formats: LiveData<List<FormatResponse>> = _formats
-    val states: LiveData<List<StateResponse>> = _states
     val bookDetailLoading: LiveData<Boolean> = _bookDetailLoading
     val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
@@ -62,10 +52,7 @@ class BookDetailViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
-
         booksRepository.onDestroy()
-        formatRepository.onDestroy()
-        stateRepository.onDestroy()
     }
     //endregion
 
@@ -105,42 +92,6 @@ class BookDetailViewModel @Inject constructor(
                 }
             ).addTo(disposables)
         }
-    }
-
-    fun fetchFormats() {
-
-        _bookDetailFormatsLoading.value = true
-        formatRepository.getFormatsDatabaseObserver().subscribeBy(
-            onSuccess = {
-
-                _formats.value = it
-                _bookDetailFormatsLoading.value = false
-            },
-            onError = {
-
-                _formats.value = ArrayList()
-                _bookDetailFormatsLoading.value = false
-                onDestroy()
-            }
-        ).addTo(disposables)
-    }
-
-    fun fetchStates() {
-
-        _bookDetailStatesLoading.value = true
-        stateRepository.getStatesDatabaseObserver().subscribeBy(
-            onSuccess = {
-
-                _states.value = it
-                _bookDetailStatesLoading.value = false
-            },
-            onError = {
-
-                _states.value = ArrayList()
-                _bookDetailStatesLoading.value = false
-                onDestroy()
-            }
-        ).addTo(disposables)
     }
 
     fun createBook(book: BookResponse) {
