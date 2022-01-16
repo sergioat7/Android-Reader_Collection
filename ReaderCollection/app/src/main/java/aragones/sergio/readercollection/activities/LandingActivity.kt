@@ -16,7 +16,7 @@ import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import java.util.*
 
-class LandingActivity: BaseActivity() {
+class LandingActivity : BaseActivity() {
 
     //region Private properties
     private lateinit var viewModel: LandingViewModel
@@ -36,10 +36,14 @@ class LandingActivity: BaseActivity() {
 
     //region Private methods
     private fun initializeUI() {
-        viewModel = ViewModelProvider(this, LandingViewModelFactory(application))[LandingViewModel::class.java]
+        viewModel = ViewModelProvider(
+            this,
+            LandingViewModelFactory(application)
+        )[LandingViewModel::class.java]
         setupBindings()
 
         configLanguage()
+        fetchRemoteConfigValues()
         viewModel.checkVersion()
         viewModel.checkTheme()
     }
@@ -62,6 +66,8 @@ class LandingActivity: BaseActivity() {
         resources.updateConfiguration(conf, resources.displayMetrics)
     }
 
+    private fun fetchRemoteConfigValues() {
+
         val remoteConfig = Firebase.remoteConfig.apply {
             setConfigSettingsAsync(
                 remoteConfigSettings {
@@ -70,14 +76,27 @@ class LandingActivity: BaseActivity() {
             )
         }
 
+        setupStates(remoteConfig.getString("formats"))
+        setupStates(remoteConfig.getString("states"))
+
         remoteConfig.fetchAndActivate().addOnCompleteListener(this) {
 
-            val formatsString = remoteConfig.getString("formats")
-            if (formatsString.isNotEmpty()) {
+            setupStates(remoteConfig.getString("formats"))
+            setupStates(remoteConfig.getString("states"))
+        }
+    }
+
+    private fun setupFormats(formatsString: String) {
+
+        if (formatsString.isNotEmpty()) {
             }
 
-            val statesString = remoteConfig.getString("states")
-            if (statesString.isNotEmpty()) {
+        }
+    }
+
+    private fun setupStates(statesString: String) {
+
+        if (statesString.isNotEmpty()) {
             }
         }
     }
