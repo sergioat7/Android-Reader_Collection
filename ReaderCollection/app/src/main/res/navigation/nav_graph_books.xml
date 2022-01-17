@@ -83,6 +83,11 @@
             app:argType="boolean"
             />
 
+        <argument
+            android:name="query"
+            app:argType="string"
+            />
+
     </fragment>
 
 </navigation>
