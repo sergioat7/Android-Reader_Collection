@@ -41,7 +41,6 @@ class BooksViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> = _books.map {
         it.filter { book -> book.state == State.READING }
@@ -75,6 +74,7 @@ class BooksViewModel @Inject constructor(
     }
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
+    var query: String = ""
     //endregion
 
     //region Lifecycle methods

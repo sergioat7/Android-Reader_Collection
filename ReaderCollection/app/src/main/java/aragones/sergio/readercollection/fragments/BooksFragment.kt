@@ -108,7 +108,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
                     State.PENDING,
                     viewModel.sortParam,
-                    viewModel.isSortDescending
+                    viewModel.isSortDescending,
+                    viewModel.query
                 )
                 findNavController().navigate(action)
             }
@@ -116,7 +117,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
                     State.READ,
                     viewModel.sortParam,
-                    viewModel.isSortDescending
+                    viewModel.isSortDescending,
+                    viewModel.query
                 )
                 findNavController().navigate(action)
             }
