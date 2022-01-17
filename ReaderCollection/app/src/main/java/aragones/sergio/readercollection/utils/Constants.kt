@@ -33,8 +33,15 @@ object Constants {
     const val MAX_LINES = Int.MAX_VALUE
     const val NO_VALUE = "-"
 
-    var FORMATS = listOf<FormatResponse>()
-    var STATES = listOf<StateResponse>()
+    var FORMATS = listOf(
+        FormatResponse("DIGITAL", "Digital"),
+        FormatResponse("PHYSICAL", "Physical")
+    )
+    var STATES = listOf(
+        StateResponse("PENDING", "Pending"),
+        StateResponse("READ", "Read"),
+        StateResponse("READING", "Reading")
+    )
 
     fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
