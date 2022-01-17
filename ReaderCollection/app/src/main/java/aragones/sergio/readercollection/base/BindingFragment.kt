@@ -23,6 +23,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.setStatusBarStyle
@@ -108,6 +109,9 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     protected open fun initializeUi() {
         toolbar?.let{
             (activity as? AppCompatActivity)?.setSupportActionBar(it)
+            it.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
     //endregion
