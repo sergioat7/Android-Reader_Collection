@@ -35,29 +35,21 @@ class BooksRepository @Inject constructor(
                 .observeOn(ApiManager.OBSERVER_SCHEDULER)
                 .subscribeBy(
                     onComplete = {
-                        emitter.onComplete()
+                        handleDisabledContentObserver(listOf()).subscribeBy(
+                            onComplete = {
+                                emitter.onComplete()
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
                     },
                     onSuccess = { newBooks ->
                         insertBooksDatabaseObserver(newBooks).subscribeBy(
                             onComplete = {
-                                getBooksDatabaseObserver().subscribeBy(
+                                handleDisabledContentObserver(newBooks).subscribeBy(
                                     onComplete = {
                                         emitter.onComplete()
-                                    },
-                                    onSuccess = { currentBooks ->
-
-                                        val booksToRemove = AppDatabase.getDisabledContent(
-                                            currentBooks,
-                                            newBooks
-                                        ) as List<BookResponse>
-                                        deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
-                                            onComplete = {
-                                                emitter.onComplete()
-                                            },
-                                            onError = {
-                                                emitter.onError(it)
-                                            }
-                                        ).addTo(disposables)
                                     },
                                     onError = {
                                         emitter.onError(it)
@@ -295,6 +287,37 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    private fun handleDisabledContentObserver(newBooks: List<BookResponse>): Completable {
+        return Completable.create { emitter ->
+
+            getBooksDatabaseObserver().subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onSuccess = { currentBooks ->
+
+                    val booksToRemove = AppDatabase.getDisabledContent(
+                        currentBooks,
+                        newBooks
+                    ) as List<BookResponse>
+                    deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        }
+                    ).addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
+        }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
