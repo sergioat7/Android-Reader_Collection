@@ -20,6 +20,7 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
@@ -199,13 +200,13 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             pendingBooksAdapter.resetList()
-            pendingBooksAdapter.setBooks(booksResponse.toMutableList())
+            pendingBooksAdapter.setBooks(booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList())
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             booksAdapter.resetList()
-            booksAdapter.setBooks(booksResponse.toMutableList())
+            booksAdapter.setBooks(booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList())
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
