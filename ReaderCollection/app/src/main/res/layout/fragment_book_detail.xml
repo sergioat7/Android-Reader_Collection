@@ -115,7 +115,7 @@
                     android:layout_height="@dimen/size_48dp"
                     android:layout_marginBottom="@dimen/margin_8dp"
                     app:layout_collapseMode="pin"
-                    app:navigationIcon="@drawable/ic_arrow_back"
+                    app:navigationIcon="@{isDarkMode ? @drawable/ic_arrow_back_blue : @drawable/ic_arrow_back_white}"
                     app:title=" "
                     />
 
