@@ -37,8 +37,6 @@ class BooksViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private var sortParam = userRepository.sortParam
-    private var isSortDescending = userRepository.isSortDescending
     //endregion
 
     //region Public properties
@@ -68,6 +66,8 @@ class BooksViewModel @Inject constructor(
     val noResultsVisible: LiveData<Boolean> = _books.map {
         it.isEmpty()
     }
+    var sortParam = userRepository.sortParam
+    var isSortDescending = userRepository.isSortDescending
     //endregion
 
     //region Lifecycle methods
