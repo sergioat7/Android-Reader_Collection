@@ -32,6 +32,7 @@ object Constants {
     const val DATE_FORMAT = "yyyy-MM-dd"
     const val MAX_LINES = Int.MAX_VALUE
     const val NO_VALUE = "-"
+    const val BOOKS_TO_SHOW = 7
 
     var FORMATS = listOf(
         FormatResponse("DIGITAL", "Digital"),
