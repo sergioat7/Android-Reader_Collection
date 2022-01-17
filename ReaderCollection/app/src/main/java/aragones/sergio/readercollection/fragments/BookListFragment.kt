@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
@@ -17,6 +18,10 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
     //region Protected properties
     override val hasOptionsMenu = true
     override val statusBarStyle = StatusBarStyle.PRIMARY
+    //endregion
+
+    //region Private properties
+    private val args: BookListFragmentArgs by navArgs()
     //endregion
 
     //region Lifecycle methods
