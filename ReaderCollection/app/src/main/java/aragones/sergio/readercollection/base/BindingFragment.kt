@@ -80,6 +80,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         )
         @Suppress("UNCHECKED_CAST")
         binding = inflateMethod.invoke(null, inflater, container, false) as Binding
+        binding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
         return binding.root
     }
 
