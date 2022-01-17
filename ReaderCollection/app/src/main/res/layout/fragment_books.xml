@@ -16,6 +16,10 @@
             type="android.view.View"
             />
 
+        <import
+            type="aragones.sergio.readercollection.utils.Constants"
+            />
+
         <variable
             name="fragment"
             type="aragones.sergio.readercollection.fragments.BooksFragment"
@@ -135,6 +139,7 @@
                     android:layout_marginEnd="@dimen/margin_24dp"
                     android:onClick="@{fragment::seeMoreBooks}"
                     android:text="@string/see_more"
+                    android:visibility="@{viewModel.seeMorePendingBooksVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_view_pending_books"
@@ -190,6 +195,7 @@
                     android:layout_marginEnd="@dimen/margin_24dp"
                     android:onClick="@{fragment::seeMoreBooks}"
                     android:text="@string/see_more"
+                    android:visibility="@{viewModel.seeMoreReadBooksVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_view_read_books"
