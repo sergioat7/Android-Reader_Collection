@@ -36,7 +36,9 @@
 
 #-keepattributes Signature
 
-#-keep class aragones.sergio.readercollection.models.** { <fields>; }
+-keep class aragones.sergio.readercollection.models.** { <fields>; }
+
+-keep class com.google.gson.** { <fields>; }
 
 #-keep class * extends com.google.gson.TypeAdapter
 #-keep class * implements com.google.gson.TypeAdapterFactory
