@@ -195,7 +195,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private fun setupBindings() {
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
-
             readingBooksAdapter.setBooks(booksResponse.toMutableList(), true)
         })
 

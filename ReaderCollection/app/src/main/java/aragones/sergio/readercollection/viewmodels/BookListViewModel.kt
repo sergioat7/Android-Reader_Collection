@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
@@ -22,7 +23,7 @@ class BookListViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _books = MutableLiveData<List<BookResponse>>()
+    private val _books = MutableLiveData<List<BookResponse>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
@@ -54,28 +55,38 @@ class BookListViewModel @Inject constructor(
         ).subscribeBy(
             onComplete = {
 
-                _books.value = listOf()
-                _booksLoading.value = false
+                noBooksError()
             },
             onSuccess = {
 
-                val sortedBooks = if (isSortDescending) it.reversed() else it
-                _books.value = sortedBooks.filter { book ->
-                    book.title?.contains(query, true) ?: false
+                if (it.isEmpty()) {
+                    noBooksError()
+                } else {
+                    val sortedBooks = if (isSortDescending) it.reversed() else it
+                    _books.value = sortedBooks.filter { book ->
+                        book.title?.contains(query, true) ?: false
+                    }
+                    _booksLoading.value = false
                 }
-                _booksLoading.value = false
             },
             onError = {
 
-                _booksLoading.value = false
-                _booksError.value = ApiManager.handleError(it)
-                onDestroy()
+                noBooksError()
             }
         ).addTo(disposables)
     }
 
     fun setPosition(newPosition: ScrollPosition) {
         _scrollPosition.value = newPosition
+    }
+    //endregion
+
+    //region Private methods
+    private fun noBooksError() {
+
+        _booksLoading.value = false
+        _booksError.value = ErrorResponse("", R.string.error_database)
+        onDestroy()
     }
     //endregion
 }
