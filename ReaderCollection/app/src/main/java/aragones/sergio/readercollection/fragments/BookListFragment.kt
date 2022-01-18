@@ -7,7 +7,9 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
@@ -26,6 +28,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
     //region Private properties
     private val args: BookListFragmentArgs by navArgs()
     private lateinit var viewModel: BookListViewModel
+    private val goBack = MutableLiveData<Boolean>()
     //endregion
 
     //region Lifecycle methods
@@ -58,8 +61,35 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                 args.query
             )
         )[BookListViewModel::class.java]
+        setupBindings()
 
         binding.isDarkMode = context?.isDarkMode()
+    }
+    //endregion
+
+    //region Private methods
+    private fun setupBindings() {
+
+        viewModel.books.observe(viewLifecycleOwner, {
+            //TODO: show books
+        })
+
+        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.booksError.observe(viewLifecycleOwner, {
+            manageError(it, goBack)
+        })
+
+        goBack.observe(viewLifecycleOwner, {
+            findNavController().popBackStack()
+        })
     }
     //endregion
 }

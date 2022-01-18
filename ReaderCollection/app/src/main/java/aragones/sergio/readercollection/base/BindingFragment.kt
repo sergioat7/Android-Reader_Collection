@@ -118,7 +118,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     //endregion
 
     //region Public methods
-    fun manageError(errorResponse: ErrorResponse) {
+    fun manageError(errorResponse: ErrorResponse, goBack: MutableLiveData<Boolean>? = null) {
 
         val error = StringBuilder()
         if (errorResponse.error.isNotEmpty()) {
@@ -126,7 +126,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         } else {
             error.append(resources.getString(errorResponse.errorKey))
         }
-        showPopupDialog(error.toString())
+        showPopupDialog(error.toString(), goBack)
     }
 
     fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
