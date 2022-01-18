@@ -11,6 +11,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import aragones.sergio.readercollection.adapters.BooksAdapter
+import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
@@ -18,7 +20,7 @@ import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BookListViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookListViewModel
 
-class BookListFragment : BindingFragment<FragmentBookListBinding>() {
+class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClickListener {
 
     //region Protected properties
     override val hasOptionsMenu = true
@@ -28,6 +30,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
     //region Private properties
     private val args: BookListFragmentArgs by navArgs()
     private lateinit var viewModel: BookListViewModel
+    private lateinit var booksAdapter: BooksAdapter
     private val goBack = MutableLiveData<Boolean>()
     //endregion
 
@@ -46,6 +49,14 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
     }
     //endregion
 
+    //region Interface methods
+    override fun onItemClick(bookId: String) {
+        //TODO: open book detail
+    }
+
+    override fun onLoadMoreItemsClick() {}
+    //endregion
+
     //region Protected methods
     override fun initializeUi() {
         super.initializeUi()
@@ -61,8 +72,14 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                 args.query
             )
         )[BookListViewModel::class.java]
+        booksAdapter = BooksAdapter(
+            viewModel.books.value?.toMutableList() ?: mutableListOf(),
+            true,
+            this
+        )
         setupBindings()
 
+        binding.recyclerViewBooks.adapter = booksAdapter
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.isDarkMode = context?.isDarkMode()
@@ -73,7 +90,9 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
     private fun setupBindings() {
 
         viewModel.books.observe(viewLifecycleOwner, {
-            //TODO: show books
+
+            booksAdapter.resetList()
+            booksAdapter.setBooks(it.toMutableList())
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
