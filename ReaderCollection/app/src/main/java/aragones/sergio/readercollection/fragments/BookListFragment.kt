@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
@@ -21,6 +22,7 @@ import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BookListViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookListViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClickListener {
 
@@ -42,6 +44,16 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
         toolbar = binding.toolbar
         initializeUi()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
+    }
+
+    override fun onPause() {
+        super.onPause()
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
