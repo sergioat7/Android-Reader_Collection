@@ -19,7 +19,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     //region Public methods
-    fun bind(book: BookResponse, onItemClickListener: OnItemClickListener) {
+    fun bind(book: BookResponse, isGoogleBook: Boolean, onItemClickListener: OnItemClickListener) {
         binding.apply {
             when (this) {
 
@@ -32,8 +32,10 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                 is ItemGoogleBookBinding -> {
                     this.book = book
                     this.onItemClickListener = onItemClickListener
+                    this.isGoogleBook = isGoogleBook
                     this.isDarkMode = binding.root.context.isDarkMode()
-                    textViewGoogleBookRating.text = ceil(book.averageRating).toInt().toString()
+                    val rating = if (isGoogleBook) book.averageRating else book.rating
+                    textViewGoogleBookRating.text = ceil(rating).toInt().toString()
                 }
 
                 is ItemBookBinding -> {

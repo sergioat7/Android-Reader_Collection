@@ -88,9 +88,10 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
             )
         )[BookListViewModel::class.java]
         booksAdapter = BooksAdapter(
-            viewModel.books.value?.toMutableList() ?: mutableListOf(),
-            true,
-            this
+            books = viewModel.books.value?.toMutableList() ?: mutableListOf(),
+            isVerticalDesign = false,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         setupBindings()
 

@@ -27,6 +27,11 @@
             />
 
         <variable
+            name="isGoogleBook"
+            type="Boolean"
+            />
+
+        <variable
             name="isDarkMode"
             type="Boolean"
             />
@@ -121,11 +126,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/size_30dp"
                 android:isIndicator="true"
-                android:visibility="@{book.averageRating > 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{(isGoogleBook ? book.averageRating : book.rating) > 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
                 tools:rating="3"
-                rating="@{book.averageRating / 2}"
+                rating="@{(isGoogleBook ? book.averageRating : book.rating) / 2}"
                 style="@style/Widget.ReaderCollection.RatingBar"
                 />
 
@@ -134,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_12dp"
-                android:visibility="@{book.averageRating > 0 ? View.VISIBLE : View.GONE}"
+                android:visibility="@{(isGoogleBook ? book.averageRating : book.rating) > 0 ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/rating_bar_google_book"
                 app:layout_constraintStart_toEndOf="@+id/rating_bar_google_book"
                 app:layout_constraintTop_toTopOf="@+id/rating_bar_google_book"
@@ -147,7 +152,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:text="@string/new_book"
-                android:visibility="@{book.averageRating > 0 ? View.GONE : View.VISIBLE}"
+                android:visibility="@{(isGoogleBook ? book.averageRating : book.rating) > 0 ? View.GONE : View.VISIBLE}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
                 app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
