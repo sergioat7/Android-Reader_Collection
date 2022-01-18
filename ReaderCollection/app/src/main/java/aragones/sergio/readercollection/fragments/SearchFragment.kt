@@ -82,8 +82,14 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     fun goToStartEndList(view: View) {
 
         when (view) {
-            binding.floatingActionButtonStartList -> viewModel.setPosition(ScrollPosition.TOP)
-            binding.floatingActionButtonEndList -> viewModel.setPosition(ScrollPosition.END)
+            binding.floatingActionButtonStartList ->{
+                viewModel.setPosition(ScrollPosition.TOP)
+                binding.recyclerViewBooks.scrollToPosition(0)
+            }
+            binding.floatingActionButtonEndList ->{
+                viewModel.setPosition(ScrollPosition.END)
+                binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
+            }
         }
     }
     //endregion
@@ -166,15 +172,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             error?.let {
 
                 manageError(it)
-            }
-        })
-
-        viewModel.scrollPosition.observe(viewLifecycleOwner, {
-            when (it) {
-
-                ScrollPosition.TOP -> binding.recyclerViewBooks.scrollToPosition(0)
-                ScrollPosition.END -> binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
-                else -> Unit
             }
         })
     }
