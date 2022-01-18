@@ -13,6 +13,11 @@
     <data>
 
         <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.BookListViewModel"
+            />
+
+        <variable
             name="isDarkMode"
             type="Boolean"
             />
@@ -33,8 +38,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@{isDarkMode ? @drawable/ic_arrow_back_white : @drawable/ic_arrow_back_blue}"
-            app:title=" "
-            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main"
+            app:title="@{@plurals/title_books_count(viewModel.books.size(), viewModel.books.size())}"
+            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
