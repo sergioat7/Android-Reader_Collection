@@ -143,7 +143,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_view_pending_books"
-                    style="@style/Widget.ReaderCollection.TextButton.Main.Link"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                     />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -199,7 +199,7 @@
                     app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/text_view_read_books"
-                    style="@style/Widget.ReaderCollection.TextButton.Main.Link"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                     />
 
                 <androidx.recyclerview.widget.RecyclerView
