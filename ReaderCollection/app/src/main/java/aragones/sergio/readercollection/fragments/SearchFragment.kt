@@ -146,7 +146,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             if (booksResponse.isEmpty()) {
                 booksAdapter.resetList()
             } else {
-                booksAdapter.setBooks(booksResponse)
+                booksAdapter.setBooks(booksResponse, false)
             }
         })
 

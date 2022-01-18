@@ -100,8 +100,11 @@ class BooksAdapter(
 
     //region Public methods
     @SuppressLint("NotifyDataSetChanged")
-    fun setBooks(newBooks: MutableList<BookResponse>) {
+    fun setBooks(newBooks: MutableList<BookResponse>, reset: Boolean) {
 
+        if (reset) {
+            resetList()
+        }
         this.books = newBooks
         if (position < newBooks.size) {
             notifyItemInserted(position)
