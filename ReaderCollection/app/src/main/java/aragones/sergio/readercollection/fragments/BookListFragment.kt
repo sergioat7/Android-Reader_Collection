@@ -138,9 +138,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     private fun setupBindings() {
 
         viewModel.books.observe(viewLifecycleOwner, {
-
-            booksAdapter.resetList()
-            booksAdapter.setBooks(it.toMutableList())
+            booksAdapter.setBooks(it.toMutableList(), true)
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->

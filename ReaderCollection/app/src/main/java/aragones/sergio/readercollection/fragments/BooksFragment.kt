@@ -196,22 +196,18 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
-            readingBooksAdapter.resetList()
-            readingBooksAdapter.setBooks(booksResponse.toMutableList())
+            readingBooksAdapter.setBooks(booksResponse.toMutableList(), true)
         })
 
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
-
-            pendingBooksAdapter.resetList()
             pendingBooksAdapter.setBooks(
-                booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
+                booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList(),
+                true
             )
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
-
-            booksAdapter.resetList()
-            booksAdapter.setBooks(booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList())
+            booksAdapter.setBooks(booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList(), true)
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
