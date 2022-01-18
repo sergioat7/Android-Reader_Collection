@@ -12,6 +12,19 @@
 
     <data>
 
+        <import
+            type="android.view.View"
+            />
+
+        <import
+            type="aragones.sergio.readercollection.utils.ScrollPosition"
+            />
+
+        <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.BookListFragment"
+            />
+
         <variable
             name="viewModel"
             type="aragones.sergio.readercollection.viewmodels.BookListViewModel"
@@ -51,6 +64,38 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_start_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_12dp"
+            android:layout_marginEnd="@dimen/margin_12dp"
+            android:onClick="@{fragment::goToStartEndList}"
+            android:visibility="@{viewModel.books.empty || viewModel.scrollPosition == ScrollPosition.TOP ? View.GONE : View.VISIBLE}"
+            app:fabSize="mini"
+            app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
+            app:layout_constraintTop_toTopOf="@id/recycler_view_books"
+            app:maxImageSize="@dimen/size_10dp"
+            app:srcCompat="@drawable/ic_double_arrow_up"
+            style="@style/Widget.ReaderCollection.FloatingActionButton"
+            />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_end_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_12dp"
+            android:layout_marginBottom="@dimen/margin_12dp"
+            android:onClick="@{fragment::goToStartEndList}"
+            android:visibility="@{viewModel.books.empty || viewModel.scrollPosition == ScrollPosition.END ? View.GONE : View.VISIBLE}"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_view_books"
+            app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
+            app:maxImageSize="@dimen/size_10dp"
+            app:srcCompat="@drawable/ic_double_arrow_down"
+            style="@style/Widget.ReaderCollection.FloatingActionButton"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

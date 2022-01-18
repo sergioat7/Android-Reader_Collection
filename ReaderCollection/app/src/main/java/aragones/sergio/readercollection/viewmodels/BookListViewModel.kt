@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.utils.ScrollPosition
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -24,12 +25,14 @@ class BookListViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
+    private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
     //endregion
 
     //region Public properties
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
+    val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     //endregion
 
     //region Lifecycle methods
@@ -69,6 +72,10 @@ class BookListViewModel @Inject constructor(
                 onDestroy()
             }
         ).addTo(disposables)
+    }
+
+    fun setPosition(newPosition: ScrollPosition) {
+        _scrollPosition.value = newPosition
     }
     //endregion
 }

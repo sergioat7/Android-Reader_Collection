@@ -11,11 +11,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.adapters.BooksAdapter
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BookListViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookListViewModel
@@ -52,11 +54,22 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     //region Interface methods
     override fun onItemClick(bookId: String) {
 
-        val action = BookListFragmentDirections.actionBookListFragmentToBookDetailFragment(bookId, false)
+        val action =
+            BookListFragmentDirections.actionBookListFragmentToBookDetailFragment(bookId, false)
         findNavController().navigate(action)
     }
 
     override fun onLoadMoreItemsClick() {}
+    //endregion
+
+    //region Public methods
+    fun goToStartEndList(view: View) {
+
+        when (view) {
+            binding.floatingActionButtonStartList -> viewModel.setPosition(ScrollPosition.TOP)
+            binding.floatingActionButtonEndList -> viewModel.setPosition(ScrollPosition.END)
+        }
+    }
     //endregion
 
     //region Protected methods
@@ -81,7 +94,27 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
         )
         setupBindings()
 
-        binding.recyclerViewBooks.adapter = booksAdapter
+        binding.recyclerViewBooks.apply {
+            adapter = booksAdapter
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+
+                    val position =
+                        if (!recyclerView.canScrollVertically(-1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ScrollPosition.TOP
+                        } else if (!recyclerView.canScrollVertically(1) && newState == RecyclerView.SCROLL_STATE_IDLE) {
+                            ScrollPosition.END
+                        } else {
+                            ScrollPosition.MIDDLE
+                        }
+                    viewModel.setPosition(position)
+                }
+            })
+        }
+
+        binding.fragment = this
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
         binding.isDarkMode = context?.isDarkMode()
@@ -108,6 +141,15 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
         viewModel.booksError.observe(viewLifecycleOwner, {
             manageError(it, goBack)
+        })
+
+        viewModel.scrollPosition.observe(viewLifecycleOwner, {
+            when (it) {
+
+                ScrollPosition.TOP -> binding.recyclerViewBooks.scrollToPosition(0)
+                ScrollPosition.END -> binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
+                else -> Unit
+            }
         })
 
         goBack.observe(viewLifecycleOwner, {
