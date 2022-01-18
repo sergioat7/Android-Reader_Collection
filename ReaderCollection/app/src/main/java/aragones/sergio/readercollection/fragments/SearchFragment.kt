@@ -98,9 +98,10 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             SearchViewModelFactory(application)
         )[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
-            viewModel.books.value ?: mutableListOf(),
-            true,
-            this
+            books = viewModel.books.value ?: mutableListOf(),
+            isVerticalDesign = false,
+            isGoogleBook = true,
+            onItemClickListener = this
         )
         setupBindings()
 

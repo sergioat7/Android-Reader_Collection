@@ -137,23 +137,26 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             BooksViewModelFactory(application)
         )[BooksViewModel::class.java]
         readingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
                 ?: mutableListOf(),
-            false,
-            this
+            isVerticalDesign = false,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         pendingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
                 ?: mutableListOf(),
-            false,
-            this
+            isVerticalDesign = true,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         booksAdapter = BooksAdapter(
-            viewModel.books.value?.filter {
+            books = viewModel.books.value?.filter {
                 it.state != State.READING && it.state != State.PENDING
             }?.toMutableList() ?: mutableListOf(),
-            false,
-            this
+            isVerticalDesign = true,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         setupBindings()
 
@@ -200,7 +203,9 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
             pendingBooksAdapter.resetList()
-            pendingBooksAdapter.setBooks(booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList())
+            pendingBooksAdapter.setBooks(
+                booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
+            )
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->

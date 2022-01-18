@@ -22,6 +22,7 @@ import java.util.*
 
 class BooksAdapter(
     private var books: MutableList<BookResponse>,
+    private val isVerticalDesign: Boolean,
     private val isGoogleBook: Boolean,
     private var onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
@@ -32,8 +33,8 @@ class BooksAdapter(
         val book = books[position]
         return when {
             book.state == State.READING -> R.layout.item_reading_book
-            isGoogleBook && book.id.isNotBlank() -> R.layout.item_google_book
-            book.id.isNotBlank() -> R.layout.item_book
+            isVerticalDesign -> R.layout.item_book
+            !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_google_book
             else -> R.layout.item_load_more_items
         }
     }
@@ -87,7 +88,7 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is BooksViewHolder -> holder.bind(books[position], onItemClickListener)
+            is BooksViewHolder -> holder.bind(books[position], isGoogleBook, onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
     }
