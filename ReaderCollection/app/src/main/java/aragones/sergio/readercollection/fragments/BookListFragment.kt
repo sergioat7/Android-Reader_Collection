@@ -63,6 +63,8 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
         )[BookListViewModel::class.java]
         setupBindings()
 
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
         binding.isDarkMode = context?.isDarkMode()
     }
     //endregion
