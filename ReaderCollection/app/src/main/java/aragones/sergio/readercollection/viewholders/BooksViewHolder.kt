@@ -9,8 +9,8 @@ import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.databinding.ItemBookBinding
-import aragones.sergio.readercollection.databinding.ItemGoogleBookBinding
 import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
+import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.models.responses.BookResponse
 import kotlin.math.ceil
@@ -29,7 +29,13 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.isDarkMode = binding.root.context.isDarkMode()
                 }
 
-                is ItemGoogleBookBinding -> {
+                is ItemVerticalBookBinding -> {
+                    this.book = book
+                    this.onItemClickListener = onItemClickListener
+                    this.isDarkMode = binding.root.context.isDarkMode()
+                }
+
+                is ItemBookBinding -> {
                     this.book = book
                     this.onItemClickListener = onItemClickListener
                     this.isGoogleBook = isGoogleBook
@@ -38,11 +44,6 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     textViewGoogleBookRating.text = ceil(rating).toInt().toString()
                 }
 
-                is ItemBookBinding -> {
-                    this.book = book
-                    this.onItemClickListener = onItemClickListener
-                    this.isDarkMode = binding.root.context.isDarkMode()
-                }
                 else -> Unit
             }
         }

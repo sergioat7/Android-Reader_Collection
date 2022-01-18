@@ -11,9 +11,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.ItemBookBinding
-import aragones.sergio.readercollection.databinding.ItemGoogleBookBinding
 import aragones.sergio.readercollection.databinding.ItemLoadMoreItemsBinding
 import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
+import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
@@ -33,8 +33,8 @@ class BooksAdapter(
         val book = books[position]
         return when {
             book.state == State.READING -> R.layout.item_reading_book
-            isVerticalDesign -> R.layout.item_book
-            !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_google_book
+            isVerticalDesign -> R.layout.item_vertical_book
+            !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_book
             else -> R.layout.item_load_more_items
         }
     }
@@ -51,9 +51,9 @@ class BooksAdapter(
                     )
                 )
             }
-            R.layout.item_google_book -> {
+            R.layout.item_vertical_book -> {
                 BooksViewHolder(
-                    ItemGoogleBookBinding.inflate(
+                    ItemVerticalBookBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
