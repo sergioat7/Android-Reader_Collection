@@ -7,11 +7,14 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.utils.StatusBarStyle
+import aragones.sergio.readercollection.viewmodelfactories.BookListViewModelFactory
+import aragones.sergio.readercollection.viewmodels.BookListViewModel
 
 class BookListFragment : BindingFragment<FragmentBookListBinding>() {
 
@@ -22,6 +25,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
 
     //region Private properties
     private val args: BookListFragmentArgs by navArgs()
+    private lateinit var viewModel: BookListViewModel
     //endregion
 
     //region Lifecycle methods
@@ -32,8 +36,28 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
         initializeUi()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        if (this::viewModel.isInitialized) viewModel.onDestroy()
+    }
+    //endregion
+
+    //region Protected methods
     override fun initializeUi() {
         super.initializeUi()
+
+        val application = activity?.application ?: return
+        viewModel = ViewModelProvider(
+            this,
+            BookListViewModelFactory(
+                application,
+                args.state,
+                args.sortParam,
+                args.isSortDescending,
+                args.query
+            )
+        )[BookListViewModel::class.java]
 
         binding.isDarkMode = context?.isDarkMode()
     }
