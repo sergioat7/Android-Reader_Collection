@@ -51,7 +51,9 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
     //region Interface methods
     override fun onItemClick(bookId: String) {
-        //TODO: open book detail
+
+        val action = BookListFragmentDirections.actionBookListFragmentToBookDetailFragment(bookId, false)
+        findNavController().navigate(action)
     }
 
     override fun onLoadMoreItemsClick() {}
