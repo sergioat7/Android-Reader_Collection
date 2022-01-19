@@ -48,6 +48,8 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
     override fun onResume() {
         super.onResume()
+
+        if (this::viewModel.isInitialized) viewModel.fetchBooks()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
     }
 

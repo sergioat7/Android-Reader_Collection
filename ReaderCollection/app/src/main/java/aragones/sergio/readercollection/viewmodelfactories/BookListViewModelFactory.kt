@@ -34,7 +34,7 @@ class BookListViewModelFactory(
         if (modelClass.isAssignableFrom(BookListViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            bookListViewModel.fetchBooks(state, sortParam, isSortDescending, query)
+            bookListViewModel.setParams(state, sortParam, isSortDescending, query)
             return bookListViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
