@@ -23,6 +23,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
+import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.setStatusBarStyle
@@ -79,6 +80,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         )
         @Suppress("UNCHECKED_CAST")
         binding = inflateMethod.invoke(null, inflater, container, false) as Binding
+        binding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
         return binding.root
     }
 
@@ -108,12 +110,15 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     protected open fun initializeUi() {
         toolbar?.let{
             (activity as? AppCompatActivity)?.setSupportActionBar(it)
+            it.setNavigationOnClickListener {
+                findNavController().popBackStack()
+            }
         }
     }
     //endregion
 
     //region Public methods
-    fun manageError(errorResponse: ErrorResponse) {
+    fun manageError(errorResponse: ErrorResponse, goBack: MutableLiveData<Boolean>? = null) {
 
         val error = StringBuilder()
         if (errorResponse.error.isNotEmpty()) {
@@ -121,7 +126,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         } else {
             error.append(resources.getString(errorResponse.errorKey))
         }
-        showPopupDialog(error.toString())
+        showPopupDialog(error.toString(), goBack)
     }
 
     fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {

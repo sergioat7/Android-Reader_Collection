@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
-  ~ Created by Sergio Aragonés on 30/12/2021
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 9/11/2020
   -->
 
 <layout
@@ -27,6 +27,11 @@
             />
 
         <variable
+            name="isGoogleBook"
+            type="Boolean"
+            />
+
+        <variable
             name="isDarkMode"
             type="Boolean"
             />
@@ -34,50 +39,140 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="@dimen/size_150dp"
-        android:layout_height="@dimen/size_320dp"
-        android:layout_marginStart="@dimen/margin_12dp"
-        android:layout_marginEnd="@dimen/margin_12dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_220dp"
         android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
         >
 
-        <aragones.sergio.readercollection.customview.ImageViewWithLoading
-            android:id="@+id/image_view_book"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraint_layout"
             android:layout_width="0dp"
-            android:layout_height="@dimen/size_250dp"
+            android:layout_height="0dp"
+            android:padding="@dimen/padding_24dp"
+            android:background="@color/colorSecondary"
+            app:layout_constraintBottom_toTopOf="@+id/view_separator_google_book"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            src="@{book.thumbnail}"
-            center="@{true}"
-            placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"
-            radius="@{@dimen/radius_5dp}"
-            />
+            >
 
-        <TextView
-            android:id="@+id/text_view_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_8dp"
-            android:text="@{book.title}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_view_book"
-            tools:text="Harry Potter y la Piedra Filosofal"
-            style="@style/Widget.ReaderCollection.TextView.Title.Book"
-            />
+            <aragones.sergio.readercollection.customview.ImageViewWithLoading
+                android:id="@+id/image_view_google_book"
+                android:layout_width="@dimen/size_120dp"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                src="@{book.thumbnail}"
+                placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"
+                radius="@{@dimen/radius_2dp}"
+                />
 
-        <TextView
-            android:id="@+id/text_view_author"
+            <TextView
+                android:id="@+id/text_view_google_book_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:text="@{book.title}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/image_view_google_book"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Harry Potter y la Piedra Filosofal"
+                style="@style/Widget.ReaderCollection.TextView.Title.GoogleBook"
+                />
+
+            <TextView
+                android:id="@+id/text_view_google_book_author"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_12dp"
+                android:text="@{book.authorsToString()}"
+                android:visibility='@{book.authorsToString().equals("") ? View.GONE : View.VISIBLE}'
+                app:layout_constraintBottom_toTopOf="@+id/text_view_google_book_publisher"
+                app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
+                app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_google_book_title"
+                app:layout_constraintVertical_chainStyle="packed"
+                tools:text="J.K.Rowling"
+                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
+                />
+
+            <TextView
+                android:id="@+id/text_view_google_book_publisher"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_5dp"
+                android:layout_marginBottom="@dimen/margin_12dp"
+                android:text="@{@string/publisher_text(book.publisher)}"
+                android:visibility="@{book.publisher != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@+id/barrier_rating"
+                app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
+                app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_google_book_author"
+                tools:text="Salamandra"
+                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
+                />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="top"
+                app:constraint_referenced_ids="rating_bar_google_book, text_view_google_book_new"
+                />
+
+            <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                android:id="@+id/rating_bar_google_book"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/size_30dp"
+                android:isIndicator="true"
+                android:visibility="@{(isGoogleBook ? book.averageRating : book.rating) > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
+                tools:rating="3"
+                rating="@{(isGoogleBook ? book.averageRating : book.rating) / 2}"
+                style="@style/Widget.ReaderCollection.RatingBar"
+                />
+
+            <TextView
+                android:id="@+id/text_view_google_book_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_12dp"
+                android:visibility="@{(isGoogleBook ? book.averageRating : book.rating) > 0 ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/rating_bar_google_book"
+                app:layout_constraintStart_toEndOf="@+id/rating_bar_google_book"
+                app:layout_constraintTop_toTopOf="@+id/rating_bar_google_book"
+                tools:text="6"
+                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Section"
+                />
+
+            <TextView
+                android:id="@+id/text_view_google_book_new"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/new_book"
+                android:visibility="@{(isGoogleBook ? book.averageRating : book.rating) > 0 ? View.GONE : View.VISIBLE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
+                app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
+                tools:visibility="gone"
+                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
+                />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/view_separator_google_book"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{book.authorsToString()}"
-            android:visibility='@{book.authorsToString().equals("") ? View.GONE : View.VISIBLE}'
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_view_title"
-            tools:text="J.K.Rowling"
-            style="@style/Widget.ReaderCollection.TextView.Subtitle.Book"
+            android:layout_height="@dimen/size_1dp"
+            android:layout_marginStart="@dimen/margin_24dp"
+            android:layout_marginEnd="@dimen/margin_24dp"
+            android:background="@color/colorPrimaryLight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/constraint_layout"
+            app:layout_constraintStart_toStartOf="@+id/constraint_layout"
+            app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

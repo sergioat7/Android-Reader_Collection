@@ -20,6 +20,8 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
@@ -98,14 +100,41 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     }
 
     override fun onLoadMoreItemsClick() {}
+
+    override fun onShowAllItemsClick(state: String) {
+
+        val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
+            state,
+            viewModel.sortParam,
+            viewModel.isSortDescending,
+            viewModel.query
+        )
+        findNavController().navigate(action)
+    }
     //endregion
 
     //region Public methods
-    fun seeMoreBooks(view: View) {
+    fun showAllBooks(view: View) {
 
         when (view) {
-            binding.buttonSeeMorePending -> Unit//TODO: implement action
-            binding.buttonSeeMoreRead -> Unit//TODO: implement action
+            binding.buttonShowAllPending -> {
+                val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
+                    State.PENDING,
+                    viewModel.sortParam,
+                    viewModel.isSortDescending,
+                    viewModel.query
+                )
+                findNavController().navigate(action)
+            }
+            binding.buttonShowAllRead -> {
+                val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
+                    State.READ,
+                    viewModel.sortParam,
+                    viewModel.isSortDescending,
+                    viewModel.query
+                )
+                findNavController().navigate(action)
+            }
         }
     }
     //endregion
@@ -120,23 +149,26 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             BooksViewModelFactory(application)
         )[BooksViewModel::class.java]
         readingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
                 ?: mutableListOf(),
-            false,
-            this
+            isVerticalDesign = false,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         pendingBooksAdapter = BooksAdapter(
-            viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
                 ?: mutableListOf(),
-            false,
-            this
+            isVerticalDesign = true,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         booksAdapter = BooksAdapter(
-            viewModel.books.value?.filter {
+            books = viewModel.books.value?.filter {
                 it.state != State.READING && it.state != State.PENDING
             }?.toMutableList() ?: mutableListOf(),
-            false,
-            this
+            isVerticalDesign = true,
+            isGoogleBook = false,
+            onItemClickListener = this
         )
         setupBindings()
 
@@ -175,21 +207,21 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private fun setupBindings() {
 
         viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
-
-            readingBooksAdapter.resetList()
-            readingBooksAdapter.setBooks(booksResponse.toMutableList())
+            readingBooksAdapter.setBooks(booksResponse.toMutableList(), true)
         })
 
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
 
-            pendingBooksAdapter.resetList()
-            pendingBooksAdapter.setBooks(booksResponse.toMutableList())
+            val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
+            books.add(BookResponse(id = ""))
+            pendingBooksAdapter.setBooks(books, true)
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
 
-            booksAdapter.resetList()
-            booksAdapter.setBooks(booksResponse.toMutableList())
+            val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
+            books.add(BookResponse(id = ""))
+            booksAdapter.setBooks(books, true)
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->

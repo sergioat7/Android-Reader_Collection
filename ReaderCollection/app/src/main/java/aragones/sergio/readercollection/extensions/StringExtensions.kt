@@ -20,7 +20,11 @@ fun <T> String?.toList(): List<T> {
     }
 }
 
-fun String?.toDate(format: String? = null, language: String? = null): Date? {
+fun String?.toDate(
+    format: String? = null,
+    language: String? = null,
+    timeZone: TimeZone? = null
+): Date? {
 
     val dateFormat = format ?: Constants.DATE_FORMAT
     val locale = language?.let {
@@ -28,10 +32,13 @@ fun String?.toDate(format: String? = null, language: String? = null): Date? {
     } ?: run {
         Locale.getDefault()
     }
+    val simpleDateFormat = SimpleDateFormat(dateFormat, locale)
+    simpleDateFormat.timeZone = timeZone ?: TimeZone.getDefault()
+
     this?.let {
 
         return try {
-            SimpleDateFormat(dateFormat, locale).parse(it)
+            simpleDateFormat.parse(it)
         } catch (e: Exception) {
 
             Log.e("StringExtensions", e.message ?: "")

@@ -10,21 +10,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.databinding.ItemBookBinding
-import aragones.sergio.readercollection.databinding.ItemGoogleBookBinding
-import aragones.sergio.readercollection.databinding.ItemLoadMoreItemsBinding
-import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
+import aragones.sergio.readercollection.databinding.*
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
 import aragones.sergio.readercollection.viewholders.LoadMoreItemsViewHolder
+import aragones.sergio.readercollection.viewholders.ShowAllItemsViewHolder
 import java.util.*
 
 class BooksAdapter(
     private var books: MutableList<BookResponse>,
+    private val isVerticalDesign: Boolean,
     private val isGoogleBook: Boolean,
     private var onItemClickListener: OnItemClickListener
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+
+    //region Private properties
+    private var position = 0
+    //endregion
 
     //region Lifecycle methods
     override fun getItemViewType(position: Int): Int {
@@ -32,8 +35,9 @@ class BooksAdapter(
         val book = books[position]
         return when {
             book.state == State.READING -> R.layout.item_reading_book
-            isGoogleBook && book.id.isNotBlank() -> R.layout.item_google_book
-            book.id.isNotBlank() -> R.layout.item_book
+            isVerticalDesign && book.id.isNotBlank() -> R.layout.item_vertical_book
+            !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_book
+            isVerticalDesign -> R.layout.item_show_all_items
             else -> R.layout.item_load_more_items
         }
     }
@@ -50,9 +54,9 @@ class BooksAdapter(
                     )
                 )
             }
-            R.layout.item_google_book -> {
+            R.layout.item_vertical_book -> {
                 BooksViewHolder(
-                    ItemGoogleBookBinding.inflate(
+                    ItemVerticalBookBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -62,6 +66,15 @@ class BooksAdapter(
             R.layout.item_book -> {
                 BooksViewHolder(
                     ItemBookBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
+            R.layout.item_show_all_items -> {
+                ShowAllItemsViewHolder(
+                    ItemShowAllItemsBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
                         false
@@ -87,7 +100,8 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is BooksViewHolder -> holder.bind(books[position], onItemClickListener)
+            is BooksViewHolder -> holder.bind(books[position], isGoogleBook, onItemClickListener)
+            is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
     }
@@ -95,20 +109,24 @@ class BooksAdapter(
 
     //region Public methods
     @SuppressLint("NotifyDataSetChanged")
-    fun setBooks(newBooks: MutableList<BookResponse>) {
+    fun setBooks(newBooks: MutableList<BookResponse>, reset: Boolean) {
 
-        val position = this.books.size
+        if (reset) {
+            resetList()
+        }
         this.books = newBooks
         if (position < newBooks.size) {
             notifyItemInserted(position)
         } else {
             notifyDataSetChanged()
         }
+        position = this.books.size
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun resetList() {
 
+        position = 0
         this.books = ArrayList<BookResponse>()
         notifyDataSetChanged()
     }

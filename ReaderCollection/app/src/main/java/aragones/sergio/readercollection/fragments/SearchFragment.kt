@@ -76,14 +76,22 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.searchBooks()
         viewModel.setPosition(ScrollPosition.MIDDLE)
     }
+
+    override fun onShowAllItemsClick(state: String) {}
     //endregion
 
     //region Public methods
     fun goToStartEndList(view: View) {
 
         when (view) {
-            binding.floatingActionButtonStartList -> viewModel.setPosition(ScrollPosition.TOP)
-            binding.floatingActionButtonEndList -> viewModel.setPosition(ScrollPosition.END)
+            binding.floatingActionButtonStartList -> {
+                viewModel.setPosition(ScrollPosition.TOP)
+                binding.recyclerViewBooks.scrollToPosition(0)
+            }
+            binding.floatingActionButtonEndList -> {
+                viewModel.setPosition(ScrollPosition.END)
+                binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
+            }
         }
     }
     //endregion
@@ -98,9 +106,10 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             SearchViewModelFactory(application)
         )[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
-            viewModel.books.value ?: mutableListOf(),
-            true,
-            this
+            books = viewModel.books.value ?: mutableListOf(),
+            isVerticalDesign = false,
+            isGoogleBook = true,
+            onItemClickListener = this
         )
         setupBindings()
 
@@ -145,7 +154,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             if (booksResponse.isEmpty()) {
                 booksAdapter.resetList()
             } else {
-                booksAdapter.setBooks(booksResponse)
+                booksAdapter.setBooks(booksResponse, false)
             }
         })
 
@@ -165,15 +174,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             error?.let {
 
                 manageError(it)
-            }
-        })
-
-        viewModel.scrollPosition.observe(viewLifecycleOwner, {
-            when (it) {
-
-                ScrollPosition.TOP -> binding.recyclerViewBooks.scrollToPosition(0)
-                ScrollPosition.END -> binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
-                else -> Unit
             }
         })
     }
