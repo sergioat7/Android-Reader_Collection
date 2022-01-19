@@ -11,7 +11,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.utils.ScrollPosition
 import io.reactivex.rxjava3.kotlin.addTo
@@ -23,6 +22,10 @@ class BookListViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
+    private var state: String = ""
+    private var sortParam: String? = null
+    private var isSortDescending: Boolean = false
+    private var query: String = ""
     private val _books = MutableLiveData<List<BookResponse>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
@@ -44,7 +47,14 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun fetchBooks(state: String, sortParam: String?, isSortDescending: Boolean, query: String) {
+    fun setParams(state: String, sortParam: String?, isSortDescending: Boolean, query: String) {
+        this.state = state
+        this.sortParam = sortParam
+        this.isSortDescending = isSortDescending
+        this.query = query
+    }
+
+    fun fetchBooks() {
 
         _booksLoading.value = true
         booksRepository.getBooksDatabaseObserver(
