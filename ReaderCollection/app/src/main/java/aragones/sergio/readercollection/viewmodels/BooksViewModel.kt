@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
@@ -37,12 +38,9 @@ class BooksViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private var sortParam = userRepository.sortParam
-    private var isSortDescending = userRepository.isSortDescending
     //endregion
 
     //region Public properties
-    var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> = _books.map {
         it.filter { book -> book.state == State.READING }
@@ -62,12 +60,21 @@ class BooksViewModel @Inject constructor(
     val pendingBooksVisible: LiveData<Boolean> = pendingBooks.map {
         it.isNotEmpty()
     }
+    val seeMorePendingBooksVisible: LiveData<Boolean> = pendingBooks.map {
+        it.size > Constants.BOOKS_TO_SHOW
+    }
     val readBooksVisible: LiveData<Boolean> = readBooks.map {
         it.isNotEmpty()
+    }
+    val seeMoreReadBooksVisible: LiveData<Boolean> = readBooks.map {
+        it.size > Constants.BOOKS_TO_SHOW
     }
     val noResultsVisible: LiveData<Boolean> = _books.map {
         it.isEmpty()
     }
+    var sortParam = userRepository.sortParam
+    var isSortDescending = userRepository.isSortDescending
+    var query: String = ""
     //endregion
 
     //region Lifecycle methods

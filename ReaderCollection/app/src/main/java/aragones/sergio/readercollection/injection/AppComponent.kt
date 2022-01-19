@@ -17,6 +17,7 @@ import dagger.Component
 interface AppComponent {
 
     fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
+    fun inject(bookListViewModelFactory: BookListViewModelFactory)
     fun inject(booksViewModelFactory: BooksViewModelFactory)
     fun inject(landingViewModelFactory: LandingViewModelFactory)
     fun inject(loginViewModelFactory: LoginViewModelFactory)

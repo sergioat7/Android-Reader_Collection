@@ -71,10 +71,16 @@ fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity) {
 //region Private functions
 private fun getPicker(editText: TextInputEditText, context: Context): MaterialDatePicker<Long> {
 
+    val currentDateInMillis = editText.text.toString().toDate(
+        SharedPreferencesHandler.getDateFormatToShow(),
+        SharedPreferencesHandler.getLanguage(),
+        TimeZone.getTimeZone("UTC")
+    )?.time ?: MaterialDatePicker.todayInUtcMilliseconds()
+
     return MaterialDatePicker.Builder
         .datePicker()
         .setTitleText(context.resources.getString(R.string.select_a_date))
-        .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+        .setSelection(currentDateInMillis)
         .build().apply {
             addOnPositiveButtonClickListener {
 
