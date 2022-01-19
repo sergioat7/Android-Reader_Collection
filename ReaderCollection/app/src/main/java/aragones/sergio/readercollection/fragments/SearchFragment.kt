@@ -82,11 +82,11 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     fun goToStartEndList(view: View) {
 
         when (view) {
-            binding.floatingActionButtonStartList ->{
+            binding.floatingActionButtonStartList -> {
                 viewModel.setPosition(ScrollPosition.TOP)
                 binding.recyclerViewBooks.scrollToPosition(0)
             }
-            binding.floatingActionButtonEndList ->{
+            binding.floatingActionButtonEndList -> {
                 viewModel.setPosition(ScrollPosition.END)
                 binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
             }
