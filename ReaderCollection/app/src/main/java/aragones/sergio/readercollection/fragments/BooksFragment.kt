@@ -20,6 +20,7 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
@@ -99,6 +100,17 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     }
 
     override fun onLoadMoreItemsClick() {}
+
+    override fun onShowAllItemsClick(state: String) {
+
+        val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
+            state,
+            viewModel.sortParam,
+            viewModel.isSortDescending,
+            viewModel.query
+        )
+        findNavController().navigate(action)
+    }
     //endregion
 
     //region Public methods
@@ -199,14 +211,17 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         })
 
         viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
-            pendingBooksAdapter.setBooks(
-                booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList(),
-                true
-            )
+
+            val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
+            books.add(BookResponse(id = ""))
+            pendingBooksAdapter.setBooks(books, true)
         })
 
         viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
-            booksAdapter.setBooks(booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList(), true)
+
+            val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
+            books.add(BookResponse(id = ""))
+            booksAdapter.setBooks(books, true)
         })
 
         viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
