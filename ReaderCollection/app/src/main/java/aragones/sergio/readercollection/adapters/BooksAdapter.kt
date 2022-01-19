@@ -10,14 +10,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.databinding.ItemBookBinding
-import aragones.sergio.readercollection.databinding.ItemLoadMoreItemsBinding
-import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
-import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
+import aragones.sergio.readercollection.databinding.*
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.viewholders.BooksViewHolder
 import aragones.sergio.readercollection.viewholders.LoadMoreItemsViewHolder
+import aragones.sergio.readercollection.viewholders.ShowAllItemsViewHolder
 import java.util.*
 
 class BooksAdapter(
@@ -37,8 +35,9 @@ class BooksAdapter(
         val book = books[position]
         return when {
             book.state == State.READING -> R.layout.item_reading_book
-            isVerticalDesign -> R.layout.item_vertical_book
+            isVerticalDesign && book.id.isNotBlank() -> R.layout.item_vertical_book
             !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_book
+            isVerticalDesign -> R.layout.item_show_all_items
             else -> R.layout.item_load_more_items
         }
     }
@@ -73,6 +72,15 @@ class BooksAdapter(
                     )
                 )
             }
+            R.layout.item_show_all_items -> {
+                ShowAllItemsViewHolder(
+                    ItemShowAllItemsBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                    )
+                )
+            }
             else -> {
                 LoadMoreItemsViewHolder(
                     ItemLoadMoreItemsBinding.inflate(
@@ -93,6 +101,7 @@ class BooksAdapter(
 
         when (holder) {
             is BooksViewHolder -> holder.bind(books[position], isGoogleBook, onItemClickListener)
+            is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
     }

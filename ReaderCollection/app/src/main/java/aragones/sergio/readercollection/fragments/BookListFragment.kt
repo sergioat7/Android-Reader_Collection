@@ -72,6 +72,8 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     }
 
     override fun onLoadMoreItemsClick() {}
+
+    override fun onShowAllItemsClick(state: String) {}
     //endregion
 
     //region Public methods

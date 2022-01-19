@@ -9,4 +9,5 @@ interface OnItemClickListener {
 
     fun onItemClick(bookId: String)
     fun onLoadMoreItemsClick()
+    fun onShowAllItemsClick(state: String)
 }

@@ -76,6 +76,8 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.searchBooks()
         viewModel.setPosition(ScrollPosition.MIDDLE)
     }
+
+    override fun onShowAllItemsClick(state: String) {}
     //endregion
 
     //region Public methods
