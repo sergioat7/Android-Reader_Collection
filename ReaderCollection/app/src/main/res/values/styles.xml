@@ -161,6 +161,15 @@
         <item name="android:paddingEnd">@dimen/padding_12dp</item>
     </style>
 
+    <!--  ImageButton  -->
+
+    <style name="Widget.ReaderCollection.ImageButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
+        <item name="rippleColor">@null</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:minWidth">@null</item>
+        <item name="android:minHeight">@null</item>
+    </style>
+
     <!--  FloatingActionButton  -->
 
     <style name="Widget.ReaderCollection.FloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">

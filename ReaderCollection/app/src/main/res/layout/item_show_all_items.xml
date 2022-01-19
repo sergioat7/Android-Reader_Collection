@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 18/1/2022
+  -->
+
+<layout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <data>
+
+        <variable
+            name="state"
+            type="String"
+            />
+
+        <variable
+            name="onItemClickListener"
+            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="@dimen/size_150dp"
+        android:layout_height="@dimen/size_320dp"
+        android:layout_marginStart="@dimen/margin_12dp"
+        android:layout_marginEnd="@dimen/margin_12dp"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/show_all"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/image_button_show_all"
+            style="@style/Widget.ReaderCollection.TextView.Title.Section"
+            />
+
+        <ImageButton
+            android:id="@+id/image_button_show_all"
+            android:layout_width="@dimen/size_48dp"
+            android:layout_height="@dimen/size_48dp"
+            android:onClick="@{() -> onItemClickListener.onShowAllItemsClick(state)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.33"
+            app:srcCompat="@drawable/ic_arrow_circle_right"
+            style="@style/Widget.ReaderCollection.ImageButton"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
