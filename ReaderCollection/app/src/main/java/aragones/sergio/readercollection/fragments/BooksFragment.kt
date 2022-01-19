@@ -102,10 +102,10 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //endregion
 
     //region Public methods
-    fun seeMoreBooks(view: View) {
+    fun showAllBooks(view: View) {
 
         when (view) {
-            binding.buttonSeeMorePending -> {
+            binding.buttonShowAllPending -> {
                 val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
                     State.PENDING,
                     viewModel.sortParam,
@@ -114,7 +114,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 )
                 findNavController().navigate(action)
             }
-            binding.buttonSeeMoreRead -> {
+            binding.buttonShowAllRead -> {
                 val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
                     State.READ,
                     viewModel.sortParam,
