@@ -66,8 +66,8 @@
     <string name="edit">Editar</string>
     <string name="remove">Eliminar</string>
 
-    //PROFILE
-    <string name="title_profile">Perfil</string>
+    //SETTINGS
+    <string name="title_settings">Configuración</string>
     <string name="save">Guardar</string>
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
