@@ -13,16 +13,15 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.base.BindingFragment
-import aragones.sergio.readercollection.databinding.FragmentProfileBinding
+import aragones.sergio.readercollection.databinding.FragmentSettingsBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.utils.CustomDropdownType
 import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.StatusBarStyle
-import aragones.sergio.readercollection.viewmodelfactories.ProfileViewModelFactory
-import aragones.sergio.readercollection.viewmodels.ProfileViewModel
-import kotlinx.android.synthetic.main.fragment_profile.*
+import aragones.sergio.readercollection.viewmodelfactories.SettingsViewModelFactory
+import aragones.sergio.readercollection.viewmodels.SettingsViewModel
 
-class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
+class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     //region Protected properties
     override val hasOptionsMenu = true
@@ -30,7 +29,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: ProfileViewModel
+    private lateinit var viewModel: SettingsViewModel
     //endregion
 
     //region Lifecycle methods
@@ -45,7 +44,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         super.onCreateOptionsMenu(menu, inflater)
 
         menu.clear()
-        inflater.inflate(R.menu.profile_toolbar_menu, menu)
+        inflater.inflate(R.menu.settings_toolbar_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -96,7 +95,7 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
                 else resources.getStringArray(R.array.sorting_param_keys)[dropdownTextInputLayoutSortParams.getPosition()]
             val isSortDescending = dropdownTextInputLayoutSortOrders.getPosition() == 1
             val themeMode = dropdownTextInputLayoutAppTheme.getPosition()
-            this@ProfileFragment.viewModel.save(
+            this@SettingsFragment.viewModel.save(
                 textInputLayoutPassword.getValue(),
                 language,
                 sortParam,
@@ -114,8 +113,8 @@ class ProfileFragment : BindingFragment<FragmentProfileBinding>() {
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
-            ProfileViewModelFactory(application)
-        )[ProfileViewModel::class.java]
+            SettingsViewModelFactory(application)
+        )[SettingsViewModel::class.java]
         setupBindings()
 
         binding.textInputLayoutUsername.setEndIconOnClickListener {

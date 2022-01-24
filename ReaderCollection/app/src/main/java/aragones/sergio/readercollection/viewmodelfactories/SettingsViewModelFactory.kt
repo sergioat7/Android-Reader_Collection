@@ -11,10 +11,10 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
-import aragones.sergio.readercollection.viewmodels.ProfileViewModel
+import aragones.sergio.readercollection.viewmodels.SettingsViewModel
 import javax.inject.Inject
 
-class ProfileViewModelFactory(
+class SettingsViewModelFactory(
     private val application: Application
 ): ViewModelProvider.Factory {
 
@@ -24,16 +24,16 @@ class ProfileViewModelFactory(
     @Inject
     lateinit var userRepository: UserRepository
     @Inject
-    lateinit var profileViewModel: ProfileViewModel
+    lateinit var settingsViewModel: SettingsViewModel
     //endregion
 
     //region Lifecycle methods
     @Suppress("UNCHECKED_CAST")
     override fun <T: ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(ProfileViewModel::class.java)) {
+        if (modelClass.isAssignableFrom(SettingsViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            return profileViewModel as T
+            return settingsViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
