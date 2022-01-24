@@ -22,7 +22,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
-class ProfileViewModel @Inject constructor(
+class SettingsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {

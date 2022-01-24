@@ -8,15 +8,15 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph_profile"
-    app:startDestination="@id/profileFragment"
+    android:id="@+id/nav_graph_settings"
+    app:startDestination="@id/settingsFragment"
     >
 
     <fragment
-        android:id="@+id/profileFragment"
-        android:name="aragones.sergio.readercollection.fragments.ProfileFragment"
-        android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"
+        android:id="@+id/settingsFragment"
+        android:name="aragones.sergio.readercollection.fragments.SettingsFragment"
+        android:label="SettingsFragment"
+        tools:layout="@layout/fragment_settings"
         />
 
 </navigation>

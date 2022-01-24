@@ -54,7 +54,7 @@ class MainActivity : BaseActivity() {
         val navGraphIds = listOf(
             R.navigation.nav_graph_books,
             R.navigation.nav_graph_search,
-            R.navigation.nav_graph_profile
+            R.navigation.nav_graph_settings
         )
 
         // Setup the bottom navigation view with a list of navigation graphs
