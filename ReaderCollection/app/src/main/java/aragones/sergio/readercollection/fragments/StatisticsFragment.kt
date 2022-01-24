@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 24/1/2022
+ */
+
+package aragones.sergio.readercollection.fragments
+
+import android.os.Bundle
+import android.view.View
+import aragones.sergio.readercollection.base.BindingFragment
+import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
+import aragones.sergio.readercollection.utils.StatusBarStyle
+
+class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
+
+    //region Protected properties
+    override val hasOptionsMenu = true
+    override val statusBarStyle = StatusBarStyle.PRIMARY
+    //endregion
+
+    //region Lifecycle methods
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        toolbar = binding.toolbar
+        initializeUi()
+    }
+    //endregion
+}
