@@ -43,6 +43,9 @@
     //SEARCH
     <string name="title_search">Búsqueda</string>
 
+    //STATISTICS
+    <string name="title_stats">Estadísticas</string>
+
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>
     <string name="add_author">Añade el autor(es)</string>
