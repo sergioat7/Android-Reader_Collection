@@ -22,7 +22,7 @@ interface AppComponent {
     fun inject(landingViewModelFactory: LandingViewModelFactory)
     fun inject(loginViewModelFactory: LoginViewModelFactory)
     fun inject(popupSyncAppViewModelFactory: PopupSyncAppViewModelFactory)
-    fun inject(profileViewModelFactory: ProfileViewModelFactory)
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
     fun inject(searchViewModelFactory: SearchViewModelFactory)
+    fun inject(settingsViewModelFactory: SettingsViewModelFactory)
 }
