@@ -49,6 +49,25 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             this,
             StatisticsViewModelFactory(application)
         )[StatisticsViewModel::class.java]
+        setupBindings()
+    }
+    //endregion
+
+    //region Private methods
+    private fun setupBindings() {
+
+        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+
+            if (isLoading) {
+                showLoading()
+            } else {
+                hideLoading()
+            }
+        })
+
+        viewModel.booksError.observe(viewLifecycleOwner, {
+            manageError(it)
+        })
     }
     //endregion
 }
