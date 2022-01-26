@@ -30,6 +30,7 @@ class StatisticsViewModel @Inject constructor(
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _booksByYearStats = MutableLiveData<List<PieEntry>>()
+    private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _formatStats = MutableLiveData<List<PieEntry>>()
     //endregion
 
@@ -37,6 +38,7 @@ class StatisticsViewModel @Inject constructor(
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
     val booksByYearStats: LiveData<List<PieEntry>> = _booksByYearStats
+    val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val formatStats: LiveData<List<PieEntry>> = _formatStats
     //endregion
 
@@ -67,6 +69,7 @@ class StatisticsViewModel @Inject constructor(
                 } else {
 
                     createBooksByYearStats(it)
+                    createBooksByMonthStats(it)
                     createFormatStats(it)
                     _booksLoading.value = false
                 }
@@ -108,6 +111,30 @@ class StatisticsViewModel @Inject constructor(
             )
         }
         _booksByYearStats.value = entries
+    }
+
+    private fun createBooksByMonthStats(books: List<BookResponse>) {
+
+        val locale = Locale.forLanguageTag(SharedPreferencesHandler.getLanguage())
+        val calendar = Calendar.getInstance()
+        val booksBySeason = books.mapNotNull { it.readingDate }.sortedBy {
+            calendar.time = it
+            calendar.get(Calendar.MONTH)
+        }.groupBy {
+            calendar.time = it
+            SimpleDateFormat("MMM", locale).format(calendar.time)
+        }.entries
+
+        val entries = mutableListOf<PieEntry>()
+        for (entry in booksBySeason) {
+            entries.add(
+                PieEntry(
+                    entry.value.size.toFloat(),
+                    entry.key
+                )
+            )
+        }
+        _booksByMonthStats.value = entries
     }
 
     private fun createFormatStats(books: List<BookResponse>) {
