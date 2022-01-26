@@ -34,6 +34,8 @@ class StatisticsViewModel @Inject constructor(
     private val _booksByYearStats = MutableLiveData<List<PieEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<List<PieEntry>>()
+    private val _longerBook = MutableLiveData<BookResponse>()
+    private val _shorterBook = MutableLiveData<BookResponse>()
     private val _formatStats = MutableLiveData<List<PieEntry>>()
     //endregion
 
@@ -43,6 +45,8 @@ class StatisticsViewModel @Inject constructor(
     val booksByYearStats: LiveData<List<PieEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<List<PieEntry>> = _booksByAuthorStats
+    val longerBook: LiveData<BookResponse> = _longerBook
+    val shorterBook: LiveData<BookResponse> = _shorterBook
     val formatStats: LiveData<List<PieEntry>> = _formatStats
     //endregion
 
@@ -75,6 +79,8 @@ class StatisticsViewModel @Inject constructor(
                     createBooksByYearStats(books)
                     createBooksByMonthStats(books)
                     createBooksByAuthorStats(books)
+                    _longerBook.value = books.maxByOrNull { it.pageCount }
+                    _shorterBook.value = books.minByOrNull { it.pageCount }
                     createFormatStats(books)
                     _booksLoading.value = false
                 }
