@@ -66,16 +66,16 @@ class StatisticsViewModel @Inject constructor(
             onComplete = {
                 noBooksError()
             },
-            onSuccess = {
+            onSuccess = { books ->
 
-                if (it.isEmpty()) {
+                if (books.isEmpty()) {
                     noBooksError()
                 } else {
 
-                    createBooksByYearStats(it)
-                    createBooksByMonthStats(it)
-                    createBooksByAuthorStats(it)
-                    createFormatStats(it)
+                    createBooksByYearStats(books)
+                    createBooksByMonthStats(books)
+                    createBooksByAuthorStats(books)
+                    createFormatStats(books)
                     _booksLoading.value = false
                 }
             },
