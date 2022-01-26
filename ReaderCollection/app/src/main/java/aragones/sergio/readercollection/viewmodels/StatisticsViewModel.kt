@@ -36,7 +36,7 @@ class StatisticsViewModel @Inject constructor(
     private val _booksByAuthorStats = MutableLiveData<List<PieEntry>>()
     private val _longerBook = MutableLiveData<BookResponse>()
     private val _shorterBook = MutableLiveData<BookResponse>()
-    private val _formatStats = MutableLiveData<List<PieEntry>>()
+    private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
     //endregion
 
     //region Public properties
@@ -47,7 +47,7 @@ class StatisticsViewModel @Inject constructor(
     val booksByAuthorStats: LiveData<List<PieEntry>> = _booksByAuthorStats
     val longerBook: LiveData<BookResponse> = _longerBook
     val shorterBook: LiveData<BookResponse> = _shorterBook
-    val formatStats: LiveData<List<PieEntry>> = _formatStats
+    val booksByFormatStats: LiveData<List<PieEntry>> = _booksByFormatStats
     //endregion
 
     //region Lifecycle methods
@@ -170,7 +170,7 @@ class StatisticsViewModel @Inject constructor(
                 )
             )
         }
-        _formatStats.value = entries
+        _booksByFormatStats.value = entries
     }
     //endregion
 }
