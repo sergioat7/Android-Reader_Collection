@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
+import aragones.sergio.readercollection.extensions.getGroupedBy
+import aragones.sergio.readercollection.extensions.getOrderedBy
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
@@ -91,18 +93,13 @@ class StatisticsViewModel @Inject constructor(
 
     private fun createBooksByYearStats(books: List<BookResponse>) {
 
-        val locale = Locale.forLanguageTag(SharedPreferencesHandler.getLanguage())
-        val calendar = Calendar.getInstance()
-        val booksBySeason = books.mapNotNull { it.readingDate }.sortedBy {
-            calendar.time = it
-            calendar.get(Calendar.YEAR)
-        }.groupBy {
-            calendar.time = it
-            SimpleDateFormat("yyyy", locale).format(calendar.time)
-        }.entries
+        val booksByYear = books
+            .mapNotNull { it.readingDate }
+            .getOrderedBy(Calendar.YEAR)
+            .getGroupedBy("yyyy")
 
         val entries = mutableListOf<PieEntry>()
-        for (entry in booksBySeason) {
+        for (entry in booksByYear.entries) {
             entries.add(
                 PieEntry(
                     entry.value.size.toFloat(),
@@ -115,18 +112,13 @@ class StatisticsViewModel @Inject constructor(
 
     private fun createBooksByMonthStats(books: List<BookResponse>) {
 
-        val locale = Locale.forLanguageTag(SharedPreferencesHandler.getLanguage())
-        val calendar = Calendar.getInstance()
-        val booksBySeason = books.mapNotNull { it.readingDate }.sortedBy {
-            calendar.time = it
-            calendar.get(Calendar.MONTH)
-        }.groupBy {
-            calendar.time = it
-            SimpleDateFormat("MMM", locale).format(calendar.time)
-        }.entries
+        val booksByMonth = books
+            .mapNotNull { it.readingDate }
+            .getOrderedBy(Calendar.MONTH)
+            .getGroupedBy("MMM")
 
         val entries = mutableListOf<PieEntry>()
-        for (entry in booksBySeason) {
+        for (entry in booksByMonth.entries) {
             entries.add(
                 PieEntry(
                     entry.value.size.toFloat(),
