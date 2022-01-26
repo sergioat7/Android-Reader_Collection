@@ -33,6 +33,7 @@ class StatisticsViewModel @Inject constructor(
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _booksByYearStats = MutableLiveData<List<PieEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
+    private val _booksByAuthorStats = MutableLiveData<List<PieEntry>>()
     private val _formatStats = MutableLiveData<List<PieEntry>>()
     //endregion
 
@@ -41,6 +42,7 @@ class StatisticsViewModel @Inject constructor(
     val booksError: LiveData<ErrorResponse> = _booksError
     val booksByYearStats: LiveData<List<PieEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
+    val booksByAuthorStats: LiveData<List<PieEntry>> = _booksByAuthorStats
     val formatStats: LiveData<List<PieEntry>> = _formatStats
     //endregion
 
@@ -72,6 +74,7 @@ class StatisticsViewModel @Inject constructor(
 
                     createBooksByYearStats(it)
                     createBooksByMonthStats(it)
+                    createBooksByAuthorStats(it)
                     createFormatStats(it)
                     _booksLoading.value = false
                 }
@@ -127,6 +130,27 @@ class StatisticsViewModel @Inject constructor(
             )
         }
         _booksByMonthStats.value = entries
+    }
+
+    private fun createBooksByAuthorStats(books: List<BookResponse>) {
+
+        val booksByAuthor = books
+            .groupBy { it.authorsToString() }
+            .toList()
+            .sortedBy { it.second.size }
+            .reversed()
+            .take(5)
+
+        val entries = mutableListOf<PieEntry>()
+        for (entry in booksByAuthor) {
+            entries.add(
+                PieEntry(
+                    entry.second.size.toFloat(),
+                    entry.first
+                )
+            )
+        }
+        _booksByAuthorStats.value = entries
     }
 
     private fun createFormatStats(books: List<BookResponse>) {
