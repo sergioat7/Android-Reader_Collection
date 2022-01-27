@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.res.Configuration
 import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
+import androidx.core.content.res.ResourcesCompat
 
 fun Activity.getScreenSize(): Pair<Int, Int> {
 
@@ -25,6 +26,10 @@ fun Activity.hideSoftKeyboard() {
             getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     } ?: return
+}
+
+fun Activity.getCustomColor(colorId: Int): Int {
+    return ResourcesCompat.getColor(resources, colorId, null)
 }
 
 fun Context?.isDarkMode(): Boolean {
