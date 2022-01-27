@@ -43,6 +43,7 @@
     <string name="title_stats">Statistics</string>
     <string name="shorter_book">Shorter book</string>
     <string name="longer_book">Longer book</string>
+    <string name="formats">Formats</string>
 
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
