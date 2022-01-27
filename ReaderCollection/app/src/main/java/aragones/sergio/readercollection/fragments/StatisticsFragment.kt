@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
+import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
@@ -115,6 +116,20 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 this.data = data
                 invalidate()
                 animateY(1500)
+            }
+        })
+
+        viewModel.shorterBook.observe(viewLifecycleOwner, {
+            binding.layoutShorterBook.apply {
+                book = it
+                isDarkMode = requireContext().isDarkMode()
+            }
+        })
+
+        viewModel.longerBook.observe(viewLifecycleOwner, {
+            binding.layoutLongerBook.apply {
+                book = it
+                isDarkMode = requireContext().isDarkMode()
             }
         })
 

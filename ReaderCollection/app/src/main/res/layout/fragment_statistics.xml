@@ -56,6 +56,46 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
 
+                <TextView
+                    android:id="@+id/text_view_shorter_book_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/shorter_book"
+                    app:layout_constraintStart_toStartOf="@id/layout_shorter_book"
+                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
+                    style="@style/Widget.ReaderCollection.TextView.Title.Section"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_longer_book_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/longer_book"
+                    app:layout_constraintStart_toStartOf="@id/layout_longer_book"
+                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
+                    style="@style/Widget.ReaderCollection.TextView.Title.Section"
+                    />
+
+                <include
+                    android:id="@+id/layout_shorter_book"
+                    layout="@layout/item_vertical_book"
+                    android:layout_width="@dimen/size_150dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintEnd_toStartOf="@id/layout_longer_book"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_shorter_book_title"
+                    />
+
+                <include
+                    android:id="@+id/layout_longer_book"
+                    layout="@layout/item_vertical_book"
+                    android:layout_width="@dimen/size_150dp"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toEndOf="@id/layout_shorter_book"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_longer_book_title"
+                    />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
