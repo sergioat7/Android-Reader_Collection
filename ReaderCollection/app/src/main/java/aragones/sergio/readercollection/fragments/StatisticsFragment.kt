@@ -8,14 +8,17 @@ package aragones.sergio.readercollection.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
+import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.formatter.ValueFormatter
 
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
@@ -60,6 +63,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             description.isEnabled = false
             xAxis.apply {
                 position = XAxisPosition.BOTTOM
+                valueFormatter = NumberValueFormatter()
                 setDrawGridLines(false)
             }
             axisLeft.setDrawGridLines(false)
@@ -89,8 +93,15 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner, { entries ->
 
+            val colors = ArrayList<Int>()
+            colors.add(requireActivity().getCustomColor(R.color.colorPrimary))
+
             val dataSet = BarDataSet(entries, "").apply {
+                valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
+                valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
+                valueFormatter = NumberValueFormatter()
                 setDrawValues(true)
+                setColors(colors)
             }
 
             val data = BarData(dataSet)
@@ -106,6 +117,15 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 animateY(1500)
             }
         })
+
+    //region NumberValueFormatter
+    inner class NumberValueFormatter : ValueFormatter() {
+
+        override fun getFormattedValue(value: Float): String {
+            return value.toInt().toString()
+        }
+    }
+    //endregion
     }
     //endregion
 }
