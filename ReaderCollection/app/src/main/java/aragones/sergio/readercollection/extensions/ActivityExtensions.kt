@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.extensions
 import android.app.Activity
 import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Typeface
 import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
 import androidx.core.content.res.ResourcesCompat
@@ -30,6 +31,10 @@ fun Activity.hideSoftKeyboard() {
 
 fun Activity.getCustomColor(colorId: Int): Int {
     return ResourcesCompat.getColor(resources, colorId, null)
+}
+
+fun Activity.getCustomFont(fontId: Int): Typeface? {
+    return ResourcesCompat.getFont(this, fontId)
 }
 
 fun Context?.isDarkMode(): Boolean {

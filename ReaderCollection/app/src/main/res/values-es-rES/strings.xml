@@ -47,6 +47,7 @@
     <string name="title_stats">Estadísticas</string>
     <string name="shorter_book">Libro más corto</string>
     <string name="longer_book">Libro más largo</string>
+    <string name="formats">Formatos</string>
 
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>

@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
@@ -12,13 +13,18 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
+import aragones.sergio.readercollection.extensions.getCustomFont
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
@@ -72,6 +78,24 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             setDrawBarShadow(false)
             setPinchZoom(false)
             setFitBars(true)
+        }
+        binding.pieChartBooksByFormat.apply {
+
+            isRotationEnabled = false
+            isHighlightPerTapEnabled = false
+            legend.isEnabled = false
+            description.isEnabled = false
+            centerText = resources.getString(R.string.formats)
+            setUsePercentValues(true)
+            setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+            setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
+            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setDrawCenterText(true)
+            setEntryLabelColor(requireActivity().getCustomColor(R.color.colorSecondary))
+            setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
+            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setExtraOffsets(5F, 10F, 5F, 5F)
+            setHoleColor(Color.TRANSPARENT)
         }
     }
     //endregion
@@ -133,6 +157,33 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             }
         })
 
+        viewModel.booksByFormatStats.observe(viewLifecycleOwner, {
+
+            val colors = ArrayList<Int>()
+            colors.add(requireActivity().getCustomColor(R.color.colorPrimary))
+
+            val dataSet = PieDataSet(it, "").apply {
+                sliceSpace = 5F
+                valueLinePart1Length = 0.4F
+                valueLinePart2Length = 0.8F
+                yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+                setColors(colors)
+            }
+
+            val data = PieData(dataSet).apply {
+                setValueFormatter(PercentFormatter(binding.pieChartBooksByFormat))
+                setValueTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+                setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
+                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_bold))
+            }
+
+            binding.pieChartBooksByFormat.apply {
+                this.data = data
+                highlightValues(null)
+                invalidate()
+                animateY(1500, Easing.EaseInOutQuad)
+            }
+        })
     //region NumberValueFormatter
     inner class NumberValueFormatter : ValueFormatter() {
 
