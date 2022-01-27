@@ -15,12 +15,11 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import aragones.sergio.readercollection.utils.State
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -31,7 +30,7 @@ class StatisticsViewModel @Inject constructor(
     //region Private properties
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private val _booksByYearStats = MutableLiveData<List<PieEntry>>()
+    private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<List<PieEntry>>()
     private val _longerBook = MutableLiveData<BookResponse>()
@@ -42,7 +41,7 @@ class StatisticsViewModel @Inject constructor(
     //region Public properties
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
-    val booksByYearStats: LiveData<List<PieEntry>> = _booksByYearStats
+    val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<List<PieEntry>> = _booksByAuthorStats
     val longerBook: LiveData<BookResponse> = _longerBook
@@ -107,12 +106,12 @@ class StatisticsViewModel @Inject constructor(
             .getOrderedBy(Calendar.YEAR)
             .getGroupedBy("yyyy")
 
-        val entries = mutableListOf<PieEntry>()
+        val entries = mutableListOf<BarEntry>()
         for (entry in booksByYear.entries) {
             entries.add(
-                PieEntry(
-                    entry.value.size.toFloat(),
-                    entry.key
+                BarEntry(
+                    entry.key.toFloat(),
+                    entry.value.size.toFloat()
                 )
             )
         }
