@@ -20,10 +20,7 @@ import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFa
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 
@@ -86,7 +83,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             legend.isEnabled = false
             description.isEnabled = false
             centerText = resources.getString(R.string.formats)
-            setUsePercentValues(true)
             setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
             setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
             setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
@@ -95,6 +91,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
             setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
             setExtraOffsets(5F, 10F, 5F, 5F)
+            setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
         }
     }
