@@ -76,6 +76,26 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             setPinchZoom(false)
             setFitBars(true)
         }
+
+        binding.pieChartBooksByMonth.apply {
+            
+            isRotationEnabled = false
+            isHighlightPerTapEnabled = false
+            legend.isEnabled = false
+            description.isEnabled = false
+            centerText = resources.getString(R.string.months)
+            setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+            setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
+            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setDrawCenterText(true)
+            setEntryLabelColor(requireActivity().getCustomColor(R.color.colorSecondary))
+            setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
+            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setExtraOffsets(5f, 10f, 5f, 5f)
+            setUsePercentValues(false)
+            setHoleColor(Color.TRANSPARENT)
+        }
+
         binding.pieChartBooksByFormat.apply {
 
             isRotationEnabled = false
@@ -137,6 +157,35 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 this.data = data
                 invalidate()
                 animateY(1500)
+            }
+        })
+
+        viewModel.booksByMonthStats.observe(viewLifecycleOwner, {
+
+            val colors = ArrayList<Int>()
+            colors.add(requireActivity().getCustomColor(R.color.colorPrimary))
+
+            val dataSet = PieDataSet(it, "").apply {
+                sliceSpace = 5F
+                valueLinePart1Length = 0.4F
+                valueLinePart2Length = 0.8F
+                valueTextColor = requireActivity().getCustomColor(R.color.colorTertiary)
+                yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
+                valueFormatter = NumberValueFormatter()
+                setColors(colors)
+            }
+
+            val data = PieData(dataSet).apply {
+                setValueTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+                setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
+                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_bold))
+            }
+
+            binding.pieChartBooksByMonth.apply {
+                this.data = data
+                highlightValues(null)
+                invalidate()
+                animateY(1400, Easing.EaseInOutQuad)
             }
         })
 

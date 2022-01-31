@@ -56,6 +56,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
 
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pie_chart_books_by_month"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/size_250dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
+                    />
+
                 <TextView
                     android:id="@+id/text_view_shorter_book_title"
                     android:layout_width="wrap_content"
