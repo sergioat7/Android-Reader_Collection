@@ -33,6 +33,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
     //region Private properties
     private lateinit var viewModel: StatisticsViewModel
+    private val customColors = ArrayList<Int>()
     //endregion
 
     //region Lifecycle methods
@@ -54,6 +55,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
     override fun initializeUi() {
         super.initializeUi()
 
+        customColors.add(requireActivity().getCustomColor(R.color.colorPrimary))
+
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
             this,
@@ -70,7 +73,14 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 valueFormatter = NumberValueFormatter()
                 setDrawGridLines(false)
             }
-            axisLeft.setDrawGridLines(false)
+            axisLeft.apply {
+                setDrawLabels(false)
+                setDrawGridLines(false)
+            }
+            axisRight.apply {
+                setDrawLabels(false)
+                setDrawGridLines(false)
+            }
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             setPinchZoom(false)
@@ -135,15 +145,12 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner, { entries ->
 
-            val colors = ArrayList<Int>()
-            colors.add(requireActivity().getCustomColor(R.color.colorPrimary))
-
             val dataSet = BarDataSet(entries, "").apply {
                 valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
                 valueFormatter = NumberValueFormatter()
+                this.colors = customColors
                 setDrawValues(true)
-                setColors(colors)
             }
 
             val data = BarData(dataSet)
@@ -162,9 +169,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
         viewModel.booksByMonthStats.observe(viewLifecycleOwner, {
 
-            val colors = ArrayList<Int>()
-            colors.add(requireActivity().getCustomColor(R.color.colorPrimary))
-
             val dataSet = PieDataSet(it, "").apply {
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
@@ -172,7 +176,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 valueTextColor = requireActivity().getCustomColor(R.color.colorTertiary)
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 valueFormatter = NumberValueFormatter()
-                setColors(colors)
+                this.colors = customColors
             }
 
             val data = PieData(dataSet).apply {
@@ -205,15 +209,12 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
         viewModel.booksByFormatStats.observe(viewLifecycleOwner, {
 
-            val colors = ArrayList<Int>()
-            colors.add(requireActivity().getCustomColor(R.color.colorPrimary))
-
             val dataSet = PieDataSet(it, "").apply {
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
-                setColors(colors)
+                colors = customColors
             }
 
             val data = PieData(dataSet).apply {
