@@ -106,6 +106,28 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             setHoleColor(Color.TRANSPARENT)
         }
 
+        binding.horizontalBarChartBooksByAuthor.apply {
+
+            legend.isEnabled = false
+            description.isEnabled = false
+            xAxis.apply {
+                position = XAxisPosition.BOTTOM
+                setDrawGridLines(false)
+            }
+            axisLeft.apply {
+                setDrawLabels(false)
+                setDrawGridLines(false)
+            }
+            axisRight.apply {
+                setDrawLabels(false)
+                setDrawGridLines(false)
+            }
+            setDrawGridBackground(false)
+            setDrawBarShadow(false)
+            setPinchZoom(false)
+            setFitBars(true)
+        }
+
         binding.pieChartBooksByFormat.apply {
 
             isRotationEnabled = false
@@ -193,6 +215,40 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             }
         })
 
+        viewModel.booksByAuthorStats.observe(viewLifecycleOwner, { books ->
+
+            val entries = mutableListOf<BarEntry>()
+            for ((index, entry) in books.toList().withIndex()) {
+                entries.add(
+                    BarEntry(
+                        index.toFloat(),
+                        entry.second.size.toFloat()
+                    )
+                )
+            }
+
+            val dataSet = BarDataSet(entries, "").apply {
+                valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
+                valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
+                valueFormatter = NumberValueFormatter()
+                this.colors = customColors
+                setDrawValues(true)
+            }
+
+            val data = BarData(dataSet)
+
+            binding.horizontalBarChartBooksByAuthor.apply {
+                xAxis.valueFormatter = StringValueFormatter(books)
+                axisLeft.apply {
+                    axisMinimum = 0F
+                    axisMaximum = data.yMax
+                }
+                this.data = data
+                invalidate()
+                animateY(1500)
+            }
+        })
+
         viewModel.shorterBook.observe(viewLifecycleOwner, {
             binding.layoutShorterBook.apply {
                 book = it
@@ -231,6 +287,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 animateY(1500, Easing.EaseInOutQuad)
             }
         })
+    }
+    //endregion
+
     //region NumberValueFormatter
     inner class NumberValueFormatter : ValueFormatter() {
 
@@ -239,6 +298,13 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
         }
     }
     //endregion
+
+    //region StringValueFormatter
+    inner class StringValueFormatter(private val map: Map<String, List<Any>>) : ValueFormatter() {
+
+        override fun getFormattedValue(value: Float): String {
+            return map.keys.elementAt(value.toInt())
+        }
     }
     //endregion
 }

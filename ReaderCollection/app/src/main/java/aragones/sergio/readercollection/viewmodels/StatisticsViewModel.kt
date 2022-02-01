@@ -32,7 +32,7 @@ class StatisticsViewModel @Inject constructor(
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
-    private val _booksByAuthorStats = MutableLiveData<List<PieEntry>>()
+    private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
     private val _longerBook = MutableLiveData<BookResponse>()
     private val _shorterBook = MutableLiveData<BookResponse>()
     private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
@@ -43,7 +43,7 @@ class StatisticsViewModel @Inject constructor(
     val booksError: LiveData<ErrorResponse> = _booksError
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
-    val booksByAuthorStats: LiveData<List<PieEntry>> = _booksByAuthorStats
+    val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
     val longerBook: LiveData<BookResponse> = _longerBook
     val shorterBook: LiveData<BookResponse> = _shorterBook
     val booksByFormatStats: LiveData<List<PieEntry>> = _booksByFormatStats
@@ -139,23 +139,12 @@ class StatisticsViewModel @Inject constructor(
 
     private fun createBooksByAuthorStats(books: List<BookResponse>) {
 
-        val booksByAuthor = books
+        _booksByAuthorStats.value = books
             .groupBy { it.authorsToString() }
             .toList()
             .sortedBy { it.second.size }
-            .reversed()
-            .take(5)
-
-        val entries = mutableListOf<PieEntry>()
-        for (entry in booksByAuthor) {
-            entries.add(
-                PieEntry(
-                    entry.second.size.toFloat(),
-                    entry.first
-                )
-            )
-        }
-        _booksByAuthorStats.value = entries
+            .takeLast(5)
+            .toMap()
     }
 
     private fun createFormatStats(books: List<BookResponse>) {
