@@ -65,13 +65,22 @@
                     app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
                     />
 
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/horizontal_bar_chart_books_by_author"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/size_250dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pie_chart_books_by_month"
+                    />
+
                 <TextView
                     android:id="@+id/text_view_shorter_book_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/shorter_book"
                     app:layout_constraintStart_toStartOf="@id/layout_shorter_book"
-                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_bar_chart_books_by_author"
                     style="@style/Widget.ReaderCollection.TextView.Title.Section"
                     />
 
@@ -81,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/longer_book"
                     app:layout_constraintStart_toStartOf="@id/layout_longer_book"
-                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_bar_chart_books_by_author"
                     style="@style/Widget.ReaderCollection.TextView.Title.Section"
                     />
 
