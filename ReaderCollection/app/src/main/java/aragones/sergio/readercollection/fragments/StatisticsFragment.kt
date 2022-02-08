@@ -170,6 +170,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner, { entries ->
 
+            binding.barChartBooksByYear.visibility = if (entries.isEmpty()) View.GONE else View.VISIBLE
+
             val dataSet = BarDataSet(entries, "").apply {
                 valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
@@ -193,6 +195,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
         })
 
         viewModel.booksByMonthStats.observe(viewLifecycleOwner, {
+
+            binding.pieChartBooksByMonth.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = PieDataSet(it, "").apply {
                 sliceSpace = 5F
@@ -219,6 +223,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
         })
 
         viewModel.booksByAuthorStats.observe(viewLifecycleOwner, { books ->
+
+            binding.horizontalBarChartBooksByAuthor.visibility = if (books.isEmpty()) View.GONE else View.VISIBLE
 
             val entries = mutableListOf<BarEntry>()
             for ((index, entry) in books.toList().withIndex()) {
@@ -253,20 +259,28 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
         })
 
         viewModel.shorterBook.observe(viewLifecycleOwner, {
+
+            binding.textViewShorterBookTitle.visibility = if (it == null) View.GONE else View.VISIBLE
             binding.layoutShorterBook.apply {
+                root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
                 isDarkMode = requireContext().isDarkMode()
             }
         })
 
         viewModel.longerBook.observe(viewLifecycleOwner, {
+
+            binding.textViewLongerBookTitle.visibility = if (it == null) View.GONE else View.VISIBLE
             binding.layoutLongerBook.apply {
+                root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
                 isDarkMode = requireContext().isDarkMode()
             }
         })
 
         viewModel.booksByFormatStats.observe(viewLifecycleOwner, {
+
+            binding.pieChartBooksByFormat.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = PieDataSet(it, "").apply {
                 sliceSpace = 5F
