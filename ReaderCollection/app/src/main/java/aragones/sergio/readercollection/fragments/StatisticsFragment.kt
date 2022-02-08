@@ -146,6 +146,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
         }
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
     }
     //endregion
 
