@@ -12,6 +12,11 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.StatisticsViewModel"
+            />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -29,6 +34,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:subtitle="@{@plurals/title_books_count(viewModel.books.size(), viewModel.books.size())}"
+            app:subtitleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
             app:title="@string/title_stats"
             app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main"
             />

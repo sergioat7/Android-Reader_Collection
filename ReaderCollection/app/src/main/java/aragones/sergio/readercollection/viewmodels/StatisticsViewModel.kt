@@ -28,6 +28,7 @@ class StatisticsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
+    private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
@@ -39,6 +40,7 @@ class StatisticsViewModel @Inject constructor(
     //endregion
 
     //region Public properties
+    val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
@@ -71,9 +73,8 @@ class StatisticsViewModel @Inject constructor(
             },
             onSuccess = { books ->
 
-                if (books.isEmpty()) {
-                    noBooksError()
-                } else {
+                _books.value = books
+                if (books.isNotEmpty()) {
 
                     createBooksByYearStats(books)
                     createBooksByMonthStats(books)
@@ -81,8 +82,8 @@ class StatisticsViewModel @Inject constructor(
                     _longerBook.value = books.maxByOrNull { it.pageCount }
                     _shorterBook.value = books.minByOrNull { it.pageCount }
                     createFormatStats(books)
-                    _booksLoading.value = false
                 }
+                _booksLoading.value = false
             },
             onError = {
                 noBooksError()
@@ -94,6 +95,7 @@ class StatisticsViewModel @Inject constructor(
     //region Private methods
     private fun noBooksError() {
 
+        _books.value = emptyList()
         _booksLoading.value = false
         _booksError.value = ErrorResponse("", R.string.error_database)
         onDestroy()
