@@ -12,6 +12,10 @@
 
     <data>
 
+        <import
+            type="android.view.View"
+            />
+
         <variable
             name="viewModel"
             type="aragones.sergio.readercollection.viewmodels.StatisticsViewModel"
@@ -44,6 +48,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:scrollbars="none"
+            android:visibility="@{viewModel.books.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -140,6 +145,19 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <include
+            android:id="@+id/image_view_no_results"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.books.empty ? View.VISIBLE : View.GONE}"
+            app:layout_constraintWidth_percent="0.7"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            layout="@layout/content_no_results"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
