@@ -34,8 +34,8 @@ class StatisticsViewModel @Inject constructor(
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
-    private val _longerBook = MutableLiveData<BookResponse>()
-    private val _shorterBook = MutableLiveData<BookResponse>()
+    private val _longerBook = MutableLiveData<BookResponse?>()
+    private val _shorterBook = MutableLiveData<BookResponse?>()
     private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
     //endregion
 
@@ -46,8 +46,8 @@ class StatisticsViewModel @Inject constructor(
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
-    val longerBook: LiveData<BookResponse> = _longerBook
-    val shorterBook: LiveData<BookResponse> = _shorterBook
+    val longerBook: LiveData<BookResponse?> = _longerBook
+    val shorterBook: LiveData<BookResponse?> = _shorterBook
     val booksByFormatStats: LiveData<List<PieEntry>> = _booksByFormatStats
     //endregion
 
@@ -73,16 +73,13 @@ class StatisticsViewModel @Inject constructor(
             },
             onSuccess = { books ->
 
+                createBooksByYearStats(books)
+                createBooksByMonthStats(books)
+                createBooksByAuthorStats(books.filter { it.authorsToString().isNotBlank() })
+                _longerBook.value = books.filter { it.pageCount > 0 }.maxByOrNull { it.pageCount }
+                _shorterBook.value = books.filter { it.pageCount > 0 }.minByOrNull { it.pageCount }
+                createFormatStats(books.filter { it.format != null })
                 _books.value = books
-                if (books.isNotEmpty()) {
-
-                    createBooksByYearStats(books)
-                    createBooksByMonthStats(books)
-                    createBooksByAuthorStats(books)
-                    _longerBook.value = books.maxByOrNull { it.pageCount }
-                    _shorterBook.value = books.minByOrNull { it.pageCount }
-                    createFormatStats(books)
-                }
                 _booksLoading.value = false
             },
             onError = {
