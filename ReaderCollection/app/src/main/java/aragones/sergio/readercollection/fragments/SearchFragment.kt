@@ -149,33 +149,33 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
+        viewModel.books.observe(viewLifecycleOwner) { booksResponse ->
 
             if (booksResponse.isEmpty()) {
                 booksAdapter.resetList()
             } else {
                 booksAdapter.setBooks(booksResponse, false)
             }
-        })
+        }
 
-        viewModel.searchLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.searchLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.swipeRefreshLayoutBooks.isRefreshing = isLoading
-        })
+        }
 
-        viewModel.bookAdded.observe(viewLifecycleOwner, { position ->
+        viewModel.bookAdded.observe(viewLifecycleOwner) { position ->
             position?.let {
 
                 val message = resources.getString(R.string.book_saved)
                 showPopupDialog(message)
             }
-        })
+        }
 
-        viewModel.searchError.observe(viewLifecycleOwner, { error ->
+        viewModel.searchError.observe(viewLifecycleOwner) { error ->
             error?.let {
 
                 manageError(it)
             }
-        })
+        }
     }
 
     private fun setupSearchView(menu: Menu) {

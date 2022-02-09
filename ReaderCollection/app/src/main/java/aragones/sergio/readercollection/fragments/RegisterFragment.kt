@@ -12,11 +12,13 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.MainActivity
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
-import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getValue
+import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
+import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.RegisterViewModelFactory
 import aragones.sergio.readercollection.viewmodels.RegisterViewModel
-import kotlinx.android.synthetic.main.fragment_register.*
 
 class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
@@ -91,7 +93,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.registerFormState.observe(viewLifecycleOwner, {
+        viewModel.registerFormState.observe(viewLifecycleOwner) {
 
             val registerState = it ?: return@observe
 
@@ -109,25 +111,25 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
                     textInputLayoutConfirmPassword.setError(getString(registerState.passwordError))
                 }
             }
-        })
+        }
 
-        viewModel.registerLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.registerLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.registerError.observe(viewLifecycleOwner, { error ->
+        viewModel.registerError.observe(viewLifecycleOwner) { error ->
 
             if (error == null) {
                 launchActivity(MainActivity::class.java)
             } else {
                 manageError(error)
             }
-        })
+        }
     }
 
     private fun registerDataChanged() {

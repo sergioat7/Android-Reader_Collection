@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.widget.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
@@ -256,37 +255,37 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.book.observe(viewLifecycleOwner, {
+        viewModel.book.observe(viewLifecycleOwner) {
 
             book = it
             showData(it)
             binding.editable = viewModel.isGoogleBook || it == null
-        })
+        }
 
-        viewModel.bookDetailLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.bookDetailLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner, {
+        viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner) {
 
             val message = resources.getString(it)
             showPopupDialog(message, goBack)
-        })
+        }
 
-        viewModel.bookDetailError.observe(viewLifecycleOwner, {
+        viewModel.bookDetailError.observe(viewLifecycleOwner) {
 
             book?.let { b -> showData(b) }
             manageError(it)
-        })
+        }
 
-        goBack.observe(viewLifecycleOwner, {
+        goBack.observe(viewLifecycleOwner) {
             activity?.onBackPressed()
-        })
+        }
     }
 
     private fun showData(book: BookResponse) {
@@ -360,7 +359,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
                 Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
-            if (book?.readingDate == null && readingDate == null && state == State.READ) readingDate = Date()
+            if (book?.readingDate == null && readingDate == null && state == State.READ) readingDate =
+                Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
             return BookResponse(

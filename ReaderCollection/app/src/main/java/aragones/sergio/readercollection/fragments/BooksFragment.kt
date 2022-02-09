@@ -206,36 +206,36 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.readingBooks.observe(viewLifecycleOwner, { booksResponse ->
+        viewModel.readingBooks.observe(viewLifecycleOwner) { booksResponse ->
             readingBooksAdapter.setBooks(booksResponse.toMutableList(), true)
-        })
+        }
 
-        viewModel.pendingBooks.observe(viewLifecycleOwner, { booksResponse ->
+        viewModel.pendingBooks.observe(viewLifecycleOwner) { booksResponse ->
 
             val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
             books.add(BookResponse(id = ""))
             pendingBooksAdapter.setBooks(books, true)
-        })
+        }
 
-        viewModel.readBooks.observe(viewLifecycleOwner, { booksResponse ->
+        viewModel.readBooks.observe(viewLifecycleOwner) { booksResponse ->
 
             val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
             books.add(BookResponse(id = ""))
             booksAdapter.setBooks(books, true)
-        })
+        }
 
-        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.booksLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.booksError.observe(viewLifecycleOwner, { error ->
+        viewModel.booksError.observe(viewLifecycleOwner) { error ->
             manageError(error)
-        })
+        }
     }
 
     private fun setupSearchView() {
