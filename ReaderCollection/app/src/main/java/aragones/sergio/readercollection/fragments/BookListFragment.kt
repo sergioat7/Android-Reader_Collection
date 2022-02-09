@@ -147,26 +147,26 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.books.observe(viewLifecycleOwner, {
+        viewModel.books.observe(viewLifecycleOwner) {
             booksAdapter.setBooks(it.toMutableList(), true)
-        })
+        }
 
-        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.booksLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.booksError.observe(viewLifecycleOwner, {
+        viewModel.booksError.observe(viewLifecycleOwner) {
             manageError(it, goBack)
-        })
+        }
 
-        goBack.observe(viewLifecycleOwner, {
+        goBack.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
-        })
+        }
     }
     //endregion
 }
