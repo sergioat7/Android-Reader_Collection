@@ -88,6 +88,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         binding.barChartBooksByYear.apply {
 
             isDoubleTapToZoomEnabled = false
+            isHighlightPerDragEnabled = false
+            isHighlightPerTapEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             xAxis.apply {
@@ -130,6 +132,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         binding.horizontalBarChartBooksByAuthor.apply {
 
             isDoubleTapToZoomEnabled = false
+            isHighlightPerDragEnabled = false
+            isHighlightPerTapEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             xAxis.apply {
