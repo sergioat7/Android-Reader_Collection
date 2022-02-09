@@ -270,7 +270,10 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             val data = BarData(dataSet)
 
             binding.horizontalBarChartBooksByAuthor.apply {
-                xAxis.valueFormatter = StringValueFormatter(books)
+                xAxis.apply {
+                    valueFormatter = StringValueFormatter(books)
+                    labelCount = books.size
+                }
                 axisLeft.apply {
                     axisMinimum = 0F
                     axisMaximum = data.yMax
@@ -346,7 +349,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     inner class StringValueFormatter(private val map: Map<String, List<Any>>) : ValueFormatter() {
 
         override fun getFormattedValue(value: Float): String {
-            return map.keys.elementAt(value.toInt())
+            return if(value < 0 || value > map.size - 1) "" else map.keys.elementAt(value.toInt())
         }
     }
     //endregion
