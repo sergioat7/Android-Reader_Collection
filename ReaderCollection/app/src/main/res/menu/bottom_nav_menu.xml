@@ -21,6 +21,12 @@
         />
 
     <item
+        android:id="@+id/nav_graph_stats"
+        android:icon="@drawable/ic_book_statistics"
+        android:title="@string/title_stats"
+        />
+
+    <item
         android:id="@+id/nav_graph_settings"
         android:icon="@drawable/ic_settings"
         android:title="@string/title_settings"
