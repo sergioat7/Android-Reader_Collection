@@ -46,6 +46,12 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         initializeUi()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (this::viewModel.isInitialized) viewModel.fetchBooks()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
