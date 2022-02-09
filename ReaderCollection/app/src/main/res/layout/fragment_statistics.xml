@@ -49,6 +49,7 @@
             android:layout_height="0dp"
             android:scrollbars="none"
             android:layout_marginTop="@dimen/margin_12dp"
+            android:paddingBottom="@dimen/padding_12dp"
             android:visibility="@{viewModel.books.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

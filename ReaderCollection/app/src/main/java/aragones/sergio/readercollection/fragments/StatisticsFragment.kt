@@ -209,6 +209,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                     axisMinimum = data.xMin
                     axisMaximum = data.xMax
                     labelCount = entries.size / 2
+                    textColor = requireActivity().getCustomColor(R.color.colorPrimary)
+                    typeface = requireActivity().getCustomFont(R.font.roboto_bold)
                 }
                 this.data = data
                 invalidate()
@@ -224,7 +226,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
-                valueTextColor = requireActivity().getCustomColor(R.color.colorTertiary)
+                valueLineColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 valueFormatter = NumberValueFormatter()
                 this.colors = customColors
@@ -273,6 +275,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 xAxis.apply {
                     valueFormatter = StringValueFormatter(books)
                     labelCount = books.size
+                    textColor = requireActivity().getCustomColor(R.color.colorPrimary)
+                    textSize = resources.getDimension(R.dimen.text_size_4sp)
+                    typeface = requireActivity().getCustomFont(R.font.roboto_bold)
                 }
                 axisLeft.apply {
                     axisMinimum = 0F
@@ -315,6 +320,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
+                valueLineColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 colors = customColors
             }
