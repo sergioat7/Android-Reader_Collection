@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
+import aragones.sergio.readercollection.extensions.combineWith
 import aragones.sergio.readercollection.extensions.getGroupedBy
 import aragones.sergio.readercollection.extensions.getOrderedBy
 import aragones.sergio.readercollection.models.responses.BookResponse
@@ -49,6 +50,20 @@ class StatisticsViewModel @Inject constructor(
     val longerBook: LiveData<BookResponse?> = _longerBook
     val shorterBook: LiveData<BookResponse?> = _shorterBook
     val booksByFormatStats: LiveData<List<PieEntry>> = _booksByFormatStats
+    val noResultsVisible: LiveData<Boolean> = booksByYearStats.combineWith(
+        booksByMonthStats,
+        booksByAuthorStats,
+        longerBook,
+        shorterBook,
+        booksByFormatStats
+    ) { booksByYearStats, booksByMonthStats, booksByAuthorStats, longerBook, shorterBook, booksByFormatStats ->
+        booksByYearStats?.isEmpty() == true &&
+                booksByMonthStats?.isEmpty() == true &&
+                booksByAuthorStats?.isEmpty() == true &&
+                longerBook == null &&
+                shorterBook == null &&
+                booksByFormatStats?.isEmpty() == true
+    }
     //endregion
 
     //region Lifecycle methods
