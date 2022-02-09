@@ -360,7 +360,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
                 Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
-            if (readingDate == null && state == State.READ) readingDate = Date()
+            if (book?.readingDate == null && readingDate == null && state == State.READ) readingDate = Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
             return BookResponse(
