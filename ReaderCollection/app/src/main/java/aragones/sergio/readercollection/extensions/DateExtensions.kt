@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.extensions
 
 import android.util.Log
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.SharedPreferencesHandler
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,5 +32,24 @@ fun Date?.toString(format: String? = null, language: String? = null): String? {
 
         Log.e("DateExtensions", "date null")
         return null
+    }
+}
+
+fun List<Date>.getOrderedBy(field: Int): List<Date> {
+
+    val calendar = Calendar.getInstance()
+    return this.sortedBy {
+        calendar.time = it
+        calendar.get(field)
+    }
+}
+
+fun List<Date>.getGroupedBy(pattern: String): Map<String, List<Date>> {
+
+    val locale = Locale.forLanguageTag(SharedPreferencesHandler.getLanguage())
+    val calendar = Calendar.getInstance()
+    return this.groupBy {
+        calendar.time = it
+        SimpleDateFormat(pattern, locale).format(calendar.time)
     }
 }

@@ -121,6 +121,9 @@ dependencies {
     //Security
     implementation 'androidx.security:security-crypto:1.0.0'
 
+    //MPAndroidChart
+    implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
+
     //Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

@@ -25,4 +25,5 @@ interface AppComponent {
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
     fun inject(searchViewModelFactory: SearchViewModelFactory)
     fun inject(settingsViewModelFactory: SettingsViewModelFactory)
+    fun inject(atatisticsViewModelFactory: StatisticsViewModelFactory)
 }

@@ -39,6 +39,13 @@
     //SEARCH
     <string name="title_search">Search</string>
 
+    //STATISTICS
+    <string name="title_stats">Statistics</string>
+    <string name="shorter_book">Shorter book</string>
+    <string name="longer_book">Longer book</string>
+    <string name="months">Months</string>
+    <string name="formats">Formats</string>
+
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
     <string name="add_author">Add the author(s)</string>
