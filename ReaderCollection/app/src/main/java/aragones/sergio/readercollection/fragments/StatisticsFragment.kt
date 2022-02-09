@@ -87,6 +87,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         binding.barChartBooksByYear.apply {
 
+            isDoubleTapToZoomEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             xAxis.apply {
@@ -104,7 +105,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             }
             setDrawGridBackground(false)
             setDrawBarShadow(false)
-            setPinchZoom(false)
             setFitBars(true)
         }
 
@@ -129,6 +129,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         binding.horizontalBarChartBooksByAuthor.apply {
 
+            isDoubleTapToZoomEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             xAxis.apply {
@@ -145,7 +146,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             }
             setDrawGridBackground(false)
             setDrawBarShadow(false)
-            setPinchZoom(false)
             setFitBars(true)
         }
 
