@@ -103,7 +103,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         }
 
         binding.pieChartBooksByMonth.apply {
-            
+
             isRotationEnabled = false
             isHighlightPerTapEnabled = false
             legend.isEnabled = false
@@ -185,7 +185,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner, { entries ->
 
-            binding.barChartBooksByYear.visibility = if (entries.isEmpty()) View.GONE else View.VISIBLE
+            binding.barChartBooksByYear.visibility =
+                if (entries.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = BarDataSet(entries, "").apply {
                 valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
@@ -239,7 +240,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         viewModel.booksByAuthorStats.observe(viewLifecycleOwner, { books ->
 
-            binding.horizontalBarChartBooksByAuthor.visibility = if (books.isEmpty()) View.GONE else View.VISIBLE
+            binding.horizontalBarChartBooksByAuthor.visibility =
+                if (books.isEmpty()) View.GONE else View.VISIBLE
 
             val entries = mutableListOf<BarEntry>()
             for ((index, entry) in books.toList().withIndex()) {
@@ -275,7 +277,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         viewModel.shorterBook.observe(viewLifecycleOwner, {
 
-            binding.textViewShorterBookTitle.visibility = if (it == null) View.GONE else View.VISIBLE
+            binding.textViewShorterBookTitle.visibility =
+                if (it == null) View.GONE else View.VISIBLE
             binding.layoutShorterBook.apply {
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
