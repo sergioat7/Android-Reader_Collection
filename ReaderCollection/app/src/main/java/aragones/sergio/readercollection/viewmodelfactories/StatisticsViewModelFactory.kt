@@ -30,7 +30,6 @@ class StatisticsViewModelFactory(
         if (modelClass.isAssignableFrom(StatisticsViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            statisticsViewModel.fetchBooks()
             return statisticsViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
