@@ -9,7 +9,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
@@ -24,7 +26,7 @@ import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 
-class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
+class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
 
     //region Protected properties
     override val hasOptionsMenu = true
@@ -49,6 +51,19 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
 
         if (this::viewModel.isInitialized) viewModel.onDestroy()
     }
+    //endregion
+
+    //region Interface methods
+    override fun onItemClick(bookId: String) {
+
+        val action =
+            StatisticsFragmentDirections.actionStatisticsFragmentToBookDetailFragment(bookId, false)
+        findNavController().navigate(action)
+    }
+
+    override fun onLoadMoreItemsClick() {}
+
+    override fun onShowAllItemsClick(state: String) {}
     //endregion
 
     //region Protected methods
@@ -264,6 +279,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             binding.layoutShorterBook.apply {
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
+                onItemClickListener = this@StatisticsFragment
                 isDarkMode = requireContext().isDarkMode()
             }
         })
@@ -274,6 +290,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
             binding.layoutLongerBook.apply {
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
+                onItemClickListener = this@StatisticsFragment
                 isDarkMode = requireContext().isDarkMode()
             }
         })
