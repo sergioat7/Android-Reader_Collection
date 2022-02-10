@@ -68,7 +68,7 @@
                 android:paddingBottom="@dimen/padding_24dp"
                 >
 
-                <SearchView
+                <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_view_books"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/size_40dp"

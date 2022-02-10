@@ -180,20 +180,20 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.booksLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.booksLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.booksError.observe(viewLifecycleOwner, {
+        viewModel.booksError.observe(viewLifecycleOwner) {
             manageError(it)
-        })
+        }
 
-        viewModel.booksByYearStats.observe(viewLifecycleOwner, { entries ->
+        viewModel.booksByYearStats.observe(viewLifecycleOwner) { entries ->
 
             binding.barChartBooksByYear.visibility =
                 if (entries.isEmpty()) View.GONE else View.VISIBLE
@@ -220,9 +220,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 invalidate()
                 animateY(1500)
             }
-        })
+        }
 
-        viewModel.booksByMonthStats.observe(viewLifecycleOwner, {
+        viewModel.booksByMonthStats.observe(viewLifecycleOwner) {
 
             binding.pieChartBooksByMonth.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
@@ -248,9 +248,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 invalidate()
                 animateY(1400, Easing.EaseInOutQuad)
             }
-        })
+        }
 
-        viewModel.booksByAuthorStats.observe(viewLifecycleOwner, { books ->
+        viewModel.booksByAuthorStats.observe(viewLifecycleOwner) { books ->
 
             binding.horizontalBarChartBooksByAuthor.visibility =
                 if (books.isEmpty()) View.GONE else View.VISIBLE
@@ -291,9 +291,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 invalidate()
                 animateY(1500)
             }
-        })
+        }
 
-        viewModel.shorterBook.observe(viewLifecycleOwner, {
+        viewModel.shorterBook.observe(viewLifecycleOwner) {
 
             binding.textViewShorterBookTitle.visibility =
                 if (it == null) View.GONE else View.VISIBLE
@@ -303,9 +303,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 onItemClickListener = this@StatisticsFragment
                 isDarkMode = requireContext().isDarkMode()
             }
-        })
+        }
 
-        viewModel.longerBook.observe(viewLifecycleOwner, {
+        viewModel.longerBook.observe(viewLifecycleOwner) {
 
             binding.textViewLongerBookTitle.visibility = if (it == null) View.GONE else View.VISIBLE
             binding.layoutLongerBook.apply {
@@ -314,9 +314,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 onItemClickListener = this@StatisticsFragment
                 isDarkMode = requireContext().isDarkMode()
             }
-        })
+        }
 
-        viewModel.booksByFormatStats.observe(viewLifecycleOwner, {
+        viewModel.booksByFormatStats.observe(viewLifecycleOwner) {
 
             binding.pieChartBooksByFormat.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
@@ -342,7 +342,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 invalidate()
                 animateY(1500, Easing.EaseInOutQuad)
             }
-        })
+        }
     }
     //endregion
 
@@ -359,7 +359,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     inner class StringValueFormatter(private val map: Map<String, List<Any>>) : ValueFormatter() {
 
         override fun getFormattedValue(value: Float): String {
-            return if(value < 0 || value > map.size - 1) "" else map.keys.elementAt(value.toInt())
+            return if (value < 0 || value > map.size - 1) "" else map.keys.elementAt(value.toInt())
         }
     }
     //endregion
