@@ -13,10 +13,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
@@ -235,46 +235,27 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
             }
 
-            searchView.isIconifiedByDefault = false
+            searchView.setIconifiedByDefault(false)
             searchView.queryHint = resources.getString(R.string.search)
             if (query.isNotBlank()) {
                 searchView.setQuery(query, false)
             }
 
-            val searchIconId = searchView.context.resources.getIdentifier(
-                "android:id/search_mag_icon",
-                null,
-                null
-            )
-            searchView.findViewById<AppCompatImageView>(searchIconId)?.imageTintList =
+            searchView.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_mag_icon)?.imageTintList =
                 ColorStateList.valueOf(color)
 
-            val searchPlateId = searchView.context.resources.getIdentifier(
-                "android:id/search_plate",
-                null,
-                null
-            )
-            val searchPlate = searchView.findViewById<View>(searchPlateId)
+            val searchPlate = searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
             if (searchPlate != null) {
 
-                val searchTextId = searchPlate.context.resources.getIdentifier(
-                    "android:id/search_src_text",
-                    null,
-                    null
-                )
-                val searchText = searchPlate.findViewById<TextView>(searchTextId)
+                val searchText =
+                    searchPlate.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
                 if (searchText != null) {
 
                     searchText.setTextColor(color)
                     searchText.setHintTextColor(color)
                 }
 
-                val searchCloseId = searchPlate.context.resources.getIdentifier(
-                    "android:id/search_close_btn",
-                    null,
-                    null
-                )
-                searchPlate.findViewById<AppCompatImageView>(searchCloseId)?.imageTintList =
+                searchPlate.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_close_btn)?.imageTintList =
                     ColorStateList.valueOf(color)
             }
         }
