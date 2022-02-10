@@ -121,6 +121,7 @@
             android:textSize="@{textSize == 0 ? @dimen/text_size_16sp : textSize}"
             app:customInputType="@{inputType}"
             app:isBold="@{isBold}"
+            app:textInputLayoutFocusedRectEnabled="@{inputType != CustomInputType.MULTI_LINE_TEXT}"
             tools:hint="Please enter"
             style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
             />

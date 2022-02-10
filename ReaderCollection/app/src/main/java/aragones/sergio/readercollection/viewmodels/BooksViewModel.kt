@@ -147,7 +147,7 @@ class BooksViewModel @Inject constructor(
             .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, _ ->
 
                 val sort = sortingKeys[sortKeysPicker.value]
-                sortParam = if (sort.isNotBlank()) sort else null
+                sortParam = sort.ifBlank { null }
                 isSortDescending = sortOrdersPicker.value == 1
                 fetchBooks()
                 dialog.dismiss()

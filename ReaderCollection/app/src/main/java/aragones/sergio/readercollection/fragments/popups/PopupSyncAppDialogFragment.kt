@@ -58,7 +58,7 @@ class PopupSyncAppDialogFragment : DialogFragment() {
 
     private fun setupBindings() {
 
-        viewModel.loginError.observe(viewLifecycleOwner, { error ->
+        viewModel.loginError.observe(viewLifecycleOwner) { error ->
 
             if (error == null) {
                 goToMainView()
@@ -66,7 +66,7 @@ class PopupSyncAppDialogFragment : DialogFragment() {
                 showPopupDialog(resources.getString(error.errorKey))
             }
             dismiss()
-        })
+        }
     }
 
     private fun goToMainView() {

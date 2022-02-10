@@ -6,8 +6,10 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
-import android.view.*
-import android.widget.*
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.R
@@ -145,18 +147,18 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             activity?.finish()
         })
 
-        viewModel.profileLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.profileLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.profileError.observe(viewLifecycleOwner, { error ->
+        viewModel.profileError.observe(viewLifecycleOwner) { error ->
             manageError(error)
-        })
+        }
     }
 
     private fun setupDropdowns() {
