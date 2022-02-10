@@ -80,7 +80,12 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         )
         @Suppress("UNCHECKED_CAST")
         binding = inflateMethod.invoke(null, inflater, container, false) as Binding
-        binding.root.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.colorSecondary))
+        binding.root.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.colorSecondary
+            )
+        )
         return binding.root
     }
 
@@ -108,7 +113,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
 
     //region Protected methods
     protected open fun initializeUi() {
-        toolbar?.let{
+        toolbar?.let {
             (activity as? AppCompatActivity)?.setSupportActionBar(it)
             it.setNavigationOnClickListener {
                 findNavController().popBackStack()
@@ -230,9 +235,8 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
 
         searchView?.let { searchView ->
 
-            val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager?
-            if (searchManager != null) {
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
+            (activity?.getSystemService(Context.SEARCH_SERVICE) as? SearchManager)?.let {
+                searchView.setSearchableInfo(it.getSearchableInfo(activity?.componentName))
             }
 
             searchView.setIconifiedByDefault(false)
@@ -244,8 +248,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
             searchView.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_mag_icon)?.imageTintList =
                 ColorStateList.valueOf(color)
 
-            val searchPlate = searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
-            if (searchPlate != null) {
+            searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)?.let { searchPlate ->
 
                 val searchText =
                     searchPlate.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
