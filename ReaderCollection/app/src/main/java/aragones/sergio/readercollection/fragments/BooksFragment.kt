@@ -213,14 +213,14 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         viewModel.pendingBooks.observe(viewLifecycleOwner) { booksResponse ->
 
             val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
-            books.add(BookResponse(id = ""))
+            if (booksResponse.size > Constants.BOOKS_TO_SHOW) books.add(BookResponse(id = ""))
             pendingBooksAdapter.setBooks(books, true)
         }
 
         viewModel.readBooks.observe(viewLifecycleOwner) { booksResponse ->
 
             val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
-            books.add(BookResponse(id = ""))
+            if (booksResponse.size > Constants.BOOKS_TO_SHOW) books.add(BookResponse(id = ""))
             booksAdapter.setBooks(books, true)
         }
 
