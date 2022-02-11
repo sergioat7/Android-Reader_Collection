@@ -193,14 +193,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
-                        State.READ,
-                        viewModel.sortParam,
-                        viewModel.isSortDescending,
-                        "",
-                        Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id
-                    )
-                    findNavController().navigate(action)
+                    showBooks(Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id)
                 }
 
                 override fun onNothingSelected() {}
@@ -380,6 +373,18 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 animateY(1500, Easing.EaseInOutQuad)
             }
         }
+    }
+
+    private fun showBooks(format: String?) {
+
+        val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
+            State.READ,
+            viewModel.sortParam,
+            viewModel.isSortDescending,
+            "",
+            format
+        )
+        findNavController().navigate(action)
     }
     //endregion
 
