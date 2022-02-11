@@ -19,6 +19,7 @@ class BookListViewModelFactory(
     private val sortParam: String?,
     private val isSortDescending: Boolean,
     private val query: String,
+    private val author: String?,
     private val format: String?
 ) : ViewModelProvider.Factory {
 
@@ -35,7 +36,7 @@ class BookListViewModelFactory(
         if (modelClass.isAssignableFrom(BookListViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            bookListViewModel.setParams(state, sortParam, isSortDescending, query, format)
+            bookListViewModel.setParams(state, sortParam, isSortDescending, query, author, format)
             return bookListViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

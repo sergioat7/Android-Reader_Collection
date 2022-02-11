@@ -168,7 +168,10 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setFitBars(true)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    //TODO:
+                    showBooks(
+                        viewModel.booksByAuthorStats.value?.keys?.toMutableList()?.get(e?.x?.toInt() ?: 0),
+                        null
+                    )
                 }
 
                 override fun onNothingSelected() {}
@@ -193,7 +196,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    showBooks(Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id)
+                    showBooks(null, Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id)
                 }
 
                 override fun onNothingSelected() {}
@@ -375,13 +378,14 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         }
     }
 
-    private fun showBooks(format: String?) {
+    private fun showBooks(author: String?, format: String?) {
 
         val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
             State.READ,
             viewModel.sortParam,
             viewModel.isSortDescending,
             "",
+            author,
             format
         )
         findNavController().navigate(action)
