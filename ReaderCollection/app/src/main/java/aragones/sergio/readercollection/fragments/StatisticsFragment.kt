@@ -17,6 +17,8 @@ import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.extensions.getCustomFont
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
@@ -25,6 +27,8 @@ import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
 
@@ -89,7 +93,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
             isDoubleTapToZoomEnabled = false
             isHighlightPerDragEnabled = false
-            isHighlightPerTapEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             xAxis.apply {
@@ -108,12 +111,23 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             setFitBars(true)
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    showBooks(
+                        e?.x?.toInt(),
+                        null,
+                        null,
+                        null
+                    )
+                }
+
+                override fun onNothingSelected() {}
+            })
         }
 
         binding.pieChartBooksByMonth.apply {
 
             isRotationEnabled = false
-            isHighlightPerTapEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             centerText = resources.getString(R.string.months)
@@ -127,13 +141,24 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setExtraOffsets(5f, 10f, 5f, 5f)
             setUsePercentValues(false)
             setHoleColor(Color.TRANSPARENT)
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    showBooks(
+                        null,
+                        h?.x?.toInt(),
+                        null,
+                        null
+                    )
+                }
+
+                override fun onNothingSelected() {}
+            })
         }
 
         binding.horizontalBarChartBooksByAuthor.apply {
 
             isDoubleTapToZoomEnabled = false
             isHighlightPerDragEnabled = false
-            isHighlightPerTapEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             xAxis.apply {
@@ -151,12 +176,24 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             setFitBars(true)
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    showBooks(
+                        null,
+                        null,
+                        viewModel.booksByAuthorStats.value?.keys?.toMutableList()
+                            ?.get(e?.x?.toInt() ?: 0),
+                        null
+                    )
+                }
+
+                override fun onNothingSelected() {}
+            })
         }
 
         binding.pieChartBooksByFormat.apply {
 
             isRotationEnabled = false
-            isHighlightPerTapEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
             centerText = resources.getString(R.string.formats)
@@ -170,6 +207,18 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setExtraOffsets(5F, 10F, 5F, 5F)
             setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+                override fun onValueSelected(e: Entry?, h: Highlight?) {
+                    showBooks(
+                        null,
+                        null,
+                        null,
+                        Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id
+                    )
+                }
+
+                override fun onNothingSelected() {}
+            })
         }
 
         binding.viewModel = viewModel
@@ -202,7 +251,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
                 valueFormatter = NumberValueFormatter()
-                this.colors = customColors
+                colors = customColors
+                highLightColor = requireActivity().getCustomColor(R.color.colorTertiary)
                 setDrawValues(true)
             }
 
@@ -233,7 +283,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 valueLineColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 valueFormatter = NumberValueFormatter()
-                this.colors = customColors
+                colors = customColors
             }
 
             val data = PieData(dataSet).apply {
@@ -269,7 +319,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
                 valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
                 valueFormatter = NumberValueFormatter()
-                this.colors = customColors
+                colors = customColors
+                highLightColor = requireActivity().getCustomColor(R.color.colorTertiary)
                 setDrawValues(true)
             }
 
@@ -343,6 +394,21 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 animateY(1500, Easing.EaseInOutQuad)
             }
         }
+    }
+
+    private fun showBooks(year: Int?, month: Int?, author: String?, format: String?) {
+
+        val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
+            State.READ,
+            viewModel.sortParam,
+            viewModel.isSortDescending,
+            "",
+            year ?: -1,
+            month ?: -1,
+            author,
+            format
+        )
+        findNavController().navigate(action)
     }
     //endregion
 
