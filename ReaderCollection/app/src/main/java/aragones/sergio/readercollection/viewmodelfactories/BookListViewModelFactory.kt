@@ -19,6 +19,7 @@ class BookListViewModelFactory(
     private val sortParam: String?,
     private val isSortDescending: Boolean,
     private val query: String,
+    private val month: Int,
     private val author: String?,
     private val format: String?
 ) : ViewModelProvider.Factory {
@@ -41,6 +42,7 @@ class BookListViewModelFactory(
                 sortParam,
                 isSortDescending,
                 query,
+                month,
                 author,
                 format
             )

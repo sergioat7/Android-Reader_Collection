@@ -138,7 +138,11 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    //TODO:
+                    showBooks(
+                        h?.x?.toInt(),
+                        null,
+                        null
+                    )
                 }
 
                 override fun onNothingSelected() {}
@@ -169,7 +173,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(
-                        viewModel.booksByAuthorStats.value?.keys?.toMutableList()?.get(e?.x?.toInt() ?: 0),
+                        null,
+                        viewModel.booksByAuthorStats.value?.keys?.toMutableList()
+                            ?.get(e?.x?.toInt() ?: 0),
                         null
                     )
                 }
@@ -196,7 +202,11 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    showBooks(null, Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id)
+                    showBooks(
+                        null,
+                        null,
+                        Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id
+                    )
                 }
 
                 override fun onNothingSelected() {}
@@ -378,13 +388,14 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         }
     }
 
-    private fun showBooks(author: String?, format: String?) {
+    private fun showBooks(month: Int?, author: String?, format: String?) {
 
         val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
             State.READ,
             viewModel.sortParam,
             viewModel.isSortDescending,
             "",
+            month ?: -1,
             author,
             format
         )
