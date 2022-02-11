@@ -26,6 +26,7 @@ class BookListViewModel @Inject constructor(
     private var sortParam: String? = null
     private var isSortDescending: Boolean = false
     private var query: String = ""
+    private var author: String? = null
     private var format: String? = null
     private val _books = MutableLiveData<List<BookResponse>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
@@ -53,12 +54,14 @@ class BookListViewModel @Inject constructor(
         sortParam: String?,
         isSortDescending: Boolean,
         query: String,
+        author: String?,
         format: String?
     ) {
         this.state = state
         this.sortParam = sortParam
         this.isSortDescending = isSortDescending
         this.query = query
+        this.author = author
         this.format = format
     }
 
@@ -81,9 +84,12 @@ class BookListViewModel @Inject constructor(
                     noBooksError()
                 } else {
                     val sortedBooks = if (isSortDescending) it.reversed() else it
-                    _books.value = sortedBooks.filter { book ->
-                        book.title?.contains(query, true) ?: false
-                    }
+                    _books.value = sortedBooks
+                        .filter { book ->
+                            book.title?.contains(query, true) ?: false
+                        }.filter { book ->
+                            book.authorsToString().contains(author ?: "")
+                        }
                     _booksLoading.value = false
                 }
             },

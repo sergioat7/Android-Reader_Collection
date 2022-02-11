@@ -88,6 +88,12 @@
             />
 
         <argument
+            android:name="author"
+            app:argType="string"
+            app:nullable="true"
+            />
+
+        <argument
             android:name="format"
             app:argType="string"
             app:nullable="true"

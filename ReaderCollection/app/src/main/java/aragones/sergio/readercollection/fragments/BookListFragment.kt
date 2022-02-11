@@ -107,6 +107,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
                 args.sortParam,
                 args.isSortDescending,
                 args.query,
+                args.author,
                 args.format
             )
         )[BookListViewModel::class.java]
