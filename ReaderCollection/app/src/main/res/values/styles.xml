@@ -187,6 +187,16 @@
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
+    <!--  Chip  -->
+
+    <style name="Widget.ReaderCollection.Chip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipBackgroundColor">@color/colorPrimary</item>
+        <item name="rippleColor">@null</item>
+        <item name="android:checkable">false</item>
+        <item name="android:textColor">@color/textTertiary</item>
+        <item name="android:textAppearance">@style/TextAppearance.ReaderCollection.Chip</item>
+    </style>
+
     <!--  RatingBar  -->
 
     <style name="Widget.ReaderCollection.RatingBar" parent="Widget.MaterialRatingBar.RatingBar">
@@ -215,6 +225,11 @@
     <style name="TextAppearance.ReaderCollection.Hint" parent="TextAppearance.Design.Hint">
         <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
+    </style>
+
+    <style name="TextAppearance.ReaderCollection.Chip" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <!--  BottomNavigationView  -->
@@ -247,16 +262,6 @@
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:maxLines">@null</item>
         <item name="android:singleLine">false</item>
-    </style>
-
-    <!--  Others  -->
-
-    <style name="Widget.ReaderCollection.RoundedTextView">
-        <item name="android:background">@drawable/rounded_text_view</item>
-        <item name="android:textColor">@color/textTertiary</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
 </resources>
