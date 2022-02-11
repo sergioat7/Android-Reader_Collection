@@ -113,7 +113,12 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setFitBars(true)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    //TODO:
+                    showBooks(
+                        e?.x?.toInt(),
+                        null,
+                        null,
+                        null
+                    )
                 }
 
                 override fun onNothingSelected() {}
@@ -139,6 +144,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(
+                        null,
                         h?.x?.toInt(),
                         null,
                         null
@@ -174,6 +180,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(
                         null,
+                        null,
                         viewModel.booksByAuthorStats.value?.keys?.toMutableList()
                             ?.get(e?.x?.toInt() ?: 0),
                         null
@@ -203,6 +210,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(
+                        null,
                         null,
                         null,
                         Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id
@@ -388,13 +396,14 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         }
     }
 
-    private fun showBooks(month: Int?, author: String?, format: String?) {
+    private fun showBooks(year: Int?, month: Int?, author: String?, format: String?) {
 
         val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
             State.READ,
             viewModel.sortParam,
             viewModel.isSortDescending,
             "",
+            year ?: -1,
             month ?: -1,
             author,
             format
