@@ -26,6 +26,7 @@ class BookListViewModel @Inject constructor(
     private var sortParam: String? = null
     private var isSortDescending: Boolean = false
     private var query: String = ""
+    private var format: String? = null
     private val _books = MutableLiveData<List<BookResponse>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
@@ -47,18 +48,25 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun setParams(state: String, sortParam: String?, isSortDescending: Boolean, query: String) {
+    fun setParams(
+        state: String,
+        sortParam: String?,
+        isSortDescending: Boolean,
+        query: String,
+        format: String?
+    ) {
         this.state = state
         this.sortParam = sortParam
         this.isSortDescending = isSortDescending
         this.query = query
+        this.format = format
     }
 
     fun fetchBooks() {
 
         _booksLoading.value = true
         booksRepository.getBooksDatabaseObserver(
-            null,
+            format,
             state,
             null,
             sortParam
