@@ -79,7 +79,6 @@
 
         <argument
             android:name="isSortDescending"
-            android:defaultValue="false"
             app:argType="boolean"
             />
 
