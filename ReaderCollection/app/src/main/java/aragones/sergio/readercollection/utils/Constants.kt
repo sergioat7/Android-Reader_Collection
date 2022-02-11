@@ -5,11 +5,6 @@
 
 package aragones.sergio.readercollection.utils
 
-import android.content.Context
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.TextView
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
 
@@ -50,23 +45,6 @@ object Constants {
 
     fun isPasswordValid(password: String): Boolean {
         return password.length > 3
-    }
-
-    fun getRoundedTextView(text: String, context: Context): TextView {
-
-        val tv = TextView(
-            context,
-            null,
-            R.style.Widget_ReaderCollection_RoundedTextView,
-            R.style.Widget_ReaderCollection_RoundedTextView
-        )
-        tv.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        tv.gravity = Gravity.CENTER
-        tv.text = text
-        return tv
     }
 }
 

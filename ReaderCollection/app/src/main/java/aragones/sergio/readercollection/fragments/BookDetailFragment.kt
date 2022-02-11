@@ -290,19 +290,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
     private fun showData(book: BookResponse) {
 
-        binding.linearLayoutCategories.removeAllViews()
+        binding.chipGroupCategories.removeAllViews()
         book.categories?.let { categories ->
             for (category in categories) {
-
-                val tv = Constants.getRoundedTextView(category, requireContext())
-                binding.linearLayoutCategories.addView(tv)
-
-                val view = View(context)
-                view.layoutParams = ViewGroup.LayoutParams(
-                    20,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                binding.linearLayoutCategories.addView(view)
+                binding.chipGroupCategories.addChip(layoutInflater, category)
             }
         }
 
