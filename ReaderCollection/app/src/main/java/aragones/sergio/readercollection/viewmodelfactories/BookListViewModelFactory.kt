@@ -36,7 +36,14 @@ class BookListViewModelFactory(
         if (modelClass.isAssignableFrom(BookListViewModel::class.java)) {
 
             (application as ReaderCollectionApplication).appComponent.inject(this)
-            bookListViewModel.setParams(state, sortParam, isSortDescending, query, author, format)
+            bookListViewModel.setParams(
+                state,
+                sortParam,
+                isSortDescending,
+                query,
+                author,
+                format
+            )
             return bookListViewModel as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")

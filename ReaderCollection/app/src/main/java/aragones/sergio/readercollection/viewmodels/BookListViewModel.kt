@@ -83,13 +83,15 @@ class BookListViewModel @Inject constructor(
                 if (it.isEmpty()) {
                     noBooksError()
                 } else {
+
                     val sortedBooks = if (isSortDescending) it.reversed() else it
-                    _books.value = sortedBooks
+                    var filteredBooks = sortedBooks
                         .filter { book ->
                             book.title?.contains(query, true) ?: false
                         }.filter { book ->
                             book.authorsToString().contains(author ?: "")
                         }
+                    _books.value = filteredBooks
                     _booksLoading.value = false
                 }
             },
