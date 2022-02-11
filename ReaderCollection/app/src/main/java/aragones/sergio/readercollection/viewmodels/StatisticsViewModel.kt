@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.extensions.getOrderedBy
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import com.github.mikephil.charting.data.BarEntry
@@ -25,7 +26,8 @@ import java.util.*
 import javax.inject.Inject
 
 class StatisticsViewModel @Inject constructor(
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
+    userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -64,6 +66,8 @@ class StatisticsViewModel @Inject constructor(
                 shorterBook == null &&
                 booksByFormatStats?.isEmpty() == true
     }
+    var sortParam = userRepository.sortParam
+    var isSortDescending = userRepository.isSortDescending
     //endregion
 
     //region Lifecycle methods

@@ -106,7 +106,8 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
                 args.state,
                 args.sortParam,
                 args.isSortDescending,
-                args.query
+                args.query,
+                args.format
             )
         )[BookListViewModel::class.java]
         booksAdapter = BooksAdapter(

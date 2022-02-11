@@ -17,6 +17,8 @@ import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.extensions.getCustomFont
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
@@ -191,7 +193,14 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-                    //TODO:
+                    val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
+                        State.READ,
+                        viewModel.sortParam,
+                        viewModel.isSortDescending,
+                        "",
+                        Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id
+                    )
+                    findNavController().navigate(action)
                 }
 
                 override fun onNothingSelected() {}
