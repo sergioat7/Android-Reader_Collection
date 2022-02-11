@@ -107,6 +107,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
                 args.sortParam,
                 args.isSortDescending,
                 args.query,
+                args.year,
                 args.month,
                 args.author,
                 args.format

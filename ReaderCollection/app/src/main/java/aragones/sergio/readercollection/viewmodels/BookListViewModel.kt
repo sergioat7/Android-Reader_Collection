@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
+import aragones.sergio.readercollection.extensions.getMonthNumber
+import aragones.sergio.readercollection.extensions.getYear
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
@@ -26,6 +28,7 @@ class BookListViewModel @Inject constructor(
     private var sortParam: String? = null
     private var isSortDescending: Boolean = false
     private var query: String = ""
+    private var year: Int = -1
     private var month: Int = -1
     private var author: String? = null
     private var format: String? = null
@@ -55,6 +58,7 @@ class BookListViewModel @Inject constructor(
         sortParam: String?,
         isSortDescending: Boolean,
         query: String,
+        year: Int,
         month: Int,
         author: String?,
         format: String?
@@ -63,6 +67,7 @@ class BookListViewModel @Inject constructor(
         this.sortParam = sortParam
         this.isSortDescending = isSortDescending
         this.query = query
+        this.year = year
         this.month = month
         this.author = author
         this.format = format
@@ -94,6 +99,11 @@ class BookListViewModel @Inject constructor(
                         }.filter { book ->
                             book.authorsToString().contains(author ?: "")
                         }
+                    if (year >= 0) {
+                        filteredBooks = filteredBooks.filter { book ->
+                            book.readingDate.getYear() == year
+                        }
+                    }
                     if (month in 0..11) {
                         filteredBooks = filteredBooks.filter { book ->
                             book.readingDate.getMonthNumber() == month

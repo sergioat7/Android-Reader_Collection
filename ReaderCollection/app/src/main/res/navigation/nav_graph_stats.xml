@@ -88,6 +88,11 @@
             />
 
         <argument
+            android:name="year"
+            app:argType="integer"
+            />
+
+        <argument
             android:name="month"
             app:argType="integer"
             />
