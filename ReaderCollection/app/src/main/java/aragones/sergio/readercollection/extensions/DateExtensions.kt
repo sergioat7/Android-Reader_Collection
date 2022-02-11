@@ -35,6 +35,14 @@ fun Date?.toString(format: String? = null, language: String? = null): String? {
     }
 }
 
+fun Date?.getMonthNumber(): Int {
+
+    val cal1 = Calendar.getInstance()
+    cal1.time = this ?: Date()
+
+    return cal1[Calendar.MONTH]
+}
+
 fun List<Date>.getOrderedBy(field: Int): List<Date> {
 
     val calendar = Calendar.getInstance()

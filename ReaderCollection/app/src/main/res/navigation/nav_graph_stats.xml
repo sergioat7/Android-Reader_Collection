@@ -88,6 +88,11 @@
             />
 
         <argument
+            android:name="month"
+            app:argType="integer"
+            />
+
+        <argument
             android:name="author"
             app:argType="string"
             app:nullable="true"
