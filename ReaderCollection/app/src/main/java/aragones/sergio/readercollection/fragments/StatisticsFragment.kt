@@ -111,7 +111,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             setFitBars(true)
-            setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     //TODO:
                 }
@@ -136,7 +136,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setExtraOffsets(5f, 10f, 5f, 5f)
             setUsePercentValues(false)
             setHoleColor(Color.TRANSPARENT)
-            setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     //TODO:
                 }
@@ -166,7 +166,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             setFitBars(true)
-            setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(
                         viewModel.booksByAuthorStats.value?.keys?.toMutableList()?.get(e?.x?.toInt() ?: 0),
@@ -194,7 +194,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setExtraOffsets(5F, 10F, 5F, 5F)
             setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
-            setOnChartValueSelectedListener(object : OnChartValueSelectedListener{
+            setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(null, Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id)
                 }
