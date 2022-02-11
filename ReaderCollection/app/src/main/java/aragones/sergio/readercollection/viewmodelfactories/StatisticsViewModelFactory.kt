@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.repositories.BooksRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
 import javax.inject.Inject
 
@@ -20,6 +21,8 @@ class StatisticsViewModelFactory(
     //region Public properties
     @Inject
     lateinit var booksRepository: BooksRepository
+    @Inject
+    lateinit var userRepository: UserRepository
     @Inject
     lateinit var statisticsViewModel: StatisticsViewModel
     //endregion

@@ -9,6 +9,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
+import aragones.sergio.readercollection.extensions.getMonthNumber
+import aragones.sergio.readercollection.extensions.getYear
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
@@ -26,6 +28,10 @@ class BookListViewModel @Inject constructor(
     private var sortParam: String? = null
     private var isSortDescending: Boolean = false
     private var query: String = ""
+    private var year: Int = -1
+    private var month: Int = -1
+    private var author: String? = null
+    private var format: String? = null
     private val _books = MutableLiveData<List<BookResponse>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
@@ -47,18 +53,31 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun setParams(state: String, sortParam: String?, isSortDescending: Boolean, query: String) {
+    fun setParams(
+        state: String,
+        sortParam: String?,
+        isSortDescending: Boolean,
+        query: String,
+        year: Int,
+        month: Int,
+        author: String?,
+        format: String?
+    ) {
         this.state = state
         this.sortParam = sortParam
         this.isSortDescending = isSortDescending
         this.query = query
+        this.year = year
+        this.month = month
+        this.author = author
+        this.format = format
     }
 
     fun fetchBooks() {
 
         _booksLoading.value = true
         booksRepository.getBooksDatabaseObserver(
-            null,
+            format,
             state,
             null,
             sortParam
@@ -72,10 +91,25 @@ class BookListViewModel @Inject constructor(
                 if (it.isEmpty()) {
                     noBooksError()
                 } else {
+
                     val sortedBooks = if (isSortDescending) it.reversed() else it
-                    _books.value = sortedBooks.filter { book ->
-                        book.title?.contains(query, true) ?: false
+                    var filteredBooks = sortedBooks
+                        .filter { book ->
+                            book.title?.contains(query, true) ?: false
+                        }.filter { book ->
+                            book.authorsToString().contains(author ?: "")
+                        }
+                    if (year >= 0) {
+                        filteredBooks = filteredBooks.filter { book ->
+                            book.readingDate.getYear() == year
+                        }
                     }
+                    if (month in 0..11) {
+                        filteredBooks = filteredBooks.filter { book ->
+                            book.readingDate.getMonthNumber() == month
+                        }
+                    }
+                    _books.value = filteredBooks
                     _booksLoading.value = false
                 }
             },

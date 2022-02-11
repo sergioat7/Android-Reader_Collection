@@ -87,6 +87,32 @@
             app:argType="string"
             />
 
+        <argument
+            android:name="year"
+            app:argType="integer"
+            android:defaultValue="-1"
+            />
+
+        <argument
+            android:name="month"
+            app:argType="integer"
+            android:defaultValue="-1"
+            />
+
+        <argument
+            android:name="author"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"
+            />
+
+        <argument
+            android:name="format"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null"
+            />
+
         <action
             android:id="@+id/action_bookListFragment_to_bookDetailFragment"
             app:destination="@id/bookDetailFragment"
