@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
@@ -122,6 +123,16 @@ class BookListViewModel @Inject constructor(
 
     fun setPosition(newPosition: ScrollPosition) {
         _scrollPosition.value = newPosition
+    }
+
+    fun sort(context: Context, acceptHandler: (() -> Unit)?) {
+        super.sort(context, sortParam, isSortDescending) { newSortParam, newIsSortDescending ->
+
+            sortParam = newSortParam
+            isSortDescending = newIsSortDescending
+            fetchBooks()
+            acceptHandler?.invoke()
+        }
     }
     //endregion
 
