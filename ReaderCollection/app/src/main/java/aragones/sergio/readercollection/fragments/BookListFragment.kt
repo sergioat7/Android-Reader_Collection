@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -44,6 +46,13 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
         toolbar = binding.toolbar
         initializeUi()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.book_list_toolbar_menu, menu)
     }
 
     override fun onResume() {
