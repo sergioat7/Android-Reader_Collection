@@ -66,11 +66,12 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             }
             R.id.action_sort -> {
 
-                viewModel.sort(requireContext())
-                binding.apply {
-                    recyclerViewReadingBooks.scrollToPosition(0)
-                    recyclerViewPendingBooks.scrollToPosition(0)
-                    recyclerViewBooks.scrollToPosition(0)
+                viewModel.sort(requireContext()) {
+                    binding.apply {
+                        recyclerViewReadingBooks.scrollToPosition(0)
+                        recyclerViewPendingBooks.scrollToPosition(0)
+                        recyclerViewBooks.scrollToPosition(0)
+                    }
                 }
                 return true
             }
