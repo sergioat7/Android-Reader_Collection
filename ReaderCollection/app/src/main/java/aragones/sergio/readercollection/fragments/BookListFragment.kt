@@ -61,9 +61,9 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
         when (item.itemId) {
             R.id.action_sort -> {
 
-                viewModel.sort(requireContext())
-                binding.apply {
-                    recyclerViewBooks.scrollToPosition(0)
+                viewModel.sort(requireContext()) {
+                    viewModel.setPosition(ScrollPosition.TOP)
+                    binding.recyclerViewBooks.scrollToPosition(0)
                 }
                 return true
             }
