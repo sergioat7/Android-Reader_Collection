@@ -6,6 +6,9 @@
 package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
@@ -44,6 +47,28 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
         toolbar = binding.toolbar
         initializeUi()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.book_list_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_sort -> {
+
+                viewModel.sort(requireContext()) {
+                    viewModel.setPosition(ScrollPosition.TOP)
+                    binding.recyclerViewBooks.scrollToPosition(0)
+                }
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
