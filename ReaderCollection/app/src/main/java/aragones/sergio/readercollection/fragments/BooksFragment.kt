@@ -28,7 +28,6 @@ import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
-import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
 
@@ -205,25 +204,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         }
         setupSearchView()
 
-        TapTargetSequence(requireActivity())
-            .targets(
-                TapTarget.forView(
-                    activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-                        ?.findViewById(R.id.nav_graph_books), ""
-                ).cancelable(false).tintTarget(true),
-                TapTarget.forView(
-                    activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-                        ?.findViewById(R.id.nav_graph_search), ""
-                ).cancelable(false).tintTarget(true),
-                TapTarget.forView(
-                    activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-                        ?.findViewById(R.id.nav_graph_stats), ""
-                ).cancelable(false).tintTarget(true),
-                TapTarget.forView(
-                    activity?.findViewById<BottomNavigationView>(R.id.nav_view)
-                        ?.findViewById(R.id.nav_graph_settings), ""
-                ).cancelable(false).tintTarget(true)
-            )
+        val bottomNavigationBarSequence = TapTargetSequence(requireActivity())
+            .targets(createTargetsForBottomNavigationView())
             .listener(object : TapTargetSequence.Listener {
 
                 override fun onSequenceFinish() {}
@@ -231,7 +213,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
 
                 override fun onSequenceCanceled(lastTarget: TapTarget) {}
-            }).start()
+            })
+        bottomNavigationBarSequence.start()
     }
     //endregion
 
@@ -294,6 +277,31 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             }
         })
         this.setupSearchView(R.color.colorSecondary, "")
+    }
+
+    private fun createTargetsForBottomNavigationView(): List<TapTarget> {
+        return listOf(
+            Constants.createTargetForBottomNavigationView(
+                activity,
+                R.id.nav_graph_books,
+                ""
+            ).cancelable(false).tintTarget(true),
+            Constants.createTargetForBottomNavigationView(
+                activity,
+                R.id.nav_graph_search,
+                ""
+            ).cancelable(false).tintTarget(true),
+            Constants.createTargetForBottomNavigationView(
+                activity,
+                R.id.nav_graph_stats,
+                ""
+            ).cancelable(false).tintTarget(true),
+            Constants.createTargetForBottomNavigationView(
+                activity,
+                R.id.nav_graph_settings,
+                ""
+            ).cancelable(false).tintTarget(true)
+        )
     }
     //endregion
 }
