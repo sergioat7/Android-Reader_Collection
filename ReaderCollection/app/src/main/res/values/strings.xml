@@ -129,4 +129,14 @@
     <string name="error_resource_found">This book is already in your collection.</string>
     <string name="error_database">There was an error with the database. Please, try again.</string>
 
+    //TUTORIALS
+    <string name="books_view_tutorial_title">This is the main screen</string>
+    <string name="books_view_tutorial_description">Here you can find all the books in your collection</string>
+    <string name="search_view_tutorial_title">This is the search screen</string>
+    <string name="search_view_tutorial_description">Here you can find new books to add to your collection</string>
+    <string name="stats_view_tutorial_title">This is the statistics screen</string>
+    <string name="stats_view_tutorial_description">Here you can see the statistics about all the books you have read</string>
+    <string name="settings_view_tutorial_title">This is the settings screen</string>
+    <string name="settings_view_tutorial_description">Here you can modify your personal data and the app configuration</string>
+
 </resources>

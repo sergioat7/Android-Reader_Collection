@@ -284,22 +284,26 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_books,
-                ""
+                resources.getString(R.string.books_view_tutorial_title),
+                resources.getString(R.string.books_view_tutorial_description)
             ).cancelable(false).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_search,
-                ""
+                resources.getString(R.string.search_view_tutorial_title),
+                resources.getString(R.string.search_view_tutorial_description)
             ).cancelable(false).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_stats,
-                ""
+                resources.getString(R.string.stats_view_tutorial_title),
+                resources.getString(R.string.stats_view_tutorial_description)
             ).cancelable(false).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_settings,
-                ""
+                resources.getString(R.string.settings_view_tutorial_title),
+                resources.getString(R.string.settings_view_tutorial_description)
             ).cancelable(false).tintTarget(true)
         )
     }
