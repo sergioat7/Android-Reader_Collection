@@ -119,4 +119,14 @@
     <string name="error_resource_found">Este libro ya está en tu colección.</string>
     <string name="error_database">Hubo un error con la base de datos. Por favor, inténtalo otra vez.</string>
 
+    //TUTORIALS
+    <string name="books_view_tutorial_title">Esta es la pantalla principal</string>
+    <string name="books_view_tutorial_description">Aquí encontrarás todos los libros de tu colección</string>
+    <string name="search_view_tutorial_title">Esta es la pantalla de búsqueda</string>
+    <string name="search_view_tutorial_description">Aquí puedes buscar nuevos libros para añadirlos a tu colección</string>
+    <string name="stats_view_tutorial_title">Esta es la pantalla de estadísticas</string>
+    <string name="stats_view_tutorial_description">Aquí podrás ver estadísticas sobre los libros que te has leído</string>
+    <string name="settings_view_tutorial_title">Esta es la pantalla de configuración</string>
+    <string name="settings_view_tutorial_description">Aquí podrás modificar tus datos y la configuración de la aplicación</string>
+
 </resources>
