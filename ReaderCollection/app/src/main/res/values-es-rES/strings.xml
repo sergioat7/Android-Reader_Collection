@@ -148,5 +148,9 @@
     <string name="add_image_button_tutorial_description">Aquí podrás añadir o cambiar la imagen del libro. Para ello, debes introducir el enlace de la imagen (http://…) que deberás buscar previamente</string>
     <string name="rate_view_tutorial_title">Este es el elemento para puntuar el libro</string>
     <string name="rate_view_tutorial_description">Aquí podrás puntuar el libro del 1 al 10 (cada estrella equivale a 2 puntos)</string>
+    <string name="edit_book_icon_tutorial_title">Este es el botón de editar libro</string>
+    <string name="edit_book_icon_tutorial_description">Aquí podrás editar los datos de este libro</string>
+    <string name="delete_book_icon_tutorial_title">Este es el botón de borrar libro</string>
+    <string name="delete_book_icon_tutorial_description">Aquí podrás borrar de tu colección este libro</string>
 
 </resources>

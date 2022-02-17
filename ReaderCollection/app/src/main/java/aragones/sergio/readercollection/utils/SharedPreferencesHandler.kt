@@ -225,4 +225,16 @@ object SharedPreferencesHandler {
             commit()
         }
     }
+
+    fun hasBookDetailsTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, hasBookDetailsTutorialBeenShown)
+            commit()
+        }
+    }
 }

@@ -158,5 +158,9 @@
     <string name="add_image_button_tutorial_description">Here you can add or change the book image. To do so, you must introduce the image link (http://…) that you should look for beforehand</string>
     <string name="rate_view_tutorial_title">This is the rate book element</string>
     <string name="rate_view_tutorial_description">Here you can rate this book from 1 to 10 (each star represents 2 points)</string>
+    <string name="edit_book_icon_tutorial_title">This is the edit book button</string>
+    <string name="edit_book_icon_tutorial_description">Here you can edit this book data</string>
+    <string name="delete_book_icon_tutorial_title">This is the delete book button</string>
+    <string name="delete_book_icon_tutorial_description">Here you can delete this book from your collection</string>
 
 </resources>

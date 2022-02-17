@@ -48,6 +48,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private lateinit var menu: Menu
     private lateinit var mainContentSequence: TapTargetSequence
     private var newBookToolbarSequence: TapTargetSequence? = null
+    private var bookDetailsToolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -294,6 +295,23 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 if (!viewModel.newBookTutorialShown) {
                     mainContentSequence.start()
                 }
+            } else {
+
+                bookDetailsToolbarSequence = TapTargetSequence(requireActivity())
+                    .targets(createTargetsForBookDetailsToolbar())
+                    .listener(object : TapTargetSequence.Listener {
+
+                        override fun onSequenceFinish() {
+                            viewModel.setBookDetailsTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                if (!viewModel.bookDetailsTutorialShown) {
+                    bookDetailsToolbarSequence?.start()
+                }
             }
         }
     }
@@ -463,6 +481,26 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 resources.getString(R.string.rate_view_tutorial_title),
                 resources.getString(R.string.rate_view_tutorial_description)
             ).style(requireActivity()).cancelable(false).tintTarget(false)
+        )
+    }
+
+    private fun createTargetsForBookDetailsToolbar(): List<TapTarget> {
+
+        val editBookItem = binding.toolbar.menu.findItem(R.id.action_edit)
+        val deleteBookItem = binding.toolbar.menu.findItem(R.id.action_remove)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                editBookItem.itemId,
+                resources.getString(R.string.edit_book_icon_tutorial_title),
+                resources.getString(R.string.edit_book_icon_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(true),
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                deleteBookItem.itemId,
+                resources.getString(R.string.delete_book_icon_tutorial_title),
+                resources.getString(R.string.delete_book_icon_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(true)
         )
     }
     //endregion

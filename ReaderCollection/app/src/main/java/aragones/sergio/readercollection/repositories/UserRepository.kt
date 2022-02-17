@@ -52,6 +52,9 @@ class UserRepository @Inject constructor(
 
     val hasNewBookTutorialBeenShown: Boolean
         get() = SharedPreferencesHandler.hasNewBookTutorialBeenShown()
+
+    val hasBookDetailsTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasBookDetailsTutorialBeenShown()
     //endregion
 
     //region Public methods
@@ -151,6 +154,10 @@ class UserRepository @Inject constructor(
 
     fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
         SharedPreferencesHandler.setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown)
+    }
+
+    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
     }
     //endregion
 }

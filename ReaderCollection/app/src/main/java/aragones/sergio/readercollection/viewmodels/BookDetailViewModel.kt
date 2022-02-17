@@ -50,6 +50,7 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
     var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
+    var bookDetailsTutorialShown = userRepository.hasBookDetailsTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -183,6 +184,11 @@ class BookDetailViewModel @Inject constructor(
     fun setNewBookTutorialAsShown() {
         userRepository.setHasNewBookTutorialBeenShown(true)
         newBookTutorialShown = true
+    }
+
+    fun setBookDetailsTutorialAsShown() {
+        userRepository.setHasBookDetailsTutorialBeenShown(true)
+        bookDetailsTutorialShown = true
     }
     //endregion
 }
