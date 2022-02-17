@@ -9,12 +9,14 @@ import android.app.Activity
 import aragones.sergio.readercollection.R
 import com.getkeepsafe.taptargetview.TapTarget
 
-fun TapTarget.style(activity: Activity): TapTarget {
+fun TapTarget.style(activity: Activity, oppositeTheme: Boolean? = false): TapTarget {
     return this
-        .titleTextColor(R.color.textTertiary)
+        .outerCircleColor(if(oppositeTheme == true) R.color.colorSecondary else R.color.colorPrimary)
+        .titleTextColor(if(oppositeTheme == true) R.color.colorPrimary else R.color.colorSecondary)
         .titleTextSize(activity.resources.getDimension(R.dimen.text_size_6sp).toInt())
         .titleTypeface(activity.getCustomFont(R.font.roboto_bold))
-        .descriptionTextColor(R.color.textTertiary)
+        .descriptionTextColor(if(oppositeTheme == true) R.color.colorPrimary else R.color.colorSecondary)
         .descriptionTextSize(activity.resources.getDimension(R.dimen.text_size_4sp).toInt())
         .descriptionTypeface(activity.getCustomFont(R.font.roboto_regular))
+        .targetCircleColor(R.color.colorTertiary)
 }
