@@ -177,4 +177,64 @@ object SharedPreferencesHandler {
             else -> "MMMM d, yyyy"
         }
     }
+
+    fun hasBooksTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, hasBooksTutorialBeenShown)
+            commit()
+        }
+    }
+
+    fun hasSearchTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, hasSearchTutorialBeenShown)
+            commit()
+        }
+    }
+
+    fun hasSettingsTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, hasSettingsTutorialBeenShown)
+            commit()
+        }
+    }
+
+    fun hasNewBookTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, hasNewBookTutorialBeenShown)
+            commit()
+        }
+    }
+
+    fun hasBookDetailsTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, hasBookDetailsTutorialBeenShown)
+            commit()
+        }
+    }
 }

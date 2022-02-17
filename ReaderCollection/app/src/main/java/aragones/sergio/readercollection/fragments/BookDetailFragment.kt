@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
@@ -19,10 +20,15 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.*
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
@@ -40,6 +46,9 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private var book: BookResponse? = null
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
+    private lateinit var mainContentSequence: TapTargetSequence
+    private var newBookToolbarSequence: TapTargetSequence? = null
+    private var bookDetailsToolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -249,6 +258,62 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             editable = false
             isDarkMode = context?.isDarkMode()
         }
+
+        mainContentSequence = TapTargetSequence(requireActivity())
+            .targets(createTargetsForScrollView())
+            .listener(object : TapTargetSequence.Listener {
+
+                override fun onSequenceFinish() {
+                    newBookToolbarSequence?.start()
+                }
+
+                override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                override fun onSequenceCanceled(lastTarget: TapTarget) {}
+            })
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+
+            if (viewModel.isGoogleBook) {
+
+                newBookToolbarSequence = TapTargetSequence(requireActivity())
+                    .targets(createTargetsForNewBookToolbar())
+                    .listener(object : TapTargetSequence.Listener {
+
+                        override fun onSequenceFinish() {
+                            viewModel.setNewBookTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                if (!viewModel.newBookTutorialShown) {
+                    mainContentSequence.start()
+                }
+            } else {
+
+                bookDetailsToolbarSequence = TapTargetSequence(requireActivity())
+                    .targets(createTargetsForBookDetailsToolbar())
+                    .listener(object : TapTargetSequence.Listener {
+
+                        override fun onSequenceFinish() {
+                            viewModel.setBookDetailsTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                if (!viewModel.bookDetailsTutorialShown) {
+                    bookDetailsToolbarSequence?.start()
+                }
+            }
+        }
     }
     //endregion
 
@@ -389,6 +454,54 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         }
 
         binding.editable = editable
+    }
+
+    private fun createTargetsForNewBookToolbar(): List<TapTarget> {
+
+        val saveBookItem = binding.toolbar.menu.findItem(R.id.action_save)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                saveBookItem.itemId,
+                resources.getString(R.string.add_book_icon_tutorial_title),
+                resources.getString(R.string.add_book_icon_tutorial_description)
+            ).style(requireActivity(), true).cancelable(false).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForScrollView(): List<TapTarget> {
+        return listOf(
+            TapTarget.forView(
+                binding.floatingActionButtonAddPhoto,
+                resources.getString(R.string.add_image_button_tutorial_title),
+                resources.getString(R.string.add_image_button_tutorial_description)
+            ).style(requireActivity(), true).cancelable(false).tintTarget(false),
+            TapTarget.forView(
+                binding.ratingBar,
+                resources.getString(R.string.rate_view_tutorial_title),
+                resources.getString(R.string.rate_view_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForBookDetailsToolbar(): List<TapTarget> {
+
+        val editBookItem = binding.toolbar.menu.findItem(R.id.action_edit)
+        val deleteBookItem = binding.toolbar.menu.findItem(R.id.action_remove)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                editBookItem.itemId,
+                resources.getString(R.string.edit_book_icon_tutorial_title),
+                resources.getString(R.string.edit_book_icon_tutorial_description)
+            ).style(requireActivity(), true).cancelable(false).tintTarget(true),
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                deleteBookItem.itemId,
+                resources.getString(R.string.delete_book_icon_tutorial_title),
+                resources.getString(R.string.delete_book_icon_tutorial_description)
+            ).style(requireActivity(), true).cancelable(false).tintTarget(true)
+        )
     }
     //endregion
 }

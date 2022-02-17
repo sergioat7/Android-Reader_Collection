@@ -5,8 +5,12 @@
 
 package aragones.sergio.readercollection.utils
 
+import androidx.fragment.app.FragmentActivity
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
+import com.getkeepsafe.taptargetview.TapTarget
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 object Preferences {
     const val PREFERENCES_NAME = "preferences"
@@ -20,6 +24,11 @@ object Preferences {
     const val VERSION_PREFERENCE_NAME = "version"
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
+    const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
+    const val SEARCH_TUTORIAL_PREFERENCE_NAME = "searchTutorial"
+    const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"
+    const val NEW_BOOK_TUTORIAL_PREFERENCE_NAME = "newBookTutorial"
+    const val BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME = "bookDetailsTutorial"
 }
 
 object Constants {
@@ -45,6 +54,19 @@ object Constants {
 
     fun isPasswordValid(password: String): Boolean {
         return password.length > 3
+    }
+
+    fun createTargetForBottomNavigationView(
+        activity: FragmentActivity?,
+        id: Int,
+        title: String,
+        description: String?
+    ): TapTarget {
+        return TapTarget.forView(
+            activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.findViewById(id),
+            title,
+            description
+        )
     }
 }
 
