@@ -42,6 +42,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
     private lateinit var bottomNavigationBarSequence: TapTargetSequence
+    private lateinit var mainContentSequence: TapTargetSequence
     //endregion
 
     //region Lifecycle methods
@@ -209,7 +210,20 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             .targets(createTargetsForBottomNavigationView())
             .listener(object : TapTargetSequence.Listener {
 
-                override fun onSequenceFinish() {}
+                override fun onSequenceFinish() {
+                    mainContentSequence.start()
+                }
+
+                override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                override fun onSequenceCanceled(lastTarget: TapTarget) {}
+            })
+        mainContentSequence = TapTargetSequence(requireActivity())
+            .targets(createTargetsForScrollView())
+            .listener(object : TapTargetSequence.Listener {
+
+                override fun onSequenceFinish() {
+                }
 
                 override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
 
@@ -306,6 +320,15 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 resources.getString(R.string.settings_view_tutorial_title),
                 resources.getString(R.string.settings_view_tutorial_description)
             ).cancelable(false).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForScrollView(): List<TapTarget> {
+        return listOf(
+            TapTarget.forView(
+                binding.searchViewBooks, resources.getString(R.string.search_bar_tutorial_title),
+                resources.getString(R.string.search_bar_tutorial_description)
+            ).cancelable(false).tintTarget(false)
         )
     }
     //endregion

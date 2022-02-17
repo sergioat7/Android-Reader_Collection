@@ -138,5 +138,7 @@
     <string name="stats_view_tutorial_description">Here you can see different statistics about all the books you have already read</string>
     <string name="settings_view_tutorial_title">This is the settings screen</string>
     <string name="settings_view_tutorial_description">Here you can modify your personal data and the app configuration</string>
+    <string name="search_bar_tutorial_title">This is the search bar</string>
+    <string name="search_bar_tutorial_description">Here you can search by the title for any book in your collection</string>
 
 </resources>
