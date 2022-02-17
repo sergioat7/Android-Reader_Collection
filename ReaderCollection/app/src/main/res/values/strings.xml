@@ -138,8 +138,8 @@
     <string name="stats_view_tutorial_description">Here you can see different statistics about all the books you have already read</string>
     <string name="settings_view_tutorial_title">This is the settings screen</string>
     <string name="settings_view_tutorial_description">Here you can modify your personal data and the app configuration</string>
-    <string name="search_bar_tutorial_title">This is the search bar</string>
-    <string name="search_bar_tutorial_description">Here you can search by the title for any book in your collection</string>
+    <string name="search_bar_books_tutorial_title">This is the search bar</string>
+    <string name="search_bar_books_tutorial_description">Here you can search by the title for any book in your collection</string>
     <string name="sync_icon_tutorial_title">This is the synchronization button</string>
     <string name="sync_icon_tutorial_description">Here you can synchronize your data with the server, in case you have made any modification in another device</string>
     <string name="sort_icon_tutorial_title">This is the sort button</string>

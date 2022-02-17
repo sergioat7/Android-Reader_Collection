@@ -374,8 +374,9 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private fun createTargetsForScrollView(): List<TapTarget> {
         return listOf(
             TapTarget.forView(
-                binding.searchViewBooks, resources.getString(R.string.search_bar_tutorial_title),
-                resources.getString(R.string.search_bar_tutorial_description)
+                binding.searchViewBooks,
+                resources.getString(R.string.search_bar_books_tutorial_title),
+                resources.getString(R.string.search_bar_books_tutorial_description)
             ).style(requireActivity()).cancelable(false).tintTarget(false)
         )
     }

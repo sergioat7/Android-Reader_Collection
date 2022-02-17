@@ -128,8 +128,8 @@
     <string name="stats_view_tutorial_description">Aquí podrás ver diferentes estadísticas sobre los libros que ya has leído</string>
     <string name="settings_view_tutorial_title">Esta es la pantalla de configuración</string>
     <string name="settings_view_tutorial_description">Aquí podrás modificar tus datos y la configuración de la aplicación</string>
-    <string name="search_bar_tutorial_title">Esta es la barra de búsqueda</string>
-    <string name="search_bar_tutorial_description">Aquí podrás buscar por el título entre los libros de tu colección</string>
+    <string name="search_bar_books_tutorial_title">Esta es la barra de búsqueda</string>
+    <string name="search_bar_books_tutorial_description">Aquí podrás buscar por el título entre los libros de tu colección</string>
     <string name="sync_icon_tutorial_title">Este es el botón de sincronización</string>
     <string name="sync_icon_tutorial_description">Aquí podrás sincronizar tus libros con el servidor, por si has realizado alguna modificación en otro dispositivo</string>
     <string name="sort_icon_tutorial_title">Este es el botón de ordenación</string>
