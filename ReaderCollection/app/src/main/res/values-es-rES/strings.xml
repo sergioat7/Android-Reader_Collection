@@ -142,5 +142,11 @@
     <string name="delete_profile_icon_tutorial_description">Aquí podrás eliminar tu perfil y todos los datos que hayas creado (usuario, contraseña y libros)</string>
     <string name="logout_icon_tutorial_title">Este es el botón de cerrar sesión</string>
     <string name="logout_icon_tutorial_description">Aquí podrás cerrar sesión, por si quieres entrar con un usuario diferente</string>
+    <string name="add_book_icon_tutorial_title">Este es el botón de añadir libro</string>
+    <string name="add_book_icon_tutorial_description">Aquí podrás añadir a tu colección este libro</string>
+    <string name="add_image_button_tutorial_title">Este es el botón de añadir imagen</string>
+    <string name="add_image_button_tutorial_description">Aquí podrás añadir o cambiar la imagen del libro. Para ello, debes introducir el enlace de la imagen (http://…) que deberás buscar previamente</string>
+    <string name="rate_view_tutorial_title">Este es el elemento para puntuar el libro</string>
+    <string name="rate_view_tutorial_description">Aquí podrás puntuar el libro del 1 al 10 (cada estrella equivale a 2 puntos)</string>
 
 </resources>
