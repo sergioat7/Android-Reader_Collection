@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.activities.LandingActivity
 import aragones.sergio.readercollection.base.BindingFragment
@@ -22,6 +23,11 @@ import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.SettingsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SettingsViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
@@ -32,6 +38,8 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     //region Private properties
     private lateinit var viewModel: SettingsViewModel
+    private lateinit var mainContentSequence: TapTargetSequence
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -126,6 +134,41 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         binding.fragment = this
         binding.viewModel = this.viewModel
         binding.lifecycleOwner = this
+
+        mainContentSequence = TapTargetSequence(requireActivity())
+            .targets(createTargetsForScrollView())
+            .listener(object : TapTargetSequence.Listener {
+
+                override fun onSequenceFinish() {
+                    toolbarSequence?.start()
+                }
+
+                override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                override fun onSequenceCanceled(lastTarget: TapTarget) {}
+            })
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            toolbarSequence = TapTargetSequence(requireActivity())
+                .targets(createTargetsForToolbar())
+                .listener(object : TapTargetSequence.Listener {
+
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+            if (!viewModel.tutorialShown) {
+                mainContentSequence.start()
+            }
+        }
     }
     //endregion
 
@@ -179,6 +222,36 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         binding.dropdownTextInputLayoutAppTheme.setValue(
             appThemes[viewModel.themeMode],
             CustomDropdownType.APP_THEME
+        )
+    }
+
+    private fun createTargetsForToolbar(): List<TapTarget> {
+
+        val deleteProfileItem = binding.toolbar.menu.findItem(R.id.action_delete)
+        val logoutItem = binding.toolbar.menu.findItem(R.id.action_logout)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                deleteProfileItem.itemId,
+                resources.getString(R.string.delete_profile_icon_tutorial_title),
+                resources.getString(R.string.delete_profile_icon_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(true),
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                logoutItem.itemId,
+                resources.getString(R.string.logout_icon_tutorial_title),
+                resources.getString(R.string.logout_icon_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForScrollView(): List<TapTarget> {
+        return listOf(
+            TapTarget.forView(
+                binding.buttonSave,
+                resources.getString(R.string.save_settings_button_tutorial_title),
+                resources.getString(R.string.save_settings_button_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(false)
         )
     }
     //endregion
