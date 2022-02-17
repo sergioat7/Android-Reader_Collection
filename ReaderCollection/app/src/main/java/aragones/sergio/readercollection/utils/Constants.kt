@@ -24,6 +24,7 @@ object Preferences {
     const val VERSION_PREFERENCE_NAME = "version"
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
+    const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
 }
 
 object Constants {

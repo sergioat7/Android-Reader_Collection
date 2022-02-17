@@ -40,6 +40,9 @@ class UserRepository @Inject constructor(
 
     val themeMode: Int
         get() = SharedPreferencesHandler.getThemeMode()
+
+    val hasBooksTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasBooksTutorialBeenShown()
     //endregion
 
     //region Public methods
@@ -123,6 +126,10 @@ class UserRepository @Inject constructor(
 
     fun storeThemeMode(themeMode: Int) {
         SharedPreferencesHandler.setThemeMode(themeMode)
+    }
+
+    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown)
     }
     //endregion
 }
