@@ -189,4 +189,16 @@ object SharedPreferencesHandler {
             commit()
         }
     }
+
+    fun hasSearchTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, hasSearchTutorialBeenShown)
+            commit()
+        }
+    }
 }

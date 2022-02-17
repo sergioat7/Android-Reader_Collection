@@ -133,7 +133,7 @@
     <string name="books_view_tutorial_title">This is the main screen</string>
     <string name="books_view_tutorial_description">Here you can find all the books in your collection, in 3 sections: Reading, Pending and Read</string>
     <string name="search_view_tutorial_title">This is the search screen</string>
-    <string name="search_view_tutorial_description">Here you can find new books to add to your collection</string>
+    <string name="search_view_tutorial_description">Here you can search for new books to add to your collection</string>
     <string name="stats_view_tutorial_title">This is the statistics screen</string>
     <string name="stats_view_tutorial_description">Here you can see different statistics about all the books you have already read</string>
     <string name="settings_view_tutorial_title">This is the settings screen</string>
@@ -144,5 +144,7 @@
     <string name="sync_icon_tutorial_description">Here you can synchronize your data with the server, in case you have made any modification in another device</string>
     <string name="sort_icon_tutorial_title">This is the sort button</string>
     <string name="sort_icon_tutorial_description">Here you can sort the books in your collection by different values</string>
+    <string name="search_bar_tutorial_title">This is the search button</string>
+    <string name="search_bar_tutorial_description">Here you can search for the new books you want to add to your collection</string>
 
 </resources>
