@@ -177,4 +177,16 @@ object SharedPreferencesHandler {
             else -> "MMMM d, yyyy"
         }
     }
+
+    fun hasBooksTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, hasBooksTutorialBeenShown)
+            commit()
+        }
+    }
 }

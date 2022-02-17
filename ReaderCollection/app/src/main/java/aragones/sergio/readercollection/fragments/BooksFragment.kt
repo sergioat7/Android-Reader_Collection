@@ -245,13 +245,17 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 .targets(createTargetsForToolbar())
                 .listener(object : TapTargetSequence.Listener {
 
-                    override fun onSequenceFinish() {}
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
 
                     override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
 
                     override fun onSequenceCanceled(lastTarget: TapTarget) {}
                 })
-            bottomNavigationBarSequence.start()
+            if (!viewModel.tutorialShown) {
+                bottomNavigationBarSequence.start()
+            }
         }
     }
     //endregion

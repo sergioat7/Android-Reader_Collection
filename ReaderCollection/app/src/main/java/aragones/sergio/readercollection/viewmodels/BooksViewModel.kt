@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    userRepository: UserRepository
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -68,6 +68,7 @@ class BooksViewModel @Inject constructor(
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var query: String = ""
+    val tutorialShown = userRepository.hasBooksTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -124,6 +125,10 @@ class BooksViewModel @Inject constructor(
         _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
+    }
+
+    fun setTutorialAsShown() {
+        userRepository.setHasBooksTutorialBeenShown(true)
     }
     //endregion
 }
