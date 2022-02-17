@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import aragones.sergio.readercollection.R
@@ -28,6 +29,9 @@ import aragones.sergio.readercollection.viewmodelfactories.BooksViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BooksViewModel
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
 
@@ -43,6 +47,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private lateinit var booksAdapter: BooksAdapter
     private lateinit var bottomNavigationBarSequence: TapTargetSequence
     private lateinit var mainContentSequence: TapTargetSequence
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -223,13 +228,31 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             .listener(object : TapTargetSequence.Listener {
 
                 override fun onSequenceFinish() {
+                    toolbarSequence?.start()
                 }
 
                 override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
 
                 override fun onSequenceCanceled(lastTarget: TapTarget) {}
             })
-        bottomNavigationBarSequence.start()
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            toolbarSequence = TapTargetSequence(requireActivity())
+                .targets(createTargetsForToolbar())
+                .listener(object : TapTargetSequence.Listener {
+
+                    override fun onSequenceFinish() {}
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+            bottomNavigationBarSequence.start()
+        }
     }
     //endregion
 
@@ -319,6 +342,26 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 R.id.nav_graph_settings,
                 resources.getString(R.string.settings_view_tutorial_title),
                 resources.getString(R.string.settings_view_tutorial_description)
+            ).cancelable(false).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForToolbar(): List<TapTarget> {
+
+        val syncItem = binding.toolbar.menu.findItem(R.id.action_synchronize)
+        val sortItem = binding.toolbar.menu.findItem(R.id.action_sort)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                syncItem.itemId,
+                resources.getString(R.string.sync_icon_tutorial_title),
+                resources.getString(R.string.sync_icon_tutorial_description)
+            ).cancelable(false).tintTarget(true),
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                sortItem.itemId,
+                resources.getString(R.string.sort_icon_tutorial_title),
+                resources.getString(R.string.sort_icon_tutorial_description)
             ).cancelable(false).tintTarget(true)
         )
     }
