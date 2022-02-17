@@ -14,13 +14,15 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val googleBookRepository: GoogleBookRepository
+    private val googleBookRepository: GoogleBookRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -47,6 +49,7 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
+    var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -175,6 +178,11 @@ class BookDetailViewModel @Inject constructor(
 
     fun setIsGoogleBook(isGoogleBook: Boolean) {
         this.isGoogleBook = isGoogleBook
+    }
+
+    fun setNewBookTutorialAsShown() {
+        userRepository.setHasNewBookTutorialBeenShown(true)
+        newBookTutorialShown = true
     }
     //endregion
 }
