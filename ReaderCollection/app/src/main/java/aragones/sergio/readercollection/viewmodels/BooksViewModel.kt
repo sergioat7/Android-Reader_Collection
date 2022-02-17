@@ -68,7 +68,7 @@ class BooksViewModel @Inject constructor(
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var query: String = ""
-    val tutorialShown = userRepository.hasBooksTutorialBeenShown
+    var tutorialShown = userRepository.hasBooksTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -129,6 +129,7 @@ class BooksViewModel @Inject constructor(
 
     fun setTutorialAsShown() {
         userRepository.setHasBooksTutorialBeenShown(true)
+        tutorialShown = true
     }
     //endregion
 }
