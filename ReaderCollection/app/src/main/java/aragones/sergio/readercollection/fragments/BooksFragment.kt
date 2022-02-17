@@ -41,6 +41,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
+    private lateinit var bottomNavigationBarSequence: TapTargetSequence
     //endregion
 
     //region Lifecycle methods
@@ -204,7 +205,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         }
         setupSearchView()
 
-        val bottomNavigationBarSequence = TapTargetSequence(requireActivity())
+        bottomNavigationBarSequence = TapTargetSequence(requireActivity())
             .targets(createTargetsForBottomNavigationView())
             .listener(object : TapTargetSequence.Listener {
 
