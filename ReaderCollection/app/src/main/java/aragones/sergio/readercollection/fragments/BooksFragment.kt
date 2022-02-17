@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
@@ -328,25 +329,25 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 R.id.nav_graph_books,
                 resources.getString(R.string.books_view_tutorial_title),
                 resources.getString(R.string.books_view_tutorial_description)
-            ).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(false).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_search,
                 resources.getString(R.string.search_view_tutorial_title),
                 resources.getString(R.string.search_view_tutorial_description)
-            ).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(false).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_stats,
                 resources.getString(R.string.stats_view_tutorial_title),
                 resources.getString(R.string.stats_view_tutorial_description)
-            ).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(false).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_settings,
                 resources.getString(R.string.settings_view_tutorial_title),
                 resources.getString(R.string.settings_view_tutorial_description)
-            ).cancelable(false).tintTarget(true)
+            ).style(requireActivity()).cancelable(false).tintTarget(true)
         )
     }
 
@@ -360,13 +361,13 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 syncItem.itemId,
                 resources.getString(R.string.sync_icon_tutorial_title),
                 resources.getString(R.string.sync_icon_tutorial_description)
-            ).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(false).tintTarget(true),
             TapTarget.forToolbarMenuItem(
                 binding.toolbar,
                 sortItem.itemId,
                 resources.getString(R.string.sort_icon_tutorial_title),
                 resources.getString(R.string.sort_icon_tutorial_description)
-            ).cancelable(false).tintTarget(true)
+            ).style(requireActivity()).cancelable(false).tintTarget(true)
         )
     }
 
@@ -375,7 +376,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             TapTarget.forView(
                 binding.searchViewBooks, resources.getString(R.string.search_bar_tutorial_title),
                 resources.getString(R.string.search_bar_tutorial_description)
-            ).cancelable(false).tintTarget(false)
+            ).style(requireActivity()).cancelable(false).tintTarget(false)
         )
     }
     //endregion
