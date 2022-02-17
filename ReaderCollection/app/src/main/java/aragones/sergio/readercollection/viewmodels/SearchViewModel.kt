@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.State
 import io.reactivex.rxjava3.kotlin.addTo
@@ -22,7 +23,8 @@ import javax.inject.Inject
 
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val googleBookRepository: GoogleBookRepository
+    private val googleBookRepository: GoogleBookRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -42,6 +44,7 @@ class SearchViewModel @Inject constructor(
     val bookAdded: LiveData<Int?> = _bookAdded
     val searchError: LiveData<ErrorResponse?> = _searchError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
+    var tutorialShown = userRepository.hasSearchTutorialBeenShown
     //endregion
 
     //region Public methods
@@ -114,6 +117,11 @@ class SearchViewModel @Inject constructor(
 
     fun setPosition(newPosition: ScrollPosition) {
         _scrollPosition.value = newPosition
+    }
+
+    fun setTutorialAsShown() {
+        userRepository.setHasSearchTutorialBeenShown(true)
+        tutorialShown = true
     }
     //endregion
 }

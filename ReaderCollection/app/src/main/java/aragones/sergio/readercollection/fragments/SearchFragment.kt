@@ -15,6 +15,7 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +25,16 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickListener {
@@ -143,6 +150,28 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             viewModel = this@SearchFragment.viewModel
             lifecycleOwner = this@SearchFragment
         }
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            val toolbarSequence = TapTargetSequence(requireActivity())
+                .targets(createTargetsForToolbar())
+                .listener(object : TapTargetSequence.Listener {
+
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+            if (!viewModel.tutorialShown) {
+                toolbarSequence.start()
+            }
+        }
     }
     //endregion
 
@@ -204,6 +233,19 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.reloadData()
         viewModel.searchBooks()
         requireActivity().hideSoftKeyboard()
+    }
+
+    private fun createTargetsForToolbar(): List<TapTarget> {
+
+        val searchItem = binding.toolbar.menu.findItem(R.id.action_search)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                searchItem.itemId,
+                resources.getString(R.string.search_bar_tutorial_title),
+                resources.getString(R.string.search_bar_tutorial_description)
+            ).style(requireActivity()).cancelable(false).tintTarget(true)
+        )
     }
     //endregion
 
