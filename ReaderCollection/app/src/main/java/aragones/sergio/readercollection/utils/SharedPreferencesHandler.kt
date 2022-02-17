@@ -201,4 +201,16 @@ object SharedPreferencesHandler {
             commit()
         }
     }
+
+    fun hasSettingsTutorialBeenShown(): Boolean {
+        return appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
+    }
+
+    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
+
+        with(appPreferences.edit()) {
+            putBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, hasSettingsTutorialBeenShown)
+            commit()
+        }
+    }
 }
