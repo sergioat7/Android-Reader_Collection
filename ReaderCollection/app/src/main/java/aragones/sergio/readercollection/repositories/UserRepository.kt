@@ -40,6 +40,21 @@ class UserRepository @Inject constructor(
 
     val themeMode: Int
         get() = SharedPreferencesHandler.getThemeMode()
+
+    val hasBooksTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasBooksTutorialBeenShown()
+
+    val hasSearchTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasSearchTutorialBeenShown()
+
+    val hasSettingsTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasSettingsTutorialBeenShown()
+
+    val hasNewBookTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasNewBookTutorialBeenShown()
+
+    val hasBookDetailsTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasBookDetailsTutorialBeenShown()
     //endregion
 
     //region Public methods
@@ -123,6 +138,26 @@ class UserRepository @Inject constructor(
 
     fun storeThemeMode(themeMode: Int) {
         SharedPreferencesHandler.setThemeMode(themeMode)
+    }
+
+    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown)
+    }
+
+    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown)
+    }
+
+    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown)
+    }
+
+    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown)
+    }
+
+    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
     }
     //endregion
 }

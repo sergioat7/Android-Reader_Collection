@@ -44,6 +44,7 @@ class SettingsViewModel @Inject constructor(
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse> = _profileError
+    var tutorialShown = userRepository.hasSettingsTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -171,6 +172,11 @@ class SettingsViewModel @Inject constructor(
             passwordError = R.string.invalid_password
         }
         _profileForm.value = passwordError
+    }
+
+    fun setTutorialAsShown() {
+        userRepository.setHasSettingsTutorialBeenShown(true)
+        tutorialShown = true
     }
     //endregion
 
