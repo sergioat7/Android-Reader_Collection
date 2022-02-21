@@ -133,11 +133,11 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             centerText = resources.getString(R.string.months)
             setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
             setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_serif_regular))
             setDrawCenterText(true)
             setEntryLabelColor(requireActivity().getCustomColor(R.color.colorSecondary))
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_serif_regular))
             setExtraOffsets(5f, 10f, 5f, 5f)
             setUsePercentValues(false)
             setHoleColor(Color.TRANSPARENT)
@@ -199,11 +199,11 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             centerText = resources.getString(R.string.formats)
             setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
             setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_serif_regular))
             setDrawCenterText(true)
             setEntryLabelColor(requireActivity().getCustomColor(R.color.colorSecondary))
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_serif_regular))
             setExtraOffsets(5F, 10F, 5F, 5F)
             setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
@@ -264,7 +264,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                     axisMaximum = data.xMax
                     labelCount = entries.size / 2
                     textColor = requireActivity().getCustomColor(R.color.colorPrimary)
-                    typeface = requireActivity().getCustomFont(R.font.roboto_bold)
+                    typeface = requireActivity().getCustomFont(R.font.roboto_serif_bold)
                 }
                 this.data = data
                 invalidate()
@@ -289,7 +289,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             val data = PieData(dataSet).apply {
                 setValueTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
                 setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
-                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_bold))
+                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_serif_bold))
             }
 
             binding.pieChartBooksByMonth.apply {
@@ -332,7 +332,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                     labelCount = books.size
                     textColor = requireActivity().getCustomColor(R.color.colorPrimary)
                     textSize = resources.getDimension(R.dimen.text_size_4sp)
-                    typeface = requireActivity().getCustomFont(R.font.roboto_bold)
+                    typeface = requireActivity().getCustomFont(R.font.roboto_serif_bold)
                 }
                 axisLeft.apply {
                     axisMinimum = 0F
@@ -384,7 +384,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 setValueFormatter(PercentFormatter(binding.pieChartBooksByFormat))
                 setValueTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
                 setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
-                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_bold))
+                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_serif_bold))
             }
 
             binding.pieChartBooksByFormat.apply {

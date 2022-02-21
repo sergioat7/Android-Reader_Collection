@@ -106,8 +106,8 @@ fun setInputType(view: TextInputEditText, inputType: CustomInputType?) {
 @BindingAdapter("isBold")
 fun setBold(view: TextInputEditText, isBold: Boolean?) {
     if (isBold == true) {
-        view.typeface = ResourcesCompat.getFont(view.context, R.font.roboto_bold)
+        view.typeface = ResourcesCompat.getFont(view.context, R.font.roboto_serif_bold)
     } else {
-        view.typeface = ResourcesCompat.getFont(view.context, R.font.roboto_regular)
+        view.typeface = ResourcesCompat.getFont(view.context, R.font.roboto_serif_regular)
     }
 }
