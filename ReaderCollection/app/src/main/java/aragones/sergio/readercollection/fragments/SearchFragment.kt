@@ -47,6 +47,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Private properties
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -63,6 +64,25 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         menu.clear()
         inflater.inflate(R.menu.search_toolbar_menu, menu)
         setupSearchView(menu)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            createSequence()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        toolbarSequence?.cancel()
     }
 
     override fun onDestroy() {
@@ -150,28 +170,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             viewModel = this@SearchFragment.viewModel
             lifecycleOwner = this@SearchFragment
         }
-        /*
-        Must be created with a delay in order to wait for the fragment menu creation,
-        otherwise it wouldn't be icons in the toolbar
-         */
-        lifecycleScope.launch(Dispatchers.Main) {
-            delay(500)
-            val toolbarSequence = TapTargetSequence(requireActivity())
-                .targets(createTargetsForToolbar())
-                .listener(object : TapTargetSequence.Listener {
-
-                    override fun onSequenceFinish() {
-                        viewModel.setTutorialAsShown()
-                    }
-
-                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
-                })
-            if (!viewModel.tutorialShown) {
-                toolbarSequence.start()
-            }
-        }
     }
     //endregion
 
@@ -235,17 +233,31 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         requireActivity().hideSoftKeyboard()
     }
 
-    private fun createTargetsForToolbar(): List<TapTarget> {
+    private fun createSequence() {
 
-        val searchItem = binding.toolbar.menu.findItem(R.id.action_search)
-        return listOf(
-            TapTarget.forToolbarMenuItem(
-                binding.toolbar,
-                searchItem.itemId,
-                resources.getString(R.string.search_bar_tutorial_title),
-                resources.getString(R.string.search_bar_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true)
-        )
+        if (!viewModel.tutorialShown) {
+            toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                target(
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_search).itemId,
+                        resources.getString(R.string.search_bar_tutorial_title),
+                        resources.getString(R.string.search_bar_tutorial_description)
+                    ).style(requireActivity()).cancelable(true).tintTarget(true)
+                )
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                start()
+            }
+        }
     }
     //endregion
 
