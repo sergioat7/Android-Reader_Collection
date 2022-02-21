@@ -21,6 +21,7 @@ object SharedPreferencesHandler {
         Preferences.PREFERENCES_NAME,
         Context.MODE_PRIVATE
     )
+    private val editor = appPreferences.edit()
     private val appEncryptedPreferences = EncryptedSharedPreferences.create(
         Preferences.ENCRYPTED_PREFERENCES_NAME,
         MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
@@ -28,213 +29,157 @@ object SharedPreferencesHandler {
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
+    private val encryptedEditor = appEncryptedPreferences.edit()
     private val gson = Gson()
     //endregion
 
+    //region Public properties
+    var language: String
+        get() {
+            return appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
+                it
+            } ?: run {
+                language = Locale.getDefault().language
+                language
+            }
+        }
+        set(value) {
+            editor.apply {
+                putString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var credentials: AuthData
+        get() {
+            return appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
+                ?.let {
+                    gson.fromJson(it, AuthData::class.java)
+                } ?: run {
+                AuthData("")
+            }
+        }
+        set(value) {
+            encryptedEditor.apply {
+                putString(Preferences.AUTH_DATA_PREFERENCES_NAME, gson.toJson(value))
+                commit()
+            }
+        }
+    var userData: UserData
+        get() {
+            return appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
+                ?.let {
+                    gson.fromJson(it, UserData::class.java)
+                } ?: run {
+                UserData("", "", false)
+            }
+        }
+        set(value) {
+            encryptedEditor.apply {
+                putString(Preferences.USER_DATA_PREFERENCES_NAME, gson.toJson(value))
+                commit()
+            }
+        }
+    val isLoggedIn: Boolean
+        get() = userData.isLoggedIn && credentials.token.isNotEmpty()
+    var sortParam: String?
+        get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
+        set(value) {
+            editor.apply {
+                putString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var version: Int
+        get() = appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
+        set(value) {
+            editor.apply {
+                putInt(Preferences.VERSION_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var themeMode: Int
+        get() = appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
+        set(value) {
+            editor.apply {
+                putInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var isSortDescending: Boolean
+        get() = appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
+        set(value) {
+            editor.apply {
+                putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    val dateFormatToShow: String
+        get() {
+            return when (language) {
+                "es" -> "d MMMM yyyy"
+                else -> "MMMM d, yyyy"
+            }
+        }
+    var hasBooksTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) {
+            editor.apply {
+                putBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var hasSearchTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) {
+            editor.apply {
+                putBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var hasSettingsTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) {
+            editor.apply {
+                putBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var hasNewBookTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) {
+            editor.apply {
+                putBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, value)
+                commit()
+            }
+        }
+    var hasBookDetailsTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) {
+            editor.apply {
+                putBoolean(
+                    Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME,
+                    value
+                )
+                commit()
+            }
+        }
+    //endregion
+
     //region Public methods
-    fun getLanguage(): String {
-
-        appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
-            return it
-        } ?: run {
-
-            val locale = Locale.getDefault().language
-            setLanguage(locale)
-            return locale
-        }
-    }
-
-    fun setLanguage(language: String) {
-
-        with(appPreferences.edit()) {
-            putString(Preferences.LANGUAGE_PREFERENCE_NAME, language)
-            commit()
-        }
-    }
-
-    fun getCredentials(): AuthData {
-
-        val authDataJson =
-            appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
-        return if (authDataJson != null) {
-            gson.fromJson(authDataJson, AuthData::class.java)
-        } else {
-            AuthData("")
-        }
-    }
-
-    fun storeCredentials(authData: AuthData) {
-
-        with(appEncryptedPreferences.edit()) {
-            val authDataJson = gson.toJson(authData)
-            putString(Preferences.AUTH_DATA_PREFERENCES_NAME, authDataJson)
-            commit()
-        }
-    }
-
     fun removeCredentials() {
-        appEncryptedPreferences.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
-    }
-
-    fun isLoggedIn(): Boolean {
-
-        val userData = getUserData()
-        val authData = getCredentials()
-        return userData.isLoggedIn && authData.token.isNotEmpty()
-    }
-
-    fun getUserData(): UserData {
-
-        val userDataJson =
-            appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
-        return if (userDataJson != null) {
-            gson.fromJson(userDataJson, UserData::class.java)
-        } else {
-            UserData("", "", false)
-        }
-    }
-
-    fun storeUserData(userData: UserData) {
-
-        with(appEncryptedPreferences.edit()) {
-            val userDataJson = gson.toJson(userData)
-            putString(Preferences.USER_DATA_PREFERENCES_NAME, userDataJson)
-            commit()
-        }
+        encryptedEditor.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun storePassword(password: String) {
-
-        val userData = getUserData()
-        userData.password = password
-        storeUserData(userData)
-    }
-
-    fun removeUserData() {
-        appEncryptedPreferences.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
+        this.userData = UserData(userData.username, password, userData.isLoggedIn)
     }
 
     fun removePassword() {
-
-        val userData = getUserData()
-        userData.password = ""
-        userData.isLoggedIn = false
-        storeUserData(userData)
+        this.userData = UserData(userData.username, "", false)
     }
 
-    fun getSortParam(): String? {
-        return appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
+    fun removeUserData() {
+        encryptedEditor.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
     }
-
-    fun setSortParam(sortParam: String?) {
-
-        with(appPreferences.edit()) {
-            putString(Preferences.SORT_PARAM_PREFERENCE_NAME, sortParam)
-            commit()
-        }
-    }
-
-    fun getVersion(): Int {
-        return appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
-    }
-
-    fun setVersion(version: Int) {
-
-        with(appPreferences.edit()) {
-            putInt(Preferences.VERSION_PREFERENCE_NAME, version)
-            commit()
-        }
-    }
-
-    fun getThemeMode(): Int {
-        return appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
-    }
-
-    fun setThemeMode(themeMode: Int) {
-
-        with(appPreferences.edit()) {
-            putInt(Preferences.THEME_MODE_PREFERENCE_NAME, themeMode)
-            commit()
-        }
-    }
-
-    fun isSortDescending(): Boolean {
-        return appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
-    }
-
-    fun setIsSortDescending(isSortDescending: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
-            commit()
-        }
-    }
-
-    fun getDateFormatToShow(): String {
-
-        return when (getLanguage()) {
-            "es" -> "d MMMM yyyy"
-            else -> "MMMM d, yyyy"
-        }
-    }
-
-    fun hasBooksTutorialBeenShown(): Boolean {
-        return appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
-    }
-
-    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, hasBooksTutorialBeenShown)
-            commit()
-        }
-    }
-
-    fun hasSearchTutorialBeenShown(): Boolean {
-        return appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
-    }
-
-    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, hasSearchTutorialBeenShown)
-            commit()
-        }
-    }
-
-    fun hasSettingsTutorialBeenShown(): Boolean {
-        return appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
-    }
-
-    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, hasSettingsTutorialBeenShown)
-            commit()
-        }
-    }
-
-    fun hasNewBookTutorialBeenShown(): Boolean {
-        return appPreferences.getBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, false)
-    }
-
-    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, hasNewBookTutorialBeenShown)
-            commit()
-        }
-    }
-
-    fun hasBookDetailsTutorialBeenShown(): Boolean {
-        return appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
-    }
-
-    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, hasBookDetailsTutorialBeenShown)
-            commit()
-        }
-    }
+    //endregion
 }
