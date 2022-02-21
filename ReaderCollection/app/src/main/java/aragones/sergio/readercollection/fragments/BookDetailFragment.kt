@@ -428,7 +428,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 saveBookItem.itemId,
                 resources.getString(R.string.add_book_icon_tutorial_title),
                 resources.getString(R.string.add_book_icon_tutorial_description)
-            ).style(requireActivity(), true).cancelable(true).tintTarget(true)
+            ).style(requireContext(), true).cancelable(true).tintTarget(true)
         )
     }
 
@@ -438,12 +438,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 binding.floatingActionButtonAddPhoto,
                 resources.getString(R.string.add_image_button_tutorial_title),
                 resources.getString(R.string.add_image_button_tutorial_description)
-            ).style(requireActivity(), true).cancelable(true).tintTarget(false),
+            ).style(requireContext(), true).cancelable(true).tintTarget(false),
             TapTarget.forView(
                 binding.ratingBar,
                 resources.getString(R.string.rate_view_tutorial_title),
                 resources.getString(R.string.rate_view_tutorial_description)
-            ).style(requireActivity()).cancelable(true).tintTarget(true)
+            ).style(requireContext()).cancelable(true).tintTarget(true)
         )
     }
 
@@ -457,13 +457,13 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 editBookItem.itemId,
                 resources.getString(R.string.edit_book_icon_tutorial_title),
                 resources.getString(R.string.edit_book_icon_tutorial_description)
-            ).style(requireActivity(), true).cancelable(true).tintTarget(true),
+            ).style(requireContext(), true).cancelable(true).tintTarget(true),
             TapTarget.forToolbarMenuItem(
                 binding.toolbar,
                 deleteBookItem.itemId,
                 resources.getString(R.string.delete_book_icon_tutorial_title),
                 resources.getString(R.string.delete_book_icon_tutorial_description)
-            ).style(requireActivity(), true).cancelable(true).tintTarget(true)
+            ).style(requireContext(), true).cancelable(true).tintTarget(true)
         )
     }
 

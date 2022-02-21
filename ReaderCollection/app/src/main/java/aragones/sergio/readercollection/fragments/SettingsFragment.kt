@@ -216,13 +216,13 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                 deleteProfileItem.itemId,
                 resources.getString(R.string.delete_profile_icon_tutorial_title),
                 resources.getString(R.string.delete_profile_icon_tutorial_description)
-            ).style(requireActivity()).cancelable(true).tintTarget(true),
+            ).style(requireContext()).cancelable(true).tintTarget(true),
             TapTarget.forToolbarMenuItem(
                 binding.toolbar,
                 logoutItem.itemId,
                 resources.getString(R.string.logout_icon_tutorial_title),
                 resources.getString(R.string.logout_icon_tutorial_description)
-            ).style(requireActivity()).cancelable(true).tintTarget(true)
+            ).style(requireContext()).cancelable(true).tintTarget(true)
         )
     }
 
@@ -232,7 +232,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                 binding.buttonSave,
                 resources.getString(R.string.save_settings_button_tutorial_title),
                 resources.getString(R.string.save_settings_button_tutorial_description)
-            ).style(requireActivity()).cancelable(true).tintTarget(false)
+            ).style(requireContext()).cancelable(true).tintTarget(false)
         )
     }
 

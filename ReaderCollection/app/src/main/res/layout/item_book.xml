@@ -78,38 +78,22 @@
                 app:layout_constraintStart_toEndOf="@+id/image_view_google_book"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Harry Potter y la Piedra Filosofal"
-                style="@style/Widget.ReaderCollection.TextView.Title.GoogleBook"
+                style="@style/Widget.ReaderCollection.TextView.Title.Book"
                 />
 
             <TextView
                 android:id="@+id/text_view_google_book_author"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_12dp"
+                android:layout_marginTop="@dimen/margin_8dp"
                 android:text="@{book.authorsToString()}"
                 android:visibility='@{book.authorsToString().equals("") ? View.GONE : View.VISIBLE}'
-                app:layout_constraintBottom_toTopOf="@+id/text_view_google_book_publisher"
-                app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
-                app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_google_book_title"
-                app:layout_constraintVertical_chainStyle="packed"
-                tools:text="J.K.Rowling"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
-                />
-
-            <TextView
-                android:id="@+id/text_view_google_book_publisher"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_5dp"
-                android:layout_marginBottom="@dimen/margin_12dp"
-                android:text="@{@string/publisher_text(book.publisher)}"
-                android:visibility="@{book.publisher != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/barrier_rating"
                 app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
                 app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
-                app:layout_constraintTop_toBottomOf="@+id/text_view_google_book_author"
-                tools:text="Salamandra"
+                app:layout_constraintTop_toBottomOf="@+id/text_view_google_book_title"
+                app:layout_constraintVertical_bias="0.0"
+                tools:text="J.K.Rowling"
                 style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
                 />
 
