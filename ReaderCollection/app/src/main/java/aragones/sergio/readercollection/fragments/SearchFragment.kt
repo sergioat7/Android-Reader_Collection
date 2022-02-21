@@ -243,7 +243,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
                         binding.toolbar.menu.findItem(R.id.action_search).itemId,
                         resources.getString(R.string.search_bar_tutorial_title),
                         resources.getString(R.string.search_bar_tutorial_description)
-                    ).style(requireActivity()).cancelable(true).tintTarget(true)
+                    ).style(requireContext()).cancelable(true).tintTarget(true)
                 )
                 continueOnCancel(false)
                 listener(object : TapTargetSequence.Listener {
