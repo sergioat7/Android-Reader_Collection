@@ -80,7 +80,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     override fun initializeUi() {
         super.initializeUi()
 
-        customColors.add(requireActivity().getCustomColor(R.color.colorPrimary))
+        customColors.add(requireContext().getCustomColor(R.color.colorPrimary))
 
         val application = activity?.application ?: return
         viewModel = ViewModelProvider(
@@ -97,6 +97,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             description.isEnabled = false
             xAxis.apply {
                 position = XAxisPosition.BOTTOM
+                textColor = requireContext().getCustomColor(R.color.textPrimary)
+                textSize = resources.getDimension(R.dimen.text_size_4sp)
+                typeface = requireContext().getCustomFont(R.font.roboto_serif_thin)
                 valueFormatter = NumberValueFormatter()
                 setDrawGridLines(false)
             }
@@ -131,13 +134,13 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             legend.isEnabled = false
             description.isEnabled = false
             centerText = resources.getString(R.string.months)
-            setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+            setCenterTextColor(context.getCustomColor(R.color.textPrimary))
             setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setCenterTextTypeface(context.getCustomFont(R.font.roboto_serif_regular))
             setDrawCenterText(true)
-            setEntryLabelColor(requireActivity().getCustomColor(R.color.colorSecondary))
+            setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_thin))
             setExtraOffsets(5f, 10f, 5f, 5f)
             setUsePercentValues(false)
             setHoleColor(Color.TRANSPARENT)
@@ -163,6 +166,9 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             description.isEnabled = false
             xAxis.apply {
                 position = XAxisPosition.BOTTOM
+                textColor = requireContext().getCustomColor(R.color.textPrimary)
+                textSize = resources.getDimension(R.dimen.text_size_4sp)
+                typeface = requireContext().getCustomFont(R.font.roboto_serif_thin)
                 setDrawGridLines(false)
             }
             axisLeft.apply {
@@ -176,6 +182,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawGridBackground(false)
             setDrawBarShadow(false)
             setFitBars(true)
+            setExtraOffsets(0F, 0F, 20F, 0F)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
                     showBooks(
@@ -197,13 +204,13 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             legend.isEnabled = false
             description.isEnabled = false
             centerText = resources.getString(R.string.formats)
-            setCenterTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+            setCenterTextColor(context.getCustomColor(R.color.textPrimary))
             setCenterTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setCenterTextTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setCenterTextTypeface(context.getCustomFont(R.font.roboto_serif_regular))
             setDrawCenterText(true)
-            setEntryLabelColor(requireActivity().getCustomColor(R.color.colorSecondary))
+            setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setEntryLabelTypeface(requireActivity().getCustomFont(R.font.roboto_regular))
+            setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_thin))
             setExtraOffsets(5F, 10F, 5F, 5F)
             setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
@@ -248,11 +255,12 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 if (entries.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = BarDataSet(entries, "").apply {
-                valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
-                valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
+                valueTextColor = requireContext().getCustomColor(R.color.textPrimary)
+                valueTextSize = resources.getDimension(R.dimen.text_size_3sp)
+                valueTypeface = requireContext().getCustomFont(R.font.roboto_serif_regular)
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
-                highLightColor = requireActivity().getCustomColor(R.color.colorTertiary)
+                highLightColor = requireContext().getCustomColor(R.color.colorTertiary)
                 setDrawValues(true)
             }
 
@@ -262,9 +270,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 xAxis.apply {
                     axisMinimum = data.xMin
                     axisMaximum = data.xMax
-                    labelCount = entries.size / 2
-                    textColor = requireActivity().getCustomColor(R.color.colorPrimary)
-                    typeface = requireActivity().getCustomFont(R.font.roboto_bold)
                 }
                 this.data = data
                 invalidate()
@@ -277,19 +282,19 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             binding.pieChartBooksByMonth.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = PieDataSet(it, "").apply {
-                sliceSpace = 5F
+                sliceSpace = 1F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
-                valueLineColor = requireActivity().getCustomColor(R.color.colorPrimary)
+                valueLineColor = requireContext().getCustomColor(R.color.colorPrimary)
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
             }
 
             val data = PieData(dataSet).apply {
-                setValueTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
-                setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
-                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_bold))
+                setValueTextColor(requireContext().getCustomColor(R.color.textPrimary))
+                setValueTextSize(resources.getDimension(R.dimen.text_size_3sp))
+                setValueTypeface(requireContext().getCustomFont(R.font.roboto_serif_regular))
             }
 
             binding.pieChartBooksByMonth.apply {
@@ -316,11 +321,12 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             }
 
             val dataSet = BarDataSet(entries, "").apply {
-                valueTextColor = requireActivity().getCustomColor(R.color.colorPrimary)
-                valueTextSize = resources.getDimension(R.dimen.text_size_2sp)
+                valueTextColor = requireContext().getCustomColor(R.color.textPrimary)
+                valueTextSize = resources.getDimension(R.dimen.text_size_3sp)
+                valueTypeface = requireContext().getCustomFont(R.font.roboto_serif_regular)
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
-                highLightColor = requireActivity().getCustomColor(R.color.colorTertiary)
+                highLightColor = requireContext().getCustomColor(R.color.colorTertiary)
                 setDrawValues(true)
             }
 
@@ -330,9 +336,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 xAxis.apply {
                     valueFormatter = StringValueFormatter(books)
                     labelCount = books.size
-                    textColor = requireActivity().getCustomColor(R.color.colorPrimary)
-                    textSize = resources.getDimension(R.dimen.text_size_4sp)
-                    typeface = requireActivity().getCustomFont(R.font.roboto_bold)
                 }
                 axisLeft.apply {
                     axisMinimum = 0F
@@ -375,16 +378,16 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
-                valueLineColor = requireActivity().getCustomColor(R.color.colorPrimary)
+                valueLineColor = requireContext().getCustomColor(R.color.colorPrimary)
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 colors = customColors
             }
 
             val data = PieData(dataSet).apply {
                 setValueFormatter(PercentFormatter(binding.pieChartBooksByFormat))
-                setValueTextColor(requireActivity().getCustomColor(R.color.colorPrimary))
+                setValueTextColor(requireContext().getCustomColor(R.color.textPrimary))
                 setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
-                setValueTypeface(requireActivity().getCustomFont(R.font.roboto_bold))
+                setValueTypeface(requireContext().getCustomFont(R.font.roboto_serif_regular))
             }
 
             binding.pieChartBooksByFormat.apply {

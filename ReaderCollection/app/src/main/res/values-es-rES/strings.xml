@@ -31,7 +31,6 @@
     <string name="new_book">Nuevo</string>
     <string name="format">Formato</string>
     <string name="state">Estado</string>
-    <string name="publisher_text">Ed. %s</string>
     <string name="load_more">Cargar más</string>
     <string name="synchronize">Sincronizar</string>
     <string name="sort">Ordenar</string>
