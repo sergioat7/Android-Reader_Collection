@@ -9,6 +9,9 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.ReaderCollectionApplication
+import aragones.sergio.readercollection.extensions.setBoolean
+import aragones.sergio.readercollection.extensions.setInt
+import aragones.sergio.readercollection.extensions.setString
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import com.google.gson.Gson
@@ -43,12 +46,7 @@ object SharedPreferencesHandler {
                 language
             }
         }
-        set(value) {
-            editor.apply {
-                putString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
     var credentials: AuthData
         get() {
             return appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
@@ -58,12 +56,10 @@ object SharedPreferencesHandler {
                 AuthData("")
             }
         }
-        set(value) {
-            encryptedEditor.apply {
-                putString(Preferences.AUTH_DATA_PREFERENCES_NAME, gson.toJson(value))
-                commit()
-            }
-        }
+        set(value) = encryptedEditor.setString(
+            Preferences.AUTH_DATA_PREFERENCES_NAME,
+            gson.toJson(value)
+        )
     var userData: UserData
         get() {
             return appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
@@ -73,46 +69,24 @@ object SharedPreferencesHandler {
                 UserData("", "", false)
             }
         }
-        set(value) {
-            encryptedEditor.apply {
-                putString(Preferences.USER_DATA_PREFERENCES_NAME, gson.toJson(value))
-                commit()
-            }
-        }
+        set(value) = encryptedEditor.setString(
+            Preferences.USER_DATA_PREFERENCES_NAME,
+            gson.toJson(value)
+        )
     val isLoggedIn: Boolean
         get() = userData.isLoggedIn && credentials.token.isNotEmpty()
     var sortParam: String?
         get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
-        set(value) {
-            editor.apply {
-                putString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
     var version: Int
         get() = appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
-        set(value) {
-            editor.apply {
-                putInt(Preferences.VERSION_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setInt(Preferences.VERSION_PREFERENCE_NAME, value)
     var themeMode: Int
         get() = appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
-        set(value) {
-            editor.apply {
-                putInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
     var isSortDescending: Boolean
         get() = appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
-        set(value) {
-            editor.apply {
-                putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
     val dateFormatToShow: String
         get() {
             return when (language) {
@@ -122,47 +96,19 @@ object SharedPreferencesHandler {
         }
     var hasBooksTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) {
-            editor.apply {
-                putBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)
     var hasSearchTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) {
-            editor.apply {
-                putBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
     var hasSettingsTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) {
-            editor.apply {
-                putBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, value)
     var hasNewBookTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) {
-            editor.apply {
-                putBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, value)
-                commit()
-            }
-        }
+        set(value) = editor.setBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, value)
     var hasBookDetailsTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) {
-            editor.apply {
-                putBoolean(
-                    Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME,
-                    value
-                )
-                commit()
-            }
-        }
+        set(value) = editor.setBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, value)
     //endregion
 
     //region Public methods
