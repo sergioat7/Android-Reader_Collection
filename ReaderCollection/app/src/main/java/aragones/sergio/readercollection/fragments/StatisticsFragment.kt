@@ -99,6 +99,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 position = XAxisPosition.BOTTOM
                 textColor = requireContext().getCustomColor(R.color.textPrimary)
                 textSize = resources.getDimension(R.dimen.text_size_4sp)
+                typeface = requireContext().getCustomFont(R.font.roboto_serif_thin)
                 valueFormatter = NumberValueFormatter()
                 setDrawGridLines(false)
             }
@@ -139,7 +140,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawCenterText(true)
             setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_regular))
+            setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_thin))
             setExtraOffsets(5f, 10f, 5f, 5f)
             setUsePercentValues(false)
             setHoleColor(Color.TRANSPARENT)
@@ -167,6 +168,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 position = XAxisPosition.BOTTOM
                 textColor = requireContext().getCustomColor(R.color.textPrimary)
                 textSize = resources.getDimension(R.dimen.text_size_4sp)
+                typeface = requireContext().getCustomFont(R.font.roboto_serif_thin)
                 setDrawGridLines(false)
             }
             axisLeft.apply {
@@ -208,7 +210,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setDrawCenterText(true)
             setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
             setEntryLabelTextSize(resources.getDimension(R.dimen.text_size_4sp))
-            setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_regular))
+            setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_thin))
             setExtraOffsets(5F, 10F, 5F, 5F)
             setUsePercentValues(true)
             setHoleColor(Color.TRANSPARENT)
@@ -385,7 +387,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 setValueFormatter(PercentFormatter(binding.pieChartBooksByFormat))
                 setValueTextColor(requireContext().getCustomColor(R.color.textPrimary))
                 setValueTextSize(resources.getDimension(R.dimen.text_size_4sp))
-                setValueTypeface(requireContext().getCustomFont(R.font.roboto_serif_bold))
+                setValueTypeface(requireContext().getCustomFont(R.font.roboto_serif_regular))
             }
 
             binding.pieChartBooksByFormat.apply {
