@@ -30,7 +30,7 @@
         <item name="android:textSize">@dimen/text_size_20sp</item>
     </style>
 
-    <style name="Widget.ReaderCollection.TextView.Title.Book">
+    <style name="Widget.ReaderCollection.TextView.Title.VerticalBook">
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:maxLines">2</item>
     </style>
@@ -40,9 +40,9 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="Widget.ReaderCollection.TextView.Title.GoogleBook">
+    <style name="Widget.ReaderCollection.TextView.Title.Book">
         <item name="android:textSize">@dimen/text_size_24sp</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:maxLines">4</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.TextCount">
