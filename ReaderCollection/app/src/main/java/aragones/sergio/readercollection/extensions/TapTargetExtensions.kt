@@ -14,9 +14,9 @@ fun TapTarget.style(activity: Activity, oppositeTheme: Boolean? = false): TapTar
         .outerCircleColor(if(oppositeTheme == true) R.color.colorSecondary else R.color.colorPrimary)
         .titleTextColor(if(oppositeTheme == true) R.color.colorPrimary else R.color.colorSecondary)
         .titleTextSize(activity.resources.getDimension(R.dimen.text_size_6sp).toInt())
-        .titleTypeface(activity.getCustomFont(R.font.roboto_bold))
+        .titleTypeface(activity.getCustomFont(R.font.roboto_serif_bold))
         .descriptionTextColor(if(oppositeTheme == true) R.color.colorPrimary else R.color.colorSecondary)
         .descriptionTextSize(activity.resources.getDimension(R.dimen.text_size_4sp).toInt())
-        .descriptionTypeface(activity.getCustomFont(R.font.roboto_regular))
+        .descriptionTypeface(activity.getCustomFont(R.font.roboto_serif_regular))
         .targetCircleColor(R.color.colorTertiary)
 }
