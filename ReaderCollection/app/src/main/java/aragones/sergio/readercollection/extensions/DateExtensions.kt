@@ -60,7 +60,7 @@ fun List<Date>.getOrderedBy(field: Int): List<Date> {
 
 fun List<Date>.getGroupedBy(pattern: String): Map<String, List<Date>> {
 
-    val locale = Locale.forLanguageTag(SharedPreferencesHandler.getLanguage())
+    val locale = Locale.forLanguageTag(SharedPreferencesHandler.language)
     val calendar = Calendar.getInstance()
     return this.groupBy {
         calendar.time = it

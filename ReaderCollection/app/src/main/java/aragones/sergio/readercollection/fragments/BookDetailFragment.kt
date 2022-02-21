@@ -362,12 +362,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 it.trimStart().trimEnd()
             }
             val publishedDate = textInputLayoutPublishedDate.getValue().toDate(
-                SharedPreferencesHandler.getDateFormatToShow(),
-                SharedPreferencesHandler.getLanguage()
+                SharedPreferencesHandler.dateFormatToShow,
+                SharedPreferencesHandler.language
             )
             var readingDate = textInputLayoutReadingDate.getValue().toDate(
-                SharedPreferencesHandler.getDateFormatToShow(),
-                SharedPreferencesHandler.getLanguage()
+                SharedPreferencesHandler.dateFormatToShow,
+                SharedPreferencesHandler.language
             )
             val pageCountText = textInputLayoutPages.getValue()
             val pageCount =

@@ -111,16 +111,16 @@ data class BookResponse(
     fun publishedDateAsHumanReadable(): String? {
 
         return publishedDate.toString(
-            SharedPreferencesHandler.getDateFormatToShow(),
-            SharedPreferencesHandler.getLanguage()
+            SharedPreferencesHandler.dateFormatToShow,
+            SharedPreferencesHandler.language
         )
     }
 
     fun readingDateAsHumanReadable(): String? {
 
         return readingDate.toString(
-            SharedPreferencesHandler.getDateFormatToShow(),
-            SharedPreferencesHandler.getLanguage()
+            SharedPreferencesHandler.dateFormatToShow,
+            SharedPreferencesHandler.language
         )
     }
 }

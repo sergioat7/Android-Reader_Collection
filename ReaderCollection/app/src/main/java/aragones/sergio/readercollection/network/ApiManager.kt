@@ -139,14 +139,14 @@ object ApiManager {
 
             val request = if (authRequirement != null) {
 
-                val accessToken = SharedPreferencesHandler.getCredentials().token
+                val accessToken = SharedPreferencesHandler.credentials.token
                 original.newBuilder()
-                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.getLanguage())
+                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.language)
                     .header(AUTHORIZATION_HEADER, accessToken)
                     .build()
             } else {
                 original.newBuilder()
-                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.getLanguage())
+                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.language)
                     .build()
             }
 

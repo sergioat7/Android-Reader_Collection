@@ -72,8 +72,8 @@ fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity) {
 private fun getPicker(editText: TextInputEditText, context: Context): MaterialDatePicker<Long> {
 
     val currentDateInMillis = editText.text.toString().toDate(
-        SharedPreferencesHandler.getDateFormatToShow(),
-        SharedPreferencesHandler.getLanguage(),
+        SharedPreferencesHandler.dateFormatToShow,
+        SharedPreferencesHandler.language,
         TimeZone.getTimeZone("UTC")
     )?.time ?: MaterialDatePicker.todayInUtcMilliseconds()
 
@@ -88,8 +88,8 @@ private fun getPicker(editText: TextInputEditText, context: Context): MaterialDa
                 calendar.timeInMillis = it
 
                 val dateString = calendar.time.toString(
-                    SharedPreferencesHandler.getDateFormatToShow(),
-                    SharedPreferencesHandler.getLanguage()
+                    SharedPreferencesHandler.dateFormatToShow,
+                    SharedPreferencesHandler.language
                 )
 
                 editText.setText(dateString)
