@@ -64,13 +64,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_view_book"
             tools:text="Harry Potter y la Piedra Filosofal"
-            style="@style/Widget.ReaderCollection.TextView.Title.Book"
+            style="@style/Widget.ReaderCollection.TextView.Title.VerticalBook"
             />
 
         <TextView
             android:id="@+id/text_view_author"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_8dp"
             android:text="@{book.authorsToString()}"
             android:visibility='@{book.authorsToString().equals("") ? View.GONE : View.VISIBLE}'
             app:layout_constraintEnd_toEndOf="parent"
