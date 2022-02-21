@@ -49,6 +49,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private lateinit var mainContentSequence: TapTargetSequence
     private var newBookToolbarSequence: TapTargetSequence? = null
     private var bookDetailsToolbarSequence: TapTargetSequence? = null
+    private var mainContentSequenceShown = false
     //endregion
 
     //region Lifecycle methods
@@ -101,6 +102,24 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        createSequence()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
+            mainContentSequence.cancel()
+            newBookToolbarSequence?.cancel()
+        }
+        if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
+            bookDetailsToolbarSequence?.cancel()
+        }
     }
 
     override fun onResume() {
@@ -258,62 +277,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             editable = false
             isDarkMode = context?.isDarkMode()
         }
-
-        mainContentSequence = TapTargetSequence(requireActivity())
-            .targets(createTargetsForScrollView())
-            .listener(object : TapTargetSequence.Listener {
-
-                override fun onSequenceFinish() {
-                    newBookToolbarSequence?.start()
-                }
-
-                override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                override fun onSequenceCanceled(lastTarget: TapTarget) {}
-            })
-        /*
-        Must be created with a delay in order to wait for the fragment menu creation,
-        otherwise it wouldn't be icons in the toolbar
-         */
-        lifecycleScope.launch(Dispatchers.Main) {
-            delay(500)
-
-            if (viewModel.isGoogleBook) {
-
-                newBookToolbarSequence = TapTargetSequence(requireActivity())
-                    .targets(createTargetsForNewBookToolbar())
-                    .listener(object : TapTargetSequence.Listener {
-
-                        override fun onSequenceFinish() {
-                            viewModel.setNewBookTutorialAsShown()
-                        }
-
-                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
-                    })
-                if (!viewModel.newBookTutorialShown) {
-                    mainContentSequence.start()
-                }
-            } else {
-
-                bookDetailsToolbarSequence = TapTargetSequence(requireActivity())
-                    .targets(createTargetsForBookDetailsToolbar())
-                    .listener(object : TapTargetSequence.Listener {
-
-                        override fun onSequenceFinish() {
-                            viewModel.setBookDetailsTutorialAsShown()
-                        }
-
-                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
-                    })
-                if (!viewModel.bookDetailsTutorialShown) {
-                    bookDetailsToolbarSequence?.start()
-                }
-            }
-        }
     }
     //endregion
 
@@ -465,7 +428,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 saveBookItem.itemId,
                 resources.getString(R.string.add_book_icon_tutorial_title),
                 resources.getString(R.string.add_book_icon_tutorial_description)
-            ).style(requireActivity(), true).cancelable(false).tintTarget(true)
+            ).style(requireActivity(), true).cancelable(true).tintTarget(true)
         )
     }
 
@@ -475,12 +438,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 binding.floatingActionButtonAddPhoto,
                 resources.getString(R.string.add_image_button_tutorial_title),
                 resources.getString(R.string.add_image_button_tutorial_description)
-            ).style(requireActivity(), true).cancelable(false).tintTarget(false),
+            ).style(requireActivity(), true).cancelable(true).tintTarget(false),
             TapTarget.forView(
                 binding.ratingBar,
                 resources.getString(R.string.rate_view_tutorial_title),
                 resources.getString(R.string.rate_view_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true)
+            ).style(requireActivity()).cancelable(true).tintTarget(true)
         )
     }
 
@@ -494,14 +457,87 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 editBookItem.itemId,
                 resources.getString(R.string.edit_book_icon_tutorial_title),
                 resources.getString(R.string.edit_book_icon_tutorial_description)
-            ).style(requireActivity(), true).cancelable(false).tintTarget(true),
+            ).style(requireActivity(), true).cancelable(true).tintTarget(true),
             TapTarget.forToolbarMenuItem(
                 binding.toolbar,
                 deleteBookItem.itemId,
                 resources.getString(R.string.delete_book_icon_tutorial_title),
                 resources.getString(R.string.delete_book_icon_tutorial_description)
-            ).style(requireActivity(), true).cancelable(false).tintTarget(true)
+            ).style(requireActivity(), true).cancelable(true).tintTarget(true)
         )
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
+            mainContentSequence = TapTargetSequence(requireActivity()).apply {
+                targets(createTargetsForScrollView())
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        mainContentSequenceShown = true
+                        newBookToolbarSequence?.start()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                if (!mainContentSequenceShown) {
+                    start()
+                }
+            }
+        }
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+
+            if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
+                newBookToolbarSequence = TapTargetSequence(requireActivity()).apply {
+                    targets(createTargetsForNewBookToolbar())
+                    continueOnCancel(false)
+                    listener(object : TapTargetSequence.Listener {
+                        override fun onSequenceFinish() {
+                            viewModel.setNewBookTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(
+                            lastTarget: TapTarget,
+                            targetClicked: Boolean
+                        ) {
+                        }
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                    if (mainContentSequenceShown) {
+                        start()
+                    }
+                }
+            } else if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
+
+                bookDetailsToolbarSequence = TapTargetSequence(requireActivity()).apply {
+                    targets(createTargetsForBookDetailsToolbar())
+                    continueOnCancel(false)
+                    listener(object : TapTargetSequence.Listener {
+                        override fun onSequenceFinish() {
+                            viewModel.setBookDetailsTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(
+                            lastTarget: TapTarget,
+                            targetClicked: Boolean
+                        ) {
+                        }
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                    start()
+                }
+            }
+        }
     }
     //endregion
 }

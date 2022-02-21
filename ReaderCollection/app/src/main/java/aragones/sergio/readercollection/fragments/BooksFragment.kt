@@ -49,6 +49,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     private lateinit var bottomNavigationBarSequence: TapTargetSequence
     private lateinit var mainContentSequence: TapTargetSequence
     private var toolbarSequence: TapTargetSequence? = null
+    private var bottomNavigationBarSequenceShown = false
+    private var mainContentSequenceShown = false
     //endregion
 
     //region Lifecycle methods
@@ -87,6 +89,22 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        createSequence()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (!viewModel.tutorialShown) {
+            bottomNavigationBarSequence.cancel()
+            mainContentSequence.cancel()
+            toolbarSequence?.cancel()
+        }
     }
 
     override fun onResume() {
@@ -211,53 +229,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             lifecycleOwner = this@BooksFragment
         }
         setupSearchView()
-
-        bottomNavigationBarSequence = TapTargetSequence(requireActivity())
-            .targets(createTargetsForBottomNavigationView())
-            .listener(object : TapTargetSequence.Listener {
-
-                override fun onSequenceFinish() {
-                    mainContentSequence.start()
-                }
-
-                override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                override fun onSequenceCanceled(lastTarget: TapTarget) {}
-            })
-        mainContentSequence = TapTargetSequence(requireActivity())
-            .targets(createTargetsForScrollView())
-            .listener(object : TapTargetSequence.Listener {
-
-                override fun onSequenceFinish() {
-                    toolbarSequence?.start()
-                }
-
-                override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                override fun onSequenceCanceled(lastTarget: TapTarget) {}
-            })
-        /*
-        Must be created with a delay in order to wait for the fragment menu creation,
-        otherwise it wouldn't be icons in the toolbar
-         */
-        lifecycleScope.launch(Dispatchers.Main) {
-            delay(500)
-            toolbarSequence = TapTargetSequence(requireActivity())
-                .targets(createTargetsForToolbar())
-                .listener(object : TapTargetSequence.Listener {
-
-                    override fun onSequenceFinish() {
-                        viewModel.setTutorialAsShown()
-                    }
-
-                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
-
-                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
-                })
-            if (!viewModel.tutorialShown) {
-                bottomNavigationBarSequence.start()
-            }
-        }
     }
     //endregion
 
@@ -329,25 +300,25 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 R.id.nav_graph_books,
                 resources.getString(R.string.books_view_tutorial_title),
                 resources.getString(R.string.books_view_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(true).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_search,
                 resources.getString(R.string.search_view_tutorial_title),
                 resources.getString(R.string.search_view_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(true).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_stats,
                 resources.getString(R.string.stats_view_tutorial_title),
                 resources.getString(R.string.stats_view_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(true).tintTarget(true),
             Constants.createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_settings,
                 resources.getString(R.string.settings_view_tutorial_title),
                 resources.getString(R.string.settings_view_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true)
+            ).style(requireActivity()).cancelable(true).tintTarget(true)
         )
     }
 
@@ -361,13 +332,13 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 syncItem.itemId,
                 resources.getString(R.string.sync_icon_tutorial_title),
                 resources.getString(R.string.sync_icon_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true),
+            ).style(requireActivity()).cancelable(true).tintTarget(true),
             TapTarget.forToolbarMenuItem(
                 binding.toolbar,
                 sortItem.itemId,
                 resources.getString(R.string.sort_icon_tutorial_title),
                 resources.getString(R.string.sort_icon_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(true)
+            ).style(requireActivity()).cancelable(true).tintTarget(true)
         )
     }
 
@@ -377,8 +348,76 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 binding.searchViewBooks,
                 resources.getString(R.string.search_bar_books_tutorial_title),
                 resources.getString(R.string.search_bar_books_tutorial_description)
-            ).style(requireActivity()).cancelable(false).tintTarget(false)
+            ).style(requireActivity()).cancelable(true).tintTarget(false)
         )
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.tutorialShown) {
+            bottomNavigationBarSequence = TapTargetSequence(requireActivity()).apply {
+                targets(createTargetsForBottomNavigationView())
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        bottomNavigationBarSequenceShown = true
+                        mainContentSequence.start()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                if (!bottomNavigationBarSequenceShown) {
+                    start()
+                }
+            }
+
+            mainContentSequence = TapTargetSequence(requireActivity()).apply {
+                targets(createTargetsForScrollView())
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        mainContentSequenceShown = true
+                        toolbarSequence?.start()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                if (bottomNavigationBarSequenceShown && !mainContentSequenceShown) {
+                    start()
+                }
+            }
+            /*
+            Must be created with a delay in order to wait for the fragment menu creation,
+            otherwise it wouldn't be icons in the toolbar
+             */
+            lifecycleScope.launch(Dispatchers.Main) {
+                delay(500)
+                toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                    targets(createTargetsForToolbar())
+                    continueOnCancel(false)
+                    listener(object : TapTargetSequence.Listener {
+                        override fun onSequenceFinish() {
+                            viewModel.setTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(
+                            lastTarget: TapTarget,
+                            targetClicked: Boolean
+                        ) {
+                        }
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                    if (bottomNavigationBarSequenceShown && mainContentSequenceShown) {
+                        start()
+                    }
+                }
+            }
+        }
     }
     //endregion
 }
