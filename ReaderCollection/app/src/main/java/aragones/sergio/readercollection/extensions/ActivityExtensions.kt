@@ -29,11 +29,11 @@ fun Activity.hideSoftKeyboard() {
     } ?: return
 }
 
-fun Activity.getCustomColor(colorId: Int): Int {
+fun Context.getCustomColor(colorId: Int): Int {
     return ResourcesCompat.getColor(resources, colorId, null)
 }
 
-fun Activity.getCustomFont(fontId: Int): Typeface? {
+fun Context.getCustomFont(fontId: Int): Typeface? {
     return ResourcesCompat.getFont(this, fontId)
 }
 
