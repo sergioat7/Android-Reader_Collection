@@ -48,6 +48,10 @@
     <string name="longer_book">Libro más largo</string>
     <string name="months">Meses</string>
     <string name="formats">Formatos</string>
+    <string name="import_file">Importar libros</string>
+    <string name="export_file">Exportar libros</string>
+    <string name="import_confirmation">¿Estás seguro de que quieres IMPORTAR los datos? Este proceso puede llevar un tiempo.</string>
+    <string name="export_confirmation">¿Estás seguro de que quieres EXPORTAR los datos? Este proceso puede llevar un tiempo.</string>
 
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>

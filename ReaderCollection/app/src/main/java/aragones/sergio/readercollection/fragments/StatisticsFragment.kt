@@ -7,6 +7,9 @@ package aragones.sergio.readercollection.fragments
 
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -48,6 +51,34 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         toolbar = binding.toolbar
         initializeUi()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.statistics_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_import -> {
+
+                showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
+                    //TODO:
+                })
+                return true
+            }
+            R.id.action_export -> {
+
+                showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
+                    //TODO:
+                })
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
