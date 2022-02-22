@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class StatisticsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    userRepository: UserRepository
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -68,6 +68,7 @@ class StatisticsViewModel @Inject constructor(
     }
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
+    var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -105,6 +106,11 @@ class StatisticsViewModel @Inject constructor(
                 noBooksError()
             }
         ).addTo(disposables)
+    }
+
+    fun setTutorialAsShown() {
+        userRepository.setHasStatisticsTutorialBeenShown(true)
+        tutorialShown = true
     }
     //endregion
 

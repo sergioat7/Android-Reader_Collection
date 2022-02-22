@@ -12,6 +12,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.OnItemClickListener
@@ -20,11 +21,14 @@ import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.extensions.getCustomFont
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.*
@@ -32,6 +36,9 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
 
@@ -43,6 +50,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     //region Private properties
     private lateinit var viewModel: StatisticsViewModel
     private val customColors = ArrayList<Int>()
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -79,6 +87,25 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            createSequence()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        toolbarSequence?.cancel()
     }
 
     override fun onResume() {
@@ -443,6 +470,39 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             format
         )
         findNavController().navigate(action)
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.tutorialShown) {
+            toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                targets(
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_import).itemId,
+                        resources.getString(R.string.import_file_icon_tutorial_title),
+                        resources.getString(R.string.import_file_icon_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true),
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_export).itemId,
+                        resources.getString(R.string.export_file_icon_tutorial_title),
+                        resources.getString(R.string.export_file_icon_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true)
+                )
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                start()
+            }
+        }
     }
     //endregion
 

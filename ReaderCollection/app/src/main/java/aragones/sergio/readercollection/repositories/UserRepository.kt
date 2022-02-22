@@ -47,6 +47,9 @@ class UserRepository @Inject constructor(
     val hasSearchTutorialBeenShown: Boolean
         get() = SharedPreferencesHandler.hasSearchTutorialBeenShown
 
+    val hasStatisticsTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasStatisticsTutorialBeenShown
+
     val hasSettingsTutorialBeenShown: Boolean
         get() = SharedPreferencesHandler.hasSettingsTutorialBeenShown
 
@@ -146,6 +149,10 @@ class UserRepository @Inject constructor(
 
     fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
         SharedPreferencesHandler.hasSearchTutorialBeenShown = hasSearchTutorialBeenShown
+    }
+
+    fun setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.hasStatisticsTutorialBeenShown = hasStatisticsTutorialBeenShown
     }
 
     fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {

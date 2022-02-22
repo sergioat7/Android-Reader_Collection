@@ -139,6 +139,10 @@
     <string name="sort_icon_tutorial_description">Aquí podrás ordenar tus libros por diferentes valores</string>
     <string name="search_bar_tutorial_title">Este es el botón de búsqueda</string>
     <string name="search_bar_tutorial_description">Aquí podrás buscar los libros que quieras añadir a tu colección</string>
+    <string name="import_file_icon_tutorial_title">Este es el botón de importar archivo</string>
+    <string name="import_file_icon_tutorial_description">Aquí podrás importar desde un archivo los datos de los libros que quieras almacenar</string>
+    <string name="export_file_icon_tutorial_title">Este es el botón de exportar archivo</string>
+    <string name="export_file_icon_tutorial_description">Aquí podrás guardar los datos de tus libros en un archivo</string>
     <string name="save_settings_button_tutorial_title">Este es el botón de guardar</string>
     <string name="save_settings_button_tutorial_description">Aquí podrás guardar los datos y la configuración actual después de modificarlos a tu gusto</string>
     <string name="delete_profile_icon_tutorial_title">Este es el botón de borrar perfil</string>
