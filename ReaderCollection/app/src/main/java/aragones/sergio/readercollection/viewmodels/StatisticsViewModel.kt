@@ -33,7 +33,7 @@ class StatisticsViewModel @Inject constructor(
     //region Private properties
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
-    private val _booksError = MutableLiveData<ErrorResponse>()
+    private val _booksError = MutableLiveData<ErrorResponse?>()
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
@@ -45,7 +45,7 @@ class StatisticsViewModel @Inject constructor(
     //region Public properties
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
-    val booksError: LiveData<ErrorResponse> = _booksError
+    val booksError: LiveData<ErrorResponse?> = _booksError
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
@@ -74,7 +74,9 @@ class StatisticsViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -89,7 +91,9 @@ class StatisticsViewModel @Inject constructor(
             null
         ).subscribeBy(
             onComplete = {
-                noBooksError()
+
+                _books.value = emptyList()
+                manageError(ErrorResponse("", R.string.error_database))
             },
             onSuccess = { books ->
 
@@ -103,7 +107,9 @@ class StatisticsViewModel @Inject constructor(
                 _booksLoading.value = false
             },
             onError = {
-                noBooksError()
+
+                _books.value = emptyList()
+                manageError(ErrorResponse("", R.string.error_database))
             }
         ).addTo(disposables)
     }
@@ -183,6 +189,13 @@ class StatisticsViewModel @Inject constructor(
             )
         }
         _booksByFormatStats.value = entries
+    }
+
+    private fun manageError(error: ErrorResponse) {
+
+        _booksLoading.value = false
+        _booksError.value = error
+        _booksError.value = null
     }
     //endregion
 }

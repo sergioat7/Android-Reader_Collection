@@ -84,7 +84,6 @@ class BookListViewModel @Inject constructor(
             sortParam
         ).subscribeBy(
             onComplete = {
-
                 noBooksError()
             },
             onSuccess = {
@@ -115,7 +114,6 @@ class BookListViewModel @Inject constructor(
                 }
             },
             onError = {
-
                 noBooksError()
             }
         ).addTo(disposables)
@@ -141,7 +139,6 @@ class BookListViewModel @Inject constructor(
 
         _booksLoading.value = false
         _booksError.value = ErrorResponse("", R.string.error_database)
-        onDestroy()
     }
     //endregion
 }

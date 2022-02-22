@@ -42,7 +42,9 @@ class LoginViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -61,7 +63,6 @@ class LoginViewModel @Inject constructor(
 
                 _loginLoading.value = false
                 _loginError.value = ApiManager.handleError(it)
-                onDestroy()
             }
         ).addTo(disposables)
     }
@@ -96,8 +97,8 @@ class LoginViewModel @Inject constructor(
             },
             onError = {
 
+                _loginLoading.value = false
                 _loginError.value = ErrorResponse("", R.string.error_database)
-                onDestroy()
             }
         ).addTo(disposables)
     }

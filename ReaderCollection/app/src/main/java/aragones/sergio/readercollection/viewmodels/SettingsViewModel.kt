@@ -31,7 +31,7 @@ class SettingsViewModel @Inject constructor(
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
-    private val _profileError = MutableLiveData<ErrorResponse>()
+    private val _profileError = MutableLiveData<ErrorResponse?>()
     //endregion
 
     //region Public properties
@@ -43,14 +43,16 @@ class SettingsViewModel @Inject constructor(
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
-    val profileError: LiveData<ErrorResponse> = _profileError
+    val profileError: LiveData<ErrorResponse?> = _profileError
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -100,18 +102,12 @@ class SettingsViewModel @Inject constructor(
                             }
                         },
                         onError = {
-
-                            _profileLoading.value = false
-                            _profileError.value = ApiManager.handleError(it)
-                            onDestroy()
+                            manageError(ApiManager.handleError(it))
                         }
                     ).addTo(disposables)
                 },
                 onError = {
-
-                    _profileLoading.value = false
-                    _profileError.value = ApiManager.handleError(it)
-                    onDestroy()
+                    manageError(ApiManager.handleError(it))
                 }
             ).addTo(disposables)
         }
@@ -157,10 +153,7 @@ class SettingsViewModel @Inject constructor(
                 resetDatabase()
             },
             onError = {
-
-                _profileLoading.value = false
-                _profileError.value = ApiManager.handleError(it)
-                onDestroy()
+                manageError(ApiManager.handleError(it))
             }
         ).addTo(disposables)
     }
@@ -217,6 +210,13 @@ class SettingsViewModel @Inject constructor(
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    private fun manageError(error: ErrorResponse) {
+
+        _profileLoading.value = false
+        _profileError.value = error
+        _profileError.value = null
     }
     //endregion
 }

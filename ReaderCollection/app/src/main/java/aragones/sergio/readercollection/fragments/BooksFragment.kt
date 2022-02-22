@@ -262,8 +262,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             }
         }
 
-        viewModel.booksError.observe(viewLifecycleOwner) { error ->
-            manageError(error)
+        viewModel.booksError.observe(viewLifecycleOwner) {
+            it?.let { manageError(it) }
         }
     }
 
