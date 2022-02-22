@@ -180,8 +180,8 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
             }
         }
 
-        viewModel.profileError.observe(viewLifecycleOwner) { error ->
-            manageError(error)
+        viewModel.profileError.observe(viewLifecycleOwner) {
+            it?.let { manageError(it) }
         }
     }
 

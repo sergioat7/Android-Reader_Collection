@@ -42,9 +42,7 @@ class PopupSyncAppViewModel @Inject constructor(
                 _loginError.value = null
             },
             onError = {
-
                 _loginError.value = ErrorResponse("", R.string.error_database)
-                onDestroy()
             }
         ).addTo(disposables)
     }

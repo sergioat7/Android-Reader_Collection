@@ -55,7 +55,6 @@ class RegisterViewModel @Inject constructor(
 
                 _registerLoading.value = false
                 _registerError.value = ApiManager.handleError(it)
-                onDestroy()
             }
         ).addTo(disposables)
     }

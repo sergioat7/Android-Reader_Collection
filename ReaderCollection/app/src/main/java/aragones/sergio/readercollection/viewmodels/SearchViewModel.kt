@@ -47,6 +47,16 @@ class SearchViewModel @Inject constructor(
     var tutorialShown = userRepository.hasSearchTutorialBeenShown
     //endregion
 
+    //region Lifecycle methods
+    override fun onDestroy() {
+        super.onDestroy()
+
+        booksRepository.onDestroy()
+        googleBookRepository.onDestroy()
+        userRepository.onDestroy()
+    }
+    //endregion
+
     //region Public methods
     fun searchBooks() {
 
@@ -76,7 +86,6 @@ class SearchViewModel @Inject constructor(
                 _searchLoading.value = false
                 _searchError.value = ErrorResponse("", R.string.error_search)
                 _searchError.value = null
-                onDestroy()
             }
         ).addTo(disposables)
     }
@@ -109,7 +118,6 @@ class SearchViewModel @Inject constructor(
                     _bookAdded.value = null
                     _searchError.value = ApiManager.handleError(it)
                     _searchError.value = null
-                    onDestroy()
                 }
             ).addTo(disposables)
         }

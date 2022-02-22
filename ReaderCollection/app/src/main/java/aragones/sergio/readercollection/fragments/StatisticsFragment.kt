@@ -304,7 +304,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         }
 
         viewModel.booksError.observe(viewLifecycleOwner) {
-            manageError(it)
+            it?.let { manageError(it) }
         }
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner) { entries ->
