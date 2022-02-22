@@ -413,7 +413,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
                 onItemClickListener = this@StatisticsFragment
-                isDarkMode = requireContext().isDarkMode()
+                isDarkMode = context.isDarkMode()
             }
         }
 
@@ -424,7 +424,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
                 onItemClickListener = this@StatisticsFragment
-                isDarkMode = requireContext().isDarkMode()
+                isDarkMode = context.isDarkMode()
             }
         }
 
