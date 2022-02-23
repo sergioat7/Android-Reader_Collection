@@ -74,7 +74,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             R.id.action_import -> {
 
                 showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
-                    //TODO:
+                    viewModel.importData()
                 })
                 return true
             }

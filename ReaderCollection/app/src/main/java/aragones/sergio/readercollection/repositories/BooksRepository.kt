@@ -12,6 +12,7 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.BookApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
+import aragones.sergio.readercollection.utils.CsvReader
 import aragones.sergio.readercollection.utils.CsvWriter
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
@@ -20,6 +21,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.io.File
+import java.io.FileReader
 import java.io.FileWriter
 import javax.inject.Inject
 
@@ -103,6 +105,60 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .getBooksObserver(query)
             .`as`(RxJavaBridge.toV3Maybe())
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    fun importDataFrom(file: File): Completable {
+
+        val csvReader = CsvReader(FileReader(file))
+        var count = 0
+        val columns = StringBuilder()
+        val value = StringBuilder()
+
+        var nextLine = csvReader.readNext()
+        while (nextLine != null) {
+            for (i in nextLine.indices) {
+                if (count == 0) {
+                    if (i == nextLine.size - 1) {
+                        columns.append(nextLine[i])
+                    } else {
+                        columns.append(nextLine[i]).append(",")
+                    }
+                } else {
+                    when (i) {
+                        0 -> value.append("('").append(nextLine[i]).append("',")
+                        nextLine.size - 1 -> value.append("'").append(nextLine[i]).append("'),")
+                        else -> value.append("'").append(nextLine[i]).append("',")
+                    }
+                }
+            }
+            count += 1
+            nextLine = csvReader.readNext()
+        }
+
+        val query = SimpleSQLiteQuery(
+            "INSERT INTO Book ($columns) VALUES ${value.dropLast(1)}"
+        )
+        return Completable.create { emitter ->
+
+            database
+                .bookDao()
+                .insertBooksObserver(query)
+                .`as`(RxJavaBridge.toV3Single())
+                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+                .observeOn(ApiManager.OBSERVER_SCHEDULER)
+                .subscribeBy(
+                    onSuccess = {
+
+                        //TODO: send to server
+                        emitter.onComplete()
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
+        }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
