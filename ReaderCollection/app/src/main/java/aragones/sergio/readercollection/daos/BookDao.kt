@@ -18,6 +18,9 @@ interface BookDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertBooksObserver(books: List<BookResponse>): Completable
 
+    @RawQuery
+    fun insertBooksObserver(query: SupportSQLiteQuery): Single<List<BookResponse>>
+
     @Update(onConflict = OnConflictStrategy.REPLACE)
     fun updateBooksObserver(books: List<BookResponse>): Completable
 

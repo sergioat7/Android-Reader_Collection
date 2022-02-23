@@ -123,7 +123,29 @@ class StatisticsViewModel @Inject constructor(
         tutorialShown = true
     }
 
+    fun importData() {
 
+        _booksLoading.value = true
+        val exportDir =
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "")
+        if (!exportDir.exists()) exportDir.mkdirs()
+        val file = File(exportDir, "books.csv")
+
+        if (file.exists()) {
+            booksRepository.importDataFrom(file).subscribeBy(
+                onComplete = {
+
+                    _booksLoading.value = false
+                    _exportSuccessMessage.value = Pair(R.string.file_created, file.path)
+                    _exportSuccessMessage.value = null
+                },
+                onError = {
+                    manageError(ErrorResponse("", R.string.error_database))
+                }
+            ).addTo(disposables)
+        } else {
+            //TODO: show error
+        }
     }
 
     fun exportData() {
