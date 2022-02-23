@@ -6,18 +6,21 @@
 package aragones.sergio.readercollection.repositories
 
 import androidx.sqlite.db.SimpleSQLiteQuery
+import aragones.sergio.readercollection.base.BaseRepository
 import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.BookApiService
 import aragones.sergio.readercollection.persistence.AppDatabase
-import aragones.sergio.readercollection.base.BaseRepository
+import aragones.sergio.readercollection.utils.CsvWriter
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.io.File
+import java.io.FileWriter
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
@@ -102,6 +105,31 @@ class BooksRepository @Inject constructor(
             .`as`(RxJavaBridge.toV3Maybe())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    fun exportDataTo(file: File): Boolean {
+
+        return try {
+            if (file.createNewFile()) {
+                val csvWriter = CsvWriter(FileWriter(file))
+                val cursor = database.query("SELECT * FROM Book", null)
+                csvWriter.writeNext(cursor.columnNames)
+                while (cursor.moveToNext()) {
+                    val arrStr = arrayOfNulls<String>(cursor.columnCount)
+                    for (i in 0 until cursor.columnCount - 1) arrStr[i] = cursor.getString(i)
+                    csvWriter.writeNext(arrStr)
+                }
+                csvWriter.close()
+                cursor.close()
+                true
+            } else {
+                file.delete()
+                false
+            }
+        } catch (e: Exception) {
+            file.delete()
+            false
+        }
     }
 
     fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {

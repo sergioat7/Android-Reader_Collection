@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.viewmodels
 
+import android.os.Environment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
@@ -22,6 +23,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.io.File
 import java.util.*
 import javax.inject.Inject
 
@@ -34,6 +36,7 @@ class StatisticsViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse?>()
+    private val _exportSuccessMessage = MutableLiveData<Pair<Int, String>?>()
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
@@ -46,6 +49,7 @@ class StatisticsViewModel @Inject constructor(
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse?> = _booksError
+    val exportSuccessMessage: LiveData<Pair<Int, String>?> = _exportSuccessMessage
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
@@ -118,17 +122,29 @@ class StatisticsViewModel @Inject constructor(
         userRepository.setHasStatisticsTutorialBeenShown(true)
         tutorialShown = true
     }
+
+
+    }
+
+    fun exportData() {
+
+        _booksLoading.value = true
+        val exportDir =
+            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "")
+        if (!exportDir.exists()) exportDir.mkdirs()
+        val file = File(exportDir, "books.csv")
+
+        if (booksRepository.exportDataTo(file)) {
+            _booksLoading.value = false
+            _exportSuccessMessage.value = Pair(R.string.file_created, file.path)
+            _exportSuccessMessage.value = null
+        } else {
+            manageError(ErrorResponse("", R.string.error_database))
+        }
+    }
     //endregion
 
     //region Private methods
-    private fun noBooksError() {
-
-        _books.value = emptyList()
-        _booksLoading.value = false
-        _booksError.value = ErrorResponse("", R.string.error_database)
-        onDestroy()
-    }
-
     private fun createBooksByYearStats(books: List<BookResponse>) {
 
         val booksByYear = books

@@ -81,7 +81,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             R.id.action_export -> {
 
                 showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
-                    //TODO:
+                    viewModel.exportData()
                 })
                 return true
             }
@@ -300,6 +300,14 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 showLoading()
             } else {
                 hideLoading()
+            }
+        }
+
+        viewModel.exportSuccessMessage.observe(viewLifecycleOwner) {
+            it?.let {
+
+                val message = resources.getString(it.first, it.second)
+                showPopupDialog(message)
             }
         }
 

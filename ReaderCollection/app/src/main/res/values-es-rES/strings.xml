@@ -52,6 +52,7 @@
     <string name="export_file">Exportar libros</string>
     <string name="import_confirmation">¿Estás seguro de que quieres IMPORTAR los datos? Este proceso puede llevar un tiempo.</string>
     <string name="export_confirmation">¿Estás seguro de que quieres EXPORTAR los datos? Este proceso puede llevar un tiempo.</string>
+    <string name="file_created">Archivo creado en %s</string>
 
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>
