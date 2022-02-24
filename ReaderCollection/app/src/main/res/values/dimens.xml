@@ -49,10 +49,13 @@
     <dimen name="text_size_16sp">16sp</dimen>
     <dimen name="text_size_14sp">14sp</dimen>
     <dimen name="text_size_12sp">12sp</dimen>
+    <dimen name="text_size_6sp">6sp</dimen>
+    <dimen name="text_size_4sp">4sp</dimen>
+    <dimen name="text_size_3sp">3sp</dimen>
+    <dimen name="text_size_2sp">2sp</dimen>
 
     <!--  radius  -->
     <dimen name="radius_100dp">100dp</dimen>
-    <dimen name="radius_36dp">36dp</dimen>
     <dimen name="radius_20dp">20dp</dimen>
     <dimen name="radius_15dp">15dp</dimen>
     <dimen name="radius_10dp">10dp</dimen>

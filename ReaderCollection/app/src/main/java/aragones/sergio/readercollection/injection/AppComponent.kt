@@ -17,11 +17,13 @@ import dagger.Component
 interface AppComponent {
 
     fun inject(bookDetailViewModelFactory: BookDetailViewModelFactory)
+    fun inject(bookListViewModelFactory: BookListViewModelFactory)
     fun inject(booksViewModelFactory: BooksViewModelFactory)
     fun inject(landingViewModelFactory: LandingViewModelFactory)
     fun inject(loginViewModelFactory: LoginViewModelFactory)
     fun inject(popupSyncAppViewModelFactory: PopupSyncAppViewModelFactory)
-    fun inject(profileViewModelFactory: ProfileViewModelFactory)
     fun inject(registerViewModelFactory: RegisterViewModelFactory)
     fun inject(searchViewModelFactory: SearchViewModelFactory)
+    fun inject(settingsViewModelFactory: SettingsViewModelFactory)
+    fun inject(statisticsViewModelFactory: StatisticsViewModelFactory)
 }

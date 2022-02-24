@@ -18,7 +18,6 @@ import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.LoginViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LoginViewModel
-import kotlinx.android.synthetic.main.fragment_login.*
 
 class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
@@ -87,7 +86,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.loginFormState.observe(viewLifecycleOwner, {
+        viewModel.loginFormState.observe(viewLifecycleOwner) {
 
             binding.textInputLayoutUsername.setError("")
             binding.textInputLayoutPassword.setError("")
@@ -99,18 +98,18 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             if (loginState.passwordError != null) {
                 binding.textInputLayoutPassword.setError(getString(loginState.passwordError))
             }
-        })
+        }
 
-        viewModel.loginLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.loginLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.loginError.observe(viewLifecycleOwner, { error ->
+        viewModel.loginError.observe(viewLifecycleOwner) { error ->
 
             if (error == null) {
                 launchActivity(MainActivity::class.java, true)
@@ -119,7 +118,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                 hideLoading()
                 manageError(error)
             }
-        })
+        }
     }
 
     private fun loginDataChanged() {

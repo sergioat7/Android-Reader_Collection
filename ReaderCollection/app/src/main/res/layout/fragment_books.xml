@@ -16,6 +16,10 @@
             type="android.view.View"
             />
 
+        <import
+            type="aragones.sergio.readercollection.utils.Constants"
+            />
+
         <variable
             name="fragment"
             type="aragones.sergio.readercollection.fragments.BooksFragment"
@@ -64,7 +68,7 @@
                 android:paddingBottom="@dimen/padding_24dp"
                 >
 
-                <SearchView
+                <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_view_books"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/size_40dp"
@@ -119,34 +123,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_24dp"
-                    android:layout_marginTop="@dimen/margin_8dp"
                     android:text="@string/pending"
                     android:visibility="@{viewModel.pendingBooksVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toStartOf="@+id/button_see_more_pending"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_show_all_pending"
+                    app:layout_constraintEnd_toStartOf="@+id/button_show_all_pending"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+                    app:layout_constraintTop_toTopOf="@+id/button_show_all_pending"
                     style="@style/Widget.ReaderCollection.TextView.Title.Section"
                     />
 
                 <Button
-                    android:id="@+id/button_see_more_pending"
+                    android:id="@+id/button_show_all_pending"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:layout_marginEnd="@dimen/margin_24dp"
-                    android:onClick="@{fragment::seeMoreBooks}"
-                    android:text="@string/see_more"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_view_pending_books"
+                    android:onClick="@{fragment::showAllBooks}"
+                    android:text="@string/show_all"
+                    android:visibility="@{viewModel.seeMorePendingBooksVisible ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/text_view_pending_books"
-                    style="@style/Widget.ReaderCollection.TextButton.Main.Link"
+                    app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                     />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_pending_books"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/size_320dp"
-                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:clipToPadding="false"
                     android:paddingStart="@dimen/padding_12dp"
                     android:paddingEnd="@dimen/padding_12dp"
@@ -175,34 +179,34 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/margin_24dp"
-                    android:layout_marginTop="@dimen/margin_8dp"
                     android:text="@string/read"
                     android:visibility="@{viewModel.readBooksVisible ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toStartOf="@+id/button_see_more_read"
+                    app:layout_constraintBottom_toBottomOf="@+id/button_show_all_read"
+                    app:layout_constraintEnd_toStartOf="@+id/button_show_all_read"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/view_separator_pending_read"
+                    app:layout_constraintTop_toTopOf="@+id/button_show_all_read"
                     style="@style/Widget.ReaderCollection.TextView.Title.Section"
                     />
 
                 <Button
-                    android:id="@+id/button_see_more_read"
+                    android:id="@+id/button_show_all_read"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:layout_marginEnd="@dimen/margin_24dp"
-                    android:onClick="@{fragment::seeMoreBooks}"
-                    android:text="@string/see_more"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/text_view_read_books"
+                    android:onClick="@{fragment::showAllBooks}"
+                    android:text="@string/show_all"
+                    android:visibility="@{viewModel.seeMoreReadBooksVisible ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/text_view_read_books"
-                    style="@style/Widget.ReaderCollection.TextButton.Main.Link"
+                    app:layout_constraintTop_toBottomOf="@id/view_separator_pending_read"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                     />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_books"
                     android:layout_width="0dp"
                     android:layout_height="@dimen/size_320dp"
-                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:layout_marginTop="@dimen/margin_16dp"
                     android:clipToPadding="false"
                     android:paddingStart="@dimen/padding_12dp"
                     android:paddingEnd="@dimen/padding_12dp"

@@ -27,7 +27,7 @@ class LandingViewModel @Inject constructor(
 
     //region Public properties
     val language: String
-        get() = SharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.language
     val landingClassToStart = _landingClassToStart
     //endregion
 
@@ -41,17 +41,17 @@ class LandingViewModel @Inject constructor(
     //region Public methods
     fun checkVersion() {
 
-        val currentVersion = SharedPreferencesHandler.getVersion()
+        val currentVersion = SharedPreferencesHandler.version
         val newVersion = BuildConfig.VERSION_CODE
         if (newVersion > currentVersion) {
 
-            SharedPreferencesHandler.setVersion(newVersion)
+            SharedPreferencesHandler.version = newVersion
             SharedPreferencesHandler.removePassword()
             SharedPreferencesHandler.removeCredentials()
             resetDatabase()
         } else {
 
-            _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn()) {
+            _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn) {
                 MainActivity::class.java
             } else {
                 LoginActivity::class.java
@@ -61,7 +61,7 @@ class LandingViewModel @Inject constructor(
 
     fun checkTheme() {
 
-        when (SharedPreferencesHandler.getThemeMode()) {
+        when (SharedPreferencesHandler.themeMode) {
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)

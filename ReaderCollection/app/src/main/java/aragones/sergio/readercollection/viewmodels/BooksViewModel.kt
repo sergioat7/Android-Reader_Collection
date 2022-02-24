@@ -6,30 +6,24 @@
 package aragones.sergio.readercollection.viewmodels
 
 import android.content.Context
-import android.view.Gravity
-import android.widget.LinearLayout
-import android.widget.NumberPicker
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
-import aragones.sergio.readercollection.extensions.getPickerParams
-import aragones.sergio.readercollection.extensions.setup
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    userRepository: UserRepository
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -37,12 +31,9 @@ class BooksViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private var sortParam = userRepository.sortParam
-    private var isSortDescending = userRepository.isSortDescending
     //endregion
 
     //region Public properties
-    var query: String = ""
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> = _books.map {
         it.filter { book -> book.state == State.READING }
@@ -62,12 +53,22 @@ class BooksViewModel @Inject constructor(
     val pendingBooksVisible: LiveData<Boolean> = pendingBooks.map {
         it.isNotEmpty()
     }
+    val seeMorePendingBooksVisible: LiveData<Boolean> = pendingBooks.map {
+        it.size > Constants.BOOKS_TO_SHOW
+    }
     val readBooksVisible: LiveData<Boolean> = readBooks.map {
         it.isNotEmpty()
+    }
+    val seeMoreReadBooksVisible: LiveData<Boolean> = readBooks.map {
+        it.size > Constants.BOOKS_TO_SHOW
     }
     val noResultsVisible: LiveData<Boolean> = _books.map {
         it.isEmpty()
     }
+    var sortParam = userRepository.sortParam
+    var isSortDescending = userRepository.isSortDescending
+    var query: String = ""
+    var tutorialShown = userRepository.hasBooksTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -108,47 +109,14 @@ class BooksViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun sort(context: Context) {
+    fun sort(context: Context, acceptHandler: (() -> Unit)?) {
+        super.sort(context, sortParam, isSortDescending) { newSortParam, newIsSortDescending ->
 
-        val sortingKeys = context.resources.getStringArray(R.array.sorting_param_keys)
-        val sortingValues = context.resources.getStringArray(R.array.sorting_param_values)
-
-        val dialogView = LinearLayout(context)
-        dialogView.orientation = LinearLayout.HORIZONTAL
-
-        val sortKeysPicker = NumberPicker(context)
-        sortKeysPicker.setup(sortingValues)
-        sortParam?.let {
-            sortKeysPicker.value = sortingKeys.indexOf(it)
+            sortParam = newSortParam
+            isSortDescending = newIsSortDescending
+            fetchBooks()
+            acceptHandler?.invoke()
         }
-
-        val sortOrdersPicker = NumberPicker(context)
-        sortOrdersPicker.setup(context.resources.getStringArray(R.array.sorting_order_values))
-        sortOrdersPicker.value = if (isSortDescending) 1 else 0
-
-        val params = LinearLayout.LayoutParams(50, 50)
-        params.gravity = Gravity.CENTER
-
-        dialogView.layoutParams = params
-        dialogView.addView(sortKeysPicker, getPickerParams())
-        dialogView.addView(sortOrdersPicker, getPickerParams())
-
-        MaterialAlertDialogBuilder(context)
-            .setTitle(context.resources.getString(R.string.order_by))
-            .setView(dialogView)
-            .setCancelable(false)
-            .setPositiveButton(context.resources.getString(R.string.accept)) { dialog, _ ->
-
-                val sort = sortingKeys[sortKeysPicker.value]
-                sortParam = if (sort.isNotBlank()) sort else null
-                isSortDescending = sortOrdersPicker.value == 1
-                fetchBooks()
-                dialog.dismiss()
-            }
-            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
     }
 
     fun searchBooks(query: String) {
@@ -157,6 +125,11 @@ class BooksViewModel @Inject constructor(
         _books.value = _originalBooks.value?.filter { book ->
             book.title?.contains(query, true) ?: false
         } ?: listOf()
+    }
+
+    fun setTutorialAsShown() {
+        userRepository.setHasBooksTutorialBeenShown(true)
+        tutorialShown = true
     }
     //endregion
 }

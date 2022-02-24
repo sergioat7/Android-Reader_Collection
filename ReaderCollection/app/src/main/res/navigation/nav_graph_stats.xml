@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 24/1/2022
+  -->
+
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_stats"
+    app:startDestination="@id/statisticsFragment"
+    >
+
+    <fragment
+        android:id="@+id/statisticsFragment"
+        android:name="aragones.sergio.readercollection.fragments.StatisticsFragment"
+        android:label="StatisticsFragment"
+        tools:layout="@layout/fragment_statistics"
+        >
+
+        <action
+            android:id="@+id/action_statisticsFragment_to_bookDetailFragment"
+            app:destination="@id/bookDetailFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right"
+            />
+
+        <action
+            android:id="@+id/action_statisticsFragment_to_bookListFragment"
+            app:destination="@id/bookListFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookDetailFragment"
+        android:name="aragones.sergio.readercollection.fragments.BookDetailFragment"
+        android:label="BookDetailFragment"
+        tools:layout="@layout/fragment_book_detail"
+        >
+
+        <argument
+            android:name="bookId"
+            app:argType="string"
+            />
+
+        <argument
+            android:name="isGoogleBook"
+            android:defaultValue="false"
+            app:argType="boolean"
+            />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookListFragment"
+        android:name="aragones.sergio.readercollection.fragments.BookListFragment"
+        android:label="BookListFragment"
+        tools:layout="@layout/fragment_book_list"
+        >
+
+        <argument
+            android:name="state"
+            app:argType="string"
+            />
+
+        <argument
+            android:name="sortParam"
+            app:argType="string"
+            app:nullable="true"
+            />
+
+        <argument
+            android:name="isSortDescending"
+            app:argType="boolean"
+            />
+
+        <argument
+            android:name="query"
+            app:argType="string"
+            />
+
+        <argument
+            android:name="year"
+            app:argType="integer"
+            />
+
+        <argument
+            android:name="month"
+            app:argType="integer"
+            />
+
+        <argument
+            android:name="author"
+            app:argType="string"
+            app:nullable="true"
+            />
+
+        <argument
+            android:name="format"
+            app:argType="string"
+            app:nullable="true"
+            />
+
+        <action
+            android:id="@+id/action_bookListFragment_to_bookDetailFragment"
+            app:destination="@id/bookDetailFragment"
+            app:enterAnim="@anim/slide_left"
+            app:exitAnim="@anim/wait_anim"
+            app:popEnterAnim="@anim/wait_anim"
+            app:popExitAnim="@anim/slide_right"
+            />
+
+    </fragment>
+
+</navigation>

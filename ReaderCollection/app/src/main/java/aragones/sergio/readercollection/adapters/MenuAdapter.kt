@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.extensions.getCustomFont
 
 class MenuAdapter(
     private val ctx: Context,
@@ -25,7 +27,10 @@ class MenuAdapter(
             ?: LayoutInflater.from(ctx)
                 .inflate(android.R.layout.simple_dropdown_item_1line, parent, false)
 
-        item.findViewById<TextView>(android.R.id.text1).text = values[position]
+        item.findViewById<TextView>(android.R.id.text1).apply {
+            text = values[position]
+            typeface = ctx.getCustomFont(R.font.roboto_serif_regular)
+        }
         return item
     }
 

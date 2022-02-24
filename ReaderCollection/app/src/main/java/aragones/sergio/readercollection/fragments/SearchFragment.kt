@@ -12,9 +12,10 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
-import android.widget.SearchView
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -24,10 +25,16 @@ import aragones.sergio.readercollection.adapters.OnItemClickListener
 import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
+import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.SearchViewModelFactory
 import aragones.sergio.readercollection.viewmodels.SearchViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickListener {
@@ -40,6 +47,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Private properties
     private lateinit var viewModel: SearchViewModel
     private lateinit var booksAdapter: BooksAdapter
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -56,6 +64,25 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         menu.clear()
         inflater.inflate(R.menu.search_toolbar_menu, menu)
         setupSearchView(menu)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            createSequence()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        toolbarSequence?.cancel()
     }
 
     override fun onDestroy() {
@@ -76,14 +103,22 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.searchBooks()
         viewModel.setPosition(ScrollPosition.MIDDLE)
     }
+
+    override fun onShowAllItemsClick(state: String) {}
     //endregion
 
     //region Public methods
     fun goToStartEndList(view: View) {
 
         when (view) {
-            binding.floatingActionButtonStartList -> viewModel.setPosition(ScrollPosition.TOP)
-            binding.floatingActionButtonEndList -> viewModel.setPosition(ScrollPosition.END)
+            binding.floatingActionButtonStartList -> {
+                viewModel.setPosition(ScrollPosition.TOP)
+                binding.recyclerViewBooks.scrollToPosition(0)
+            }
+            binding.floatingActionButtonEndList -> {
+                viewModel.setPosition(ScrollPosition.END)
+                binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
+            }
         }
     }
     //endregion
@@ -98,9 +133,10 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
             SearchViewModelFactory(application)
         )[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
-            viewModel.books.value ?: mutableListOf(),
-            true,
-            this
+            books = viewModel.books.value ?: mutableListOf(),
+            isVerticalDesign = false,
+            isGoogleBook = true,
+            onItemClickListener = this
         )
         setupBindings()
 
@@ -140,42 +176,33 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.books.observe(viewLifecycleOwner, { booksResponse ->
+        viewModel.books.observe(viewLifecycleOwner) { booksResponse ->
 
             if (booksResponse.isEmpty()) {
                 booksAdapter.resetList()
             } else {
-                booksAdapter.setBooks(booksResponse)
+                booksAdapter.setBooks(booksResponse, false)
             }
-        })
+        }
 
-        viewModel.searchLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.searchLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.swipeRefreshLayoutBooks.isRefreshing = isLoading
-        })
+        }
 
-        viewModel.bookAdded.observe(viewLifecycleOwner, { position ->
+        viewModel.bookAdded.observe(viewLifecycleOwner) { position ->
             position?.let {
 
                 val message = resources.getString(R.string.book_saved)
                 showPopupDialog(message)
             }
-        })
+        }
 
-        viewModel.searchError.observe(viewLifecycleOwner, { error ->
+        viewModel.searchError.observe(viewLifecycleOwner) { error ->
             error?.let {
 
                 manageError(it)
             }
-        })
-
-        viewModel.scrollPosition.observe(viewLifecycleOwner, {
-            when (it) {
-
-                ScrollPosition.TOP -> binding.recyclerViewBooks.scrollToPosition(0)
-                ScrollPosition.END -> binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
-                else -> Unit
-            }
-        })
+        }
     }
 
     private fun setupSearchView(menu: Menu) {
@@ -204,6 +231,33 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         viewModel.reloadData()
         viewModel.searchBooks()
         requireActivity().hideSoftKeyboard()
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.tutorialShown) {
+            toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                target(
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_search).itemId,
+                        resources.getString(R.string.search_bar_tutorial_title),
+                        resources.getString(R.string.search_bar_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true)
+                )
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                start()
+            }
+        }
     }
     //endregion
 

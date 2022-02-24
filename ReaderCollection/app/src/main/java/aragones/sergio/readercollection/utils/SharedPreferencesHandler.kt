@@ -9,6 +9,9 @@ import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.ReaderCollectionApplication
+import aragones.sergio.readercollection.extensions.setBoolean
+import aragones.sergio.readercollection.extensions.setInt
+import aragones.sergio.readercollection.extensions.setString
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import com.google.gson.Gson
@@ -21,6 +24,7 @@ object SharedPreferencesHandler {
         Preferences.PREFERENCES_NAME,
         Context.MODE_PRIVATE
     )
+    private val editor = appPreferences.edit()
     private val appEncryptedPreferences = EncryptedSharedPreferences.create(
         Preferences.ENCRYPTED_PREFERENCES_NAME,
         MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
@@ -28,153 +32,100 @@ object SharedPreferencesHandler {
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
+    private val encryptedEditor = appEncryptedPreferences.edit()
     private val gson = Gson()
     //endregion
 
+    //region Public properties
+    var language: String
+        get() {
+            return appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
+                it
+            } ?: run {
+                language = Locale.getDefault().language
+                language
+            }
+        }
+        set(value) = editor.setString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
+    var credentials: AuthData
+        get() {
+            return appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
+                ?.let {
+                    gson.fromJson(it, AuthData::class.java)
+                } ?: run {
+                AuthData("")
+            }
+        }
+        set(value) = encryptedEditor.setString(
+            Preferences.AUTH_DATA_PREFERENCES_NAME,
+            gson.toJson(value)
+        )
+    var userData: UserData
+        get() {
+            return appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
+                ?.let {
+                    gson.fromJson(it, UserData::class.java)
+                } ?: run {
+                UserData("", "", false)
+            }
+        }
+        set(value) = encryptedEditor.setString(
+            Preferences.USER_DATA_PREFERENCES_NAME,
+            gson.toJson(value)
+        )
+    val isLoggedIn: Boolean
+        get() = userData.isLoggedIn && credentials.token.isNotEmpty()
+    var sortParam: String?
+        get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
+        set(value) = editor.setString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
+    var version: Int
+        get() = appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
+        set(value) = editor.setInt(Preferences.VERSION_PREFERENCE_NAME, value)
+    var themeMode: Int
+        get() = appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
+        set(value) = editor.setInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
+    var isSortDescending: Boolean
+        get() = appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
+    val dateFormatToShow: String
+        get() {
+            return when (language) {
+                "es" -> "d MMMM yyyy"
+                else -> "MMMM d, yyyy"
+            }
+        }
+    var hasBooksTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)
+    var hasSearchTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
+    var hasSettingsTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, value)
+    var hasNewBookTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, value)
+    var hasBookDetailsTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, value)
+    //endregion
+
     //region Public methods
-    fun getLanguage(): String {
-
-        appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
-            return it
-        } ?: run {
-
-            val locale = Locale.getDefault().language
-            setLanguage(locale)
-            return locale
-        }
-    }
-
-    fun setLanguage(language: String) {
-
-        with(appPreferences.edit()) {
-            putString(Preferences.LANGUAGE_PREFERENCE_NAME, language)
-            commit()
-        }
-    }
-
-    fun getCredentials(): AuthData {
-
-        val authDataJson =
-            appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
-        return if (authDataJson != null) {
-            gson.fromJson(authDataJson, AuthData::class.java)
-        } else {
-            AuthData("")
-        }
-    }
-
-    fun storeCredentials(authData: AuthData) {
-
-        with(appEncryptedPreferences.edit()) {
-            val authDataJson = gson.toJson(authData)
-            putString(Preferences.AUTH_DATA_PREFERENCES_NAME, authDataJson)
-            commit()
-        }
-    }
-
     fun removeCredentials() {
-        appEncryptedPreferences.edit()?.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
-    }
-
-    fun isLoggedIn(): Boolean {
-
-        val userData = getUserData()
-        val authData = getCredentials()
-        return userData.isLoggedIn && authData.token.isNotEmpty()
-    }
-
-    fun getUserData(): UserData {
-
-        val userDataJson =
-            appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
-        return if (userDataJson != null) {
-            gson.fromJson(userDataJson, UserData::class.java)
-        } else {
-            UserData("", "", false)
-        }
-    }
-
-    fun storeUserData(userData: UserData) {
-
-        with(appEncryptedPreferences.edit()) {
-            val userDataJson = gson.toJson(userData)
-            putString(Preferences.USER_DATA_PREFERENCES_NAME, userDataJson)
-            commit()
-        }
+        encryptedEditor.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
     }
 
     fun storePassword(password: String) {
-
-        val userData = getUserData()
-        userData.password = password
-        storeUserData(userData)
-    }
-
-    fun removeUserData() {
-        appEncryptedPreferences.edit()?.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
+        this.userData = UserData(userData.username, password, userData.isLoggedIn)
     }
 
     fun removePassword() {
-
-        val userData = getUserData()
-        userData.password = ""
-        userData.isLoggedIn = false
-        storeUserData(userData)
+        this.userData = UserData(userData.username, "", false)
     }
 
-    fun getSortParam(): String? {
-        return appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
+    fun removeUserData() {
+        encryptedEditor.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
     }
-
-    fun setSortParam(sortParam: String?) {
-
-        with(appPreferences.edit()) {
-            putString(Preferences.SORT_PARAM_PREFERENCE_NAME, sortParam)
-            commit()
-        }
-    }
-
-    fun getVersion(): Int {
-        return appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
-    }
-
-    fun setVersion(version: Int) {
-
-        with(appPreferences.edit()) {
-            putInt(Preferences.VERSION_PREFERENCE_NAME, version)
-            commit()
-        }
-    }
-
-    fun getThemeMode(): Int {
-        return appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
-    }
-
-    fun setThemeMode(themeMode: Int) {
-
-        with(appPreferences.edit()) {
-            putInt(Preferences.THEME_MODE_PREFERENCE_NAME, themeMode)
-            commit()
-        }
-    }
-
-    fun isSortDescending(): Boolean {
-        return appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
-    }
-
-    fun setIsSortDescending(isSortDescending: Boolean) {
-
-        with(appPreferences.edit()) {
-            putBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, isSortDescending)
-            commit()
-        }
-    }
-
-    fun getDateFormatToShow(): String {
-
-        return when (getLanguage()) {
-            "es" -> "d MMMM yyyy"
-            else -> "MMMM d, yyyy"
-        }
-    }
+    //endregion
 }

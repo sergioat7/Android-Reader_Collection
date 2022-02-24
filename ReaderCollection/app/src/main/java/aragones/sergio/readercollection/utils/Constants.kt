@@ -5,13 +5,12 @@
 
 package aragones.sergio.readercollection.utils
 
-import android.content.Context
-import android.view.Gravity
-import android.view.ViewGroup
-import android.widget.TextView
+import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
+import com.getkeepsafe.taptargetview.TapTarget
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 object Preferences {
     const val PREFERENCES_NAME = "preferences"
@@ -25,6 +24,11 @@ object Preferences {
     const val VERSION_PREFERENCE_NAME = "version"
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
+    const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
+    const val SEARCH_TUTORIAL_PREFERENCE_NAME = "searchTutorial"
+    const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"
+    const val NEW_BOOK_TUTORIAL_PREFERENCE_NAME = "newBookTutorial"
+    const val BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME = "bookDetailsTutorial"
 }
 
 object Constants {
@@ -32,9 +36,17 @@ object Constants {
     const val DATE_FORMAT = "yyyy-MM-dd"
     const val MAX_LINES = Int.MAX_VALUE
     const val NO_VALUE = "-"
+    const val BOOKS_TO_SHOW = 7
 
-    var FORMATS = listOf<FormatResponse>()
-    var STATES = listOf<StateResponse>()
+    var FORMATS = listOf(
+        FormatResponse("DIGITAL", "Digital"),
+        FormatResponse("PHYSICAL", "Physical")
+    )
+    var STATES = listOf(
+        StateResponse("PENDING", "Pending"),
+        StateResponse("READ", "Read"),
+        StateResponse("READING", "Reading")
+    )
 
     fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
@@ -44,21 +56,17 @@ object Constants {
         return password.length > 3
     }
 
-    fun getRoundedTextView(text: String, context: Context): TextView {
-
-        val tv = TextView(
-            context,
-            null,
-            R.style.Widget_ReaderCollection_RoundedTextView,
-            R.style.Widget_ReaderCollection_RoundedTextView
+    fun createTargetForBottomNavigationView(
+        activity: FragmentActivity?,
+        id: Int,
+        title: String,
+        description: String?
+    ): TapTarget {
+        return TapTarget.forView(
+            activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.findViewById(id),
+            title,
+            description
         )
-        tv.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.WRAP_CONTENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
-        )
-        tv.gravity = Gravity.CENTER
-        tv.text = text
-        return tv
     }
 }
 
