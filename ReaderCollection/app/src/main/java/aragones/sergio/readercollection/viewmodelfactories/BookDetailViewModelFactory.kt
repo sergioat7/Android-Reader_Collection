@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
+import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
 import javax.inject.Inject
 
@@ -25,6 +26,8 @@ class BookDetailViewModelFactory(
     lateinit var booksRepository: BooksRepository
     @Inject
     lateinit var googleBookRepository: GoogleBookRepository
+    @Inject
+    lateinit var userRepository: UserRepository
     @Inject
     lateinit var bookDetailViewModel: BookDetailViewModel
     //endregion

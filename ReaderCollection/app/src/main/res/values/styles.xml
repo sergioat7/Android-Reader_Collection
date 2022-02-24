@@ -18,7 +18,7 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title">
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_serif_bold</item>
         <item name="android:textColor">@color/textPrimary</item>
     </style>
 
@@ -30,7 +30,7 @@
         <item name="android:textSize">@dimen/text_size_20sp</item>
     </style>
 
-    <style name="Widget.ReaderCollection.TextView.Title.Book">
+    <style name="Widget.ReaderCollection.TextView.Title.VerticalBook">
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:maxLines">2</item>
     </style>
@@ -40,9 +40,9 @@
         <item name="android:maxLines">1</item>
     </style>
 
-    <style name="Widget.ReaderCollection.TextView.Title.GoogleBook">
+    <style name="Widget.ReaderCollection.TextView.Title.Book">
         <item name="android:textSize">@dimen/text_size_24sp</item>
-        <item name="android:maxLines">2</item>
+        <item name="android:maxLines">4</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Title.TextCount">
@@ -50,7 +50,7 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Subtitle">
-        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_serif_regular</item>
         <item name="android:textColor">@color/textSecondary</item>
     </style>
 
@@ -74,7 +74,7 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextView.TitleSpecial">
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_serif_bold</item>
         <item name="android:textColor">@color/textQuaternary</item>
     </style>
 
@@ -87,7 +87,7 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextView.Header">
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_serif_bold</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:textColor">@color/textSecondary</item>
     </style>
@@ -132,12 +132,7 @@
     </style>
 
     <style name="Widget.ReaderCollection.TextButton.Main.Action">
-        <item name="android:fontFamily">@font/roboto_bold</item>
-        <item name="android:textSize">@dimen/text_size_16sp</item>
-    </style>
-
-    <style name="Widget.ReaderCollection.TextButton.Main.Link">
-        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_serif_bold</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
     </style>
 
@@ -154,7 +149,7 @@
     <style name="Widget.ReaderCollection.Button.Main">
         <item name="backgroundTint">@drawable/rounded_button_primary</item>
         <item name="shapeAppearance">@style/ShapeAppearance.ReaderCollection.Rounded.15</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_serif_bold</item>
         <item name="android:textColor">@color/textTertiary</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
         <item name="android:textAllCaps">false</item>
@@ -164,6 +159,15 @@
     <style name="Widget.ReaderCollection.Button.Main.Icon">
         <item name="android:paddingStart">@dimen/padding_12dp</item>
         <item name="android:paddingEnd">@dimen/padding_12dp</item>
+    </style>
+
+    <!--  ImageButton  -->
+
+    <style name="Widget.ReaderCollection.ImageButton" parent="Widget.MaterialComponents.TimePicker.ImageButton">
+        <item name="rippleColor">@null</item>
+        <item name="android:background">@android:color/transparent</item>
+        <item name="android:minWidth">@null</item>
+        <item name="android:minHeight">@null</item>
     </style>
 
     <!--  FloatingActionButton  -->
@@ -181,6 +185,16 @@
     <style name="Widget.ReaderCollection.RadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:buttonTint">@color/colorPrimary</item>
         <item name="android:textColor">@color/textPrimary</item>
+    </style>
+
+    <!--  Chip  -->
+
+    <style name="Widget.ReaderCollection.Chip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="chipBackgroundColor">@color/colorPrimary</item>
+        <item name="rippleColor">@null</item>
+        <item name="android:checkable">false</item>
+        <item name="android:textColor">@color/textTertiary</item>
+        <item name="android:textAppearance">@style/TextAppearance.ReaderCollection.Chip</item>
     </style>
 
     <!--  RatingBar  -->
@@ -209,8 +223,13 @@
     <!--  TextAppearance  -->
 
     <style name="TextAppearance.ReaderCollection.Hint" parent="TextAppearance.Design.Hint">
-        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="fontFamily">@font/roboto_serif_regular</item>
         <item name="android:textSize">@dimen/text_size_12sp</item>
+    </style>
+
+    <style name="TextAppearance.ReaderCollection.Chip" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/roboto_serif_regular</item>
+        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
     <!--  BottomNavigationView  -->
@@ -218,8 +237,8 @@
     <style name="Widget.ReaderCollection.BottomNavigationView" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
         <item name="itemIconTint">@drawable/bottom_navigation_icon_colors</item>
         <item name="itemTextColor">@drawable/bottom_navigation_text_colors</item>
-        <item name="itemTextAppearanceInactive">@font/roboto_regular</item>
-        <item name="itemTextAppearanceActive">@font/roboto_bold</item>
+        <item name="itemTextAppearanceInactive">@font/roboto_serif_regular</item>
+        <item name="itemTextAppearanceActive">@font/roboto_serif_bold</item>
         <item name="labelVisibilityMode">labeled</item>
     </style>
 
@@ -232,7 +251,7 @@
     <style name="MaterialAlertDialog.ReaderCollection.Title" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/text_size_20sp</item>
-        <item name="android:fontFamily">@font/roboto_bold</item>
+        <item name="android:fontFamily">@font/roboto_serif_bold</item>
         <item name="android:maxLines">@null</item>
         <item name="android:singleLine">false</item>
     </style>
@@ -240,19 +259,9 @@
     <style name="MaterialAlertDialog.ReaderCollection.Body" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:textSize">@dimen/text_size_16sp</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:fontFamily">@font/roboto_serif_regular</item>
         <item name="android:maxLines">@null</item>
         <item name="android:singleLine">false</item>
-    </style>
-
-    <!--  Others  -->
-
-    <style name="Widget.ReaderCollection.RoundedTextView">
-        <item name="android:background">@drawable/rounded_text_view</item>
-        <item name="android:textColor">@color/textTertiary</item>
-        <item name="android:maxLines">1</item>
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textSize">@dimen/text_size_14sp</item>
     </style>
 
 </resources>

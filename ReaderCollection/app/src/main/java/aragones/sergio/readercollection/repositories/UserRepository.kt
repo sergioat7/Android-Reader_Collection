@@ -24,22 +24,37 @@ class UserRepository @Inject constructor(
 
     //region Public properties
     val username: String
-        get() = SharedPreferencesHandler.getUserData().username
+        get() = SharedPreferencesHandler.userData.username
 
     val userData: UserData
-        get() = SharedPreferencesHandler.getUserData()
+        get() = SharedPreferencesHandler.userData
 
     val language: String
-        get() = SharedPreferencesHandler.getLanguage()
+        get() = SharedPreferencesHandler.language
 
     val sortParam: String?
-        get() = SharedPreferencesHandler.getSortParam()
+        get() = SharedPreferencesHandler.sortParam
 
     val isSortDescending: Boolean
-        get() = SharedPreferencesHandler.isSortDescending()
+        get() = SharedPreferencesHandler.isSortDescending
 
     val themeMode: Int
-        get() = SharedPreferencesHandler.getThemeMode()
+        get() = SharedPreferencesHandler.themeMode
+
+    val hasBooksTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasBooksTutorialBeenShown
+
+    val hasSearchTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasSearchTutorialBeenShown
+
+    val hasSettingsTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasSettingsTutorialBeenShown
+
+    val hasNewBookTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasNewBookTutorialBeenShown
+
+    val hasBookDetailsTutorialBeenShown: Boolean
+        get() = SharedPreferencesHandler.hasBookDetailsTutorialBeenShown
     //endregion
 
     //region Public methods
@@ -85,12 +100,12 @@ class UserRepository @Inject constructor(
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
 
-        SharedPreferencesHandler.storeUserData(userData)
-        SharedPreferencesHandler.storeCredentials(authData)
+        SharedPreferencesHandler.userData = userData
+        SharedPreferencesHandler.credentials = authData
     }
 
     fun storeCredentials(authData: AuthData) {
-        SharedPreferencesHandler.storeCredentials(authData)
+        SharedPreferencesHandler.credentials = authData
     }
 
     fun removeCredentials() {
@@ -110,19 +125,39 @@ class UserRepository @Inject constructor(
     }
 
     fun storeLanguage(language: String) {
-        SharedPreferencesHandler.setLanguage(language)
+        SharedPreferencesHandler.language = language
     }
 
     fun storeSortParam(sortParam: String?) {
-        SharedPreferencesHandler.setSortParam(sortParam)
+        SharedPreferencesHandler.sortParam = sortParam
     }
 
     fun storeIsSortDescending(isSortDescending: Boolean) {
-        SharedPreferencesHandler.setIsSortDescending(isSortDescending)
+        SharedPreferencesHandler.isSortDescending = isSortDescending
     }
 
     fun storeThemeMode(themeMode: Int) {
-        SharedPreferencesHandler.setThemeMode(themeMode)
+        SharedPreferencesHandler.themeMode = themeMode
+    }
+
+    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.hasBooksTutorialBeenShown = hasBooksTutorialBeenShown
+    }
+
+    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.hasSearchTutorialBeenShown = hasSearchTutorialBeenShown
+    }
+
+    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.hasSettingsTutorialBeenShown = hasSettingsTutorialBeenShown
+    }
+
+    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.hasNewBookTutorialBeenShown = hasNewBookTutorialBeenShown
+    }
+
+    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
+        SharedPreferencesHandler.hasBookDetailsTutorialBeenShown = hasBookDetailsTutorialBeenShown
     }
     //endregion
 }

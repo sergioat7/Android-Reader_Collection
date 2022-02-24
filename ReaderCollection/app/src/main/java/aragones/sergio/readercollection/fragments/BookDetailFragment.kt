@@ -7,9 +7,9 @@ package aragones.sergio.readercollection.fragments
 
 import android.os.Bundle
 import android.view.*
-import android.widget.*
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BindingFragment
@@ -20,10 +20,15 @@ import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.utils.*
 import aragones.sergio.readercollection.viewmodelfactories.BookDetailViewModelFactory
 import aragones.sergio.readercollection.viewmodels.BookDetailViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
@@ -41,6 +46,10 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     private var book: BookResponse? = null
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
+    private lateinit var mainContentSequence: TapTargetSequence
+    private var newBookToolbarSequence: TapTargetSequence? = null
+    private var bookDetailsToolbarSequence: TapTargetSequence? = null
+    private var mainContentSequenceShown = false
     //endregion
 
     //region Lifecycle methods
@@ -93,6 +102,24 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        createSequence()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
+            mainContentSequence.cancel()
+            newBookToolbarSequence?.cancel()
+        }
+        if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
+            bookDetailsToolbarSequence?.cancel()
+        }
     }
 
     override fun onResume() {
@@ -256,54 +283,45 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.book.observe(viewLifecycleOwner, {
+        viewModel.book.observe(viewLifecycleOwner) {
 
             book = it
             showData(it)
             binding.editable = viewModel.isGoogleBook || it == null
-        })
+        }
 
-        viewModel.bookDetailLoading.observe(viewLifecycleOwner, { isLoading ->
+        viewModel.bookDetailLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
                 showLoading()
             } else {
                 hideLoading()
             }
-        })
+        }
 
-        viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner, {
+        viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner) {
 
             val message = resources.getString(it)
             showPopupDialog(message, goBack)
-        })
+        }
 
-        viewModel.bookDetailError.observe(viewLifecycleOwner, {
+        viewModel.bookDetailError.observe(viewLifecycleOwner) {
 
             book?.let { b -> showData(b) }
             manageError(it)
-        })
+        }
 
-        goBack.observe(viewLifecycleOwner, {
+        goBack.observe(viewLifecycleOwner) {
             activity?.onBackPressed()
-        })
+        }
     }
 
     private fun showData(book: BookResponse) {
 
-        binding.linearLayoutCategories.removeAllViews()
+        binding.chipGroupCategories.removeAllViews()
         book.categories?.let { categories ->
             for (category in categories) {
-
-                val tv = Constants.getRoundedTextView(category, requireContext())
-                binding.linearLayoutCategories.addView(tv)
-
-                val view = View(context)
-                view.layoutParams = ViewGroup.LayoutParams(
-                    20,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                binding.linearLayoutCategories.addView(view)
+                binding.chipGroupCategories.addChip(layoutInflater, category)
             }
         }
 
@@ -344,12 +362,12 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 it.trimStart().trimEnd()
             }
             val publishedDate = textInputLayoutPublishedDate.getValue().toDate(
-                SharedPreferencesHandler.getDateFormatToShow(),
-                SharedPreferencesHandler.getLanguage()
+                SharedPreferencesHandler.dateFormatToShow,
+                SharedPreferencesHandler.language
             )
             var readingDate = textInputLayoutReadingDate.getValue().toDate(
-                SharedPreferencesHandler.getDateFormatToShow(),
-                SharedPreferencesHandler.getLanguage()
+                SharedPreferencesHandler.dateFormatToShow,
+                SharedPreferencesHandler.language
             )
             val pageCountText = textInputLayoutPages.getValue()
             val pageCount =
@@ -360,7 +378,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
                 Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
-            if (readingDate == null && state == State.READ) readingDate = Date()
+            if (book?.readingDate == null && readingDate == null && state == State.READ) readingDate =
+                Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
             return BookResponse(
@@ -398,6 +417,127 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         }
 
         binding.editable = editable
+    }
+
+    private fun createTargetsForNewBookToolbar(): List<TapTarget> {
+
+        val saveBookItem = binding.toolbar.menu.findItem(R.id.action_save)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                saveBookItem.itemId,
+                resources.getString(R.string.add_book_icon_tutorial_title),
+                resources.getString(R.string.add_book_icon_tutorial_description)
+            ).style(requireContext(), true).cancelable(true).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForScrollView(): List<TapTarget> {
+        return listOf(
+            TapTarget.forView(
+                binding.floatingActionButtonAddPhoto,
+                resources.getString(R.string.add_image_button_tutorial_title),
+                resources.getString(R.string.add_image_button_tutorial_description)
+            ).style(requireContext(), true).cancelable(true).tintTarget(false),
+            TapTarget.forView(
+                binding.ratingBar,
+                resources.getString(R.string.rate_view_tutorial_title),
+                resources.getString(R.string.rate_view_tutorial_description)
+            ).style(requireContext()).cancelable(true).tintTarget(true)
+        )
+    }
+
+    private fun createTargetsForBookDetailsToolbar(): List<TapTarget> {
+
+        val editBookItem = binding.toolbar.menu.findItem(R.id.action_edit)
+        val deleteBookItem = binding.toolbar.menu.findItem(R.id.action_remove)
+        return listOf(
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                editBookItem.itemId,
+                resources.getString(R.string.edit_book_icon_tutorial_title),
+                resources.getString(R.string.edit_book_icon_tutorial_description)
+            ).style(requireContext(), true).cancelable(true).tintTarget(true),
+            TapTarget.forToolbarMenuItem(
+                binding.toolbar,
+                deleteBookItem.itemId,
+                resources.getString(R.string.delete_book_icon_tutorial_title),
+                resources.getString(R.string.delete_book_icon_tutorial_description)
+            ).style(requireContext(), true).cancelable(true).tintTarget(true)
+        )
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
+            mainContentSequence = TapTargetSequence(requireActivity()).apply {
+                targets(createTargetsForScrollView())
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        mainContentSequenceShown = true
+                        newBookToolbarSequence?.start()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                if (!mainContentSequenceShown) {
+                    start()
+                }
+            }
+        }
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+
+            if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
+                newBookToolbarSequence = TapTargetSequence(requireActivity()).apply {
+                    targets(createTargetsForNewBookToolbar())
+                    continueOnCancel(false)
+                    listener(object : TapTargetSequence.Listener {
+                        override fun onSequenceFinish() {
+                            viewModel.setNewBookTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(
+                            lastTarget: TapTarget,
+                            targetClicked: Boolean
+                        ) {
+                        }
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                    if (mainContentSequenceShown) {
+                        start()
+                    }
+                }
+            } else if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
+
+                bookDetailsToolbarSequence = TapTargetSequence(requireActivity()).apply {
+                    targets(createTargetsForBookDetailsToolbar())
+                    continueOnCancel(false)
+                    listener(object : TapTargetSequence.Listener {
+                        override fun onSequenceFinish() {
+                            viewModel.setBookDetailsTutorialAsShown()
+                        }
+
+                        override fun onSequenceStep(
+                            lastTarget: TapTarget,
+                            targetClicked: Boolean
+                        ) {
+                        }
+
+                        override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                    })
+                    start()
+                }
+            }
+        }
     }
     //endregion
 }

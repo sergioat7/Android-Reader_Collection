@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 18/10/2020
+  -->
+
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <data>
+
+        <import
+            type="aragones.sergio.readercollection.utils.Preferences"
+            />
+
+        <import
+            type="aragones.sergio.readercollection.utils.CustomInputType"
+            />
+
+        <variable
+            name="fragment"
+            type="aragones.sergio.readercollection.fragments.SettingsFragment"
+            />
+
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.viewmodels.SettingsViewModel"
+            />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".fragments.SettingsFragment"
+        >
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/title_settings"
+            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main"
+            />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            app:layout_constraintBottom_toTopOf="@+id/button_save"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            >
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <include
+                    android:id="@+id/text_input_layout_username"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_24dp"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    android:layout_marginEnd="@dimen/margin_24dp"
+                    android:text="@{viewModel.userData.username}"
+                    app:enabled="@{false}"
+                    app:endIconSrc="@{@drawable/ic_show_info}"
+                    app:inputType="@{CustomInputType.TEXT}"
+                    app:labelHintText="@{@string/username}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <include
+                    android:id="@+id/text_input_layout_password"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    android:text="@{viewModel.userData.password}"
+                    app:enabled="@{true}"
+                    app:endIconSrc="@{@drawable/ic_show_password}"
+                    app:inputType="@{CustomInputType.PASSWORD}"
+                    app:labelHintText="@{@string/password}"
+                    app:layout_constraintEnd_toEndOf="@+id/text_input_layout_username"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_layout_username"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_username"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_language_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@string/app_language"
+                    app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
+                    app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                    />
+
+                <RadioGroup
+                    android:id="@+id/radio_group_language"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="@+id/text_input_layout_password"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_layout_password"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_language_title"
+                    >
+
+                    <RadioButton
+                        android:id="@+id/radio_button_en"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@{viewModel.language.equals(Preferences.ENGLISH_LANGUAGE_KEY)}"
+                        android:text="@string/english"
+                        style="@style/Widget.ReaderCollection.RadioButton"
+                        />
+
+                    <RadioButton
+                        android:id="@+id/radio_button_es"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@{viewModel.language.equals(Preferences.SPANISH_LANGUAGE_KEY)}"
+                        android:text="@string/spanish"
+                        style="@style/Widget.ReaderCollection.RadioButton"
+                        />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/text_view_sort_param_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:text="@string/sort_books_param"
+                    app:layout_constraintBottom_toTopOf="@+id/dropdown_text_input_layout_sort_params"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_sort_params"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_sort_params"
+                    app:layout_constraintTop_toBottomOf="@+id/radio_group_language"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                    />
+
+                <include
+                    android:id="@+id/dropdown_text_input_layout_sort_params"
+                    layout="@layout/custom_dropdown_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_5dp"
+                    app:enabled="@{true}"
+                    app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
+                    app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
+                    />
+
+                <include
+                    android:id="@+id/dropdown_text_input_layout_sort_orders"
+                    layout="@layout/custom_dropdown_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:enabled="@{true}"
+                    app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
+                    app:layout_constraintStart_toStartOf="@+id/radio_group_language"
+                    app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_sort_params"
+                    />
+
+                <TextView
+                    android:id="@+id/text_view_app_theme_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_20dp"
+                    android:layout_marginBottom="@dimen/margin_5dp"
+                    android:text="@string/app_theme"
+                    app:layout_constraintBottom_toTopOf="@+id/dropdown_text_input_layout_app_theme"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_app_theme"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_app_theme"
+                    app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_sort_orders"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
+                    />
+
+                <include
+                    android:id="@+id/dropdown_text_input_layout_app_theme"
+                    layout="@layout/custom_dropdown_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:enabled="@{true}"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_sort_orders"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_sort_orders"
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_app_theme_title"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+        <Button
+            android:id="@+id/button_save"
+            android:layout_width="@dimen/size_200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_24dp"
+            android:text="@string/save"
+            android:enabled="@{viewModel.profileForm == null}"
+            android:onClick="@{() -> fragment.save()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            style="@style/Widget.ReaderCollection.Button.Main"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

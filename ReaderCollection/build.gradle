@@ -2,7 +2,7 @@
 buildscript {
     ext.kotlin_version = "1.6.10"
     ext.lifecycleVersion = "2.4.0"
-    ext.navigationVersion = "2.3.5"
+    ext.navigationVersion = "2.4.1"
     ext.retrofitVersion = "2.9.0"
     ext.daggerVersion = "2.40.5"
     ext.roomVersion = "2.4.1"
@@ -10,10 +10,11 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.3.10'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.8.1'
@@ -28,6 +29,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
 }
 

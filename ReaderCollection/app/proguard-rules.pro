@@ -36,7 +36,9 @@
 
 #-keepattributes Signature
 
-#-keep class aragones.sergio.readercollection.models.** { <fields>; }
+-keep class aragones.sergio.readercollection.models.** { <fields>; }
+
+-keep class com.google.gson.** { <fields>; }
 
 #-keep class * extends com.google.gson.TypeAdapter
 #-keep class * implements com.google.gson.TypeAdapterFactory
@@ -48,3 +50,12 @@
 }
 
 ##---------------------End: proguard configuration for Gson --------------------------
+
+##---------------------Begin: proguard configuration for BindingFragment -------------
+
+-keep class ** extends androidx.databinding.ViewDataBinding {
+    public static ** inflate(android.view.LayoutInflater, android.view.ViewGroup, boolean);
+    public static ** bind(android.view.View);
+}
+
+##---------------------End: proguard configuration for BindingFragment ---------------
