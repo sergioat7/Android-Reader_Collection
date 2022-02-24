@@ -150,56 +150,16 @@
                     app:layout_constraintTop_toTopOf="parent"
                     />
 
-                <TextView
-                    android:id="@+id/text_view_no_ratings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/margin_24dp"
-                    android:text="@string/new_book"
-                    android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
-                    style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
-                    />
-
                 <me.zhanghai.android.materialratingbar.MaterialRatingBar
                     android:id="@+id/rating_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/size_30dp"
                     android:layout_marginTop="@dimen/margin_24dp"
                     android:isIndicator="@{!editable}"
-                    android:visibility="@{viewModel.book.averageRating == 0 &amp;&amp; viewModel.isGoogleBook ? View.INVISIBLE : View.VISIBLE}"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
                     rating="@{viewModel.isGoogleBook ? viewModel.book.averageRating / 2 : viewModel.book.rating / 2}"
                     style="@style/Widget.ReaderCollection.RatingBar"
-                    />
-
-                <ImageView
-                    android:id="@+id/image_view_rating_count"
-                    android:layout_width="@dimen/size_20dp"
-                    android:layout_height="0dp"
-                    android:layout_marginStart="@dimen/margin_12dp"
-                    android:src="@drawable/ic_person"
-                    android:visibility="@{viewModel.book.averageRating > 0 &amp;&amp; viewModel.isGoogleBook ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@id/rating_bar"
-                    app:layout_constraintStart_toEndOf="@id/rating_bar"
-                    app:layout_constraintTop_toTopOf="@id/rating_bar"
-                    />
-
-                <TextView
-                    android:id="@+id/text_view_rating_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:gravity="center_vertical"
-                    android:text="@{String.valueOf(viewModel.book.ratingsCount)}"
-                    android:visibility="@{viewModel.book.averageRating > 0 &amp;&amp; viewModel.isGoogleBook ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="@id/rating_bar"
-                    app:layout_constraintStart_toEndOf="@id/image_view_rating_count"
-                    app:layout_constraintTop_toTopOf="@id/rating_bar"
-                    tools:text="18"
-                    style="@style/Widget.ReaderCollection.TextView.Title.TextCount"
                     />
 
                 <include
