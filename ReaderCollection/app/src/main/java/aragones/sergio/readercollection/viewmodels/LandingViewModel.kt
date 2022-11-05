@@ -7,12 +7,11 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
-import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.activities.LoginActivity
 import aragones.sergio.readercollection.activities.MainActivity
+import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
-import aragones.sergio.readercollection.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -39,23 +38,12 @@ class LandingViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun checkVersion() {
+    fun checkIsLoggedIn() {
 
-        val currentVersion = SharedPreferencesHandler.version
-        val newVersion = BuildConfig.VERSION_CODE
-        if (newVersion > currentVersion) {
-
-            SharedPreferencesHandler.version = newVersion
-            SharedPreferencesHandler.removePassword()
-            SharedPreferencesHandler.removeCredentials()
-            resetDatabase()
+        _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn) {
+            MainActivity::class.java
         } else {
-
-            _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn) {
-                MainActivity::class.java
-            } else {
-                LoginActivity::class.java
-            }
+            LoginActivity::class.java
         }
     }
 
