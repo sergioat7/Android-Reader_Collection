@@ -50,8 +50,8 @@ class LandingActivity : BaseActivity() {
 
         configLanguage()
         fetchRemoteConfigValues()
-        viewModel.checkVersion()
         viewModel.checkTheme()
+        viewModel.checkIsLoggedIn()
     }
 
     private fun setupBindings() {
