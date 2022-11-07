@@ -52,15 +52,15 @@ class LoginViewModel @Inject constructor(
             val userData = UserData(username, password, true)
             val authData = AuthData(token)
             userRepository.storeLoginData(userData, authData)
-            booksRepository.loadBooks(success = {
+//            booksRepository.loadBooks(success = {
 
                 _loginLoading.value = false
                 _loginError.value = null
-            }, failure = {
-
-                _loginLoading.value = false
-                _loginError.value = it
-            })
+//            }, failure = {
+//
+//                _loginLoading.value = false
+//                _loginError.value = it
+//            })
         }, failure = {
 
             _loginLoading.value = false
