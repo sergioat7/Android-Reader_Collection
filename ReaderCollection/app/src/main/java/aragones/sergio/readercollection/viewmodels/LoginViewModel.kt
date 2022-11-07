@@ -51,7 +51,16 @@ class LoginViewModel @Inject constructor(
 
             val userData = UserData(username, password, true)
             val authData = AuthData(token)
-            loadContent(userData, authData)
+            userRepository.storeLoginData(userData, authData)
+            booksRepository.loadBooks(success = {
+
+                _loginLoading.value = false
+                _loginError.value = null
+            }, failure = {
+
+                _loginLoading.value = false
+                _loginError.value = it
+            })
         }, failure = {
 
             _loginLoading.value = false
@@ -74,20 +83,6 @@ class LoginViewModel @Inject constructor(
             isDataValid = false
         }
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
-    }
-    //endregion
-
-    //region Private methods
-    private fun loadContent(userData: UserData, authData: AuthData) {
-
-        userRepository.storeLoginData(userData, authData)
-        booksRepository.loadBooks(success = {
-
-            _loginLoading.value = false
-            _loginError.value = null
-        }, failure = {
-            _loginError.value = it
-        })
     }
     //endregion
 }
