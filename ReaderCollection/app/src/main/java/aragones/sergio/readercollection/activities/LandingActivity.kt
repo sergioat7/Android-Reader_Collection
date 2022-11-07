@@ -9,12 +9,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.ViewModelProvider
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseActivity
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.viewmodelfactories.LandingViewModelFactory
 import aragones.sergio.readercollection.viewmodels.LandingViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -51,7 +53,13 @@ class LandingActivity : BaseActivity() {
         configLanguage()
         fetchRemoteConfigValues()
         viewModel.checkTheme()
-        viewModel.checkIsLoggedIn()
+        if (!viewModel.newChangesPopupShown) {
+            showPopupActionDialog(getString(R.string.new_version_changes), acceptHandler = {
+                viewModel.checkIsLoggedIn()
+            })
+        } else {
+            viewModel.checkIsLoggedIn()
+        }
     }
 
     private fun setupBindings() {
@@ -124,6 +132,18 @@ class LandingActivity : BaseActivity() {
 
             Constants.STATES = states
         }
+    }
+
+    private fun showPopupActionDialog(message: String, acceptHandler: () -> Unit) {
+
+        MaterialAlertDialogBuilder(this)
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+                acceptHandler()
+                dialog.dismiss()
+            }
+            .show()
     }
     //endregion
 }

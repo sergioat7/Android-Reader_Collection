@@ -27,6 +27,8 @@ class LandingViewModel @Inject constructor(
     //region Public properties
     val language: String
         get() = SharedPreferencesHandler.language
+    val newChangesPopupShown: Boolean
+        get() = SharedPreferencesHandler.newChangesPopupShown
     val landingClassToStart = _landingClassToStart
     //endregion
 
@@ -40,6 +42,7 @@ class LandingViewModel @Inject constructor(
     //region Public methods
     fun checkIsLoggedIn() {
 
+        SharedPreferencesHandler.newChangesPopupShown = true
         _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn) {
             MainActivity::class.java
         } else {

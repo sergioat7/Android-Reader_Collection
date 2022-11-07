@@ -9,6 +9,8 @@
     //GENERAL
     <string name="search">Buscar</string>
 
+    <string name="new_version_changes">Debido a problemas con los servidores, a partir de ahora la aplicación sólo funcionará en local. Todos los juegos que guardes quedarán almacenados sola y exclusivamente en la aplicación, por tanto, si la desinstalas, perderás toda la información almacenada. Los juegos que ya tuvieras guardados seguirán estando disponibles mientras no desinstales la aplicación.</string>
+
     //LOGIN &amp; REGISTRATION
     <string name="invalid_username">Usuario no válido</string>
     <string name="invalid_password">La contraseña debe tener más de 3 carácteres</string>
