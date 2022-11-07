@@ -16,8 +16,6 @@ import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
@@ -83,18 +81,13 @@ class LoginViewModel @Inject constructor(
     private fun loadContent(userData: UserData, authData: AuthData) {
 
         userRepository.storeLoginData(userData, authData)
-        booksRepository.loadBooksObserver().subscribeBy(
-            onComplete = {
+        booksRepository.loadBooks(success = {
 
-                _loginLoading.value = false
-                _loginError.value = null
-            },
-            onError = {
-
-                _loginError.value = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database)
-                onDestroy()
-            }
-        ).addTo(disposables)
+            _loginLoading.value = false
+            _loginError.value = null
+        }, failure = {
+            _loginError.value = it
+        })
     }
     //endregion
 }
