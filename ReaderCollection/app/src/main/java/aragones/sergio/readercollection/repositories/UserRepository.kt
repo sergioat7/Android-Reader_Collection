@@ -75,29 +75,37 @@ class UserRepository @Inject constructor(
         success: (String) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        externalScope.launch {
-
-            val body = LoginCredentials(username, password)
-            try {
-                when (val response = ApiManager.validateResponse(api.login(body))) {
-                    is RequestResult.JsonSuccess -> success(response.body.token)
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-            }
+        if (userData.username.isEmpty() || userData.username != username) {
+            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.username_not_exist))
+        } else if (userData.username == username && userData.password == password) {
+            success("-")
+        } else {
+            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.wrong_password))
         }
+//        externalScope.launch {
+//
+//            val body = LoginCredentials(username, password)
+//            try {
+//                when (val response = ApiManager.validateResponse(api.login(body))) {
+//                    is RequestResult.JsonSuccess -> success(response.body.token)
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun logout() {
-        externalScope.launch {
-
-            try {
-                api.logout()
-            } catch (e: Exception) {
-            }
-        }
+        SharedPreferencesHandler.logout()
+//        externalScope.launch {
+//
+//            try {
+//                api.logout()
+//            } catch (e: Exception) {
+//            }
+//        }
     }
 
     fun register(
@@ -106,50 +114,54 @@ class UserRepository @Inject constructor(
         success: () -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        externalScope.launch {
-
-            val body = LoginCredentials(username, password)
-            try {
-                when (val response = ApiManager.validateResponse(api.register(body))) {
-                    is RequestResult.Success -> success()
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse("", R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse("", R.string.error_server))
-            }
-        }
+        SharedPreferencesHandler.userData = UserData(username, password, false)
+        success()
+//        externalScope.launch {
+//
+//            val body = LoginCredentials(username, password)
+//            try {
+//                when (val response = ApiManager.validateResponse(api.register(body))) {
+//                    is RequestResult.Success -> success()
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse("", R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse("", R.string.error_server))
+//            }
+//        }
     }
 
     fun updatePassword(password: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        externalScope.launch {
-
-            try {
-                val body = NewPassword(password)
-                when (val response = ApiManager.validateResponse(api.updatePassword(body))) {
-                    is RequestResult.Success -> success()
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-            }
-        }
+        success()
+//        externalScope.launch {
+//
+//            try {
+//                val body = NewPassword(password)
+//                when (val response = ApiManager.validateResponse(api.updatePassword(body))) {
+//                    is RequestResult.Success -> success()
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun deleteUser(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        externalScope.launch {
-
-            try {
-                when (val response = ApiManager.validateResponse(api.deleteUser())) {
-                    is RequestResult.Success -> success()
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-            }
-        }
+        success()
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.deleteUser())) {
+//                    is RequestResult.Success -> success()
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
@@ -174,9 +186,9 @@ class UserRepository @Inject constructor(
         SharedPreferencesHandler.removeUserData()
     }
 
-    fun removePassword() {
-        SharedPreferencesHandler.removePassword()
-    }
+//    fun removePassword() {
+//        SharedPreferencesHandler.removePassword()
+//    }
 
     fun storeLanguage(language: String) {
         SharedPreferencesHandler.language = language

@@ -55,11 +55,13 @@ class SettingsViewModel @Inject constructor(
     //region Public methods
     fun logout() {
 
-        _profileLoading.value = true
-        userRepository.removePassword()
-        userRepository.removeCredentials()
+//        _profileLoading.value = true
+//        userRepository.removePassword()
+//        userRepository.removeCredentials()
         userRepository.logout()
-        resetDatabase()
+//        resetDatabase()
+
+        _profileRedirection.value = true
     }
 
     fun save(

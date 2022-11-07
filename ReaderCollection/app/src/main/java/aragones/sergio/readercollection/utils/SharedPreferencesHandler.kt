@@ -115,8 +115,12 @@ object SharedPreferencesHandler {
         this.userData = UserData(userData.username, password, userData.isLoggedIn)
     }
 
-    fun removePassword() {
-        this.userData = UserData(userData.username, "", false)
+//    fun removePassword() {
+//        this.userData = UserData(userData.username, "", false)
+//    }
+
+    fun logout() {
+        this.userData = UserData(userData.username, userData.password, false)
     }
 
     fun removeUserData() {
