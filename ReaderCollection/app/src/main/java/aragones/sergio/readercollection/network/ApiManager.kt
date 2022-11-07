@@ -102,13 +102,65 @@ object ApiManager {
         }
     }
 
+    inline fun <reified T : Any> validateResponse(response: retrofit2.Response<T>): RequestResult<T> {
+
+        val isSuccessful = response.isSuccessful
+        val code = response.code()
+        val body = response.body()
+        val error = response.errorBody()
+        return when {
+            isSuccessful -> {
+                when {
+                    T::class == Unit::class -> RequestResult.Success
+                    body != null && code != 204 -> RequestResult.JsonSuccess(body)
+                    else -> getEmptyResponse() ?: RequestResult.Failure(
+                        ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
+                    )
+                }
+            }
+            code == 302 -> {
+                RequestResult.Failure(
+                    ErrorResponse(Constants.EMPTY_VALUE, R.string.error_resource_found)
+                )
+            }
+            code < 500 && error != null -> {
+                RequestResult.Failure(
+                    gson.fromJson(
+                        error.charStream(),
+                        ErrorResponse::class.java
+                    )
+                )
+            }
+            else -> {
+                RequestResult.Failure(
+                    ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
+                )
+            }
+        }
+    }
+
+    inline fun <reified T : Any> getEmptyResponse(): RequestResult<T>? {
+
+        try {
+            return RequestResult.JsonSuccess(gson.fromJson("{}", T::class.java))
+        } catch (e: Exception) {
+        }
+
+        try {
+            return RequestResult.JsonSuccess(gson.fromJson("[]", T::class.java))
+        } catch (e: Exception) {
+        }
+
+        return null
+    }
+
     fun handleError(error: Throwable): ErrorResponse {
 
         lateinit var errorResponse: ErrorResponse
         if (error is HttpException) {
 
             if (error.code() == 302) {
-                errorResponse = ErrorResponse("", R.string.error_resource_found)
+                errorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_resource_found)
             } else {
                 error.response()?.errorBody()?.let { errorBody ->
 
@@ -117,14 +169,14 @@ object ApiManager {
                             errorBody.charStream(), ErrorResponse::class.java
                         )
                     } catch (e: Exception) {
-                        ErrorResponse("", R.string.error_server)
+                        ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
                     }
                 } ?: run {
-                    errorResponse = ErrorResponse("", R.string.error_server)
+                    errorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
                 }
             }
         } else {
-            errorResponse = ErrorResponse("", R.string.error_server)
+            errorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
         }
         return errorResponse
     }

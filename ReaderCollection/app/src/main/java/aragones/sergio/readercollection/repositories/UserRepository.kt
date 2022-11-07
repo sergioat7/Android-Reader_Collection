@@ -5,22 +5,33 @@
 
 package aragones.sergio.readercollection.repositories
 
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.base.BaseRepository
+import aragones.sergio.readercollection.injection.MainDispatcher
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.requests.LoginCredentials
 import aragones.sergio.readercollection.models.requests.NewPassword
-import aragones.sergio.readercollection.models.responses.LoginResponse
+import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.network.RequestResult
 import aragones.sergio.readercollection.network.UserApiService
-import aragones.sergio.readercollection.base.BaseRepository
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.SharedPreferencesHandler
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val api: UserApiService
+    private val api: UserApiService,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : BaseRepository() {
+
+    //region Private properties
+    private val externalScope = CoroutineScope(Job() + mainDispatcher)
+    //endregion
 
     //region Public properties
     val username: String
@@ -58,44 +69,99 @@ class UserRepository @Inject constructor(
     //endregion
 
     //region Public methods
-    fun registerObserver(username: String, password: String): Completable {
-
-        return api
-            .register(LoginCredentials(username, password))
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    fun login(
+        username: String,
+        password: String,
+        success: (String) -> Unit,
+        failure: (ErrorResponse) -> Unit
+    ) {
+        if (userData.username.isEmpty() || userData.username != username) {
+            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.username_not_exist))
+        } else if (userData.username == username && userData.password == password) {
+            success("-")
+        } else {
+            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.wrong_password))
+        }
+//        externalScope.launch {
+//
+//            val body = LoginCredentials(username, password)
+//            try {
+//                when (val response = ApiManager.validateResponse(api.login(body))) {
+//                    is RequestResult.JsonSuccess -> success(response.body.token)
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
-    fun deleteUserObserver(): Completable {
-
-        return api
-            .deleteUser()
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    fun logout() {
+        SharedPreferencesHandler.logout()
+//        externalScope.launch {
+//
+//            try {
+//                api.logout()
+//            } catch (e: Exception) {
+//            }
+//        }
     }
 
-    fun loginObserver(username: String, password: String): Single<LoginResponse> {
-
-        return api
-            .login(LoginCredentials(username, password))
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    fun register(
+        username: String,
+        password: String,
+        success: () -> Unit,
+        failure: (ErrorResponse) -> Unit
+    ) {
+        SharedPreferencesHandler.userData = UserData(username, password, false)
+        success()
+//        externalScope.launch {
+//
+//            val body = LoginCredentials(username, password)
+//            try {
+//                when (val response = ApiManager.validateResponse(api.register(body))) {
+//                    is RequestResult.Success -> success()
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse("", R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse("", R.string.error_server))
+//            }
+//        }
     }
 
-    fun logoutObserver(): Completable {
-
-        return api
-            .logout()
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    fun updatePassword(password: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
+        success()
+//        externalScope.launch {
+//
+//            try {
+//                val body = NewPassword(password)
+//                when (val response = ApiManager.validateResponse(api.updatePassword(body))) {
+//                    is RequestResult.Success -> success()
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
-    fun updatePasswordObserver(newPassword: String): Completable {
-
-        return api
-            .updatePassword(NewPassword(newPassword))
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    fun deleteUser(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
+        success()
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.deleteUser())) {
+//                    is RequestResult.Success -> success()
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
@@ -120,9 +186,9 @@ class UserRepository @Inject constructor(
         SharedPreferencesHandler.removeUserData()
     }
 
-    fun removePassword() {
-        SharedPreferencesHandler.removePassword()
-    }
+//    fun removePassword() {
+//        SharedPreferencesHandler.removePassword()
+//    }
 
     fun storeLanguage(language: String) {
         SharedPreferencesHandler.language = language
