@@ -269,12 +269,12 @@ class BooksRepository @Inject constructor(
     }
 
     fun setFavouriteBook(
-        googleId: String,
+        bookId: String,
         isFavourite: Boolean,
         success: (BookResponse) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        getBookDatabaseObserver(googleId).subscribeBy(
+        getBookDatabaseObserver(bookId).subscribeBy(
             onSuccess = { book ->
                 book.isFavourite = isFavourite
                 updateBooksDatabaseObserver(listOf(book)).subscribeBy(
@@ -305,7 +305,7 @@ class BooksRepository @Inject constructor(
 //            try {
 //                when (val response = ApiManager.validateResponse(
 //                    api.setFavouriteBook(
-//                        googleId,
+//                        bookId,
 //                        FavouriteBook(isFavourite)
 //                    )
 //                )) {
@@ -336,7 +336,6 @@ class BooksRepository @Inject constructor(
     }
 
     fun resetTableObserver(): Completable {
-
         return Completable.create { emitter ->
 
             getBooksDatabaseObserver().subscribeBy(
@@ -357,9 +356,7 @@ class BooksRepository @Inject constructor(
                     emitter.onError(it)
                 }
             ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+        }.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
     //endregion
 
@@ -387,37 +384,6 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    private fun handleDisabledContentObserver(newBooks: List<BookResponse>): Completable {
-        return Completable.create { emitter ->
-
-            getBooksDatabaseObserver().subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onSuccess = { currentBooks ->
-
-                    val booksToRemove = AppDatabase.getDisabledContent(
-                        currentBooks,
-                        newBooks
-                    ) as List<BookResponse>
-                    deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
-                        onComplete = {
-                            emitter.onComplete()
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
-        }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
