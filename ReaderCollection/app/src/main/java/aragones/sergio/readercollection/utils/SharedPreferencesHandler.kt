@@ -104,6 +104,9 @@ object SharedPreferencesHandler {
     var hasBookDetailsTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, value)
+    var newChangesPopupShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.NEW_CHANGES_POPUP_PREFERENCES_NAME, false)
+        set(value) = editor.setBoolean(Preferences.NEW_CHANGES_POPUP_PREFERENCES_NAME, value)
     //endregion
 
     //region Public methods
