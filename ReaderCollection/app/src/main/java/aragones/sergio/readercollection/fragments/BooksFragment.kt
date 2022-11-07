@@ -71,11 +71,11 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
-            R.id.action_synchronize -> {
-
-                openSyncPopup()
-                return true
-            }
+//            R.id.action_synchronize -> {
+//
+//                openSyncPopup()
+//                return true
+//            }
             R.id.action_sort -> {
 
                 viewModel.sort(requireContext()) {
@@ -324,15 +324,15 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
     private fun createTargetsForToolbar(): List<TapTarget> {
 
-        val syncItem = binding.toolbar.menu.findItem(R.id.action_synchronize)
+//        val syncItem = binding.toolbar.menu.findItem(R.id.action_synchronize)
         val sortItem = binding.toolbar.menu.findItem(R.id.action_sort)
         return listOf(
-            TapTarget.forToolbarMenuItem(
-                binding.toolbar,
-                syncItem.itemId,
-                resources.getString(R.string.sync_icon_tutorial_title),
-                resources.getString(R.string.sync_icon_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true),
+//            TapTarget.forToolbarMenuItem(
+//                binding.toolbar,
+//                syncItem.itemId,
+//                resources.getString(R.string.sync_icon_tutorial_title),
+//                resources.getString(R.string.sync_icon_tutorial_description)
+//            ).style(requireContext()).cancelable(true).tintTarget(true),
             TapTarget.forToolbarMenuItem(
                 binding.toolbar,
                 sortItem.itemId,

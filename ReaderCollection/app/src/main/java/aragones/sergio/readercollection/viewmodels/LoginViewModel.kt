@@ -13,12 +13,9 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class LoginViewModel @Inject constructor(
@@ -50,20 +47,25 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _loginLoading.value = true
-        userRepository.loginObserver(username, password).subscribeBy(
-            onSuccess = {
+        userRepository.login(username, password, success = { token ->
 
-                val userData = UserData(username, password, true)
-                val authData = AuthData(it.token)
-                loadContent(userData, authData)
-            },
-            onError = {
+            val userData = UserData(username, password, true)
+            val authData = AuthData(token)
+            userRepository.storeLoginData(userData, authData)
+//            booksRepository.loadBooks(success = {
 
                 _loginLoading.value = false
-                _loginError.value = ApiManager.handleError(it)
-                onDestroy()
-            }
-        ).addTo(disposables)
+                _loginError.value = null
+//            }, failure = {
+//
+//                _loginLoading.value = false
+//                _loginError.value = it
+//            })
+        }, failure = {
+
+            _loginLoading.value = false
+            _loginError.value = it
+        })
     }
 
     fun loginDataChanged(username: String, password: String) {
@@ -81,25 +83,6 @@ class LoginViewModel @Inject constructor(
             isDataValid = false
         }
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
-    }
-    //endregion
-
-    //region Private methods
-    private fun loadContent(userData: UserData, authData: AuthData) {
-
-        userRepository.storeLoginData(userData, authData)
-        booksRepository.loadBooksObserver().subscribeBy(
-            onComplete = {
-
-                _loginLoading.value = false
-                _loginError.value = null
-            },
-            onError = {
-
-                _loginError.value = ErrorResponse("", R.string.error_database)
-                onDestroy()
-            }
-        ).addTo(disposables)
     }
     //endregion
 }
