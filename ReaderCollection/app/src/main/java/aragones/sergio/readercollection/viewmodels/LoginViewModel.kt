@@ -13,7 +13,6 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
@@ -50,20 +49,16 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _loginLoading.value = true
-        userRepository.loginObserver(username, password).subscribeBy(
-            onSuccess = {
+        userRepository.login(username, password, success = { token ->
 
-                val userData = UserData(username, password, true)
-                val authData = AuthData(it.token)
-                loadContent(userData, authData)
-            },
-            onError = {
+            val userData = UserData(username, password, true)
+            val authData = AuthData(token)
+            loadContent(userData, authData)
+        }, failure = {
 
-                _loginLoading.value = false
-                _loginError.value = ApiManager.handleError(it)
-                onDestroy()
-            }
-        ).addTo(disposables)
+            _loginLoading.value = false
+            _loginError.value = it
+        })
     }
 
     fun loginDataChanged(username: String, password: String) {
@@ -96,7 +91,7 @@ class LoginViewModel @Inject constructor(
             },
             onError = {
 
-                _loginError.value = ErrorResponse("", R.string.error_database)
+                _loginError.value = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database)
                 onDestroy()
             }
         ).addTo(disposables)
