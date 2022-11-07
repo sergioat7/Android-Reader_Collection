@@ -41,46 +41,47 @@ class BooksRepository @Inject constructor(
 
     //region Public methods
     fun loadBooks(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        externalScope.launch {
-
-            try {
-                when (val response = ApiManager.validateResponse(api.getBooks())) {
-                    is RequestResult.JsonSuccess -> {
-
-                        val newBooks = response.body
-                        insertBooksDatabaseObserver(newBooks).subscribeBy(
-                            onComplete = {
-                                handleDisabledContentObserver(newBooks).subscribeBy(
-                                    onComplete = {
-                                        success()
-                                    },
-                                    onError = {
-                                        failure(
-                                            ErrorResponse(
-                                                Constants.EMPTY_VALUE,
-                                                R.string.error_database
-                                            )
-                                        )
-                                    }
-                                ).addTo(disposables)
-                            },
-                            onError = {
-                                failure(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_database
-                                    )
-                                )
-                            }
-                        ).addTo(disposables)
-                    }
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-            }
-        }
+        success()
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.getBooks())) {
+//                    is RequestResult.JsonSuccess -> {
+//
+//                        val newBooks = response.body
+//                        insertBooksDatabaseObserver(newBooks).subscribeBy(
+//                            onComplete = {
+//                                handleDisabledContentObserver(newBooks).subscribeBy(
+//                                    onComplete = {
+//                                        success()
+//                                    },
+//                                    onError = {
+//                                        failure(
+//                                            ErrorResponse(
+//                                                Constants.EMPTY_VALUE,
+//                                                R.string.error_database
+//                                            )
+//                                        )
+//                                    }
+//                                ).addTo(disposables)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun getBooksDatabaseObserver(
@@ -128,18 +129,31 @@ class BooksRepository @Inject constructor(
     }
 
     fun createBook(newBook: BookResponse, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        externalScope.launch {
-
-            try {
-                when (val response = ApiManager.validateResponse(api.createBook(newBook))) {
-                    is RequestResult.Success -> loadBooks(success, failure)
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+        insertBooksDatabaseObserver(listOf(newBook)).subscribeBy(
+            onComplete = {
+                success()
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
             }
-        }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.createBook(newBook))) {
+//                    is RequestResult.Success -> loadBooks(success, failure)
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun setBook(
@@ -147,73 +161,111 @@ class BooksRepository @Inject constructor(
         success: (BookResponse) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        externalScope.launch {
-
-            try {
-                when (val response = ApiManager.validateResponse(api.setBook(book.id, book))) {
-                    is RequestResult.JsonSuccess -> {
-                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                            onComplete = {
-                                success(book)
-                            },
-                            onError = {
-                                failure(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_database
-                                    )
-                                )
-                            }
-                        ).addTo(disposables)
-                    }
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+            onComplete = {
+                success(book)
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
             }
-        }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.setBook(book.id, book))) {
+//                    is RequestResult.JsonSuccess -> {
+//                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                            onComplete = {
+//                                success(book)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        externalScope.launch {
-
-            try {
-                when (val response = ApiManager.validateResponse(api.deleteBook(bookId))) {
-                    is RequestResult.Success -> {
-                        getBookDatabaseObserver(bookId).subscribeBy(
-                            onSuccess = { book ->
-                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
-                                    onComplete = {
-                                        success()
-                                    },
-                                    onError = {
-                                        failure(
-                                            ErrorResponse(
-                                                Constants.EMPTY_VALUE,
-                                                R.string.error_database
-                                            )
-                                        )
-                                    }
-                                ).addTo(disposables)
-                            },
-                            onError = {
-                                failure(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_database
-                                    )
-                                )
-                            }
-                        ).addTo(disposables)
+        getBookDatabaseObserver(bookId).subscribeBy(
+            onSuccess = { book ->
+                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
+                    onComplete = {
+                        success()
+                    },
+                    onError = {
+                        failure(
+                            ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_database
+                            )
+                        )
                     }
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                ).addTo(disposables)
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
             }
-        }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.deleteBook(bookId))) {
+//                    is RequestResult.Success -> {
+//                        getBookDatabaseObserver(bookId).subscribeBy(
+//                            onSuccess = { book ->
+//                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                                    onComplete = {
+//                                        success()
+//                                    },
+//                                    onError = {
+//                                        failure(
+//                                            ErrorResponse(
+//                                                Constants.EMPTY_VALUE,
+//                                                R.string.error_database
+//                                            )
+//                                        )
+//                                    }
+//                                ).addTo(disposables)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun setFavouriteBook(
@@ -222,39 +274,65 @@ class BooksRepository @Inject constructor(
         success: (BookResponse) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        externalScope.launch {
-
-            try {
-                when (val response = ApiManager.validateResponse(
-                    api.setFavouriteBook(
-                        googleId,
-                        FavouriteBook(isFavourite)
-                    )
-                )) {
-                    is RequestResult.JsonSuccess -> {
-
-                        val book = response.body
-                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                            onComplete = {
-                                success(book)
-                            },
-                            onError = {
-                                failure(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_database
-                                    )
-                                )
-                            }
-                        ).addTo(disposables)
+        getBookDatabaseObserver(googleId).subscribeBy(
+            onSuccess = { book ->
+                book.isFavourite = isFavourite
+                updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+                    onComplete = {
+                        success(book)
+                    },
+                    onError = {
+                        failure(
+                            ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_database
+                            )
+                        )
                     }
-                    is RequestResult.Failure -> failure(response.error)
-                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                }
-            } catch (e: Exception) {
-                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                ).addTo(disposables)
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
             }
-        }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(
+//                    api.setFavouriteBook(
+//                        googleId,
+//                        FavouriteBook(isFavourite)
+//                    )
+//                )) {
+//                    is RequestResult.JsonSuccess -> {
+//
+//                        val book = response.body
+//                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                            onComplete = {
+//                                success(book)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun resetTableObserver(): Completable {
