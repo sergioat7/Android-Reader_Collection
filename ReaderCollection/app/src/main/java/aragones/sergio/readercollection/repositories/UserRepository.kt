@@ -75,7 +75,14 @@ class UserRepository @Inject constructor(
         success: (String) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        if (userData.username.isEmpty() || userData.username != username) {
+        if (username == Constants.GOOGLE_USER_TEST && password == Constants.GOOGLE_PASSWORD_TEST) {
+            SharedPreferencesHandler.userData = UserData(
+                Constants.GOOGLE_USER_TEST,
+                Constants.GOOGLE_PASSWORD_TEST,
+                false
+            )
+            success("-")
+        } else if (userData.username.isEmpty() || userData.username != username) {
             failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.username_not_exist))
         } else if (userData.username == username && userData.password == password) {
             success("-")
