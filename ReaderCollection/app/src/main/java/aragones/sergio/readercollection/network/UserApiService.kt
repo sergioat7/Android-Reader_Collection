@@ -8,8 +8,7 @@ package aragones.sergio.readercollection.network
 import aragones.sergio.readercollection.models.requests.LoginCredentials
 import aragones.sergio.readercollection.models.requests.NewPassword
 import aragones.sergio.readercollection.models.responses.LoginResponse
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
+import retrofit2.Response
 import retrofit2.http.*
 
 interface UserApiService {
@@ -17,31 +16,31 @@ interface UserApiService {
     @Headers(
         "Content-Type:application/json"
     )
-    @POST("user")
-    fun register(@Body body: LoginCredentials): Completable
-
-    @Headers(
-        "${ApiManager.AUTHORIZATION_HEADER}:_"
-    )
-    @DELETE("user")
-    fun deleteUser(): Completable
-
-    @Headers(
-        "Content-Type:application/json"
-    )
     @POST("user/session")
-    fun login(@Body body: LoginCredentials): Single<LoginResponse>
+    suspend fun login(@Body body: LoginCredentials): Response<LoginResponse>
 
     @Headers(
         "${ApiManager.AUTHORIZATION_HEADER}:_"
     )
     @DELETE("user/session")
-    fun logout(): Completable
+    suspend fun logout(): Response<Unit>
+
+    @Headers(
+        "Content-Type:application/json"
+    )
+    @POST("user")
+    suspend fun register(@Body body: LoginCredentials): Response<Unit>
+
+    @Headers(
+        "${ApiManager.AUTHORIZATION_HEADER}:_"
+    )
+    @DELETE("user")
+    suspend fun deleteUser(): Response<Unit>
 
     @Headers(
         "Content-Type:application/json",
         "${ApiManager.AUTHORIZATION_HEADER}:_"
     )
     @PUT("user/updatePassword")
-    fun updatePassword(@Body body: NewPassword): Completable
+    suspend fun updatePassword(@Body body: NewPassword): Response<Unit>
 }

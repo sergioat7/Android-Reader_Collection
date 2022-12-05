@@ -21,7 +21,6 @@ object Preferences {
     const val ENGLISH_LANGUAGE_KEY = "en"
     const val SPANISH_LANGUAGE_KEY = "es"
     const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
-    const val VERSION_PREFERENCE_NAME = "version"
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
     const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
@@ -29,14 +28,18 @@ object Preferences {
     const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"
     const val NEW_BOOK_TUTORIAL_PREFERENCE_NAME = "newBookTutorial"
     const val BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME = "bookDetailsTutorial"
+    const val NEW_CHANGES_POPUP_PREFERENCES_NAME = "newChanges"
 }
 
 object Constants {
     const val DATABASE_NAME = "ReaderCollection"
     const val DATE_FORMAT = "yyyy-MM-dd"
     const val MAX_LINES = Int.MAX_VALUE
+    const val EMPTY_VALUE = ""
     const val NO_VALUE = "-"
     const val BOOKS_TO_SHOW = 7
+    const val GOOGLE_USER_TEST = "googleTest"
+    const val GOOGLE_PASSWORD_TEST = "d9MqzK3k1&07"
 
     var FORMATS = listOf(
         FormatResponse("DIGITAL", "Digital"),
