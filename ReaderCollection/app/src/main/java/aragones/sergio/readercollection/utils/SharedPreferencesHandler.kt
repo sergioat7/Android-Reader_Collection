@@ -39,9 +39,7 @@ object SharedPreferencesHandler {
     //region Public properties
     var language: String
         get() {
-            return appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null)?.let {
-                it
-            } ?: run {
+            return appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null) ?: run {
                 language = Locale.getDefault().language
                 language
             }
@@ -78,9 +76,6 @@ object SharedPreferencesHandler {
     var sortParam: String?
         get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
         set(value) = editor.setString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
-    var version: Int
-        get() = appPreferences.getInt(Preferences.VERSION_PREFERENCE_NAME, 0)
-        set(value) = editor.setInt(Preferences.VERSION_PREFERENCE_NAME, value)
     var themeMode: Int
         get() = appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
         set(value) = editor.setInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
@@ -109,6 +104,9 @@ object SharedPreferencesHandler {
     var hasBookDetailsTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, value)
+    var newChangesPopupShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.NEW_CHANGES_POPUP_PREFERENCES_NAME, false)
+        set(value) = editor.setBoolean(Preferences.NEW_CHANGES_POPUP_PREFERENCES_NAME, value)
     //endregion
 
     //region Public methods
@@ -120,8 +118,12 @@ object SharedPreferencesHandler {
         this.userData = UserData(userData.username, password, userData.isLoggedIn)
     }
 
-    fun removePassword() {
-        this.userData = UserData(userData.username, "", false)
+//    fun removePassword() {
+//        this.userData = UserData(userData.username, "", false)
+//    }
+
+    fun logout() {
+        this.userData = UserData(userData.username, userData.password, false)
     }
 
     fun removeUserData() {

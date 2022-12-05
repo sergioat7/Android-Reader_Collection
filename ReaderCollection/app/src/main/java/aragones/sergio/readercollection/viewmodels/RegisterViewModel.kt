@@ -13,11 +13,8 @@ import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.LoginFormState
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class RegisterViewModel @Inject constructor(
@@ -47,17 +44,24 @@ class RegisterViewModel @Inject constructor(
     fun register(username: String, password: String) {
 
         _registerLoading.value = true
-        userRepository.registerObserver(username, password).subscribeBy(
-            onComplete = {
-                login(username, password)
-            },
-            onError = {
+        userRepository.register(username, password, success = {
+            userRepository.login(username, password, success = { token ->
+
+                val userData = UserData(username, password, true)
+                val authData = AuthData(token)
+                userRepository.storeLoginData(userData, authData)
+                _registerLoading.value = false
+                _registerError.value = null
+            }, failure = {
 
                 _registerLoading.value = false
-                _registerError.value = ApiManager.handleError(it)
-                onDestroy()
-            }
-        ).addTo(disposables)
+                _registerError.value = it
+            })
+        }, failure = {
+
+            _registerLoading.value = false
+            _registerError.value = it
+        })
     }
 
     fun registerDataChanged(username: String, password: String, confirmPassword: String) {
@@ -79,27 +83,6 @@ class RegisterViewModel @Inject constructor(
             isDataValid = false
         }
         _registerForm.value = LoginFormState(usernameError, passwordError, isDataValid)
-    }
-    //endregion
-
-    //region Private methods
-    private fun login(username: String, password: String) {
-
-        userRepository.loginObserver(username, password).subscribeBy(
-            onSuccess = {
-
-                val userData = UserData(username, password, true)
-                val authData = AuthData(it.token)
-                userRepository.storeLoginData(userData, authData)
-                _registerLoading.value = false
-                _registerError.value = null
-            },
-            onError = {
-
-                _registerLoading.value = false
-                _registerError.value = ApiManager.handleError(it)
-            }
-        )
     }
     //endregion
 }
