@@ -11,7 +11,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.UserRepository
@@ -95,49 +94,40 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
-    fun createBook(book: BookResponse) {
+    fun createBook(newBook: BookResponse) {
 
         _bookDetailLoading.value = true
-        booksRepository.createBookObserver(book).subscribeBy(
-            onComplete = {
+        booksRepository.createBook(newBook, success = {
 
-                _bookDetailLoading.value = false
-                _bookDetailSuccessMessage.value = R.string.book_saved
-            },
-            onError = {
-                manageError(ApiManager.handleError(it))
-            }
-        ).addTo(disposables)
+            _bookDetailLoading.value = false
+            _bookDetailSuccessMessage.value = R.string.book_saved
+        }, failure = {
+            manageError(it)
+        })
     }
 
     fun setBook(book: BookResponse) {
 
         _bookDetailLoading.value = true
-        booksRepository.updateBookObserver(book).subscribeBy(
-            onSuccess = {
+        booksRepository.setBook(book, success = {
 
-                _book.value = it
-                _bookDetailLoading.value = false
-            },
-            onError = {
-                manageError(ApiManager.handleError(it))
-            }
-        ).addTo(disposables)
+            _book.value = it
+            _bookDetailLoading.value = false
+        }, failure = {
+            manageError(it)
+        })
     }
 
     fun deleteBook() {
 
         _bookDetailLoading.value = true
-        booksRepository.deleteBookObserver(bookId).subscribeBy(
-            onComplete = {
+        booksRepository.deleteBook(bookId, success = {
 
-                _bookDetailLoading.value = false
-                _bookDetailSuccessMessage.value = R.string.book_removed
-            },
-            onError = {
-                manageError(ApiManager.handleError(it))
-            }
-        ).addTo(disposables)
+            _bookDetailLoading.value = false
+            _bookDetailSuccessMessage.value = R.string.book_removed
+        }, failure = {
+            manageError(it)
+        })
     }
 
     fun setBookImage(imageUri: String?) {
@@ -147,16 +137,13 @@ class BookDetailViewModel @Inject constructor(
     fun setFavourite(isFavourite: Boolean) {
 
         _bookDetailFavouriteLoading.value = true
-        booksRepository.setFavouriteBookObserver(bookId, isFavourite).subscribeBy(
-            onSuccess = {
+        booksRepository.setFavouriteBook(bookId, isFavourite, success = {
 
-                _isFavourite.value = it.isFavourite
-                _bookDetailFavouriteLoading.value = false
-            },
-            onError = {
-                _bookDetailFavouriteLoading.value = false
-            }
-        ).addTo(disposables)
+            _isFavourite.value = it.isFavourite
+            _bookDetailFavouriteLoading.value = false
+        }, failure = {
+            _bookDetailFavouriteLoading.value = false
+        })
     }
 
     fun setBookId(bookId: String) {

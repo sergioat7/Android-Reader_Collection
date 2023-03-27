@@ -13,11 +13,9 @@ import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.login.AuthData
 import aragones.sergio.readercollection.models.login.UserData
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.UserRepository
 import aragones.sergio.readercollection.utils.Constants
-import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
@@ -59,16 +57,13 @@ class SettingsViewModel @Inject constructor(
     //region Public methods
     fun logout() {
 
-        _profileLoading.value = true
+//        _profileLoading.value = true
+//        userRepository.removePassword()
+//        userRepository.removeCredentials()
+        userRepository.logout()
+//        resetDatabase()
 
-        userRepository.removePassword()
-        userRepository.removeCredentials()
-        userRepository.logoutObserver().subscribeBy(
-            onComplete = {},
-            onError = {}
-        ).addTo(disposables)
-
-        resetDatabase()
+        _profileRedirection.value = true
     }
 
     fun save(
@@ -88,28 +83,22 @@ class SettingsViewModel @Inject constructor(
         if (changePassword) {
 
             _profileLoading.value = true
-            userRepository.updatePasswordObserver(newPassword).subscribeBy(
-                onComplete = {
+            userRepository.updatePassword(newPassword, success = {
 
-                    userRepository.storePassword(newPassword)
-                    loginObserver().subscribeBy(
-                        onComplete = {
+                userRepository.storePassword(newPassword)
+                userRepository.login(userRepository.username, newPassword, success = { token ->
 
-                            userData.password = newPassword
-                            _profileLoading.value = false
-                            if (changeLanguage || changeSortParam || changeIsSortDescending) {
-                                _profileRedirection.value = true
-                            }
-                        },
-                        onError = {
-                            manageError(ApiManager.handleError(it))
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    manageError(ApiManager.handleError(it))
-                }
-            ).addTo(disposables)
+                    userRepository.storeCredentials(AuthData(token))
+                    _profileLoading.value = false
+                    if (changeLanguage || changeSortParam || changeIsSortDescending) {
+                        _profileRedirection.value = true
+                    }
+                }, failure = {
+                    manageError(it)
+                })
+            }, failure = {
+                manageError(it)
+            })
         }
 
         if (changeLanguage) {
@@ -145,17 +134,14 @@ class SettingsViewModel @Inject constructor(
     fun deleteUser() {
 
         _profileLoading.value = true
-        userRepository.deleteUserObserver().subscribeBy(
-            onComplete = {
+        userRepository.deleteUser(success = {
 
-                userRepository.removeUserData()
-                userRepository.removeCredentials()
-                resetDatabase()
-            },
-            onError = {
-                manageError(ApiManager.handleError(it))
-            }
-        ).addTo(disposables)
+            userRepository.removeUserData()
+            userRepository.removeCredentials()
+            resetDatabase()
+        }, failure = {
+            manageError(it)
+        })
     }
 
     fun profileDataChanged(password: String) {
@@ -188,28 +174,6 @@ class SettingsViewModel @Inject constructor(
                 _profileRedirection.value = true
             }
         ).addTo(disposables)
-    }
-
-    private fun loginObserver(): Completable {
-
-        return Completable.create { emitter ->
-
-            val username = userRepository.username
-            val password = userRepository.userData.password
-            userRepository.loginObserver(username, password).subscribeBy(
-                onSuccess = {
-
-                    val authData = AuthData(it.token)
-                    userRepository.storeCredentials(authData)
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     private fun manageError(error: ErrorResponse) {

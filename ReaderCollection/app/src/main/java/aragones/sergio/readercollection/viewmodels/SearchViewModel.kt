@@ -11,7 +11,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.BookResponse
 import aragones.sergio.readercollection.models.responses.ErrorResponse
-import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.repositories.BooksRepository
 import aragones.sergio.readercollection.repositories.GoogleBookRepository
 import aragones.sergio.readercollection.repositories.UserRepository
@@ -101,25 +100,22 @@ class SearchViewModel @Inject constructor(
     }
 
     fun addBook(position: Int) {
-        _books.value?.get(position)?.let { book ->
+        _books.value?.get(position)?.let { newBook ->
 
-            book.state = State.PENDING
+            newBook.state = State.PENDING
             _searchLoading.value = true
-            booksRepository.createBookObserver(book).subscribeBy(
-                onComplete = {
+            booksRepository.createBook(newBook, success = {
 
-                    _bookAdded.value = position
-                    _bookAdded.value = null
-                    _searchLoading.value = false
-                },
-                onError = {
+                _bookAdded.value = position
+                _bookAdded.value = null
+                _searchLoading.value = false
+            }, failure = {
 
-                    _searchLoading.value = false
-                    _bookAdded.value = null
-                    _searchError.value = ApiManager.handleError(it)
-                    _searchError.value = null
-                }
-            ).addTo(disposables)
+                _searchLoading.value = false
+                _bookAdded.value = null
+                _searchError.value = it
+                _searchError.value = null
+            })
         }
     }
 

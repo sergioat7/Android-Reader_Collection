@@ -9,12 +9,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <item
-        android:id="@+id/action_synchronize"
-        android:icon="@drawable/ic_synchronize"
-        android:title="@string/synchronize"
-        app:showAsAction="ifRoom"
-        />
+<!--    <item-->
+<!--        android:id="@+id/action_synchronize"-->
+<!--        android:icon="@drawable/ic_synchronize"-->
+<!--        android:title="@string/synchronize"-->
+<!--        app:showAsAction="ifRoom"-->
+<!--        />-->
 
     <item
         android:id="@+id/action_sort"

@@ -6,20 +6,29 @@
 package aragones.sergio.readercollection.repositories
 
 import androidx.sqlite.db.SimpleSQLiteQuery
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseRepository
+import aragones.sergio.readercollection.injection.MainDispatcher
 import aragones.sergio.readercollection.models.requests.FavouriteBook
 import aragones.sergio.readercollection.models.responses.BookResponse
+import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.BookApiService
+import aragones.sergio.readercollection.network.RequestResult
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.utils.CsvReader
 import aragones.sergio.readercollection.utils.CsvWriter
+import aragones.sergio.readercollection.utils.Constants
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -27,52 +36,57 @@ import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
     private val api: BookApiService,
-    private val database: AppDatabase
+    private val database: AppDatabase,
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : BaseRepository() {
 
+    //region Private properties
+    private val externalScope = CoroutineScope(Job() + mainDispatcher)
+    //endregion
+
     //region Public methods
-    fun loadBooksObserver(): Completable {
-
-        return Completable.create { emitter ->
-
-            api.getBooks()
-                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-                .observeOn(ApiManager.OBSERVER_SCHEDULER)
-                .subscribeBy(
-                    onComplete = {
-                        handleDisabledContentObserver(listOf()).subscribeBy(
-                            onComplete = {
-                                emitter.onComplete()
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
-                    },
-                    onSuccess = { newBooks ->
-                        insertBooksDatabaseObserver(newBooks).subscribeBy(
-                            onComplete = {
-                                handleDisabledContentObserver(newBooks).subscribeBy(
-                                    onComplete = {
-                                        emitter.onComplete()
-                                    },
-                                    onError = {
-                                        emitter.onError(it)
-                                    }
-                                ).addTo(disposables)
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    fun loadBooks(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
+        success()
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.getBooks())) {
+//                    is RequestResult.JsonSuccess -> {
+//
+//                        val newBooks = response.body
+//                        insertBooksDatabaseObserver(newBooks).subscribeBy(
+//                            onComplete = {
+//                                handleDisabledContentObserver(newBooks).subscribeBy(
+//                                    onComplete = {
+//                                        success()
+//                                    },
+//                                    onError = {
+//                                        failure(
+//                                            ErrorResponse(
+//                                                Constants.EMPTY_VALUE,
+//                                                R.string.error_database
+//                                            )
+//                                        )
+//                                    }
+//                                ).addTo(disposables)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun getBooksDatabaseObserver(
@@ -198,129 +212,214 @@ class BooksRepository @Inject constructor(
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun createBookObserver(book: BookResponse): Completable {
+    fun createBook(newBook: BookResponse, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
+        insertBooksDatabaseObserver(listOf(newBook)).subscribeBy(
+            onComplete = {
+                success()
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
+            }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.createBook(newBook))) {
+//                    is RequestResult.Success -> loadBooks(success, failure)
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
+    }
 
-        return Completable.create { emitter ->
+    fun setBook(
+        book: BookResponse,
+        success: (BookResponse) -> Unit,
+        failure: (ErrorResponse) -> Unit
+    ) {
+        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+            onComplete = {
+                success(book)
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
+            }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.setBook(book.id, book))) {
+//                    is RequestResult.JsonSuccess -> {
+//                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                            onComplete = {
+//                                success(book)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
+    }
 
-            api.createBook(book)
-                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-                .observeOn(ApiManager.OBSERVER_SCHEDULER)
-                .subscribeBy(
+    fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
+        getBookDatabaseObserver(bookId).subscribeBy(
+            onSuccess = { book ->
+                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
                     onComplete = {
-
-                        loadBooksObserver().subscribeBy(
-                            onComplete = {
-                                emitter.onComplete()
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
+                        success()
                     },
                     onError = {
-                        emitter.onError(it)
+                        failure(
+                            ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_database
+                            )
+                        )
                     }
                 ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
+            }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(api.deleteBook(bookId))) {
+//                    is RequestResult.Success -> {
+//                        getBookDatabaseObserver(bookId).subscribeBy(
+//                            onSuccess = { book ->
+//                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                                    onComplete = {
+//                                        success()
+//                                    },
+//                                    onError = {
+//                                        failure(
+//                                            ErrorResponse(
+//                                                Constants.EMPTY_VALUE,
+//                                                R.string.error_database
+//                                            )
+//                                        )
+//                                    }
+//                                ).addTo(disposables)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
-    fun updateBookObserver(book: BookResponse): Single<BookResponse> {
-
-        val observer: Single<BookResponse> = Single.create { emitter ->
-
-            api.setBook(book.id, book)
-                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-                .observeOn(ApiManager.OBSERVER_SCHEDULER)
-                .subscribeBy(
-                    onSuccess = {
-
-                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                            onComplete = {
-                                emitter.onSuccess(book)
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                ).addTo(disposables)
-        }
-        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-
-        return observer
-    }
-
-    fun deleteBookObserver(googleId: String): Completable {
-
-        return Completable.create { emitter ->
-
-            api.deleteBook(googleId)
-                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-                .observeOn(ApiManager.OBSERVER_SCHEDULER)
-                .subscribeBy(
+    fun setFavouriteBook(
+        bookId: String,
+        isFavourite: Boolean,
+        success: (BookResponse) -> Unit,
+        failure: (ErrorResponse) -> Unit
+    ) {
+        getBookDatabaseObserver(bookId).subscribeBy(
+            onSuccess = { book ->
+                book.isFavourite = isFavourite
+                updateBooksDatabaseObserver(listOf(book)).subscribeBy(
                     onComplete = {
-                        getBookDatabaseObserver(googleId).subscribeBy(
-                            onSuccess = { book ->
-                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
-                                    onComplete = {
-                                        emitter.onComplete()
-                                    },
-                                    onError = {
-                                        emitter.onError(it)
-                                    }
-                                ).addTo(disposables)
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
+                        success(book)
                     },
                     onError = {
-                        emitter.onError(it)
+                        failure(
+                            ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_database
+                            )
+                        )
                     }
                 ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    fun setFavouriteBookObserver(googleId: String, isFavourite: Boolean): Single<BookResponse> {
-
-        val observer: Single<BookResponse> = Single.create { emitter ->
-
-            api.setFavouriteBook(googleId, FavouriteBook(isFavourite))
-                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-                .observeOn(ApiManager.OBSERVER_SCHEDULER)
-                .subscribeBy(
-                    onSuccess = { book ->
-                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                            onComplete = {
-                                emitter.onSuccess(book)
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                ).addTo(disposables)
-        }
-        observer.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-
-        return observer
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
+            }
+        ).addTo(disposables)
+//        externalScope.launch {
+//
+//            try {
+//                when (val response = ApiManager.validateResponse(
+//                    api.setFavouriteBook(
+//                        bookId,
+//                        FavouriteBook(isFavourite)
+//                    )
+//                )) {
+//                    is RequestResult.JsonSuccess -> {
+//
+//                        val book = response.body
+//                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                            onComplete = {
+//                                success(book)
+//                            },
+//                            onError = {
+//                                failure(
+//                                    ErrorResponse(
+//                                        Constants.EMPTY_VALUE,
+//                                        R.string.error_database
+//                                    )
+//                                )
+//                            }
+//                        ).addTo(disposables)
+//                    }
+//                    is RequestResult.Failure -> failure(response.error)
+//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//                }
+//            } catch (e: Exception) {
+//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+//            }
+//        }
     }
 
     fun resetTableObserver(): Completable {
-
         return Completable.create { emitter ->
 
             getBooksDatabaseObserver().subscribeBy(
@@ -341,9 +440,7 @@ class BooksRepository @Inject constructor(
                     emitter.onError(it)
                 }
             ).addTo(disposables)
-        }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+        }.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
     //endregion
 
@@ -371,37 +468,6 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    private fun handleDisabledContentObserver(newBooks: List<BookResponse>): Completable {
-        return Completable.create { emitter ->
-
-            getBooksDatabaseObserver().subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onSuccess = { currentBooks ->
-
-                    val booksToRemove = AppDatabase.getDisabledContent(
-                        currentBooks,
-                        newBooks
-                    ) as List<BookResponse>
-                    deleteBooksDatabaseObserver(booksToRemove).subscribeBy(
-                        onComplete = {
-                            emitter.onComplete()
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
-        }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
