@@ -11,6 +11,7 @@ import dagger.Component
 @Component(
     modules = [
         AppDatabaseModule::class,
+        DispatcherModule::class,
         NetworkModule::class
     ]
 )

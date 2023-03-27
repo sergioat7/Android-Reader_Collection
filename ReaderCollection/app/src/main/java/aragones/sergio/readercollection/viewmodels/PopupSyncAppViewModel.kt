@@ -7,12 +7,9 @@ package aragones.sergio.readercollection.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.models.responses.ErrorResponse
 import aragones.sergio.readercollection.repositories.BooksRepository
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class PopupSyncAppViewModel @Inject constructor(
@@ -37,14 +34,11 @@ class PopupSyncAppViewModel @Inject constructor(
     //region Public methods
     fun loadContent() {
 
-        booksRepository.loadBooksObserver().subscribeBy(
-            onComplete = {
-                _loginError.value = null
-            },
-            onError = {
-                _loginError.value = ErrorResponse("", R.string.error_database)
-            }
-        ).addTo(disposables)
+        booksRepository.loadBooks(success = {
+            _loginError.value = null
+        }, failure = {
+            _loginError.value = it
+        })
     }
     //endregion
 }
