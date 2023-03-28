@@ -136,11 +136,11 @@ class StatisticsViewModel @Inject constructor(
                 onComplete = {
 
                     _booksLoading.value = false
-                    _exportSuccessMessage.value = Pair(R.string.file_created, file.path)
+                    _exportSuccessMessage.value = Pair(R.string.data_imported, file.path)
                     _exportSuccessMessage.value = null
                 },
                 onError = {
-                    manageError(ErrorResponse("", R.string.error_database))
+                    manageError(ErrorResponse("", R.string.error_file_data))
                 }
             ).addTo(disposables)
         } else {
