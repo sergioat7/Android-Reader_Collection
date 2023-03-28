@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.viewmodels
 import android.os.Environment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.base.BaseViewModel
 import aragones.sergio.readercollection.extensions.combineWith
@@ -23,6 +24,8 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -134,10 +137,14 @@ class StatisticsViewModel @Inject constructor(
         if (file.exists()) {
             booksRepository.importDataFrom(file).subscribeBy(
                 onComplete = {
-
+                    
                     _booksLoading.value = false
                     _exportSuccessMessage.value = Pair(R.string.data_imported, file.path)
                     _exportSuccessMessage.value = null
+                    viewModelScope.launch {
+                        delay(500)
+                        fetchBooks()
+                    }
                 },
                 onError = {
                     manageError(ErrorResponse("", R.string.error_file_data))
