@@ -53,6 +53,7 @@
     <string name="import_confirmation">Are you sure you want to IMPORT the data? This process could take a while.</string>
     <string name="export_confirmation">Are you sure you want to EXPORT the data? This process could take a while.</string>
     <string name="file_created">File created in %s</string>
+    <string name="data_imported">Data imported correctly</string>
 
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
@@ -136,6 +137,7 @@
     <string name="error_no_book">There is no book with that id.</string>
     <string name="error_resource_found">This book is already in your collection.</string>
     <string name="error_database">There was an error with the database. Please, try again.</string>
+    <string name="error_file_data">There is an error with the data format. Please, be sure data is in the correct format.</string>
 
     //TUTORIALS
     <string name="books_view_tutorial_title">This is the main screen</string>

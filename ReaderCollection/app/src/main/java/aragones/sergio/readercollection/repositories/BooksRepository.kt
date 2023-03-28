@@ -128,22 +128,26 @@ class BooksRepository @Inject constructor(
         val csvReader = CsvReader(FileReader(file))
         var count = 0
         val columns = StringBuilder()
-        val value = StringBuilder()
+        val values = StringBuilder()
 
         var nextLine = csvReader.readNext()
         while (nextLine != null) {
             for (i in nextLine.indices) {
+
                 if (count == 0) {
+
                     if (i == nextLine.size - 1) {
                         columns.append(nextLine[i])
                     } else {
                         columns.append(nextLine[i]).append(",")
                     }
                 } else {
+
+                    val value = nextLine[i].replace("'","''")
                     when (i) {
-                        0 -> value.append("('").append(nextLine[i]).append("',")
-                        nextLine.size - 1 -> value.append("'").append(nextLine[i]).append("'),")
-                        else -> value.append("'").append(nextLine[i]).append("',")
+                        0 -> values.append("('$value',")
+                        nextLine.size - 1 -> values.append("'$value'),")
+                        else -> values.append("'$value',")
                     }
                 }
             }
@@ -152,7 +156,7 @@ class BooksRepository @Inject constructor(
         }
 
         val query = SimpleSQLiteQuery(
-            "INSERT INTO Book ($columns) VALUES ${value.dropLast(1)}"
+            "INSERT INTO Book ($columns) VALUES ${values.dropLast(1)}"
         )
         return Completable.create { emitter ->
 
@@ -164,8 +168,6 @@ class BooksRepository @Inject constructor(
                 .observeOn(ApiManager.OBSERVER_SCHEDULER)
                 .subscribeBy(
                     onSuccess = {
-
-                        //TODO: send to server
                         emitter.onComplete()
                     },
                     onError = {
