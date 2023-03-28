@@ -217,8 +217,12 @@ class StatisticsViewModel @Inject constructor(
 
     private fun createFormatStats(books: List<BookResponse>) {
 
+        val booksByFormat = books
+            .filter { it.format?.isNotEmpty() == true }
+            .groupBy { it.format }
+
         val entries = mutableListOf<PieEntry>()
-        for (entry in books.groupBy { it.format }.entries) {
+        for (entry in booksByFormat.entries) {
             entries.add(
                 PieEntry(
                     entry.value.size.toFloat(),
