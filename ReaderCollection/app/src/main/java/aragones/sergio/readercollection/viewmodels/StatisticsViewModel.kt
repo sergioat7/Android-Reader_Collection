@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.viewmodels
 
-import android.os.Environment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -26,8 +25,7 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.io.File
-import java.util.*
+import java.util.Calendar
 import javax.inject.Inject
 
 class StatisticsViewModel @Inject constructor(
@@ -126,50 +124,37 @@ class StatisticsViewModel @Inject constructor(
         tutorialShown = true
     }
 
-    fun importData() {
+    fun importData(jsonData: String) {
 
-        _booksLoading.value = true
-        val exportDir =
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "")
-        if (!exportDir.exists()) exportDir.mkdirs()
-        val file = File(exportDir, "books.csv")
+        booksRepository.importDataFrom(jsonData).subscribeBy(
+            onComplete = {
 
-        if (file.exists()) {
-            booksRepository.importDataFrom(file).subscribeBy(
-                onComplete = {
-                    
-                    _booksLoading.value = false
-                    _exportSuccessMessage.value = Pair(R.string.data_imported, file.path)
-                    _exportSuccessMessage.value = null
-                    viewModelScope.launch {
-                        delay(500)
-                        fetchBooks()
-                    }
-                },
-                onError = {
-                    manageError(ErrorResponse("", R.string.error_file_data))
+                _exportSuccessMessage.value = Pair(R.string.data_imported, "")
+                _exportSuccessMessage.value = null
+                viewModelScope.launch {
+                    delay(500)
+                    fetchBooks()
                 }
-            ).addTo(disposables)
-        } else {
-            //TODO: show error
-        }
+            },
+            onError = {
+                manageError(ErrorResponse("", R.string.error_file_data))
+            }
+        ).addTo(disposables)
     }
 
-    fun exportData() {
+    fun getDataToExport(completion: (String?) -> Unit) {
 
-        _booksLoading.value = true
-        val exportDir =
-            File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), "")
-        if (!exportDir.exists()) exportDir.mkdirs()
-        val file = File(exportDir, "books.csv")
+        booksRepository.exportDataTo().subscribeBy(
+            onSuccess = {
 
-        if (booksRepository.exportDataTo(file)) {
-            _booksLoading.value = false
-            _exportSuccessMessage.value = Pair(R.string.file_created, file.path)
-            _exportSuccessMessage.value = null
-        } else {
-            manageError(ErrorResponse("", R.string.error_database))
-        }
+                completion(it)
+                _exportSuccessMessage.value = Pair(R.string.file_created, "")
+                _exportSuccessMessage.value = null
+            }, onError = {
+                completion(null)
+                manageError(ErrorResponse("", R.string.error_database))
+            }
+        ).addTo(disposables)
     }
     //endregion
 
