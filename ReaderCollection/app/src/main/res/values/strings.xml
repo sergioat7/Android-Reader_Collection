@@ -52,7 +52,7 @@
     <string name="export_file">Export books</string>
     <string name="import_confirmation">Are you sure you want to IMPORT the data? This process could take a while.</string>
     <string name="export_confirmation">Are you sure you want to EXPORT the data? This process could take a while.</string>
-    <string name="file_created">File created in %s</string>
+    <string name="file_created">File created</string>
     <string name="data_imported">Data imported correctly</string>
 
     //BOOK DETAILS

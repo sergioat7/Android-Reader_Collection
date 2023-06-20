@@ -16,9 +16,9 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.BookApiService
 import aragones.sergio.readercollection.network.RequestResult
 import aragones.sergio.readercollection.persistence.AppDatabase
-import aragones.sergio.readercollection.utils.CsvReader
-import aragones.sergio.readercollection.utils.CsvWriter
 import aragones.sergio.readercollection.utils.Constants
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -29,9 +29,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.io.File
-import java.io.FileReader
-import java.io.FileWriter
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
@@ -123,85 +120,35 @@ class BooksRepository @Inject constructor(
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun importDataFrom(file: File): Completable {
+    fun importDataFrom(jsonData: String): Completable {
 
-        val csvReader = CsvReader(FileReader(file))
-        var count = 0
-        val columns = StringBuilder()
-        val values = StringBuilder()
-
-        var nextLine = csvReader.readNext()
-        while (nextLine != null) {
-            for (i in nextLine.indices) {
-
-                if (count == 0) {
-
-                    if (i == nextLine.size - 1) {
-                        columns.append(nextLine[i])
-                    } else {
-                        columns.append(nextLine[i]).append(",")
-                    }
-                } else {
-
-                    val value = nextLine[i].replace("'","''")
-                    when (i) {
-                        0 -> values.append("('$value',")
-                        nextLine.size - 1 -> values.append("'$value'),")
-                        else -> values.append("'$value',")
-                    }
-                }
-            }
-            count += 1
-            nextLine = csvReader.readNext()
-        }
-
-        val query = SimpleSQLiteQuery(
-            "INSERT INTO Book ($columns) VALUES ${values.dropLast(1)}"
-        )
-        return Completable.create { emitter ->
-
-            database
-                .bookDao()
-                .insertBooksObserver(query)
-                .`as`(RxJavaBridge.toV3Single())
-                .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-                .observeOn(ApiManager.OBSERVER_SCHEDULER)
-                .subscribeBy(
-                    onSuccess = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    }
-                ).addTo(disposables)
-        }
+        val listType = object : TypeToken<List<BookResponse?>?>() {}.type
+        val books = Gson().fromJson<List<BookResponse?>>(jsonData, listType).mapNotNull { it }
+        return database
+            .bookDao()
+            .insertBooksObserver(books)
+            .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
-    fun exportDataTo(file: File): Boolean {
+    fun exportDataTo(): Single<String> {
 
-        return try {
-            if (file.createNewFile()) {
-                val csvWriter = CsvWriter(FileWriter(file))
-                val cursor = database.query("SELECT * FROM Book", null)
-                csvWriter.writeNext(cursor.columnNames)
-                while (cursor.moveToNext()) {
-                    val arrStr = arrayOfNulls<String>(cursor.columnCount)
-                    for (i in 0 until cursor.columnCount - 1) arrStr[i] = cursor.getString(i)
-                    csvWriter.writeNext(arrStr)
+        return Single.create<String> { emitter ->
+            getBooksDatabaseObserver(null, null, null, null).subscribeBy(
+                onComplete = {
+                    emitter.onSuccess("")
+                },
+                onSuccess = {
+                    emitter.onSuccess(Gson().toJson(it))
+                },
+                onError = {
+                    emitter.onError(it)
                 }
-                csvWriter.close()
-                cursor.close()
-                true
-            } else {
-                file.delete()
-                false
-            }
-        } catch (e: Exception) {
-            file.delete()
-            false
+            ).addTo(disposables)
         }
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
     fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {

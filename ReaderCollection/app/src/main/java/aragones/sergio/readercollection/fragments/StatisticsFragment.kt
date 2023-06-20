@@ -5,12 +5,16 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -31,7 +35,13 @@ import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
@@ -39,6 +49,10 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+
 
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
 
@@ -49,6 +63,8 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
     //region Private properties
     private lateinit var viewModel: StatisticsViewModel
+    private lateinit var openFileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var newFileLauncher: ActivityResultLauncher<Intent>
     private val customColors = ArrayList<Int>()
     private var toolbarSequence: TapTargetSequence? = null
     //endregion
@@ -74,14 +90,24 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             R.id.action_import -> {
 
                 showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
-                    viewModel.importData()
+
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                    intent.type = "*/*"
+                    openFileLauncher.launch(intent)
                 })
                 return true
             }
+
             R.id.action_export -> {
 
                 showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
-                    viewModel.exportData()
+
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "text/txt"
+                        putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
+                    }
+                    newFileLauncher.launch(intent)
                 })
                 return true
             }
@@ -137,6 +163,41 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     //region Protected methods
     override fun initializeUi() {
         super.initializeUi()
+
+        openFileLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    result.data?.data?.let { uri ->
+
+                        try {
+                            val inputStream = context?.contentResolver?.openInputStream(uri)
+                            val reader = BufferedReader(InputStreamReader(inputStream))
+                            val jsonData = reader.readLine()
+                            inputStream?.close()
+                            viewModel.importData(jsonData)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            }
+        newFileLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    result.data?.data?.let { uri ->
+
+                        viewModel.getDataToExport {
+                            it?.let {
+                                context?.contentResolver?.openOutputStream(uri)
+                                    ?.use { outputStream ->
+                                        outputStream.write(it.toByteArray())
+                                        outputStream.close()
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
 
         customColors.add(requireContext().getCustomColor(R.color.colorPrimary))
 
