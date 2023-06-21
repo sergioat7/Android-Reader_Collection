@@ -24,8 +24,10 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.extensions.getCustomFont
+import aragones.sergio.readercollection.extensions.getMonthNumber
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.extensions.toDate
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
@@ -265,9 +267,11 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
+
+                    val month = (e as PieEntry).label.toDate("MMM").getMonthNumber()
                     showBooks(
                         null,
-                        h?.x?.toInt(),
+                        month,
                         null,
                         null
                     )
