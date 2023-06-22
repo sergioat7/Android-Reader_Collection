@@ -5,10 +5,18 @@
 
 package aragones.sergio.readercollection.fragments
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.adapters.OnItemClickListener
@@ -16,19 +24,37 @@ import aragones.sergio.readercollection.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.extensions.getCustomFont
+import aragones.sergio.readercollection.extensions.getMonthNumber
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.extensions.toDate
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import aragones.sergio.readercollection.viewmodelfactories.StatisticsViewModelFactory
 import aragones.sergio.readercollection.viewmodels.StatisticsViewModel
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
-import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+
 
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
 
@@ -39,7 +65,10 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
     //region Private properties
     private lateinit var viewModel: StatisticsViewModel
+    private lateinit var openFileLauncher: ActivityResultLauncher<Intent>
+    private lateinit var newFileLauncher: ActivityResultLauncher<Intent>
     private val customColors = ArrayList<Int>()
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -48,6 +77,63 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         toolbar = binding.toolbar
         initializeUi()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        menu.clear()
+        inflater.inflate(R.menu.statistics_toolbar_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        when (item.itemId) {
+            R.id.action_import -> {
+
+                showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
+
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                    intent.type = "*/*"
+                    openFileLauncher.launch(intent)
+                })
+                return true
+            }
+
+            R.id.action_export -> {
+
+                showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
+
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "text/txt"
+                        putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
+                    }
+                    newFileLauncher.launch(intent)
+                })
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+        lifecycleScope.launch(Dispatchers.Main) {
+            delay(500)
+            createSequence()
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        toolbarSequence?.cancel()
     }
 
     override fun onResume() {
@@ -79,6 +165,41 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     //region Protected methods
     override fun initializeUi() {
         super.initializeUi()
+
+        openFileLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    result.data?.data?.let { uri ->
+
+                        try {
+                            val inputStream = context?.contentResolver?.openInputStream(uri)
+                            val reader = BufferedReader(InputStreamReader(inputStream))
+                            val jsonData = reader.readLine()
+                            inputStream?.close()
+                            viewModel.importData(jsonData)
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+                    }
+                }
+            }
+        newFileLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == RESULT_OK) {
+                    result.data?.data?.let { uri ->
+
+                        viewModel.getDataToExport {
+                            it?.let {
+                                context?.contentResolver?.openOutputStream(uri)
+                                    ?.use { outputStream ->
+                                        outputStream.write(it.toByteArray())
+                                        outputStream.close()
+                                    }
+                            }
+                        }
+                    }
+                }
+            }
 
         customColors.add(requireContext().getCustomColor(R.color.colorPrimary))
 
@@ -146,9 +267,11 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
+
+                    val month = (e as PieEntry).label.toDate("MMM").getMonthNumber()
                     showBooks(
                         null,
-                        h?.x?.toInt(),
+                        month,
                         null,
                         null
                     )
@@ -245,8 +368,16 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             }
         }
 
+        viewModel.exportSuccessMessage.observe(viewLifecycleOwner) {
+            it?.let {
+
+                val message = resources.getString(it.first, it.second)
+                showPopupDialog(message)
+            }
+        }
+
         viewModel.booksError.observe(viewLifecycleOwner) {
-            manageError(it)
+            it?.let { manageError(it) }
         }
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner) { entries ->
@@ -355,7 +486,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
                 onItemClickListener = this@StatisticsFragment
-                isDarkMode = requireContext().isDarkMode()
+                isDarkMode = context.isDarkMode()
             }
         }
 
@@ -366,7 +497,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
                 book = it
                 onItemClickListener = this@StatisticsFragment
-                isDarkMode = requireContext().isDarkMode()
+                isDarkMode = context.isDarkMode()
             }
         }
 
@@ -412,6 +543,39 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
             format
         )
         findNavController().navigate(action)
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.tutorialShown) {
+            toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                targets(
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_import).itemId,
+                        resources.getString(R.string.import_file_icon_tutorial_title),
+                        resources.getString(R.string.import_file_icon_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true),
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_export).itemId,
+                        resources.getString(R.string.export_file_icon_tutorial_title),
+                        resources.getString(R.string.export_file_icon_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true)
+                )
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                start()
+            }
+        }
     }
     //endregion
 

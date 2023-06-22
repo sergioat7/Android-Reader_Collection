@@ -30,7 +30,7 @@ class BooksViewModel @Inject constructor(
     private val _originalBooks = MutableLiveData<List<BookResponse>>()
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
-    private val _booksError = MutableLiveData<ErrorResponse>()
+    private val _booksError = MutableLiveData<ErrorResponse?>()
     //endregion
 
     //region Public properties
@@ -45,7 +45,7 @@ class BooksViewModel @Inject constructor(
         it.filter { book -> book.state != State.READING && book.state != State.PENDING }
     }
     val booksLoading: LiveData<Boolean> = _booksLoading
-    val booksError: LiveData<ErrorResponse> = _booksError
+    val booksError: LiveData<ErrorResponse?> = _booksError
 
     val readingBooksVisible: LiveData<Boolean> = readingBooks.map {
         !((it.isEmpty() && query.isNotBlank()) || books.value?.isEmpty() == true)
@@ -74,7 +74,9 @@ class BooksViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -104,7 +106,7 @@ class BooksViewModel @Inject constructor(
 
                 _booksLoading.value = false
                 _booksError.value = ApiManager.handleError(it)
-                onDestroy()
+                _booksError.value = null
             }
         ).addTo(disposables)
     }

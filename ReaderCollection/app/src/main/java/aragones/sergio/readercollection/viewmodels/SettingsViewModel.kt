@@ -29,7 +29,7 @@ class SettingsViewModel @Inject constructor(
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
-    private val _profileError = MutableLiveData<ErrorResponse>()
+    private val _profileError = MutableLiveData<ErrorResponse?>()
     //endregion
 
     //region Public properties
@@ -41,14 +41,16 @@ class SettingsViewModel @Inject constructor(
     val profileForm: LiveData<Int?> = _profileForm
     val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
-    val profileError: LiveData<ErrorResponse> = _profileError
+    val profileError: LiveData<ErrorResponse?> = _profileError
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -92,14 +94,10 @@ class SettingsViewModel @Inject constructor(
                         _profileRedirection.value = true
                     }
                 }, failure = {
-
-                    _profileLoading.value = false
-                    _profileError.value = it
+                    manageError(it)
                 })
             }, failure = {
-
-                _profileLoading.value = false
-                _profileError.value = it
+                manageError(it)
             })
         }
 
@@ -142,9 +140,7 @@ class SettingsViewModel @Inject constructor(
             userRepository.removeCredentials()
             resetDatabase()
         }, failure = {
-
-            _profileLoading.value = false
-            _profileError.value = it
+            manageError(it)
         })
     }
 
@@ -178,6 +174,13 @@ class SettingsViewModel @Inject constructor(
                 _profileRedirection.value = true
             }
         ).addTo(disposables)
+    }
+
+    private fun manageError(error: ErrorResponse) {
+
+        _profileLoading.value = false
+        _profileError.value = error
+        _profileError.value = null
     }
     //endregion
 }
