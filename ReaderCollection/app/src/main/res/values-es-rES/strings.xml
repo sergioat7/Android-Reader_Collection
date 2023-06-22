@@ -52,6 +52,12 @@
     <string name="longer_book">Libro más largo</string>
     <string name="months">Meses</string>
     <string name="formats">Formatos</string>
+    <string name="import_file">Importar libros</string>
+    <string name="export_file">Exportar libros</string>
+    <string name="import_confirmation">¿Estás seguro de que quieres IMPORTAR los datos? Este proceso puede llevar un tiempo.</string>
+    <string name="export_confirmation">¿Estás seguro de que quieres EXPORTAR los datos? Este proceso puede llevar un tiempo.</string>
+    <string name="file_created">Archivo creado</string>
+    <string name="data_imported">Datos importados correctamente</string>
 
     //BOOK DETAILS
     <string name="add_title">Añade un título</string>
@@ -121,6 +127,7 @@
     <string name="error_no_book">No existe un libro con ese id.</string>
     <string name="error_resource_found">Este libro ya está en tu colección.</string>
     <string name="error_database">Hubo un error con la base de datos. Por favor, inténtalo otra vez.</string>
+    <string name="error_file_data">Hay un error con el formato de los datos. Por favor, asegúrate de que los datos están en el formato correcto.</string>
 
     //TUTORIALS
     <string name="books_view_tutorial_title">Esta es la pantalla principal</string>
@@ -139,6 +146,10 @@
     <string name="sort_icon_tutorial_description">Aquí podrás ordenar tus libros por diferentes valores</string>
     <string name="search_bar_tutorial_title">Este es el botón de búsqueda</string>
     <string name="search_bar_tutorial_description">Aquí podrás buscar los libros que quieras añadir a tu colección</string>
+    <string name="import_file_icon_tutorial_title">Este es el botón de importar archivo</string>
+    <string name="import_file_icon_tutorial_description">Aquí podrás importar desde un archivo los datos de los libros que quieras almacenar</string>
+    <string name="export_file_icon_tutorial_title">Este es el botón de exportar archivo</string>
+    <string name="export_file_icon_tutorial_description">Aquí podrás guardar los datos de tus libros en un archivo</string>
     <string name="save_settings_button_tutorial_title">Este es el botón de guardar</string>
     <string name="save_settings_button_tutorial_description">Aquí podrás guardar los datos y la configuración actual después de modificarlos a tu gusto</string>
     <string name="delete_profile_icon_tutorial_title">Este es el botón de borrar perfil</string>

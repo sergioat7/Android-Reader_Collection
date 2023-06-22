@@ -308,7 +308,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         viewModel.bookDetailError.observe(viewLifecycleOwner) {
 
             book?.let { b -> showData(b) }
-            manageError(it)
+            it?.let { manageError(it) }
         }
 
         goBack.observe(viewLifecycleOwner) {
