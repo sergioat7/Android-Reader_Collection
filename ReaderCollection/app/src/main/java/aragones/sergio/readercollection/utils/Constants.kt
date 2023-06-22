@@ -25,6 +25,7 @@ object Preferences {
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
     const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
     const val SEARCH_TUTORIAL_PREFERENCE_NAME = "searchTutorial"
+    const val STATISTICS_TUTORIAL_PREFERENCE_NAME = "statisticsTutorial"
     const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"
     const val NEW_BOOK_TUTORIAL_PREFERENCE_NAME = "newBookTutorial"
     const val BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME = "bookDetailsTutorial"

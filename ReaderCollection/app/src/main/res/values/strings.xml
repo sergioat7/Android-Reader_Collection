@@ -48,6 +48,12 @@
     <string name="longer_book">Longer book</string>
     <string name="months">Months</string>
     <string name="formats">Formats</string>
+    <string name="import_file">Import books</string>
+    <string name="export_file">Export books</string>
+    <string name="import_confirmation">Are you sure you want to IMPORT the data? This process could take a while.</string>
+    <string name="export_confirmation">Are you sure you want to EXPORT the data? This process could take a while.</string>
+    <string name="file_created">File created</string>
+    <string name="data_imported">Data imported correctly</string>
 
     //BOOK DETAILS
     <string name="add_title">Add a title</string>
@@ -131,6 +137,7 @@
     <string name="error_no_book">There is no book with that id.</string>
     <string name="error_resource_found">This book is already in your collection.</string>
     <string name="error_database">There was an error with the database. Please, try again.</string>
+    <string name="error_file_data">There is an error with the data format. Please, be sure data is in the correct format.</string>
 
     //TUTORIALS
     <string name="books_view_tutorial_title">This is the main screen</string>
@@ -149,6 +156,10 @@
     <string name="sort_icon_tutorial_description">Here you can sort the books in your collection by different values</string>
     <string name="search_bar_tutorial_title">This is the search button</string>
     <string name="search_bar_tutorial_description">Here you can search for the new books you want to add to your collection</string>
+    <string name="import_file_icon_tutorial_title">This is the import file button</string>
+    <string name="import_file_icon_tutorial_description">Here you can import from a file all the books data you want to store in the app</string>
+    <string name="export_file_icon_tutorial_title">This is the export file button</string>
+    <string name="export_file_icon_tutorial_description">Here you can store in a file all your books data</string>
     <string name="save_settings_button_tutorial_title">This is the save button</string>
     <string name="save_settings_button_tutorial_description">Here you can save your personal data and the current app configuration after you modify it</string>
     <string name="delete_profile_icon_tutorial_title">This is the delete profile button</string>
