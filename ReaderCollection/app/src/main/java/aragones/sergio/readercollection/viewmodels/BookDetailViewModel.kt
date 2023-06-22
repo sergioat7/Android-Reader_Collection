@@ -34,7 +34,7 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailSuccessMessage = MutableLiveData<Int>()
-    private val _bookDetailError = MutableLiveData<ErrorResponse>()
+    private val _bookDetailError = MutableLiveData<ErrorResponse?>()
     //endregion
 
     //region Public properties
@@ -47,7 +47,7 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
     val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
-    val bookDetailError: LiveData<ErrorResponse> = _bookDetailError
+    val bookDetailError: LiveData<ErrorResponse?> = _bookDetailError
     var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
     var bookDetailsTutorialShown = userRepository.hasBookDetailsTutorialBeenShown
     //endregion
@@ -55,7 +55,10 @@ class BookDetailViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        googleBookRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -72,10 +75,7 @@ class BookDetailViewModel @Inject constructor(
                     _bookDetailLoading.value = false
                 },
                 onError = {
-
-                    _bookDetailLoading.value = false
-                    _bookDetailError.value = ErrorResponse("", R.string.error_server)
-                    onDestroy()
+                    manageError(ErrorResponse("", R.string.error_server))
                 }
             ).addTo(disposables)
         } else {
@@ -88,10 +88,7 @@ class BookDetailViewModel @Inject constructor(
                     _bookDetailLoading.value = false
                 },
                 onError = {
-
-                    _bookDetailLoading.value = false
-                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                    onDestroy()
+                    manageError(ErrorResponse("", R.string.error_no_book))
                 }
             ).addTo(disposables)
         }
@@ -105,9 +102,7 @@ class BookDetailViewModel @Inject constructor(
             _bookDetailLoading.value = false
             _bookDetailSuccessMessage.value = R.string.book_saved
         }, failure = {
-
-            _bookDetailLoading.value = false
-            _bookDetailError.value = it
+            manageError(it)
         })
     }
 
@@ -119,9 +114,7 @@ class BookDetailViewModel @Inject constructor(
             _book.value = it
             _bookDetailLoading.value = false
         }, failure = {
-
-            _bookDetailLoading.value = false
-            _bookDetailError.value = it
+            manageError(it)
         })
     }
 
@@ -133,9 +126,7 @@ class BookDetailViewModel @Inject constructor(
             _bookDetailLoading.value = false
             _bookDetailSuccessMessage.value = R.string.book_removed
         }, failure = {
-
-            _bookDetailLoading.value = false
-            _bookDetailError.value = it
+            manageError(it)
         })
     }
 
@@ -171,6 +162,15 @@ class BookDetailViewModel @Inject constructor(
     fun setBookDetailsTutorialAsShown() {
         userRepository.setHasBookDetailsTutorialBeenShown(true)
         bookDetailsTutorialShown = true
+    }
+    //endregion
+
+    //region Private methods
+    private fun manageError(error: ErrorResponse) {
+
+        _bookDetailLoading.value = false
+        _bookDetailError.value = error
+        _bookDetailError.value = null
     }
     //endregion
 }

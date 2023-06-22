@@ -17,6 +17,8 @@ import aragones.sergio.readercollection.network.BookApiService
 import aragones.sergio.readercollection.network.RequestResult
 import aragones.sergio.readercollection.persistence.AppDatabase
 import aragones.sergio.readercollection.utils.Constants
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -114,6 +116,37 @@ class BooksRepository @Inject constructor(
             .bookDao()
             .getBooksObserver(query)
             .`as`(RxJavaBridge.toV3Maybe())
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    fun importDataFrom(jsonData: String): Completable {
+
+        val listType = object : TypeToken<List<BookResponse?>?>() {}.type
+        val books = Gson().fromJson<List<BookResponse?>>(jsonData, listType).mapNotNull { it }
+        return database
+            .bookDao()
+            .insertBooksObserver(books)
+            .`as`(RxJavaBridge.toV3Completable())
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    fun exportDataTo(): Single<String> {
+
+        return Single.create<String> { emitter ->
+            getBooksDatabaseObserver(null, null, null, null).subscribeBy(
+                onComplete = {
+                    emitter.onSuccess("")
+                },
+                onSuccess = {
+                    emitter.onSuccess(Gson().toJson(it))
+                },
+                onError = {
+                    emitter.onError(it)
+                }
+            ).addTo(disposables)
+        }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }

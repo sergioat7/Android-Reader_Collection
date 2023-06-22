@@ -95,6 +95,9 @@ object SharedPreferencesHandler {
     var hasSearchTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
+    var hasStatisticsTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.STATISTICS_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.STATISTICS_TUTORIAL_PREFERENCE_NAME, value)
     var hasSettingsTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, value)
