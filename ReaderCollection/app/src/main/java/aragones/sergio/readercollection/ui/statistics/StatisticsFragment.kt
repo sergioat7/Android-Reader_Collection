@@ -77,6 +77,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         initializeUi()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
@@ -84,6 +85,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
         inflater.inflate(R.menu.statistics_toolbar_menu, menu)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {

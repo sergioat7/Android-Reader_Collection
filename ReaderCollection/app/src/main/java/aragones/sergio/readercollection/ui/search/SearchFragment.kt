@@ -56,6 +56,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
         initializeUi()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 

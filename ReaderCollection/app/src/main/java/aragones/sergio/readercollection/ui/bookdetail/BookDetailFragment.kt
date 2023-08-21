@@ -59,6 +59,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         initializeUi()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
 
@@ -75,6 +76,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         when (item.itemId) {
