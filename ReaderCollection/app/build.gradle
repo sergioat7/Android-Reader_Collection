@@ -30,8 +30,8 @@ android {
 
         applicationId "aragones.sergio.readercollection"
         minSdkVersion 23
-        targetSdkVersion 32
-        compileSdk 32
+        targetSdkVersion 34
+        compileSdk 34
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         versionCode versionMajor * 100000 + versionMinor * 1000 + versionPatch * 10 + versionBuild
