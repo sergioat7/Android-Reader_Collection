@@ -10,23 +10,25 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.landing.LandingActivity
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSettingsBinding
 import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.ui.base.BindingFragment
+import aragones.sergio.readercollection.ui.landing.LandingActivity
 import aragones.sergio.readercollection.utils.CustomDropdownType
 import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     //region Protected properties
@@ -35,7 +37,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: SettingsViewModel
+    private val viewModel: SettingsViewModel by viewModels()
     private lateinit var mainContentSequence: TapTargetSequence
     private var toolbarSequence: TapTargetSequence? = null
     private var mainContentSequenceShown = false
@@ -105,7 +107,8 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
+
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -137,11 +140,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
     override fun initializeUi() {
         super.initializeUi()
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            SettingsViewModelFactory(application)
-        )[SettingsViewModel::class.java]
         setupBindings()
 
         binding.textInputLayoutUsername.setEndIconOnClickListener {

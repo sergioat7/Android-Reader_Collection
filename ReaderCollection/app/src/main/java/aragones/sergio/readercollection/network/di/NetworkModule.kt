@@ -11,20 +11,27 @@ import aragones.sergio.readercollection.network.interfaces.GoogleApiService
 import aragones.sergio.readercollection.network.interfaces.UserApiService
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
-class NetworkModule {
+@InstallIn(SingletonComponent::class)
+object NetworkModule {
 
+    @Singleton
     @Provides
     fun providesBookApiService(): BookApiService = ApiManager.getService(
         ApiManager.BASE_ENDPOINT
     )
 
+    @Singleton
     @Provides
     fun providesGoogleApiService(): GoogleApiService = ApiManager.getService(
         ApiManager.BASE_GOOGLE_ENDPOINT
     )
 
+    @Singleton
     @Provides
     fun providesUserApiService(): UserApiService = ApiManager.getService(
         ApiManager.BASE_ENDPOINT

@@ -7,17 +7,16 @@ package aragones.sergio.readercollection.ui.bookdetail
 
 import android.os.Bundle
 import android.view.*
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.*
 import aragones.sergio.readercollection.models.BookResponse
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.*
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
@@ -25,12 +24,14 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
+@AndroidEntryPoint
 class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     AppBarLayout.OnOffsetChangedListener {
 
@@ -40,8 +41,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //endregion
 
     //region Private properties
-    private val args: BookDetailFragmentArgs by navArgs()
-    private lateinit var viewModel: BookDetailViewModel
+    private val viewModel: BookDetailViewModel by viewModels()
     private var book: BookResponse? = null
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
@@ -89,6 +89,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     setEdition(false)
                 }
             }
+
             R.id.action_edit -> setEdition(true)
             R.id.action_remove -> {
 
@@ -96,6 +97,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     viewModel.deleteBook()
                 })
             }
+
             R.id.action_cancel -> {
 
                 setEdition(false)
@@ -136,7 +138,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     override fun onDestroy() {
         super.onDestroy()
 
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -190,6 +192,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                     textInputLayoutDescription.maxLines = Constants.MAX_LINES
                     buttonReadMoreDescription.visibility = View.GONE
                 }
+
                 buttonReadMoreSummary -> {
                     textInputLayoutSummary.maxLines = Constants.MAX_LINES
                     buttonReadMoreSummary.visibility = View.GONE
@@ -203,11 +206,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     override fun initializeUi() {
         super.initializeUi()
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            BookDetailViewModelFactory(application, args.bookId, args.isGoogleBook)
-        )[BookDetailViewModel::class.java]
         setupBindings()
 
         with(binding) {

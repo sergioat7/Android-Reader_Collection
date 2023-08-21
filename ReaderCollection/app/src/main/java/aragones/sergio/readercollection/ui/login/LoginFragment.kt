@@ -7,16 +7,18 @@ package aragones.sergio.readercollection.ui.login
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
-import aragones.sergio.readercollection.ui.MainActivity
-import aragones.sergio.readercollection.ui.register.RegisterActivity
-import aragones.sergio.readercollection.ui.base.BindingFragment
+import androidx.fragment.app.viewModels
 import aragones.sergio.readercollection.databinding.FragmentLoginBinding
 import aragones.sergio.readercollection.extensions.doAfterTextChanged
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setError
+import aragones.sergio.readercollection.ui.MainActivity
+import aragones.sergio.readercollection.ui.base.BindingFragment
+import aragones.sergio.readercollection.ui.register.RegisterActivity
 import aragones.sergio.readercollection.utils.StatusBarStyle
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     //region Protected properties
@@ -25,7 +27,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: LoginViewModel
+    private val viewModel: LoginViewModel by viewModels()
     //endregion
 
     //region Lifecycle methods
@@ -59,9 +61,6 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //region Protected methods
     override fun initializeUi() {
 
-        val application = activity?.application ?: return
-        viewModel =
-            ViewModelProvider(this, LoginViewModelFactory(application))[LoginViewModel::class.java]
         setupBindings()
 
         binding.fragment = this

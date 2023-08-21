@@ -5,6 +5,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'dagger.hilt.android.plugin'
 }
 
 def versionMajor = 2
@@ -66,6 +67,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17
     }
+
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
@@ -100,12 +105,6 @@ dependencies {
     implementation 'io.reactivex.rxjava3:rxkotlin:3.0.1'
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
 
-    //Dagger2
-    api "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger:$daggerVersion"
-    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
-
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
 
@@ -133,11 +132,12 @@ dependencies {
     //TapTargetView
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
 
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+
     //Test
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
-    kaptTest "com.google.dagger:dagger-android-processor:$daggerVersion"
-    kaptAndroidTest "com.google.dagger:dagger-android-processor:$daggerVersion"
-    androidTestImplementation "com.google.dagger:dagger-android:$daggerVersion"
 }
