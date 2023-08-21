@@ -13,7 +13,7 @@ import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.interfaces.BookApiService
-import aragones.sergio.readercollection.database.AppDatabase
+import aragones.sergio.readercollection.database.ReaderCollectionDatabase
 import aragones.sergio.readercollection.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -30,7 +30,7 @@ import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
     private val api: BookApiService,
-    private val database: AppDatabase,
+    private val database: ReaderCollectionDatabase,
     @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : BaseRepository() {
 

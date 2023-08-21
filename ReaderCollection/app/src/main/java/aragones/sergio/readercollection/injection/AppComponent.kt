@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.injection
 
 import aragones.sergio.readercollection.network.di.NetworkModule
-import aragones.sergio.readercollection.database.di.AppDatabaseModule
+import aragones.sergio.readercollection.database.di.DatabaseModule
 import aragones.sergio.readercollection.data.source.di.DispatcherModule
 import aragones.sergio.readercollection.ui.bookdetail.BookDetailViewModelFactory
 import aragones.sergio.readercollection.ui.booklist.BookListViewModelFactory
@@ -22,7 +22,7 @@ import dagger.Component
 
 @Component(
     modules = [
-        AppDatabaseModule::class,
+        DatabaseModule::class,
         DispatcherModule::class,
         NetworkModule::class
     ]
