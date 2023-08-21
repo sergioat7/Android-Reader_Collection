@@ -9,16 +9,17 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import aragones.sergio.readercollection.injection.AppComponent
-import aragones.sergio.readercollection.injection.AppDatabaseModule
+import aragones.sergio.readercollection.database.di.DatabaseModule
 import aragones.sergio.readercollection.injection.DaggerAppComponent
-import aragones.sergio.readercollection.injection.NetworkModule
+import aragones.sergio.readercollection.network.di.NetworkModule
 
 class ReaderCollectionApplication : Application() {
 
     //region Static properties
     companion object {
-        @SuppressLint("StaticFieldLeak")
-        lateinit var context: Context
+        val context: Context
+            get() = app.applicationContext
+        private lateinit var app: ReaderCollectionApplication
     }
     //endregion
 
@@ -30,14 +31,14 @@ class ReaderCollectionApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
+        app = this
+
         appComponent = DaggerAppComponent.builder()
-            .appDatabaseModule(
-                AppDatabaseModule(applicationContext)
+            .databaseModule(
+                DatabaseModule(applicationContext)
             )
             .networkModule(NetworkModule())
             .build()
-
-        context = applicationContext
     }
     //endregion
 }

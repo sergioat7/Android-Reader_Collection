@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/booksFragment"
-        android:name="aragones.sergio.readercollection.fragments.BooksFragment"
+        android:name="aragones.sergio.readercollection.ui.books.BooksFragment"
         android:label="BooksFragment"
         tools:layout="@layout/fragment_books"
         >
@@ -41,7 +41,7 @@
 
     <fragment
         android:id="@+id/bookDetailFragment"
-        android:name="aragones.sergio.readercollection.fragments.BookDetailFragment"
+        android:name="aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment"
         android:label="BookDetailFragment"
         tools:layout="@layout/fragment_book_detail"
         >
@@ -61,7 +61,7 @@
 
     <fragment
         android:id="@+id/bookListFragment"
-        android:name="aragones.sergio.readercollection.fragments.BookListFragment"
+        android:name="aragones.sergio.readercollection.ui.booklist.BookListFragment"
         android:label="BookListFragment"
         tools:layout="@layout/fragment_book_list"
         >

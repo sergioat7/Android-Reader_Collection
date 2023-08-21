@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="aragones.sergio.readercollection.fragments.SettingsFragment"
+        android:name="aragones.sergio.readercollection.ui.settings.SettingsFragment"
         android:label="SettingsFragment"
         tools:layout="@layout/fragment_settings"
         />
