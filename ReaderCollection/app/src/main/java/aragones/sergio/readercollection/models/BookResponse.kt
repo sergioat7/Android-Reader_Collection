@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.models
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.extensions.toString
@@ -57,6 +58,8 @@ data class BookResponse(
     @SerializedName("isFavourite")
     var isFavourite: Boolean
 ) : BaseModel<String> {
+
+    @Ignore
     constructor(id: String) : this(
         id,
         null,
@@ -80,6 +83,7 @@ data class BookResponse(
         false
     )
 
+    @Ignore
     constructor(googleBook: GoogleBookResponse) : this(
         id = googleBook.id,
         title = StringBuilder().append(googleBook.volumeInfo.title ?: "").append(" ")
