@@ -7,14 +7,16 @@ package aragones.sergio.readercollection.ui.modals.syncapp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.data.source.BooksRepository
+import aragones.sergio.readercollection.models.ErrorResponse
+import aragones.sergio.readercollection.ui.base.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class PopupSyncAppViewModel @Inject constructor(
     private val booksRepository: BooksRepository
-): BaseViewModel() {
+) : BaseViewModel() {
 
     //region Private properties
     private val _loginError = MutableLiveData<ErrorResponse?>()
@@ -27,6 +29,7 @@ class PopupSyncAppViewModel @Inject constructor(
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
     }
     //endregion

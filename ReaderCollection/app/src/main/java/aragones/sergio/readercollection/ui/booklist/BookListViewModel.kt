@@ -8,31 +8,35 @@ package aragones.sergio.readercollection.ui.booklist
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.base.BaseViewModel
+import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.extensions.getMonthNumber
 import aragones.sergio.readercollection.extensions.getYear
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
-import aragones.sergio.readercollection.data.source.BooksRepository
+import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.ScrollPosition
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
+@HiltViewModel
 class BookListViewModel @Inject constructor(
+    state: SavedStateHandle,
     private val booksRepository: BooksRepository
 ) : BaseViewModel() {
 
     //region Private properties
-    private var state: String = ""
-    private var sortParam: String? = null
-    private var isSortDescending: Boolean = false
-    private var query: String = ""
-    private var year: Int = -1
-    private var month: Int = -1
-    private var author: String? = null
-    private var format: String? = null
+    private var state: String = state["state"] ?: ""
+    private var sortParam: String? = state["sortParam"]
+    private var isSortDescending: Boolean = state["isSortDescending"] ?: false
+    private var query: String = state["query"] ?: ""
+    private var year: Int = state["year"] ?: -1
+    private var month: Int = state["month"] ?: -1
+    private var author: String? = state["author"]
+    private var format: String? = state["format"]
     private val _books = MutableLiveData<List<BookResponse>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
@@ -54,26 +58,6 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun setParams(
-        state: String,
-        sortParam: String?,
-        isSortDescending: Boolean,
-        query: String,
-        year: Int,
-        month: Int,
-        author: String?,
-        format: String?
-    ) {
-        this.state = state
-        this.sortParam = sortParam
-        this.isSortDescending = isSortDescending
-        this.query = query
-        this.year = year
-        this.month = month
-        this.author = author
-        this.format = format
-    }
-
     fun fetchBooks() {
 
         _booksLoading.value = true

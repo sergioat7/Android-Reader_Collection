@@ -10,21 +10,22 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.books.BooksAdapter
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.ui.base.BindingFragment
+import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClickListener {
 
     //region Protected properties
@@ -33,8 +34,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     //endregion
 
     //region Private properties
-    private val args: BookListFragmentArgs by navArgs()
-    private lateinit var viewModel: BookListViewModel
+    private val viewModel: BookListViewModel by viewModels()
     private lateinit var booksAdapter: BooksAdapter
     private val goBack = MutableLiveData<Boolean>()
     //endregion
@@ -74,7 +74,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     override fun onResume() {
         super.onResume()
 
-        if (this::viewModel.isInitialized) viewModel.fetchBooks()
+        viewModel.fetchBooks()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
     }
 
@@ -86,7 +86,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     override fun onDestroy() {
         super.onDestroy()
 
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -111,6 +111,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
                 viewModel.setPosition(ScrollPosition.TOP)
                 binding.recyclerViewBooks.scrollToPosition(0)
             }
+
             binding.floatingActionButtonEndList -> {
                 viewModel.setPosition(ScrollPosition.END)
                 binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
@@ -123,21 +124,6 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     override fun initializeUi() {
         super.initializeUi()
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            BookListViewModelFactory(
-                application,
-                args.state,
-                args.sortParam,
-                args.isSortDescending,
-                args.query,
-                args.year,
-                args.month,
-                args.author,
-                args.format
-            )
-        )[BookListViewModel::class.java]
         booksAdapter = BooksAdapter(
             books = viewModel.books.value?.toMutableList() ?: mutableListOf(),
             isVerticalDesign = false,

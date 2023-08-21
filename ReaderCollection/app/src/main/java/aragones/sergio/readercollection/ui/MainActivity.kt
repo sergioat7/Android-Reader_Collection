@@ -10,10 +10,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.databinding.ActivityMainBinding
 import aragones.sergio.readercollection.extensions.setupWithNavController
+import aragones.sergio.readercollection.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
     //region Private properties
@@ -24,6 +26,7 @@ class MainActivity : BaseActivity() {
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setContentView(binding.root)
 
