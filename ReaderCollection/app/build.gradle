@@ -44,11 +44,12 @@ android {
             shrinkResources = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+            manifestPlaceholders = [appName: "@string/app_name"]
         }
         debug {
             applicationIdSuffix ".debug"
             versionNameSuffix '.debug'
-            debuggable true
+            manifestPlaceholders = [appName: "Reader Collection - Pre"]
         }
     }
 
