@@ -9,14 +9,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.base.BaseViewModel
+import aragones.sergio.readercollection.data.source.BooksRepository
+import aragones.sergio.readercollection.data.source.UserRepository
 import aragones.sergio.readercollection.extensions.combineWith
 import aragones.sergio.readercollection.extensions.getGroupedBy
 import aragones.sergio.readercollection.extensions.getOrderedBy
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
-import aragones.sergio.readercollection.data.source.BooksRepository
-import aragones.sergio.readercollection.data.source.UserRepository
+import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import com.github.mikephil.charting.data.BarEntry

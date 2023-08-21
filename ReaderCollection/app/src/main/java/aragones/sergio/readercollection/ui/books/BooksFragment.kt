@@ -11,17 +11,17 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.models.BookResponse
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
@@ -39,7 +39,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: BooksViewModel
+    private val viewModel: BooksViewModel by viewModels()
     private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
@@ -109,14 +109,14 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     override fun onResume() {
         super.onResume()
 
-        if (this::viewModel.isInitialized) viewModel.fetchBooks()
+        viewModel.fetchBooks()
         this.searchView?.clearFocus()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -154,6 +154,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
                 )
                 findNavController().navigate(action)
             }
+
             binding.buttonShowAllRead -> {
                 val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
                     State.READ,
@@ -171,11 +172,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
     override fun initializeUi() {
         super.initializeUi()
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            BooksViewModelFactory(application)
-        )[BooksViewModel::class.java]
         readingBooksAdapter = BooksAdapter(
             books = viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
                 ?: mutableListOf(),

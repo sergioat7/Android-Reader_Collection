@@ -8,11 +8,11 @@ package aragones.sergio.readercollection.ui.landing
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.lifecycle.ViewModelProvider
+import androidx.activity.viewModels
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
+import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.Constants
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.ktx.Firebase
@@ -25,7 +25,7 @@ import java.util.*
 class LandingActivity : BaseActivity() {
 
     //region Private properties
-    private lateinit var viewModel: LandingViewModel
+    private val viewModel: LandingViewModel by viewModels()
     //endregion
 
     //region Lifecycle methods
@@ -42,10 +42,7 @@ class LandingActivity : BaseActivity() {
 
     //region Private methods
     private fun initializeUI() {
-        viewModel = ViewModelProvider(
-            this,
-            LandingViewModelFactory(application)
-        )[LandingViewModel::class.java]
+
         setupBindings()
 
         configLanguage()

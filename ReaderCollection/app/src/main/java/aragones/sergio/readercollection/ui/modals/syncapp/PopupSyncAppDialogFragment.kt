@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.ui.landing.LandingActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,7 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class PopupSyncAppDialogFragment : DialogFragment() {
 
     //region Private properties
-    private lateinit var viewModel: PopupSyncAppViewModel
+    private val viewModel: PopupSyncAppViewModel by viewModels()
     //endregion
 
     //region Lifecycle methods
@@ -44,11 +44,6 @@ class PopupSyncAppDialogFragment : DialogFragment() {
     //region Private functions
     private fun initializeUI() {
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            PopupSyncAppViewModelFactory(application)
-        )[PopupSyncAppViewModel::class.java]
         setupBindings()
 
         viewModel.loadContent()
