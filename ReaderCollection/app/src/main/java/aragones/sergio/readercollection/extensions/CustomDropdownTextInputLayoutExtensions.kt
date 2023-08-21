@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.extensions
 
 import androidx.core.view.doOnLayout
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.adapters.MenuAdapter
+import aragones.sergio.readercollection.ui.adapters.MenuAdapter
 import aragones.sergio.readercollection.databinding.CustomDropdownTextInputLayoutBinding
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.CustomDropdownType

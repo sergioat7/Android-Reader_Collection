@@ -14,7 +14,7 @@
 
     <fragment
         android:id="@+id/searchFragment"
-        android:name="aragones.sergio.readercollection.fragments.SearchFragment"
+        android:name="aragones.sergio.readercollection.ui.search.SearchFragment"
         android:label="SearchFragment"
         tools:layout="@layout/fragment_search"
         >
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/bookDetailFragment"
-        android:name="aragones.sergio.readercollection.fragments.BookDetailFragment"
+        android:name="aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment"
         android:label="BookDetailFragment"
         tools:layout="@layout/fragment_book_detail"
         >

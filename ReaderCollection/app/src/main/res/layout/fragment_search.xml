@@ -22,12 +22,12 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.fragments.SearchFragment"
+            type="aragones.sergio.readercollection.ui.search.SearchFragment"
             />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.viewmodels.SearchViewModel"
+            type="aragones.sergio.readercollection.ui.search.SearchViewModel"
             />
 
     </data>
@@ -35,7 +35,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.SearchFragment"
+        tools:context=".ui.search.SearchFragment"
         >
 
         <androidx.appcompat.widget.Toolbar

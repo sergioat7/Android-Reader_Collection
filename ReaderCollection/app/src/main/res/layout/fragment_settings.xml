@@ -22,12 +22,12 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.fragments.SettingsFragment"
+            type="aragones.sergio.readercollection.ui.settings.SettingsFragment"
             />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.viewmodels.SettingsViewModel"
+            type="aragones.sergio.readercollection.ui.settings.SettingsViewModel"
             />
 
     </data>
@@ -35,7 +35,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.SettingsFragment"
+        tools:context=".ui.settings.SettingsFragment"
         >
 
         <androidx.appcompat.widget.Toolbar

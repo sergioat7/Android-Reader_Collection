@@ -18,7 +18,7 @@
 
         <variable
             name="onItemClickListener"
-            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            type="aragones.sergio.readercollection.interfaces.OnItemClickListener"
             />
 
     </data>
