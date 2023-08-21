@@ -5,6 +5,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'dagger.hilt.android.plugin'
 }
 
 def versionMajor = 2
@@ -65,6 +66,10 @@ android {
     }
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17
+    }
+
+    kapt {
+        correctErrorTypes = true
     }
 }
 
@@ -132,6 +137,10 @@ dependencies {
 
     //TapTargetView
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+
+    //Hilt
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
     //Test
     testImplementation 'junit:junit:4.13.2'
