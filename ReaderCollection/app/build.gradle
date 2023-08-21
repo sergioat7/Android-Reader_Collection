@@ -26,14 +26,12 @@ android {
         }
     }
 
-    compileSdkVersion 32
-    buildToolsVersion "30.0.3"
-
     defaultConfig {
 
         applicationId "aragones.sergio.readercollection"
         minSdkVersion 23
         targetSdkVersion 32
+        compileSdk 32
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         versionCode versionMajor * 100000 + versionMinor * 1000 + versionPatch * 10 + versionBuild
