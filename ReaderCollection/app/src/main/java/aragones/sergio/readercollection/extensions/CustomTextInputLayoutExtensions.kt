@@ -15,7 +15,7 @@ import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
 import java.util.*

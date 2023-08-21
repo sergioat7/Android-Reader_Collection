@@ -30,12 +30,12 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.fragments.BookDetailFragment"
+            type="aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment"
             />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.viewmodels.BookDetailViewModel"
+            type="aragones.sergio.readercollection.ui.bookdetail.BookDetailViewModel"
             />
 
         <variable
@@ -53,7 +53,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.BookDetailFragment"
+        tools:context=".ui.bookdetail.BookDetailFragment"
         >
 
         <com.google.android.material.appbar.AppBarLayout
@@ -77,7 +77,7 @@
                     android:layout_height="wrap_content"
                     >
 
-                    <aragones.sergio.readercollection.customview.ImageViewWithLoading
+                    <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
                         android:id="@+id/image_view_book"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
