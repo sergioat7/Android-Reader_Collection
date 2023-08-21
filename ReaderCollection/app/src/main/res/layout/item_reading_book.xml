@@ -18,12 +18,12 @@
 
         <variable
             name="book"
-            type="aragones.sergio.readercollection.models.responses.BookResponse"
+            type="aragones.sergio.readercollection.models.BookResponse"
             />
 
         <variable
             name="onItemClickListener"
-            type="aragones.sergio.readercollection.adapters.OnItemClickListener"
+            type="aragones.sergio.readercollection.interfaces.OnItemClickListener"
             />
 
         <variable
@@ -66,7 +66,7 @@
             style="@style/Widget.ReaderCollection.TextView.Subtitle.ReadingBook"
             />
 
-        <aragones.sergio.readercollection.customview.ImageViewWithLoading
+        <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
             android:id="@+id/image_view_reading_book"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -8,9 +8,9 @@ package aragones.sergio.readercollection.network
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.toDate
-import aragones.sergio.readercollection.models.responses.ErrorResponse
+import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import com.google.gson.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
