@@ -14,18 +14,18 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.books.BooksAdapter
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.ui.base.BindingFragment
+import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
@@ -43,7 +43,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: SearchViewModel
+    private val viewModel: SearchViewModel by viewModels()
     private lateinit var booksAdapter: BooksAdapter
     private var toolbarSequence: TapTargetSequence? = null
     //endregion
@@ -86,7 +86,8 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
     override fun onDestroy() {
         super.onDestroy()
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
+
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -114,6 +115,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
                 viewModel.setPosition(ScrollPosition.TOP)
                 binding.recyclerViewBooks.scrollToPosition(0)
             }
+
             binding.floatingActionButtonEndList -> {
                 viewModel.setPosition(ScrollPosition.END)
                 binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
@@ -126,11 +128,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     override fun initializeUi() {
         super.initializeUi()
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            SearchViewModelFactory(application)
-        )[SearchViewModel::class.java]
         booksAdapter = BooksAdapter(
             books = viewModel.books.value ?: mutableListOf(),
             isVerticalDesign = false,
@@ -320,6 +317,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
                         icon?.draw(c)
                         x = max(dX, -maxX)
                     }
+
                     else -> {// view is unSwiped
                         val background = RectF(0F, 0F, 0F, 0F)
                         c.drawRect(background, paint)

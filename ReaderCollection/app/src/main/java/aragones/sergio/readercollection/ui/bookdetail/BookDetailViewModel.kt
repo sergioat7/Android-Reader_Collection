@@ -7,25 +7,28 @@ package aragones.sergio.readercollection.ui.bookdetail
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.GoogleBookRepository
 import aragones.sergio.readercollection.data.source.UserRepository
+import aragones.sergio.readercollection.models.BookResponse
+import aragones.sergio.readercollection.models.ErrorResponse
+import aragones.sergio.readercollection.ui.base.BaseViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 class BookDetailViewModel @Inject constructor(
+    state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val googleBookRepository: GoogleBookRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
-    private var bookId: String = ""
+    private val bookId: String =
+        state["bookId"] ?: throw IllegalStateException("Book id not found in the state handle")
     private val _book = MutableLiveData<BookResponse>()
     private val _bookImage = MutableLiveData<String?>()
     private val _isFavourite = MutableLiveData<Boolean>()
@@ -38,7 +41,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    var isGoogleBook: Boolean = false
+    var isGoogleBook: Boolean = state["isGoogleBook"] ?: false
     val book: LiveData<BookResponse> = _book
     val bookImage: LiveData<String?> = _bookImage
     val isFavourite: LiveData<Boolean> = _isFavourite
@@ -53,6 +56,10 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
+    init {
+        fetchBook()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -63,37 +70,6 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun fetchBook() {
-
-        _bookDetailLoading.value = true
-        if (isGoogleBook) {
-
-            googleBookRepository.getBookObserver(bookId).subscribeBy(
-                onSuccess = {
-
-                    _book.value = BookResponse(it)
-                    _bookDetailLoading.value = false
-                },
-                onError = {
-                    manageError(ErrorResponse("", R.string.error_server))
-                }
-            ).addTo(disposables)
-        } else {
-
-            booksRepository.getBookDatabaseObserver(bookId).subscribeBy(
-                onSuccess = {
-
-                    _book.value = it
-                    _isFavourite.value = it.isFavourite
-                    _bookDetailLoading.value = false
-                },
-                onError = {
-                    manageError(ErrorResponse("", R.string.error_no_book))
-                }
-            ).addTo(disposables)
-        }
-    }
-
     fun createBook(newBook: BookResponse) {
 
         _bookDetailLoading.value = true
@@ -146,14 +122,6 @@ class BookDetailViewModel @Inject constructor(
         })
     }
 
-    fun setBookId(bookId: String) {
-        this.bookId = bookId
-    }
-
-    fun setIsGoogleBook(isGoogleBook: Boolean) {
-        this.isGoogleBook = isGoogleBook
-    }
-
     fun setNewBookTutorialAsShown() {
         userRepository.setHasNewBookTutorialBeenShown(true)
         newBookTutorialShown = true
@@ -166,6 +134,37 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Private methods
+    private fun fetchBook() {
+
+        _bookDetailLoading.value = true
+        if (isGoogleBook) {
+
+            googleBookRepository.getBookObserver(bookId).subscribeBy(
+                onSuccess = {
+
+                    _book.value = BookResponse(it)
+                    _bookDetailLoading.value = false
+                },
+                onError = {
+                    manageError(ErrorResponse("", R.string.error_server))
+                }
+            ).addTo(disposables)
+        } else {
+
+            booksRepository.getBookDatabaseObserver(bookId).subscribeBy(
+                onSuccess = {
+
+                    _book.value = it
+                    _isFavourite.value = it.isFavourite
+                    _bookDetailLoading.value = false
+                },
+                onError = {
+                    manageError(ErrorResponse("", R.string.error_no_book))
+                }
+            ).addTo(disposables)
+        }
+    }
+
     private fun manageError(error: ErrorResponse) {
 
         _bookDetailLoading.value = false

@@ -15,12 +15,10 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentStatisticsBinding
 import aragones.sergio.readercollection.extensions.getCustomColor
 import aragones.sergio.readercollection.extensions.getCustomFont
@@ -28,6 +26,8 @@ import aragones.sergio.readercollection.extensions.getMonthNumber
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.extensions.toDate
+import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
@@ -53,7 +53,6 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 
-
 class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
 
     //region Protected properties
@@ -62,7 +61,7 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: StatisticsViewModel
+    private val viewModel: StatisticsViewModel by viewModels()
     private lateinit var openFileLauncher: ActivityResultLauncher<Intent>
     private lateinit var newFileLauncher: ActivityResultLauncher<Intent>
     private val customColors = ArrayList<Int>()
@@ -139,13 +138,13 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     override fun onResume() {
         super.onResume()
 
-        if (this::viewModel.isInitialized) viewModel.fetchBooks()
+        viewModel.fetchBooks()
     }
 
     override fun onDestroy() {
         super.onDestroy()
 
-        if (this::viewModel.isInitialized) viewModel.onDestroy()
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -203,11 +202,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         customColors.add(requireContext().getCustomColor(R.color.colorPrimary))
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            StatisticsViewModelFactory(application)
-        )[StatisticsViewModel::class.java]
         setupBindings()
 
         binding.barChartBooksByYear.apply {

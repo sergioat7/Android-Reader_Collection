@@ -7,15 +7,15 @@ package aragones.sergio.readercollection.ui.register
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.MainActivity
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
 import aragones.sergio.readercollection.extensions.doAfterTextChanged
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
 import aragones.sergio.readercollection.extensions.setError
+import aragones.sergio.readercollection.ui.MainActivity
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.StatusBarStyle
 
 class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
@@ -26,7 +26,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     //endregion
 
     //region Private properties
-    private lateinit var viewModel: RegisterViewModel
+    private val viewModel: RegisterViewModel by viewModels()
     //endregion
 
     //region Lifecycle methods
@@ -51,6 +51,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
+
         viewModel.onDestroy()
     }
     //endregion
@@ -72,11 +73,6 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     override fun initializeUi() {
         super.initializeUi()
 
-        val application = activity?.application ?: return
-        viewModel = ViewModelProvider(
-            this,
-            RegisterViewModelFactory(application)
-        )[RegisterViewModel::class.java]
         setupBindings()
 
         binding.textInputLayoutUsername.setEndIconOnClickListener {
