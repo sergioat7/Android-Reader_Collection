@@ -5,14 +5,11 @@
 
 package aragones.sergio.readercollection
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
-import aragones.sergio.readercollection.injection.AppComponent
-import aragones.sergio.readercollection.database.di.DatabaseModule
-import aragones.sergio.readercollection.injection.DaggerAppComponent
-import aragones.sergio.readercollection.network.di.NetworkModule
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class ReaderCollectionApplication : Application() {
 
     //region Static properties
@@ -23,22 +20,11 @@ class ReaderCollectionApplication : Application() {
     }
     //endregion
 
-    //region Public properties
-    lateinit var appComponent: AppComponent
-    //endregion
-
     //region Lifecycle methods
     override fun onCreate() {
         super.onCreate()
 
         app = this
-
-        appComponent = DaggerAppComponent.builder()
-            .databaseModule(
-                DatabaseModule(applicationContext)
-            )
-            .networkModule(NetworkModule())
-            .build()
     }
     //endregion
 }

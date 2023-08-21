@@ -23,10 +23,12 @@ import aragones.sergio.readercollection.utils.Preferences
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     //region Protected properties

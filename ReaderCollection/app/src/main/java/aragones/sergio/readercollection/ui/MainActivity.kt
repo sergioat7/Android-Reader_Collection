@@ -13,7 +13,9 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.ActivityMainBinding
 import aragones.sergio.readercollection.extensions.setupWithNavController
 import aragones.sergio.readercollection.ui.base.BaseActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity() {
 
     //region Private properties

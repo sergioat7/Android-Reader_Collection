@@ -15,7 +15,9 @@ import androidx.fragment.app.viewModels
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.ui.landing.LandingActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class PopupSyncAppDialogFragment : DialogFragment() {
 
     //region Private properties

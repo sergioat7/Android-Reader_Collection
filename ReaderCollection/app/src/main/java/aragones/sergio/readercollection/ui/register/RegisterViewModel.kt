@@ -15,8 +15,10 @@ import aragones.sergio.readercollection.models.LoginFormState
 import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
+import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
+@HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository
 ) : BaseViewModel() {

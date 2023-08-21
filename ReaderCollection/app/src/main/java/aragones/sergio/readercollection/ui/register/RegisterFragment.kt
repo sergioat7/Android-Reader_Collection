@@ -17,7 +17,9 @@ import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.StatusBarStyle
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
 
     //region Protected properties
