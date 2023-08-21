@@ -24,12 +24,14 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
 import kotlin.math.abs
 
+@AndroidEntryPoint
 class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     AppBarLayout.OnOffsetChangedListener {
 

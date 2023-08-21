@@ -19,9 +19,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.util.*
 
+@AndroidEntryPoint
 class LandingActivity : BaseActivity() {
 
     //region Private properties

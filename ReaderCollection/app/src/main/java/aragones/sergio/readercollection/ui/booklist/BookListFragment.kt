@@ -23,7 +23,9 @@ import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClickListener {
 
     //region Protected properties

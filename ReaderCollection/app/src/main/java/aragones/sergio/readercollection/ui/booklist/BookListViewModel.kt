@@ -17,10 +17,12 @@ import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.ScrollPosition
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
+@HiltViewModel
 class BookListViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository

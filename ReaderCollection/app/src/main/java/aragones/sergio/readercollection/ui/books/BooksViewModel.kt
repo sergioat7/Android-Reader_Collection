@@ -17,10 +17,12 @@ import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
+@HiltViewModel
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository

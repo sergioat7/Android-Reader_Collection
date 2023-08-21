@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.delay
@@ -28,6 +29,7 @@ import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
+@HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository
