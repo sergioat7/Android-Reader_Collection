@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.models
 
-import aragones.sergio.readercollection.base.BaseModel
+import aragones.sergio.readercollection.models.base.BaseModel
 
 data class StateResponse(
     override val id: String,

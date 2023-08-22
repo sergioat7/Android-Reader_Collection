@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.extensions
 
 import android.util.Log
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import java.text.SimpleDateFormat
 import java.util.*
 
