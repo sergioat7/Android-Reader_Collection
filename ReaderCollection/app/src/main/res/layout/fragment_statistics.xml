@@ -18,7 +18,7 @@
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.viewmodels.StatisticsViewModel"
+            type="aragones.sergio.readercollection.ui.statistics.StatisticsViewModel"
             />
 
     </data>
@@ -28,7 +28,7 @@
         android:layout_height="match_parent"
         android:paddingStart="@dimen/padding_8dp"
         android:paddingEnd="@dimen/padding_8dp"
-        tools:context=".fragments.StatisticsFragment"
+        tools:context=".ui.statistics.StatisticsFragment"
         >
 
         <androidx.appcompat.widget.Toolbar

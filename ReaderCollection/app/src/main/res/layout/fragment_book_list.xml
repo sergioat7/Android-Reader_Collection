@@ -22,12 +22,12 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.fragments.BookListFragment"
+            type="aragones.sergio.readercollection.ui.booklist.BookListFragment"
             />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.viewmodels.BookListViewModel"
+            type="aragones.sergio.readercollection.ui.booklist.BookListViewModel"
             />
 
         <variable
@@ -40,7 +40,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".fragments.BookListFragment"
+        tools:context=".ui.booklist.BookListFragment"
         >
 
         <androidx.appcompat.widget.Toolbar
