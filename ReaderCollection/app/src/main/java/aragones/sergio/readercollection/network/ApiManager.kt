@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.network
 
+import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.toDate
@@ -144,11 +145,13 @@ object ApiManager {
         try {
             return RequestResult.JsonSuccess(gson.fromJson("{}", T::class.java))
         } catch (e: Exception) {
+            Log.e("ApiManager", e.printStackTrace().toString())
         }
 
         try {
             return RequestResult.JsonSuccess(gson.fromJson("[]", T::class.java))
         } catch (e: Exception) {
+            Log.e("ApiManager", e.printStackTrace().toString())
         }
 
         return null
