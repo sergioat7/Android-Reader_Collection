@@ -26,6 +26,7 @@ import aragones.sergio.readercollection.extensions.getMonthNumber
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.extensions.toDate
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
@@ -55,10 +56,13 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 @AndroidEntryPoint
-class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemClickListener {
+class StatisticsFragment :
+    BindingFragment<FragmentStatisticsBinding>(),
+    MenuProviderInterface,
+    OnItemClickListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -76,46 +80,6 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.statistics_toolbar_menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.action_import -> {
-
-                showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
-
-                    val intent = Intent(Intent.ACTION_GET_CONTENT)
-                    intent.type = "*/*"
-                    openFileLauncher.launch(intent)
-                })
-                return true
-            }
-
-            R.id.action_export -> {
-
-                showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
-
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                        addCategory(Intent.CATEGORY_OPENABLE)
-                        type = "text/txt"
-                        putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
-                    }
-                    newFileLauncher.launch(intent)
-                })
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -151,6 +115,43 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>(), OnItemC
     //endregion
 
     //region Interface methods
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        menu.clear()
+        menuInflater.inflate(R.menu.statistics_toolbar_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        return when (menuItem.itemId) {
+            R.id.action_import -> {
+
+                showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
+
+                    val intent = Intent(Intent.ACTION_GET_CONTENT)
+                    intent.type = "*/*"
+                    openFileLauncher.launch(intent)
+                })
+                true
+            }
+
+            R.id.action_export -> {
+
+                showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
+
+                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                        addCategory(Intent.CATEGORY_OPENABLE)
+                        type = "text/txt"
+                        putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
+                    }
+                    newFileLauncher.launch(intent)
+                })
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun onItemClick(bookId: String) {
 
         val action =
