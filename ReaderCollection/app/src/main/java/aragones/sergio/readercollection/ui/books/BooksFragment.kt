@@ -11,6 +11,7 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -19,6 +20,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
@@ -33,10 +35,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
+class BooksFragment :
+    BindingFragment<FragmentBooksBinding>(),
+    MenuProviderInterface,
+    OnItemClickListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -58,38 +63,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.books_toolbar_menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-//            R.id.action_synchronize -> {
-//
-//                openSyncPopup()
-//                return true
-//            }
-            R.id.action_sort -> {
-
-                viewModel.sort(requireContext()) {
-                    binding.apply {
-                        recyclerViewReadingBooks.scrollToPosition(0)
-                        recyclerViewPendingBooks.scrollToPosition(0)
-                        recyclerViewBooks.scrollToPosition(0)
-                    }
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -140,6 +113,36 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
             viewModel.query
         )
         findNavController().navigate(action)
+    }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        menu.clear()
+        menuInflater.inflate(R.menu.books_toolbar_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        return when (menuItem.itemId) {
+//            R.id.action_synchronize -> {
+//
+//                openSyncPopup()
+//                true
+//            }
+            R.id.action_sort -> {
+
+                viewModel.sort(requireContext()) {
+                    binding.apply {
+                        recyclerViewReadingBooks.scrollToPosition(0)
+                        recyclerViewPendingBooks.scrollToPosition(0)
+                        recyclerViewBooks.scrollToPosition(0)
+                    }
+                }
+                true
+            }
+
+            else -> false
+        }
     }
     //endregion
 
