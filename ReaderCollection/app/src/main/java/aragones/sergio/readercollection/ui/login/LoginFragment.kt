@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     //region Protected properties
-    override val hasOptionsMenu = false
+    override val menuProviderInterface = null
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 

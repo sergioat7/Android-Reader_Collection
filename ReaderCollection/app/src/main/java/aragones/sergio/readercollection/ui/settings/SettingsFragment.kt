@@ -15,7 +15,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentSettingsBinding
-import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getPosition
+import aragones.sergio.readercollection.extensions.getValue
+import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
+import aragones.sergio.readercollection.extensions.setError
+import aragones.sergio.readercollection.extensions.setValue
+import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.landing.LandingActivity
 import aragones.sergio.readercollection.utils.CustomDropdownType
@@ -29,10 +36,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
+class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProviderInterface {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -49,36 +56,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.settings_toolbar_menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.action_delete -> {
-
-                showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
-                    viewModel.deleteUser()
-                })
-                return true
-            }
-            R.id.action_logout -> {
-
-                showPopupConfirmationDialog(R.string.profile_logout_confirmation, acceptHandler = {
-                    viewModel.logout()
-                })
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -111,6 +88,35 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         viewModel.onDestroy()
     }
     //endregion
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        menu.clear()
+        menuInflater.inflate(R.menu.settings_toolbar_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        return when (menuItem.itemId) {
+            R.id.action_delete -> {
+
+                showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
+                    viewModel.deleteUser()
+                })
+                true
+            }
+
+            R.id.action_logout -> {
+
+                showPopupConfirmationDialog(R.string.profile_logout_confirmation, acceptHandler = {
+                    viewModel.logout()
+                })
+                true
+            }
+
+            else -> false
+        }
+    }
 
     //region Public methods
     fun save() {

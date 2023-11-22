@@ -11,6 +11,7 @@ import android.graphics.RectF
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
@@ -23,6 +24,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
@@ -37,10 +39,13 @@ import kotlinx.coroutines.launch
 import kotlin.math.max
 
 @AndroidEntryPoint
-class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickListener {
+class SearchFragment :
+    BindingFragment<FragmentSearchBinding>(),
+    MenuProviderInterface,
+    OnItemClickListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -56,15 +61,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.search_toolbar_menu, menu)
-        setupSearchView(menu)
     }
 
     override fun onStart() {
@@ -94,6 +90,17 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>(), OnItemClickList
     //endregion
 
     //region Interface methods
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        menu.clear()
+        menuInflater.inflate(R.menu.search_toolbar_menu, menu)
+        setupSearchView(menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+        return false
+    }
+
     override fun onItemClick(bookId: String) {
 
         val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(bookId, true)

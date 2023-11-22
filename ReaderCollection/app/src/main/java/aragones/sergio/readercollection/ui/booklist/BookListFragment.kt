@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
@@ -26,10 +27,13 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClickListener {
+class BookListFragment :
+    BindingFragment<FragmentBookListBinding>(),
+    MenuProviderInterface,
+    OnItemClickListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -45,30 +49,6 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.book_list_toolbar_menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.action_sort -> {
-
-                viewModel.sort(requireContext()) {
-                    viewModel.setPosition(ScrollPosition.TOP)
-                    binding.recyclerViewBooks.scrollToPosition(0)
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
@@ -91,6 +71,27 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     //endregion
 
     //region Interface methods
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        menu.clear()
+        menuInflater.inflate(R.menu.book_list_toolbar_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        return when (menuItem.itemId) {
+            R.id.action_sort -> {
+
+                viewModel.sort(requireContext()) {
+                    viewModel.setPosition(ScrollPosition.TOP)
+                    binding.recyclerViewBooks.scrollToPosition(0)
+                }
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun onItemClick(bookId: String) {
 
         val action =
