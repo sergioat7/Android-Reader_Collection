@@ -11,7 +11,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.*
+import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.utils.State
 import java.util.*
@@ -20,11 +22,13 @@ class BooksAdapter(
     private var books: MutableList<BookResponse>,
     private val isVerticalDesign: Boolean,
     private val isGoogleBook: Boolean,
-    private var onItemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+    private var onItemClickListener: OnItemClickListener,
+    private var onStartDraggingListener: OnStartDraggingListener? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), ItemMoveListener {
 
     //region Private properties
     private var position = 0
+    private var isDraggingEnabled = false
     //endregion
 
     //region Lifecycle methods
@@ -98,7 +102,14 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is BooksViewHolder -> holder.bind(books[position], isGoogleBook, onItemClickListener)
+            is BooksViewHolder -> holder.bind(
+                books[position],
+                isGoogleBook,
+                isDraggingEnabled,
+                onItemClickListener,
+                onStartDraggingListener
+            )
+
             is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
@@ -127,6 +138,37 @@ class BooksAdapter(
         position = 0
         this.books = ArrayList<BookResponse>()
         notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setDragging(enable: Boolean) {
+
+        isDraggingEnabled = enable
+        notifyDataSetChanged()
+    }
+    //endregion
+
+    //region Interface methods
+    override fun onRowMoved(fromPosition: Int, toPosition: Int) {
+
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(books, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(books, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onRowSelected(myViewHolder: BooksViewHolder) {
+        myViewHolder.setSelected(true)
+    }
+
+    override fun onRowClear(myViewHolder: BooksViewHolder) {
+        myViewHolder.setSelected(false)
     }
     //endregion
 }
