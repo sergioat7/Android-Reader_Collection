@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.ui.books
 
+import android.annotation.SuppressLint
 import android.view.MotionEvent
 import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
@@ -23,6 +24,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     //region Public methods
+    @SuppressLint("ClickableViewAccessibility")
     fun bind(
         book: BookResponse,
         isGoogleBook: Boolean,
@@ -56,7 +58,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.imageViewDragging.setOnTouchListener { _, event ->
 
                         if (event.action == MotionEvent.ACTION_DOWN) {
-                            onStartDraggingListener?.requestDrag(this@BooksViewHolder)
+                            onStartDraggingListener?.onStartDragging(this@BooksViewHolder)
                         }
                         false
                     }

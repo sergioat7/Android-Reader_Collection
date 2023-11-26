@@ -79,24 +79,7 @@ class BookListViewModel @Inject constructor(
                     noBooksError()
                 } else {
 
-                    val sortedBooks = if (isSortDescending) it.reversed() else it
-                    var filteredBooks = sortedBooks
-                        .filter { book ->
-                            book.title?.contains(query, true) ?: false
-                        }.filter { book ->
-                            book.authorsToString().contains(author ?: "")
-                        }
-                    if (year >= 0) {
-                        filteredBooks = filteredBooks.filter { book ->
-                            book.readingDate.getYear() == year
-                        }
-                    }
-                    if (month in 0..11) {
-                        filteredBooks = filteredBooks.filter { book ->
-                            book.readingDate.getMonthNumber() == month
-                        }
-                    }
-                    _books.value = filteredBooks
+                    showBooks(it)
                     _booksLoading.value = false
                 }
             },
@@ -122,6 +105,28 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Private methods
+    private fun showBooks(books: List<BookResponse>) {
+
+        val sortedBooks = if (isSortDescending) books.reversed() else books
+        var filteredBooks = sortedBooks
+            .filter { book ->
+                book.title?.contains(query, true) ?: false
+            }.filter { book ->
+                book.authorsToString().contains(author ?: "")
+            }
+        if (year >= 0) {
+            filteredBooks = filteredBooks.filter { book ->
+                book.readingDate.getYear() == year
+            }
+        }
+        if (month in 0..11) {
+            filteredBooks = filteredBooks.filter { book ->
+                book.readingDate.getMonthNumber() == month
+            }
+        }
+        _books.value = filteredBooks.sortedBy { it.priority }
+    }
+
     private fun noBooksError() {
 
         _booksLoading.value = false

@@ -8,5 +8,5 @@ package aragones.sergio.readercollection.interfaces
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
 
 interface OnStartDraggingListener {
-    fun requestDrag(viewHolder: BooksViewHolder)
+    fun onStartDragging(viewHolder: BooksViewHolder)
 }
