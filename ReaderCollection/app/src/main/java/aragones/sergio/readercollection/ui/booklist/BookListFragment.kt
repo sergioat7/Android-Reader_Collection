@@ -127,7 +127,7 @@ class BookListFragment :
 
     override fun onShowAllItemsClick(state: String) {}
 
-    override fun requestDrag(viewHolder: BooksViewHolder) {
+    override fun onStartDragging(viewHolder: BooksViewHolder) {
         touchHelper.startDrag(viewHolder)
     }
     //endregion
