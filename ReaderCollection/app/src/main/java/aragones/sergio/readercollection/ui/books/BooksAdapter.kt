@@ -168,7 +168,12 @@ class BooksAdapter(
     }
 
     override fun onRowClear(myViewHolder: BooksViewHolder) {
+
         myViewHolder.setSelected(false)
+        for ((index, book) in books.withIndex()) {
+            book.priority = index
+        }
+        onStartDraggingListener?.onFinishDragging(books)
     }
     //endregion
 }

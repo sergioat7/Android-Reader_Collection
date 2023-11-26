@@ -5,8 +5,11 @@
 
 package aragones.sergio.readercollection.interfaces
 
+import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
 
 interface OnStartDraggingListener {
+
     fun onStartDragging(viewHolder: BooksViewHolder)
+    fun onFinishDragging(books: List<BookResponse>)
 }

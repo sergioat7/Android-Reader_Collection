@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
@@ -129,6 +130,10 @@ class BookListFragment :
 
     override fun onStartDragging(viewHolder: BooksViewHolder) {
         touchHelper.startDrag(viewHolder)
+    }
+
+    override fun onFinishDragging(books: List<BookResponse>) {
+        viewModel.setPriorityFor(books)
     }
     //endregion
 
