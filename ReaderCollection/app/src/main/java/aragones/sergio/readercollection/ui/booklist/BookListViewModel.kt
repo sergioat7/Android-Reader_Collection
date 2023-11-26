@@ -102,6 +102,20 @@ class BookListViewModel @Inject constructor(
             acceptHandler?.invoke()
         }
     }
+
+    fun setPriorityFor(books: List<BookResponse>) {
+
+        _booksLoading.value = true
+        booksRepository.setBooks(books, success = {
+
+            showBooks(books)
+            _booksLoading.value = false
+        }, failure = {
+
+            _booksLoading.value = false
+            _booksError.value = it
+        })
+    }
     //endregion
 
     //region Private methods

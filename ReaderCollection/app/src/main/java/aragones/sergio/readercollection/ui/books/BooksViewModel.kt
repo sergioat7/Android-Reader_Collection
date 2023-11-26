@@ -41,7 +41,7 @@ class BooksViewModel @Inject constructor(
         it.filter { book -> book.state == State.READING }
     }
     val pendingBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state == State.PENDING }
+        it.filter { book -> book.state == State.PENDING }.sortedBy { book -> book.priority }
     }
     val readBooks: LiveData<List<BookResponse>> = _books.map {
         it.filter { book -> book.state != State.READING && book.state != State.PENDING }
