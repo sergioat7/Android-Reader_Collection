@@ -14,7 +14,7 @@ import aragones.sergio.readercollection.models.base.BaseModel
 
 @Database(
     entities = [BookResponse::class],
-    version = 2
+    version = 3
 )
 @TypeConverters(ListConverter::class, DateConverter::class)
 abstract class ReaderCollectionDatabase : RoomDatabase() {
