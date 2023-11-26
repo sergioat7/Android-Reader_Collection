@@ -56,7 +56,8 @@ data class BookResponse(
     @SerializedName("state")
     var state: String?,
     @SerializedName("isFavourite")
-    var isFavourite: Boolean
+    var isFavourite: Boolean,
+    var priority: Int
 ) : BaseModel<String> {
 
     @Ignore
@@ -80,7 +81,8 @@ data class BookResponse(
         null,
         null,
         null,
-        false
+        false,
+        -1
     )
 
     @Ignore
@@ -105,7 +107,8 @@ data class BookResponse(
         image = googleBook.getGoogleBookImage(),
         format = null,
         state = null,
-        isFavourite = false
+        isFavourite = false,
+        priority = -1
     )
 
     fun authorsToString(): String {
