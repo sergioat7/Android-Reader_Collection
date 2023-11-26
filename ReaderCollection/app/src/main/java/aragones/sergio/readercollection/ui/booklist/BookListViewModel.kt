@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.ScrollPosition
+import aragones.sergio.readercollection.utils.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -48,6 +49,8 @@ class BookListViewModel @Inject constructor(
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
+    val arePendingBooks: Boolean
+        get() = state == State.PENDING
     //endregion
 
     //region Lifecycle methods

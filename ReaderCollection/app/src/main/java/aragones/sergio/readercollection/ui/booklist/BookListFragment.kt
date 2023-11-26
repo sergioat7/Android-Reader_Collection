@@ -41,6 +41,7 @@ class BookListFragment :
     private val viewModel: BookListViewModel by viewModels()
     private lateinit var booksAdapter: BooksAdapter
     private val goBack = MutableLiveData<Boolean>()
+    private lateinit var menu: Menu
     //endregion
 
     //region Lifecycle methods
@@ -73,13 +74,29 @@ class BookListFragment :
     //region Interface methods
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
 
+        this.menu = menu
         menu.clear()
+
         menuInflater.inflate(R.menu.book_list_toolbar_menu, menu)
+        menu.findItem(R.id.action_enable_drag).isVisible = viewModel.arePendingBooks
+        menu.findItem(R.id.action_disable_drag).isVisible = false
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
 
         return when (menuItem.itemId) {
+            R.id.action_enable_drag -> {
+
+                menu.findItem(R.id.action_enable_drag).isVisible = false
+                menu.findItem(R.id.action_disable_drag).isVisible = true
+                true
+            }
+            R.id.action_disable_drag -> {
+
+                menu.findItem(R.id.action_enable_drag).isVisible = true
+                menu.findItem(R.id.action_disable_drag).isVisible = false
+                true
+            }
             R.id.action_sort -> {
 
                 viewModel.sort(requireContext()) {

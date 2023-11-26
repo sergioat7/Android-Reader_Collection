@@ -39,6 +39,7 @@
     <string name="load_more">Cargar más</string>
     <string name="synchronize">Sincronizar</string>
     <string name="sort">Ordenar</string>
+    <string name="drag">Arrastrar</string>
     <string name="pending">Pendientes</string>
     <string name="read">Leídos</string>
     <string name="show_all">Ver todo</string>
