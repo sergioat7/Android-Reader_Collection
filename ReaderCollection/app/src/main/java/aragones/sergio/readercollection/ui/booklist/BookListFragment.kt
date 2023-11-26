@@ -13,14 +13,17 @@ import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
+import aragones.sergio.readercollection.ui.books.BooksViewHolder
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,7 +33,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class BookListFragment :
     BindingFragment<FragmentBookListBinding>(),
     MenuProviderInterface,
-    OnItemClickListener {
+    OnItemClickListener,
+    OnStartDraggingListener {
 
     //region Protected properties
     override val menuProviderInterface = this
@@ -40,6 +44,7 @@ class BookListFragment :
     //region Private properties
     private val viewModel: BookListViewModel by viewModels()
     private lateinit var booksAdapter: BooksAdapter
+    private lateinit var touchHelper: ItemTouchHelper
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
     //endregion
@@ -89,12 +94,14 @@ class BookListFragment :
 
                 menu.findItem(R.id.action_enable_drag).isVisible = false
                 menu.findItem(R.id.action_disable_drag).isVisible = true
+                booksAdapter.setDragging(true)
                 true
             }
             R.id.action_disable_drag -> {
 
                 menu.findItem(R.id.action_enable_drag).isVisible = true
                 menu.findItem(R.id.action_disable_drag).isVisible = false
+                booksAdapter.setDragging(false)
                 true
             }
             R.id.action_sort -> {
@@ -119,6 +126,10 @@ class BookListFragment :
     override fun onLoadMoreItemsClick() {}
 
     override fun onShowAllItemsClick(state: String) {}
+
+    override fun requestDrag(viewHolder: BooksViewHolder) {
+        touchHelper.startDrag(viewHolder)
+    }
     //endregion
 
     //region Public methods
@@ -146,8 +157,10 @@ class BookListFragment :
             books = viewModel.books.value?.toMutableList() ?: mutableListOf(),
             isVerticalDesign = false,
             isGoogleBook = false,
-            onItemClickListener = this
+            onItemClickListener = this,
+            onStartDraggingListener = this
         )
+        touchHelper = ItemTouchHelper(ItemMoveCallback(booksAdapter))
         setupBindings()
 
         binding.recyclerViewBooks.apply {
@@ -168,6 +181,7 @@ class BookListFragment :
                     viewModel.setPosition(position)
                 }
             })
+            touchHelper.attachToRecyclerView(this)
         }
 
         binding.fragment = this
