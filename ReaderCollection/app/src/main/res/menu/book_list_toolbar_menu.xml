@@ -10,6 +10,20 @@
     >
 
     <item
+        android:id="@+id/action_enable_drag"
+        android:icon="@drawable/ic_enable_drag"
+        android:title="@string/drag"
+        app:showAsAction="always"
+        />
+
+    <item
+        android:id="@+id/action_disable_drag"
+        android:icon="@drawable/ic_disable_drag"
+        android:title="@string/drag"
+        app:showAsAction="always"
+        />
+
+    <item
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort_books"
         android:title="@string/sort"
