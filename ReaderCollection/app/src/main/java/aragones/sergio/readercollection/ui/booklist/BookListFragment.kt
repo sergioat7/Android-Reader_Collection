@@ -194,7 +194,7 @@ class BookListFragment :
             onItemClickListener = this,
             onStartDraggingListener = this
         )
-        touchHelper = ItemTouchHelper(ItemMoveCallback(booksAdapter))
+        touchHelper = ItemTouchHelper(ItemMoveCallback(true, booksAdapter))
         setupBindings()
 
         binding.recyclerViewBooks.apply {

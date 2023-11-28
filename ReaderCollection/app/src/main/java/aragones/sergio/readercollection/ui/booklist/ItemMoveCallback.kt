@@ -10,15 +10,20 @@ import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
 
-class ItemMoveCallback(private val listener: ItemMoveListener) : ItemTouchHelper.Callback() {
+class ItemMoveCallback(
+    private val isVerticalDesign: Boolean,
+    private val listener: ItemMoveListener
+) : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
     ): Int {
 
-        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
-        return makeMovementFlags(dragFlags, 0)
+        val flags =
+            if (isVerticalDesign) ItemTouchHelper.UP or ItemTouchHelper.DOWN
+            else ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
+        return makeMovementFlags(flags, 0)
     }
 
     override fun onMove(

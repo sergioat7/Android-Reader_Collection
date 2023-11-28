@@ -140,6 +140,10 @@ class BooksAdapter(
         notifyDataSetChanged()
     }
 
+    fun isDraggingEnabled(): Boolean {
+        return isDraggingEnabled
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     fun setDragging(enable: Boolean) {
 

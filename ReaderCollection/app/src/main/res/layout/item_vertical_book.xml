@@ -31,9 +31,15 @@
             type="Boolean"
             />
 
+        <variable
+            name="isDraggingEnable"
+            type="Boolean"
+            />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout"
         android:layout_width="@dimen/size_150dp"
         android:layout_height="@dimen/size_320dp"
         android:layout_marginStart="@dimen/margin_12dp"
@@ -41,13 +47,23 @@
         android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
         >
 
+        <ImageView
+            android:id="@+id/image_view_dragging"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_enable_drag"
+            android:visibility="@{isDraggingEnable ? View.VISIBLE : View.GONE}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
         <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
             android:id="@+id/image_view_book"
             android:layout_width="0dp"
             android:layout_height="@dimen/size_250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/image_view_dragging"
             src="@{book.thumbnail}"
             center="@{true}"
             placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"
