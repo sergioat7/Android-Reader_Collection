@@ -12,12 +12,14 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
@@ -27,8 +29,13 @@ import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class BookListFragment :
@@ -48,6 +55,7 @@ class BookListFragment :
     private lateinit var touchHelper: ItemTouchHelper
     private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -56,6 +64,21 @@ class BookListFragment :
 
         toolbar = binding.toolbar
         initializeUi()
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (viewModel.arePendingBooks) {
+            /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+            lifecycleScope.launch(Dispatchers.Main) {
+                delay(500)
+                createSequence()
+            }
+        }
     }
 
     override fun onResume() {
@@ -68,6 +91,12 @@ class BookListFragment :
     override fun onPause() {
         super.onPause()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        toolbarSequence?.cancel()
     }
 
     override fun onDestroy() {
@@ -218,6 +247,33 @@ class BookListFragment :
 
         goBack.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.tutorialShown) {
+            toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                target(
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_enable_drag).itemId,
+                        resources.getString(R.string.drag_bar_tutorial_title),
+                        resources.getString(R.string.drag_bar_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true)
+                )
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                start()
+            }
         }
     }
     //endregion
