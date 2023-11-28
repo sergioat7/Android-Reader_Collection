@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.BooksRepository
+import aragones.sergio.readercollection.data.source.UserRepository
 import aragones.sergio.readercollection.extensions.getMonthNumber
 import aragones.sergio.readercollection.extensions.getYear
 import aragones.sergio.readercollection.models.BookResponse
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class BookListViewModel @Inject constructor(
     state: SavedStateHandle,
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -51,12 +53,15 @@ class BookListViewModel @Inject constructor(
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     val arePendingBooks: Boolean
         get() = state == State.PENDING
+    var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
     override fun onDestroy() {
         super.onDestroy()
+
         booksRepository.onDestroy()
+        userRepository.onDestroy()
     }
     //endregion
 
@@ -115,6 +120,12 @@ class BookListViewModel @Inject constructor(
             _booksLoading.value = false
             _booksError.value = it
         })
+    }
+
+    fun setTutorialAsShown() {
+
+        userRepository.setHasDragTutorialBeenShown(true)
+        tutorialShown = true
     }
     //endregion
 

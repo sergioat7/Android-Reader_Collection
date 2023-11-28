@@ -24,6 +24,7 @@ object Preferences {
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
     const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
+    const val DRAG_TUTORIAL_PREFERENCE_NAME = "dragTutorial"
     const val SEARCH_TUTORIAL_PREFERENCE_NAME = "searchTutorial"
     const val STATISTICS_TUTORIAL_PREFERENCE_NAME = "statisticsTutorial"
     const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"

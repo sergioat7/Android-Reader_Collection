@@ -93,6 +93,9 @@ object SharedPreferencesHandler {
     var hasBooksTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)
+    var hasDragTutorialBeenShown: Boolean
+        get() = appPreferences.getBoolean(Preferences.DRAG_TUTORIAL_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.DRAG_TUTORIAL_PREFERENCE_NAME, value)
     var hasSearchTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
