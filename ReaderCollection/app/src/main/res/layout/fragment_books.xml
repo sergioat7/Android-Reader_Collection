@@ -146,6 +146,20 @@
                     style="@style/Widget.ReaderCollection.TextButton.Main.Action"
                     />
 
+                <ImageButton
+                    android:id="@+id/image_button_enable_drag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_16dp"
+                    android:layout_marginEnd="@dimen/margin_24dp"
+                    android:onClick="@{fragment::setDragging}"
+                    android:visibility="@{viewModel.seeMorePendingBooksVisible ? View.INVISIBLE : View.VISIBLE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
+                    app:srcCompat="@drawable/ic_enable_drag"
+                    style="@style/Widget.ReaderCollection.ImageButton"
+                    />
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_pending_books"
                     android:layout_width="0dp"

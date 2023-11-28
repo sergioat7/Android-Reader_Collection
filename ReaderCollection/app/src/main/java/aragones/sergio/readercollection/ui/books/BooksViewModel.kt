@@ -136,5 +136,19 @@ class BooksViewModel @Inject constructor(
         userRepository.setHasBooksTutorialBeenShown(true)
         tutorialShown = true
     }
+
+    fun setPriorityFor(books: List<BookResponse>) {
+
+        _booksLoading.value = true
+        booksRepository.setBooks(books, success = {
+
+            searchBooks(query)
+            _booksLoading.value = false
+        }, failure = {
+
+            _booksLoading.value = false
+            _booksError.value = it
+        })
+    }
     //endregion
 }

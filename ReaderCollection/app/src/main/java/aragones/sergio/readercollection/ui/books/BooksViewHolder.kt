@@ -45,6 +45,14 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.book = book
                     this.onItemClickListener = onItemClickListener
                     this.isDarkMode = binding.root.context.isDarkMode()
+                    this.isDraggingEnable = isDraggingEnable
+                    this.imageViewDragging.setOnTouchListener { _, event ->
+
+                        if (event.action == MotionEvent.ACTION_DOWN) {
+                            onStartDraggingListener?.onStartDragging(this@BooksViewHolder)
+                        }
+                        false
+                    }
                 }
 
                 is ItemBookBinding -> {
@@ -71,14 +79,25 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
 
     fun setSelected(isSelected: Boolean) {
 
-        if (binding is ItemBookBinding) {
-            val colorId = if (isSelected) R.color.colorQuaternary else R.color.colorSecondary
-            binding.constraintLayout.setBackgroundColor(
-                ContextCompat.getColor(
-                    binding.root.context,
-                    colorId
+        val colorId = if (isSelected) R.color.colorQuaternary else R.color.colorSecondary
+        when (binding) {
+            is ItemVerticalBookBinding -> {
+                binding.constraintLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        colorId
+                    )
                 )
-            )
+            }
+            is ItemBookBinding -> {
+                binding.constraintLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        colorId
+                    )
+                )
+            }
+            else -> Unit
         }
     }
     //endregion
