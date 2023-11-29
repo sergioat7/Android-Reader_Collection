@@ -11,7 +11,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -22,6 +21,7 @@ import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
@@ -38,7 +38,8 @@ import kotlinx.coroutines.launch
 class BooksFragment :
     BindingFragment<FragmentBooksBinding>(),
     MenuProviderInterface,
-    OnItemClickListener {
+    OnItemClickListener,
+    OnStartDraggingListener {
 
     //region Protected properties
     override val menuProviderInterface = this
@@ -144,6 +145,13 @@ class BooksFragment :
             else -> false
         }
     }
+
+    override fun onStartDragging(viewHolder: BooksViewHolder) {
+    }
+
+    override fun onFinishDragging(books: List<BookResponse>) {
+        viewModel.setPriorityFor(books)
+    }
     //endregion
 
     //region Public methods
@@ -178,23 +186,23 @@ class BooksFragment :
         super.initializeUi()
 
         readingBooksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.isReading() }?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = false,
             isGoogleBook = false,
             onItemClickListener = this
         )
         pendingBooksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.isPending() }?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,
-            onItemClickListener = this
+            onItemClickListener = this,
+            onStartDraggingListener = this
         )
         booksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter {
-                it.state != State.READING && it.state != State.PENDING
-            }?.toMutableList() ?: mutableListOf(),
+            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }?.toMutableList()
+                ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,
             onItemClickListener = this

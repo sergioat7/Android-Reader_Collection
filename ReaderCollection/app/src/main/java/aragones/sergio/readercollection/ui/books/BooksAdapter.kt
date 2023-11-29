@@ -11,8 +11,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.*
+import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
 import aragones.sergio.readercollection.models.BookResponse
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import java.util.*
 
@@ -20,11 +24,14 @@ class BooksAdapter(
     private var books: MutableList<BookResponse>,
     private val isVerticalDesign: Boolean,
     private val isGoogleBook: Boolean,
-    private var onItemClickListener: OnItemClickListener
-) : RecyclerView.Adapter<RecyclerView.ViewHolder?>() {
+    private var onItemClickListener: OnItemClickListener,
+    private var onStartDraggingListener: OnStartDraggingListener? = null
+) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), ItemMoveListener, OnSwitchClickListener {
 
     //region Private properties
+    private lateinit var recyclerView: RecyclerView
     private var position = 0
+    private var isDraggingEnabled = false
     //endregion
 
     //region Lifecycle methods
@@ -32,7 +39,7 @@ class BooksAdapter(
 
         val book = books[position]
         return when {
-            book.state == State.READING -> R.layout.item_reading_book
+            book.isReading() -> R.layout.item_reading_book
             isVerticalDesign && book.id.isNotBlank() -> R.layout.item_vertical_book
             !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_book
             isVerticalDesign -> R.layout.item_show_all_items
@@ -98,10 +105,26 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is BooksViewHolder -> holder.bind(books[position], isGoogleBook, onItemClickListener)
+            is BooksViewHolder -> holder.bind(
+                books[position],
+                isGoogleBook,
+                isDraggingEnabled,
+                position == 0,
+                position == Constants.BOOKS_TO_SHOW - 1,
+                onItemClickListener,
+                onStartDraggingListener,
+                this
+            )
+
             is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
+    }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+
+        this.recyclerView = recyclerView
     }
     //endregion
 
@@ -127,6 +150,62 @@ class BooksAdapter(
         position = 0
         this.books = ArrayList<BookResponse>()
         notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setDragging(enable: Boolean) {
+
+        isDraggingEnabled = enable
+        notifyDataSetChanged()
+    }
+    //endregion
+
+    //region Interface methods
+    override fun onRowMoved(fromPosition: Int, toPosition: Int) {
+
+        if (fromPosition < toPosition) {
+            for (i in fromPosition until toPosition) {
+                Collections.swap(books, i, i + 1)
+            }
+        } else {
+            for (i in fromPosition downTo toPosition + 1) {
+                Collections.swap(books, i, i - 1)
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition)
+    }
+
+    override fun onRowSelected(myViewHolder: BooksViewHolder) {
+        myViewHolder.setSelected(true)
+    }
+
+    override fun onRowClear(myViewHolder: BooksViewHolder) {
+
+        myViewHolder.setSelected(false)
+        for ((index, book) in books.withIndex()) {
+            book.priority = index
+        }
+        onStartDraggingListener?.onFinishDragging(books)
+    }
+
+    override fun onSwitchLeft(fromPosition: Int) {
+
+        val toPosition = fromPosition - 1
+        books[fromPosition].priority = toPosition
+        books[toPosition].priority = fromPosition
+        onRowMoved(fromPosition, toPosition)
+        recyclerView.scrollToPosition(toPosition)
+        onStartDraggingListener?.onFinishDragging(listOf(books[fromPosition], books[toPosition]))
+    }
+
+    override fun onSwitchRight(fromPosition: Int) {
+
+        val toPosition = fromPosition + 1
+        books[fromPosition].priority = toPosition
+        books[toPosition].priority = fromPosition
+        onRowMoved(fromPosition, toPosition)
+        recyclerView.scrollToPosition(toPosition)
+        onStartDraggingListener?.onFinishDragging(listOf(books[fromPosition], books[toPosition]))
     }
     //endregion
 }

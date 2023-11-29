@@ -29,6 +29,12 @@ object DatabaseModule {
         }
     }
 
+    private val MIGRATION_2_3 = object : Migration(2, 3) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE Book ADD priority INTEGER NOT NULL DEFAULT -1")
+        }
+    }
+
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): ReaderCollectionDatabase {
@@ -40,6 +46,7 @@ object DatabaseModule {
                 Constants.DATABASE_NAME
             )
             .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_2_3)
             .build()
     }
 }

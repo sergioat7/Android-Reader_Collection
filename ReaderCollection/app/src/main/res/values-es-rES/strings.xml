@@ -39,6 +39,7 @@
     <string name="load_more">Cargar más</string>
     <string name="synchronize">Sincronizar</string>
     <string name="sort">Ordenar</string>
+    <string name="drag">Arrastrar</string>
     <string name="pending">Pendientes</string>
     <string name="read">Leídos</string>
     <string name="show_all">Ver todo</string>
@@ -147,6 +148,8 @@
     <string name="sort_icon_tutorial_description">Aquí podrás ordenar tus libros por diferentes valores</string>
     <string name="search_bar_tutorial_title">Este es el botón de búsqueda</string>
     <string name="search_bar_tutorial_description">Aquí podrás buscar los libros que quieras añadir a tu colección</string>
+    <string name="drag_bar_tutorial_title">Este es el botón de arrastrar y soltar</string>
+    <string name="drag_bar_tutorial_description">Aquí podrás habilitar la función de arrastrar y soltar los libros para ordenarlos</string>
     <string name="import_file_icon_tutorial_title">Este es el botón de importar archivo</string>
     <string name="import_file_icon_tutorial_description">Aquí podrás importar desde un archivo los datos de los libros que quieras almacenar</string>
     <string name="export_file_icon_tutorial_title">Este es el botón de exportar archivo</string>

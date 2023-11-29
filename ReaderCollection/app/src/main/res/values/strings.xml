@@ -34,6 +34,7 @@
     <string name="load_more">Load more</string>
     <string name="synchronize">Synchronize</string>
     <string name="sort">Sort</string>
+    <string name="drag">Drag</string>
     <string name="pending">Pending</string>
     <string name="read">Read</string>
     <string name="show_all">Show all</string>
@@ -156,6 +157,8 @@
     <string name="sort_icon_tutorial_description">Here you can sort the books in your collection by different values</string>
     <string name="search_bar_tutorial_title">This is the search button</string>
     <string name="search_bar_tutorial_description">Here you can search for the new books you want to add to your collection</string>
+    <string name="drag_bar_tutorial_title">This is the drag and drop button</string>
+    <string name="drag_bar_tutorial_description">Here you can enable the drag and drop option to sort the books</string>
     <string name="import_file_icon_tutorial_title">This is the import file button</string>
     <string name="import_file_icon_tutorial_description">Here you can import from a file all the books data you want to store in the app</string>
     <string name="export_file_icon_tutorial_title">This is the export file button</string>

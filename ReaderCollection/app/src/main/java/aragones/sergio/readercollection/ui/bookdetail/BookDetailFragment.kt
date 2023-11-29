@@ -402,7 +402,8 @@ class BookDetailFragment :
                 image = book?.image,
                 format = format,
                 state = state,
-                isFavourite = isFavourite
+                isFavourite = isFavourite,
+                priority = book?.priority ?: -1
             )
         }
     }
