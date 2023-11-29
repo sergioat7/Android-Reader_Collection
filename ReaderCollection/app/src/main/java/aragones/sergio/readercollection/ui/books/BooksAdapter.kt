@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
 import aragones.sergio.readercollection.models.BookResponse
+import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import java.util.*
 
@@ -107,6 +108,8 @@ class BooksAdapter(
                 books[position],
                 isGoogleBook,
                 isDraggingEnabled,
+                position == 0,
+                position == Constants.BOOKS_TO_SHOW - 1,
                 onItemClickListener,
                 onStartDraggingListener,
                 this
