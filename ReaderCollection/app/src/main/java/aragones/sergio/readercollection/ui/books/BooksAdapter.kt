@@ -29,6 +29,7 @@ class BooksAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), ItemMoveListener, OnSwitchClickListener {
 
     //region Private properties
+    private lateinit var recyclerView: RecyclerView
     private var position = 0
     private var isDraggingEnabled = false
     //endregion
@@ -119,6 +120,12 @@ class BooksAdapter(
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
     }
+
+    override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
+        super.onAttachedToRecyclerView(recyclerView)
+
+        this.recyclerView = recyclerView
+    }
     //endregion
 
     //region Public methods
@@ -187,6 +194,7 @@ class BooksAdapter(
         books[fromPosition].priority = toPosition
         books[toPosition].priority = fromPosition
         onRowMoved(fromPosition, toPosition)
+        recyclerView.scrollToPosition(toPosition)
         onStartDraggingListener?.onFinishDragging(listOf(books[fromPosition], books[toPosition]))
     }
 
@@ -196,6 +204,7 @@ class BooksAdapter(
         books[fromPosition].priority = toPosition
         books[toPosition].priority = fromPosition
         onRowMoved(fromPosition, toPosition)
+        recyclerView.scrollToPosition(toPosition)
         onStartDraggingListener?.onFinishDragging(listOf(books[fromPosition], books[toPosition]))
     }
     //endregion
