@@ -36,7 +36,7 @@ class BooksAdapter(
 
         val book = books[position]
         return when {
-            book.state == State.READING -> R.layout.item_reading_book
+            book.isReading() -> R.layout.item_reading_book
             isVerticalDesign && book.id.isNotBlank() -> R.layout.item_vertical_book
             !isVerticalDesign && book.id.isNotBlank() -> R.layout.item_book
             isVerticalDesign -> R.layout.item_show_all_items

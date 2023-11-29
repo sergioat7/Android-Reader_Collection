@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
 import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.extensions.toString
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.utils.State
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -129,5 +130,13 @@ data class BookResponse(
             SharedPreferencesHandler.dateFormatToShow,
             SharedPreferencesHandler.language
         )
+    }
+
+    fun isPending(): Boolean {
+        return state == State.PENDING
+    }
+
+    fun isReading(): Boolean {
+        return state == State.READING
     }
 }

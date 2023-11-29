@@ -38,13 +38,13 @@ class BooksViewModel @Inject constructor(
     //region Public properties
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state == State.READING }
+        it.filter { book -> book.isReading() }
     }
     val pendingBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state == State.PENDING }.sortedBy { book -> book.priority }
+        it.filter { book -> book.isPending() }.sortedBy { book -> book.priority }
     }
     val readBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state != State.READING && book.state != State.PENDING }
+        it.filter { book -> !book.isReading() && !book.isPending() }
     }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse?> = _booksError
