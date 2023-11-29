@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
 import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.extensions.toString
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.utils.State
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
@@ -56,7 +57,8 @@ data class BookResponse(
     @SerializedName("state")
     var state: String?,
     @SerializedName("isFavourite")
-    var isFavourite: Boolean
+    var isFavourite: Boolean,
+    var priority: Int
 ) : BaseModel<String> {
 
     @Ignore
@@ -80,7 +82,8 @@ data class BookResponse(
         null,
         null,
         null,
-        false
+        false,
+        -1
     )
 
     @Ignore
@@ -105,7 +108,8 @@ data class BookResponse(
         image = googleBook.getGoogleBookImage(),
         format = null,
         state = null,
-        isFavourite = false
+        isFavourite = false,
+        priority = -1
     )
 
     fun authorsToString(): String {
@@ -126,5 +130,13 @@ data class BookResponse(
             SharedPreferencesHandler.dateFormatToShow,
             SharedPreferencesHandler.language
         )
+    }
+
+    fun isPending(): Boolean {
+        return state == State.PENDING
+    }
+
+    fun isReading(): Boolean {
+        return state == State.READING
     }
 }

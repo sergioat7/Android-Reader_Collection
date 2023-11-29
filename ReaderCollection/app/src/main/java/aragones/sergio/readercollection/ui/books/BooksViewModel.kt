@@ -38,13 +38,13 @@ class BooksViewModel @Inject constructor(
     //region Public properties
     val books: LiveData<List<BookResponse>> = _books
     val readingBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state == State.READING }
+        it.filter { book -> book.isReading() }
     }
     val pendingBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state == State.PENDING }
+        it.filter { book -> book.isPending() }.sortedBy { book -> book.priority }
     }
     val readBooks: LiveData<List<BookResponse>> = _books.map {
-        it.filter { book -> book.state != State.READING && book.state != State.PENDING }
+        it.filter { book -> !book.isReading() && !book.isPending() }
     }
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse?> = _booksError
@@ -135,6 +135,20 @@ class BooksViewModel @Inject constructor(
     fun setTutorialAsShown() {
         userRepository.setHasBooksTutorialBeenShown(true)
         tutorialShown = true
+    }
+
+    fun setPriorityFor(books: List<BookResponse>) {
+
+        _booksLoading.value = true
+        booksRepository.setBooks(books, success = {
+
+            searchBooks(query)
+            _booksLoading.value = false
+        }, failure = {
+
+            _booksLoading.value = false
+            _booksError.value = it
+        })
     }
     //endregion
 }
