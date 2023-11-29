@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.databinding.*
 import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.utils.State
 import java.util.*
@@ -24,7 +25,7 @@ class BooksAdapter(
     private val isGoogleBook: Boolean,
     private var onItemClickListener: OnItemClickListener,
     private var onStartDraggingListener: OnStartDraggingListener? = null
-) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), ItemMoveListener {
+) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), ItemMoveListener, OnSwitchClickListener {
 
     //region Private properties
     private var position = 0
@@ -107,7 +108,8 @@ class BooksAdapter(
                 isGoogleBook,
                 isDraggingEnabled,
                 onItemClickListener,
-                onStartDraggingListener
+                onStartDraggingListener,
+                this
             )
 
             is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
@@ -138,10 +140,6 @@ class BooksAdapter(
         position = 0
         this.books = ArrayList<BookResponse>()
         notifyDataSetChanged()
-    }
-
-    fun isDraggingEnabled(): Boolean {
-        return isDraggingEnabled
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -178,6 +176,24 @@ class BooksAdapter(
             book.priority = index
         }
         onStartDraggingListener?.onFinishDragging(books)
+    }
+
+    override fun onSwitchLeft(fromPosition: Int) {
+
+        val toPosition = fromPosition - 1
+        books[fromPosition].priority = toPosition
+        books[toPosition].priority = fromPosition
+        onRowMoved(fromPosition, toPosition)
+        onStartDraggingListener?.onFinishDragging(listOf(books[fromPosition], books[toPosition]))
+    }
+
+    override fun onSwitchRight(fromPosition: Int) {
+
+        val toPosition = fromPosition + 1
+        books[fromPosition].priority = toPosition
+        books[toPosition].priority = fromPosition
+        onRowMoved(fromPosition, toPosition)
+        onStartDraggingListener?.onFinishDragging(listOf(books[fromPosition], books[toPosition]))
     }
     //endregion
 }

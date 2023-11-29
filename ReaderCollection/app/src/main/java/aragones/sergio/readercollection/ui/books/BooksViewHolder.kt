@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
 import aragones.sergio.readercollection.models.BookResponse
 import kotlin.math.ceil
 
@@ -30,7 +31,8 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
         isGoogleBook: Boolean,
         isDraggingEnable: Boolean,
         onItemClickListener: OnItemClickListener,
-        onStartDraggingListener: OnStartDraggingListener?
+        onStartDraggingListener: OnStartDraggingListener?,
+        onSwitchClickListener: OnSwitchClickListener?
     ) {
         binding.apply {
             when (this) {
@@ -45,13 +47,11 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.book = book
                     this.onItemClickListener = onItemClickListener
                     this.isDarkMode = binding.root.context.isDarkMode()
-                    this.isDraggingEnable = isDraggingEnable
-                    this.imageViewDragging.setOnTouchListener { _, event ->
-
-                        if (event.action == MotionEvent.ACTION_DOWN) {
-                            onStartDraggingListener?.onStartDragging(this@BooksViewHolder)
-                        }
-                        false
+                    this.imageViewSwitchLeft.setOnClickListener {
+                        onSwitchClickListener?.onSwitchLeft(adapterPosition)
+                    }
+                    this.imageViewSwitchRight.setOnClickListener {
+                        onSwitchClickListener?.onSwitchRight(adapterPosition)
                     }
                 }
 
