@@ -232,6 +232,26 @@ class BooksRepository @Inject constructor(
 //        }
     }
 
+    fun setBooks(
+        books: List<BookResponse>,
+        success: () -> Unit,
+        failure: (ErrorResponse) -> Unit
+    ) {
+        updateBooksDatabaseObserver(books).subscribeBy(
+            onComplete = {
+                success()
+            },
+            onError = {
+                failure(
+                    ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database
+                    )
+                )
+            }
+        ).addTo(disposables)
+    }
+
     fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
         getBookDatabaseObserver(bookId).subscribeBy(
             onSuccess = { book ->

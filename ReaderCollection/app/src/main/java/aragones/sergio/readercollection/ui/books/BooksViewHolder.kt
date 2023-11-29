@@ -5,13 +5,19 @@
 
 package aragones.sergio.readercollection.ui.books
 
+import android.annotation.SuppressLint
+import android.view.MotionEvent
+import androidx.core.content.ContextCompat
 import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.ItemBookBinding
 import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
 import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
 import aragones.sergio.readercollection.models.BookResponse
 import kotlin.math.ceil
 
@@ -19,7 +25,17 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     //region Public methods
-    fun bind(book: BookResponse, isGoogleBook: Boolean, onItemClickListener: OnItemClickListener) {
+    @SuppressLint("ClickableViewAccessibility")
+    fun bind(
+        book: BookResponse,
+        isGoogleBook: Boolean,
+        isDraggingEnable: Boolean,
+        isFirst: Boolean,
+        isLast: Boolean,
+        onItemClickListener: OnItemClickListener,
+        onStartDraggingListener: OnStartDraggingListener?,
+        onSwitchClickListener: OnSwitchClickListener?
+    ) {
         binding.apply {
             when (this) {
 
@@ -33,6 +49,14 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.book = book
                     this.onItemClickListener = onItemClickListener
                     this.isDarkMode = binding.root.context.isDarkMode()
+                    this.isSwitchLeftIconEnabled = !isFirst && book.isPending()
+                    this.isSwitchRightIconEnabled = !isLast && book.isPending()
+                    this.imageViewSwitchLeft.setOnClickListener {
+                        onSwitchClickListener?.onSwitchLeft(adapterPosition)
+                    }
+                    this.imageViewSwitchRight.setOnClickListener {
+                        onSwitchClickListener?.onSwitchRight(adapterPosition)
+                    }
                 }
 
                 is ItemBookBinding -> {
@@ -40,12 +64,44 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.onItemClickListener = onItemClickListener
                     this.isGoogleBook = isGoogleBook
                     this.isDarkMode = binding.root.context.isDarkMode()
+                    this.isDraggingEnable = isDraggingEnable
                     val rating = if (isGoogleBook) book.averageRating else book.rating
                     textViewGoogleBookRating.text = ceil(rating).toInt().toString()
+                    this.imageViewDragging.setOnTouchListener { _, event ->
+
+                        if (event.action == MotionEvent.ACTION_DOWN) {
+                            onStartDraggingListener?.onStartDragging(this@BooksViewHolder)
+                        }
+                        false
+                    }
                 }
 
                 else -> Unit
             }
+        }
+    }
+
+    fun setSelected(isSelected: Boolean) {
+
+        val colorId = if (isSelected) R.color.colorQuaternary else R.color.colorSecondary
+        when (binding) {
+            is ItemVerticalBookBinding -> {
+                binding.constraintLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        colorId
+                    )
+                )
+            }
+            is ItemBookBinding -> {
+                binding.constraintLayout.setBackgroundColor(
+                    ContextCompat.getColor(
+                        binding.root.context,
+                        colorId
+                    )
+                )
+            }
+            else -> Unit
         }
     }
     //endregion

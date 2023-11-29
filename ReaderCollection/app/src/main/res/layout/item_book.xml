@@ -36,6 +36,11 @@
             type="Boolean"
             />
 
+        <variable
+            name="isDraggingEnable"
+            type="Boolean"
+            />
+
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -48,7 +53,9 @@
             android:id="@+id/constraint_layout"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="@dimen/padding_24dp"
+            android:paddingTop="@dimen/padding_24dp"
+            android:paddingBottom="@dimen/padding_24dp"
+            android:paddingEnd="@dimen/padding_24dp"
             android:background="@color/colorSecondary"
             app:layout_constraintBottom_toTopOf="@+id/view_separator_google_book"
             app:layout_constraintEnd_toEndOf="parent"
@@ -56,12 +63,25 @@
             app:layout_constraintTop_toTopOf="parent"
             >
 
+            <ImageView
+                android:id="@+id/image_view_dragging"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_24dp"
+                android:src="@drawable/ic_enable_drag"
+                android:visibility="@{isDraggingEnable ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible"/>
+
             <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
                 android:id="@+id/image_view_google_book"
                 android:layout_width="@dimen/size_120dp"
                 android:layout_height="0dp"
+                android:layout_marginStart="@dimen/margin_24dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@id/image_view_dragging"
                 app:layout_constraintTop_toTopOf="parent"
                 src="@{book.thumbnail}"
                 placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"

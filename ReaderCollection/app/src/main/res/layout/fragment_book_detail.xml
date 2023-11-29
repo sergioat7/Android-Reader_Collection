@@ -290,11 +290,13 @@
                     android:layout_marginTop="@dimen/margin_32dp"
                     app:enabled="@{editable}"
                     app:inputHintText="@{@string/select_state}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
                     app:labelHintText="@{@string/state}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
                     app:showText="true"
+                    app:textColor="@{@color/textSecondary}"
                     />
 
                 <ProgressBar
@@ -337,11 +339,13 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     app:enabled="@{editable}"
                     app:inputHintText="@{@string/select_format}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
                     app:labelHintText="@{@string/format}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_reading_date"
                     app:showText="true"
+                    app:textColor="@{@color/textSecondary}"
                     />
 
                 <ProgressBar

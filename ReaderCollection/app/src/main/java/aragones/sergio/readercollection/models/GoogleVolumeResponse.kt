@@ -5,8 +5,6 @@
 
 package aragones.sergio.readercollection.models
 
-import aragones.sergio.readercollection.models.GoogleImageLinksResponse
-import aragones.sergio.readercollection.models.GoogleIsbnResponse
 import com.google.gson.annotations.SerializedName
 import java.util.*
 
