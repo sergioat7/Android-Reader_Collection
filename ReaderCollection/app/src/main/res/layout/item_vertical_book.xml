@@ -32,7 +32,12 @@
             />
 
         <variable
-            name="isDraggingEnable"
+            name="isSwitchLeftIconEnabled"
+            type="Boolean"
+            />
+
+        <variable
+            name="isSwitchRightIconEnabled"
             type="Boolean"
             />
 
@@ -48,14 +53,32 @@
         >
 
         <ImageView
-            android:id="@+id/image_view_dragging"
+            android:id="@+id/image_view_switch_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_enable_drag"
-            android:visibility="@{isDraggingEnable ? View.VISIBLE : View.GONE}"
+            android:src="@drawable/ic_round_switch_left"
+            android:visibility='@{isSwitchLeftIconEnabled ? View.VISIBLE : View.GONE}'
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            />
+
+        <ImageView
+            android:id="@+id/image_view_switch_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_round_switch_right"
+            android:visibility='@{isSwitchRightIconEnabled ? View.VISIBLE : View.GONE}'
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/barrier_swap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:barrierDirection="bottom"
+            app:constraint_referenced_ids="image_view_switch_left, image_view_switch_right"
+            />
 
         <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
             android:id="@+id/image_view_book"
@@ -63,7 +86,7 @@
             android:layout_height="@dimen/size_250dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_view_dragging"
+            app:layout_constraintTop_toBottomOf="@id/barrier_swap"
             src="@{book.thumbnail}"
             center="@{true}"
             placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"

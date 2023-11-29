@@ -14,7 +14,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
@@ -25,7 +24,6 @@ import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
-import aragones.sergio.readercollection.ui.booklist.ItemMoveCallback
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.State
 import aragones.sergio.readercollection.utils.StatusBarStyle
@@ -53,7 +51,6 @@ class BooksFragment :
     private lateinit var readingBooksAdapter: BooksAdapter
     private lateinit var pendingBooksAdapter: BooksAdapter
     private lateinit var booksAdapter: BooksAdapter
-    private lateinit var touchHelper: ItemTouchHelper
     private lateinit var bottomNavigationBarSequence: TapTargetSequence
     private lateinit var mainContentSequence: TapTargetSequence
     private var toolbarSequence: TapTargetSequence? = null
@@ -150,7 +147,6 @@ class BooksFragment :
     }
 
     override fun onStartDragging(viewHolder: BooksViewHolder) {
-        touchHelper.startDrag(viewHolder)
     }
 
     override fun onFinishDragging(books: List<BookResponse>) {
@@ -183,17 +179,6 @@ class BooksFragment :
             }
         }
     }
-
-    fun setDragging(view: View) {
-
-        val isDraggingEnabled = pendingBooksAdapter.isDraggingEnabled()
-        if (isDraggingEnabled) {
-            binding.imageButtonEnableDrag.setImageResource(R.drawable.ic_enable_drag)
-        } else {
-            binding.imageButtonEnableDrag.setImageResource(R.drawable.ic_disable_drag)
-        }
-        pendingBooksAdapter.setDragging(!isDraggingEnabled)
-    }
     //endregion
 
     //region Protected methods
@@ -222,7 +207,6 @@ class BooksFragment :
             isGoogleBook = false,
             onItemClickListener = this
         )
-        touchHelper = ItemTouchHelper(ItemMoveCallback(false, pendingBooksAdapter))
         setupBindings()
 
         with(binding) {
@@ -240,7 +224,6 @@ class BooksFragment :
                 false
             )
             recyclerViewPendingBooks.adapter = pendingBooksAdapter
-            touchHelper.attachToRecyclerView(recyclerViewPendingBooks)
 
             recyclerViewBooks.layoutManager = LinearLayoutManager(
                 requireContext(),
