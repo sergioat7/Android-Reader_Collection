@@ -10,11 +10,13 @@ import android.view.*
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.*
@@ -32,11 +34,13 @@ import java.util.*
 import kotlin.math.abs
 
 @AndroidEntryPoint
-class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
+class BookDetailFragment :
+    BindingFragment<FragmentBookDetailBinding>(),
+    MenuProviderInterface,
     AppBarLayout.OnOffsetChangedListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.SECONDARY
     //endregion
 
@@ -57,54 +61,6 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        this.menu = menu
-        menu.clear()
-
-        val menuRes =
-            if (viewModel.isGoogleBook) R.menu.google_book_detail_toolbar_menu
-            else R.menu.book_detail_toolbar_menu
-        inflater.inflate(menuRes, menu)
-        menu.findItem(R.id.action_save).isVisible = viewModel.isGoogleBook
-        if (!viewModel.isGoogleBook) {
-            menu.findItem(R.id.action_cancel).isVisible = false
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.action_save -> {
-                if (viewModel.isGoogleBook) {
-                    viewModel.createBook(getBookData())
-                } else {
-
-                    viewModel.setBook(getBookData())
-                    setEdition(false)
-                }
-            }
-
-            R.id.action_edit -> setEdition(true)
-            R.id.action_remove -> {
-
-                showPopupConfirmationDialog(R.string.book_remove_confirmation, acceptHandler = {
-                    viewModel.deleteBook()
-                })
-            }
-
-            R.id.action_cancel -> {
-
-                setEdition(false)
-                book?.let { showData(it) }
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -143,6 +99,51 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
     //endregion
 
     //region Interface methods
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        this.menu = menu
+        menu.clear()
+
+        val menuRes =
+            if (viewModel.isGoogleBook) R.menu.google_book_detail_toolbar_menu
+            else R.menu.book_detail_toolbar_menu
+        menuInflater.inflate(menuRes, menu)
+        menu.findItem(R.id.action_save).isVisible = viewModel.isGoogleBook
+        if (!viewModel.isGoogleBook) {
+            menu.findItem(R.id.action_cancel).isVisible = false
+        }
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        when (menuItem.itemId) {
+            R.id.action_save -> {
+                if (viewModel.isGoogleBook) {
+                    viewModel.createBook(getBookData())
+                } else {
+
+                    viewModel.setBook(getBookData())
+                    setEdition(false)
+                }
+            }
+
+            R.id.action_edit -> setEdition(true)
+            R.id.action_remove -> {
+
+                showPopupConfirmationDialog(R.string.book_remove_confirmation, acceptHandler = {
+                    viewModel.deleteBook()
+                })
+            }
+
+            R.id.action_cancel -> {
+
+                setEdition(false)
+                book?.let { showData(it) }
+            }
+        }
+        return false
+    }
+
     override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
 
         val maxScroll = appBarLayout?.totalScrollRange ?: 0
@@ -311,7 +312,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
         }
 
         goBack.observe(viewLifecycleOwner) {
-            activity?.onBackPressed()
+            findNavController().popBackStack()
         }
     }
 
@@ -334,7 +335,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
         /*
         * This works before it's executed AFTER onResume method.
-        * Othwerwise, we must be sure to place it in onResume method.
+        * Otherwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutFormat.setValue(
             book.format,
@@ -346,7 +347,7 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
 
         /*
         * This works before it's executed AFTER onResume method.
-        * Othwerwise, we must be sure to place it in onResume method.
+        * Otherwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutState.setValue(
             book.state ?: Constants.STATES.first().id,
@@ -401,7 +402,8 @@ class BookDetailFragment : BindingFragment<FragmentBookDetailBinding>(),
                 image = book?.image,
                 format = format,
                 state = state,
-                isFavourite = isFavourite
+                isFavourite = isFavourite,
+                priority = book?.priority ?: -1
             )
         }
     }

@@ -11,6 +11,9 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -19,6 +22,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
@@ -27,9 +31,10 @@ import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.setStatusBarStyle
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.modals.loading.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.ui.modals.syncapp.PopupSyncAppDialogFragment
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
@@ -44,8 +49,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     //region Protected properties
     protected lateinit var binding: Binding
         private set
-
-    protected abstract val hasOptionsMenu: Boolean
+    protected abstract val menuProviderInterface: MenuProviderInterface?
     protected abstract val statusBarStyle: StatusBarStyle
     protected open var toolbar: Toolbar? = null
     //endregion
@@ -61,7 +65,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        setHasOptionsMenu(hasOptionsMenu)
         val bindingType =
             (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
                 .firstOrNull {
@@ -92,21 +95,33 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        activity?.let {
+        activity?.apply {
+
             when (statusBarStyle) {
                 StatusBarStyle.PRIMARY -> {
-                    it.window.setStatusBarStyle(
-                        ContextCompat.getColor(it, R.color.colorSecondary),
-                        !it.isDarkMode()
+                    window.setStatusBarStyle(
+                        ContextCompat.getColor(this, R.color.colorSecondary),
+                        !isDarkMode()
                     )
                 }
+
                 StatusBarStyle.SECONDARY -> {
-                    it.window.setStatusBarStyle(
-                        ContextCompat.getColor(it, R.color.colorPrimary),
-                        it.isDarkMode()
+                    window.setStatusBarStyle(
+                        ContextCompat.getColor(this, R.color.colorPrimary),
+                        isDarkMode()
                     )
                 }
             }
+
+            addMenuProvider(object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuProviderInterface?.onCreateMenu(menu, menuInflater)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    return menuProviderInterface?.onMenuItemSelected(menuItem) ?: false
+                }
+            }, viewLifecycleOwner)
         }
     }
     //endregion
@@ -248,19 +263,20 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
             searchView.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_mag_icon)?.imageTintList =
                 ColorStateList.valueOf(color)
 
-            searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)?.let { searchPlate ->
+            searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
+                ?.let { searchPlate ->
 
-                val searchText =
-                    searchPlate.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
-                if (searchText != null) {
+                    val searchText =
+                        searchPlate.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
+                    if (searchText != null) {
 
-                    searchText.setTextColor(color)
-                    searchText.setHintTextColor(color)
+                        searchText.setTextColor(color)
+                        searchText.setHintTextColor(color)
+                    }
+
+                    searchPlate.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_close_btn)?.imageTintList =
+                        ColorStateList.valueOf(color)
                 }
-
-                searchPlate.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_close_btn)?.imageTintList =
-                    ColorStateList.valueOf(color)
-            }
         }
     }
     //endregion

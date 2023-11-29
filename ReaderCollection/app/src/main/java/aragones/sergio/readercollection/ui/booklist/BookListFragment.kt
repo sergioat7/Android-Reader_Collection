@@ -12,31 +12,50 @@ import android.view.MenuItem
 import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
+import aragones.sergio.readercollection.ui.books.BooksViewHolder
 import aragones.sergio.readercollection.utils.ScrollPosition
 import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClickListener {
+class BookListFragment :
+    BindingFragment<FragmentBookListBinding>(),
+    MenuProviderInterface,
+    OnItemClickListener,
+    OnStartDraggingListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
     //region Private properties
     private val viewModel: BookListViewModel by viewModels()
     private lateinit var booksAdapter: BooksAdapter
+    private lateinit var touchHelper: ItemTouchHelper
     private val goBack = MutableLiveData<Boolean>()
+    private lateinit var menu: Menu
+    private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
     //region Lifecycle methods
@@ -47,28 +66,19 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
         initializeUi()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onStart() {
+        super.onStart()
 
-        menu.clear()
-        inflater.inflate(R.menu.book_list_toolbar_menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-            R.id.action_sort -> {
-
-                viewModel.sort(requireContext()) {
-                    viewModel.setPosition(ScrollPosition.TOP)
-                    binding.recyclerViewBooks.scrollToPosition(0)
-                }
-                return true
+        if (viewModel.arePendingBooks) {
+            /*
+        Must be created with a delay in order to wait for the fragment menu creation,
+        otherwise it wouldn't be icons in the toolbar
+         */
+            lifecycleScope.launch(Dispatchers.Main) {
+                delay(500)
+                createSequence()
             }
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {
@@ -83,6 +93,12 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
     }
 
+    override fun onStop() {
+        super.onStop()
+
+        toolbarSequence?.cancel()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -91,6 +107,45 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     //endregion
 
     //region Interface methods
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        this.menu = menu
+        menu.clear()
+
+        menuInflater.inflate(R.menu.book_list_toolbar_menu, menu)
+        menu.findItem(R.id.action_enable_drag).isVisible = viewModel.arePendingBooks
+        menu.findItem(R.id.action_disable_drag).isVisible = false
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        return when (menuItem.itemId) {
+            R.id.action_enable_drag -> {
+
+                menu.findItem(R.id.action_enable_drag).isVisible = false
+                menu.findItem(R.id.action_disable_drag).isVisible = true
+                booksAdapter.setDragging(true)
+                true
+            }
+            R.id.action_disable_drag -> {
+
+                menu.findItem(R.id.action_enable_drag).isVisible = true
+                menu.findItem(R.id.action_disable_drag).isVisible = false
+                booksAdapter.setDragging(false)
+                true
+            }
+            R.id.action_sort -> {
+
+                viewModel.sort(requireContext()) {
+                    viewModel.setPosition(ScrollPosition.TOP)
+                    binding.recyclerViewBooks.scrollToPosition(0)
+                }
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun onItemClick(bookId: String) {
 
         val action =
@@ -101,6 +156,14 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
     override fun onLoadMoreItemsClick() {}
 
     override fun onShowAllItemsClick(state: String) {}
+
+    override fun onStartDragging(viewHolder: BooksViewHolder) {
+        touchHelper.startDrag(viewHolder)
+    }
+
+    override fun onFinishDragging(books: List<BookResponse>) {
+        viewModel.setPriorityFor(books)
+    }
     //endregion
 
     //region Public methods
@@ -128,8 +191,10 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
             books = viewModel.books.value?.toMutableList() ?: mutableListOf(),
             isVerticalDesign = false,
             isGoogleBook = false,
-            onItemClickListener = this
+            onItemClickListener = this,
+            onStartDraggingListener = this
         )
+        touchHelper = ItemTouchHelper(ItemMoveCallback(booksAdapter))
         setupBindings()
 
         binding.recyclerViewBooks.apply {
@@ -150,6 +215,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
                     viewModel.setPosition(position)
                 }
             })
+            touchHelper.attachToRecyclerView(this)
         }
 
         binding.fragment = this
@@ -181,6 +247,33 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>(), OnItemClick
 
         goBack.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
+        }
+    }
+
+    private fun createSequence() {
+
+        if (!viewModel.tutorialShown) {
+            toolbarSequence = TapTargetSequence(requireActivity()).apply {
+                target(
+                    TapTarget.forToolbarMenuItem(
+                        binding.toolbar,
+                        binding.toolbar.menu.findItem(R.id.action_enable_drag).itemId,
+                        resources.getString(R.string.drag_bar_tutorial_title),
+                        resources.getString(R.string.drag_bar_tutorial_description)
+                    ).style(requireContext()).cancelable(true).tintTarget(true)
+                )
+                continueOnCancel(false)
+                listener(object : TapTargetSequence.Listener {
+                    override fun onSequenceFinish() {
+                        viewModel.setTutorialAsShown()
+                    }
+
+                    override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {}
+
+                    override fun onSequenceCanceled(lastTarget: TapTarget) {}
+                })
+                start()
+            }
         }
     }
     //endregion

@@ -19,7 +19,9 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
@@ -33,10 +35,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListener {
+class BooksFragment :
+    BindingFragment<FragmentBooksBinding>(),
+    MenuProviderInterface,
+    OnItemClickListener,
+    OnStartDraggingListener {
 
     //region Protected properties
-    override val hasOptionsMenu = true
+    override val menuProviderInterface = this
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -58,38 +64,6 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
 
         toolbar = binding.toolbar
         initializeUi()
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        super.onCreateOptionsMenu(menu, inflater)
-
-        menu.clear()
-        inflater.inflate(R.menu.books_toolbar_menu, menu)
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-
-        when (item.itemId) {
-//            R.id.action_synchronize -> {
-//
-//                openSyncPopup()
-//                return true
-//            }
-            R.id.action_sort -> {
-
-                viewModel.sort(requireContext()) {
-                    binding.apply {
-                        recyclerViewReadingBooks.scrollToPosition(0)
-                        recyclerViewPendingBooks.scrollToPosition(0)
-                        recyclerViewBooks.scrollToPosition(0)
-                    }
-                }
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onStart() {
@@ -141,6 +115,43 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         )
         findNavController().navigate(action)
     }
+
+    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+
+        menu.clear()
+        menuInflater.inflate(R.menu.books_toolbar_menu, menu)
+    }
+
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+
+        return when (menuItem.itemId) {
+//            R.id.action_synchronize -> {
+//
+//                openSyncPopup()
+//                true
+//            }
+            R.id.action_sort -> {
+
+                viewModel.sort(requireContext()) {
+                    binding.apply {
+                        recyclerViewReadingBooks.scrollToPosition(0)
+                        recyclerViewPendingBooks.scrollToPosition(0)
+                        recyclerViewBooks.scrollToPosition(0)
+                    }
+                }
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    override fun onStartDragging(viewHolder: BooksViewHolder) {
+    }
+
+    override fun onFinishDragging(books: List<BookResponse>) {
+        viewModel.setPriorityFor(books)
+    }
     //endregion
 
     //region Public methods
@@ -175,23 +186,23 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>(), OnItemClickListen
         super.initializeUi()
 
         readingBooksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { it.state == State.READING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.isReading() }?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = false,
             isGoogleBook = false,
             onItemClickListener = this
         )
         pendingBooksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { it.state == State.PENDING }?.toMutableList()
+            books = viewModel.books.value?.filter { it.isPending() }?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,
-            onItemClickListener = this
+            onItemClickListener = this,
+            onStartDraggingListener = this
         )
         booksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter {
-                it.state != State.READING && it.state != State.PENDING
-            }?.toMutableList() ?: mutableListOf(),
+            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }?.toMutableList()
+                ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,
             onItemClickListener = this
