@@ -30,6 +30,8 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
         book: BookResponse,
         isGoogleBook: Boolean,
         isDraggingEnable: Boolean,
+        isFirst: Boolean,
+        isLast: Boolean,
         onItemClickListener: OnItemClickListener,
         onStartDraggingListener: OnStartDraggingListener?,
         onSwitchClickListener: OnSwitchClickListener?
@@ -47,6 +49,8 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     this.book = book
                     this.onItemClickListener = onItemClickListener
                     this.isDarkMode = binding.root.context.isDarkMode()
+                    this.isSwitchLeftIconEnabled = !isFirst && book.isPending()
+                    this.isSwitchRightIconEnabled = !isLast && book.isPending()
                     this.imageViewSwitchLeft.setOnClickListener {
                         onSwitchClickListener?.onSwitchLeft(adapterPosition)
                     }
