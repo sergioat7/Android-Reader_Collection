@@ -35,7 +35,6 @@ class BookListViewModel @Inject constructor(
     private var state: String = state["state"] ?: ""
     private var sortParam: String? = state["sortParam"]
     private var isSortDescending: Boolean = state["isSortDescending"] ?: false
-    private var query: String = state["query"] ?: ""
     private var year: Int = state["year"] ?: -1
     private var month: Int = state["month"] ?: -1
     private var author: String? = state["author"]
@@ -47,6 +46,7 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Public properties
+    var query: String = state["query"] ?: ""
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError

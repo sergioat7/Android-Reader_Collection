@@ -199,7 +199,9 @@ class BooksFragment :
             isGoogleBook = false,
             onItemClickListener = this,
             onStartDraggingListener = this
-        )
+        ).apply {
+            setSwitching(viewModel.query.isEmpty())
+        }
         booksAdapter = BooksAdapter(
             books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }?.toMutableList()
                 ?: mutableListOf(),
@@ -288,6 +290,7 @@ class BooksFragment :
                     recyclerViewPendingBooks.scrollToPosition(0)
                     recyclerViewBooks.scrollToPosition(0)
                 }
+                pendingBooksAdapter.setSwitching(newText.isEmpty())
                 return true
             }
 
