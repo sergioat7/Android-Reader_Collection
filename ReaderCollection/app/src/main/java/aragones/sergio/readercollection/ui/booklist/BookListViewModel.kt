@@ -135,7 +135,8 @@ class BookListViewModel @Inject constructor(
         val sortedBooks = if (isSortDescending) books.reversed() else books
         var filteredBooks = sortedBooks
             .filter { book ->
-                book.title?.contains(query, true) ?: false
+                (book.title?.contains(query, true) ?: false)
+                    || book.authorsToString().contains(query, true)
             }.filter { book ->
                 book.authorsToString().contains(author ?: "")
             }
