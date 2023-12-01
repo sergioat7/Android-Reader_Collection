@@ -110,7 +110,7 @@ class BooksAdapter(
                 isGoogleBook,
                 isDraggingEnabled,
                 position == 0,
-                position == Constants.BOOKS_TO_SHOW - 1,
+                position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1,
                 onItemClickListener,
                 onStartDraggingListener,
                 this
