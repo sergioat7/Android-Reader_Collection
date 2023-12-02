@@ -6,7 +6,11 @@
 package aragones.sergio.readercollection.ui.bookdetail
 
 import android.os.Bundle
-import android.view.*
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
@@ -15,11 +19,29 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
-import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.extensions.addChip
+import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getScreenSize
+import aragones.sergio.readercollection.extensions.getSpannableFor
+import aragones.sergio.readercollection.extensions.getValue
+import aragones.sergio.readercollection.extensions.isBlank
+import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.isNotBlank
+import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
+import aragones.sergio.readercollection.extensions.setHintStyle
+import aragones.sergio.readercollection.extensions.setOnClickListener
+import aragones.sergio.readercollection.extensions.setValue
+import aragones.sergio.readercollection.extensions.showDatePicker
+import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.extensions.toDate
+import aragones.sergio.readercollection.extensions.toList
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
-import aragones.sergio.readercollection.utils.*
+import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.CustomDropdownType
+import aragones.sergio.readercollection.utils.State
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
@@ -30,7 +52,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 import kotlin.math.abs
 
 @AndroidEntryPoint
