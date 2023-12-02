@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.ui.bookdetail
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
@@ -17,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.addChip
@@ -75,6 +77,7 @@ class BookDetailFragment :
     private var newBookToolbarSequence: TapTargetSequence? = null
     private var bookDetailsToolbarSequence: TapTargetSequence? = null
     private var mainContentSequenceShown = false
+    private var isStyleBeingApplied = false
     //endregion
 
     //region Lifecycle methods
@@ -270,7 +273,9 @@ class BookDetailFragment :
                     } else {
                         View.VISIBLE
                     }
+                applyStyleTo(textInputLayoutDescription)
             }
+            applyStyleTo(textInputLayoutDescription)
 
             textInputLayoutSummary.doAfterTextChanged {
                 buttonReadMoreSummary.visibility =
@@ -279,7 +284,9 @@ class BookDetailFragment :
                     } else {
                         View.VISIBLE
                     }
+                applyStyleTo(textInputLayoutSummary)
             }
+            applyStyleTo(textInputLayoutSummary)
 
             textInputLayoutPublishedDate.setOnClickListener {
                 textInputLayoutPublishedDate.showDatePicker(requireActivity())
@@ -560,6 +567,19 @@ class BookDetailFragment :
                     start()
                 }
             }
+        }
+    }
+
+    private fun applyStyleTo(input: CustomTextInputLayoutBinding) {
+
+        if (!isStyleBeingApplied) {
+
+            val selection = input.textInputEditText.selectionEnd
+            val spannable = input.getSpannableFor(Typeface.BOLD)
+            isStyleBeingApplied = true
+            input.textInputEditText.text = spannable
+            input.textInputEditText.setSelection(selection)
+            isStyleBeingApplied = false
         }
     }
     //endregion
