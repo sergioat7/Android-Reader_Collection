@@ -16,6 +16,7 @@
     <dimen name="margin_12dp">12dp</dimen>
     <dimen name="margin_8dp">8dp</dimen>
     <dimen name="margin_5dp">5dp</dimen>
+    <dimen name="margin_5dp_negative">-5dp</dimen>
 
     <!--  paddings  -->
     <dimen name="padding_32dp">32dp</dimen>
