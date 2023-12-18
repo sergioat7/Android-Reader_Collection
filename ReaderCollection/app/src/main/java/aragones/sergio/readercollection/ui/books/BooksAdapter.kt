@@ -32,6 +32,7 @@ class BooksAdapter(
     private lateinit var recyclerView: RecyclerView
     private var position = 0
     private var isDraggingEnabled = false
+    private var isSwitchingEnabled = false
     //endregion
 
     //region Lifecycle methods
@@ -105,17 +106,21 @@ class BooksAdapter(
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         when (holder) {
-            is BooksViewHolder -> holder.bind(
-                books[position],
-                isGoogleBook,
-                isDraggingEnabled,
-                position == 0,
-                position == Constants.BOOKS_TO_SHOW - 1,
-                onItemClickListener,
-                onStartDraggingListener,
-                this
-            )
+            is BooksViewHolder -> {
 
+                val isFirst = position == 0 || !isSwitchingEnabled
+                val isLast = position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1 || !isSwitchingEnabled
+                holder.bind(
+                    books[position],
+                    isGoogleBook,
+                    isDraggingEnabled,
+                    isFirst,
+                    isLast,
+                    onItemClickListener,
+                    onStartDraggingListener,
+                    this
+                )
+            }
             is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
@@ -156,6 +161,13 @@ class BooksAdapter(
     fun setDragging(enable: Boolean) {
 
         isDraggingEnabled = enable
+        notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun setSwitching(enable: Boolean) {
+
+        isSwitchingEnabled = enable
         notifyDataSetChanged()
     }
     //endregion
