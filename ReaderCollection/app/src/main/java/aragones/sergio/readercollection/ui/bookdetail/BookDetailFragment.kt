@@ -267,8 +267,12 @@ class BookDetailFragment :
             }
 
             textInputLayoutDescription.doAfterTextChanged {
+
                 buttonReadMoreDescription.visibility =
-                    if (textInputLayoutDescription.isBlank() || textInputLayoutDescription.maxLines == Constants.MAX_LINES) {
+                    if (textInputLayoutDescription.isBlank()
+                        || textInputLayoutDescription.textInputEditText.lineCount < 8 ||
+                        textInputLayoutDescription.maxLines == Constants.MAX_LINES
+                        ) {
                         View.GONE
                     } else {
                         View.VISIBLE
@@ -278,8 +282,12 @@ class BookDetailFragment :
             applyStyleTo(textInputLayoutDescription)
 
             textInputLayoutSummary.doAfterTextChanged {
+
                 buttonReadMoreSummary.visibility =
-                    if (textInputLayoutSummary.isBlank() || textInputLayoutSummary.maxLines == Constants.MAX_LINES) {
+                    if (textInputLayoutSummary.isBlank()
+                        || textInputLayoutSummary.textInputEditText.lineCount < 8 ||
+                        textInputLayoutSummary.maxLines == Constants.MAX_LINES
+                    ) {
                         View.GONE
                     } else {
                         View.VISIBLE
