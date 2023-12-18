@@ -113,7 +113,8 @@ class BookListFragment :
         menu.clear()
 
         menuInflater.inflate(R.menu.book_list_toolbar_menu, menu)
-        menu.findItem(R.id.action_enable_drag).isVisible = viewModel.arePendingBooks
+        menu.findItem(R.id.action_enable_drag).isVisible =
+            viewModel.arePendingBooks && viewModel.query.isEmpty()
         menu.findItem(R.id.action_disable_drag).isVisible = false
     }
 
