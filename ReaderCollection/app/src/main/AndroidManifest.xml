@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ReaderCollection.NoActionBar"
         tools:ignore="AllowBackup">
-        <activity android:name=".ui.MainActivity" />
+        <activity android:name=".ui.MainActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.register.RegisterActivity" />
         <activity android:name=".ui.login.LoginActivity" />
         <activity
