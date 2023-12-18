@@ -5,21 +5,45 @@
 
 package aragones.sergio.readercollection.ui.bookdetail
 
+import android.graphics.Typeface
 import android.os.Bundle
-import android.view.*
+import android.view.Gravity
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
-import aragones.sergio.readercollection.extensions.*
+import aragones.sergio.readercollection.extensions.addChip
+import aragones.sergio.readercollection.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.extensions.getScreenSize
+import aragones.sergio.readercollection.extensions.getSpannableFor
+import aragones.sergio.readercollection.extensions.getValue
+import aragones.sergio.readercollection.extensions.isBlank
+import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.isNotBlank
+import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
+import aragones.sergio.readercollection.extensions.setHintStyle
+import aragones.sergio.readercollection.extensions.setOnClickListener
+import aragones.sergio.readercollection.extensions.setValue
+import aragones.sergio.readercollection.extensions.showDatePicker
+import aragones.sergio.readercollection.extensions.style
+import aragones.sergio.readercollection.extensions.toDate
+import aragones.sergio.readercollection.extensions.toList
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
-import aragones.sergio.readercollection.utils.*
+import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.CustomDropdownType
+import aragones.sergio.readercollection.utils.State
+import aragones.sergio.readercollection.utils.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
@@ -30,7 +54,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import java.util.*
+import java.util.Date
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -53,6 +77,7 @@ class BookDetailFragment :
     private var newBookToolbarSequence: TapTargetSequence? = null
     private var bookDetailsToolbarSequence: TapTargetSequence? = null
     private var mainContentSequenceShown = false
+    private var isStyleBeingApplied = false
     //endregion
 
     //region Lifecycle methods
@@ -242,22 +267,34 @@ class BookDetailFragment :
             }
 
             textInputLayoutDescription.doAfterTextChanged {
+
                 buttonReadMoreDescription.visibility =
-                    if (textInputLayoutDescription.isBlank() || textInputLayoutDescription.maxLines == Constants.MAX_LINES) {
+                    if (textInputLayoutDescription.isBlank()
+                        || textInputLayoutDescription.textInputEditText.lineCount < 8 ||
+                        textInputLayoutDescription.maxLines == Constants.MAX_LINES
+                        ) {
                         View.GONE
                     } else {
                         View.VISIBLE
                     }
+                applyStyleTo(textInputLayoutDescription)
             }
+            applyStyleTo(textInputLayoutDescription)
 
             textInputLayoutSummary.doAfterTextChanged {
+
                 buttonReadMoreSummary.visibility =
-                    if (textInputLayoutSummary.isBlank() || textInputLayoutSummary.maxLines == Constants.MAX_LINES) {
+                    if (textInputLayoutSummary.isBlank()
+                        || textInputLayoutSummary.textInputEditText.lineCount < 8 ||
+                        textInputLayoutSummary.maxLines == Constants.MAX_LINES
+                    ) {
                         View.GONE
                     } else {
                         View.VISIBLE
                     }
+                applyStyleTo(textInputLayoutSummary)
             }
+            applyStyleTo(textInputLayoutSummary)
 
             textInputLayoutPublishedDate.setOnClickListener {
                 textInputLayoutPublishedDate.showDatePicker(requireActivity())
@@ -538,6 +575,19 @@ class BookDetailFragment :
                     start()
                 }
             }
+        }
+    }
+
+    private fun applyStyleTo(input: CustomTextInputLayoutBinding) {
+
+        if (!isStyleBeingApplied) {
+
+            val selection = input.textInputEditText.selectionEnd
+            val spannable = input.getSpannableFor(Typeface.BOLD)
+            isStyleBeingApplied = true
+            input.textInputEditText.text = spannable
+            input.textInputEditText.setSelection(selection)
+            isStyleBeingApplied = false
         }
     }
     //endregion
