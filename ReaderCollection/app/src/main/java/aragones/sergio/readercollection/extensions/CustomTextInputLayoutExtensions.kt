@@ -7,18 +7,24 @@ package aragones.sergio.readercollection.extensions
 
 import android.content.Context
 import android.text.Editable
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
+import android.text.style.StyleSpan
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.textfield.TextInputEditText
-import java.util.*
+import java.util.Calendar
+import java.util.TimeZone
 
 fun CustomTextInputLayoutBinding.setError(text: String?) {
     if (textInputLayout.error != text) {
@@ -52,6 +58,44 @@ fun CustomTextInputLayoutBinding.setHintStyle(id: Int) {
     this.textInputLayout.doOnLayout {
         this.textInputLayout.setHintTextAppearance(id)
     }
+}
+
+fun CustomTextInputLayoutBinding.getSpannableFor(style: Int): SpannableStringBuilder {
+
+    val text = textInputEditText.text.toString()
+    val spannable = SpannableStringBuilder(text)
+    val regex = Regex("\\*(.*?)\\*")
+
+    val asterisksIndices = mutableListOf<Int>()
+    val matches = regex.findAll(text)
+    for (match in matches) {
+
+        val initPosition = match.range.first + 1
+        val endPosition = initPosition + match.groupValues[1].length
+        spannable.setSpan(
+            StyleSpan(style),
+            initPosition,
+            endPosition,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+        asterisksIndices.add(initPosition - 1)
+        asterisksIndices.add(endPosition)
+    }
+
+    for (index in asterisksIndices) {
+        spannable.setSpan(
+            ForegroundColorSpan(
+                ContextCompat.getColor(
+                    textInputEditText.context,
+                    R.color.textSecondaryThin
+                )
+            ),
+            index,
+            index + 1,
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+        )
+    }
+    return spannable
 }
 
 fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity) {
