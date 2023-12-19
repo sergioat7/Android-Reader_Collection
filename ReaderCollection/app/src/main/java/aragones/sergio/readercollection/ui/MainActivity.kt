@@ -13,6 +13,8 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.ActivityMainBinding
 import aragones.sergio.readercollection.extensions.setupWithNavController
 import aragones.sergio.readercollection.ui.base.BaseActivity
+import aragones.sergio.readercollection.utils.InAppUpdateService
+import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -21,6 +23,7 @@ class MainActivity : BaseActivity() {
     //region Private properties
     private lateinit var binding: ActivityMainBinding
     private var currentNavController: LiveData<NavController>? = null
+    private lateinit var inAppUpdateService: InAppUpdateService
     //endregion
 
     //region Lifecycle methods
@@ -33,6 +36,25 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         } // Else, need to wait for onRestoreInstanceState
+
+        inAppUpdateService = InAppUpdateService(this)
+        inAppUpdateService.installStatus.observe(this) {
+            if (it == InstallStatus.DOWNLOADED) {
+                inAppUpdateService.onResume()
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        inAppUpdateService.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        inAppUpdateService.onDestroy()
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
