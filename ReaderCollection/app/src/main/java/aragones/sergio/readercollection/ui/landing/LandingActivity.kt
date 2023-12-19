@@ -14,7 +14,9 @@ import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
@@ -28,17 +30,21 @@ class LandingActivity : BaseActivity() {
 
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()
+    private val inAppUpdateService by lazy { InAppUpdateService(this) }
     //endregion
 
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         initializeUI()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         viewModel.onDestroy()
+        inAppUpdateService.onDestroy()
     }
     //endregion
 
@@ -50,6 +56,24 @@ class LandingActivity : BaseActivity() {
         configLanguage()
         fetchRemoteConfigValues()
         viewModel.checkTheme()
+
+        inAppUpdateService.checkVersion()
+        inAppUpdateService.installStatus.observe(this) {
+            when (it) {
+
+                InstallStatus.DOWNLOADING, InstallStatus.DOWNLOADED, InstallStatus.INSTALLED, InstallStatus.CANCELED -> {
+                    launchApp()
+                    inAppUpdateService.onDestroy()
+                }
+
+                InstallStatus.FAILED -> inAppUpdateService.checkVersion()
+                else -> Unit
+            }
+        }
+    }
+
+    private fun launchApp() {
+
         if (!viewModel.newChangesPopupShown) {
             showPopupActionDialog(getString(R.string.new_version_changes), acceptHandler = {
                 viewModel.checkIsLoggedIn()
