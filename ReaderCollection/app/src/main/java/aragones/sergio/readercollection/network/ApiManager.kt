@@ -8,11 +8,10 @@ package aragones.sergio.readercollection.network
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.extensions.toDate
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
-import com.google.gson.*
+import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -23,9 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.reflect.Type
-import java.util.*
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import kotlin.reflect.KClass
 
@@ -46,20 +43,8 @@ object ApiManager {
     //endregion
 
     //region Public properties
-    val gson: Gson =
-        GsonBuilder()
-            .registerTypeAdapter(
-                Date::class.java,
-                JsonDeserializer<Date> { json: JsonElement, _: Type?, _: JsonDeserializationContext? ->
-                    json.asString.toDate()
-                }
-            )
-            .setDateFormat(Constants.DATE_FORMAT)
-            .serializeNulls()
-            .create()
-
+    val moshi: Moshi = Moshi.Builder().add(MoshiDateAdapter(Constants.DATE_FORMAT)).build()
     var retrofits: MutableMap<KClass<*>, Any> = mutableMapOf()
-
     var apis: MutableMap<KClass<*>, Any> = mutableMapOf()
     //endregion
 
@@ -85,7 +70,7 @@ object ApiManager {
                 Retrofit.Builder()
                     .baseUrl(url)
                     .client(clientBuilder.build())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addConverterFactory(MoshiConverterFactory.create(moshi))
                     .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
                     .build()
 
@@ -126,10 +111,8 @@ object ApiManager {
             }
             code < 500 && error != null -> {
                 RequestResult.Failure(
-                    gson.fromJson(
-                        error.charStream(),
-                        ErrorResponse::class.java
-                    )
+                    moshi.adapter(ErrorResponse::class.java).fromJson(error.charStream().toString())
+                        ?: ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
                 )
             }
             else -> {
@@ -143,13 +126,17 @@ object ApiManager {
     inline fun <reified T : Any> getEmptyResponse(): RequestResult<T>? {
 
         try {
-            return RequestResult.JsonSuccess(gson.fromJson("{}", T::class.java))
+
+            val result = moshi.adapter(T::class.java).fromJson("{}")!!
+            return RequestResult.JsonSuccess(result)
         } catch (e: Exception) {
             Log.e("ApiManager", e.printStackTrace().toString())
         }
 
         try {
-            return RequestResult.JsonSuccess(gson.fromJson("[]", T::class.java))
+
+            val result = moshi.adapter(T::class.java).fromJson("[]")!!
+            return RequestResult.JsonSuccess(result)
         } catch (e: Exception) {
             Log.e("ApiManager", e.printStackTrace().toString())
         }
@@ -168,9 +155,9 @@ object ApiManager {
                 error.response()?.errorBody()?.let { errorBody ->
 
                     errorResponse = try {
-                        gson.fromJson(
-                            errorBody.charStream(), ErrorResponse::class.java
-                        )
+                        moshi.adapter(ErrorResponse::class.java)
+                            .fromJson(errorBody.charStream().toString())
+                            ?: ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
                     } catch (e: Exception) {
                         ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
                     }

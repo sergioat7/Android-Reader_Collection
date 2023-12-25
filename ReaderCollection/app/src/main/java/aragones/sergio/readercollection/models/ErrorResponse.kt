@@ -5,10 +5,12 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class ErrorResponse(
-    @SerializedName("error")
+    @Json(name = "error")
     val error: String,
     val errorKey: Int
 )
