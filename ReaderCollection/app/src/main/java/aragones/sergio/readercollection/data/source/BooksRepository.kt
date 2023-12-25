@@ -9,14 +9,15 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.source.di.MainDispatcher
+import aragones.sergio.readercollection.database.ReaderCollectionDatabase
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.network.MoshiDateAdapter
 import aragones.sergio.readercollection.network.interfaces.BookApiService
-import aragones.sergio.readercollection.database.ReaderCollectionDatabase
 import aragones.sergio.readercollection.utils.Constants
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -36,6 +37,14 @@ class BooksRepository @Inject constructor(
 
     //region Private properties
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
+    private val moshiAdapter = Moshi.Builder()
+        .add(MoshiDateAdapter("MMM dd, yyyy"))
+        .build().adapter<List<BookResponse?>?>(
+        Types.newParameterizedType(
+            List::class.java,
+            BookResponse::class.java
+        )
+    )
     //endregion
 
     //region Public methods
@@ -119,8 +128,7 @@ class BooksRepository @Inject constructor(
 
     fun importDataFrom(jsonData: String): Completable {
 
-        val listType = object : TypeToken<List<BookResponse?>?>() {}.type
-        val books = Gson().fromJson<List<BookResponse?>>(jsonData, listType).mapNotNull { it }
+        val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
         return database
             .bookDao()
             .insertBooksObserver(books)
@@ -137,7 +145,7 @@ class BooksRepository @Inject constructor(
                     emitter.onSuccess("")
                 },
                 onSuccess = {
-                    emitter.onSuccess(Gson().toJson(it))
+                    emitter.onSuccess(moshiAdapter.toJson(it))
                 },
                 onError = {
                     emitter.onError(it)
