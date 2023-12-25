@@ -15,8 +15,8 @@ import aragones.sergio.readercollection.extensions.setString
 import aragones.sergio.readercollection.models.AuthData
 import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.utils.Preferences
-import com.google.gson.Gson
-import java.util.*
+import com.squareup.moshi.Moshi
+import java.util.Locale
 
 object SharedPreferencesHandler {
 
@@ -34,7 +34,7 @@ object SharedPreferencesHandler {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
     )
     private val encryptedEditor = appEncryptedPreferences.edit()
-    private val gson = Gson()
+    private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Public properties
@@ -50,27 +50,27 @@ object SharedPreferencesHandler {
         get() {
             return appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
                 ?.let {
-                    gson.fromJson(it, AuthData::class.java)
+                    moshi.adapter(AuthData::class.java).fromJson(it)
                 } ?: run {
                 AuthData("")
             }
         }
         set(value) = encryptedEditor.setString(
             Preferences.AUTH_DATA_PREFERENCES_NAME,
-            gson.toJson(value)
+            moshi.adapter(AuthData::class.java).toJson(value)
         )
     var userData: UserData
         get() {
             return appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
                 ?.let {
-                    gson.fromJson(it, UserData::class.java)
+                    moshi.adapter(UserData::class.java).fromJson(it)
                 } ?: run {
                 UserData("", "", false)
             }
         }
         set(value) = encryptedEditor.setString(
             Preferences.USER_DATA_PREFERENCES_NAME,
-            gson.toJson(value)
+            moshi.adapter(UserData::class.java).toJson(value)
         )
     val isLoggedIn: Boolean
         get() = userData.isLoggedIn && credentials.token.isNotEmpty()
