@@ -8,55 +8,57 @@ package aragones.sergio.readercollection.models
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import aragones.sergio.readercollection.models.base.BaseModel
-import aragones.sergio.readercollection.extensions.toString
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.extensions.toString
+import aragones.sergio.readercollection.models.base.BaseModel
 import aragones.sergio.readercollection.utils.State
-import com.google.gson.annotations.SerializedName
-import java.util.*
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import java.util.Date
 
+@JsonClass(generateAdapter = true)
 @Entity(tableName = "Book")
 data class BookResponse(
     @PrimaryKey
-    @SerializedName("googleId")
+    @Json(name = "googleId")
     override val id: String,
-    @SerializedName("title")
+    @Json(name = "title")
     val title: String?,
-    @SerializedName("subtitle")
+    @Json(name = "subtitle")
     val subtitle: String?,
-    @SerializedName("authors")
+    @Json(name = "authors")
     val authors: List<String>?,
-    @SerializedName("publisher")
+    @Json(name = "publisher")
     val publisher: String?,
-    @SerializedName("publishedDate")
+    @Json(name = "publishedDate")
     val publishedDate: Date?,
-    @SerializedName("readingDate")
+    @Json(name = "readingDate")
     val readingDate: Date?,
-    @SerializedName("description")
+    @Json(name = "description")
     val description: String?,
-    @SerializedName("summary")
+    @Json(name = "summary")
     val summary: String?,
-    @SerializedName("isbn")
+    @Json(name = "isbn")
     val isbn: String?,
-    @SerializedName("pageCount")
+    @Json(name = "pageCount")
     val pageCount: Int,
-    @SerializedName("categories")
+    @Json(name = "categories")
     val categories: List<String>?,
-    @SerializedName("averageRating")
+    @Json(name = "averageRating")
     val averageRating: Double,
-    @SerializedName("ratingsCount")
+    @Json(name = "ratingsCount")
     val ratingsCount: Int,
-    @SerializedName("rating")
+    @Json(name = "rating")
     val rating: Double,
-    @SerializedName("thumbnail")
+    @Json(name = "thumbnail")
     val thumbnail: String?,
-    @SerializedName("image")
+    @Json(name = "image")
     val image: String?,
-    @SerializedName("format")
+    @Json(name = "format")
     val format: String?,
-    @SerializedName("state")
+    @Json(name = "state")
     var state: String?,
-    @SerializedName("isFavourite")
+    @Json(name = "isFavourite")
     var isFavourite: Boolean,
     var priority: Int
 ) : BaseModel<String> {

@@ -27,6 +27,6 @@ interface BookDao {
     @RawQuery
     fun getBooksObserver(query: SupportSQLiteQuery): Maybe<List<BookResponse>>
 
-    @Query("SELECT * FROM Book WHERE id == :bookId")
-    fun getBookObserver(bookId: String): Single<BookResponse>
+    @Query("SELECT * FROM Book WHERE id == :id")
+    fun getBookObserver(id: String): Single<BookResponse>
 }
