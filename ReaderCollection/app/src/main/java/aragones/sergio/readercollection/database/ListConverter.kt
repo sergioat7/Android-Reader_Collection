@@ -6,42 +6,30 @@
 package aragones.sergio.readercollection.database
 
 import androidx.room.TypeConverter
-import aragones.sergio.readercollection.models.BookResponse
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
-import java.util.*
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.Types
+import java.util.Collections
 
 class ListConverter {
 
-    private val gson = Gson()
-
-    @TypeConverter
-    fun stringToBookList(data: String?): List<BookResponse?>? {
-        if (data == null) {
-            return Collections.emptyList()
-        }
-        val listType =
-            object : TypeToken<List<BookResponse?>?>() {}.type
-        return gson.fromJson<List<BookResponse?>>(data, listType)
-    }
-
-    @TypeConverter
-    fun bookListToString(books: List<BookResponse?>?): String? {
-        return gson.toJson(books)
-    }
+    private val moshiAdapter = Moshi.Builder().build().adapter<List<String?>?>(
+        Types.newParameterizedType(
+            List::class.java,
+            String::class.java
+        )
+    )
 
     @TypeConverter
     fun stringToStringList(data: String?): List<String?>? {
+
         if (data == null) {
             return Collections.emptyList()
         }
-        val listType =
-            object : TypeToken<List<String?>?>() {}.type
-        return gson.fromJson<List<String?>>(data, listType)
+        return moshiAdapter.fromJson(data).orEmpty()
     }
 
     @TypeConverter
     fun stringListToString(elements: List<String?>?): String? {
-        return gson.toJson(elements)
+        return moshiAdapter.toJson(elements)
     }
 }
