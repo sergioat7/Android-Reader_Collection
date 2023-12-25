@@ -20,7 +20,7 @@ import com.google.android.play.core.install.model.InstallStatus
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.util.*
@@ -31,6 +31,7 @@ class LandingActivity : BaseActivity() {
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()
     private val inAppUpdateService by lazy { InAppUpdateService(this) }
+    private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Lifecycle methods
@@ -128,8 +129,8 @@ class LandingActivity : BaseActivity() {
             try {
                 val languagedFormats =
                     JSONObject(formatsString).get(viewModel.language).toString()
-                formats =
-                    Gson().fromJson(languagedFormats, Array<FormatResponse>::class.java).asList()
+                formats = moshi.adapter(Array<FormatResponse>::class.java)
+                    .fromJson(languagedFormats)?.asList() ?: listOf()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }
@@ -145,8 +146,8 @@ class LandingActivity : BaseActivity() {
             try {
                 val languagedStates =
                     JSONObject(statesString).get(viewModel.language).toString()
-                states =
-                    Gson().fromJson(languagedStates, Array<StateResponse>::class.java).asList()
+                states = moshi.adapter(Array<StateResponse>::class.java)
+                    .fromJson(languagedStates)?.asList() ?: listOf()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }

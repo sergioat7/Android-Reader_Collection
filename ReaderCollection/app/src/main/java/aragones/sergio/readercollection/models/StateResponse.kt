@@ -6,7 +6,9 @@
 package aragones.sergio.readercollection.models
 
 import aragones.sergio.readercollection.models.base.BaseModel
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class StateResponse(
     override val id: String,
     val name: String

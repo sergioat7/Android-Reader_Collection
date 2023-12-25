@@ -5,12 +5,14 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GoogleBookResponse(
-    @SerializedName("id")
+    @Json(name = "id")
     val id: String,
-    @SerializedName("volumeInfo")
+    @Json(name = "volumeInfo")
     val volumeInfo: GoogleVolumeResponse
 ) {
 
