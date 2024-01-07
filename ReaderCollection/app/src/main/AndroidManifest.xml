@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ReaderCollection.NoActionBar"
-        tools:ignore="AllowBackup">
+        android:localeConfig="@xml/locales_config"
+        tools:ignore="AllowBackup,UnusedAttribute">
         <activity android:name=".ui.MainActivity"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".ui.register.RegisterActivity" />
