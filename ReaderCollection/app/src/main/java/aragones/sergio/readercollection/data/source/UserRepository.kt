@@ -5,21 +5,26 @@
 
 package aragones.sergio.readercollection.data.source
 
+import android.app.LocaleManager
+import android.os.Build
+import android.os.LocaleList
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.source.di.MainDispatcher
 import aragones.sergio.readercollection.models.AuthData
-import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.models.ErrorResponse
+import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.network.interfaces.UserApiService
 import aragones.sergio.readercollection.utils.Constants
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import java.util.Locale
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val api: UserApiService,
+    private val localeManager: LocaleManager,
     @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : BaseRepository() {
 
@@ -198,7 +203,11 @@ class UserRepository @Inject constructor(
 //    }
 
     fun storeLanguage(language: String) {
+
         SharedPreferencesHandler.language = language
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            localeManager.applicationLocales = LocaleList(Locale.forLanguageTag(language))
+        }
     }
 
     fun storeSortParam(sortParam: String?) {

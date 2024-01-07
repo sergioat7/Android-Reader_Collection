@@ -6,10 +6,13 @@
 package aragones.sergio.readercollection.ui.landing
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.ui.base.BaseActivity
@@ -96,10 +99,17 @@ class LandingActivity : BaseActivity() {
 
     private fun configLanguage() {
 
-        val language = viewModel.language
-        val conf = resources.configuration
-        conf.setLocale(Locale(language))
-        resources.updateConfiguration(conf, resources.displayMetrics)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+
+            val language = viewModel.language
+            val conf = resources.configuration
+            conf.setLocale(Locale(language))
+            resources.updateConfiguration(conf, resources.displayMetrics)
+        } else {
+
+            val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
+            SharedPreferencesHandler.language = locale.language
+        }
     }
 
     private fun fetchRemoteConfigValues() {
