@@ -580,7 +580,7 @@ class BookDetailFragment :
 
     private fun applyStyleTo(input: CustomTextInputLayoutBinding) {
 
-        if (!isStyleBeingApplied) {
+        if (!isStyleBeingApplied && binding.editable == false) {
 
             val selection = input.textInputEditText.selectionEnd
             val spannable = input.getSpannableFor(Typeface.BOLD)
