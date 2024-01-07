@@ -5,11 +5,13 @@
 
 package aragones.sergio.readercollection.ui.settings
 
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -34,6 +36,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 @AndroidEntryPoint
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProviderInterface {
@@ -80,6 +83,11 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
             viewModel.profileDataChanged(it.toString())
         }
         setupDropdowns()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+
+            val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
+            viewModel.language = locale.language
+        }
     }
 
     override fun onDestroy() {
