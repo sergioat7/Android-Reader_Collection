@@ -40,6 +40,7 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailSuccessMessage = MutableLiveData<Int>()
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
+    private lateinit var pendingBooks: List<BookResponse>
     //endregion
 
     //region Public properties
@@ -59,6 +60,18 @@ class BookDetailViewModel @Inject constructor(
 
     //region Lifecycle methods
     init {
+
+        booksRepository.getPendingBooksDatabaseObserver().subscribeBy(
+            onComplete = {
+                pendingBooks = listOf()
+            },
+            onSuccess = {
+                pendingBooks = it
+            },
+            onError = {
+                pendingBooks = listOf()
+            }
+        ).addTo(disposables)
         fetchBook()
     }
 
@@ -74,6 +87,7 @@ class BookDetailViewModel @Inject constructor(
     //region Public methods
     fun createBook(newBook: BookResponse) {
 
+        newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         _bookDetailLoading.value = true
         booksRepository.createBook(newBook, success = {
 

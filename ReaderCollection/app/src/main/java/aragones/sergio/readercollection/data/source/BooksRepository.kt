@@ -126,6 +126,16 @@ class BooksRepository @Inject constructor(
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
 
+    fun getPendingBooksDatabaseObserver(): Maybe<List<BookResponse>> {
+
+        return database
+            .bookDao()
+            .getPendingBooksObserver()
+            .`as`(RxJavaBridge.toV3Maybe())
+            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
+            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
     fun importDataFrom(jsonData: String): Completable {
 
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
