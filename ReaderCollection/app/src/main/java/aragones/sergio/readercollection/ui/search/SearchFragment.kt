@@ -76,6 +76,12 @@ class SearchFragment :
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        viewModel.onResume()
+    }
+
     override fun onStop() {
         super.onStop()
 
