@@ -5,11 +5,13 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GoogleIsbnResponse(
-    @SerializedName("type")
+    @Json(name = "type")
     val type: String?,
-    @SerializedName("identifier")
+    @Json(name = "identifier")
     val identifier: String?
 )

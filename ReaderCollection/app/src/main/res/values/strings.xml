@@ -3,8 +3,11 @@
     //GENERAL
     <string name="app_name" translatable="false">Reader Collection</string>
     <string name="search">Search</string>
+    <string name="restart">Restart</string>
 
     <string name="new_version_changes">Due to problems with the servers, from now on the app will work just in local mode. Every game you add will be saved just in the app, so if you uninstall it, you will lose all the saved information. Games you already had saved will still be available as long as you do not uninstall the app.</string>
+
+    <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 
     //LOGIN &amp; REGISTRATION
     <string name="invalid_username">Not a valid username</string>

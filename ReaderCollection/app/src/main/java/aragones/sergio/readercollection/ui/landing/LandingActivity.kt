@@ -6,19 +6,24 @@
 package aragones.sergio.readercollection.ui.landing
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.models.FormatResponse
 import aragones.sergio.readercollection.models.StateResponse
 import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.Constants
+import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.play.core.install.model.InstallStatus
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
-import com.google.gson.Gson
+import com.squareup.moshi.Moshi
 import dagger.hilt.android.AndroidEntryPoint
 import org.json.JSONObject
 import java.util.*
@@ -28,17 +33,22 @@ class LandingActivity : BaseActivity() {
 
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()
+    private val inAppUpdateService by lazy { InAppUpdateService(this) }
+    private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         initializeUI()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         viewModel.onDestroy()
+        inAppUpdateService.onDestroy()
     }
     //endregion
 
@@ -50,6 +60,24 @@ class LandingActivity : BaseActivity() {
         configLanguage()
         fetchRemoteConfigValues()
         viewModel.checkTheme()
+
+        inAppUpdateService.checkVersion()
+        inAppUpdateService.installStatus.observe(this) {
+            when (it) {
+
+                InstallStatus.DOWNLOADING, InstallStatus.DOWNLOADED, InstallStatus.INSTALLED, InstallStatus.CANCELED -> {
+                    launchApp()
+                    inAppUpdateService.onDestroy()
+                }
+
+                InstallStatus.FAILED -> inAppUpdateService.checkVersion()
+                else -> Unit
+            }
+        }
+    }
+
+    private fun launchApp() {
+
         if (!viewModel.newChangesPopupShown) {
             showPopupActionDialog(getString(R.string.new_version_changes), acceptHandler = {
                 viewModel.checkIsLoggedIn()
@@ -71,10 +99,17 @@ class LandingActivity : BaseActivity() {
 
     private fun configLanguage() {
 
-        val language = viewModel.language
-        val conf = resources.configuration
-        conf.setLocale(Locale(language))
-        resources.updateConfiguration(conf, resources.displayMetrics)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+
+            val language = viewModel.language
+            val conf = resources.configuration
+            conf.setLocale(Locale(language))
+            resources.updateConfiguration(conf, resources.displayMetrics)
+        } else {
+
+            val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
+            SharedPreferencesHandler.language = locale.language
+        }
     }
 
     private fun fetchRemoteConfigValues() {
@@ -104,8 +139,8 @@ class LandingActivity : BaseActivity() {
             try {
                 val languagedFormats =
                     JSONObject(formatsString).get(viewModel.language).toString()
-                formats =
-                    Gson().fromJson(languagedFormats, Array<FormatResponse>::class.java).asList()
+                formats = moshi.adapter(Array<FormatResponse>::class.java)
+                    .fromJson(languagedFormats)?.asList() ?: listOf()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }
@@ -121,8 +156,8 @@ class LandingActivity : BaseActivity() {
             try {
                 val languagedStates =
                     JSONObject(statesString).get(viewModel.language).toString()
-                states =
-                    Gson().fromJson(languagedStates, Array<StateResponse>::class.java).asList()
+                states = moshi.adapter(Array<StateResponse>::class.java)
+                    .fromJson(languagedStates)?.asList() ?: listOf()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }

@@ -5,19 +5,21 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class GoogleImageLinksResponse(
-    @SerializedName("smallThumbnail")
+    @Json(name = "smallThumbnail")
     val smallThumbnail: String?,
-    @SerializedName("thumbnail")
+    @Json(name = "thumbnail")
     val thumbnail: String?,
-    @SerializedName("small")
+    @Json(name = "small")
     val small: String?,
-    @SerializedName("medium")
+    @Json(name = "medium")
     val medium: String?,
-    @SerializedName("large")
+    @Json(name = "large")
     val large: String?,
-    @SerializedName("extraLarge")
+    @Json(name = "extraLarge")
     val extraLarge: String?
 )

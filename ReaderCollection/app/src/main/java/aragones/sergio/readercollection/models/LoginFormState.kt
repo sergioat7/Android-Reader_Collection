@@ -5,13 +5,15 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class LoginFormState(
-    @SerializedName("usernameError")
+    @Json(name = "usernameError")
     val usernameError: Int? = null,
-    @SerializedName("passwordError")
+    @Json(name = "passwordError")
     val passwordError: Int? = null,
-    @SerializedName("isDataValid")
+    @Json(name = "isDataValid")
     val isDataValid: Boolean = false
 )
