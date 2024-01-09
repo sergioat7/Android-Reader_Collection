@@ -5,9 +5,11 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class LoginResponse(
-    @SerializedName("token")
+    @Json(name = "token")
     val token: String
 )

@@ -36,6 +36,7 @@ class SearchViewModel @Inject constructor(
     private val _bookAdded = MutableLiveData<Int?>()
     private val _searchError = MutableLiveData<ErrorResponse?>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
+    private lateinit var pendingBooks: MutableList<BookResponse>
     //endregion
 
     //region Public properties
@@ -49,6 +50,14 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
+    init {
+        fetchPendingBooks()
+    }
+
+    fun onResume() {
+        fetchPendingBooks()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -105,9 +114,11 @@ class SearchViewModel @Inject constructor(
         _books.value?.get(position)?.let { newBook ->
 
             newBook.state = State.PENDING
+            newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
             _searchLoading.value = true
             booksRepository.createBook(newBook, success = {
 
+                pendingBooks.add(newBook)
                 _bookAdded.value = position
                 _bookAdded.value = null
                 _searchLoading.value = false
@@ -128,6 +139,23 @@ class SearchViewModel @Inject constructor(
     fun setTutorialAsShown() {
         userRepository.setHasSearchTutorialBeenShown(true)
         tutorialShown = true
+    }
+    //endregion
+
+    //region Private methods
+    private fun fetchPendingBooks() {
+
+        booksRepository.getPendingBooksDatabaseObserver().subscribeBy(
+            onComplete = {
+                pendingBooks = mutableListOf()
+            },
+            onSuccess = {
+                pendingBooks = it.toMutableList()
+            },
+            onError = {
+                pendingBooks = mutableListOf()
+            }
+        ).addTo(disposables)
     }
     //endregion
 }

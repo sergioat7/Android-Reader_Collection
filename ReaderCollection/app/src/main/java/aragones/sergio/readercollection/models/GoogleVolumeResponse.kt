@@ -5,32 +5,34 @@
 
 package aragones.sergio.readercollection.models
 
-import com.google.gson.annotations.SerializedName
-import java.util.*
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import java.util.Date
 
+@JsonClass(generateAdapter = true)
 data class GoogleVolumeResponse(
-    @SerializedName("title")
+    @Json(name = "title")
     val title: String?,
-    @SerializedName("subtitle")
+    @Json(name = "subtitle")
     val subtitle: String?,
-    @SerializedName("authors")
+    @Json(name = "authors")
     val authors: List<String>?,
-    @SerializedName("publisher")
+    @Json(name = "publisher")
     val publisher: String?,
-    @SerializedName("publishedDate")
+    @Json(name = "publishedDate")
     val publishedDate: Date?,
-    @SerializedName("description")
+    @Json(name = "description")
     val description: String?,
-    @SerializedName("industryIdentifiers")
+    @Json(name = "industryIdentifiers")
     val industryIdentifiers: List<GoogleIsbnResponse>?,
-    @SerializedName("pageCount")
+    @Json(name = "pageCount")
     val pageCount: Int?,
-    @SerializedName("categories")
+    @Json(name = "categories")
     val categories: List<String>?,
-    @SerializedName("averageRating")
+    @Json(name = "averageRating")
     val averageRating: Double?,
-    @SerializedName("ratingsCount")
+    @Json(name = "ratingsCount")
     val ratingsCount: Int?,
-    @SerializedName("imageLinks")
+    @Json(name = "imageLinks")
     val imageLinks: GoogleImageLinksResponse?
 )

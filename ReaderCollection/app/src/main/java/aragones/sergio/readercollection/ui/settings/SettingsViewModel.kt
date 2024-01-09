@@ -36,7 +36,11 @@ class SettingsViewModel @Inject constructor(
 
     //region Public properties
     val userData: UserData = userRepository.userData
-    val language: String = userRepository.language
+    var language: String
+        get() = userRepository.language
+        set(value) {
+            userRepository.storeLanguage(value)
+        }
     var sortParam: String? = userRepository.sortParam
     var isSortDescending: Boolean = userRepository.isSortDescending
     var themeMode: Int = userRepository.themeMode
