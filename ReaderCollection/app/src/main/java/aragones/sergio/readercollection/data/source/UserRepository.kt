@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.data.source
 
 import android.app.LocaleManager
+import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import aragones.sergio.readercollection.R
@@ -16,6 +17,7 @@ import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.network.interfaces.UserApiService
 import aragones.sergio.readercollection.utils.Constants
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -24,12 +26,18 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val api: UserApiService,
-    private val localeManager: LocaleManager,
+    @ApplicationContext private val context: Context,
     @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) : BaseRepository() {
 
     //region Private properties
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
+    private var localeManager: LocaleManager? =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            context.getSystemService(LocaleManager::class.java)
+        } else {
+            null
+        }
     //endregion
 
     //region Public properties
@@ -206,7 +214,7 @@ class UserRepository @Inject constructor(
 
         SharedPreferencesHandler.language = language
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            localeManager.applicationLocales = LocaleList(Locale.forLanguageTag(language))
+            localeManager?.applicationLocales = LocaleList(Locale.forLanguageTag(language))
         }
     }
 
