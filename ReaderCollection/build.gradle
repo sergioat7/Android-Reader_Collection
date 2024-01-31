@@ -39,12 +39,3 @@ apply plugin: "io.gitlab.arturbosch.detekt"
 tasks.register('clean', Delete) {
     delete rootProject.buildDir
 }
-
-ext {
-
-    //App dependencies
-    lifecycleVersion = '2.4.0'
-    retrofitVersion = '2.9.0'
-    roomVersion = '2.5.2'
-    moshiVersion = '1.15.0'
-}
