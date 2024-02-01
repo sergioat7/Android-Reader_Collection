@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
-val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystorePropertiesFile: File = rootProject.file("keystore.properties")
 val keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
@@ -30,12 +30,10 @@ android {
 
     signingConfigs {
         create("release") {
-            if (project.hasProperty("READER_COLLECTION_STORE_FILE")) {
-                storeFile = file(keystoreProperties["READER_COLLECTION_STORE_FILE"] as String)
-                storePassword = keystoreProperties["READER_COLLECTION_STORE_PASSWORD"] as String
-                keyAlias = keystoreProperties["READER_COLLECTION_KEY_ALIAS"] as String
-                keyPassword = keystoreProperties["READER_COLLECTION_KEY_PASSWORD"] as String
-            }
+            storeFile = file(keystoreProperties.getProperty("keystore.storeFile"))
+            storePassword = keystoreProperties.getProperty("keystore.storePassword")
+            keyAlias = keystoreProperties.getProperty("keystore.keyAlias")
+            keyPassword = keystoreProperties.getProperty("keystore.keyPassword")
         }
     }
 
@@ -60,7 +58,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName(name)
             manifestPlaceholders["appName"] = "@string/app_name"
         }
         debug {
