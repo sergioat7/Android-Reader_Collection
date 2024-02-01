@@ -1,6 +1,7 @@
 import java.io.FileInputStream
 import java.util.Properties
 
+@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -99,45 +100,22 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
 
-    implementation(libs.navigation.fragment.ktx)
-    implementation(libs.navigation.ui.ktx)
-    implementation(libs.navigation.dynamic.features.fragment)
-
+    implementation(libs.bundles.navigation)
     implementation(libs.moshi)
     kapt(libs.moshi.kotlin.codegen)
-
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.adapter.rxjava)
-    implementation(libs.okhttp3.logging.interceptor)
-    implementation(libs.retrofit.converter.moshi)
-
-    implementation(libs.rxjava)
-    implementation(libs.rxkotlin)
-    implementation(libs.rxandroid)
-
+    implementation(libs.bundles.retrofit)
+    implementation(libs.bundles.rx)
     implementation(libs.picasso)
-
     implementation(libs.materialratingbar)
-
-    implementation(libs.room.runtime)
+    implementation(libs.bundles.room)
     kapt(libs.room.compiler)
-    implementation(libs.room.rxjava)
-    implementation(libs.room.rxjava3.bridge)
-
     implementation(platform(libs.firebase.bom))
-    implementation(libs.firebase.analytics)
-    implementation(libs.firebase.crashlytics)
-    implementation(libs.firebase.config)
-
+    implementation(libs.bundles.firebase)
     implementation(libs.security.crypto)
-
     implementation(libs.android.chart)
-
     implementation(libs.tap.target.view)
-
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
-
     implementation(libs.app.update.ktx)
 
     testImplementation(libs.junit)
