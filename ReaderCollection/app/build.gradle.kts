@@ -71,6 +71,7 @@ android {
     buildFeatures {
         dataBinding = true
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -115,7 +116,7 @@ dependencies {
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
     implementation(libs.app.update.ktx)
-    
+
     debugImplementation(libs.leak.canary)
 
     testImplementation(libs.junit)
