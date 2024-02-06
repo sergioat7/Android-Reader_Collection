@@ -47,14 +47,14 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     //endregion
 
     //region Protected properties
-    protected lateinit var binding: Binding
-        private set
+    protected val binding: Binding get() = requireNotNull(mBinding)
     protected abstract val menuProviderInterface: MenuProviderInterface?
     protected abstract val statusBarStyle: StatusBarStyle
     protected open var toolbar: Toolbar? = null
     //endregion
 
     //region Private properties
+    private var mBinding: Binding? = null
     private var loadingFragment: PopupLoadingDialogFragment? = null
     //endregion
 
@@ -82,14 +82,15 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
             Boolean::class.javaPrimitiveType
         )
         @Suppress("UNCHECKED_CAST")
-        binding = inflateMethod.invoke(null, inflater, container, false) as Binding
-        binding.root.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.colorSecondary
+        mBinding = (inflateMethod.invoke(null, inflater, container, false) as Binding).also {
+            it.root.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.colorSecondary
+                )
             )
-        )
-        return binding.root
+        }
+        return mBinding?.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -123,6 +124,15 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                 }
             }, viewLifecycleOwner)
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        mBinding?.unbind()
+        mBinding = null
+        searchView = null
+        toolbar = null
     }
     //endregion
 

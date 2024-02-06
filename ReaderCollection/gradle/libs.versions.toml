@@ -1,0 +1,123 @@
+[versions]
+core-ktx = "1.12.0"
+appcompat = "1.6.1"
+constraint-layout = "2.1.4"
+fragment = "1.6.2"
+material = "1.11.0"
+legacy = "1.0.0"
+lifecycle = "2.7.0"
+navigation = "2.7.6"
+moshi = "1.15.0"
+retrofit = "2.9.0"
+okhttp3 = "4.11.0"
+rxjava = "3.0.7"
+rxkotlin = "3.0.1"
+rxandroid = "3.0.0"
+picasso = "2.71828"
+material-rating-bar = "1.4.0"
+room = "2.6.1"
+room-rxjava3-bridge = "3.0.0"
+firebase-bom = "32.7.1"
+security = "1.0.0"
+android-chart = "3.1.0"
+tap-target-view = "1.13.3"
+hilt = "2.47"
+app-update = "2.1.0"
+leak-canary = "2.9.1"
+junit = "4.13.2"
+androidx-test-ext-junit = "1.1.5"
+espresso-core = "3.5.1"
+agp = "8.2.2"
+kotlin = "1.9.22"
+crashlytics = "2.9.8"
+google-services = "4.4.0"
+detekt = "1.23.1"
+
+[libraries]
+#Android
+core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraint-layout" }
+fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "fragment" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacy" }
+lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
+
+#Navigation
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
+navigation-dynamic-features-fragment = { group = "androidx.navigation", name = "navigation-dynamic-features-fragment", version.ref = "navigation" }
+
+#Moshi
+moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
+moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+
+#Retrofit
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofit-adapter-rxjava = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "retrofit" }
+okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
+retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+
+#Rx
+rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
+rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version.ref = "rxkotlin" }
+rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxandroid" }
+
+#Picasso
+picasso = { group = "com.squareup.picasso", name = "picasso", version.ref = "picasso" }
+
+#MaterialRatingBar
+materialratingbar = { group = "me.zhanghai.android.materialratingbar", name = "library", version.ref = "material-rating-bar" }
+
+#Room
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+room-rxjava = { group = "androidx.room", name = "room-rxjava2", version.ref = "room" }
+room-rxjava3-bridge = { group = "com.github.akarnokd", name = "rxjava3-bridge", version.ref = "room-rxjava3-bridge" }
+
+#Firebase
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics-ktx" }
+firebase-crashlytics = { module = "com.google.firebase:firebase-crashlytics-ktx" }
+firebase-config = { module = "com.google.firebase:firebase-config-ktx" }
+
+#Security
+security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
+
+#Android chart
+android-chart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "android-chart" }
+
+#Tap target view
+tap-target-view = { group = "com.getkeepsafe.taptargetview", name = "taptargetview", version.ref = "tap-target-view" }
+
+#Hilt
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
+hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+
+#In-app update
+app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "app-update" }
+
+#Leak Canary
+leak-canary = { group = "com.squareup.leakcanary", name = "leakcanary-android", version.ref = "leak-canary" }
+
+#Tests
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+#Android tests
+androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
+espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espresso-core" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
+
+[bundles]
+navigation = ["navigation-fragment-ktx", "navigation-ui-ktx", "navigation-dynamic-features-fragment"]
+retrofit = ["retrofit", "retrofit-adapter-rxjava", "okhttp3-logging-interceptor", "retrofit-converter-moshi"]
+rx = ["rxjava", "rxkotlin", "rxandroid"]
+room = ["room-runtime", "room-rxjava", "room-rxjava3-bridge"]
+firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-config"]
