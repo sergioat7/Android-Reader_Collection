@@ -51,7 +51,8 @@ class SearchFragment :
 
     //region Private properties
     private val viewModel: SearchViewModel by viewModels()
-    private lateinit var booksAdapter: BooksAdapter
+    private var booksAdapter: BooksAdapter? = null
+    private val lastItemPosition: Int get() = (booksAdapter?.itemCount ?: 1) - 1
     private var toolbarSequence: TapTargetSequence? = null
     //endregion
 
@@ -86,6 +87,13 @@ class SearchFragment :
         super.onStop()
 
         toolbarSequence?.cancel()
+        toolbarSequence = null
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        booksAdapter = null
     }
 
     override fun onDestroy() {
@@ -133,7 +141,7 @@ class SearchFragment :
 
             binding.floatingActionButtonEndList -> {
                 viewModel.setPosition(ScrollPosition.END)
-                binding.recyclerViewBooks.scrollToPosition(booksAdapter.itemCount - 1)
+                binding.recyclerViewBooks.scrollToPosition(lastItemPosition)
             }
         }
     }
@@ -190,9 +198,9 @@ class SearchFragment :
         viewModel.books.observe(viewLifecycleOwner) { booksResponse ->
 
             if (booksResponse.isEmpty()) {
-                booksAdapter.resetList()
+                booksAdapter?.resetList()
             } else {
-                booksAdapter.setBooks(booksResponse, false)
+                booksAdapter?.setBooks(booksResponse, false)
             }
         }
 
@@ -288,7 +296,7 @@ class SearchFragment :
 
             val position = viewHolder.adapterPosition
             viewModel.addBook(position)
-            booksAdapter.notifyItemChanged(position)
+            booksAdapter?.notifyItemChanged(position)
         }
 
         override fun onChildDraw(

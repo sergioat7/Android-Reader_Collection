@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import aragones.sergio.readercollection.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 /**
@@ -88,7 +87,7 @@ fun BottomNavigationView.setupWithNavController(
                     FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
                 val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
-                        as NavHostFragment
+                    as NavHostFragment
 
                 // Exclude the first fragment tag because it's always in the back stack.
                 if (firstFragmentTag != newlySelectedItemTag) {
@@ -96,10 +95,10 @@ fun BottomNavigationView.setupWithNavController(
                     // to it, creating the fixed started destination.
                     fragmentManager.beginTransaction()
                         .setCustomAnimations(
-                            R.anim.nav_default_enter_anim,
-                            R.anim.nav_default_exit_anim,
-                            R.anim.nav_default_pop_enter_anim,
-                            R.anim.nav_default_pop_exit_anim
+                            androidx.navigation.ui.R.anim.nav_default_enter_anim,
+                            androidx.navigation.ui.R.anim.nav_default_exit_anim,
+                            androidx.navigation.ui.R.anim.nav_default_pop_enter_anim,
+                            androidx.navigation.ui.R.anim.nav_default_pop_exit_anim
                         )
                         .attach(selectedFragment)
                         .setPrimaryNavigationFragment(selectedFragment)
@@ -199,7 +198,7 @@ private fun BottomNavigationView.setupItemReselected(
     setOnNavigationItemReselectedListener { item ->
         val newlySelectedItemTag = graphIdToTagMap[item.itemId]
         val selectedFragment = fragmentManager.findFragmentByTag(newlySelectedItemTag)
-                as NavHostFragment
+            as NavHostFragment
         val navController = selectedFragment.navController
         // Pop the back stack to the start destination of the current navController graph
         navController.popBackStack(
