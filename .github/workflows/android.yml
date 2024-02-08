@@ -39,24 +39,15 @@ jobs:
         id: decode_keystore
         uses: timheuer/base64-to-file@v1
         with:
-          fileName: 'keystore/readercollection-keystore.jks'
+          fileName: ${{ secrets.KEYSTORE_PATH }}
           encodedString: ${{ secrets.KEYSTORE }}
 
       - name: Assemble release bundle
-        run: ./gradlew app:bundleRelease
+        run: ./gradlew bundleRelease
         env:
           SIGNING_KEY_ALIAS: ${{ secrets.ALIAS }}
           SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           SIGNING_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
-
-      #      - name: Sign release
-      #        uses: r0adkll/sign-android-release@v1
-      #        with:
-      #          releaseDirectory: app/build/outputs/bundle/release
-      #          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-      #          alias: ${{ secrets.ALIAS }}
-      #          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-      #          keyPassword: ${{ secrets.KEY_PASSWORD }}
 
       - name: Create service_account.json
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
