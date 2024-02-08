@@ -30,6 +30,14 @@ android {
 
     signingConfigs {
         create("release") {
+
+            val tmpFilePath = System.getProperty("user.home") + "/work/_temp/keystore/"
+            val allFilesFromDir = File(tmpFilePath).listFiles()
+            if (allFilesFromDir != null) {
+                val keystoreFile = allFilesFromDir.first()
+                keystoreFile.renameTo(file(keystoreProperties.getProperty("keystore.storeFile")))
+            }
+            
             storeFile = file(keystoreProperties.getProperty("keystore.storeFile"))
             storePassword = keystoreProperties.getProperty("keystore.storePassword")
             keyAlias = keystoreProperties.getProperty("keystore.keyAlias")
