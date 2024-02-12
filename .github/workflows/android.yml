@@ -3,7 +3,7 @@ name: Deploy to Alpha
 on:
   push:
     branches:
-      - release/
+      - release/*
 
 jobs:
   deploy:
@@ -24,7 +24,7 @@ jobs:
           cache: gradle
 
       - name: Grant execution permission for gradlew
-        run: chmod +x gradlew
+        run: chmod +x ./gradlew
 
       - name: Build with Gradle
         run: ./gradlew build
@@ -35,24 +35,19 @@ jobs:
       - name: Run detekt validation
         run: ./gradlew detekt
 
+      - name: Decode Keystore
+        id: decode_keystore
+        uses: timheuer/base64-to-file@v1
+        with:
+          fileName: ${{ secrets.KEYSTORE_PATH }}
+          encodedString: ${{ secrets.KEYSTORE }}
+
       - name: Assemble release bundle
         run: ./gradlew bundleRelease
-
-      - name: Sign release
-        uses: r0adkll/sign-android-release@v1
-        with:
-          releaseDirectory: app/build/outputs/bundle/release
-          signingKeyBase64: ${{ secrets.SIGNING_KEY }}
-          alias: ${{ secrets.ALIAS }}
-          keyStorePassword: ${{ secrets.KEY_STORE_PASSWORD }}
-          keyPassword: ${{ secrets.KEY_PASSWORD }}
-
-      - name: Tag release
-        run: |
-          version_name=${GITHUB_REF##*/}
-          echo "Tagging release with tag $version_name"
-          git tag $version_name release/$version_name
-          git push origin --tags
+        env:
+          SIGNING_KEY_ALIAS: ${{ secrets.ALIAS }}
+          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          SIGNING_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
 
       - name: Create service_account.json
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
@@ -62,5 +57,12 @@ jobs:
         with:
           serviceAccountJson: service_account.json
           packageName: aragones.sergio.readercollection
-          releaseFile: app/build/outputs/bundle/release/app-release.aab
+          releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: internal
+
+      - name: Tag release
+        run: |
+          version_name=${GITHUB_REF##*/}
+          echo "Tagging release with tag $version_name"
+          git tag $version_name release/$version_name
+          git push origin --tags
