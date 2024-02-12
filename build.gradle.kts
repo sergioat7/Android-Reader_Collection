@@ -1,3 +1,8 @@
+/*
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 12/2/2024
+ */
+
 buildscript {
     dependencies {
         classpath("com.google.firebase:firebase-crashlytics-gradle:${libs.versions.crashlytics.get()}")//
@@ -5,7 +10,6 @@ buildscript {
     }
 }
 
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false

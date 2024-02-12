@@ -1,7 +1,11 @@
+/*
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 12/2/2024
+ */
+
 import java.io.FileInputStream
 import java.util.Properties
 
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -21,7 +25,7 @@ val appName = "aragones.sergio.readercollection"
 val versionMajor = 2
 val versionMinor = 5
 val versionPatch = 2
-val versionBuild = 0 // bump for dogfood builds, public betas, etc.
+val versionBuild = 4 // bump for dogfood builds, public betas, etc.
 
 android {
 
@@ -37,7 +41,7 @@ android {
                 val keystoreFile = allFilesFromDir.first()
                 keystoreFile.renameTo(file(keystoreProperties.getProperty("keystore.storeFile")))
             }
-            
+
             storeFile = file(keystoreProperties.getProperty("keystore.storeFile"))
             storePassword = keystoreProperties.getProperty("keystore.storePassword")
             keyAlias = keystoreProperties.getProperty("keystore.keyAlias")
