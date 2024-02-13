@@ -1,7 +1,6 @@
 import java.io.FileInputStream
 import java.util.Properties
 
-@Suppress("DSL_SCOPE_VIOLATION") // TODO: Remove once KTIJ-19369 is fixed
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -20,8 +19,8 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 5
-val versionPatch = 1
-val versionBuild = 0 // bump for dogfood builds, public betas, etc.
+val versionPatch = 2
+val versionBuild = 7 // bump for dogfood builds, public betas, etc.
 
 android {
 
