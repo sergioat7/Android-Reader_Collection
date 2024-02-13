@@ -62,26 +62,26 @@ jobs:
           releaseName: ${GITHUB_REF##*/}
           whatsNewDirectory: whatsnew/
 
-      - name: Merge to master
-        run: |
-          version_name=${GITHUB_REF##*/}
-          git checkout master
-          git fetch origin master
-          git merge -m "Merge branch 'release/$version_name'" release/$version_name
-          git push origin master
-
-      - name: Tag release
-        run: |
-          git checkout master
-          version_name=${GITHUB_REF##*/}
-          echo "Tagging release with tag $version_name"
-          git tag $version_name release/$version_name
-          git push origin --tags
-
-      - name: Merge to develop
-        run: |
-          version_name=${GITHUB_REF##*/}
-          git checkout develop
-          git fetch origin develop
-          git merge -m "Merge branch 'master' into develop" master
-          git push origin develop
+#      - name: Merge to master
+#        run: |
+#          version_name=${GITHUB_REF##*/}
+#          git checkout master
+#          git fetch origin master
+#          git merge -m "Merge branch 'release/$version_name'" release/$version_name
+#          git push origin master
+#
+#      - name: Tag release
+#        run: |
+#          git checkout master
+#          version_name=${GITHUB_REF##*/}
+#          echo "Tagging release with tag $version_name"
+#          git tag $version_name release/$version_name
+#          git push origin --tags
+#
+#      - name: Merge to develop
+#        run: |
+#          version_name=${GITHUB_REF##*/}
+#          git checkout develop
+#          git fetch origin develop
+#          git merge -m "Merge branch 'master' into develop" master
+#          git push origin develop
