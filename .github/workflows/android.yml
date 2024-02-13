@@ -59,7 +59,6 @@ jobs:
           packageName: aragones.sergio.readercollection
           releaseFiles: app/build/outputs/bundle/release/app-release.aab
           track: internal
-          releaseName: ${GITHUB_REF##*/}
           whatsNewDirectory: whatsnew/
 
 #      - name: Merge to master
