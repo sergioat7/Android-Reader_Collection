@@ -274,7 +274,7 @@ class BookDetailFragment :
                     if (textInputLayoutDescription.isBlank()
                         || textInputLayoutDescription.textInputEditText.lineCount < 8 ||
                         textInputLayoutDescription.maxLines == Constants.MAX_LINES
-                        ) {
+                    ) {
                         View.GONE
                     } else {
                         View.VISIBLE

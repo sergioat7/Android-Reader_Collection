@@ -59,6 +59,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             R.layout.item_vertical_book -> {
                 BooksViewHolder(
                     ItemVerticalBookBinding.inflate(
@@ -68,6 +69,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             R.layout.item_book -> {
                 BooksViewHolder(
                     ItemBookBinding.inflate(
@@ -77,6 +79,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             R.layout.item_show_all_items -> {
                 ShowAllItemsViewHolder(
                     ItemShowAllItemsBinding.inflate(
@@ -86,6 +89,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             else -> {
                 LoadMoreItemsViewHolder(
                     ItemLoadMoreItemsBinding.inflate(
@@ -121,6 +125,7 @@ class BooksAdapter(
                     this
                 )
             }
+
             is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }
