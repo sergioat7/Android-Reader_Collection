@@ -204,7 +204,8 @@ class BooksFragment :
             setSwitching(viewModel.query.isEmpty())
         }
         booksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }?.toMutableList()
+            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }
+                ?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,

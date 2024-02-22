@@ -148,6 +148,7 @@ class StatisticsFragment :
                 })
                 true
             }
+
             else -> false
         }
     }

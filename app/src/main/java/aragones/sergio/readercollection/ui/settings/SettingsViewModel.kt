@@ -80,11 +80,11 @@ class SettingsViewModel @Inject constructor(
         newThemeMode: Int
     ) {
 
-        val changePassword =            newPassword != userRepository.userData.password
-        val changeLanguage =            newLanguage != language
-        val changeSortParam =           newSortParam != sortParam
-        val changeIsSortDescending =    newIsSortDescending != isSortDescending
-        val changeThemeMode =           newThemeMode != themeMode
+        val changePassword = newPassword != userRepository.userData.password
+        val changeLanguage = newLanguage != language
+        val changeSortParam = newSortParam != sortParam
+        val changeIsSortDescending = newIsSortDescending != isSortDescending
+        val changeThemeMode = newThemeMode != themeMode
 
         if (changePassword) {
 
