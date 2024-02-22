@@ -293,7 +293,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_state"
-                    app:text='@{viewModel.book.readingDateAsHumanReadable() ?? editable ? null : Constants.NO_VALUE}'
                     app:textColor="@{@color/textSecondary}" />
 
                 <include
@@ -395,7 +394,6 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_publisher"
-                    app:text="@{viewModel.book.publishedDateAsHumanReadable() ?? editable ? null : Constants.NO_VALUE}"
                     app:textColor="@{@color/textSecondary}" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

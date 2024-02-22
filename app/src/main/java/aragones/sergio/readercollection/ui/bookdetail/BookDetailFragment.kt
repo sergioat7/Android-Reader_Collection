@@ -35,10 +35,10 @@ import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
-import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
+import com.aragones.sergio.data.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomDropdownType
 import com.aragones.sergio.util.State
@@ -46,6 +46,7 @@ import com.aragones.sergio.util.StatusBarStyle
 import com.aragones.sergio.util.extensions.isNotBlank
 import com.aragones.sergio.util.extensions.toDate
 import com.aragones.sergio.util.extensions.toList
+import com.aragones.sergio.util.extensions.toString
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
@@ -298,10 +299,6 @@ class BookDetailFragment :
             }
             applyStyleTo(textInputLayoutSummary)
 
-            textInputLayoutPublishedDate.setOnClickListener {
-                textInputLayoutPublishedDate.showDatePicker(requireActivity())
-            }
-
             textInputLayoutReadingDate.setOnClickListener {
                 textInputLayoutReadingDate.showDatePicker(requireActivity())
             }
@@ -309,6 +306,10 @@ class BookDetailFragment :
             dropdownTextInputLayoutFormat.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
 
             dropdownTextInputLayoutState.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
+
+            textInputLayoutPublishedDate.setOnClickListener {
+                textInputLayoutPublishedDate.showDatePicker(requireActivity())
+            }
 
             fragment = this@BookDetailFragment
             viewModel = this@BookDetailFragment.viewModel
@@ -364,8 +365,12 @@ class BookDetailFragment :
             }
         }
 
+        binding.textInputLayoutReadingDate.text = getTextDate(viewModel.book.value?.readingDate)
+
         setFormat(book)
         setState(book)
+
+        binding.textInputLayoutPublishedDate.text = getTextDate(viewModel.book.value?.publishedDate)
 
         viewModel.setBookImage(book.thumbnail ?: book.image)
     }
@@ -392,6 +397,14 @@ class BookDetailFragment :
             book.state ?: STATES.first().id,
             CustomDropdownType.STATE
         )
+    }
+
+    private fun getTextDate(date: Date?): String? {
+
+        return date?.toString(
+            SharedPreferencesHandler.dateFormatToShow,
+            SharedPreferencesHandler.language
+        ) ?: if (binding.editable == true) null else Constants.NO_VALUE
     }
 
     private fun getBookData(): BookResponse {
@@ -457,6 +470,8 @@ class BookDetailFragment :
         }
 
         binding.editable = editable
+        binding.textInputLayoutReadingDate.text = getTextDate(viewModel.book.value?.readingDate)
+        binding.textInputLayoutPublishedDate.text = getTextDate(viewModel.book.value?.publishedDate)
     }
 
     private fun createTargetsForNewBookToolbar(): List<TapTarget> {
