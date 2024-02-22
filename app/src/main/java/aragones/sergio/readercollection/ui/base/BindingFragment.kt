@@ -35,7 +35,7 @@ import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.modals.loading.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.ui.modals.syncapp.PopupSyncAppDialogFragment
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.util.StatusBarStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 import java.lang.reflect.ParameterizedType

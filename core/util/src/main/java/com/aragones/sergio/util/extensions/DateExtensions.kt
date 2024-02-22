@@ -3,13 +3,13 @@
  * Created by Sergio Aragonés on 2/1/2022
  */
 
-package aragones.sergio.readercollection.extensions
+package com.aragones.sergio.util.extensions
 
-import android.util.Log
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import com.aragones.sergio.util.Constants
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 fun Date?.toString(format: String? = null, language: String? = null): String? {
 
@@ -24,13 +24,9 @@ fun Date?.toString(format: String? = null, language: String? = null): String? {
         return try {
             SimpleDateFormat(dateFormat, locale).format(it)
         } catch (e: Exception) {
-
-            Log.e("DateExtensions", e.message ?: "")
             null
         }
     } ?: run {
-
-        Log.e("DateExtensions", "date null")
         return null
     }
 }
@@ -58,9 +54,9 @@ fun List<Date>.getOrderedBy(field: Int): List<Date> {
     }
 }
 
-fun List<Date>.getGroupedBy(pattern: String): Map<String, List<Date>> {
+fun List<Date>.getGroupedBy(pattern: String, language: String): Map<String, List<Date>> {
 
-    val locale = Locale.forLanguageTag(SharedPreferencesHandler.language)
+    val locale = Locale.forLanguageTag(language)
     val calendar = Calendar.getInstance()
     return this.groupBy {
         calendar.time = it

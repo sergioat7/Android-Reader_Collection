@@ -10,7 +10,7 @@ import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.models.ErrorResponse
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
