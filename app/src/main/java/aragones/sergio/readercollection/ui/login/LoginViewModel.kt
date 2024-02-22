@@ -15,7 +15,7 @@ import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.models.LoginFormState
 import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

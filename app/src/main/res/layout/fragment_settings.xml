@@ -13,11 +13,11 @@
     <data>
 
         <import
-            type="aragones.sergio.readercollection.utils.Preferences"
+            type="com.aragones.sergio.util.Preferences"
             />
 
         <import
-            type="aragones.sergio.readercollection.utils.CustomInputType"
+            type="com.aragones.sergio.util.CustomInputType"
             />
 
         <variable

@@ -27,9 +27,9 @@ import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.landing.LandingActivity
-import aragones.sergio.readercollection.utils.CustomDropdownType
-import aragones.sergio.readercollection.utils.Preferences
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.util.CustomDropdownType
+import com.aragones.sergio.util.Preferences
+import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import dagger.hilt.android.AndroidEntryPoint

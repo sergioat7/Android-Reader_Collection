@@ -5,8 +5,8 @@
 
 package aragones.sergio.readercollection.network
 
-import aragones.sergio.readercollection.extensions.toDate
-import aragones.sergio.readercollection.extensions.toString
+import com.aragones.sergio.util.extensions.toDate
+import com.aragones.sergio.util.extensions.toString
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.util.Date

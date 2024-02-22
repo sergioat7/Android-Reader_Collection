@@ -16,17 +16,11 @@
             type="android.view.View"
             />
 
-        <import
-            type="aragones.sergio.readercollection.extensions.StringExtensionsKt"
-            />
+        <import type="com.aragones.sergio.util.extensions.StringExtensionsKt" />
 
-        <import
-            type="aragones.sergio.readercollection.utils.Constants"
-            />
+        <import type="com.aragones.sergio.util.Constants" />
 
-        <import
-            type="aragones.sergio.readercollection.utils.CustomInputType"
-            />
+        <import type="com.aragones.sergio.util.CustomInputType" />
 
         <variable
             name="fragment"

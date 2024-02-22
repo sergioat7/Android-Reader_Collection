@@ -28,22 +28,24 @@ import aragones.sergio.readercollection.extensions.getSpannableFor
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.isBlank
 import aragones.sergio.readercollection.extensions.isDarkMode
-import aragones.sergio.readercollection.extensions.isNotBlank
 import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
 import aragones.sergio.readercollection.extensions.setHintStyle
 import aragones.sergio.readercollection.extensions.setOnClickListener
 import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.extensions.style
-import aragones.sergio.readercollection.extensions.toDate
-import aragones.sergio.readercollection.extensions.toList
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.CustomDropdownType
-import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import aragones.sergio.readercollection.utils.Constants.FORMATS
+import aragones.sergio.readercollection.utils.Constants.STATES
+import com.aragones.sergio.util.Constants
+import com.aragones.sergio.util.CustomDropdownType
+import com.aragones.sergio.util.State
+import com.aragones.sergio.util.StatusBarStyle
+import com.aragones.sergio.util.extensions.isNotBlank
+import com.aragones.sergio.util.extensions.toDate
+import com.aragones.sergio.util.extensions.toList
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
@@ -387,7 +389,7 @@ class BookDetailFragment :
         * Otherwise, we must be sure to place it in onResume method.
         */
         binding.dropdownTextInputLayoutState.setValue(
-            book.state ?: Constants.STATES.first().id,
+            book.state ?: STATES.first().id,
             CustomDropdownType.STATE
         )
     }
@@ -412,9 +414,9 @@ class BookDetailFragment :
                 else 0
             val rating = ratingBar.rating.toDouble() * 2
             val format =
-                Constants.FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
+                FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
-                Constants.STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
+                STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
             if (book?.readingDate == null && readingDate == null && state == State.READ) readingDate =
                 Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false

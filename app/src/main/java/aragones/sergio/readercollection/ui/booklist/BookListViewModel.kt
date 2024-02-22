@@ -12,13 +12,13 @@ import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.UserRepository
-import aragones.sergio.readercollection.extensions.getMonthNumber
-import aragones.sergio.readercollection.extensions.getYear
 import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.utils.ScrollPosition
-import aragones.sergio.readercollection.utils.State
+import com.aragones.sergio.util.ScrollPosition
+import com.aragones.sergio.util.State
+import com.aragones.sergio.util.extensions.getMonthNumber
+import com.aragones.sergio.util.extensions.getYear
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy

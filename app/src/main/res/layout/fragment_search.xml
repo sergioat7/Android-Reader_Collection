@@ -17,7 +17,7 @@
             />
 
         <import
-            type="aragones.sergio.readercollection.utils.ScrollPosition"
+            type="com.aragones.sergio.util.ScrollPosition"
             />
 
         <variable

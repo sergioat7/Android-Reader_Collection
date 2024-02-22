@@ -10,7 +10,7 @@ import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import aragones.sergio.readercollection.database.ReaderCollectionDatabase
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

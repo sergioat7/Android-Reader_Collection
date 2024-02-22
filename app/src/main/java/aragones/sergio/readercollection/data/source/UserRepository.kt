@@ -16,7 +16,7 @@ import aragones.sergio.readercollection.models.AuthData
 import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.network.interfaces.UserApiService
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
