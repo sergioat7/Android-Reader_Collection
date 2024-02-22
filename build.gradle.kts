@@ -10,6 +10,7 @@ plugins {
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.androidLibrary) apply false
 }
 
 tasks.register("clean", Delete::class) {
