@@ -128,6 +128,7 @@ class BookListFragment :
                 booksAdapter.setDragging(true)
                 true
             }
+
             R.id.action_disable_drag -> {
 
                 menu.findItem(R.id.action_enable_drag).isVisible = true
@@ -135,6 +136,7 @@ class BookListFragment :
                 booksAdapter.setDragging(false)
                 true
             }
+
             R.id.action_sort -> {
 
                 viewModel.sort(requireContext()) {
@@ -143,6 +145,7 @@ class BookListFragment :
                 }
                 true
             }
+
             else -> false
         }
     }

@@ -58,8 +58,8 @@ class LoginViewModel @Inject constructor(
             userRepository.storeLoginData(userData, authData)
 //            booksRepository.loadBooks(success = {
 
-                _loginLoading.value = false
-                _loginError.value = null
+            _loginLoading.value = false
+            _loginError.value = null
 //            }, failure = {
 //
 //                _loginLoading.value = false

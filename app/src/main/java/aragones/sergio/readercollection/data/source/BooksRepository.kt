@@ -40,11 +40,11 @@ class BooksRepository @Inject constructor(
     private val moshiAdapter = Moshi.Builder()
         .add(MoshiDateAdapter("MMM dd, yyyy"))
         .build().adapter<List<BookResponse?>?>(
-        Types.newParameterizedType(
-            List::class.java,
-            BookResponse::class.java
+            Types.newParameterizedType(
+                List::class.java,
+                BookResponse::class.java
+            )
         )
-    )
     //endregion
 
     //region Public methods

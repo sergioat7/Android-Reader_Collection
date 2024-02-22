@@ -68,11 +68,11 @@ class StatisticsViewModel @Inject constructor(
         booksByFormatStats
     ) { booksByYearStats, booksByMonthStats, booksByAuthorStats, longerBook, shorterBook, booksByFormatStats ->
         booksByYearStats?.isEmpty() == true &&
-                booksByMonthStats?.isEmpty() == true &&
-                booksByAuthorStats?.isEmpty() == true &&
-                longerBook == null &&
-                shorterBook == null &&
-                booksByFormatStats?.isEmpty() == true
+            booksByMonthStats?.isEmpty() == true &&
+            booksByAuthorStats?.isEmpty() == true &&
+            longerBook == null &&
+            shorterBook == null &&
+            booksByFormatStats?.isEmpty() == true
     }
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
