@@ -9,9 +9,9 @@ import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
-import aragones.sergio.readercollection.extensions.toString
 import aragones.sergio.readercollection.models.base.BaseModel
-import aragones.sergio.readercollection.utils.State
+import com.aragones.sergio.util.State
+import com.aragones.sergio.util.extensions.toString
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.Date

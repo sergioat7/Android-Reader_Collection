@@ -17,7 +17,7 @@
             />
 
         <import
-            type="aragones.sergio.readercollection.utils.Constants"
+            type="com.aragones.sergio.util.Constants"
             />
 
         <variable

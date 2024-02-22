@@ -16,8 +16,7 @@ import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
 import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.State
+import com.aragones.sergio.util.Constants
 import java.util.*
 
 class BooksAdapter(
@@ -109,7 +108,8 @@ class BooksAdapter(
             is BooksViewHolder -> {
 
                 val isFirst = position == 0 || !isSwitchingEnabled
-                val isLast = position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1 || !isSwitchingEnabled
+                val isLast =
+                    position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1 || !isSwitchingEnabled
                 holder.bind(
                     books[position],
                     isGoogleBook,

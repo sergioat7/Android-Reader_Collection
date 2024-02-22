@@ -3,13 +3,13 @@
  * Created by Sergio Aragonés on 2/1/2022
  */
 
-package aragones.sergio.readercollection.extensions
+package com.aragones.sergio.util.extensions
 
-import android.util.Log
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.util.Constants
 import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 
 fun <T> String?.toList(): List<T> {
 
@@ -40,12 +40,9 @@ fun String?.toDate(
         return try {
             simpleDateFormat.parse(it)
         } catch (e: Exception) {
-
-            Log.e("StringExtensions", e.message ?: "")
             null
         }
     } ?: run {
-        Log.e("StringExtensions", "dateString null")
         return null
     }
 }

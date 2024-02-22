@@ -88,7 +88,9 @@ android {
 
 dependencies {
 
+    implementation(project(":core:util"))
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.constraintlayout)

@@ -15,7 +15,7 @@ import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.MoshiDateAdapter
 import aragones.sergio.readercollection.network.interfaces.BookApiService
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
