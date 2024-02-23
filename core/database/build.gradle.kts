@@ -6,6 +6,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -36,7 +37,22 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
+    kapt {
+        correctErrorTypes = true
+    }
 }
 
 dependencies {
+
+    implementation(project(":core:util"))
+    implementation(project(":data"))
+
+    implementation(libs.moshi)
+
+    implementation(libs.room.runtime)
+    implementation(libs.room.rxjava)
+    kapt(libs.room.compiler)
+
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 }

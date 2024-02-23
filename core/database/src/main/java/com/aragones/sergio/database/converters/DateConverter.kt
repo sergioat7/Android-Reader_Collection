@@ -3,16 +3,16 @@
  * Created by Sergio Aragonés on 5/1/2021
  */
 
-package aragones.sergio.readercollection.database
+package com.aragones.sergio.database.converters
 
 import androidx.room.TypeConverter
-import java.util.*
+import java.util.Date
 
 class DateConverter {
 
     @TypeConverter
     fun toDate(dateLong: Long?): Date? {
-        return if(dateLong == null) null else Date(dateLong)
+        return if (dateLong == null) null else Date(dateLong)
     }
 
     @TypeConverter

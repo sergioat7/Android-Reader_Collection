@@ -122,5 +122,4 @@ androidLibrary = { id = "com.android.library", version.ref = "agp" }
 navigation = ["navigation-fragment-ktx", "navigation-ui-ktx", "navigation-dynamic-features-fragment"]
 retrofit = ["retrofit", "retrofit-adapter-rxjava", "okhttp3-logging-interceptor", "retrofit-converter-moshi"]
 rx = ["rxjava", "rxkotlin", "rxandroid"]
-room = ["room-runtime", "room-rxjava", "room-rxjava3-bridge"]
 firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-config"]

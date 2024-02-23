@@ -3,20 +3,23 @@
  * Created by Sergio Aragonés on 5/1/2021
  */
 
-package aragones.sergio.readercollection.database
+package com.aragones.sergio.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import aragones.sergio.readercollection.database.daos.BookDao
 import com.aragones.sergio.data.BaseModel
 import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.database.daos.BookDao
 
 @Database(
     entities = [BookResponse::class],
     version = 3
 )
-@TypeConverters(ListConverter::class, DateConverter::class)
+@TypeConverters(
+    com.aragones.sergio.database.converters.ListConverter::class,
+    com.aragones.sergio.database.converters.DateConverter::class
+)
 abstract class ReaderCollectionDatabase : RoomDatabase() {
 
     //region Public properties
