@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.database.daos
+package com.aragones.sergio.database.daos
 
 import androidx.room.Dao
 import androidx.room.Delete

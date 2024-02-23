@@ -117,7 +117,7 @@
             NewLineAtEndOfFile:BookApiService.kt$aragones.sergio.readercollection.network.interfaces.BookApiService.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookDao.kt$aragones.sergio.readercollection.database.daos.BookDao.kt
+            NewLineAtEndOfFile:BookDao.kt$com.aragones.sergio.database.daos.BookDao.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BookDetailFragment.kt$aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment.kt
@@ -162,10 +162,10 @@
             NewLineAtEndOfFile:CustomTextInputLayoutExtensions.kt$aragones.sergio.readercollection.extensions.CustomTextInputLayoutExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:DatabaseModule.kt$aragones.sergio.readercollection.database.di.DatabaseModule.kt
+            NewLineAtEndOfFile:DatabaseModule.kt$com.aragones.sergio.database.di.DatabaseModule.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:DateConverter.kt$aragones.sergio.readercollection.database.DateConverter.kt
+            NewLineAtEndOfFile:DateConverter.kt$com.aragones.sergio.database.converters.DateConverter.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:DateExtensions.kt$aragones.sergio.readercollection.extensions.DateExtensions.kt
@@ -216,7 +216,7 @@
             NewLineAtEndOfFile:LandingViewModel.kt$aragones.sergio.readercollection.ui.landing.LandingViewModel.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ListConverter.kt$aragones.sergio.readercollection.database.ListConverter.kt
+            NewLineAtEndOfFile:ListConverter.kt$com.aragones.sergio.database.converters.ListConverter.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LiveDataExtensions.kt$aragones.sergio.readercollection.extensions.LiveDataExtensions.kt
@@ -275,7 +275,7 @@
             NewLineAtEndOfFile:ReaderCollectionApplication.kt$aragones.sergio.readercollection.ReaderCollectionApplication.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ReaderCollectionDatabase.kt$aragones.sergio.readercollection.database.ReaderCollectionDatabase.kt
+            NewLineAtEndOfFile:ReaderCollectionDatabase.kt$com.aragones.sergio.database.ReaderCollectionDatabase.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:RegisterActivity.kt$aragones.sergio.readercollection.ui.register.RegisterActivity.kt
