@@ -13,7 +13,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.BindingAdapter
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
-import aragones.sergio.readercollection.utils.CustomInputType
+import com.aragones.sergio.util.CustomInputType
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.squareup.picasso.Callback

@@ -8,8 +8,8 @@ package aragones.sergio.readercollection.ui.modals.syncapp
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.data.source.BooksRepository
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.base.BaseViewModel
+import com.aragones.sergio.data.business.ErrorResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

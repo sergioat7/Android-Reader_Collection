@@ -28,8 +28,8 @@ import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
-import aragones.sergio.readercollection.utils.ScrollPosition
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.util.ScrollPosition
+import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import dagger.hilt.android.AndroidEntryPoint

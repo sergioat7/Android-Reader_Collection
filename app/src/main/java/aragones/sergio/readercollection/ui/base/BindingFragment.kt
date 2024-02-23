@@ -32,10 +32,10 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.setStatusBarStyle
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.modals.loading.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.ui.modals.syncapp.PopupSyncAppDialogFragment
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.data.business.ErrorResponse
+import com.aragones.sergio.util.StatusBarStyle
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import java.io.Serializable
 import java.lang.reflect.ParameterizedType
