@@ -99,12 +99,16 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
                 textInputLayoutConfirmPassword.setError("")
 
                 if (registerState.usernameError != null) {
-                    textInputLayoutUsername.setError(getString(registerState.usernameError))
+                    textInputLayoutUsername.setError(getString(registerState.usernameError ?: 0))
                 }
                 if (registerState.passwordError != null) {
 
-                    textInputLayoutPassword.setError(getString(registerState.passwordError))
-                    textInputLayoutConfirmPassword.setError(getString(registerState.passwordError))
+                    textInputLayoutPassword.setError(getString(registerState.passwordError ?: 0))
+                    textInputLayoutConfirmPassword.setError(
+                        getString(
+                            registerState.passwordError ?: 0
+                        )
+                    )
                 }
             }
         }

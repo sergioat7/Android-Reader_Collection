@@ -16,8 +16,8 @@ import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.InAppUpdateService
-import com.aragones.sergio.data.FormatResponse
-import com.aragones.sergio.data.StateResponse
+import com.aragones.sergio.data.business.FormatResponse
+import com.aragones.sergio.data.business.StateResponse
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.firebase.ktx.Firebase

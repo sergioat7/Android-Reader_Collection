@@ -10,11 +10,11 @@ import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.UserRepository
-import aragones.sergio.readercollection.models.AuthData
-import aragones.sergio.readercollection.models.LoginFormState
-import aragones.sergio.readercollection.models.UserData
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import com.aragones.sergio.data.ErrorResponse
+import com.aragones.sergio.data.auth.AuthData
+import com.aragones.sergio.data.auth.LoginFormState
+import com.aragones.sergio.data.auth.UserData
+import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

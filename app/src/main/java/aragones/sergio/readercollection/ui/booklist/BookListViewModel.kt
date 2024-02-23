@@ -13,8 +13,8 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.UserRepository
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import com.aragones.sergio.data.BookResponse
-import com.aragones.sergio.data.ErrorResponse
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.extensions.getMonthNumber

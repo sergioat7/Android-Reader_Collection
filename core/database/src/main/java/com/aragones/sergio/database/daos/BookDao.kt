@@ -13,7 +13,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.data.business.BookResponse
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single

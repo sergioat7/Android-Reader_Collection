@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 23/2/2024
  */
 
-package com.aragones.sergio.data
+package com.aragones.sergio.data.business
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

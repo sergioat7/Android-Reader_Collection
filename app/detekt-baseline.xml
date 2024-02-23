@@ -94,12 +94,12 @@
         <ID>
             NewLineAtEndOfFile:ApiManager.kt$aragones.sergio.readercollection.network.ApiManager.kt
         </ID>
-        <ID>NewLineAtEndOfFile:AuthData.kt$aragones.sergio.readercollection.models.AuthData.kt</ID>
+        <ID>NewLineAtEndOfFile:AuthData.kt$com.aragones.sergio.data.auth.AuthData.kt</ID>
         <ID>
             NewLineAtEndOfFile:BaseActivity.kt$aragones.sergio.readercollection.ui.base.BaseActivity.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BaseModel.kt$com.aragones.sergio.data.BaseModel.kt
+            NewLineAtEndOfFile:BaseModel.kt$com.aragones.sergio.data.business.BaseModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BaseRepository.kt$aragones.sergio.readercollection.data.source.base.BaseRepository.kt
@@ -132,7 +132,7 @@
             NewLineAtEndOfFile:BookListViewModel.kt$aragones.sergio.readercollection.ui.booklist.BookListViewModel.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookResponse.kt$com.aragones.sergio.data.BookResponse.kt
+            NewLineAtEndOfFile:BookResponse.kt$com.aragones.sergio.data.business.BookResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BooksAdapter.kt$aragones.sergio.readercollection.ui.books.BooksAdapter.kt
@@ -171,37 +171,37 @@
             NewLineAtEndOfFile:DateExtensions.kt$aragones.sergio.readercollection.extensions.DateExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ErrorResponse.kt$com.aragones.sergio.data.ErrorResponse.kt
+            NewLineAtEndOfFile:ErrorResponse.kt$com.aragones.sergio.data.business.ErrorResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ExampleUnitTest.kt$aragones.sergio.readercollection.ExampleUnitTest.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:FavouriteBook.kt$com.aragones.sergio.data.FavouriteBook.kt
+            NewLineAtEndOfFile:FavouriteBook.kt$com.aragones.sergio.data.business.FavouriteBook.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:FormatResponse.kt$com.aragones.sergio.data.FormatResponse.kt
+            NewLineAtEndOfFile:FormatResponse.kt$com.aragones.sergio.data.business.FormatResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:GoogleApiService.kt$aragones.sergio.readercollection.network.interfaces.GoogleApiService.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleBookListResponse.kt$com.aragones.sergio.data.GoogleBookListResponse.kt
+            NewLineAtEndOfFile:GoogleBookListResponse.kt$com.aragones.sergio.data.business.GoogleBookListResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:GoogleBookRepository.kt$aragones.sergio.readercollection.data.source.GoogleBookRepository.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleBookResponse.kt$com.aragones.sergio.data.GoogleBookResponse.kt
+            NewLineAtEndOfFile:GoogleBookResponse.kt$com.aragones.sergio.data.business.GoogleBookResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleImageLinksResponse.kt$com.aragones.sergio.data.GoogleImageLinksResponse.kt
+            NewLineAtEndOfFile:GoogleImageLinksResponse.kt$com.aragones.sergio.data.business.GoogleImageLinksResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleIsbnResponse.kt$com.aragones.sergio.data.GoogleIsbnResponse.kt
+            NewLineAtEndOfFile:GoogleIsbnResponse.kt$com.aragones.sergio.data.business.GoogleIsbnResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleVolumeResponse.kt$com.aragones.sergio.data.GoogleVolumeResponse.kt
+            NewLineAtEndOfFile:GoogleVolumeResponse.kt$com.aragones.sergio.data.business.GoogleVolumeResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ImageViewExtensions.kt$aragones.sergio.readercollection.extensions.ImageViewExtensions.kt
@@ -228,16 +228,16 @@
             NewLineAtEndOfFile:LoginActivity.kt$aragones.sergio.readercollection.ui.login.LoginActivity.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginCredentials.kt$aragones.sergio.readercollection.models.LoginCredentials.kt
+            NewLineAtEndOfFile:LoginCredentials.kt$com.aragones.sergio.data.auth.LoginCredentials.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginFormState.kt$aragones.sergio.readercollection.models.LoginFormState.kt
+            NewLineAtEndOfFile:LoginFormState.kt$com.aragones.sergio.data.auth.LoginFormState.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LoginFragment.kt$aragones.sergio.readercollection.ui.login.LoginFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginResponse.kt$aragones.sergio.readercollection.models.LoginResponse.kt
+            NewLineAtEndOfFile:LoginResponse.kt$com.aragones.sergio.data.auth.LoginResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LoginViewModel.kt$aragones.sergio.readercollection.ui.login.LoginViewModel.kt
@@ -254,7 +254,7 @@
             NewLineAtEndOfFile:NetworkModule.kt$aragones.sergio.readercollection.network.di.NetworkModule.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:NewPassword.kt$aragones.sergio.readercollection.models.NewPassword.kt
+            NewLineAtEndOfFile:NewPassword.kt$com.aragones.sergio.data.auth.NewPassword.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:NumberPickerExtensions.kt$aragones.sergio.readercollection.extensions.NumberPickerExtensions.kt
@@ -311,7 +311,7 @@
             NewLineAtEndOfFile:ShowAllItemsViewHolder.kt$aragones.sergio.readercollection.ui.books.ShowAllItemsViewHolder.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:StateResponse.kt$com.aragones.sergio.data.StateResponse.kt
+            NewLineAtEndOfFile:StateResponse.kt$com.aragones.sergio.data.business.StateResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StatisticsFragment.kt$aragones.sergio.readercollection.ui.statistics.StatisticsFragment.kt
@@ -328,7 +328,7 @@
         <ID>
             NewLineAtEndOfFile:UserApiService.kt$aragones.sergio.readercollection.network.interfaces.UserApiService.kt
         </ID>
-        <ID>NewLineAtEndOfFile:UserData.kt$aragones.sergio.readercollection.models.UserData.kt</ID>
+        <ID>NewLineAtEndOfFile:UserData.kt$com.aragones.sergio.data.auth.UserData.kt</ID>
         <ID>
             NewLineAtEndOfFile:UserRepository.kt$aragones.sergio.readercollection.data.source.UserRepository.kt
         </ID>

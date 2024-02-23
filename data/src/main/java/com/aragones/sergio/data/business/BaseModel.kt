@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 17/10/2020
  */
 
-package com.aragones.sergio.data
+package com.aragones.sergio.data.business
 
 interface BaseModel<T> {
     val id: T
