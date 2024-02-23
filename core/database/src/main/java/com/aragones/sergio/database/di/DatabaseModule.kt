@@ -3,13 +3,13 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.database.di
+package com.aragones.sergio.database.di
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import aragones.sergio.readercollection.database.ReaderCollectionDatabase
+import com.aragones.sergio.database.ReaderCollectionDatabase
 import com.aragones.sergio.util.Constants
 import dagger.Module
 import dagger.Provides

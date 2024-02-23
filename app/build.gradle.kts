@@ -88,6 +88,7 @@ android {
 
 dependencies {
 
+    implementation(project(":core:database"))
     implementation(project(":core:util"))
     implementation(project(":data"))
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
@@ -108,8 +109,9 @@ dependencies {
     implementation(libs.bundles.rx)
     implementation(libs.picasso)
     implementation(libs.materialratingbar)
-    implementation(libs.bundles.room)
-    kapt(libs.room.compiler)
+    implementation(libs.room.runtime)
+    implementation(libs.room.rxjava)
+    implementation(libs.room.rxjava3.bridge)
     implementation(platform(libs.firebase.bom))
     implementation(libs.bundles.firebase)
     implementation(libs.security.crypto)

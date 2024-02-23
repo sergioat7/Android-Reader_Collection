@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 6/1/2021
  */
 
-package aragones.sergio.readercollection.database
+package com.aragones.sergio.database.converters
 
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
