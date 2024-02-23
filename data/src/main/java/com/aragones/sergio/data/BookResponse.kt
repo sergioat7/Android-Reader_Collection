@@ -3,15 +3,12 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.models
+package com.aragones.sergio.data
 
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
-import aragones.sergio.readercollection.models.base.BaseModel
 import com.aragones.sergio.util.State
-import com.aragones.sergio.util.extensions.toString
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.Date
@@ -116,22 +113,6 @@ data class BookResponse(
 
     fun authorsToString(): String {
         return authors?.joinToString(separator = ", ") ?: ""
-    }
-
-    fun publishedDateAsHumanReadable(): String? {
-
-        return publishedDate.toString(
-            SharedPreferencesHandler.dateFormatToShow,
-            SharedPreferencesHandler.language
-        )
-    }
-
-    fun readingDateAsHumanReadable(): String? {
-
-        return readingDate.toString(
-            SharedPreferencesHandler.dateFormatToShow,
-            SharedPreferencesHandler.language
-        )
     }
 
     fun isPending(): Boolean {
