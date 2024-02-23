@@ -9,7 +9,7 @@ import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
-import com.aragones.sergio.data.ErrorResponse
+import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -104,17 +104,20 @@ object ApiManager {
                     )
                 }
             }
+
             code == 302 -> {
                 RequestResult.Failure(
                     ErrorResponse(Constants.EMPTY_VALUE, R.string.error_resource_found)
                 )
             }
+
             code < 500 && error != null -> {
                 RequestResult.Failure(
                     moshi.adapter(ErrorResponse::class.java).fromJson(error.charStream().toString())
                         ?: ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)
                 )
             }
+
             else -> {
                 RequestResult.Failure(
                     ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server)

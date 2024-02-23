@@ -1,52 +1,42 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 9/11/2020
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import
-            type="android.view.View"
-            />
+        <import type="android.view.View" />
 
         <variable
             name="book"
-            type="com.aragones.sergio.data.BookResponse" />
+            type="com.aragones.sergio.data.business.BookResponse" />
 
         <variable
             name="onItemClickListener"
-            type="aragones.sergio.readercollection.interfaces.OnItemClickListener"
-            />
+            type="aragones.sergio.readercollection.interfaces.OnItemClickListener" />
 
         <variable
             name="isGoogleBook"
-            type="Boolean"
-            />
+            type="Boolean" />
 
         <variable
             name="isDarkMode"
-            type="Boolean"
-            />
+            type="Boolean" />
 
         <variable
             name="isDraggingEnable"
-            type="Boolean"
-            />
+            type="Boolean" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_220dp"
-        android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}"
-        >
+        android:onClick="@{() -> onItemClickListener.onItemClick(book.id)}">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
@@ -59,8 +49,7 @@
             app:layout_constraintBottom_toTopOf="@+id/view_separator_google_book"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
                 android:id="@+id/image_view_dragging"
@@ -72,7 +61,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
             <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
                 android:id="@+id/image_view_google_book"
@@ -84,8 +73,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 src="@{book.thumbnail}"
                 placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_white : @drawable/ic_default_book_cover_blue}"
-                radius="@{@dimen/radius_2dp}"
-                />
+                radius="@{@dimen/radius_2dp}" />
 
             <TextView
                 android:id="@+id/text_view_google_book_title"
@@ -97,8 +85,7 @@
                 app:layout_constraintStart_toEndOf="@+id/image_view_google_book"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Harry Potter y la Piedra Filosofal"
-                style="@style/Widget.ReaderCollection.TextView.Title.Book"
-                />
+                style="@style/Widget.ReaderCollection.TextView.Title.Book" />
 
             <TextView
                 android:id="@+id/text_view_google_book_author"
@@ -113,16 +100,14 @@
                 app:layout_constraintTop_toBottomOf="@+id/text_view_google_book_title"
                 app:layout_constraintVertical_bias="0.0"
                 tools:text="J.K.Rowling"
-                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook"
-                />
+                style="@style/Widget.ReaderCollection.TextView.Subtitle.GoogleBook" />
 
             <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/barrier_rating"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="top"
-                app:constraint_referenced_ids="rating_bar_google_book, text_view_google_book_new"
-                />
+                app:constraint_referenced_ids="rating_bar_google_book, text_view_google_book_new" />
 
             <me.zhanghai.android.materialratingbar.MaterialRatingBar
                 android:id="@+id/rating_bar_google_book"
@@ -134,8 +119,7 @@
                 app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
                 tools:rating="3"
                 rating="@{(isGoogleBook ? book.averageRating : book.rating) / 2}"
-                style="@style/Widget.ReaderCollection.RatingBar"
-                />
+                style="@style/Widget.ReaderCollection.RatingBar" />
 
             <TextView
                 android:id="@+id/text_view_google_book_rating"
@@ -147,8 +131,7 @@
                 app:layout_constraintStart_toEndOf="@+id/rating_bar_google_book"
                 app:layout_constraintTop_toTopOf="@+id/rating_bar_google_book"
                 tools:text="6"
-                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Section"
-                />
+                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Section" />
 
             <TextView
                 android:id="@+id/text_view_google_book_new"
@@ -160,8 +143,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/text_view_google_book_title"
                 app:layout_constraintStart_toStartOf="@+id/text_view_google_book_title"
                 tools:visibility="gone"
-                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main"
-                />
+                style="@style/Widget.ReaderCollection.TextView.TitleSpecial.Main" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -175,8 +157,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/constraint_layout"
             app:layout_constraintStart_toStartOf="@+id/constraint_layout"
-            app:layout_constraintTop_toBottomOf="@+id/constraint_layout"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/constraint_layout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
