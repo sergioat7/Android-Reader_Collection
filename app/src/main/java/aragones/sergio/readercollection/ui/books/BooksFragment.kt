@@ -22,11 +22,12 @@ import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
-import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.State
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import aragones.sergio.readercollection.utils.Constants.createTargetForBottomNavigationView
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.util.Constants
+import com.aragones.sergio.util.State
+import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import dagger.hilt.android.AndroidEntryPoint
@@ -203,7 +204,8 @@ class BooksFragment :
             setSwitching(viewModel.query.isEmpty())
         }
         booksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }?.toMutableList()
+            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }
+                ?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,
@@ -306,25 +308,25 @@ class BooksFragment :
 
     private fun createTargetsForBottomNavigationView(): List<TapTarget> {
         return listOf(
-            Constants.createTargetForBottomNavigationView(
+            createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_books,
                 resources.getString(R.string.books_view_tutorial_title),
                 resources.getString(R.string.books_view_tutorial_description)
             ).style(requireContext()).cancelable(true).tintTarget(true),
-            Constants.createTargetForBottomNavigationView(
+            createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_search,
                 resources.getString(R.string.search_view_tutorial_title),
                 resources.getString(R.string.search_view_tutorial_description)
             ).style(requireContext()).cancelable(true).tintTarget(true),
-            Constants.createTargetForBottomNavigationView(
+            createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_stats,
                 resources.getString(R.string.stats_view_tutorial_title),
                 resources.getString(R.string.stats_view_tutorial_description)
             ).style(requireContext()).cancelable(true).tintTarget(true),
-            Constants.createTargetForBottomNavigationView(
+            createTargetForBottomNavigationView(
                 activity,
                 R.id.nav_graph_settings,
                 resources.getString(R.string.settings_view_tutorial_title),

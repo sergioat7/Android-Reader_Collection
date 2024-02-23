@@ -5,11 +5,11 @@
 
 package aragones.sergio.readercollection.data.source
 
-import aragones.sergio.readercollection.models.GoogleBookListResponse
-import aragones.sergio.readercollection.models.GoogleBookResponse
+import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.interfaces.GoogleApiService
-import aragones.sergio.readercollection.data.source.base.BaseRepository
+import com.aragones.sergio.data.business.GoogleBookListResponse
+import com.aragones.sergio.data.business.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 

@@ -15,7 +15,7 @@ import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.register.RegisterActivity
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.util.StatusBarStyle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -90,10 +90,10 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             val loginState = it ?: return@observe
 
             if (loginState.usernameError != null) {
-                binding.textInputLayoutUsername.setError(getString(loginState.usernameError))
+                binding.textInputLayoutUsername.setError(getString(loginState.usernameError ?: 0))
             }
             if (loginState.passwordError != null) {
-                binding.textInputLayoutPassword.setError(getString(loginState.passwordError))
+                binding.textInputLayoutPassword.setError(getString(loginState.passwordError ?: 0))
             }
         }
 

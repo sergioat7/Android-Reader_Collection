@@ -18,7 +18,7 @@ import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
-import aragones.sergio.readercollection.models.BookResponse
+import com.aragones.sergio.data.business.BookResponse
 import kotlin.math.ceil
 
 class BooksViewHolder(private val binding: ViewDataBinding) :
@@ -93,6 +93,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     )
                 )
             }
+
             is ItemBookBinding -> {
                 binding.constraintLayout.setBackgroundColor(
                     ContextCompat.getColor(
@@ -101,6 +102,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                     )
                 )
             }
+
             else -> Unit
         }
     }

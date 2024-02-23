@@ -10,15 +10,16 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.BooksRepository
+import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.source.UserRepository
 import aragones.sergio.readercollection.extensions.combineWith
-import aragones.sergio.readercollection.extensions.getGroupedBy
-import aragones.sergio.readercollection.extensions.getOrderedBy
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.State
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.data.business.ErrorResponse
+import com.aragones.sergio.util.State
+import com.aragones.sergio.util.extensions.getGroupedBy
+import com.aragones.sergio.util.extensions.getOrderedBy
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -67,11 +68,11 @@ class StatisticsViewModel @Inject constructor(
         booksByFormatStats
     ) { booksByYearStats, booksByMonthStats, booksByAuthorStats, longerBook, shorterBook, booksByFormatStats ->
         booksByYearStats?.isEmpty() == true &&
-                booksByMonthStats?.isEmpty() == true &&
-                booksByAuthorStats?.isEmpty() == true &&
-                longerBook == null &&
-                shorterBook == null &&
-                booksByFormatStats?.isEmpty() == true
+            booksByMonthStats?.isEmpty() == true &&
+            booksByAuthorStats?.isEmpty() == true &&
+            longerBook == null &&
+            shorterBook == null &&
+            booksByFormatStats?.isEmpty() == true
     }
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
@@ -166,7 +167,7 @@ class StatisticsViewModel @Inject constructor(
         val booksByYear = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.YEAR)
-            .getGroupedBy("yyyy")
+            .getGroupedBy("yyyy", SharedPreferencesHandler.language)
 
         val entries = mutableListOf<BarEntry>()
         for (entry in booksByYear.entries) {
@@ -185,7 +186,7 @@ class StatisticsViewModel @Inject constructor(
         val booksByMonth = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.MONTH)
-            .getGroupedBy("MMM")
+            .getGroupedBy("MMM", SharedPreferencesHandler.language)
 
         val entries = mutableListOf<PieEntry>()
         for (entry in booksByMonth.entries) {
