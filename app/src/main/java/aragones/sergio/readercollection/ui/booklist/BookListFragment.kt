@@ -23,12 +23,12 @@ import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
-import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
-import aragones.sergio.readercollection.utils.ScrollPosition
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.util.ScrollPosition
+import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -128,6 +128,7 @@ class BookListFragment :
                 booksAdapter.setDragging(true)
                 true
             }
+
             R.id.action_disable_drag -> {
 
                 menu.findItem(R.id.action_enable_drag).isVisible = true
@@ -135,6 +136,7 @@ class BookListFragment :
                 booksAdapter.setDragging(false)
                 true
             }
+
             R.id.action_sort -> {
 
                 viewModel.sort(requireContext()) {
@@ -143,6 +145,7 @@ class BookListFragment :
                 }
                 true
             }
+
             else -> false
         }
     }

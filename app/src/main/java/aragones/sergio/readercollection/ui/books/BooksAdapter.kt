@@ -15,9 +15,8 @@ import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.State
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.util.Constants
 import java.util.*
 
 class BooksAdapter(
@@ -60,6 +59,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             R.layout.item_vertical_book -> {
                 BooksViewHolder(
                     ItemVerticalBookBinding.inflate(
@@ -69,6 +69,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             R.layout.item_book -> {
                 BooksViewHolder(
                     ItemBookBinding.inflate(
@@ -78,6 +79,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             R.layout.item_show_all_items -> {
                 ShowAllItemsViewHolder(
                     ItemShowAllItemsBinding.inflate(
@@ -87,6 +89,7 @@ class BooksAdapter(
                     )
                 )
             }
+
             else -> {
                 LoadMoreItemsViewHolder(
                     ItemLoadMoreItemsBinding.inflate(
@@ -109,7 +112,8 @@ class BooksAdapter(
             is BooksViewHolder -> {
 
                 val isFirst = position == 0 || !isSwitchingEnabled
-                val isLast = position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1 || !isSwitchingEnabled
+                val isLast =
+                    position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1 || !isSwitchingEnabled
                 holder.bind(
                     books[position],
                     isGoogleBook,
@@ -121,6 +125,7 @@ class BooksAdapter(
                     this
                 )
             }
+
             is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
             else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
         }

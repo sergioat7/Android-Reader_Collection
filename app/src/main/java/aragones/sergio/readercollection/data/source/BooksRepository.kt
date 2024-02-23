@@ -9,13 +9,13 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.source.di.MainDispatcher
-import aragones.sergio.readercollection.database.ReaderCollectionDatabase
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.MoshiDateAdapter
 import aragones.sergio.readercollection.network.interfaces.BookApiService
-import aragones.sergio.readercollection.utils.Constants
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.data.business.ErrorResponse
+import com.aragones.sergio.database.ReaderCollectionDatabase
+import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -40,11 +40,11 @@ class BooksRepository @Inject constructor(
     private val moshiAdapter = Moshi.Builder()
         .add(MoshiDateAdapter("MMM dd, yyyy"))
         .build().adapter<List<BookResponse?>?>(
-        Types.newParameterizedType(
-            List::class.java,
-            BookResponse::class.java
+            Types.newParameterizedType(
+                List::class.java,
+                BookResponse::class.java
+            )
         )
-    )
     //endregion
 
     //region Public methods

@@ -7,10 +7,10 @@ package aragones.sergio.readercollection.extensions
 
 import androidx.core.view.doOnLayout
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.adapters.MenuAdapter
 import aragones.sergio.readercollection.databinding.CustomDropdownTextInputLayoutBinding
+import aragones.sergio.readercollection.ui.adapters.MenuAdapter
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.CustomDropdownType
+import com.aragones.sergio.util.CustomDropdownType
 
 fun CustomDropdownTextInputLayoutBinding.setHintStyle(id: Int) {
     textInputLayout.doOnLayout {
@@ -35,8 +35,10 @@ fun CustomDropdownTextInputLayoutBinding.setValue(currentKey: String?, type: Cus
         CustomDropdownType.STATE -> Constants.STATES.map { it.name }
         CustomDropdownType.SORT_PARAM -> root.context.resources.getStringArray(R.array.sorting_param_values)
             .toList()
+
         CustomDropdownType.SORT_ORDER -> root.context.resources.getStringArray(R.array.sorting_order_values)
             .toList()
+
         CustomDropdownType.APP_THEME -> root.context.resources.getStringArray(R.array.app_theme_values)
             .toList()
     }
@@ -51,8 +53,10 @@ fun CustomDropdownTextInputLayoutBinding.setValue(currentKey: String?, type: Cus
             CustomDropdownType.STATE -> Constants.STATES.map { it.id }
             CustomDropdownType.SORT_PARAM -> root.context.resources.getStringArray(R.array.sorting_param_keys)
                 .toList()
+
             CustomDropdownType.SORT_ORDER -> root.context.resources.getStringArray(R.array.sorting_order_keys)
                 .toList()
+
             CustomDropdownType.APP_THEME -> root.context.resources.getStringArray(R.array.app_theme_values)
                 .toList()
         }

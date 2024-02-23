@@ -16,7 +16,7 @@ import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
 import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BindingFragment
-import aragones.sergio.readercollection.utils.StatusBarStyle
+import com.aragones.sergio.util.StatusBarStyle
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -99,12 +99,16 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
                 textInputLayoutConfirmPassword.setError("")
 
                 if (registerState.usernameError != null) {
-                    textInputLayoutUsername.setError(getString(registerState.usernameError))
+                    textInputLayoutUsername.setError(getString(registerState.usernameError ?: 0))
                 }
                 if (registerState.passwordError != null) {
 
-                    textInputLayoutPassword.setError(getString(registerState.passwordError))
-                    textInputLayoutConfirmPassword.setError(getString(registerState.passwordError))
+                    textInputLayoutPassword.setError(getString(registerState.passwordError ?: 0))
+                    textInputLayoutConfirmPassword.setError(
+                        getString(
+                            registerState.passwordError ?: 0
+                        )
+                    )
                 }
             }
         }

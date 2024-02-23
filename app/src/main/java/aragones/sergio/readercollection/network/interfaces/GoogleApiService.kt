@@ -5,8 +5,8 @@
 
 package aragones.sergio.readercollection.network.interfaces
 
-import aragones.sergio.readercollection.models.GoogleBookListResponse
-import aragones.sergio.readercollection.models.GoogleBookResponse
+import com.aragones.sergio.data.business.GoogleBookListResponse
+import com.aragones.sergio.data.business.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.*
 

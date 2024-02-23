@@ -11,12 +11,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.UserRepository
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.utils.State
+import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.data.business.ErrorResponse
+import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
