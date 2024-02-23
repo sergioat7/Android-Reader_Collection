@@ -5,9 +5,15 @@
 
 package aragones.sergio.readercollection.database.daos
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.RawQuery
+import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
-import aragones.sergio.readercollection.models.BookResponse
+import com.aragones.sergio.data.BookResponse
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single

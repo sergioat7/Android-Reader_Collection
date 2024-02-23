@@ -72,6 +72,7 @@ materialratingbar = { group = "me.zhanghai.android.materialratingbar", name = "l
 
 #Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+room-common = { group = "androidx.room", name = "room-common", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-rxjava = { group = "androidx.room", name = "room-rxjava2", version.ref = "room" }
 room-rxjava3-bridge = { group = "com.github.akarnokd", name = "rxjava3-bridge", version.ref = "room-rxjava3-bridge" }

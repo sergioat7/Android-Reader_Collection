@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.network
 
-import aragones.sergio.readercollection.models.ErrorResponse
+import com.aragones.sergio.data.ErrorResponse
 
 sealed class RequestResult<out T> {
     data object Success : RequestResult<Nothing>()

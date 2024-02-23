@@ -171,16 +171,16 @@
             NewLineAtEndOfFile:DateExtensions.kt$aragones.sergio.readercollection.extensions.DateExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ErrorResponse.kt$aragones.sergio.readercollection.models.ErrorResponse.kt
+            NewLineAtEndOfFile:ErrorResponse.kt$com.aragones.sergio.data.ErrorResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ExampleUnitTest.kt$aragones.sergio.readercollection.ExampleUnitTest.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:FavouriteBook.kt$aragones.sergio.readercollection.models.FavouriteBook.kt
+            NewLineAtEndOfFile:FavouriteBook.kt$com.aragones.sergio.data.FavouriteBook.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:FormatResponse.kt$aragones.sergio.readercollection.models.FormatResponse.kt
+            NewLineAtEndOfFile:FormatResponse.kt$com.aragones.sergio.data.FormatResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:GoogleApiService.kt$aragones.sergio.readercollection.network.interfaces.GoogleApiService.kt
@@ -311,7 +311,7 @@
             NewLineAtEndOfFile:ShowAllItemsViewHolder.kt$aragones.sergio.readercollection.ui.books.ShowAllItemsViewHolder.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:StateResponse.kt$aragones.sergio.readercollection.models.StateResponse.kt
+            NewLineAtEndOfFile:StateResponse.kt$com.aragones.sergio.data.StateResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StatisticsFragment.kt$aragones.sergio.readercollection.ui.statistics.StatisticsFragment.kt

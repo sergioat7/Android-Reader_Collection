@@ -22,9 +22,9 @@ import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
-import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.createTargetForBottomNavigationView
+import com.aragones.sergio.data.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.StatusBarStyle

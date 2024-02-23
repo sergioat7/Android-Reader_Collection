@@ -10,11 +10,11 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.source.di.MainDispatcher
 import aragones.sergio.readercollection.database.ReaderCollectionDatabase
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.ErrorResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.MoshiDateAdapter
 import aragones.sergio.readercollection.network.interfaces.BookApiService
+import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.data.ErrorResponse
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
