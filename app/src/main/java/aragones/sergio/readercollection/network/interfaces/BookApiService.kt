@@ -5,9 +5,9 @@
 
 package aragones.sergio.readercollection.network.interfaces
 
-import aragones.sergio.readercollection.models.FavouriteBook
-import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.network.ApiManager
+import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.data.FavouriteBook
 import retrofit2.Response
 import retrofit2.http.*
 

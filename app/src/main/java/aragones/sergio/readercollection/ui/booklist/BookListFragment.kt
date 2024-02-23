@@ -23,10 +23,10 @@ import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
-import aragones.sergio.readercollection.models.BookResponse
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
+import com.aragones.sergio.data.BookResponse
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget

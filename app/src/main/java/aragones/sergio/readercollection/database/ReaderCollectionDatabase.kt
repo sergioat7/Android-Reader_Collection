@@ -9,8 +9,8 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import aragones.sergio.readercollection.database.daos.BookDao
-import aragones.sergio.readercollection.models.BookResponse
-import aragones.sergio.readercollection.models.base.BaseModel
+import com.aragones.sergio.data.BaseModel
+import com.aragones.sergio.data.BookResponse
 
 @Database(
     entities = [BookResponse::class],

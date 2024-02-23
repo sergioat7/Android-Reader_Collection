@@ -18,8 +18,7 @@
 
         <variable
             name="book"
-            type="aragones.sergio.readercollection.models.BookResponse"
-            />
+            type="com.aragones.sergio.data.BookResponse" />
 
         <variable
             name="onItemClickListener"

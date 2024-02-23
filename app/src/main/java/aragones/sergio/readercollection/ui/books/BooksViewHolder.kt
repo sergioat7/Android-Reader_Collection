@@ -18,7 +18,7 @@ import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
-import aragones.sergio.readercollection.models.BookResponse
+import com.aragones.sergio.data.BookResponse
 import kotlin.math.ceil
 
 class BooksViewHolder(private val binding: ViewDataBinding) :

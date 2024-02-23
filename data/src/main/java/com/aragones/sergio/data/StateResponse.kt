@@ -3,13 +3,12 @@
  * Created by Sergio Aragonés on 16/1/2022
  */
 
-package aragones.sergio.readercollection.models
+package com.aragones.sergio.data
 
-import aragones.sergio.readercollection.models.base.BaseModel
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class FormatResponse(
+data class StateResponse(
     override val id: String,
     val name: String
 ) : BaseModel<String>

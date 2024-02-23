@@ -5,8 +5,8 @@
 
 package aragones.sergio.readercollection.data.source
 
-import aragones.sergio.readercollection.models.GoogleBookListResponse
-import aragones.sergio.readercollection.models.GoogleBookResponse
+import com.aragones.sergio.data.GoogleBookListResponse
+import com.aragones.sergio.data.GoogleBookResponse
 import aragones.sergio.readercollection.network.ApiManager
 import aragones.sergio.readercollection.network.interfaces.GoogleApiService
 import aragones.sergio.readercollection.data.source.base.BaseRepository
