@@ -24,7 +24,7 @@ import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.createTargetForBottomNavigationView
-import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.StatusBarStyle

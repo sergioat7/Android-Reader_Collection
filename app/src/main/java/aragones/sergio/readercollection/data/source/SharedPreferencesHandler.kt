@@ -12,8 +12,8 @@ import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.extensions.setBoolean
 import aragones.sergio.readercollection.extensions.setInt
 import aragones.sergio.readercollection.extensions.setString
-import aragones.sergio.readercollection.models.AuthData
-import aragones.sergio.readercollection.models.UserData
+import com.aragones.sergio.data.auth.AuthData
+import com.aragones.sergio.data.auth.UserData
 import com.aragones.sergio.util.Preferences
 import com.squareup.moshi.Moshi
 import java.util.Locale

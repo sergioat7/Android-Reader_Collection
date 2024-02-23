@@ -5,10 +5,10 @@
 
 package aragones.sergio.readercollection.network.interfaces
 
-import aragones.sergio.readercollection.models.LoginCredentials
-import aragones.sergio.readercollection.models.NewPassword
-import aragones.sergio.readercollection.models.LoginResponse
 import aragones.sergio.readercollection.network.ApiManager
+import com.aragones.sergio.data.auth.LoginCredentials
+import com.aragones.sergio.data.auth.LoginResponse
+import com.aragones.sergio.data.auth.NewPassword
 import retrofit2.Response
 import retrofit2.http.*
 

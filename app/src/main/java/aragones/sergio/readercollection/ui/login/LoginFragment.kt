@@ -90,10 +90,10 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             val loginState = it ?: return@observe
 
             if (loginState.usernameError != null) {
-                binding.textInputLayoutUsername.setError(getString(loginState.usernameError))
+                binding.textInputLayoutUsername.setError(getString(loginState.usernameError ?: 0))
             }
             if (loginState.passwordError != null) {
-                binding.textInputLayoutPassword.setError(getString(loginState.passwordError))
+                binding.textInputLayoutPassword.setError(getString(loginState.passwordError ?: 0))
             }
         }
 

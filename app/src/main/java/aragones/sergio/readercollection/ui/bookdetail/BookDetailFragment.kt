@@ -38,7 +38,7 @@ import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
-import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomDropdownType
 import com.aragones.sergio.util.State

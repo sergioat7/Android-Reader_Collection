@@ -8,8 +8,8 @@ package com.aragones.sergio.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.aragones.sergio.data.BaseModel
-import com.aragones.sergio.data.BookResponse
+import com.aragones.sergio.data.business.BaseModel
+import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.database.daos.BookDao
 
 @Database(
