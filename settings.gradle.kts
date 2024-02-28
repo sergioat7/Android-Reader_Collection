@@ -17,6 +17,5 @@ dependencyResolutionManagement {
 rootProject.name = "Reader Collection"
 include(":app")
 include(":core:util")
-include(":core:network")
 include(":core:database")
 include(":data")
