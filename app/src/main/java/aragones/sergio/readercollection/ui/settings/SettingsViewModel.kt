@@ -19,6 +19,8 @@ import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,6 +34,8 @@ class SettingsViewModel @Inject constructor(
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse?>()
+    private val _dialogMessageId = MutableStateFlow(-1)
+    private val _infoMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
@@ -49,6 +53,8 @@ class SettingsViewModel @Inject constructor(
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse?> = _profileError
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
+    val dialogMessageId: StateFlow<Int> = _dialogMessageId
+    val infoMessageId: StateFlow<Int> = _infoMessageId
     //endregion
 
     //region Lifecycle methods
@@ -162,6 +168,20 @@ class SettingsViewModel @Inject constructor(
     fun setTutorialAsShown() {
         userRepository.setHasSettingsTutorialBeenShown(true)
         tutorialShown = true
+    }
+
+    fun showConfirmationDialog(textId: Int) {
+        _dialogMessageId.value = textId
+    }
+
+    fun showInfoDialog(textId: Int) {
+        _infoMessageId.value = textId
+    }
+
+    fun closeDialogs() {
+
+        _dialogMessageId.value = -1
+        _infoMessageId.value = -1
     }
     //endregion
 
