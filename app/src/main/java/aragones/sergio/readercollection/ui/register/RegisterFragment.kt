@@ -7,6 +7,8 @@ package aragones.sergio.readercollection.ui.register
 
 import android.os.Bundle
 import android.view.View
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
@@ -14,6 +16,7 @@ import aragones.sergio.readercollection.extensions.doAfterTextChanged
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
 import aragones.sergio.readercollection.extensions.setError
+import aragones.sergio.readercollection.ui.InformationAlertDialog
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import com.aragones.sergio.util.StatusBarStyle
@@ -34,7 +37,15 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
     //region Lifecycle methods
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         initializeUi()
+        binding.composeView.setContent {
+
+            val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+            InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
+                viewModel.closeDialogs()
+            }
+        }
     }
 
     override fun onResume() {
@@ -78,7 +89,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
         setupBindings()
 
         binding.textInputLayoutUsername.setEndIconOnClickListener {
-            showPopupDialog(resources.getString(R.string.username_info))
+            viewModel.showInfoDialog(R.string.username_info)
         }
         binding.fragment = this
         binding.viewModel = this.viewModel
