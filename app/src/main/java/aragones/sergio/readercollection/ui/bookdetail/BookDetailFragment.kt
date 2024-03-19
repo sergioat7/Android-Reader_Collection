@@ -12,14 +12,14 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
-import aragones.sergio.readercollection.databinding.DialogSetImageBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.addChip
 import aragones.sergio.readercollection.extensions.doAfterTextChanged
@@ -35,6 +35,9 @@ import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.ui.ConfirmationAlertDialog
+import aragones.sergio.readercollection.ui.InformationAlertDialog
+import aragones.sergio.readercollection.ui.TextFieldAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
@@ -52,7 +55,6 @@ import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -74,7 +76,6 @@ class BookDetailFragment :
     //region Private properties
     private val viewModel: BookDetailViewModel by viewModels()
     private var book: BookResponse? = null
-    private val goBack = MutableLiveData<Boolean>()
     private lateinit var menu: Menu
     private lateinit var mainContentSequence: TapTargetSequence
     private var newBookToolbarSequence: TapTargetSequence? = null
@@ -89,6 +90,39 @@ class BookDetailFragment :
 
         toolbar = binding.toolbar
         initializeUi()
+        binding.composeView.setContent {
+
+            val showDeleteConfirmationDialog by viewModel.showDeleteConfirmationDialog.collectAsState()
+            ConfirmationAlertDialog(
+                show = showDeleteConfirmationDialog,
+                textId = R.string.book_remove_confirmation,
+                onCancel = {
+                    viewModel.showDeleteDialog(false)
+                },
+                onAccept = {
+
+                    viewModel.showDeleteDialog(false)
+                    viewModel.deleteBook()
+                })
+
+            val successMessageId by viewModel.bookDetailSuccessMessage.collectAsState()
+            InformationAlertDialog(show = successMessageId != -1, textId = successMessageId) {
+                viewModel.goBack()
+            }
+
+            val showImageDialog by viewModel.showImageDialog.collectAsState()
+            TextFieldAlertDialog(
+                show = showImageDialog,
+                titleTextId = R.string.enter_valid_url,
+                onCancel = {
+                    viewModel.showImageDialog(false)
+                },
+                onAccept = {
+
+                    viewModel.showImageDialog(false)
+                    if (it.isNotBlank()) viewModel.setBookImage(it)
+                })
+        }
     }
 
     override fun onStart() {
@@ -156,12 +190,7 @@ class BookDetailFragment :
             }
 
             R.id.action_edit -> setEdition(true)
-            R.id.action_remove -> {
-
-                showPopupConfirmationDialog(R.string.book_remove_confirmation, acceptHandler = {
-                    viewModel.deleteBook()
-                })
-            }
+            R.id.action_remove -> viewModel.showDeleteDialog(true)
 
             R.id.action_cancel -> {
 
@@ -194,23 +223,7 @@ class BookDetailFragment :
 
     //region Public methods
     fun setImage() {
-
-        val dialogBinding = DialogSetImageBinding.inflate(layoutInflater)
-
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle(resources.getString(R.string.enter_valid_url))
-            .setView(dialogBinding.root)
-            .setCancelable(false)
-            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
-
-                val url = dialogBinding.textInputLayoutImage.getValue()
-                if (url.isNotBlank()) viewModel.setBookImage(url)
-                dialog.dismiss()
-            }
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+        viewModel.showImageDialog(true)
     }
 
     fun readMore(view: View) {
@@ -339,19 +352,13 @@ class BookDetailFragment :
             }
         }
 
-        viewModel.bookDetailSuccessMessage.observe(viewLifecycleOwner) {
-
-            val message = resources.getString(it)
-            showPopupDialog(message, goBack)
-        }
-
         viewModel.bookDetailError.observe(viewLifecycleOwner) {
 
             book?.let { b -> showData(b) }
             it?.let { manageError(it) }
         }
 
-        goBack.observe(viewLifecycleOwner) {
+        viewModel.goBack.observe(viewLifecycleOwner) {
             findNavController().popBackStack()
         }
     }
