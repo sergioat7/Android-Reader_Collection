@@ -108,8 +108,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
                     app:layout_constraintStart_toStartOf="@+id/radio_group_language"
                     app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password"
-                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                    />
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main" />
 
                 <RadioGroup
                     android:id="@+id/radio_group_language"
@@ -118,8 +117,7 @@
                     android:orientation="horizontal"
                     app:layout_constraintEnd_toEndOf="@+id/text_input_layout_password"
                     app:layout_constraintStart_toStartOf="@+id/text_input_layout_password"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_language_title"
-                    >
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_language_title">
 
                     <RadioButton
                         android:id="@+id/radio_button_en"
@@ -128,8 +126,7 @@
                         android:layout_weight="1"
                         android:checked="@{viewModel.language.equals(Preferences.ENGLISH_LANGUAGE_KEY)}"
                         android:text="@string/english"
-                        style="@style/Widget.ReaderCollection.RadioButton"
-                        />
+                        style="@style/Widget.ReaderCollection.RadioButton" />
 
                     <RadioButton
                         android:id="@+id/radio_button_es"
@@ -138,8 +135,7 @@
                         android:layout_weight="1"
                         android:checked="@{viewModel.language.equals(Preferences.SPANISH_LANGUAGE_KEY)}"
                         android:text="@string/spanish"
-                        style="@style/Widget.ReaderCollection.RadioButton"
-                        />
+                        style="@style/Widget.ReaderCollection.RadioButton" />
 
                 </RadioGroup>
 
@@ -153,8 +149,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_sort_params"
                     app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_sort_params"
                     app:layout_constraintTop_toBottomOf="@+id/radio_group_language"
-                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                    />
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main" />
 
                 <include
                     android:id="@+id/dropdown_text_input_layout_sort_params"
@@ -165,8 +160,7 @@
                     app:enabled="@{true}"
                     app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
                     app:layout_constraintStart_toStartOf="@+id/radio_group_language"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_sort_param_title" />
 
                 <include
                     android:id="@+id/dropdown_text_input_layout_sort_orders"
@@ -176,8 +170,7 @@
                     app:enabled="@{true}"
                     app:layout_constraintEnd_toEndOf="@+id/radio_group_language"
                     app:layout_constraintStart_toStartOf="@+id/radio_group_language"
-                    app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_sort_params"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_sort_params" />
 
                 <TextView
                     android:id="@+id/text_view_app_theme_title"
@@ -190,8 +183,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_app_theme"
                     app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_app_theme"
                     app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_sort_orders"
-                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                    />
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main" />
 
                 <include
                     android:id="@+id/dropdown_text_input_layout_app_theme"
@@ -201,8 +193,7 @@
                     app:enabled="@{true}"
                     app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_sort_orders"
                     app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_sort_orders"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_app_theme_title"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_app_theme_title" />
 
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/compose_view"
@@ -229,8 +220,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            style="@style/Widget.ReaderCollection.Button.Main"
-            />
+            style="@style/Widget.ReaderCollection.Button.Main" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
