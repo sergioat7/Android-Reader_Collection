@@ -14,6 +14,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -26,6 +28,7 @@ import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.ui.InformationAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import com.aragones.sergio.util.ScrollPosition
@@ -62,6 +65,13 @@ class SearchFragment :
 
         toolbar = binding.toolbar
         initializeUi()
+        binding.composeView.setContent {
+
+            val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+            InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
+                viewModel.closeDialogs()
+            }
+        }
     }
 
     override fun onStart() {
@@ -206,14 +216,6 @@ class SearchFragment :
 
         viewModel.searchLoading.observe(viewLifecycleOwner) { isLoading ->
             binding.swipeRefreshLayoutBooks.isRefreshing = isLoading
-        }
-
-        viewModel.bookAdded.observe(viewLifecycleOwner) { position ->
-            position?.let {
-
-                val message = resources.getString(R.string.book_saved)
-                showPopupDialog(message)
-            }
         }
 
         viewModel.searchError.observe(viewLifecycleOwner) { error ->
