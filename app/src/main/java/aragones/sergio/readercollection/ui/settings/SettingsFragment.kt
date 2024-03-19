@@ -12,6 +12,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -25,6 +27,8 @@ import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.ui.ConfirmationAlertDialog
+import aragones.sergio.readercollection.ui.InformationAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.landing.LandingActivity
 import com.aragones.sergio.util.CustomDropdownType
@@ -59,6 +63,39 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
 
         toolbar = binding.toolbar
         initializeUi()
+        binding.composeView.setContent {
+
+            val confirmationDialogMessageId by viewModel.dialogMessageId.collectAsState()
+            ConfirmationAlertDialog(
+                show = confirmationDialogMessageId != -1,
+                textId = confirmationDialogMessageId,
+                onCancel = {
+                    viewModel.closeDialogs()
+                },
+                onAccept = {
+
+                    viewModel.closeDialogs()
+                    when (confirmationDialogMessageId) {
+                        R.string.profile_delete_confirmation -> {
+                            viewModel.deleteUser()
+                        }
+
+                        R.string.profile_logout_confirmation -> {
+                            viewModel.logout()
+                        }
+
+                        else -> Unit
+                    }
+                })
+
+            val successMessageId by viewModel.infoMessageId.collectAsState()
+            InformationAlertDialog(
+                show = successMessageId != -1,
+                textId = successMessageId
+            ) {
+                viewModel.closeDialogs()
+            }
+        }
     }
 
     override fun onStart() {
@@ -108,17 +145,13 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
         return when (menuItem.itemId) {
             R.id.action_delete -> {
 
-                showPopupConfirmationDialog(R.string.profile_delete_confirmation, acceptHandler = {
-                    viewModel.deleteUser()
-                })
+                viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
                 true
             }
 
             R.id.action_logout -> {
 
-                showPopupConfirmationDialog(R.string.profile_logout_confirmation, acceptHandler = {
-                    viewModel.logout()
-                })
+                viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
                 true
             }
 
@@ -157,7 +190,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
         setupBindings()
 
         binding.textInputLayoutUsername.setEndIconOnClickListener {
-            showPopupDialog(resources.getString(R.string.username_info))
+            viewModel.showInfoDialog(R.string.username_info)
         }
 
         binding.fragment = this
