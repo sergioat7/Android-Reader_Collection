@@ -65,17 +65,17 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
         initializeUi()
         binding.composeView.setContent {
 
-            val confirmationDialogMessageId by viewModel.dialogMessageId.collectAsState()
+            val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
             ConfirmationAlertDialog(
-                show = confirmationDialogMessageId != -1,
-                textId = confirmationDialogMessageId,
+                show = confirmationMessageId != -1,
+                textId = confirmationMessageId,
                 onCancel = {
                     viewModel.closeDialogs()
                 },
                 onAccept = {
 
                     viewModel.closeDialogs()
-                    when (confirmationDialogMessageId) {
+                    when (confirmationMessageId) {
                         R.string.profile_delete_confirmation -> {
                             viewModel.deleteUser()
                         }
@@ -88,10 +88,10 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
                     }
                 })
 
-            val successMessageId by viewModel.infoMessageId.collectAsState()
+            val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
             InformationAlertDialog(
-                show = successMessageId != -1,
-                textId = successMessageId
+                show = infoMessageId != -1,
+                textId = infoMessageId
             ) {
                 viewModel.closeDialogs()
             }

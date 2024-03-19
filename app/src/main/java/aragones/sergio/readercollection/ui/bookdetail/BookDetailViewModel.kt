@@ -40,12 +40,11 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFormatsLoading = MutableLiveData<Boolean>()
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
-    private val _bookDetailSuccessMessage = MutableStateFlow(-1)
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
-    private val _goBack = MutableLiveData<Boolean>()
     private lateinit var pendingBooks: List<BookResponse>
-    private val _showDeleteConfirmationDialog = MutableStateFlow(false)
-    private val _showImageDialog = MutableStateFlow(false)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _imageDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
@@ -57,13 +56,12 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
-    val bookDetailSuccessMessage: StateFlow<Int> = _bookDetailSuccessMessage
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     val bookDetailError: LiveData<ErrorResponse?> = _bookDetailError
-    val goBack: LiveData<Boolean> = _goBack
     var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
     var bookDetailsTutorialShown = userRepository.hasBookDetailsTutorialBeenShown
-    var showDeleteConfirmationDialog: StateFlow<Boolean> = _showDeleteConfirmationDialog
-    var showImageDialog: StateFlow<Boolean> = _showImageDialog
+    var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    var imageDialogMessageId: StateFlow<Int> = _imageDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -100,7 +98,7 @@ class BookDetailViewModel @Inject constructor(
         booksRepository.createBook(newBook, success = {
 
             _bookDetailLoading.value = false
-            _bookDetailSuccessMessage.value = R.string.book_saved
+            _infoDialogMessageId.value = R.string.book_saved
         }, failure = {
             manageError(it)
         })
@@ -124,7 +122,7 @@ class BookDetailViewModel @Inject constructor(
         booksRepository.deleteBook(bookId, success = {
 
             _bookDetailLoading.value = false
-            _bookDetailSuccessMessage.value = R.string.book_removed
+            _infoDialogMessageId.value = R.string.book_removed
         }, failure = {
             manageError(it)
         })
@@ -156,18 +154,19 @@ class BookDetailViewModel @Inject constructor(
         bookDetailsTutorialShown = true
     }
 
-    fun showImageDialog(value: Boolean) {
-        _showImageDialog.value = value
+    fun showConfirmationDialog(textId: Int) {
+        _confirmationDialogMessageId.value = textId
     }
 
-    fun showDeleteDialog(show: Boolean) {
-        _showDeleteConfirmationDialog.value = show
+    fun showImageDialog(textId: Int) {
+        _imageDialogMessageId.value = textId
     }
 
-    fun goBack() {
+    fun closeDialogs() {
 
-        _bookDetailSuccessMessage.value = -1
-        _goBack.value = true
+        _confirmationDialogMessageId.value = -1
+        _infoDialogMessageId.value = -1
+        _imageDialogMessageId.value = -1
     }
     //endregion
 

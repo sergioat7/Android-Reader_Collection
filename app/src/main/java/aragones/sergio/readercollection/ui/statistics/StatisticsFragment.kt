@@ -86,17 +86,17 @@ class StatisticsFragment :
         initializeUi()
         binding.composeView.setContent {
 
-            val confirmationDialogMessageId by viewModel.dialogMessageId.collectAsState()
+            val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
             ConfirmationAlertDialog(
-                show = confirmationDialogMessageId != -1,
-                textId = confirmationDialogMessageId,
+                show = confirmationMessageId != -1,
+                textId = confirmationMessageId,
                 onCancel = {
-                    viewModel.closeImportExportDialog()
+                    viewModel.closeDialogs()
                 },
                 onAccept = {
 
-                    viewModel.closeImportExportDialog()
-                    when (confirmationDialogMessageId) {
+                    viewModel.closeDialogs()
+                    when (confirmationMessageId) {
                         R.string.import_confirmation -> {
 
                             val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -118,12 +118,12 @@ class StatisticsFragment :
                     }
                 })
 
-            val successMessageId by viewModel.exportSuccessMessage.collectAsState()
+            val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
             InformationAlertDialog(
-                show = successMessageId != -1,
-                textId = successMessageId
+                show = infoMessageId != -1,
+                textId = infoMessageId
             ) {
-                viewModel.closeImportExportDialog()
+                viewModel.closeDialogs()
             }
         }
     }
@@ -172,13 +172,13 @@ class StatisticsFragment :
         return when (menuItem.itemId) {
             R.id.action_import -> {
 
-                viewModel.showImportDialog()
+                viewModel.showConfirmationDialog(R.string.import_confirmation)
                 true
             }
 
             R.id.action_export -> {
 
-                viewModel.showExportDialog()
+                viewModel.showConfirmationDialog(R.string.export_confirmation)
                 true
             }
 

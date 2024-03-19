@@ -34,8 +34,8 @@ class SettingsViewModel @Inject constructor(
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse?>()
-    private val _dialogMessageId = MutableStateFlow(-1)
-    private val _infoMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
@@ -53,8 +53,8 @@ class SettingsViewModel @Inject constructor(
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse?> = _profileError
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
-    val dialogMessageId: StateFlow<Int> = _dialogMessageId
-    val infoMessageId: StateFlow<Int> = _infoMessageId
+    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -171,17 +171,17 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun showConfirmationDialog(textId: Int) {
-        _dialogMessageId.value = textId
+        _confirmationDialogMessageId.value = textId
     }
 
     fun showInfoDialog(textId: Int) {
-        _infoMessageId.value = textId
+        _infoDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
 
-        _dialogMessageId.value = -1
-        _infoMessageId.value = -1
+        _confirmationDialogMessageId.value = -1
+        _infoDialogMessageId.value = -1
     }
     //endregion
 
