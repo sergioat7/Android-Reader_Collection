@@ -19,6 +19,8 @@ import com.aragones.sergio.util.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,20 +35,20 @@ class SearchViewModel @Inject constructor(
     private val _query = MutableLiveData("")
     private val _books = MutableLiveData<MutableList<BookResponse>>(mutableListOf())
     private val _searchLoading = MutableLiveData(false)
-    private val _bookAdded = MutableLiveData<Int?>()
     private val _searchError = MutableLiveData<ErrorResponse?>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
     private lateinit var pendingBooks: MutableList<BookResponse>
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     var query: LiveData<String> = _query
     val books: LiveData<MutableList<BookResponse>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
-    val bookAdded: LiveData<Int?> = _bookAdded
     val searchError: LiveData<ErrorResponse?> = _searchError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     var tutorialShown = userRepository.hasSearchTutorialBeenShown
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -119,13 +121,11 @@ class SearchViewModel @Inject constructor(
             booksRepository.createBook(newBook, success = {
 
                 pendingBooks.add(newBook)
-                _bookAdded.value = position
-                _bookAdded.value = null
+                _infoDialogMessageId.value = R.string.book_saved
                 _searchLoading.value = false
             }, failure = {
 
                 _searchLoading.value = false
-                _bookAdded.value = null
                 _searchError.value = it
                 _searchError.value = null
             })
@@ -139,6 +139,10 @@ class SearchViewModel @Inject constructor(
     fun setTutorialAsShown() {
         userRepository.setHasSearchTutorialBeenShown(true)
         tutorialShown = true
+    }
+
+    fun closeDialogs() {
+        _infoDialogMessageId.value = -1
     }
     //endregion
 
