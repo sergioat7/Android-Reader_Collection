@@ -18,6 +18,8 @@ import com.aragones.sergio.data.business.ErrorResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,9 +40,12 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFormatsLoading = MutableLiveData<Boolean>()
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
-    private val _bookDetailSuccessMessage = MutableLiveData<Int>()
+    private val _bookDetailSuccessMessage = MutableStateFlow(-1)
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
+    private val _goBack = MutableLiveData<Boolean>()
     private lateinit var pendingBooks: List<BookResponse>
+    private val _showDeleteConfirmationDialog = MutableStateFlow(false)
+    private val _showImageDialog = MutableStateFlow(false)
     //endregion
 
     //region Public properties
@@ -52,10 +57,13 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
-    val bookDetailSuccessMessage: LiveData<Int> = _bookDetailSuccessMessage
+    val bookDetailSuccessMessage: StateFlow<Int> = _bookDetailSuccessMessage
     val bookDetailError: LiveData<ErrorResponse?> = _bookDetailError
+    val goBack: LiveData<Boolean> = _goBack
     var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
     var bookDetailsTutorialShown = userRepository.hasBookDetailsTutorialBeenShown
+    var showDeleteConfirmationDialog: StateFlow<Boolean> = _showDeleteConfirmationDialog
+    var showImageDialog: StateFlow<Boolean> = _showImageDialog
     //endregion
 
     //region Lifecycle methods
@@ -146,6 +154,20 @@ class BookDetailViewModel @Inject constructor(
     fun setBookDetailsTutorialAsShown() {
         userRepository.setHasBookDetailsTutorialBeenShown(true)
         bookDetailsTutorialShown = true
+    }
+
+    fun showImageDialog(value: Boolean) {
+        _showImageDialog.value = value
+    }
+
+    fun showDeleteDialog(show: Boolean) {
+        _showDeleteConfirmationDialog.value = show
+    }
+
+    fun goBack() {
+
+        _bookDetailSuccessMessage.value = -1
+        _goBack.value = true
     }
     //endregion
 
