@@ -81,6 +81,46 @@ fun ConfirmationAlertDialog(
     }
 }
 
+@Preview
+@Composable
+fun InformationAlertDialogPreview() {
+    InformationAlertDialog(true, R.string.book_saved) {}
+}
+
+@Composable
+fun InformationAlertDialog(
+    show: Boolean,
+    @StringRes textId: Int,
+    onDismiss: () -> Unit
+) {
+    if (show) {
+
+        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
+
+        Dialog(
+            onDismissRequest = { onDismiss() },
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+        ) {
+            Surface(
+                color = colorResource(id = R.color.colorSecondary),
+                shape = RoundedCornerShape(10.dp)
+            ) {
+                Column(Modifier.fillMaxWidth()) {
+                    TextMessageAlertDialog(textId)
+                    TextButtonAlertDialog(
+                        textId = R.string.accept,
+                        modifier = Modifier
+                            .align(Alignment.End)
+                            .padding(end = padding12.dp)
+                    ) {
+                        onDismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
 @Composable
 fun TextMessageAlertDialog(@StringRes textId: Int) {
 
