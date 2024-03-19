@@ -92,34 +92,36 @@ class BookDetailFragment :
         initializeUi()
         binding.composeView.setContent {
 
-            val showDeleteConfirmationDialog by viewModel.showDeleteConfirmationDialog.collectAsState()
+            val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
             ConfirmationAlertDialog(
-                show = showDeleteConfirmationDialog,
-                textId = R.string.book_remove_confirmation,
+                show = confirmationMessageId != -1,
+                textId = confirmationMessageId,
                 onCancel = {
-                    viewModel.showDeleteDialog(false)
+                    viewModel.closeDialogs()
                 },
                 onAccept = {
 
-                    viewModel.showDeleteDialog(false)
+                    viewModel.closeDialogs()
                     viewModel.deleteBook()
                 })
 
-            val successMessageId by viewModel.bookDetailSuccessMessage.collectAsState()
-            InformationAlertDialog(show = successMessageId != -1, textId = successMessageId) {
-                viewModel.goBack()
+            val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+            InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
+
+                viewModel.closeDialogs()
+                findNavController().popBackStack()
             }
 
-            val showImageDialog by viewModel.showImageDialog.collectAsState()
+            val imageDialogMessageId by viewModel.imageDialogMessageId.collectAsState()
             TextFieldAlertDialog(
-                show = showImageDialog,
-                titleTextId = R.string.enter_valid_url,
+                show = imageDialogMessageId != -1,
+                titleTextId = imageDialogMessageId,
                 onCancel = {
-                    viewModel.showImageDialog(false)
+                    viewModel.closeDialogs()
                 },
                 onAccept = {
 
-                    viewModel.showImageDialog(false)
+                    viewModel.closeDialogs()
                     if (it.isNotBlank()) viewModel.setBookImage(it)
                 })
         }
@@ -190,7 +192,7 @@ class BookDetailFragment :
             }
 
             R.id.action_edit -> setEdition(true)
-            R.id.action_remove -> viewModel.showDeleteDialog(true)
+            R.id.action_remove -> viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
 
             R.id.action_cancel -> {
 
@@ -223,7 +225,7 @@ class BookDetailFragment :
 
     //region Public methods
     fun setImage() {
-        viewModel.showImageDialog(true)
+        viewModel.showImageDialog(R.string.enter_valid_url)
     }
 
     fun readMore(view: View) {
@@ -356,10 +358,6 @@ class BookDetailFragment :
 
             book?.let { b -> showData(b) }
             it?.let { manageError(it) }
-        }
-
-        viewModel.goBack.observe(viewLifecycleOwner) {
-            findNavController().popBackStack()
         }
     }
 

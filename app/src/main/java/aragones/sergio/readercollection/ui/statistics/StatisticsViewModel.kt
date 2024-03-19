@@ -42,21 +42,20 @@ class StatisticsViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse?>()
-    private val _exportSuccessMessage = MutableStateFlow(-1)
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
     private val _longerBook = MutableLiveData<BookResponse?>()
     private val _shorterBook = MutableLiveData<BookResponse?>()
     private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
-    private val _dialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse?> = _booksError
-    val exportSuccessMessage: StateFlow<Int> = _exportSuccessMessage
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
@@ -80,7 +79,8 @@ class StatisticsViewModel @Inject constructor(
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
-    val dialogMessageId: StateFlow<Int> = _dialogMessageId
+    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -131,18 +131,14 @@ class StatisticsViewModel @Inject constructor(
         tutorialShown = true
     }
 
-    fun showImportDialog() {
-        _dialogMessageId.value = R.string.import_confirmation
+    fun showConfirmationDialog(textId: Int) {
+        _confirmationDialogMessageId.value = textId
     }
 
-    fun showExportDialog() {
-        _dialogMessageId.value = R.string.export_confirmation
-    }
+    fun closeDialogs() {
 
-    fun closeImportExportDialog() {
-
-        _dialogMessageId.value = -1
-        _exportSuccessMessage.value = -1
+        _confirmationDialogMessageId.value = -1
+        _infoDialogMessageId.value = -1
     }
 
     fun importData(jsonData: String) {
@@ -150,7 +146,7 @@ class StatisticsViewModel @Inject constructor(
         booksRepository.importDataFrom(jsonData).subscribeBy(
             onComplete = {
 
-                _exportSuccessMessage.value = R.string.data_imported
+                _infoDialogMessageId.value = R.string.data_imported
                 viewModelScope.launch {
                     delay(500)
                     fetchBooks()
@@ -168,7 +164,7 @@ class StatisticsViewModel @Inject constructor(
             onSuccess = {
 
                 completion(it)
-                _exportSuccessMessage.value = R.string.file_created
+                _infoDialogMessageId.value = R.string.file_created
             }, onError = {
                 completion(null)
                 manageError(ErrorResponse("", R.string.error_database))

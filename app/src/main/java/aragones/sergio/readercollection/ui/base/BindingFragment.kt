@@ -223,30 +223,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         loadingFragment = null
     }
 
-    fun showPopupConfirmationDialog(
-        messageId: Int,
-        acceptHandler: () -> Unit,
-        cancelHandler: (() -> Unit)? = null
-    ) {
-
-        MaterialAlertDialogBuilder(
-            requireContext(),
-            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
-        )
-            .setMessage(resources.getString(messageId))
-            .setCancelable(false)
-            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
-
-                acceptHandler()
-                dialog.dismiss()
-            }
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
-                cancelHandler?.invoke()
-                dialog.dismiss()
-            }
-            .show()
-    }
-
     fun openSyncPopup() {
 
         showPopupConfirmationDialog(R.string.sync_confirmation, acceptHandler = {
@@ -292,6 +268,30 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     //endregion
 
     //region Private methods
+    private fun showPopupConfirmationDialog(
+        messageId: Int,
+        acceptHandler: () -> Unit,
+        cancelHandler: (() -> Unit)? = null
+    ) {
+
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
+            .setMessage(resources.getString(messageId))
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                acceptHandler()
+                dialog.dismiss()
+            }
+            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+                cancelHandler?.invoke()
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun showSyncPopup() {
 
         val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return

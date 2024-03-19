@@ -1,25 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 24/1/2022
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import
-            type="android.view.View"
-            />
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.statistics.StatisticsViewModel"
-            />
+            type="aragones.sergio.readercollection.ui.statistics.StatisticsViewModel" />
 
     </data>
 
@@ -28,8 +22,7 @@
         android:layout_height="match_parent"
         android:paddingStart="@dimen/padding_8dp"
         android:paddingEnd="@dimen/padding_8dp"
-        tools:context=".ui.statistics.StatisticsFragment"
-        >
+        tools:context=".ui.statistics.StatisticsFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -41,27 +34,24 @@
             app:subtitle='@{viewModel.noResultsVisible ? "" : @plurals/title_books_count(viewModel.books.size(), viewModel.books.size())}'
             app:subtitleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
             app:title="@string/title_stats"
-            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main"
-            />
+            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main" />
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:scrollbars="none"
             android:layout_marginTop="@dimen/margin_12dp"
             android:paddingBottom="@dimen/padding_12dp"
+            android:scrollbars="none"
             android:visibility="@{viewModel.books.empty ? View.GONE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/padding_24dp"
-                >
+                android:paddingBottom="@dimen/padding_24dp">
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/bar_chart_books_by_year"
@@ -69,8 +59,7 @@
                     android:layout_height="@dimen/size_250dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pie_chart_books_by_month"
@@ -79,8 +68,7 @@
                     android:layout_marginTop="@dimen/padding_24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/bar_chart_books_by_year" />
 
                 <com.github.mikephil.charting.charts.HorizontalBarChart
                     android:id="@+id/horizontal_bar_chart_books_by_author"
@@ -89,30 +77,27 @@
                     android:layout_marginTop="@dimen/padding_24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/pie_chart_books_by_month"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/pie_chart_books_by_month" />
 
                 <TextView
                     android:id="@+id/text_view_shorter_book_title"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_24dp"
                     android:text="@string/shorter_book"
                     app:layout_constraintStart_toStartOf="@id/layout_shorter_book"
-                    app:layout_constraintTop_toBottomOf="@id/horizontal_bar_chart_books_by_author"
-                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_bar_chart_books_by_author" />
 
                 <TextView
                     android:id="@+id/text_view_longer_book_title"
+                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_24dp"
                     android:text="@string/longer_book"
                     app:layout_constraintStart_toStartOf="@id/layout_longer_book"
-                    app:layout_constraintTop_toBottomOf="@id/horizontal_bar_chart_books_by_author"
-                    style="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/horizontal_bar_chart_books_by_author" />
 
                 <include
                     android:id="@+id/layout_shorter_book"
@@ -122,8 +107,7 @@
                     android:layout_marginTop="@dimen/margin_8dp"
                     app:layout_constraintEnd_toStartOf="@id/layout_longer_book"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_view_shorter_book_title"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/text_view_shorter_book_title" />
 
                 <include
                     android:id="@+id/layout_longer_book"
@@ -131,10 +115,9 @@
                     android:layout_width="@dimen/size_150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_8dp"
-                    app:layout_constraintStart_toEndOf="@id/layout_shorter_book"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_view_longer_book_title"
-                    />
+                    app:layout_constraintStart_toEndOf="@id/layout_shorter_book"
+                    app:layout_constraintTop_toBottomOf="@id/text_view_longer_book_title" />
 
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pie_chart_books_by_format"
@@ -143,16 +126,15 @@
                     android:layout_marginTop="@dimen/padding_24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/layout_shorter_book"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/layout_shorter_book" />
 
                 <androidx.compose.ui.platform.ComposeView
                     android:id="@+id/compose_view"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:visibility="gone" />
 
@@ -162,16 +144,15 @@
 
         <include
             android:id="@+id/image_view_no_results"
+            layout="@layout/content_no_results"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:visibility="@{viewModel.noResultsVisible ? View.VISIBLE : View.GONE}"
-            app:layout_constraintWidth_percent="0.7"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            layout="@layout/content_no_results"
-            />
+            app:layout_constraintWidth_percent="0.7" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
