@@ -15,6 +15,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -26,6 +28,8 @@ import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.ui.ConfirmationAlertDialog
+import aragones.sergio.readercollection.ui.InformationAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.State
@@ -80,6 +84,48 @@ class StatisticsFragment :
 
         toolbar = binding.toolbar
         initializeUi()
+        binding.composeView.setContent {
+
+            val confirmationDialogMessageId by viewModel.dialogMessageId.collectAsState()
+            ConfirmationAlertDialog(
+                show = confirmationDialogMessageId != -1,
+                textId = confirmationDialogMessageId,
+                onCancel = {
+                    viewModel.closeImportExportDialog()
+                },
+                onAccept = {
+
+                    viewModel.closeImportExportDialog()
+                    when (confirmationDialogMessageId) {
+                        R.string.import_confirmation -> {
+
+                            val intent = Intent(Intent.ACTION_GET_CONTENT)
+                            intent.type = "*/*"
+                            openFileLauncher.launch(intent)
+                        }
+
+                        R.string.export_confirmation -> {
+
+                            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                                addCategory(Intent.CATEGORY_OPENABLE)
+                                type = "text/txt"
+                                putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
+                            }
+                            newFileLauncher.launch(intent)
+                        }
+
+                        else -> Unit
+                    }
+                })
+
+            val successMessageId by viewModel.exportSuccessMessage.collectAsState()
+            InformationAlertDialog(
+                show = successMessageId != -1,
+                textId = successMessageId
+            ) {
+                viewModel.closeImportExportDialog()
+            }
+        }
     }
 
     override fun onStart() {
@@ -126,26 +172,13 @@ class StatisticsFragment :
         return when (menuItem.itemId) {
             R.id.action_import -> {
 
-                showPopupConfirmationDialog(R.string.import_confirmation, acceptHandler = {
-
-                    val intent = Intent(Intent.ACTION_GET_CONTENT)
-                    intent.type = "*/*"
-                    openFileLauncher.launch(intent)
-                })
+                viewModel.showImportDialog()
                 true
             }
 
             R.id.action_export -> {
 
-                showPopupConfirmationDialog(R.string.export_confirmation, acceptHandler = {
-
-                    val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                        addCategory(Intent.CATEGORY_OPENABLE)
-                        type = "text/txt"
-                        putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
-                    }
-                    newFileLauncher.launch(intent)
-                })
+                viewModel.showExportDialog()
                 true
             }
 
@@ -363,14 +396,6 @@ class StatisticsFragment :
                 showLoading()
             } else {
                 hideLoading()
-            }
-        }
-
-        viewModel.exportSuccessMessage.observe(viewLifecycleOwner) {
-            it?.let {
-
-                val message = resources.getString(it.first, it.second)
-                showPopupDialog(message)
             }
         }
 

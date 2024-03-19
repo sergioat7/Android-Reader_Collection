@@ -26,6 +26,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -40,20 +42,21 @@ class StatisticsViewModel @Inject constructor(
     private val _books = MutableLiveData<List<BookResponse>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse?>()
-    private val _exportSuccessMessage = MutableLiveData<Pair<Int, String>?>()
+    private val _exportSuccessMessage = MutableStateFlow(-1)
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
     private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
     private val _longerBook = MutableLiveData<BookResponse?>()
     private val _shorterBook = MutableLiveData<BookResponse?>()
     private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
+    private val _dialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val books: LiveData<List<BookResponse>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse?> = _booksError
-    val exportSuccessMessage: LiveData<Pair<Int, String>?> = _exportSuccessMessage
+    val exportSuccessMessage: StateFlow<Int> = _exportSuccessMessage
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
     val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
@@ -77,6 +80,7 @@ class StatisticsViewModel @Inject constructor(
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
+    val dialogMessageId: StateFlow<Int> = _dialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -127,13 +131,26 @@ class StatisticsViewModel @Inject constructor(
         tutorialShown = true
     }
 
+    fun showImportDialog() {
+        _dialogMessageId.value = R.string.import_confirmation
+    }
+
+    fun showExportDialog() {
+        _dialogMessageId.value = R.string.export_confirmation
+    }
+
+    fun closeImportExportDialog() {
+
+        _dialogMessageId.value = -1
+        _exportSuccessMessage.value = -1
+    }
+
     fun importData(jsonData: String) {
 
         booksRepository.importDataFrom(jsonData).subscribeBy(
             onComplete = {
 
-                _exportSuccessMessage.value = Pair(R.string.data_imported, "")
-                _exportSuccessMessage.value = null
+                _exportSuccessMessage.value = R.string.data_imported
                 viewModelScope.launch {
                     delay(500)
                     fetchBooks()
@@ -151,8 +168,7 @@ class StatisticsViewModel @Inject constructor(
             onSuccess = {
 
                 completion(it)
-                _exportSuccessMessage.value = Pair(R.string.file_created, "")
-                _exportSuccessMessage.value = null
+                _exportSuccessMessage.value = R.string.file_created
             }, onError = {
                 completion(null)
                 manageError(ErrorResponse("", R.string.error_database))
