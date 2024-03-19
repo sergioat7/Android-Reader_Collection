@@ -1,80 +1,63 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 11/1/2022
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import
-            type="com.aragones.sergio.util.CustomInputType"
-            />
+        <import type="com.aragones.sergio.util.CustomInputType" />
 
         <variable
             name="labelHintText"
-            type="String"
-            />
+            type="String" />
 
         <variable
             name="inputHintText"
-            type="String"
-            />
+            type="String" />
 
         <variable
             name="inputHintTextColor"
-            type="int"
-            />
+            type="int" />
 
         <variable
             name="text"
-            type="String"
-            />
+            type="String" />
 
         <variable
             name="textColor"
-            type="int"
-            />
+            type="int" />
 
         <variable
             name="textSize"
-            type="float"
-            />
+            type="float" />
 
         <variable
             name="isBold"
-            type="Boolean"
-            />
+            type="Boolean" />
 
         <variable
             name="endIconSrc"
-            type="android.graphics.drawable.Drawable"
-            />
+            type="android.graphics.drawable.Drawable" />
 
         <variable
             name="inputType"
-            type="CustomInputType"
-            />
+            type="CustomInputType" />
 
         <variable
             name="maxLength"
-            type="int"
-            />
+            type="int" />
 
         <variable
             name="maxLines"
-            type="int"
-            />
+            type="int" />
 
         <variable
             name="enabled"
-            type="Boolean"
-            />
+            type="Boolean" />
 
     </data>
 
@@ -96,13 +79,12 @@
         app:endIconDrawable="@{endIconSrc}"
         app:endIconMode="custom"
         app:endIconTint="@color/colorPrimary"
-        app:endIconVisible='@{endIconSrc != null &amp;&amp; text != null}'
+        app:endIconVisible='@{endIconSrc != null}'
         app:end_icon_mode="@{endIconSrc != null ? (inputType == CustomInputType.PASSWORD ? 1 : -1) : 0}"
         app:expandedHintEnabled="@{inputHintText == null}"
         tools:expandedHintEnabled="false"
         tools:hint="Username"
-        style="@style/Widget.ReaderCollection.TextInputLayout.Bordered"
-        >
+        style="@style/Widget.ReaderCollection.TextInputLayout.Bordered">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/text_input_edit_text"
@@ -123,8 +105,7 @@
             app:isBold="@{isBold}"
             app:textInputLayoutFocusedRectEnabled="@{inputType != CustomInputType.MULTI_LINE_TEXT}"
             tools:hint="Please enter"
-            style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
-            />
+            style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
