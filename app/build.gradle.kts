@@ -71,6 +71,7 @@ android {
         dataBinding = true
         viewBinding = true
         buildConfig = true
+        compose = true
     }
 
     compileOptions {
@@ -83,6 +84,13 @@ android {
 
     kapt {
         correctErrorTypes = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
+    kotlin {
+        jvmToolchain(17)
     }
 }
 
@@ -122,6 +130,9 @@ dependencies {
     implementation(libs.app.update.ktx)
 
     debugImplementation(libs.leak.canary)
+
+    implementation(platform(libs.compose.bom))
+    implementation(libs.bundles.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
