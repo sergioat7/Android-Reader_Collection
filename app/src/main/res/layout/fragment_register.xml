@@ -1,38 +1,30 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 28/10/2020
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import
-            type="com.aragones.sergio.util.CustomInputType"
-            />
+        <import type="com.aragones.sergio.util.CustomInputType" />
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.ui.register.RegisterFragment"
-            />
+            type="aragones.sergio.readercollection.ui.register.RegisterFragment" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.register.RegisterViewModel"
-            />
+            type="aragones.sergio.readercollection.ui.register.RegisterViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.register.RegisterFragment"
-        >
+        tools:context=".ui.register.RegisterFragment">
 
         <ImageView
             android:id="@+id/image_view"
@@ -44,8 +36,7 @@
             app:layout_constraintBottom_toTopOf="@+id/text_input_layout_username"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <include
             android:id="@+id/text_input_layout_username"
@@ -56,16 +47,15 @@
             android:layout_marginTop="@dimen/margin_20dp"
             android:layout_marginEnd="@dimen/margin_24dp"
             android:layout_marginBottom="@dimen/margin_8dp"
-            app:labelHintText="@{@string/username}"
-            app:inputType="@{CustomInputType.TEXT}"
             app:enabled="@{true}"
             app:endIconSrc="@{@drawable/ic_show_info}"
+            app:inputType="@{CustomInputType.TEXT}"
+            app:labelHintText="@{@string/username}"
             app:layout_constraintBottom_toTopOf="@+id/text_input_layout_password"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_view"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/image_view" />
 
         <include
             android:id="@+id/text_input_layout_password"
@@ -73,16 +63,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8dp"
-            app:labelHintText="@{@string/password}"
-            app:inputType="@{CustomInputType.PASSWORD}"
             app:enabled="@{true}"
             app:endIconSrc="@{@drawable/ic_show_password}"
+            app:inputType="@{CustomInputType.PASSWORD}"
+            app:labelHintText="@{@string/password}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/text_input_layout_username"
             app:layout_constraintStart_toStartOf="@+id/text_input_layout_username"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6"
-            />
+            app:layout_constraintVertical_bias="0.6" />
 
         <include
             android:id="@+id/text_input_layout_confirm_password"
@@ -90,17 +79,17 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_8dp"
-            app:labelHintText="@{@string/confirm_password}"
-            app:inputType="@{CustomInputType.PASSWORD}"
             app:enabled="@{true}"
             app:endIconSrc="@{@drawable/ic_show_password}"
+            app:inputType="@{CustomInputType.PASSWORD}"
+            app:labelHintText="@{@string/confirm_password}"
             app:layout_constraintEnd_toEndOf="@+id/text_input_layout_username"
             app:layout_constraintStart_toStartOf="@+id/text_input_layout_username"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_password" />
 
         <Button
             android:id="@+id/button_register"
+            style="@style/Widget.ReaderCollection.Button.Main"
             android:layout_width="@dimen/size_200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_12dp"
@@ -111,9 +100,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_confirm_password"
-            style="@style/Widget.ReaderCollection.Button.Main"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/text_input_layout_confirm_password" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
