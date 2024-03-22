@@ -27,8 +27,8 @@ import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
-import aragones.sergio.readercollection.ui.ConfirmationAlertDialog
-import aragones.sergio.readercollection.ui.InformationAlertDialog
+import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
+import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.landing.LandingActivity
 import com.aragones.sergio.util.CustomDropdownType

@@ -28,7 +28,7 @@ import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.ui.InformationAlertDialog
+import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import com.aragones.sergio.util.ScrollPosition

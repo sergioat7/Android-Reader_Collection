@@ -36,9 +36,9 @@ import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
-import aragones.sergio.readercollection.ui.ConfirmationAlertDialog
-import aragones.sergio.readercollection.ui.InformationAlertDialog
-import aragones.sergio.readercollection.ui.TextFieldAlertDialog
+import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
+import aragones.sergio.readercollection.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.ui.components.TextFieldAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
