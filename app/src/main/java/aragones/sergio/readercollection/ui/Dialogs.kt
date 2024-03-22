@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -31,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -132,13 +134,14 @@ fun InformationAlertDialog(
 @Preview
 @Composable
 fun TextFieldAlertDialogPreview() {
-    TextFieldAlertDialog(true, R.string.enter_valid_url, {}, {})
+    TextFieldAlertDialog(true, R.string.enter_valid_url, type = KeyboardType.Uri, {}, {})
 }
 
 @Composable
 fun TextFieldAlertDialog(
     show: Boolean,
     @StringRes titleTextId: Int,
+    type: KeyboardType,
     onCancel: () -> Unit,
     onAccept: (String) -> Unit
 ) {
@@ -178,7 +181,8 @@ fun TextFieldAlertDialog(
                             textColor = textSecondary
                         ),
                         shape = RoundedCornerShape(10.dp),
-                        singleLine = true
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = type)
                     )
                     Row(
                         modifier = Modifier
