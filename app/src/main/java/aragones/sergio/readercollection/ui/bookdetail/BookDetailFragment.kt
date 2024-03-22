@@ -14,6 +14,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -116,6 +117,7 @@ class BookDetailFragment :
             TextFieldAlertDialog(
                 show = imageDialogMessageId != -1,
                 titleTextId = imageDialogMessageId,
+                type = KeyboardType.Uri,
                 onCancel = {
                     viewModel.closeDialogs()
                 },
