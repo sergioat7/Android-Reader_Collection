@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 19/3/2024
  */
 
-package aragones.sergio.readercollection.ui
+package aragones.sergio.readercollection.ui.components
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
