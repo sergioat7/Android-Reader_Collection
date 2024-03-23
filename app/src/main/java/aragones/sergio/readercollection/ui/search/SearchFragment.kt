@@ -68,10 +68,12 @@ class SearchFragment :
         binding.composeView.setContent {
 
             val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-            InformationAlertDialog(
-                show = infoDialogMessageId != -1,
-                text = getString(infoDialogMessageId)
-            ) {
+            val text = if (infoDialogMessageId != -1) {
+                getString(infoDialogMessageId)
+            } else {
+                ""
+            }
+            InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
                 viewModel.closeDialogs()
             }
         }
