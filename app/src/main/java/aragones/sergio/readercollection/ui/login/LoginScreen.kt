@@ -34,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.ui.components.MainActionButton
 import aragones.sergio.readercollection.ui.components.robotoSerifFamily
@@ -52,6 +53,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
     val password by viewModel.password.observeAsState(initial = "")
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     val loginFormState by viewModel.loginFormState.observeAsState(initial = LoginFormState())
+    val loading by viewModel.loginLoading.observeAsState(initial = false)
 
     val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
@@ -60,83 +62,88 @@ fun LoginScreen(viewModel: LoginViewModel) {
 
     val textSize16 = dimensionResource(id = R.dimen.text_size_16sp).value
 
-    Column(
-        Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.colorSecondary))
-            .padding(padding24.dp)
-    ) {
-        Image(
-            painter = painterResource(id = R.drawable.login_register_image),
-            contentDescription = "",
-            modifier = Modifier
-                .align(Alignment.CenterHorizontally)
-        )
-        CustomOutlinedTextField(
-            text = username,
-            errorTextId = loginFormState.usernameError,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
-            labelText = stringResource(id = R.string.username),
-            onTextChanged = { newUsername ->
-                viewModel.loginDataChanged(newUsername, password)
-            }
-        )
-        CustomOutlinedTextField(
-            text = password,
-            errorTextId = loginFormState.passwordError,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
-            labelText = stringResource(id = R.string.password),
-            endIcon = if (passwordVisibility) {
-                R.drawable.ic_hide_password
-            } else {
-                R.drawable.ic_show_password
-            },
-            onTextChanged = { newPassword ->
-                viewModel.loginDataChanged(username, newPassword)
-            },
-            onEndIconClicked = { passwordVisibility = !passwordVisibility }
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        MainActionButton(
-            text = stringResource(id = R.string.sign_in),
-            modifier = Modifier
-                .width(size200.dp)
-                .align(Alignment.CenterHorizontally)
-                .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = loginFormState.isDataValid
+    if (loading) {
+        CustomCircularProgressIndicator()
+    } else {
+
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(colorResource(id = R.color.colorSecondary))
+                .padding(padding24.dp)
         ) {
-            viewModel.login(username, password)
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(
-                text = stringResource(id = R.string.not_account),
-                modifier = Modifier.padding(end = 5.dp),
-                style = TextStyle(
-                    color = colorResource(id = R.color.textSecondary),
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = textSize16.sp
-                )
+            Image(
+                painter = painterResource(id = R.drawable.login_register_image),
+                contentDescription = "",
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
             )
-            TextButton(onClick = { viewModel.goToRegister() }) {
+            CustomOutlinedTextField(
+                text = username,
+                errorTextId = loginFormState.usernameError,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
+                labelText = stringResource(id = R.string.username),
+                onTextChanged = { newUsername ->
+                    viewModel.loginDataChanged(newUsername, password)
+                }
+            )
+            CustomOutlinedTextField(
+                text = password,
+                errorTextId = loginFormState.passwordError,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
+                labelText = stringResource(id = R.string.password),
+                endIcon = if (passwordVisibility) {
+                    R.drawable.ic_hide_password
+                } else {
+                    R.drawable.ic_show_password
+                },
+                onTextChanged = { newPassword ->
+                    viewModel.loginDataChanged(username, newPassword)
+                },
+                onEndIconClicked = { passwordVisibility = !passwordVisibility }
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            MainActionButton(
+                text = stringResource(id = R.string.sign_in),
+                modifier = Modifier
+                    .width(size200.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .padding(horizontal = padding12.dp, vertical = padding24.dp),
+                enabled = loginFormState.isDataValid
+            ) {
+                viewModel.login(username, password)
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
                 Text(
-                    text = stringResource(id = R.string.create_account),
+                    text = stringResource(id = R.string.not_account),
+                    modifier = Modifier.padding(end = 5.dp),
                     style = TextStyle(
-                        color = colorResource(id = R.color.textPrimary),
+                        color = colorResource(id = R.color.textSecondary),
                         fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = textSize16.sp,
-                        letterSpacing = 0.sp
-                    ),
-                    maxLines = 1
+                        fontWeight = FontWeight.Normal,
+                        fontSize = textSize16.sp
+                    )
                 )
+                TextButton(onClick = { viewModel.goToRegister() }) {
+                    Text(
+                        text = stringResource(id = R.string.create_account),
+                        style = TextStyle(
+                            color = colorResource(id = R.color.textPrimary),
+                            fontFamily = robotoSerifFamily,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = textSize16.sp,
+                            letterSpacing = 0.sp
+                        ),
+                        maxLines = 1
+                    )
+                }
             }
         }
     }
