@@ -72,7 +72,7 @@ fun ConfirmationAlertDialog(
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Column(Modifier.fillMaxWidth()) {
-                    TextMessageAlertDialog(textId)
+                    TextMessageAlertDialog(stringResource(id = textId))
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
@@ -94,13 +94,13 @@ fun ConfirmationAlertDialog(
 @Preview
 @Composable
 fun InformationAlertDialogPreview() {
-    InformationAlertDialog(true, R.string.book_saved) {}
+    InformationAlertDialog(true, stringResource(id = R.string.book_saved)) {}
 }
 
 @Composable
 fun InformationAlertDialog(
     show: Boolean,
-    @StringRes textId: Int,
+    text: String,
     onDismiss: () -> Unit
 ) {
     if (show) {
@@ -116,7 +116,7 @@ fun InformationAlertDialog(
                 shape = RoundedCornerShape(10.dp)
             ) {
                 Column(Modifier.fillMaxWidth()) {
-                    TextMessageAlertDialog(textId)
+                    TextMessageAlertDialog(text)
                     TextButtonAlertDialog(
                         textId = R.string.accept,
                         modifier = Modifier
@@ -223,7 +223,7 @@ fun TextTitleAlertDialog(@StringRes textId: Int) {
 }
 
 @Composable
-fun TextMessageAlertDialog(@StringRes textId: Int) {
+fun TextMessageAlertDialog(text: String) {
 
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
     Text(
@@ -232,7 +232,7 @@ fun TextMessageAlertDialog(@StringRes textId: Int) {
             start = padding24.dp,
             end = padding24.dp
         ),
-        text = stringResource(id = textId),
+        text = text,
         color = colorResource(id = R.color.colorPrimary),
         fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
         fontFamily = robotoSerifFamily,
