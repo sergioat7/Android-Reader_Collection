@@ -21,8 +21,7 @@
     <string name="sign_up">Sign up</string>
     <string name="confirm_password">Confirm password</string>
     <string name="username_info">This username is only needed for identification purposes and to be able to separate your books from another user\'s ones.\n\nHowever, due to any personal information is stored, if you forget your password you won\'t be able to retrieve it.\n\nIf this happens, contact the app\'s developer, you can find his email in the Google Play Store app\'s card</string>
-    <string name="username_not_exist">Username does not exist</string>
-    <string name="wrong_password">Password is wrong</string>
+    <string name="wrong_credentials">Username or password are not correct</string>
 
     //BOOKS
     <string name="title_books">Bookshelf</string>
