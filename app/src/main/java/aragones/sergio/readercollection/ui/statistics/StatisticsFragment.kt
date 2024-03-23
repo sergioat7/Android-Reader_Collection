@@ -121,10 +121,12 @@ class StatisticsFragment :
                 })
 
             val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-            InformationAlertDialog(
-                show = infoMessageId != -1,
-                text = getString(infoMessageId)
-            ) {
+            val text = if (infoMessageId != -1) {
+                getString(infoMessageId)
+            } else {
+                ""
+            }
+            InformationAlertDialog(show = infoMessageId != -1, text = text) {
                 viewModel.closeDialogs()
             }
         }
