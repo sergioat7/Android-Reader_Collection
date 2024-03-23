@@ -14,8 +14,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.SearchView
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -28,9 +28,9 @@ import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
+import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
@@ -67,7 +67,7 @@ class SearchFragment :
         initializeUi()
         binding.composeView.setContent {
 
-            val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+            val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
                 viewModel.closeDialogs()
             }

@@ -15,8 +15,8 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -28,9 +28,9 @@ import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.ui.components.InformationAlertDialog
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.StatusBarStyle
@@ -86,7 +86,9 @@ class StatisticsFragment :
         initializeUi()
         binding.composeView.setContent {
 
-            val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
+            val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
+                initial = -1
+            )
             ConfirmationAlertDialog(
                 show = confirmationMessageId != -1,
                 textId = confirmationMessageId,
@@ -95,7 +97,6 @@ class StatisticsFragment :
                 },
                 onAccept = {
 
-                    viewModel.closeDialogs()
                     when (confirmationMessageId) {
                         R.string.import_confirmation -> {
 
@@ -116,9 +117,10 @@ class StatisticsFragment :
 
                         else -> Unit
                     }
+                    viewModel.closeDialogs()
                 })
 
-            val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
+            val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             InformationAlertDialog(
                 show = infoMessageId != -1,
                 textId = infoMessageId
