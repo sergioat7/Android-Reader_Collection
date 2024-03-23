@@ -125,7 +125,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     fontSize = textSize16.sp
                 )
             )
-            TextButton(onClick = { /*TODO*/ }) {
+            TextButton(onClick = { viewModel.goToRegister() }) {
                 Text(
                     text = stringResource(id = R.string.create_account),
                     style = TextStyle(
