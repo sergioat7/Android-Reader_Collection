@@ -26,13 +26,16 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
+    private val _username = MutableLiveData(userRepository.username)
+    private val _password = MutableLiveData<String>()
     private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginLoading = MutableLiveData<Boolean>()
     private val _loginError = MutableLiveData<ErrorResponse?>()
     //endregion
 
     //region Public properties
-    val username: String = userRepository.username
+    val username: LiveData<String> = _username
+    val password: LiveData<String> = _password
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse?> = _loginError
@@ -86,6 +89,9 @@ class LoginViewModel @Inject constructor(
             passwordError = R.string.invalid_password
             isDataValid = false
         }
+
+        _username.value = username
+        _password.value = password
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
     //endregion
