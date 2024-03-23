@@ -159,24 +159,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         showPopupDialog(error.toString(), goBack)
     }
 
-    fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
-
-        MaterialAlertDialogBuilder(
-            requireContext(),
-            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
-        )
-            .setMessage(message)
-            .setCancelable(false)
-            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
-
-                dialog.dismiss()
-                goBack?.let {
-                    it.value = true
-                }
-            }
-            .show()
-    }
-
     fun <T> launchActivity(activity: Class<T>, clearStack: Boolean = false) {
 
         val intent = Intent(context, activity)
@@ -303,6 +285,24 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         val dialogFragment = PopupSyncAppDialogFragment()
         dialogFragment.isCancelable = false
         dialogFragment.show(ft, "syncDialog")
+    }
+
+    private fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
+
+        MaterialAlertDialogBuilder(
+            requireContext(),
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
+        )
+            .setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                dialog.dismiss()
+                goBack?.let {
+                    it.value = true
+                }
+            }
+            .show()
     }
     //endregion
 }
