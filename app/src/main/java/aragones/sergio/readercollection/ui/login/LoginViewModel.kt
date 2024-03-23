@@ -102,5 +102,9 @@ class LoginViewModel @Inject constructor(
     fun goToRegister() {
         _activityName.value = RegisterActivity::class.simpleName
     }
+
+    fun closeDialogs() {
+        _loginError.value = null
+    }
     //endregion
 }
