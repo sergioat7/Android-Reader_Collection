@@ -32,7 +32,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
-            LoginScreen()
+            LoginScreen(viewModel)
         }
         setupBindings()
     }
