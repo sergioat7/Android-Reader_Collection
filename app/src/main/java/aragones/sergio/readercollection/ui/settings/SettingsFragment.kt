@@ -12,8 +12,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -27,9 +27,9 @@ import aragones.sergio.readercollection.extensions.setError
 import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.ui.components.InformationAlertDialog
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.landing.LandingActivity
 import com.aragones.sergio.util.CustomDropdownType
 import com.aragones.sergio.util.Preferences
@@ -65,7 +65,9 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
         initializeUi()
         binding.composeView.setContent {
 
-            val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
+            val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
+                initial = -1
+            )
             ConfirmationAlertDialog(
                 show = confirmationMessageId != -1,
                 textId = confirmationMessageId,
@@ -74,7 +76,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
                 },
                 onAccept = {
 
-                    viewModel.closeDialogs()
                     when (confirmationMessageId) {
                         R.string.profile_delete_confirmation -> {
                             viewModel.deleteUser()
@@ -86,9 +87,10 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
 
                         else -> Unit
                     }
+                    viewModel.closeDialogs()
                 })
 
-            val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
+            val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             InformationAlertDialog(
                 show = infoMessageId != -1,
                 textId = infoMessageId

@@ -18,8 +18,6 @@ import com.aragones.sergio.data.business.ErrorResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,9 +40,9 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
     private lateinit var pendingBooks: List<BookResponse>
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
-    private val _imageDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableLiveData(-1)
+    private val _infoDialogMessageId = MutableLiveData(-1)
+    private val _imageDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
@@ -56,12 +54,12 @@ class BookDetailViewModel @Inject constructor(
     val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
     val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
     val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     val bookDetailError: LiveData<ErrorResponse?> = _bookDetailError
     var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
     var bookDetailsTutorialShown = userRepository.hasBookDetailsTutorialBeenShown
-    var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    var imageDialogMessageId: StateFlow<Int> = _imageDialogMessageId
+    var confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
+    var imageDialogMessageId: LiveData<Int> = _imageDialogMessageId
     //endregion
 
     //region Lifecycle methods
