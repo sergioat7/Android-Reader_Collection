@@ -63,15 +63,6 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     //region Private methods
     private fun setupBindings() {
 
-        viewModel.loginLoading.observe(viewLifecycleOwner) { isLoading ->
-
-            if (isLoading) {
-                showLoading()
-            } else {
-                hideLoading()
-            }
-        }
-
         viewModel.activityName.observe(viewLifecycleOwner) { activityName ->
 
             when (activityName) {
