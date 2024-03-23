@@ -18,6 +18,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -36,17 +37,21 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.ui.components.MainActionButton
 import aragones.sergio.readercollection.ui.components.robotoSerifFamily
+import com.aragones.sergio.data.auth.LoginFormState
 
 @Preview
 @Composable
 fun LoginPreview() {
-    LoginScreen()
+//    LoginScreen()
 }
 
 @Composable
-fun LoginScreen() {
+fun LoginScreen(viewModel: LoginViewModel) {
 
+    val username by viewModel.username.observeAsState(initial = "")
+    val password by viewModel.password.observeAsState(initial = "")
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+    val loginFormState by viewModel.loginFormState.observeAsState(initial = LoginFormState())
 
     val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
@@ -68,19 +73,19 @@ fun LoginScreen() {
                 .align(Alignment.CenterHorizontally)
         )
         CustomOutlinedTextField(
-            text = "username",
-            errorTextId = null,
+            text = username,
+            errorTextId = loginFormState.usernameError,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
             labelText = stringResource(id = R.string.username),
             onTextChanged = { newUsername ->
-                //TODO:
+                viewModel.loginDataChanged(newUsername, password)
             }
         )
         CustomOutlinedTextField(
-            text = "password",
-            errorTextId = null,
+            text = password,
+            errorTextId = loginFormState.passwordError,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
@@ -91,7 +96,7 @@ fun LoginScreen() {
                 R.drawable.ic_show_password
             },
             onTextChanged = { newPassword ->
-                //TODO:
+                viewModel.loginDataChanged(username, newPassword)
             },
             onEndIconClicked = { passwordVisibility = !passwordVisibility }
         )
@@ -102,9 +107,9 @@ fun LoginScreen() {
                 .width(size200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = false
+            enabled = loginFormState.isDataValid
         ) {
-            //TODO:
+            viewModel.login(username, password)
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
