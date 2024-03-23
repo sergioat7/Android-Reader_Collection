@@ -95,12 +95,10 @@ class UserRepository @Inject constructor(
                 false
             )
             success("-")
-        } else if (userData.username.isEmpty() || userData.username != username) {
-            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.username_not_exist))
         } else if (userData.username == username && userData.password == password) {
             success("-")
         } else {
-            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.wrong_password))
+            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.wrong_credentials))
         }
 //        externalScope.launch {
 //
