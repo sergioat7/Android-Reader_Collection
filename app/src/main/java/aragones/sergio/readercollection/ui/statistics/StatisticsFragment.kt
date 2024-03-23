@@ -123,7 +123,7 @@ class StatisticsFragment :
             val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             InformationAlertDialog(
                 show = infoMessageId != -1,
-                textId = infoMessageId
+                text = getString(infoMessageId)
             ) {
                 viewModel.closeDialogs()
             }

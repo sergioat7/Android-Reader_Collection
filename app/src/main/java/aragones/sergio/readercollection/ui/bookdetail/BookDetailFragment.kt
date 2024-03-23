@@ -109,7 +109,7 @@ class BookDetailFragment :
                 })
 
             val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-            InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
+            InformationAlertDialog(show = infoDialogMessageId != -1, text = getString(infoDialogMessageId)) {
 
                 viewModel.closeDialogs()
                 findNavController().popBackStack()
