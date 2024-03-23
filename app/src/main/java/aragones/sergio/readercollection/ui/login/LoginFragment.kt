@@ -39,13 +39,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.onDestroy()
-    }
-    //endregion
 
-    //region Public methods
-    fun goToRegister() {
-        launchActivity(RegisterActivity::class.java)
+        viewModel.onDestroy()
     }
     //endregion
 
@@ -61,14 +56,12 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
             }
         }
 
-        viewModel.loginError.observe(viewLifecycleOwner) { error ->
+        viewModel.activityName.observe(viewLifecycleOwner) { activityName ->
 
-            if (error == null) {
-                launchActivity(MainActivity::class.java, true)
-            } else {
-
-                hideLoading()
-                manageError(error)
+            when (activityName) {
+                MainActivity::class.simpleName -> launchActivity(MainActivity::class.java, true)
+                RegisterActivity::class.simpleName -> launchActivity(RegisterActivity::class.java)
+                else -> Unit
             }
         }
     }

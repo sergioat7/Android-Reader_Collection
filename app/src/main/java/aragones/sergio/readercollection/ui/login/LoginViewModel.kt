@@ -10,7 +10,9 @@ import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.UserRepository
+import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BaseViewModel
+import aragones.sergio.readercollection.ui.register.RegisterActivity
 import com.aragones.sergio.data.auth.AuthData
 import com.aragones.sergio.data.auth.LoginFormState
 import com.aragones.sergio.data.auth.UserData
@@ -31,6 +33,7 @@ class LoginViewModel @Inject constructor(
     private val _loginForm = MutableLiveData<LoginFormState>()
     private val _loginLoading = MutableLiveData<Boolean>()
     private val _loginError = MutableLiveData<ErrorResponse?>()
+    private val _activityName = MutableLiveData<String?>()
     //endregion
 
     //region Public properties
@@ -39,6 +42,7 @@ class LoginViewModel @Inject constructor(
     val loginFormState: LiveData<LoginFormState> = _loginForm
     val loginLoading: LiveData<Boolean> = _loginLoading
     val loginError: LiveData<ErrorResponse?> = _loginError
+    val activityName: LiveData<String?> = _activityName
     //endregion
 
     //region Lifecycle methods
@@ -62,7 +66,7 @@ class LoginViewModel @Inject constructor(
 //            booksRepository.loadBooks(success = {
 
             _loginLoading.value = false
-            _loginError.value = null
+            _activityName.value = MainActivity::class.simpleName
 //            }, failure = {
 //
 //                _loginLoading.value = false
@@ -93,6 +97,10 @@ class LoginViewModel @Inject constructor(
         _username.value = username
         _password.value = password
         _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
+    }
+
+    fun goToRegister() {
+        _activityName.value = RegisterActivity::class.simpleName
     }
     //endregion
 }
