@@ -19,8 +19,6 @@ import com.aragones.sergio.util.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,7 +36,7 @@ class SearchViewModel @Inject constructor(
     private val _searchError = MutableLiveData<ErrorResponse?>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
     private lateinit var pendingBooks: MutableList<BookResponse>
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
@@ -48,7 +46,7 @@ class SearchViewModel @Inject constructor(
     val searchError: LiveData<ErrorResponse?> = _searchError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     var tutorialShown = userRepository.hasSearchTutorialBeenShown
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

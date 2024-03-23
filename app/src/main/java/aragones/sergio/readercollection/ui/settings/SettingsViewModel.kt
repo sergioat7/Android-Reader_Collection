@@ -19,8 +19,6 @@ import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,8 +32,8 @@ class SettingsViewModel @Inject constructor(
     private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse?>()
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableLiveData(-1)
+    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
@@ -53,8 +51,8 @@ class SettingsViewModel @Inject constructor(
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse?> = _profileError
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
-    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

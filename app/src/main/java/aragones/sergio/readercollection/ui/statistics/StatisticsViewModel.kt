@@ -26,8 +26,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
@@ -48,8 +46,8 @@ class StatisticsViewModel @Inject constructor(
     private val _longerBook = MutableLiveData<BookResponse?>()
     private val _shorterBook = MutableLiveData<BookResponse?>()
     private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableLiveData(-1)
+    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
@@ -79,8 +77,8 @@ class StatisticsViewModel @Inject constructor(
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
-    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

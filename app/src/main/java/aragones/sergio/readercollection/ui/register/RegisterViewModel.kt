@@ -16,8 +16,6 @@ import com.aragones.sergio.data.auth.UserData
 import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,14 +27,14 @@ class RegisterViewModel @Inject constructor(
     private val _registerForm = MutableLiveData<LoginFormState>()
     private val _registerLoading = MutableLiveData<Boolean>()
     private val _registerError = MutableLiveData<ErrorResponse?>()
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
     val registerFormState: LiveData<LoginFormState> = _registerForm
     val registerLoading: LiveData<Boolean> = _registerLoading
     val registerError: LiveData<ErrorResponse?> = _registerError
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

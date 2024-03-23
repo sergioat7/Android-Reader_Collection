@@ -7,8 +7,8 @@ package aragones.sergio.readercollection.ui.register
 
 import android.os.Bundle
 import android.view.View
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.fragment.app.viewModels
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentRegisterBinding
@@ -16,9 +16,9 @@ import aragones.sergio.readercollection.extensions.doAfterTextChanged
 import aragones.sergio.readercollection.extensions.getValue
 import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
 import aragones.sergio.readercollection.extensions.setError
-import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BindingFragment
+import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import com.aragones.sergio.util.StatusBarStyle
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,7 +41,7 @@ class RegisterFragment : BindingFragment<FragmentRegisterBinding>() {
         initializeUi()
         binding.composeView.setContent {
 
-            val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+            val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
                 viewModel.closeDialogs()
             }

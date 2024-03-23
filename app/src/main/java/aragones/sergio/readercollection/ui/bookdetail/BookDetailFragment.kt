@@ -12,8 +12,8 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -36,10 +36,10 @@ import aragones.sergio.readercollection.extensions.setValue
 import aragones.sergio.readercollection.extensions.showDatePicker
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.components.TextFieldAlertDialog
-import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.data.business.BookResponse
@@ -93,7 +93,9 @@ class BookDetailFragment :
         initializeUi()
         binding.composeView.setContent {
 
-            val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
+            val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
+                initial = -1
+            )
             ConfirmationAlertDialog(
                 show = confirmationMessageId != -1,
                 textId = confirmationMessageId,
@@ -106,14 +108,14 @@ class BookDetailFragment :
                     viewModel.deleteBook()
                 })
 
-            val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+            val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             InformationAlertDialog(show = infoDialogMessageId != -1, textId = infoDialogMessageId) {
 
                 viewModel.closeDialogs()
                 findNavController().popBackStack()
             }
 
-            val imageDialogMessageId by viewModel.imageDialogMessageId.collectAsState()
+            val imageDialogMessageId by viewModel.imageDialogMessageId.observeAsState(initial = -1)
             TextFieldAlertDialog(
                 show = imageDialogMessageId != -1,
                 titleTextId = imageDialogMessageId,
