@@ -24,6 +24,9 @@ class RegisterViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
+    private val _username = MutableLiveData<String>()
+    private val _password = MutableLiveData<String>()
+    private val _confirmPassword = MutableLiveData<String>()
     private val _registerForm = MutableLiveData<LoginFormState>()
     private val _registerLoading = MutableLiveData<Boolean>()
     private val _registerError = MutableLiveData<ErrorResponse?>()
@@ -31,6 +34,9 @@ class RegisterViewModel @Inject constructor(
     //endregion
 
     //region Public properties
+    val username: LiveData<String> = _username
+    val password: LiveData<String> = _password
+    val confirmPassword: LiveData<String> = _confirmPassword
     val registerFormState: LiveData<LoginFormState> = _registerForm
     val registerLoading: LiveData<Boolean> = _registerLoading
     val registerError: LiveData<ErrorResponse?> = _registerError
@@ -86,6 +92,10 @@ class RegisterViewModel @Inject constructor(
             passwordError = R.string.invalid_repeat_password
             isDataValid = false
         }
+
+        _username.value = username
+        _password.value = password
+        _confirmPassword.value = confirmPassword
         _registerForm.value = LoginFormState(usernameError, passwordError, isDataValid)
     }
 
