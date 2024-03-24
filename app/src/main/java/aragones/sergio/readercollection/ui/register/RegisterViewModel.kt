@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.UserRepository
+import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import com.aragones.sergio.data.auth.AuthData
 import com.aragones.sergio.data.auth.LoginFormState
@@ -31,6 +32,7 @@ class RegisterViewModel @Inject constructor(
     private val _registerLoading = MutableLiveData<Boolean>()
     private val _registerError = MutableLiveData<ErrorResponse?>()
     private val _infoDialogMessageId = MutableLiveData(-1)
+    private val _activityName = MutableLiveData<String?>()
     //endregion
 
     //region Public properties
@@ -41,6 +43,7 @@ class RegisterViewModel @Inject constructor(
     val registerLoading: LiveData<Boolean> = _registerLoading
     val registerError: LiveData<ErrorResponse?> = _registerError
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
+    val activityName: LiveData<String?> = _activityName
     //endregion
 
     //region Lifecycle methods
@@ -61,7 +64,7 @@ class RegisterViewModel @Inject constructor(
                 val authData = AuthData(token)
                 userRepository.storeLoginData(userData, authData)
                 _registerLoading.value = false
-                _registerError.value = null
+                _activityName.value = MainActivity::class.simpleName
             }, failure = {
 
                 _registerLoading.value = false
@@ -104,6 +107,8 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun closeDialogs() {
+
+        _registerError.value = null
         _infoDialogMessageId.value = -1
     }
     //endregion
