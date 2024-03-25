@@ -85,6 +85,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     .fillMaxWidth()
                     .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
                 labelText = stringResource(id = R.string.username),
+                isLastTextField = false,
                 onTextChanged = { newUsername ->
                     viewModel.loginDataChanged(newUsername, password)
                 }
@@ -101,6 +102,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 } else {
                     R.drawable.ic_show_password
                 },
+                isLastTextField = true,
                 onTextChanged = { newPassword ->
                     viewModel.loginDataChanged(username, newPassword)
                 },

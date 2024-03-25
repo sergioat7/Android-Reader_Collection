@@ -79,6 +79,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                     .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
                 labelText = stringResource(id = R.string.username),
                 endIcon = R.drawable.ic_show_info,
+                isLastTextField = false,
                 onTextChanged = { newUsername ->
                     viewModel.registerDataChanged(newUsername, password, confirmPassword)
                 },
@@ -98,6 +99,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 } else {
                     R.drawable.ic_show_password
                 },
+                isLastTextField = false,
                 onTextChanged = { newPassword ->
                     viewModel.registerDataChanged(username, newPassword, confirmPassword)
                 },
@@ -115,6 +117,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 } else {
                     R.drawable.ic_show_password
                 },
+                isLastTextField = true,
                 onTextChanged = { newPassword ->
                     viewModel.registerDataChanged(username, password, newPassword)
                 },
