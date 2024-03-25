@@ -67,6 +67,7 @@ class LoginViewModel @Inject constructor(
 
             _loginLoading.value = false
             _activityName.value = MainActivity::class.simpleName
+            _activityName.value = null
 //            }, failure = {
 //
 //                _loginLoading.value = false
@@ -100,7 +101,9 @@ class LoginViewModel @Inject constructor(
     }
 
     fun goToRegister() {
+        
         _activityName.value = RegisterActivity::class.simpleName
+        _activityName.value = null
     }
 
     fun closeDialogs() {
