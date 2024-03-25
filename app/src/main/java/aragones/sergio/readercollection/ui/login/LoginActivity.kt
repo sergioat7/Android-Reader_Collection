@@ -7,22 +7,75 @@ package aragones.sergio.readercollection.ui.login
 
 import android.os.Bundle
 import androidx.activity.addCallback
+import androidx.activity.viewModels
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.core.content.ContextCompat
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.databinding.ActivityLoginBinding
+import aragones.sergio.readercollection.extensions.isDarkMode
+import aragones.sergio.readercollection.extensions.setStatusBarStyle
+import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BaseActivity
+import aragones.sergio.readercollection.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.ui.register.RegisterActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class LoginActivity : BaseActivity() {
 
+    //region Private properties
+    private val viewModel: LoginViewModel by viewModels()
+    //endregion
+
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_login)
+        window.setStatusBarStyle(
+            ContextCompat.getColor(this, R.color.colorSecondary),
+            !isDarkMode()
+        )
+
+        ActivityLoginBinding.inflate(layoutInflater).apply {
+            setContentView(root)
+
+            composeView.setContent {
+                LoginScreen(viewModel)
+
+                val error by viewModel.loginError.observeAsState()
+                val errorText = StringBuilder()
+                error?.let {
+                    if (it.error.isNotEmpty()) {
+                        errorText.append(it.error)
+                    } else {
+                        errorText.append(resources.getString(it.errorKey))
+                    }
+                }
+                InformationAlertDialog(show = error != null, text = errorText.toString()) {
+                    viewModel.closeDialogs()
+                }
+            }
+        }
+
+        viewModel.activityName.observe(this) { activityName ->
+
+            when (activityName) {
+                MainActivity::class.simpleName -> launchActivity(MainActivity::class.java, true)
+                RegisterActivity::class.simpleName -> launchActivity(RegisterActivity::class.java)
+                else -> Unit
+            }
+        }
 
         onBackPressedDispatcher.addCallback {
             moveTaskToBack(true)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        viewModel.onDestroy()
     }
     //endregion
 }
