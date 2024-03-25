@@ -65,6 +65,7 @@ class RegisterViewModel @Inject constructor(
                 userRepository.storeLoginData(userData, authData)
                 _registerLoading.value = false
                 _activityName.value = MainActivity::class.simpleName
+                _activityName.value = null
             }, failure = {
 
                 _registerLoading.value = false
