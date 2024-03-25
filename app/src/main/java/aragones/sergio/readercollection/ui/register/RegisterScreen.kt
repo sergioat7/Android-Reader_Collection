@@ -70,6 +70,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 contentDescription = "",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
+                    .weight(5f)
             )
             CustomOutlinedTextField(
                 text = username,

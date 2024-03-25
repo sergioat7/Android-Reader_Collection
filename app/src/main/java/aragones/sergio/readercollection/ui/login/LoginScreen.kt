@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.ui.login
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -77,6 +78,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 contentDescription = "",
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
+                    .weight(5f)
             )
             CustomOutlinedTextField(
                 text = username,
@@ -120,6 +122,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 viewModel.login(username, password)
             }
             Row(
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             ) {
@@ -142,8 +145,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                             fontWeight = FontWeight.Bold,
                             fontSize = textSize16.sp,
                             letterSpacing = 0.sp
-                        ),
-                        maxLines = 1
+                        )
                     )
                 }
             }
