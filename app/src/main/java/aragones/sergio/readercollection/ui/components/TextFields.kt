@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -23,6 +24,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -93,6 +96,9 @@ fun CustomOutlinedTextField(
     onEndIconClicked: (() -> Unit)? = null
 ) {
 
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     val margin5 = dimensionResource(id = R.dimen.margin_5dp).value
 
     val textSize12 = dimensionResource(id = R.dimen.text_size_12sp).value
@@ -154,6 +160,11 @@ fun CustomOutlinedTextField(
                 CustomInputType.PASSWORD -> KeyboardOptions(keyboardType = KeyboardType.Password)
                 else -> KeyboardOptions(keyboardType = KeyboardType.Text)
             },
+            keyboardActions = KeyboardActions(onDone = {
+
+                keyboard?.hide()
+                focusManager.clearFocus()
+            }),
             visualTransformation = if (endIcon == R.drawable.ic_show_password) {
                 PasswordVisualTransformation()
             } else {
