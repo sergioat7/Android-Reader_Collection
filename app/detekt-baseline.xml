@@ -234,9 +234,6 @@
             NewLineAtEndOfFile:LoginFormState.kt$com.aragones.sergio.data.auth.LoginFormState.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginFragment.kt$aragones.sergio.readercollection.ui.login.LoginFragment.kt
-        </ID>
-        <ID>
             NewLineAtEndOfFile:LoginResponse.kt$com.aragones.sergio.data.auth.LoginResponse.kt
         </ID>
         <ID>
@@ -279,9 +276,6 @@
         </ID>
         <ID>
             NewLineAtEndOfFile:RegisterActivity.kt$aragones.sergio.readercollection.ui.register.RegisterActivity.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:RegisterFragment.kt$aragones.sergio.readercollection.ui.register.RegisterFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:RegisterViewModel.kt$aragones.sergio.readercollection.ui.register.RegisterViewModel.kt
