@@ -32,6 +32,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -89,6 +90,7 @@ fun CustomOutlinedTextField(
     fontWeight: FontWeight = FontWeight.Normal,
     @DrawableRes endIcon: Int? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
+    isLastTextField: Boolean? = null,
     maxLength: Int = Integer.MAX_VALUE,
     maxLines: Int = Integer.MAX_VALUE,
     enabled: Boolean = true,
@@ -132,6 +134,27 @@ fun CustomOutlinedTextField(
             }
         }
     }
+    val keyboardAction = when (isLastTextField) {
+        true -> ImeAction.Done
+        false -> ImeAction.Next
+        else -> ImeAction.Default
+    }
+    val keyboardOptions = when (inputType) {
+        CustomInputType.NUMBER -> KeyboardOptions(
+            keyboardType = KeyboardType.Number,
+            imeAction = keyboardAction
+        )
+
+        CustomInputType.PASSWORD -> KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = keyboardAction
+        )
+
+        else -> KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = keyboardAction
+        )
+    }
 
     Column(modifier = modifier) {
 
@@ -155,11 +178,7 @@ fun CustomOutlinedTextField(
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon,
-            keyboardOptions = when (inputType) {
-                CustomInputType.NUMBER -> KeyboardOptions(keyboardType = KeyboardType.Number)
-                CustomInputType.PASSWORD -> KeyboardOptions(keyboardType = KeyboardType.Password)
-                else -> KeyboardOptions(keyboardType = KeyboardType.Text)
-            },
+            keyboardOptions = keyboardOptions,
             keyboardActions = KeyboardActions(onDone = {
 
                 keyboard?.hide()
