@@ -25,19 +25,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.ui.components.MainActionButton
 import com.aragones.sergio.data.auth.LoginFormState
-
-@Preview
-@Composable
-fun RegisterScreenPreview() {
-//    RegisterScreen()
-}
 
 @Composable
 fun RegisterScreen(viewModel: RegisterViewModel) {
