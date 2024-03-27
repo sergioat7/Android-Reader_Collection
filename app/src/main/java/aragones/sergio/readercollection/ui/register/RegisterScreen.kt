@@ -55,86 +55,85 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
     val margin8 = dimensionResource(id = R.dimen.margin_8dp).value
     val size200 = dimensionResource(id = R.dimen.size_200dp).value
 
+    Column(
+        Modifier
+            .fillMaxSize()
+            .background(colorResource(id = R.color.colorSecondary))
+            .padding(padding24.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.login_register_image),
+            contentDescription = "",
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .weight(5f)
+        )
+        CustomOutlinedTextField(
+            text = username,
+            errorTextId = registerFormState.usernameError,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
+            labelText = stringResource(id = R.string.username),
+            endIcon = R.drawable.ic_show_info,
+            isLastTextField = false,
+            onTextChanged = { newUsername ->
+                viewModel.registerDataChanged(newUsername, password, confirmPassword)
+            },
+            onEndIconClicked = {
+                viewModel.showInfoDialog(R.string.username_info)
+            }
+        )
+        CustomOutlinedTextField(
+            text = password,
+            errorTextId = registerFormState.passwordError,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
+            labelText = stringResource(id = R.string.password),
+            endIcon = if (passwordVisibility) {
+                R.drawable.ic_hide_password
+            } else {
+                R.drawable.ic_show_password
+            },
+            isLastTextField = false,
+            onTextChanged = { newPassword ->
+                viewModel.registerDataChanged(username, newPassword, confirmPassword)
+            },
+            onEndIconClicked = { passwordVisibility = !passwordVisibility }
+        )
+        CustomOutlinedTextField(
+            text = confirmPassword,
+            errorTextId = registerFormState.passwordError,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
+            labelText = stringResource(id = R.string.confirm_password),
+            endIcon = if (confirmPasswordVisibility) {
+                R.drawable.ic_hide_password
+            } else {
+                R.drawable.ic_show_password
+            },
+            isLastTextField = true,
+            onTextChanged = { newPassword ->
+                viewModel.registerDataChanged(username, password, newPassword)
+            },
+            onEndIconClicked = { confirmPasswordVisibility = !confirmPasswordVisibility }
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        MainActionButton(
+            text = stringResource(id = R.string.sign_up),
+            modifier = Modifier
+                .width(size200.dp)
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = padding12.dp, vertical = padding24.dp),
+            enabled = registerFormState.isDataValid
+        ) {
+            viewModel.register(username, password)
+        }
+    }
+
     if (loading) {
         CustomCircularProgressIndicator()
-    } else {
-
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(colorResource(id = R.color.colorSecondary))
-                .padding(padding24.dp)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.login_register_image),
-                contentDescription = "",
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .weight(5f)
-            )
-            CustomOutlinedTextField(
-                text = username,
-                errorTextId = registerFormState.usernameError,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
-                labelText = stringResource(id = R.string.username),
-                endIcon = R.drawable.ic_show_info,
-                isLastTextField = false,
-                onTextChanged = { newUsername ->
-                    viewModel.registerDataChanged(newUsername, password, confirmPassword)
-                },
-                onEndIconClicked = {
-                    viewModel.showInfoDialog(R.string.username_info)
-                }
-            )
-            CustomOutlinedTextField(
-                text = password,
-                errorTextId = registerFormState.passwordError,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
-                labelText = stringResource(id = R.string.password),
-                endIcon = if (passwordVisibility) {
-                    R.drawable.ic_hide_password
-                } else {
-                    R.drawable.ic_show_password
-                },
-                isLastTextField = false,
-                onTextChanged = { newPassword ->
-                    viewModel.registerDataChanged(username, newPassword, confirmPassword)
-                },
-                onEndIconClicked = { passwordVisibility = !passwordVisibility }
-            )
-            CustomOutlinedTextField(
-                text = confirmPassword,
-                errorTextId = registerFormState.passwordError,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
-                labelText = stringResource(id = R.string.confirm_password),
-                endIcon = if (confirmPasswordVisibility) {
-                    R.drawable.ic_hide_password
-                } else {
-                    R.drawable.ic_show_password
-                },
-                isLastTextField = true,
-                onTextChanged = { newPassword ->
-                    viewModel.registerDataChanged(username, password, newPassword)
-                },
-                onEndIconClicked = { confirmPasswordVisibility = !confirmPasswordVisibility }
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            MainActionButton(
-                text = stringResource(id = R.string.sign_up),
-                modifier = Modifier
-                    .width(size200.dp)
-                    .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = padding12.dp, vertical = padding24.dp),
-                enabled = registerFormState.isDataValid
-            ) {
-                viewModel.register(username, password)
-            }
-        }
     }
 }
