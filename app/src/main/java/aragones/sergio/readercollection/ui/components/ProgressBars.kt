@@ -5,17 +5,19 @@
 
 package aragones.sergio.readercollection.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 
 @Preview(showBackground = true)
@@ -29,7 +31,13 @@ fun CustomCircularProgressIndicator() {
 
     val colorPrimary = colorResource(id = R.color.colorPrimary)
 
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.DarkGray.copy(alpha = 0.75f))
+            .clickable {}//To avoid clicks in views behind
+            .pointerInput(Unit) { detectTapGestures(onPress = {}) }//To avoid showing shadow on click
+    ) {
         CircularProgressIndicator(color = colorPrimary, modifier = Modifier.align(Alignment.Center))
     }
 }
