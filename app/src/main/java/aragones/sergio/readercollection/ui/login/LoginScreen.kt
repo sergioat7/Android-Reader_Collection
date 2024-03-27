@@ -31,7 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
@@ -40,12 +39,6 @@ import aragones.sergio.readercollection.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.ui.components.MainActionButton
 import aragones.sergio.readercollection.ui.components.robotoSerifFamily
 import com.aragones.sergio.data.auth.LoginFormState
-
-@Preview
-@Composable
-fun LoginPreview() {
-//    LoginScreen()
-}
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
