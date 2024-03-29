@@ -6,9 +6,9 @@
 package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.data.remote.ApiManager
-import aragones.sergio.readercollection.data.remote.interfaces.BookApiService
-import aragones.sergio.readercollection.data.remote.interfaces.GoogleApiService
-import aragones.sergio.readercollection.data.remote.interfaces.UserApiService
+import aragones.sergio.readercollection.data.remote.services.BookApiService
+import aragones.sergio.readercollection.data.remote.services.GoogleApiService
+import aragones.sergio.readercollection.data.remote.services.UserApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -3,12 +3,14 @@
  * Created by Sergio Aragonés on 18/10/2020
  */
 
-package aragones.sergio.readercollection.data.remote.interfaces
+package aragones.sergio.readercollection.data.remote.services
 
 import com.aragones.sergio.data.business.GoogleBookListResponse
 import com.aragones.sergio.data.business.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
-import retrofit2.http.*
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.QueryMap
 
 interface GoogleApiService {
 

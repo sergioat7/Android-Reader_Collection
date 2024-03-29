@@ -1,16 +1,20 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 17/10/2020
  */
 
-package aragones.sergio.readercollection.data.remote.interfaces
+package aragones.sergio.readercollection.data.remote.services
 
 import aragones.sergio.readercollection.data.remote.ApiManager
 import com.aragones.sergio.data.auth.LoginCredentials
 import com.aragones.sergio.data.auth.LoginResponse
 import com.aragones.sergio.data.auth.NewPassword
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Headers
+import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface UserApiService {
 

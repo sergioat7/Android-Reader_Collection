@@ -1,15 +1,21 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 18/10/2020
  */
 
-package aragones.sergio.readercollection.data.remote.interfaces
+package aragones.sergio.readercollection.data.remote.services
 
 import aragones.sergio.readercollection.data.remote.ApiManager
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.FavouriteBook
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.Headers
+import retrofit2.http.PATCH
+import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface BookApiService {
 
