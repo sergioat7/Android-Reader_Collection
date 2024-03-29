@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 6/11/2020
  */
 
-package aragones.sergio.readercollection.data.source
+package aragones.sergio.readercollection.domain
 
 import android.app.LocaleManager
 import android.content.Context
@@ -11,10 +11,10 @@ import android.os.Build
 import android.os.LocaleList
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.services.UserApiService
-import aragones.sergio.readercollection.data.source.base.BaseRepository
-import aragones.sergio.readercollection.data.source.di.MainDispatcher
-import aragones.sergio.readercollection.data.source.model.AuthData
-import aragones.sergio.readercollection.data.source.model.UserData
+import aragones.sergio.readercollection.domain.base.BaseRepository
+import aragones.sergio.readercollection.domain.di.MainDispatcher
+import aragones.sergio.readercollection.domain.model.AuthData
+import aragones.sergio.readercollection.domain.model.UserData
 import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext

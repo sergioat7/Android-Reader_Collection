@@ -12,7 +12,7 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.InAppUpdateService

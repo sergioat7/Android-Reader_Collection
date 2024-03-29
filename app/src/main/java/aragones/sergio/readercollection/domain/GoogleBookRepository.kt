@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 7/11/2020
  */
 
-package aragones.sergio.readercollection.data.source
+package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
-import aragones.sergio.readercollection.data.source.base.BaseRepository
+import aragones.sergio.readercollection.domain.base.BaseRepository
 import com.aragones.sergio.data.business.GoogleBookListResponse
 import com.aragones.sergio.data.business.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single

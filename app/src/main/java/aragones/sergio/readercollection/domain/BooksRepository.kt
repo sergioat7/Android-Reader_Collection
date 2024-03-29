@@ -1,17 +1,17 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 19/11/2020
  */
 
-package aragones.sergio.readercollection.data.source
+package aragones.sergio.readercollection.domain
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.services.BookApiService
-import aragones.sergio.readercollection.data.source.base.BaseRepository
-import aragones.sergio.readercollection.data.source.di.MainDispatcher
+import aragones.sergio.readercollection.domain.base.BaseRepository
+import aragones.sergio.readercollection.domain.di.MainDispatcher
 import com.aragones.sergio.ReaderCollectionDatabase
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse
