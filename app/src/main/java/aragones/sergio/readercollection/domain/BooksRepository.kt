@@ -9,34 +9,25 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
-import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.domain.base.BaseRepository
-import aragones.sergio.readercollection.domain.di.MainDispatcher
-import com.aragones.sergio.ReaderCollectionDatabase
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
-    private val api: BookApiService,
-    private val database: ReaderCollectionDatabase,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    private val booksLocalDataSource: BooksLocalDataSource,
+    private val booksRemoteDataSource: BooksRemoteDataSource
 ) : BaseRepository() {
 
     //region Private properties
-    private val externalScope = CoroutineScope(Job() + mainDispatcher)
     private val moshiAdapter = Moshi.Builder()
         .add(MoshiDateAdapter("MMM dd, yyyy"))
         .build().adapter<List<BookResponse?>?>(
@@ -50,46 +41,7 @@ class BooksRepository @Inject constructor(
     //region Public methods
     fun loadBooks(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
         success()
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.getBooks())) {
-//                    is RequestResult.JsonSuccess -> {
-//
-//                        val newBooks = response.body
-//                        insertBooksDatabaseObserver(newBooks).subscribeBy(
-//                            onComplete = {
-//                                handleDisabledContentObserver(newBooks).subscribeBy(
-//                                    onComplete = {
-//                                        success()
-//                                    },
-//                                    onError = {
-//                                        failure(
-//                                            ErrorResponse(
-//                                                Constants.EMPTY_VALUE,
-//                                                R.string.error_database
-//                                            )
-//                                        )
-//                                    }
-//                                ).addTo(disposables)
-//                            },
-//                            onError = {
-//                                failure(
-//                                    ErrorResponse(
-//                                        Constants.EMPTY_VALUE,
-//                                        R.string.error_database
-//                                    )
-//                                )
-//                            }
-//                        ).addTo(disposables)
-//                    }
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
+//        booksRemoteDataSource.loadBooks(success, failure)
     }
 
     fun getBooksDatabaseObserver(
@@ -118,51 +70,41 @@ class BooksRepository @Inject constructor(
         }
 
         val query = SimpleSQLiteQuery(queryString)
-        return database
-            .bookDao()
-            .getBooksObserver(query)
-            .`as`(RxJavaBridge.toV3Maybe())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+        return booksLocalDataSource
+            .getBooksDatabaseObserver(query)
             .map { it.map { book -> book.toDomain() } }
     }
 
     fun getPendingBooksDatabaseObserver(): Maybe<List<BookResponse>> {
 
-        return database
-            .bookDao()
-            .getPendingBooksObserver()
-            .`as`(RxJavaBridge.toV3Maybe())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+        return booksLocalDataSource
+            .getPendingBooksDatabaseObserver()
             .map { it.map { book -> book.toDomain() } }
     }
 
     fun importDataFrom(jsonData: String): Completable {
 
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
-        return database
-            .bookDao()
-            .insertBooksObserver(books.map { it.toLocalData() })
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+        return booksLocalDataSource.importDataFrom(books.map { it.toLocalData() })
     }
 
     fun exportDataTo(): Single<String> {
 
         return Single.create<String> { emitter ->
-            getBooksDatabaseObserver(null, null, null, null).subscribeBy(
-                onComplete = {
-                    emitter.onSuccess("")
-                },
-                onSuccess = {
-                    emitter.onSuccess(moshiAdapter.toJson(it))
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+            booksLocalDataSource.getBooksDatabaseObserver(SimpleSQLiteQuery("SELECT * FROM Book"))
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onSuccess("")
+                    },
+                    onSuccess = {
+
+                        val books = it.map { book -> book.toDomain() }
+                        emitter.onSuccess(moshiAdapter.toJson(books))
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -170,17 +112,15 @@ class BooksRepository @Inject constructor(
 
     fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {
 
-        return database
-            .bookDao()
-            .getBookObserver(googleId)
-            .`as`(RxJavaBridge.toV3Single())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+        return booksLocalDataSource
+            .getBookDatabaseObserver(googleId)
             .map { it.toDomain() }
     }
 
     fun createBook(newBook: BookResponse, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        insertBooksDatabaseObserver(listOf(newBook)).subscribeBy(
+//        booksRemoteDataSource.createBook(newBook, success, failure)
+
+        booksLocalDataSource.insertBooksDatabaseObserver(listOf(newBook.toLocalData())).subscribeBy(
             onComplete = {
                 success()
             },
@@ -193,18 +133,6 @@ class BooksRepository @Inject constructor(
                 )
             }
         ).addTo(disposables)
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.createBook(newBook))) {
-//                    is RequestResult.Success -> loadBooks(success, failure)
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
     }
 
     fun setBook(
@@ -212,7 +140,8 @@ class BooksRepository @Inject constructor(
         success: (BookResponse) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+//        booksRemoteDataSource.setBook(book, success = {
+        booksLocalDataSource.updateBooksDatabaseObserver(listOf(book.toLocalData())).subscribeBy(
             onComplete = {
                 success(book)
             },
@@ -225,32 +154,7 @@ class BooksRepository @Inject constructor(
                 )
             }
         ).addTo(disposables)
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.setBook(book.id, book))) {
-//                    is RequestResult.JsonSuccess -> {
-//                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-//                            onComplete = {
-//                                success(book)
-//                            },
-//                            onError = {
-//                                failure(
-//                                    ErrorResponse(
-//                                        Constants.EMPTY_VALUE,
-//                                        R.string.error_database
-//                                    )
-//                                )
-//                            }
-//                        ).addTo(disposables)
-//                    }
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
+//        }, failure = failure)
     }
 
     fun setBooks(
@@ -258,9 +162,64 @@ class BooksRepository @Inject constructor(
         success: () -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        updateBooksDatabaseObserver(books).subscribeBy(
-            onComplete = {
-                success()
+//        booksRemoteDataSource.setBook(book, success = {
+        booksLocalDataSource.updateBooksDatabaseObserver(books.map { it.toLocalData() })
+            .subscribeBy(
+                onComplete = {
+                    success()
+                },
+                onError = {
+                    failure(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database
+                        )
+                    )
+                }
+            ).addTo(disposables)
+//        }, failure = failure)
+    }
+
+    fun setFavouriteBook(
+        bookId: String,
+        isFavourite: Boolean,
+        success: (BookResponse) -> Unit,
+        failure: (ErrorResponse) -> Unit
+    ) {
+//        booksRemoteDataSource.setFavouriteBook(bookId = , success = { book ->
+//            booksLocalDataSource.updateBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                onComplete = {
+//                    success(book)
+//                },
+//                onError = {
+//                    failure(
+//                        ErrorResponse(
+//                            Constants.EMPTY_VALUE,
+//                            R.string.error_database
+//                        )
+//                    )
+//                }
+//            ).addTo(disposables)
+//        }, failure)
+        booksLocalDataSource.getBookDatabaseObserver(bookId).subscribeBy(
+            onSuccess = {
+
+                val book = it.toDomain()
+                book.isFavourite = isFavourite
+                booksLocalDataSource.updateBooksDatabaseObserver(listOf(book.toLocalData()))
+                    .subscribeBy(
+                        onComplete = {
+                            success(book)
+                        },
+                        onError = {
+                            failure(
+                                ErrorResponse(
+                                    Constants.EMPTY_VALUE,
+                                    R.string.error_database
+                                )
+                            )
+                        }
+                    ).addTo(disposables)
             },
             onError = {
                 failure(
@@ -274,9 +233,11 @@ class BooksRepository @Inject constructor(
     }
 
     fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        getBookDatabaseObserver(bookId).subscribeBy(
+
+//        booksRemoteDataSource.deleteBook(bookId, success = {
+        booksLocalDataSource.getBookDatabaseObserver(bookId).subscribeBy(
             onSuccess = { book ->
-                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
+                booksLocalDataSource.deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
                     onComplete = {
                         success()
                     },
@@ -299,164 +260,32 @@ class BooksRepository @Inject constructor(
                 )
             }
         ).addTo(disposables)
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.deleteBook(bookId))) {
-//                    is RequestResult.Success -> {
-//                        getBookDatabaseObserver(bookId).subscribeBy(
-//                            onSuccess = { book ->
-//                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
-//                                    onComplete = {
-//                                        success()
-//                                    },
-//                                    onError = {
-//                                        failure(
-//                                            ErrorResponse(
-//                                                Constants.EMPTY_VALUE,
-//                                                R.string.error_database
-//                                            )
-//                                        )
-//                                    }
-//                                ).addTo(disposables)
-//                            },
-//                            onError = {
-//                                failure(
-//                                    ErrorResponse(
-//                                        Constants.EMPTY_VALUE,
-//                                        R.string.error_database
-//                                    )
-//                                )
-//                            }
-//                        ).addTo(disposables)
-//                    }
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-    }
-
-    fun setFavouriteBook(
-        bookId: String,
-        isFavourite: Boolean,
-        success: (BookResponse) -> Unit,
-        failure: (ErrorResponse) -> Unit
-    ) {
-        getBookDatabaseObserver(bookId).subscribeBy(
-            onSuccess = { book ->
-                book.isFavourite = isFavourite
-                updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-                    onComplete = {
-                        success(book)
-                    },
-                    onError = {
-                        failure(
-                            ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.error_database
-                            )
-                        )
-                    }
-                ).addTo(disposables)
-            },
-            onError = {
-                failure(
-                    ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database
-                    )
-                )
-            }
-        ).addTo(disposables)
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(
-//                    api.setFavouriteBook(
-//                        bookId,
-//                        FavouriteBook(isFavourite)
-//                    )
-//                )) {
-//                    is RequestResult.JsonSuccess -> {
-//
-//                        val book = response.body
-//                        updateBooksDatabaseObserver(listOf(book)).subscribeBy(
-//                            onComplete = {
-//                                success(book)
-//                            },
-//                            onError = {
-//                                failure(
-//                                    ErrorResponse(
-//                                        Constants.EMPTY_VALUE,
-//                                        R.string.error_database
-//                                    )
-//                                )
-//                            }
-//                        ).addTo(disposables)
-//                    }
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
+//        }, failure)
     }
 
     fun resetTableObserver(): Completable {
         return Completable.create { emitter ->
 
-            getBooksDatabaseObserver().subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onSuccess = { books ->
-                    deleteBooksDatabaseObserver(books).subscribeBy(
-                        onComplete = {
-                            emitter.onComplete()
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        }
-                    ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                }
-            ).addTo(disposables)
+            booksLocalDataSource.getBooksDatabaseObserver(SimpleSQLiteQuery("SELECT * FROM Book"))
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onSuccess = { books ->
+                        booksLocalDataSource.deleteBooksDatabaseObserver(books).subscribeBy(
+                            onComplete = {
+                                emitter.onComplete()
+                            },
+                            onError = {
+                                emitter.onError(it)
+                            }
+                        ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    }
+                ).addTo(disposables)
         }.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-    //endregion
-
-    //region Private methods
-    private fun insertBooksDatabaseObserver(books: List<BookResponse>): Completable {
-        return database
-            .bookDao()
-            .insertBooksObserver(books.map { it.toLocalData() })
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    private fun updateBooksDatabaseObserver(books: List<BookResponse>): Completable {
-        return database
-            .bookDao()
-            .updateBooksObserver(books.map { it.toLocalData() })
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
-    }
-
-    private fun deleteBooksDatabaseObserver(books: List<BookResponse>): Completable {
-        return database
-            .bookDao()
-            .deleteBooksObserver(books.map { it.toLocalData() })
-            .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
     }
     //endregion
 }
