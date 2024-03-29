@@ -1,24 +1,25 @@
 /*
- * Copyright (c) 2021 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 5/1/2021
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 29/3/2024
  */
 
-package com.aragones.sergio.database
+package aragones.sergio.readercollection.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import aragones.sergio.readercollection.data.local.converters.DateConverter
+import aragones.sergio.readercollection.data.local.converters.ListConverter
 import com.aragones.sergio.data.business.BaseModel
 import com.aragones.sergio.data.business.BookResponse
-import com.aragones.sergio.database.daos.BookDao
 
 @Database(
     entities = [BookResponse::class],
     version = 3
 )
 @TypeConverters(
-    com.aragones.sergio.database.converters.ListConverter::class,
-    com.aragones.sergio.database.converters.DateConverter::class
+    ListConverter::class,
+    DateConverter::class
 )
 abstract class ReaderCollectionDatabase : RoomDatabase() {
 
