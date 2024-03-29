@@ -13,7 +13,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
-import com.aragones.sergio.data.business.BookResponse
+import aragones.sergio.readercollection.data.local.model.Book
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
@@ -22,20 +22,20 @@ import io.reactivex.Single
 interface BookDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBooksObserver(books: List<BookResponse>): Completable
+    fun insertBooksObserver(books: List<Book>): Completable
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateBooksObserver(books: List<BookResponse>): Completable
+    fun updateBooksObserver(books: List<Book>): Completable
 
     @Delete
-    fun deleteBooksObserver(books: List<BookResponse>): Completable
+    fun deleteBooksObserver(books: List<Book>): Completable
 
     @RawQuery
-    fun getBooksObserver(query: SupportSQLiteQuery): Maybe<List<BookResponse>>
+    fun getBooksObserver(query: SupportSQLiteQuery): Maybe<List<Book>>
 
     @Query("SELECT * FROM Book WHERE state == 'PENDING'")
-    fun getPendingBooksObserver(): Maybe<List<BookResponse>>
+    fun getPendingBooksObserver(): Maybe<List<Book>>
 
     @Query("SELECT * FROM Book WHERE id == :id")
-    fun getBookObserver(id: String): Single<BookResponse>
+    fun getBookObserver(id: String): Single<Book>
 }
