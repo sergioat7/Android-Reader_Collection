@@ -5,8 +5,8 @@
 
 package aragones.sergio.readercollection.data.source
 
-import aragones.sergio.readercollection.data.local.model.Book
 import com.aragones.sergio.data.business.BookResponse
+import com.aragones.sergio.model.Book
 
 fun BookResponse.toLocalData(): Book {
     return Book(

@@ -3,15 +3,15 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.data.local
+package com.aragones.sergio
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import aragones.sergio.readercollection.data.local.converters.DateConverter
-import aragones.sergio.readercollection.data.local.converters.ListConverter
-import aragones.sergio.readercollection.data.local.model.BaseEntity
-import aragones.sergio.readercollection.data.local.model.Book
+import com.aragones.sergio.converters.DateConverter
+import com.aragones.sergio.converters.ListConverter
+import com.aragones.sergio.model.BaseEntity
+import com.aragones.sergio.model.Book
 
 @Database(
     entities = [Book::class],

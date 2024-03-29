@@ -3,13 +3,13 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.data.local.di
+package com.aragones.sergio.di
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import aragones.sergio.readercollection.data.local.ReaderCollectionDatabase
+import com.aragones.sergio.ReaderCollectionDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,7 +21,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
 
-    const val DATABASE_NAME = "ReaderCollection"
+    private const val DATABASE_NAME = "ReaderCollection"
 
     private val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {

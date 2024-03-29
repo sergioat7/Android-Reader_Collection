@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 5/1/2021
  */
 
-package aragones.sergio.readercollection.data.local.converters
+package com.aragones.sergio.converters
 
 import androidx.room.TypeConverter
 import java.util.Date

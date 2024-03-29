@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.data.local
+package com.aragones.sergio
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -13,7 +13,7 @@ import androidx.room.Query
 import androidx.room.RawQuery
 import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
-import aragones.sergio.readercollection.data.local.model.Book
+import com.aragones.sergio.model.Book
 import io.reactivex.Completable
 import io.reactivex.Maybe
 import io.reactivex.Single
