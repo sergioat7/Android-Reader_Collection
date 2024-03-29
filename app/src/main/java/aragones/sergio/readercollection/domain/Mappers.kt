@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.data.source
+package aragones.sergio.readercollection.domain
 
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.model.Book

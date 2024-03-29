@@ -8,9 +8,9 @@ package aragones.sergio.readercollection.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.source.BooksRepository
-import aragones.sergio.readercollection.data.source.GoogleBookRepository
-import aragones.sergio.readercollection.data.source.UserRepository
+import aragones.sergio.readercollection.domain.BooksRepository
+import aragones.sergio.readercollection.domain.GoogleBookRepository
+import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse

@@ -18,7 +18,7 @@ import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.toDate

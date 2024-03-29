@@ -19,7 +19,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.source.SharedPreferencesHandler
+import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.addChip

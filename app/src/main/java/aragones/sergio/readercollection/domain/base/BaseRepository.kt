@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 9/1/2021
  */
 
-package aragones.sergio.readercollection.data.source.base
+package aragones.sergio.readercollection.domain.base
 
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 
