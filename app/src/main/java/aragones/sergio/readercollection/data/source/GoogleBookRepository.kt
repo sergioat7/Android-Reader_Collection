@@ -5,9 +5,9 @@
 
 package aragones.sergio.readercollection.data.source
 
-import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.remote.ApiManager
-import aragones.sergio.readercollection.data.remote.interfaces.GoogleApiService
+import aragones.sergio.readercollection.data.remote.services.GoogleApiService
+import aragones.sergio.readercollection.data.source.base.BaseRepository
 import com.aragones.sergio.data.business.GoogleBookListResponse
 import com.aragones.sergio.data.business.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
