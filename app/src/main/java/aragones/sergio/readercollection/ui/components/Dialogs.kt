@@ -26,6 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -69,7 +70,8 @@ fun ConfirmationAlertDialog(
         ) {
             Surface(
                 color = colorResource(id = R.color.colorSecondary),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.testTag("confirmationAlertDialog")
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextMessageAlertDialog(stringResource(id = textId))
@@ -113,7 +115,8 @@ fun InformationAlertDialog(
         ) {
             Surface(
                 color = colorResource(id = R.color.colorSecondary),
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.testTag("informationAlertDialog")
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextMessageAlertDialog(text)
@@ -161,7 +164,8 @@ fun TextFieldAlertDialog(
         ) {
             Surface(
                 color = colorSecondary,
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.testTag("textFieldAlertDialog")
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextTitleAlertDialog(titleTextId)
@@ -174,7 +178,8 @@ fun TextFieldAlertDialog(
                             .border(
                                 BorderStroke(1.dp, colorResource(id = R.color.colorPrimary)),
                                 shape = RoundedCornerShape(10.dp)
-                            ),
+                            )
+                            .testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = colorPrimary,
                             unfocusedBorderColor = colorPrimaryLight,
@@ -249,7 +254,7 @@ fun TextButtonAlertDialog(
 
     TextButton(
         onClick = { onClick() },
-        modifier = modifier
+        modifier = modifier.testTag("textButtonAlertDialog")
     ) {
         Text(
             text = stringResource(id = textId).uppercase(),
