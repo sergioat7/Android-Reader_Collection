@@ -6,9 +6,9 @@
 package aragones.sergio.readercollection.data.remote.services
 
 import aragones.sergio.readercollection.data.remote.ApiManager
-import com.aragones.sergio.data.auth.LoginCredentials
-import com.aragones.sergio.data.auth.LoginResponse
-import com.aragones.sergio.data.auth.NewPassword
+import aragones.sergio.readercollection.data.remote.model.LoginCredentials
+import aragones.sergio.readercollection.data.remote.model.LoginResponse
+import aragones.sergio.readercollection.data.remote.model.NewPassword
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

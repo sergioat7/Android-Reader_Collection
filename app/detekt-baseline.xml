@@ -94,7 +94,9 @@
         <ID>
             NewLineAtEndOfFile:ApiManager.kt$aragones.sergio.readercollection.network.ApiManager.kt
         </ID>
-        <ID>NewLineAtEndOfFile:AuthData.kt$com.aragones.sergio.data.auth.AuthData.kt</ID>
+        <ID>
+            NewLineAtEndOfFile:AuthData.kt$aragones.sergio.readercollection.data.source.model.AuthData.kt
+        </ID>
         <ID>
             NewLineAtEndOfFile:BaseActivity.kt$aragones.sergio.readercollection.ui.base.BaseActivity.kt
         </ID>
@@ -228,13 +230,13 @@
             NewLineAtEndOfFile:LoginActivity.kt$aragones.sergio.readercollection.ui.login.LoginActivity.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginCredentials.kt$com.aragones.sergio.data.auth.LoginCredentials.kt
+            NewLineAtEndOfFile:LoginCredentials.kt$aragones.sergio.readercollection.data.remote.model.LoginCredentials.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginFormState.kt$com.aragones.sergio.data.auth.LoginFormState.kt
+            NewLineAtEndOfFile:LoginFormState.kt$aragones.sergio.readercollection.ui.login.model.LoginFormState.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginResponse.kt$com.aragones.sergio.data.auth.LoginResponse.kt
+            NewLineAtEndOfFile:LoginResponse.kt$aragones.sergio.readercollection.data.remote.model.LoginResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LoginViewModel.kt$aragones.sergio.readercollection.ui.login.LoginViewModel.kt
@@ -251,7 +253,7 @@
             NewLineAtEndOfFile:NetworkModule.kt$aragones.sergio.readercollection.network.di.NetworkModule.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:NewPassword.kt$com.aragones.sergio.data.auth.NewPassword.kt
+            NewLineAtEndOfFile:NewPassword.kt$aragones.sergio.readercollection.data.remote.model.NewPassword.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:NumberPickerExtensions.kt$aragones.sergio.readercollection.extensions.NumberPickerExtensions.kt
@@ -322,7 +324,9 @@
         <ID>
             NewLineAtEndOfFile:UserApiService.kt$aragones.sergio.readercollection.network.interfaces.UserApiService.kt
         </ID>
-        <ID>NewLineAtEndOfFile:UserData.kt$com.aragones.sergio.data.auth.UserData.kt</ID>
+        <ID>
+            NewLineAtEndOfFile:UserData.kt$aragones.sergio.readercollection.data.source.model.UserData.kt
+        </ID>
         <ID>
             NewLineAtEndOfFile:UserRepository.kt$aragones.sergio.readercollection.data.source.UserRepository.kt
         </ID>

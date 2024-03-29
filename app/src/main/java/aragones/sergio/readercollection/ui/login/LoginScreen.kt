@@ -38,7 +38,7 @@ import aragones.sergio.readercollection.ui.components.CustomCircularProgressIndi
 import aragones.sergio.readercollection.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.ui.components.MainActionButton
 import aragones.sergio.readercollection.ui.components.robotoSerifFamily
-import com.aragones.sergio.data.auth.LoginFormState
+import aragones.sergio.readercollection.ui.login.model.LoginFormState
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {

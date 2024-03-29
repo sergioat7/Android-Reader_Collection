@@ -3,13 +3,13 @@
  * Created by Sergio Aragonés on 19/10/2020
  */
 
-package com.aragones.sergio.data.auth
+package aragones.sergio.readercollection.data.source.model
 
-import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class NewPassword(
-    @Json(name = "password")
-    val password: String
+data class UserData(
+    var username: String,
+    var password: String,
+    var isLoggedIn: Boolean
 )
