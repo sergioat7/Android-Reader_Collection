@@ -12,6 +12,8 @@ import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse
+import com.aragones.sergio.data.business.GoogleBookListResponse
+import com.aragones.sergio.data.business.GoogleBookResponse
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
@@ -286,6 +288,18 @@ class BooksRepository @Inject constructor(
                     }
                 ).addTo(disposables)
         }.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
+    }
+
+    fun searchBooksObserver(
+        query: String,
+        page: Int,
+        order: String?
+    ): Single<GoogleBookListResponse> {
+        return booksRemoteDataSource.searchBooksObserver(query, page, order)
+    }
+
+    fun getBookObserver(volumeId: String): Single<GoogleBookResponse> {
+        return booksRemoteDataSource.getBookObserver(volumeId)
     }
     //endregion
 }

@@ -10,7 +10,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.GoogleBookRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import com.aragones.sergio.data.business.BookResponse
@@ -24,7 +23,6 @@ import javax.inject.Inject
 class BookDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
-    private val googleBookRepository: GoogleBookRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
@@ -83,7 +81,6 @@ class BookDetailViewModel @Inject constructor(
         super.onDestroy()
 
         booksRepository.onDestroy()
-        googleBookRepository.onDestroy()
         userRepository.onDestroy()
     }
     //endregion
@@ -174,7 +171,7 @@ class BookDetailViewModel @Inject constructor(
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            googleBookRepository.getBookObserver(bookId).subscribeBy(
+            booksRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = BookResponse(it)
