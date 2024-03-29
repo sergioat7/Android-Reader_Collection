@@ -3,14 +3,13 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package com.aragones.sergio.database.di
+package aragones.sergio.readercollection.data.local.di
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.aragones.sergio.database.ReaderCollectionDatabase
-import com.aragones.sergio.util.Constants
+import aragones.sergio.readercollection.data.local.ReaderCollectionDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +20,8 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
+
+    const val DATABASE_NAME = "ReaderCollection"
 
     private val MIGRATION_1_2 = object : Migration(1, 2) {
         override fun migrate(database: SupportSQLiteDatabase) {
@@ -43,7 +44,7 @@ object DatabaseModule {
             .databaseBuilder(
                 context.applicationContext,
                 ReaderCollectionDatabase::class.java,
-                Constants.DATABASE_NAME
+                DATABASE_NAME
             )
             .addMigrations(MIGRATION_1_2)
             .addMigrations(MIGRATION_2_3)

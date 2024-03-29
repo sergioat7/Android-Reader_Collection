@@ -27,7 +27,6 @@ object Preferences {
 }
 
 object Constants {
-    const val DATABASE_NAME = "ReaderCollection"
     const val DATE_FORMAT = "yyyy-MM-dd"
     const val MAX_LINES = Int.MAX_VALUE
     const val EMPTY_VALUE = ""
