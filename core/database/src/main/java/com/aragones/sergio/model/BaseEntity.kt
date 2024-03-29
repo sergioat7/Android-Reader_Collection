@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.data.local.model
+package com.aragones.sergio.model
 
 interface BaseEntity<T> {
     val id: T

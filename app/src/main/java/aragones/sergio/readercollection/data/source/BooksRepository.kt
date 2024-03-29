@@ -12,9 +12,9 @@ import aragones.sergio.readercollection.data.source.di.MainDispatcher
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.interfaces.BookApiService
+import com.aragones.sergio.ReaderCollectionDatabase
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse
-import aragones.sergio.readercollection.data.local.ReaderCollectionDatabase
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types

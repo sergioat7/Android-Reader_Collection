@@ -43,10 +43,7 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":core:util"))
-    implementation(project(":data"))
-
+    
     implementation(libs.moshi)
 
     implementation(libs.room.runtime)

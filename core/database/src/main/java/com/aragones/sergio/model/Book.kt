@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.data.local.model
+package com.aragones.sergio.model
 
 import androidx.room.Entity
 import androidx.room.Ignore
