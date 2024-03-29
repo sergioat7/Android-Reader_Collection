@@ -10,11 +10,11 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import aragones.sergio.readercollection.data.local.converters.DateConverter
 import aragones.sergio.readercollection.data.local.converters.ListConverter
-import com.aragones.sergio.data.business.BaseModel
-import com.aragones.sergio.data.business.BookResponse
+import aragones.sergio.readercollection.data.local.model.BaseEntity
+import aragones.sergio.readercollection.data.local.model.Book
 
 @Database(
-    entities = [BookResponse::class],
+    entities = [Book::class],
     version = 3
 )
 @TypeConverters(
@@ -31,11 +31,11 @@ abstract class ReaderCollectionDatabase : RoomDatabase() {
 
         //region Public methods
         fun <T> getDisabledContent(
-            currentValues: List<BaseModel<T>>,
-            newValues: List<BaseModel<T>>
-        ): List<BaseModel<T>> {
+            currentValues: List<BaseEntity<T>>,
+            newValues: List<BaseEntity<T>>
+        ): List<BaseEntity<T>> {
 
-            val disabledContent = arrayListOf<BaseModel<T>>()
+            val disabledContent = arrayListOf<BaseEntity<T>>()
             for (currentValue in currentValues) {
 
                 if (newValues.firstOrNull { it.id == currentValue.id } == null) {

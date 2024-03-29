@@ -124,6 +124,7 @@ class BooksRepository @Inject constructor(
             .`as`(RxJavaBridge.toV3Maybe())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            .map { it.map { book -> book.toDomain() } }
     }
 
     fun getPendingBooksDatabaseObserver(): Maybe<List<BookResponse>> {
@@ -134,6 +135,7 @@ class BooksRepository @Inject constructor(
             .`as`(RxJavaBridge.toV3Maybe())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            .map { it.map { book -> book.toDomain() } }
     }
 
     fun importDataFrom(jsonData: String): Completable {
@@ -141,7 +143,7 @@ class BooksRepository @Inject constructor(
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
         return database
             .bookDao()
-            .insertBooksObserver(books)
+            .insertBooksObserver(books.map { it.toLocalData() })
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -174,6 +176,7 @@ class BooksRepository @Inject constructor(
             .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            .map { it.toDomain() }
     }
 
     fun createBook(newBook: BookResponse, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
@@ -432,7 +435,7 @@ class BooksRepository @Inject constructor(
     private fun insertBooksDatabaseObserver(books: List<BookResponse>): Completable {
         return database
             .bookDao()
-            .insertBooksObserver(books)
+            .insertBooksObserver(books.map { it.toLocalData() })
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -441,7 +444,7 @@ class BooksRepository @Inject constructor(
     private fun updateBooksDatabaseObserver(books: List<BookResponse>): Completable {
         return database
             .bookDao()
-            .updateBooksObserver(books)
+            .updateBooksObserver(books.map { it.toLocalData() })
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
@@ -450,7 +453,7 @@ class BooksRepository @Inject constructor(
     private fun deleteBooksDatabaseObserver(books: List<BookResponse>): Completable {
         return database
             .bookDao()
-            .deleteBooksObserver(books)
+            .deleteBooksObserver(books.map { it.toLocalData() })
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
             .observeOn(ApiManager.OBSERVER_SCHEDULER)
