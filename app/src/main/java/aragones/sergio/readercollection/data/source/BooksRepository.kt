@@ -9,9 +9,9 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.source.di.MainDispatcher
-import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.MoshiDateAdapter
-import aragones.sergio.readercollection.network.interfaces.BookApiService
+import aragones.sergio.readercollection.data.remote.ApiManager
+import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
+import aragones.sergio.readercollection.data.remote.interfaces.BookApiService
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse
 import aragones.sergio.readercollection.data.local.ReaderCollectionDatabase

@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 25/12/2023
  */
 
-package aragones.sergio.readercollection.network
+package aragones.sergio.readercollection.data.remote
 
 import com.aragones.sergio.util.extensions.toDate
 import com.aragones.sergio.util.extensions.toString

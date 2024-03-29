@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 2/1/2022
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.network
+package aragones.sergio.readercollection.data.remote
 
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
