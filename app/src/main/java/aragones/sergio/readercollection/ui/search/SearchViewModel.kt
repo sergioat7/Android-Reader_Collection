@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.GoogleBookRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import com.aragones.sergio.data.business.BookResponse
@@ -24,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val googleBookRepository: GoogleBookRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel() {
 
@@ -62,7 +60,6 @@ class SearchViewModel @Inject constructor(
         super.onDestroy()
 
         booksRepository.onDestroy()
-        googleBookRepository.onDestroy()
         userRepository.onDestroy()
     }
     //endregion
@@ -71,7 +68,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        googleBookRepository.searchBooksObserver(_query.value ?: "", page, null).subscribeBy(
+        booksRepository.searchBooksObserver(_query.value ?: "", page, null).subscribeBy(
             onSuccess = { googleBookListResponse ->
 
                 page++
