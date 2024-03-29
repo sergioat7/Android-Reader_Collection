@@ -3,9 +3,9 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.network.interfaces
+package aragones.sergio.readercollection.data.remote.interfaces
 
-import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.data.remote.ApiManager
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.FavouriteBook
 import retrofit2.Response

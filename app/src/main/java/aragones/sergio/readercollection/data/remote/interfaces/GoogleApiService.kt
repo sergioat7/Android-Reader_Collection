@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 18/10/2020
  */
 
-package aragones.sergio.readercollection.network.interfaces
+package aragones.sergio.readercollection.data.remote.interfaces
 
 import com.aragones.sergio.data.business.GoogleBookListResponse
 import com.aragones.sergio.data.business.GoogleBookResponse

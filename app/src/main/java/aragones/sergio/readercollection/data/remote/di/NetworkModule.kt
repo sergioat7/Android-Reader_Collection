@@ -3,12 +3,12 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.network.di
+package aragones.sergio.readercollection.data.remote.di
 
-import aragones.sergio.readercollection.network.ApiManager
-import aragones.sergio.readercollection.network.interfaces.BookApiService
-import aragones.sergio.readercollection.network.interfaces.GoogleApiService
-import aragones.sergio.readercollection.network.interfaces.UserApiService
+import aragones.sergio.readercollection.data.remote.ApiManager
+import aragones.sergio.readercollection.data.remote.interfaces.BookApiService
+import aragones.sergio.readercollection.data.remote.interfaces.GoogleApiService
+import aragones.sergio.readercollection.data.remote.interfaces.UserApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -11,7 +11,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import aragones.sergio.readercollection.data.source.BooksRepository
 import aragones.sergio.readercollection.data.source.UserRepository
-import aragones.sergio.readercollection.network.ApiManager
+import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import com.aragones.sergio.data.business.BookResponse
 import com.aragones.sergio.data.business.ErrorResponse
