@@ -13,8 +13,8 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.services.UserApiService
 import aragones.sergio.readercollection.data.source.base.BaseRepository
 import aragones.sergio.readercollection.data.source.di.MainDispatcher
-import com.aragones.sergio.data.auth.AuthData
-import com.aragones.sergio.data.auth.UserData
+import aragones.sergio.readercollection.data.source.model.AuthData
+import aragones.sergio.readercollection.data.source.model.UserData
 import com.aragones.sergio.data.business.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
