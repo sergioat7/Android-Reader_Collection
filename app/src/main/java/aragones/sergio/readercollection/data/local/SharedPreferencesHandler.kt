@@ -3,14 +3,14 @@
  * Created by Sergio Aragonés on 16/10/2020
  */
 
-package aragones.sergio.readercollection.domain
+package aragones.sergio.readercollection.data.local
 
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.ReaderCollectionApplication
-import aragones.sergio.readercollection.domain.model.AuthData
-import aragones.sergio.readercollection.domain.model.UserData
+import aragones.sergio.readercollection.data.local.model.AuthData
+import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.extensions.setBoolean
 import aragones.sergio.readercollection.extensions.setInt
 import aragones.sergio.readercollection.extensions.setString

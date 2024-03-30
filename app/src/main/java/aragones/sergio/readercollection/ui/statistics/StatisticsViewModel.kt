@@ -9,14 +9,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.extensions.combineWith
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
-import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.extensions.getGroupedBy
 import com.aragones.sergio.util.extensions.getOrderedBy

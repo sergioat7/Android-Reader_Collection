@@ -7,8 +7,8 @@ package aragones.sergio.readercollection.ui.landing
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
+import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.ui.login.LoginActivity

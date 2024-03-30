@@ -19,7 +19,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.domain.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.extensions.addChip
@@ -42,7 +43,6 @@ import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.components.TextFieldAlertDialog
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomDropdownType
 import com.aragones.sergio.util.State
