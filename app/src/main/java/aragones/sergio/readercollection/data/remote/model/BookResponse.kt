@@ -85,32 +85,6 @@ data class BookResponse(
         -1
     )
 
-    @Ignore
-    constructor(googleBook: GoogleBookResponse) : this(
-        id = googleBook.id,
-        title = StringBuilder().append(googleBook.volumeInfo.title ?: "").append(" ")
-            .append(googleBook.volumeInfo.subtitle ?: "").toString(),
-        subtitle = null,
-        authors = googleBook.volumeInfo.authors,
-        publisher = googleBook.volumeInfo.publisher,
-        publishedDate = googleBook.volumeInfo.publishedDate,
-        readingDate = null,
-        description = googleBook.volumeInfo.description,
-        summary = null,
-        isbn = googleBook.getGoogleBookIsbn(),
-        pageCount = googleBook.volumeInfo.pageCount ?: 0,
-        categories = googleBook.volumeInfo.categories,
-        averageRating = googleBook.volumeInfo.averageRating ?: 0.0,
-        ratingsCount = googleBook.volumeInfo.ratingsCount ?: 0,
-        rating = 0.0,
-        thumbnail = googleBook.getGoogleBookThumbnail(),
-        image = googleBook.getGoogleBookImage(),
-        format = null,
-        state = null,
-        isFavourite = false,
-        priority = -1
-    )
-
     fun authorsToString(): String {
         return authors?.joinToString(separator = ", ") ?: ""
     }
