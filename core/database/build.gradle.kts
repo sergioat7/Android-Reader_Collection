@@ -43,11 +43,14 @@ android {
 }
 
 dependencies {
-    
+
     implementation(libs.moshi)
 
     implementation(libs.room.runtime)
+    implementation(libs.rxjava)
+    implementation(libs.rxandroid)
     implementation(libs.room.rxjava)
+    implementation(libs.room.rxjava3.bridge)
     kapt(libs.room.compiler)
 
     implementation(libs.hilt.android)
