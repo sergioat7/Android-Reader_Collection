@@ -7,6 +7,15 @@ package aragones.sergio.readercollection.data.remote.model
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.Date
+
+@JsonClass(generateAdapter = true)
+data class GoogleBookListResponse(
+    @Json(name = "totalItems")
+    val totalItems: Int,
+    @Json(name = "items")
+    var items: List<GoogleBookResponse>?
+)
 
 @JsonClass(generateAdapter = true)
 data class GoogleBookResponse(
@@ -42,3 +51,55 @@ data class GoogleBookResponse(
         ?: volumeInfo.imageLinks?.medium ?: volumeInfo.imageLinks?.small
     }
 }
+
+@JsonClass(generateAdapter = true)
+data class GoogleVolumeResponse(
+    @Json(name = "title")
+    val title: String?,
+    @Json(name = "subtitle")
+    val subtitle: String?,
+    @Json(name = "authors")
+    val authors: List<String>?,
+    @Json(name = "publisher")
+    val publisher: String?,
+    @Json(name = "publishedDate")
+    val publishedDate: Date?,
+    @Json(name = "description")
+    val description: String?,
+    @Json(name = "industryIdentifiers")
+    val industryIdentifiers: List<GoogleIsbnResponse>?,
+    @Json(name = "pageCount")
+    val pageCount: Int?,
+    @Json(name = "categories")
+    val categories: List<String>?,
+    @Json(name = "averageRating")
+    val averageRating: Double?,
+    @Json(name = "ratingsCount")
+    val ratingsCount: Int?,
+    @Json(name = "imageLinks")
+    val imageLinks: GoogleImageLinksResponse?
+)
+
+@JsonClass(generateAdapter = true)
+data class GoogleIsbnResponse(
+    @Json(name = "type")
+    val type: String?,
+    @Json(name = "identifier")
+    val identifier: String?
+)
+
+@JsonClass(generateAdapter = true)
+data class GoogleImageLinksResponse(
+    @Json(name = "smallThumbnail")
+    val smallThumbnail: String?,
+    @Json(name = "thumbnail")
+    val thumbnail: String?,
+    @Json(name = "small")
+    val small: String?,
+    @Json(name = "medium")
+    val medium: String?,
+    @Json(name = "large")
+    val large: String?,
+    @Json(name = "extraLarge")
+    val extraLarge: String?
+)
