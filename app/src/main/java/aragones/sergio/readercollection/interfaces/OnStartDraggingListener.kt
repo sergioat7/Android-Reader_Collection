@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.interfaces
 
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
-import com.aragones.sergio.data.business.BookResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 
 interface OnStartDraggingListener {
 

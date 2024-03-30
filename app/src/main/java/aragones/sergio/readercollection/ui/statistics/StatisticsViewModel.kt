@@ -15,8 +15,8 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.extensions.combineWith
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
-import com.aragones.sergio.data.business.BookResponse
-import com.aragones.sergio.data.business.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.extensions.getGroupedBy
 import com.aragones.sergio.util.extensions.getOrderedBy

@@ -101,7 +101,7 @@
             NewLineAtEndOfFile:BaseActivity.kt$aragones.sergio.readercollection.ui.base.BaseActivity.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BaseModel.kt$com.aragones.sergio.data.business.BaseModel.kt
+            NewLineAtEndOfFile:BaseModel.kt$aragones.sergio.readercollection.data.remote.model.BaseModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BaseRepository.kt$aragones.sergio.readercollection.data.source.base.BaseRepository.kt
@@ -134,7 +134,7 @@
             NewLineAtEndOfFile:BookListViewModel.kt$aragones.sergio.readercollection.ui.booklist.BookListViewModel.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookResponse.kt$com.aragones.sergio.data.business.BookResponse.kt
+            NewLineAtEndOfFile:BookResponse.kt$aragones.sergio.readercollection.data.remote.model.BookResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BooksAdapter.kt$aragones.sergio.readercollection.ui.books.BooksAdapter.kt
@@ -173,22 +173,22 @@
             NewLineAtEndOfFile:DateExtensions.kt$aragones.sergio.readercollection.extensions.DateExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ErrorResponse.kt$com.aragones.sergio.data.business.ErrorResponse.kt
+            NewLineAtEndOfFile:ErrorResponse.kt$aragones.sergio.readercollection.data.remote.model.ErrorResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ExampleUnitTest.kt$aragones.sergio.readercollection.ExampleUnitTest.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:FavouriteBook.kt$com.aragones.sergio.data.business.FavouriteBook.kt
+            NewLineAtEndOfFile:FavouriteBook.kt$aragones.sergio.readercollection.data.remote.model.FavouriteBook.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:FormatResponse.kt$com.aragones.sergio.data.business.FormatResponse.kt
+            NewLineAtEndOfFile:FormatResponse.kt$aragones.sergio.readercollection.data.remote.model.FormatResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:GoogleApiService.kt$aragones.sergio.readercollection.network.interfaces.GoogleApiService.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleBookListResponse.kt$com.aragones.sergio.data.business.GoogleBookListResponse.kt
+            NewLineAtEndOfFile:GoogleBookListResponse.kt$aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:GoogleBookRepository.kt$aragones.sergio.readercollection.data.source.GoogleBookRepository.kt
@@ -197,13 +197,13 @@
             NewLineAtEndOfFile:GoogleBookResponse.kt$com.aragones.sergio.data.business.GoogleBookResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleImageLinksResponse.kt$com.aragones.sergio.data.business.GoogleImageLinksResponse.kt
+            NewLineAtEndOfFile:GoogleImageLinksResponse.kt$aragones.sergio.readercollection.data.remote.model.GoogleImageLinksResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleIsbnResponse.kt$com.aragones.sergio.data.business.GoogleIsbnResponse.kt
+            NewLineAtEndOfFile:GoogleIsbnResponse.kt$aragones.sergio.readercollection.data.remote.model.GoogleIsbnResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:GoogleVolumeResponse.kt$com.aragones.sergio.data.business.GoogleVolumeResponse.kt
+            NewLineAtEndOfFile:GoogleVolumeResponse.kt$aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ImageViewExtensions.kt$aragones.sergio.readercollection.extensions.ImageViewExtensions.kt
@@ -307,7 +307,7 @@
             NewLineAtEndOfFile:ShowAllItemsViewHolder.kt$aragones.sergio.readercollection.ui.books.ShowAllItemsViewHolder.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:StateResponse.kt$com.aragones.sergio.data.business.StateResponse.kt
+            NewLineAtEndOfFile:StateResponse.kt$aragones.sergio.readercollection.data.remote.model.StateResponse.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StatisticsFragment.kt$aragones.sergio.readercollection.ui.statistics.StatisticsFragment.kt

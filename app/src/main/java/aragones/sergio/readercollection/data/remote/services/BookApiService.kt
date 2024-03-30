@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.data.remote.services
 
 import aragones.sergio.readercollection.data.remote.ApiManager
-import com.aragones.sergio.data.business.BookResponse
-import com.aragones.sergio.data.business.FavouriteBook
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.FavouriteBook
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE

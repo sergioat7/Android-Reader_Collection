@@ -15,7 +15,7 @@ import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
-import com.aragones.sergio.data.business.BookResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.util.Constants
 import java.util.*
 

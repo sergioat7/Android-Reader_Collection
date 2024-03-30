@@ -42,7 +42,7 @@ import aragones.sergio.readercollection.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.ui.components.TextFieldAlertDialog
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
-import com.aragones.sergio.data.business.BookResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomDropdownType
 import com.aragones.sergio.util.State

@@ -7,8 +7,8 @@ package aragones.sergio.readercollection.utils
 
 import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
-import com.aragones.sergio.data.business.FormatResponse
-import com.aragones.sergio.data.business.StateResponse
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
+import aragones.sergio.readercollection.data.remote.model.StateResponse
 import com.getkeepsafe.taptargetview.TapTarget
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
