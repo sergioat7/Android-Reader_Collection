@@ -19,21 +19,18 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    @Singleton
-    @Provides
-    fun providesBookApiService(): BookApiService = ApiManager.getService(
-        ApiManager.BASE_ENDPOINT
-    )
+    private const val BASE_ENDPOINT = "https://books-collection-services.herokuapp.com/"
+    private const val BASE_GOOGLE_ENDPOINT = "https://www.googleapis.com/books/v1/"
 
     @Singleton
     @Provides
-    fun providesGoogleApiService(): GoogleApiService = ApiManager.getService(
-        ApiManager.BASE_GOOGLE_ENDPOINT
-    )
+    fun providesBookApiService(): BookApiService = ApiManager.getService(BASE_ENDPOINT)
 
     @Singleton
     @Provides
-    fun providesUserApiService(): UserApiService = ApiManager.getService(
-        ApiManager.BASE_ENDPOINT
-    )
+    fun providesGoogleApiService(): GoogleApiService = ApiManager.getService(BASE_GOOGLE_ENDPOINT)
+
+    @Singleton
+    @Provides
+    fun providesUserApiService(): UserApiService = ApiManager.getService(BASE_ENDPOINT)
 }

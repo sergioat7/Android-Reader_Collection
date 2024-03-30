@@ -8,13 +8,10 @@ package aragones.sergio.readercollection.data.remote
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.schedulers.Schedulers
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -29,17 +26,8 @@ import kotlin.reflect.KClass
 object ApiManager {
 
     //region Static properties
-    const val BASE_ENDPOINT = "https://books-collection-services.herokuapp.com/"
-    const val BASE_GOOGLE_ENDPOINT = "https://www.googleapis.com/books/v1/"
     const val ACCEPT_LANGUAGE_HEADER = "Accept-Language"
     const val AUTHORIZATION_HEADER = "Authorization"
-    const val SEARCH_PARAM = "q"
-    const val PAGE_PARAM = "startIndex"
-    const val RESULTS_PARAM = "maxResults"
-    const val ORDER_PARAM = "orderBy"
-    const val RESULTS = 20
-    val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
-    val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
     //endregion
 
     //region Public properties

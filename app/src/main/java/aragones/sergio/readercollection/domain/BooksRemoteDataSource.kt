@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.domain
 
-import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
@@ -13,7 +12,10 @@ import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.domain.di.MainDispatcher
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -26,6 +28,13 @@ class BooksRemoteDataSource @Inject constructor(
 ) {
 
     //region Private properties
+    private val SEARCH_PARAM = "q"
+    private val PAGE_PARAM = "startIndex"
+    private val RESULTS_PARAM = "maxResults"
+    private val ORDER_PARAM = "orderBy"
+    private val RESULTS = 20
+    private val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
+    private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
     //endregion
 
@@ -180,24 +189,24 @@ class BooksRemoteDataSource @Inject constructor(
     ): Single<GoogleBookListResponse> {
 
         val params: MutableMap<String, String> = HashMap()
-        params[ApiManager.SEARCH_PARAM] = query
-        params[ApiManager.PAGE_PARAM] = ((page - 1) * ApiManager.RESULTS).toString()
-        params[ApiManager.RESULTS_PARAM] = ApiManager.RESULTS.toString()
+        params[SEARCH_PARAM] = query
+        params[PAGE_PARAM] = ((page - 1) * RESULTS).toString()
+        params[RESULTS_PARAM] = RESULTS.toString()
         if (order != null) {
-            params[ApiManager.ORDER_PARAM] = order
+            params[ORDER_PARAM] = order
         }
         return googleApiService
             .searchGoogleBooks(params)
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            .subscribeOn(SUBSCRIBER_SCHEDULER)
+            .observeOn(OBSERVER_SCHEDULER)
     }
 
     fun getBookObserver(volumeId: String): Single<GoogleBookResponse> {
 
         return googleApiService
             .getGoogleBook(volumeId)
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            .subscribeOn(SUBSCRIBER_SCHEDULER)
+            .observeOn(OBSERVER_SCHEDULER)
     }
     //endregion
 }
