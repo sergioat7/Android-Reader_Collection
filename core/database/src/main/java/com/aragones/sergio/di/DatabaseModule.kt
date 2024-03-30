@@ -9,6 +9,7 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.aragones.sergio.BookDao
 import com.aragones.sergio.ReaderCollectionDatabase
 import dagger.Module
 import dagger.Provides
@@ -49,5 +50,10 @@ object DatabaseModule {
             .addMigrations(MIGRATION_1_2)
             .addMigrations(MIGRATION_2_3)
             .build()
+    }
+
+    @Provides
+    fun provideBookDao(database: ReaderCollectionDatabase): BookDao {
+        return database.bookDao()
     }
 }
