@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -68,8 +67,6 @@ class SettingsViewModel @Inject constructor(
     fun logout() {
 
 //        _profileLoading.value = true
-//        userRepository.removePassword()
-//        userRepository.removeCredentials()
         userRepository.logout()
 //        resetDatabase()
 
@@ -95,17 +92,10 @@ class SettingsViewModel @Inject constructor(
             _profileLoading.value = true
             userRepository.updatePassword(newPassword, success = {
 
-                userRepository.storePassword(newPassword)
-                userRepository.login(userRepository.username, newPassword, success = { token ->
-
-                    userRepository.storeCredentials(AuthData(token))
-                    _profileLoading.value = false
-                    if (changeLanguage || changeSortParam || changeIsSortDescending) {
-                        _profileRedirection.value = true
-                    }
-                }, failure = {
-                    manageError(it)
-                })
+                _profileLoading.value = false
+                if (changeLanguage || changeSortParam || changeIsSortDescending) {
+                    _profileRedirection.value = true
+                }
             }, failure = {
                 manageError(it)
             })
@@ -145,9 +135,6 @@ class SettingsViewModel @Inject constructor(
 
         _profileLoading.value = true
         userRepository.deleteUser(success = {
-
-            userRepository.removeUserData()
-            userRepository.removeCredentials()
             resetDatabase()
         }, failure = {
             manageError(it)

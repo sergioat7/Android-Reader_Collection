@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.ui.login
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.model.AuthData
-import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
@@ -58,11 +56,7 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
 
         _loginLoading.value = true
-        userRepository.login(username, password, success = { token ->
-
-            val userData = UserData(username, password, true)
-            val authData = AuthData(token)
-            userRepository.storeLoginData(userData, authData)
+        userRepository.login(username, password, success = {
 //            booksRepository.loadBooks(success = {
 
             _loginLoading.value = false

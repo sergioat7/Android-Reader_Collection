@@ -32,8 +32,6 @@ object Constants {
     const val EMPTY_VALUE = ""
     const val NO_VALUE = "-"
     const val BOOKS_TO_SHOW = 7
-    const val GOOGLE_USER_TEST = "googleTest"
-    const val GOOGLE_PASSWORD_TEST = "d9MqzK3k1&07"
 
     fun isUserNameValid(username: String): Boolean {
         return username.isNotBlank()
