@@ -3,12 +3,9 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.domain
+package com.aragones.sergio
 
 import androidx.sqlite.db.SupportSQLiteQuery
-import aragones.sergio.readercollection.domain.di.MainDispatcher
-import com.aragones.sergio.BookDao
-import com.aragones.sergio.ReaderCollectionDatabase
 import com.aragones.sergio.model.Book
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -17,20 +14,15 @@ import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 class BooksLocalDataSource @Inject constructor(
-    private val bookDao: BookDao,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    private val bookDao: BookDao
 ) {
 
     //region Private properties
     private val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
     private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
-    private val externalScope = CoroutineScope(Job() + mainDispatcher)
     //endregion
 
     //region Public methods
@@ -89,7 +81,7 @@ class BooksLocalDataSource @Inject constructor(
     }
 
     fun deleteBooksDatabaseObserver(books: List<Book>): Completable {
-        
+
         return bookDao
             .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())

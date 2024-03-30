@@ -3,15 +3,15 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.domain
+package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.di.MainDispatcher
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
-import aragones.sergio.readercollection.domain.di.MainDispatcher
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single

@@ -10,12 +10,12 @@ import android.content.Context
 import android.os.Build
 import android.os.LocaleList
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.di.MainDispatcher
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.services.UserApiService
 import aragones.sergio.readercollection.domain.base.BaseRepository
-import aragones.sergio.readercollection.domain.di.MainDispatcher
 import aragones.sergio.readercollection.domain.model.AuthData
 import aragones.sergio.readercollection.domain.model.UserData
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
