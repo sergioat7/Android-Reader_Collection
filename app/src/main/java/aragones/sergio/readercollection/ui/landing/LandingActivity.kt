@@ -12,12 +12,12 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.domain.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
+import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.InAppUpdateService
-import aragones.sergio.readercollection.data.remote.model.FormatResponse
-import aragones.sergio.readercollection.data.remote.model.StateResponse
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.firebase.ktx.Firebase

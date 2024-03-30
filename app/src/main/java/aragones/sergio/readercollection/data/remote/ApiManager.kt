@@ -8,8 +8,8 @@ package aragones.sergio.readercollection.data.remote
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
-import aragones.sergio.readercollection.domain.SharedPreferencesHandler
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import okhttp3.Interceptor

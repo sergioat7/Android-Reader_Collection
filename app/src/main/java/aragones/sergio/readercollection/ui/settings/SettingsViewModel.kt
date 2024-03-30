@@ -9,12 +9,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.local.model.AuthData
+import aragones.sergio.readercollection.data.local.model.UserData
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.domain.model.AuthData
-import aragones.sergio.readercollection.domain.model.UserData
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo

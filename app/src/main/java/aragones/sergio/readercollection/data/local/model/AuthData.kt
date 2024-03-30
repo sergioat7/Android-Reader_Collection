@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 17/10/2020
  */
 
-package aragones.sergio.readercollection.domain.model
+package aragones.sergio.readercollection.data.local.model
 
 import com.squareup.moshi.JsonClass
 
