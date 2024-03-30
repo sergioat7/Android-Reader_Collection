@@ -9,9 +9,9 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
+import aragones.sergio.readercollection.domain.model.Book
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
@@ -36,10 +36,10 @@ class BooksRepository @Inject constructor(
     private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
     private val moshiAdapter = Moshi.Builder()
         .add(MoshiDateAdapter("MMM dd, yyyy"))
-        .build().adapter<List<BookResponse?>?>(
+        .build().adapter<List<Book?>?>(
             Types.newParameterizedType(
                 List::class.java,
-                BookResponse::class.java
+                Book::class.java
             )
         )
     //endregion
@@ -55,7 +55,7 @@ class BooksRepository @Inject constructor(
         state: String? = null,
         isFavourite: Boolean? = null,
         sortParam: String? = null
-    ): Maybe<List<BookResponse>> {
+    ): Maybe<List<Book>> {
 
         var queryString = "SELECT * FROM Book"
         var queryConditions = ""
@@ -81,7 +81,7 @@ class BooksRepository @Inject constructor(
             .map { it.map { book -> book.toDomain() } }
     }
 
-    fun getPendingBooksDatabaseObserver(): Maybe<List<BookResponse>> {
+    fun getPendingBooksDatabaseObserver(): Maybe<List<Book>> {
 
         return booksLocalDataSource
             .getPendingBooksDatabaseObserver()
@@ -116,14 +116,14 @@ class BooksRepository @Inject constructor(
             .observeOn(OBSERVER_SCHEDULER)
     }
 
-    fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {
+    fun getBookDatabaseObserver(googleId: String): Single<Book> {
 
         return booksLocalDataSource
             .getBookDatabaseObserver(googleId)
             .map { it.toDomain() }
     }
 
-    fun createBook(newBook: BookResponse, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
+    fun createBook(newBook: Book, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
 //        booksRemoteDataSource.createBook(newBook, success, failure)
 
         booksLocalDataSource.insertBooksDatabaseObserver(listOf(newBook.toLocalData())).subscribeBy(
@@ -142,8 +142,8 @@ class BooksRepository @Inject constructor(
     }
 
     fun setBook(
-        book: BookResponse,
-        success: (BookResponse) -> Unit,
+        book: Book,
+        success: (Book) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
 //        booksRemoteDataSource.setBook(book, success = {
@@ -164,7 +164,7 @@ class BooksRepository @Inject constructor(
     }
 
     fun setBooks(
-        books: List<BookResponse>,
+        books: List<Book>,
         success: () -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
@@ -189,7 +189,7 @@ class BooksRepository @Inject constructor(
     fun setFavouriteBook(
         bookId: String,
         isFavourite: Boolean,
-        success: (BookResponse) -> Unit,
+        success: (Book) -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
 //        booksRemoteDataSource.setFavouriteBook(bookId = , success = { book ->
@@ -298,7 +298,7 @@ class BooksRepository @Inject constructor(
         query: String,
         page: Int,
         order: String?
-    ): Single<List<BookResponse>> {
+    ): Single<List<Book>> {
         return Single.create { emitter ->
 
             booksRemoteDataSource.searchBooksObserver(query, page, order)
@@ -312,7 +312,7 @@ class BooksRepository @Inject constructor(
         }.subscribeOn(SUBSCRIBER_SCHEDULER).observeOn(OBSERVER_SCHEDULER)
     }
 
-    fun getBookObserver(volumeId: String): Single<BookResponse> {
+    fun getBookObserver(volumeId: String): Single<Book> {
         return Single.create { emitter ->
 
             booksRemoteDataSource.getBookObserver(volumeId)

@@ -14,11 +14,11 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.ItemBookBinding
 import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
 import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import kotlin.math.ceil
 
 class BooksViewHolder(private val binding: ViewDataBinding) :
@@ -27,7 +27,7 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
     //region Public methods
     @SuppressLint("ClickableViewAccessibility")
     fun bind(
-        book: BookResponse,
+        book: Book,
         isGoogleBook: Boolean,
         isDraggingEnable: Boolean,
         isFirst: Boolean,

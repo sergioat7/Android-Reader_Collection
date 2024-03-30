@@ -1,18 +1,20 @@
 /*
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 23/2/2024
+ * Created by Sergio Aragonés on 30/3/2024
  */
 
-package aragones.sergio.readercollection.data.remote.model
+package aragones.sergio.readercollection.domain.model
 
+import androidx.room.Ignore
+import com.aragones.sergio.util.State
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.Date
 
 @JsonClass(generateAdapter = true)
-data class BookResponse(
+data class Book(
     @Json(name = "googleId")
-    override val id: String,
+    val id: String,
     @Json(name = "title")
     val title: String?,
     @Json(name = "subtitle")
@@ -52,4 +54,42 @@ data class BookResponse(
     @Json(name = "isFavourite")
     var isFavourite: Boolean,
     var priority: Int
-) : BaseModel<String>
+) {
+
+    @Ignore
+    constructor(id: String) : this(
+        id,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        0,
+        null,
+        0.0,
+        0,
+        0.0,
+        null,
+        null,
+        null,
+        null,
+        false,
+        -1
+    )
+
+    fun authorsToString(): String {
+        return authors?.joinToString(separator = ", ") ?: ""
+    }
+
+    fun isPending(): Boolean {
+        return state == State.PENDING
+    }
+
+    fun isReading(): Boolean {
+        return state == State.READING
+    }
+}

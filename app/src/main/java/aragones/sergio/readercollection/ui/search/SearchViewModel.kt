@@ -8,10 +8,10 @@ package aragones.sergio.readercollection.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.State
@@ -29,17 +29,17 @@ class SearchViewModel @Inject constructor(
     //region Private properties
     private var page: Int = 1
     private val _query = MutableLiveData("")
-    private val _books = MutableLiveData<MutableList<BookResponse>>(mutableListOf())
+    private val _books = MutableLiveData<MutableList<Book>>(mutableListOf())
     private val _searchLoading = MutableLiveData(false)
     private val _searchError = MutableLiveData<ErrorResponse?>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
-    private lateinit var pendingBooks: MutableList<BookResponse>
+    private lateinit var pendingBooks: MutableList<Book>
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
     var query: LiveData<String> = _query
-    val books: LiveData<MutableList<BookResponse>> = _books
+    val books: LiveData<MutableList<Book>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
     val searchError: LiveData<ErrorResponse?> = _searchError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
@@ -74,7 +74,7 @@ class SearchViewModel @Inject constructor(
                 page++
                 val currentValues = _books.value ?: mutableListOf()
                 if (currentValues.isEmpty()) {
-                    currentValues.add(BookResponse(id = ""))
+                    currentValues.add(Book(id = ""))
                 }
                 currentValues.addAll(currentValues.size - 1, newBooks)
                 if (newBooks.isEmpty()) {

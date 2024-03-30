@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBooksBinding
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.extensions.hideSoftKeyboard
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
@@ -24,7 +25,6 @@ import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.createTargetForBottomNavigationView
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.StatusBarStyle
@@ -150,7 +150,7 @@ class BooksFragment :
     override fun onStartDragging(viewHolder: BooksViewHolder) {
     }
 
-    override fun onFinishDragging(books: List<BookResponse>) {
+    override fun onFinishDragging(books: List<Book>) {
         viewModel.setPriorityFor(books)
     }
     //endregion
@@ -254,14 +254,14 @@ class BooksFragment :
         viewModel.pendingBooks.observe(viewLifecycleOwner) { booksResponse ->
 
             val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
-            if (booksResponse.size > Constants.BOOKS_TO_SHOW) books.add(BookResponse(id = ""))
+            if (booksResponse.size > Constants.BOOKS_TO_SHOW) books.add(Book(id = ""))
             pendingBooksAdapter.setBooks(books, true)
         }
 
         viewModel.readBooks.observe(viewLifecycleOwner) { booksResponse ->
 
             val books = booksResponse.take(Constants.BOOKS_TO_SHOW).toMutableList()
-            if (booksResponse.size > Constants.BOOKS_TO_SHOW) books.add(BookResponse(id = ""))
+            if (booksResponse.size > Constants.BOOKS_TO_SHOW) books.add(Book(id = ""))
             booksAdapter.setBooks(books, true)
         }
 
