@@ -8,11 +8,11 @@ package aragones.sergio.readercollection.ui.search
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.State
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -69,22 +69,17 @@ class SearchViewModel @Inject constructor(
 
         _searchLoading.value = true
         booksRepository.searchBooksObserver(_query.value ?: "", page, null).subscribeBy(
-            onSuccess = { googleBookListResponse ->
+            onSuccess = { newBooks ->
 
                 page++
                 val currentValues = _books.value ?: mutableListOf()
-                val newValues =
-                    googleBookListResponse.items?.map { BookResponse(it) } ?: mutableListOf()
-
                 if (currentValues.isEmpty()) {
                     currentValues.add(BookResponse(id = ""))
                 }
-
-                currentValues.addAll(currentValues.size - 1, newValues)
-                if (newValues.isEmpty()) {
+                currentValues.addAll(currentValues.size - 1, newBooks)
+                if (newBooks.isEmpty()) {
                     currentValues.removeLast()
                 }
-
                 _books.value = currentValues
                 _searchLoading.value = false
             },

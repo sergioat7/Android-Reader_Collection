@@ -11,8 +11,6 @@ import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
-import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
-import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.Constants
@@ -300,12 +298,30 @@ class BooksRepository @Inject constructor(
         query: String,
         page: Int,
         order: String?
-    ): Single<GoogleBookListResponse> {
-        return booksRemoteDataSource.searchBooksObserver(query, page, order)
+    ): Single<List<BookResponse>> {
+        return Single.create { emitter ->
+
+            booksRemoteDataSource.searchBooksObserver(query, page, order)
+                .subscribeBy(onSuccess = {
+
+                    val values = it.items?.map { book -> book.toDomain() } ?: listOf()
+                    emitter.onSuccess(values)
+                }, onError = {
+                    emitter.onError(it)
+                }).addTo(disposables)
+        }.subscribeOn(SUBSCRIBER_SCHEDULER).observeOn(OBSERVER_SCHEDULER)
     }
 
-    fun getBookObserver(volumeId: String): Single<GoogleBookResponse> {
-        return booksRemoteDataSource.getBookObserver(volumeId)
+    fun getBookObserver(volumeId: String): Single<BookResponse> {
+        return Single.create { emitter ->
+
+            booksRemoteDataSource.getBookObserver(volumeId)
+                .subscribeBy(onSuccess = {
+                    emitter.onSuccess(it.toDomain())
+                }, onError = {
+                    emitter.onError(it)
+                }).addTo(disposables)
+        }.subscribeOn(SUBSCRIBER_SCHEDULER).observeOn(OBSERVER_SCHEDULER)
     }
     //endregion
 }

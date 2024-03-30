@@ -9,11 +9,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -174,7 +174,7 @@ class BookDetailViewModel @Inject constructor(
             booksRepository.getBookObserver(bookId).subscribeBy(
                 onSuccess = {
 
-                    _book.value = BookResponse(it)
+                    _book.value = it
                     _bookDetailLoading.value = false
                 },
                 onError = {
