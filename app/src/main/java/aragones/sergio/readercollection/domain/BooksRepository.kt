@@ -9,11 +9,11 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
-import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
-import com.aragones.sergio.data.business.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
+import aragones.sergio.readercollection.domain.base.BaseRepository
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
