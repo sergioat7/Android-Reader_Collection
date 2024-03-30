@@ -13,8 +13,8 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import com.aragones.sergio.data.business.BookResponse
-import com.aragones.sergio.data.business.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo

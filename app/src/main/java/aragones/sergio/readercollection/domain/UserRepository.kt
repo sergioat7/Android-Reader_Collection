@@ -15,7 +15,7 @@ import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.MainDispatcher
 import aragones.sergio.readercollection.domain.model.AuthData
 import aragones.sergio.readercollection.domain.model.UserData
-import com.aragones.sergio.data.business.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher

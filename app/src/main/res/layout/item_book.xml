@@ -13,7 +13,7 @@
 
         <variable
             name="book"
-            type="com.aragones.sergio.data.business.BookResponse" />
+            type="aragones.sergio.readercollection.data.remote.model.BookResponse" />
 
         <variable
             name="onItemClickListener"

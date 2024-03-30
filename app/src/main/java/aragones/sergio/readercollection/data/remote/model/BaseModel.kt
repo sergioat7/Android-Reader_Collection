@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 17/10/2020
  */
 
-package com.aragones.sergio.data.business
+package aragones.sergio.readercollection.data.remote.model
 
 interface BaseModel<T> {
     val id: T

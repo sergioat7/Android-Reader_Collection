@@ -9,9 +9,9 @@ import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.domain.di.MainDispatcher
-import com.aragones.sergio.data.business.BookResponse
-import com.aragones.sergio.data.business.ErrorResponse
-import com.aragones.sergio.data.business.GoogleBookListResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import com.aragones.sergio.data.business.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
 import kotlinx.coroutines.CoroutineDispatcher

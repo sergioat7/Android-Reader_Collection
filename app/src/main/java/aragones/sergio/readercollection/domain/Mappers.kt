@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.domain
 
-import com.aragones.sergio.data.business.BookResponse
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.model.Book
 
 fun BookResponse.toLocalData(): Book {
