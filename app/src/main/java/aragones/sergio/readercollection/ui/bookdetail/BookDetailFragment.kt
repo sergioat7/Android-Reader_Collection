@@ -20,9 +20,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.extensions.addChip
 import aragones.sergio.readercollection.extensions.doAfterTextChanged
 import aragones.sergio.readercollection.extensions.getScreenSize
@@ -76,7 +76,7 @@ class BookDetailFragment :
 
     //region Private properties
     private val viewModel: BookDetailViewModel by viewModels()
-    private var book: BookResponse? = null
+    private var book: Book? = null
     private lateinit var menu: Menu
     private lateinit var mainContentSequence: TapTargetSequence
     private var newBookToolbarSequence: TapTargetSequence? = null
@@ -370,7 +370,7 @@ class BookDetailFragment :
         }
     }
 
-    private fun showData(book: BookResponse) {
+    private fun showData(book: Book) {
 
         binding.chipGroupCategories.removeAllViews()
         book.categories?.let { categories ->
@@ -389,7 +389,7 @@ class BookDetailFragment :
         viewModel.setBookImage(book.thumbnail ?: book.image)
     }
 
-    private fun setFormat(book: BookResponse) {
+    private fun setFormat(book: Book) {
 
         /*
         * This works before it's executed AFTER onResume method.
@@ -401,7 +401,7 @@ class BookDetailFragment :
         )
     }
 
-    private fun setState(book: BookResponse) {
+    private fun setState(book: Book) {
 
         /*
         * This works before it's executed AFTER onResume method.
@@ -421,7 +421,7 @@ class BookDetailFragment :
         ) ?: if (binding.editable == true) null else Constants.NO_VALUE
     }
 
-    private fun getBookData(): BookResponse {
+    private fun getBookData(): Book {
         with(binding) {
 
             val authors = textInputLayoutAuthor.getValue().toList<String>().map {
@@ -448,7 +448,7 @@ class BookDetailFragment :
                 Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 
-            return BookResponse(
+            return Book(
                 id = book?.id ?: "",
                 title = textInputLayoutTitle.getValue(),
                 subtitle = book?.subtitle,

@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.extensions.isDarkMode
 import aragones.sergio.readercollection.extensions.style
 import aragones.sergio.readercollection.interfaces.MenuProviderInterface
@@ -26,7 +27,6 @@ import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
@@ -165,7 +165,7 @@ class BookListFragment :
         touchHelper.startDrag(viewHolder)
     }
 
-    override fun onFinishDragging(books: List<BookResponse>) {
+    override fun onFinishDragging(books: List<Book>) {
         viewModel.setPriorityFor(books)
     }
     //endregion

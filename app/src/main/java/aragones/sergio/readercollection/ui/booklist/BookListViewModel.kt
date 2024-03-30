@@ -10,11 +10,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.State
 import com.aragones.sergio.util.extensions.getMonthNumber
@@ -39,7 +39,7 @@ class BookListViewModel @Inject constructor(
     private var month: Int = state["month"] ?: -1
     private var author: String? = state["author"]
     private var format: String? = state["format"]
-    private val _books = MutableLiveData<List<BookResponse>>(listOf())
+    private val _books = MutableLiveData<List<Book>>(listOf())
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
@@ -47,7 +47,7 @@ class BookListViewModel @Inject constructor(
 
     //region Public properties
     var query: String = state["query"] ?: ""
-    val books: LiveData<List<BookResponse>> = _books
+    val books: LiveData<List<Book>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
@@ -108,7 +108,7 @@ class BookListViewModel @Inject constructor(
         }
     }
 
-    fun setPriorityFor(books: List<BookResponse>) {
+    fun setPriorityFor(books: List<Book>) {
 
         _booksLoading.value = true
         booksRepository.setBooks(books, success = {
@@ -130,7 +130,7 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun showBooks(books: List<BookResponse>) {
+    private fun showBooks(books: List<Book>) {
 
         val sortedBooks = if (isSortDescending) books.reversed() else books
         var filteredBooks = sortedBooks

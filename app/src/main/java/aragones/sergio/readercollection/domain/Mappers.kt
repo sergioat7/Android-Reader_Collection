@@ -5,11 +5,37 @@
 
 package aragones.sergio.readercollection.domain
 
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
-import com.aragones.sergio.model.Book
+import aragones.sergio.readercollection.domain.model.Book
+import com.aragones.sergio.model.Book as BookLocal
 
-fun BookResponse.toLocalData(): Book {
+fun Book.toLocalData(): BookLocal {
+    return BookLocal(
+        id,
+        title,
+        subtitle,
+        authors,
+        publisher,
+        publishedDate,
+        readingDate,
+        description,
+        summary,
+        isbn,
+        pageCount,
+        categories,
+        averageRating,
+        ratingsCount,
+        rating,
+        thumbnail,
+        image,
+        format,
+        state,
+        isFavourite,
+        priority
+    )
+}
+
+fun BookLocal.toDomain(): Book {
     return Book(
         id,
         title,
@@ -35,34 +61,8 @@ fun BookResponse.toLocalData(): Book {
     )
 }
 
-fun Book.toDomain(): BookResponse {
-    return BookResponse(
-        id,
-        title,
-        subtitle,
-        authors,
-        publisher,
-        publishedDate,
-        readingDate,
-        description,
-        summary,
-        isbn,
-        pageCount,
-        categories,
-        averageRating,
-        ratingsCount,
-        rating,
-        thumbnail,
-        image,
-        format,
-        state,
-        isFavourite,
-        priority
-    )
-}
-
-fun GoogleBookResponse.toDomain(): BookResponse {
-    return BookResponse(
+fun GoogleBookResponse.toDomain(): Book {
+    return Book(
         id = id,
         title = StringBuilder().append(volumeInfo.title ?: "").append(" ")
             .append(volumeInfo.subtitle ?: "").toString(),

@@ -9,10 +9,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -29,7 +29,7 @@ class BookDetailViewModel @Inject constructor(
     //region Private properties
     private val bookId: String =
         state["bookId"] ?: throw IllegalStateException("Book id not found in the state handle")
-    private val _book = MutableLiveData<BookResponse>()
+    private val _book = MutableLiveData<Book>()
     private val _bookImage = MutableLiveData<String?>()
     private val _isFavourite = MutableLiveData<Boolean>()
     private val _bookDetailLoading = MutableLiveData<Boolean>()
@@ -37,7 +37,7 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
-    private lateinit var pendingBooks: List<BookResponse>
+    private lateinit var pendingBooks: List<Book>
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     private val _imageDialogMessageId = MutableLiveData(-1)
@@ -45,7 +45,7 @@ class BookDetailViewModel @Inject constructor(
 
     //region Public properties
     var isGoogleBook: Boolean = state["isGoogleBook"] ?: false
-    val book: LiveData<BookResponse> = _book
+    val book: LiveData<Book> = _book
     val bookImage: LiveData<String?> = _bookImage
     val isFavourite: LiveData<Boolean> = _isFavourite
     val bookDetailLoading: LiveData<Boolean> = _bookDetailLoading
@@ -86,7 +86,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun createBook(newBook: BookResponse) {
+    fun createBook(newBook: Book) {
 
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         _bookDetailLoading.value = true
@@ -99,7 +99,7 @@ class BookDetailViewModel @Inject constructor(
         })
     }
 
-    fun setBook(book: BookResponse) {
+    fun setBook(book: Book) {
 
         _bookDetailLoading.value = true
         booksRepository.setBook(book, success = {

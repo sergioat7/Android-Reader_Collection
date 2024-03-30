@@ -6,7 +6,6 @@
 package com.aragones.sergio.model
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import java.util.Date
 
@@ -34,30 +33,4 @@ data class Book(
     var state: String?,
     var isFavourite: Boolean,
     var priority: Int
-) : BaseEntity<String> {
-
-    @Ignore
-    constructor(id: String) : this(
-        id,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        null,
-        0.0,
-        0,
-        0.0,
-        null,
-        null,
-        null,
-        null,
-        false,
-        -1
-    )
-}
+) : BaseEntity<String>

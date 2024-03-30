@@ -10,10 +10,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.extensions.combineWith
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
@@ -37,28 +37,28 @@ class StatisticsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _books = MutableLiveData<List<BookResponse>>()
+    private val _books = MutableLiveData<List<Book>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse?>()
     private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
     private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
-    private val _booksByAuthorStats = MutableLiveData<Map<String, List<BookResponse>>>()
-    private val _longerBook = MutableLiveData<BookResponse?>()
-    private val _shorterBook = MutableLiveData<BookResponse?>()
+    private val _booksByAuthorStats = MutableLiveData<Map<String, List<Book>>>()
+    private val _longerBook = MutableLiveData<Book?>()
+    private val _shorterBook = MutableLiveData<Book?>()
     private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
-    val books: LiveData<List<BookResponse>> = _books
+    val books: LiveData<List<Book>> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse?> = _booksError
     val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
     val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
-    val booksByAuthorStats: LiveData<Map<String, List<BookResponse>>> = _booksByAuthorStats
-    val longerBook: LiveData<BookResponse?> = _longerBook
-    val shorterBook: LiveData<BookResponse?> = _shorterBook
+    val booksByAuthorStats: LiveData<Map<String, List<Book>>> = _booksByAuthorStats
+    val longerBook: LiveData<Book?> = _longerBook
+    val shorterBook: LiveData<Book?> = _shorterBook
     val booksByFormatStats: LiveData<List<PieEntry>> = _booksByFormatStats
     val noResultsVisible: LiveData<Boolean> = booksByYearStats.combineWith(
         booksByMonthStats,
@@ -172,7 +172,7 @@ class StatisticsViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun createBooksByYearStats(books: List<BookResponse>) {
+    private fun createBooksByYearStats(books: List<Book>) {
 
         val booksByYear = books
             .mapNotNull { it.readingDate }
@@ -191,7 +191,7 @@ class StatisticsViewModel @Inject constructor(
         _booksByYearStats.value = entries
     }
 
-    private fun createBooksByMonthStats(books: List<BookResponse>) {
+    private fun createBooksByMonthStats(books: List<Book>) {
 
         val booksByMonth = books
             .mapNotNull { it.readingDate }
@@ -210,7 +210,7 @@ class StatisticsViewModel @Inject constructor(
         _booksByMonthStats.value = entries
     }
 
-    private fun createBooksByAuthorStats(books: List<BookResponse>) {
+    private fun createBooksByAuthorStats(books: List<Book>) {
 
         _booksByAuthorStats.value = books
             .groupBy { it.authorsToString() }
@@ -220,7 +220,7 @@ class StatisticsViewModel @Inject constructor(
             .toMap()
     }
 
-    private fun createFormatStats(books: List<BookResponse>) {
+    private fun createFormatStats(books: List<Book>) {
 
         val booksByFormat = books
             .filter { it.format?.isNotEmpty() == true }

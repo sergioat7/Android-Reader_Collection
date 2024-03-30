@@ -10,17 +10,21 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.databinding.*
+import aragones.sergio.readercollection.databinding.ItemBookBinding
+import aragones.sergio.readercollection.databinding.ItemLoadMoreItemsBinding
+import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
+import aragones.sergio.readercollection.databinding.ItemShowAllItemsBinding
+import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.interfaces.OnItemClickListener
 import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
-import aragones.sergio.readercollection.data.remote.model.BookResponse
 import com.aragones.sergio.util.Constants
-import java.util.*
+import java.util.Collections
 
 class BooksAdapter(
-    private var books: MutableList<BookResponse>,
+    private var books: MutableList<Book>,
     private val isVerticalDesign: Boolean,
     private val isGoogleBook: Boolean,
     private var onItemClickListener: OnItemClickListener,
@@ -140,7 +144,7 @@ class BooksAdapter(
 
     //region Public methods
     @SuppressLint("NotifyDataSetChanged")
-    fun setBooks(newBooks: MutableList<BookResponse>, reset: Boolean) {
+    fun setBooks(newBooks: MutableList<Book>, reset: Boolean) {
 
         if (reset) {
             resetList()
@@ -158,7 +162,7 @@ class BooksAdapter(
     fun resetList() {
 
         position = 0
-        this.books = ArrayList<BookResponse>()
+        this.books = ArrayList<Book>()
         notifyDataSetChanged()
     }
 

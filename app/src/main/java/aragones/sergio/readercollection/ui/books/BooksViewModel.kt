@@ -9,12 +9,12 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
+import aragones.sergio.readercollection.data.remote.ApiManager
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.data.remote.ApiManager
+import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.ui.base.BaseViewModel
-import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -28,21 +28,21 @@ class BooksViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _originalBooks = MutableLiveData<List<BookResponse>>()
-    private val _books = MutableLiveData<List<BookResponse>>()
+    private val _originalBooks = MutableLiveData<List<Book>>()
+    private val _books = MutableLiveData<List<Book>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse?>()
     //endregion
 
     //region Public properties
-    val books: LiveData<List<BookResponse>> = _books
-    val readingBooks: LiveData<List<BookResponse>> = _books.map {
+    val books: LiveData<List<Book>> = _books
+    val readingBooks: LiveData<List<Book>> = _books.map {
         it.filter { book -> book.isReading() }
     }
-    val pendingBooks: LiveData<List<BookResponse>> = _books.map {
+    val pendingBooks: LiveData<List<Book>> = _books.map {
         it.filter { book -> book.isPending() }.sortedBy { book -> book.priority }
     }
-    val readBooks: LiveData<List<BookResponse>> = _books.map {
+    val readBooks: LiveData<List<Book>> = _books.map {
         it.filter { book -> !book.isReading() && !book.isPending() }
     }
     val booksLoading: LiveData<Boolean> = _booksLoading
@@ -136,7 +136,7 @@ class BooksViewModel @Inject constructor(
         tutorialShown = true
     }
 
-    fun setPriorityFor(books: List<BookResponse>) {
+    fun setPriorityFor(books: List<Book>) {
 
         _booksLoading.value = true
         booksRepository.setBooks(books, success = {
