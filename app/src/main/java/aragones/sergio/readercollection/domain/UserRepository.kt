@@ -5,126 +5,102 @@
 
 package aragones.sergio.readercollection.domain
 
-import android.app.LocaleManager
-import android.content.Context
-import android.os.Build
-import android.os.LocaleList
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
+import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
-import aragones.sergio.readercollection.data.remote.di.MainDispatcher
+import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
-import aragones.sergio.readercollection.data.remote.services.UserApiService
 import aragones.sergio.readercollection.domain.base.BaseRepository
-import com.aragones.sergio.util.Constants
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import java.util.Locale
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
-    private val api: UserApiService,
-    @ApplicationContext private val context: Context,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    private val userLocalDataSource: UserLocalDataSource,
+    private val userRemoteDataSource: UserRemoteDataSource
 ) : BaseRepository() {
 
     //region Private properties
-    private val externalScope = CoroutineScope(Job() + mainDispatcher)
-    private var localeManager: LocaleManager? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.getSystemService(LocaleManager::class.java)
-        } else {
-            null
-        }
+    private val EMPTY_VALUE = ""
+    private val GOOGLE_USER_TEST = "googleTest"
+    private val GOOGLE_PASSWORD_TEST = "d9MqzK3k1&07"
     //endregion
 
     //region Public properties
     val username: String
-        get() = SharedPreferencesHandler.userData.username
+        get() = userLocalDataSource.username
 
     val userData: UserData
-        get() = SharedPreferencesHandler.userData
+        get() = userLocalDataSource.userData
 
     val language: String
-        get() = SharedPreferencesHandler.language
+        get() = userLocalDataSource.language
 
     val sortParam: String?
-        get() = SharedPreferencesHandler.sortParam
+        get() = userLocalDataSource.sortParam
 
     val isSortDescending: Boolean
-        get() = SharedPreferencesHandler.isSortDescending
+        get() = userLocalDataSource.isSortDescending
 
     val themeMode: Int
-        get() = SharedPreferencesHandler.themeMode
+        get() = userLocalDataSource.themeMode
 
     val hasBooksTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasBooksTutorialBeenShown
+        get() = userLocalDataSource.hasBooksTutorialBeenShown
 
     val hasDragTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasDragTutorialBeenShown
+        get() = userLocalDataSource.hasDragTutorialBeenShown
 
     val hasSearchTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasSearchTutorialBeenShown
+        get() = userLocalDataSource.hasSearchTutorialBeenShown
 
     val hasStatisticsTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasStatisticsTutorialBeenShown
+        get() = userLocalDataSource.hasStatisticsTutorialBeenShown
 
     val hasSettingsTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasSettingsTutorialBeenShown
+        get() = userLocalDataSource.hasSettingsTutorialBeenShown
 
     val hasNewBookTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasNewBookTutorialBeenShown
+        get() = userLocalDataSource.hasNewBookTutorialBeenShown
 
     val hasBookDetailsTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasBookDetailsTutorialBeenShown
+        get() = userLocalDataSource.hasBookDetailsTutorialBeenShown
     //endregion
 
     //region Public methods
     fun login(
         username: String,
         password: String,
-        success: (String) -> Unit,
+        success: () -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        if (username == Constants.GOOGLE_USER_TEST && password == Constants.GOOGLE_PASSWORD_TEST) {
-            SharedPreferencesHandler.userData = UserData(
-                Constants.GOOGLE_USER_TEST,
-                Constants.GOOGLE_PASSWORD_TEST,
-                false
-            )
-            success("-")
-        } else if (userData.username == username && userData.password == password) {
-            success("-")
-        } else {
-            failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.wrong_credentials))
-        }
-//        externalScope.launch {
-//
-//            val body = LoginCredentials(username, password)
-//            try {
-//                when (val response = ApiManager.validateResponse(api.login(body))) {
-//                    is RequestResult.JsonSuccess -> success(response.body.token)
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
+        userRemoteDataSource.login(username, password, success = { token ->
+
+            if (username == GOOGLE_USER_TEST && password == GOOGLE_PASSWORD_TEST) {
+                val userData =
+                    UserData(GOOGLE_USER_TEST, GOOGLE_PASSWORD_TEST, true)
+                val authData = AuthData("-")
+                userLocalDataSource.storeLoginData(userData, authData)
+                success()
+            } else if (userData.username == username && userData.password == password) {
+                val userData = UserData(username, password, true)
+                val authData = AuthData(token)
+                userLocalDataSource.storeLoginData(userData, authData)
+                success()
+            } else {
+                failure(ErrorResponse(EMPTY_VALUE, R.string.wrong_credentials))
+            }
+
+//            val userData = UserData(username, password, true)
+//            val authData = AuthData(token)
+//            userLocalDataSource.storeLoginData(userData, authData)
+//            success()
+        }, failure = failure)
     }
 
     fun logout() {
-        SharedPreferencesHandler.logout()
-//        externalScope.launch {
-//
-//            try {
-//                api.logout()
-//            } catch (e: Exception) {
-//            }
-//        }
+
+        userLocalDataSource.logout()
+        userRemoteDataSource.logout()
     }
 
     fun register(
@@ -133,128 +109,97 @@ class UserRepository @Inject constructor(
         success: () -> Unit,
         failure: (ErrorResponse) -> Unit
     ) {
-        SharedPreferencesHandler.userData = UserData(username, password, false)
-        success()
-//        externalScope.launch {
-//
-//            val body = LoginCredentials(username, password)
-//            try {
-//                when (val response = ApiManager.validateResponse(api.register(body))) {
-//                    is RequestResult.Success -> success()
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse("", R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse("", R.string.error_server))
-//            }
-//        }
+
+        userRemoteDataSource.register(username, password, success = {
+
+            val userData = UserData(username, password, false)
+            val authData = AuthData("-")
+            userLocalDataSource.storeLoginData(userData, authData)
+            success()
+        }, failure)
     }
 
     fun updatePassword(password: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        success()
-//        externalScope.launch {
-//
-//            try {
-//                val body = NewPassword(password)
-//                when (val response = ApiManager.validateResponse(api.updatePassword(body))) {
-//                    is RequestResult.Success -> success()
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
+
+        userRemoteDataSource.updatePassword(password, success = {
+
+            userLocalDataSource.storePassword(password)
+            userRemoteDataSource.login(userLocalDataSource.username, password, success = { token ->
+
+                userLocalDataSource.storeCredentials(AuthData(token))
+                success()
+            }, failure)
+        }, failure)
     }
 
     fun deleteUser(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        success()
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.deleteUser())) {
-//                    is RequestResult.Success -> success()
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
+
+        userRemoteDataSource.deleteUser(success = {
+
+            userLocalDataSource.removeUserData()
+            userLocalDataSource.removeCredentials()
+            success()
+        }, failure)
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
-
-        SharedPreferencesHandler.userData = userData
-        SharedPreferencesHandler.credentials = authData
+        userLocalDataSource.storeLoginData(userData, authData)
     }
 
     fun storeCredentials(authData: AuthData) {
-        SharedPreferencesHandler.credentials = authData
-    }
-
-    fun removeCredentials() {
-        SharedPreferencesHandler.removeCredentials()
+        userLocalDataSource.storeCredentials(authData)
     }
 
     fun storePassword(newPassword: String) {
-        SharedPreferencesHandler.storePassword(newPassword)
+        userLocalDataSource.storePassword(newPassword)
     }
 
     fun removeUserData() {
-        SharedPreferencesHandler.removeUserData()
+        userLocalDataSource.removeUserData()
     }
 
-//    fun removePassword() {
-//        SharedPreferencesHandler.removePassword()
-//    }
-
     fun storeLanguage(language: String) {
-
-        SharedPreferencesHandler.language = language
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            localeManager?.applicationLocales = LocaleList(Locale.forLanguageTag(language))
-        }
+        userLocalDataSource.storeLanguage(language)
     }
 
     fun storeSortParam(sortParam: String?) {
-        SharedPreferencesHandler.sortParam = sortParam
+        userLocalDataSource.storeSortParam(sortParam)
     }
 
     fun storeIsSortDescending(isSortDescending: Boolean) {
-        SharedPreferencesHandler.isSortDescending = isSortDescending
+        userLocalDataSource.storeIsSortDescending(isSortDescending)
     }
 
     fun storeThemeMode(themeMode: Int) {
-        SharedPreferencesHandler.themeMode = themeMode
+        userLocalDataSource.storeThemeMode(themeMode)
     }
 
     fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasBooksTutorialBeenShown = hasBooksTutorialBeenShown
+        userLocalDataSource.setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown)
     }
 
     fun setHasDragTutorialBeenShown(hasDragTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasDragTutorialBeenShown = hasDragTutorialBeenShown
+        userLocalDataSource.setHasDragTutorialBeenShown(hasDragTutorialBeenShown)
     }
 
     fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasSearchTutorialBeenShown = hasSearchTutorialBeenShown
+        userLocalDataSource.setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown)
     }
 
     fun setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasStatisticsTutorialBeenShown = hasStatisticsTutorialBeenShown
+        userLocalDataSource.setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown)
     }
 
     fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasSettingsTutorialBeenShown = hasSettingsTutorialBeenShown
+        userLocalDataSource.setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown)
     }
 
     fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasNewBookTutorialBeenShown = hasNewBookTutorialBeenShown
+        userLocalDataSource.setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown)
     }
 
     fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasBookDetailsTutorialBeenShown = hasBookDetailsTutorialBeenShown
+        userLocalDataSource.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
     }
     //endregion
 }

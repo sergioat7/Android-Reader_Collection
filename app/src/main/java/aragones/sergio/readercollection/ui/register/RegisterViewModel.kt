@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.ui.register
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.model.AuthData
-import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.MainActivity
@@ -58,11 +56,8 @@ class RegisterViewModel @Inject constructor(
 
         _registerLoading.value = true
         userRepository.register(username, password, success = {
-            userRepository.login(username, password, success = { token ->
+            userRepository.login(username, password, success = {
 
-                val userData = UserData(username, password, true)
-                val authData = AuthData(token)
-                userRepository.storeLoginData(userData, authData)
                 _registerLoading.value = false
                 _activityName.value = MainActivity::class.simpleName
                 _activityName.value = null
