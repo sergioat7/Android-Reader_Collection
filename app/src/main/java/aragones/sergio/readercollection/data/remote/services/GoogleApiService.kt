@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.data.remote.services
 
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
-import com.aragones.sergio.data.business.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import io.reactivex.rxjava3.core.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
