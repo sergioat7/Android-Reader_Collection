@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.domain
 
 import androidx.sqlite.db.SupportSQLiteQuery
 import aragones.sergio.readercollection.domain.di.MainDispatcher
+import com.aragones.sergio.BookDao
 import com.aragones.sergio.ReaderCollectionDatabase
 import com.aragones.sergio.model.Book
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
@@ -22,7 +23,7 @@ import kotlinx.coroutines.Job
 import javax.inject.Inject
 
 class BooksLocalDataSource @Inject constructor(
-    private val database: ReaderCollectionDatabase,
+    private val bookDao: BookDao,
     @MainDispatcher private val mainDispatcher: CoroutineDispatcher
 ) {
 
@@ -34,8 +35,8 @@ class BooksLocalDataSource @Inject constructor(
 
     //region Public methods
     fun getBooksDatabaseObserver(query: SupportSQLiteQuery): Maybe<List<Book>> {
-        return database
-            .bookDao()
+
+        return bookDao
             .getBooksObserver(query)
             .`as`(RxJavaBridge.toV3Maybe())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
@@ -44,8 +45,7 @@ class BooksLocalDataSource @Inject constructor(
 
     fun getPendingBooksDatabaseObserver(): Maybe<List<Book>> {
 
-        return database
-            .bookDao()
+        return bookDao
             .getPendingBooksObserver()
             .`as`(RxJavaBridge.toV3Maybe())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
@@ -54,8 +54,7 @@ class BooksLocalDataSource @Inject constructor(
 
     fun importDataFrom(books: List<Book>): Completable {
 
-        return database
-            .bookDao()
+        return bookDao
             .insertBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
@@ -64,8 +63,7 @@ class BooksLocalDataSource @Inject constructor(
 
     fun getBookDatabaseObserver(googleId: String): Single<Book> {
 
-        return database
-            .bookDao()
+        return bookDao
             .getBookObserver(googleId)
             .`as`(RxJavaBridge.toV3Single())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
@@ -73,8 +71,8 @@ class BooksLocalDataSource @Inject constructor(
     }
 
     fun insertBooksDatabaseObserver(books: List<Book>): Completable {
-        return database
-            .bookDao()
+
+        return bookDao
             .insertBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
@@ -82,8 +80,8 @@ class BooksLocalDataSource @Inject constructor(
     }
 
     fun updateBooksDatabaseObserver(books: List<Book>): Completable {
-        return database
-            .bookDao()
+
+        return bookDao
             .updateBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
@@ -91,8 +89,8 @@ class BooksLocalDataSource @Inject constructor(
     }
 
     fun deleteBooksDatabaseObserver(books: List<Book>): Completable {
-        return database
-            .bookDao()
+        
+        return bookDao
             .deleteBooksObserver(books)
             .`as`(RxJavaBridge.toV3Completable())
             .subscribeOn(SUBSCRIBER_SCHEDULER)
