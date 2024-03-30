@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.domain
 
 import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
@@ -17,11 +16,14 @@ import aragones.sergio.readercollection.domain.base.BaseRepository
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
@@ -30,6 +32,8 @@ class BooksRepository @Inject constructor(
 ) : BaseRepository() {
 
     //region Private properties
+    private val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
+    private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
     private val moshiAdapter = Moshi.Builder()
         .add(MoshiDateAdapter("MMM dd, yyyy"))
         .build().adapter<List<BookResponse?>?>(
@@ -108,8 +112,8 @@ class BooksRepository @Inject constructor(
                     }
                 ).addTo(disposables)
         }
-            .subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER)
-            .observeOn(ApiManager.OBSERVER_SCHEDULER)
+            .subscribeOn(SUBSCRIBER_SCHEDULER)
+            .observeOn(OBSERVER_SCHEDULER)
     }
 
     fun getBookDatabaseObserver(googleId: String): Single<BookResponse> {
@@ -287,7 +291,7 @@ class BooksRepository @Inject constructor(
                         emitter.onError(it)
                     }
                 ).addTo(disposables)
-        }.subscribeOn(ApiManager.SUBSCRIBER_SCHEDULER).observeOn(ApiManager.OBSERVER_SCHEDULER)
+        }.subscribeOn(SUBSCRIBER_SCHEDULER).observeOn(OBSERVER_SCHEDULER)
     }
 
     fun searchBooksObserver(
