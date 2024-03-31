@@ -62,6 +62,10 @@ class LandingViewModel @Inject constructor(
         }
     }
 
+    fun fetchRemoteConfigValues() {
+        booksRepository.fetchRemoteConfigValues(language)
+    }
+
     fun setLanguage(value: String) {
         userRepository.language = value
     }

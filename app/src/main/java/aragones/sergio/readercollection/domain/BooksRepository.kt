@@ -323,5 +323,9 @@ class BooksRepository @Inject constructor(
                 }).addTo(disposables)
         }.subscribeOn(SUBSCRIBER_SCHEDULER).observeOn(OBSERVER_SCHEDULER)
     }
+
+    fun fetchRemoteConfigValues(language: String) {
+        booksRemoteDataSource.fetchRemoteConfigValues(language)
+    }
     //endregion
 }
