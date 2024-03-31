@@ -5,13 +5,18 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import android.util.Log
 import aragones.sergio.readercollection.data.remote.di.MainDispatcher
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
@@ -19,12 +24,14 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
+import org.json.JSONObject
 import javax.inject.Inject
 
 class BooksRemoteDataSource @Inject constructor(
     private val booksApiService: BookApiService,
     private val googleApiService: GoogleApiService,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher
+    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
+    private val remoteConfig: FirebaseRemoteConfig
 ) {
 
     //region Private properties
@@ -36,6 +43,7 @@ class BooksRemoteDataSource @Inject constructor(
     private val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
     private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
+    private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Public methods
@@ -207,6 +215,53 @@ class BooksRemoteDataSource @Inject constructor(
             .getGoogleBook(volumeId)
             .subscribeOn(SUBSCRIBER_SCHEDULER)
             .observeOn(OBSERVER_SCHEDULER)
+    }
+
+    fun fetchRemoteConfigValues(language: String) {
+
+        setupFormats(remoteConfig.getString("formats"), language)
+        setupStates(remoteConfig.getString("states"), language)
+
+        remoteConfig.fetchAndActivate().addOnCompleteListener {
+            setupFormats(remoteConfig.getString("formats"), language)
+            setupStates(remoteConfig.getString("states"), language)
+        }
+    }
+    //endregion
+
+    //region Private methods
+    private fun setupFormats(formatsString: String, language: String) {
+
+        if (formatsString.isNotEmpty()) {
+            var formats = listOf<FormatResponse>()
+            try {
+                val languagedFormats =
+                    JSONObject(formatsString).get(language).toString()
+                formats = moshi.adapter(Array<FormatResponse>::class.java)
+                    .fromJson(languagedFormats)?.asList() ?: listOf()
+            } catch (e: Exception) {
+                Log.e("LandingActivity", e.message ?: "")
+            }
+
+            aragones.sergio.readercollection.utils.Constants.FORMATS = formats
+        }
+    }
+
+    private fun setupStates(statesString: String, language: String) {
+
+        if (statesString.isNotEmpty()) {
+            var states = listOf<StateResponse>()
+            try {
+                val languagedStates =
+                    JSONObject(statesString).get(language).toString()
+                states = moshi.adapter(Array<StateResponse>::class.java)
+                    .fromJson(languagedStates)?.asList() ?: listOf()
+            } catch (e: Exception) {
+                Log.e("LandingActivity", e.message ?: "")
+            }
+
+            aragones.sergio.readercollection.utils.Constants.STATES = states
+        }
     }
     //endregion
 }

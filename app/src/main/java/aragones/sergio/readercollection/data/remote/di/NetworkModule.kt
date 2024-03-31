@@ -9,6 +9,10 @@ import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.data.remote.services.UserApiService
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,4 +37,17 @@ object NetworkModule {
     @Singleton
     @Provides
     fun providesUserApiService(): UserApiService = ApiManager.getService(BASE_ENDPOINT)
+
+    @Singleton
+    @Provides
+    fun providesFirebaseRemoteConfig(): FirebaseRemoteConfig {
+
+        val remoteConfig = Firebase.remoteConfig
+        remoteConfig.setConfigSettingsAsync(
+            remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 3600
+            }
+        )
+        return remoteConfig
+    }
 }
