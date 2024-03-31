@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 28/3/2024
  */
 
-package aragones.sergio.readercollection.ui.components
+package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertTextContains
@@ -15,6 +15,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test

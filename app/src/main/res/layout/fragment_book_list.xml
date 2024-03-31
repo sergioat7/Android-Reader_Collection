@@ -1,47 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 17/1/2022
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import
-            type="android.view.View"
-            />
+        <import type="android.view.View" />
 
-        <import
-            type="com.aragones.sergio.util.ScrollPosition"
-            />
+        <import type="com.aragones.sergio.util.ScrollPosition" />
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.ui.booklist.BookListFragment"
-            />
+            type="aragones.sergio.readercollection.ui.booklist.BookListFragment" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.booklist.BookListViewModel"
-            />
+            type="aragones.sergio.readercollection.ui.booklist.BookListViewModel" />
 
         <variable
             name="isDarkMode"
-            type="Boolean"
-            />
+            type="Boolean" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.booklist.BookListFragment"
-        >
+        tools:context=".ui.booklist.BookListFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -52,8 +41,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:navigationIcon="@{isDarkMode ? @drawable/ic_arrow_back_white : @drawable/ic_arrow_back_blue}"
             app:title='@{viewModel.books.empty ? "" : @plurals/title_books_count(viewModel.books.size(), viewModel.books.size())}'
-            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
-            />
+            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_view_books"
@@ -63,8 +51,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            />
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_action_button_start_list"
@@ -79,8 +66,7 @@
             app:layout_constraintTop_toTopOf="@id/recycler_view_books"
             app:maxImageSize="@dimen/size_10dp"
             app:srcCompat="@drawable/ic_double_arrow_up"
-            style="@style/Widget.ReaderCollection.FloatingActionButton"
-            />
+            style="@style/Widget.ReaderCollection.FloatingActionButton" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floating_action_button_end_list"
@@ -95,8 +81,7 @@
             app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
             app:maxImageSize="@dimen/size_10dp"
             app:srcCompat="@drawable/ic_double_arrow_down"
-            style="@style/Widget.ReaderCollection.FloatingActionButton"
-            />
+            style="@style/Widget.ReaderCollection.FloatingActionButton" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

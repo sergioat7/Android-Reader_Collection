@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 19/10/2020
  */
 

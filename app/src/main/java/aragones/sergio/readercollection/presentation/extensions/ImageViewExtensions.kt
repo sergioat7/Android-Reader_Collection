@@ -1,9 +1,9 @@
 /*
- * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 2/1/2022
  */
 
-package aragones.sergio.readercollection.extensions
+package aragones.sergio.readercollection.presentation.extensions
 
 import android.graphics.drawable.BitmapDrawable
 import android.widget.ImageView

@@ -1,26 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 14/1/2022
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="labelHintText"
-            type="String"
-            />
+            type="String" />
 
         <variable
             name="inputHintText"
-            type="String"
-            />
+            type="String" />
 
         <variable
             name="inputHintTextColor"
@@ -32,8 +27,7 @@
 
         <variable
             name="enabled"
-            type="Boolean"
-            />
+            type="Boolean" />
 
     </data>
 
@@ -49,8 +43,7 @@
         app:expandedHintEnabled="false"
         app:endIconTint="@{enabled ? @color/colorPrimary : 0}"
         tools:hint="Format"
-        style="@style/Widget.ReaderCollection.TextInputLayout.BorderedDropdown"
-        >
+        style="@style/Widget.ReaderCollection.TextInputLayout.BorderedDropdown">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/material_auto_complete_text_view"
@@ -64,8 +57,7 @@
             android:textColorHint="@{inputHintTextColor == 0 ? @color/textPrimaryLight : inputHintTextColor}"
             android:textSize="@dimen/text_size_16sp"
             tools:hint="Please choose"
-            style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox"
-            />
+            style="@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox" />
 
     </com.google.android.material.textfield.TextInputLayout>
 

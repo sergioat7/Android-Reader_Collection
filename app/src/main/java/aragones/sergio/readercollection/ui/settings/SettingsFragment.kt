@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 21/8/2023
  */
 
@@ -19,14 +19,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentSettingsBinding
-import aragones.sergio.readercollection.extensions.doAfterTextChanged
-import aragones.sergio.readercollection.extensions.getPosition
-import aragones.sergio.readercollection.extensions.getValue
-import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
-import aragones.sergio.readercollection.extensions.setError
-import aragones.sergio.readercollection.extensions.setValue
-import aragones.sergio.readercollection.extensions.style
-import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.presentation.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.presentation.extensions.getPosition
+import aragones.sergio.readercollection.presentation.extensions.getValue
+import aragones.sergio.readercollection.presentation.extensions.setEndIconOnClickListener
+import aragones.sergio.readercollection.presentation.extensions.setError
+import aragones.sergio.readercollection.presentation.extensions.setValue
+import aragones.sergio.readercollection.presentation.extensions.style
+import aragones.sergio.readercollection.presentation.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.ui.components.InformationAlertDialog

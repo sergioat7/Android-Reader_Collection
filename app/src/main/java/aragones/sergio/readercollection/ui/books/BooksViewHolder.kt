@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 9/11/2020
  */
 
@@ -15,10 +15,10 @@ import aragones.sergio.readercollection.databinding.ItemBookBinding
 import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
 import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.extensions.isDarkMode
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
-import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
+import aragones.sergio.readercollection.presentation.extensions.isDarkMode
+import aragones.sergio.readercollection.presentation.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.presentation.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.presentation.interfaces.OnSwitchClickListener
 import kotlin.math.ceil
 
 class BooksViewHolder(private val binding: ViewDataBinding) :

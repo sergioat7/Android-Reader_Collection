@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 25/11/2023
  */
 
@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.ui.booklist
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import aragones.sergio.readercollection.interfaces.ItemMoveListener
+import aragones.sergio.readercollection.presentation.interfaces.ItemMoveListener
 import aragones.sergio.readercollection.ui.books.BooksViewHolder
 
 class ItemMoveCallback(

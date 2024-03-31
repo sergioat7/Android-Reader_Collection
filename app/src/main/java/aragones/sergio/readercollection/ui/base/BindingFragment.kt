@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 7/1/2022
  */
 
@@ -29,9 +29,9 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.extensions.isDarkMode
-import aragones.sergio.readercollection.extensions.setStatusBarStyle
-import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.presentation.extensions.isDarkMode
+import aragones.sergio.readercollection.presentation.extensions.setStatusBarStyle
+import aragones.sergio.readercollection.presentation.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.ui.modals.loading.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.ui.modals.syncapp.PopupSyncAppDialogFragment
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse

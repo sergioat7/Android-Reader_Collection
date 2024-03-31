@@ -1,42 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 18/10/2020
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
-        <import
-            type="android.view.View"
-            />
+        <import type="android.view.View" />
 
-        <import
-            type="com.aragones.sergio.util.Constants"
-            />
+        <import type="com.aragones.sergio.util.Constants" />
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.ui.books.BooksFragment"
-            />
+            type="aragones.sergio.readercollection.ui.books.BooksFragment" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.books.BooksViewModel"
-            />
+            type="aragones.sergio.readercollection.ui.books.BooksViewModel" />
 
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".ui.books.BooksFragment"
-        >
+        tools:context=".ui.books.BooksFragment">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -48,8 +38,7 @@
             app:subtitle="@{@plurals/title_books_count(viewModel.books.size(), viewModel.books.size())}"
             app:subtitleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main"
             app:title="@string/title_books"
-            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main"
-            />
+            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Title.Main" />
 
         <ScrollView
             android:layout_width="0dp"
@@ -59,14 +48,12 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
-            >
+            app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/padding_24dp"
-                >
+                android:paddingBottom="@dimen/padding_24dp">
 
                 <androidx.appcompat.widget.SearchView
                     android:id="@+id/search_view_books"
@@ -77,8 +64,7 @@
                     android:background="@drawable/rounded_background_search_view"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_reading_books"
@@ -88,8 +74,7 @@
                     android:visibility='@{viewModel.readingBooksVisible ? View.VISIBLE : View.GONE}'
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/search_view_books"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/search_view_books" />
 
                 <ImageView
                     android:id="@+id/image_view_no_reading_results"
@@ -101,8 +86,7 @@
                     app:layout_constraintEnd_toEndOf="@+id/recycler_view_reading_books"
                     app:layout_constraintStart_toStartOf="@+id/recycler_view_reading_books"
                     app:layout_constraintTop_toTopOf="@+id/recycler_view_reading_books"
-                    app:layout_constraintWidth_percent="0.5"
-                    />
+                    app:layout_constraintWidth_percent="0.5" />
 
                 <View
                     android:id="@+id/view_separator_reading_pending"
@@ -115,8 +99,7 @@
                     android:visibility="@{viewModel.pendingBooksVisible &amp;&amp; viewModel.readingBooksVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recycler_view_reading_books"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_view_reading_books" />
 
                 <TextView
                     android:id="@+id/text_view_pending_books"
@@ -129,8 +112,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/button_show_all_pending"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/button_show_all_pending"
-                    style="@style/Widget.ReaderCollection.TextView.Title.Section"
-                    />
+                    style="@style/Widget.ReaderCollection.TextView.Title.Section" />
 
                 <Button
                     android:id="@+id/button_show_all_pending"
@@ -143,8 +125,7 @@
                     android:visibility="@{viewModel.seeMorePendingBooksVisible ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_separator_reading_pending"
-                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
-                    />
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_pending_books"
@@ -157,8 +138,7 @@
                     android:visibility="@{viewModel.pendingBooksVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_pending_books"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_pending_books" />
 
                 <View
                     android:id="@+id/view_separator_pending_read"
@@ -171,8 +151,7 @@
                     android:visibility="@{viewModel.readBooksVisible &amp;&amp; (viewModel.readingBooksVisible || viewModel.pendingBooksVisible) ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/recycler_view_pending_books"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/recycler_view_pending_books" />
 
                 <TextView
                     android:id="@+id/text_view_read_books"
@@ -185,8 +164,7 @@
                     app:layout_constraintEnd_toStartOf="@+id/button_show_all_read"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/button_show_all_read"
-                    style="@style/Widget.ReaderCollection.TextView.Title.Section"
-                    />
+                    style="@style/Widget.ReaderCollection.TextView.Title.Section" />
 
                 <Button
                     android:id="@+id/button_show_all_read"
@@ -199,8 +177,7 @@
                     android:visibility="@{viewModel.seeMoreReadBooksVisible ? View.VISIBLE : View.INVISIBLE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/view_separator_pending_read"
-                    style="@style/Widget.ReaderCollection.TextButton.Main.Action"
-                    />
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view_books"
@@ -213,8 +190,7 @@
                     android:visibility="@{viewModel.readBooksVisible ? View.VISIBLE : View.GONE}"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/text_view_read_books"
-                    />
+                    app:layout_constraintTop_toBottomOf="@+id/text_view_read_books" />
 
                 <include
                     android:id="@+id/content_view_no_results"
@@ -226,8 +202,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/recycler_view_books"
                     app:layout_constraintWidth_percent="0.7"
-                    layout="@layout/content_no_results"
-                    />
+                    layout="@layout/content_no_results" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

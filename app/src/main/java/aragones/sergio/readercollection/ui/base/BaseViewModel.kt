@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 9/1/2021
  */
 
@@ -11,8 +11,8 @@ import android.widget.LinearLayout
 import android.widget.NumberPicker
 import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.extensions.getPickerParams
-import aragones.sergio.readercollection.extensions.setup
+import aragones.sergio.readercollection.presentation.extensions.getPickerParams
+import aragones.sergio.readercollection.presentation.extensions.setup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 

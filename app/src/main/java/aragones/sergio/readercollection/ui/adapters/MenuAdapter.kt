@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 15/1/2022
  */
 
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.extensions.getCustomFont
+import aragones.sergio.readercollection.presentation.extensions.getCustomFont
 
 class MenuAdapter(
     private val ctx: Context,

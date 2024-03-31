@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 21/8/2023
  */
 
@@ -22,20 +22,20 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.extensions.addChip
-import aragones.sergio.readercollection.extensions.doAfterTextChanged
-import aragones.sergio.readercollection.extensions.getScreenSize
-import aragones.sergio.readercollection.extensions.getSpannableFor
-import aragones.sergio.readercollection.extensions.getValue
-import aragones.sergio.readercollection.extensions.isBlank
-import aragones.sergio.readercollection.extensions.isDarkMode
-import aragones.sergio.readercollection.extensions.setEndIconOnClickListener
-import aragones.sergio.readercollection.extensions.setHintStyle
-import aragones.sergio.readercollection.extensions.setOnClickListener
-import aragones.sergio.readercollection.extensions.setValue
-import aragones.sergio.readercollection.extensions.showDatePicker
-import aragones.sergio.readercollection.extensions.style
-import aragones.sergio.readercollection.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.presentation.extensions.addChip
+import aragones.sergio.readercollection.presentation.extensions.doAfterTextChanged
+import aragones.sergio.readercollection.presentation.extensions.getScreenSize
+import aragones.sergio.readercollection.presentation.extensions.getSpannableFor
+import aragones.sergio.readercollection.presentation.extensions.getValue
+import aragones.sergio.readercollection.presentation.extensions.isBlank
+import aragones.sergio.readercollection.presentation.extensions.isDarkMode
+import aragones.sergio.readercollection.presentation.extensions.setEndIconOnClickListener
+import aragones.sergio.readercollection.presentation.extensions.setHintStyle
+import aragones.sergio.readercollection.presentation.extensions.setOnClickListener
+import aragones.sergio.readercollection.presentation.extensions.setValue
+import aragones.sergio.readercollection.presentation.extensions.showDatePicker
+import aragones.sergio.readercollection.presentation.extensions.style
+import aragones.sergio.readercollection.presentation.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.ui.components.InformationAlertDialog

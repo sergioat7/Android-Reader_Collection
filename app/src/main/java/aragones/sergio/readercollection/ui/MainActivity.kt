@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 15/10/2020
  */
 
 package aragones.sergio.readercollection.ui
@@ -11,7 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.ActivityMainBinding
-import aragones.sergio.readercollection.extensions.setupWithNavController
+import aragones.sergio.readercollection.presentation.extensions.setupWithNavController
 import aragones.sergio.readercollection.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
