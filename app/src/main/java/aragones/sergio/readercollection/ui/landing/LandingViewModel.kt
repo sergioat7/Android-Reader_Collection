@@ -7,8 +7,8 @@ package aragones.sergio.readercollection.ui.landing
 
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.domain.BooksRepository
+import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.ui.MainActivity
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.ui.login.LoginActivity
@@ -19,7 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LandingViewModel @Inject constructor(
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel() {
 
     //region Private properties
@@ -28,9 +29,9 @@ class LandingViewModel @Inject constructor(
 
     //region Public properties
     val language: String
-        get() = SharedPreferencesHandler.language
+        get() = userRepository.language
     val newChangesPopupShown: Boolean
-        get() = SharedPreferencesHandler.newChangesPopupShown
+        get() = userRepository.newChangesPopupShown
     val landingClassToStart = _landingClassToStart
     //endregion
 
@@ -44,8 +45,8 @@ class LandingViewModel @Inject constructor(
     //region Public methods
     fun checkIsLoggedIn() {
 
-        SharedPreferencesHandler.newChangesPopupShown = true
-        _landingClassToStart.value = if (SharedPreferencesHandler.isLoggedIn) {
+        userRepository.newChangesPopupShown = true
+        _landingClassToStart.value = if (userRepository.isLoggedIn) {
             MainActivity::class.java
         } else {
             LoginActivity::class.java
@@ -54,11 +55,15 @@ class LandingViewModel @Inject constructor(
 
     fun checkTheme() {
 
-        when (SharedPreferencesHandler.themeMode) {
+        when (userRepository.themeMode) {
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
             else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
         }
+    }
+
+    fun setLanguage(value: String) {
+        userRepository.language = value
     }
     //endregion
 

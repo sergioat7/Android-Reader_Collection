@@ -8,7 +8,6 @@ package aragones.sergio.readercollection.data.remote
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
@@ -34,6 +33,8 @@ object ApiManager {
     val moshi: Moshi = Moshi.Builder().add(MoshiDateAdapter(Constants.DATE_FORMAT)).build()
     var retrofits: MutableMap<KClass<*>, Any> = mutableMapOf()
     var apis: MutableMap<KClass<*>, Any> = mutableMapOf()
+    var language: String = ""
+    var accessToken: String = ""
     //endregion
 
     //region Public methods
@@ -172,14 +173,13 @@ object ApiManager {
 
             val request = if (authRequirement != null) {
 
-                val accessToken = SharedPreferencesHandler.credentials.token
                 original.newBuilder()
-                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.language)
+                    .addHeader(ACCEPT_LANGUAGE_HEADER, language)
                     .header(AUTHORIZATION_HEADER, accessToken)
                     .build()
             } else {
                 original.newBuilder()
-                    .addHeader(ACCEPT_LANGUAGE_HEADER, SharedPreferencesHandler.language)
+                    .addHeader(ACCEPT_LANGUAGE_HEADER, language)
                     .build()
             }
 

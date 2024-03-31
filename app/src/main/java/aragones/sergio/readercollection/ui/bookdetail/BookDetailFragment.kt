@@ -19,7 +19,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.domain.model.Book
@@ -261,6 +260,7 @@ class BookDetailFragment :
 
         setupBindings()
 
+        val language = viewModel.language
         with(binding) {
             appBarLayoutBookDetail.addOnOffsetChangedListener(this@BookDetailFragment)
 
@@ -324,7 +324,7 @@ class BookDetailFragment :
             applyStyleTo(textInputLayoutSummary)
 
             textInputLayoutReadingDate.setOnClickListener {
-                textInputLayoutReadingDate.showDatePicker(requireActivity())
+                textInputLayoutReadingDate.showDatePicker(requireActivity(), language)
             }
 
             dropdownTextInputLayoutFormat.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
@@ -332,7 +332,7 @@ class BookDetailFragment :
             dropdownTextInputLayoutState.setHintStyle(R.style.Widget_ReaderCollection_TextView_Header)
 
             textInputLayoutPublishedDate.setOnClickListener {
-                textInputLayoutPublishedDate.showDatePicker(requireActivity())
+                textInputLayoutPublishedDate.showDatePicker(requireActivity(), language)
             }
 
             fragment = this@BookDetailFragment
@@ -415,25 +415,28 @@ class BookDetailFragment :
 
     private fun getTextDate(date: Date?): String? {
 
-        return date?.toString(
-            SharedPreferencesHandler.dateFormatToShow,
-            SharedPreferencesHandler.language
-        ) ?: if (binding.editable == true) null else Constants.NO_VALUE
+        val language = viewModel.language
+        val dateFormatToShow = Constants.getDateFormatToShow(language)
+        return date?.toString(dateFormatToShow, language)
+            ?: if (binding.editable == true) null else Constants.NO_VALUE
     }
 
     private fun getBookData(): Book {
+
+        val language = viewModel.language
+        val dateFormatToShow = Constants.getDateFormatToShow(language)
         with(binding) {
 
             val authors = textInputLayoutAuthor.getValue().toList<String>().map {
                 it.trimStart().trimEnd()
             }
             val publishedDate = textInputLayoutPublishedDate.getValue().toDate(
-                SharedPreferencesHandler.dateFormatToShow,
-                SharedPreferencesHandler.language
+                dateFormatToShow,
+                language
             )
             var readingDate = textInputLayoutReadingDate.getValue().toDate(
-                SharedPreferencesHandler.dateFormatToShow,
-                SharedPreferencesHandler.language
+                dateFormatToShow,
+                language
             )
             val pageCountText = textInputLayoutPages.getValue()
             val pageCount =

@@ -58,6 +58,8 @@ class BookDetailViewModel @Inject constructor(
     var confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var imageDialogMessageId: LiveData<Int> = _imageDialogMessageId
+    val language: String
+        get() = userRepository.language
     //endregion
 
     //region Lifecycle methods

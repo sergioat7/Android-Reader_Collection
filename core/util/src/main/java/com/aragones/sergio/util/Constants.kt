@@ -40,6 +40,13 @@ object Constants {
     fun isPasswordValid(password: String): Boolean {
         return password.length > 3
     }
+
+    fun getDateFormatToShow(language: String): String {
+        return when (language) {
+            "es" -> "d MMMM yyyy"
+            else -> "MMMM d, yyyy"
+        }
+    }
 }
 
 object State {
