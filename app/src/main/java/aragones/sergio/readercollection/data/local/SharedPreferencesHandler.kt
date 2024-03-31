@@ -83,13 +83,6 @@ object SharedPreferencesHandler {
     var isSortDescending: Boolean
         get() = appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
-    val dateFormatToShow: String
-        get() {
-            return when (language) {
-                "es" -> "d MMMM yyyy"
-                else -> "MMMM d, yyyy"
-            }
-        }
     var hasBooksTutorialBeenShown: Boolean
         get() = appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)

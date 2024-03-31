@@ -12,7 +12,6 @@ import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.ui.base.BaseActivity
@@ -99,6 +98,7 @@ class LandingActivity : BaseActivity() {
 
     private fun configLanguage() {
 
+        ApiManager.language = viewModel.language
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
 
             val language = viewModel.language
@@ -108,7 +108,7 @@ class LandingActivity : BaseActivity() {
         } else {
 
             val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
-            SharedPreferencesHandler.language = locale.language
+            viewModel.setLanguage(locale.language)
         }
     }
 

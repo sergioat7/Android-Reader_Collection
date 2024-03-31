@@ -18,7 +18,6 @@ import androidx.core.view.doOnLayout
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.FragmentActivity
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.toDate
@@ -100,26 +99,31 @@ fun CustomTextInputLayoutBinding.getSpannableFor(style: Int): SpannableStringBui
     return spannable
 }
 
-fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity) {
+fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity, language: String) {
 
     this.textInputEditText.setOnFocusChangeListener { _, hasFocus ->
         if (hasFocus) {
-            val datePicker = getPicker(this.textInputEditText, activity)
+            val datePicker = getPicker(this.textInputEditText, activity, language)
             datePicker.show(activity.supportFragmentManager, "")
         }
     }
     this.textInputEditText.setOnClickListener {
-        val datePicker = getPicker(this.textInputEditText, this.textInputEditText.context)
+        val datePicker = getPicker(this.textInputEditText, this.textInputEditText.context, language)
         datePicker.show(activity.supportFragmentManager, "")
     }
 }
 
 //region Private functions
-private fun getPicker(editText: TextInputEditText, context: Context): MaterialDatePicker<Long> {
+private fun getPicker(
+    editText: TextInputEditText,
+    context: Context,
+    language: String
+): MaterialDatePicker<Long> {
 
+    val dateFormat = Constants.getDateFormatToShow(language)
     val currentDateInMillis = editText.text.toString().toDate(
-        SharedPreferencesHandler.dateFormatToShow,
-        SharedPreferencesHandler.language,
+        dateFormat,
+        language,
         TimeZone.getTimeZone("UTC")
     )?.time ?: MaterialDatePicker.todayInUtcMilliseconds()
 
@@ -132,12 +136,7 @@ private fun getPicker(editText: TextInputEditText, context: Context): MaterialDa
 
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
-
-                val dateString = calendar.time.toString(
-                    SharedPreferencesHandler.dateFormatToShow,
-                    SharedPreferencesHandler.language
-                )
-
+                val dateString = calendar.time.toString(dateFormat, language)
                 editText.setText(dateString)
             }
         }

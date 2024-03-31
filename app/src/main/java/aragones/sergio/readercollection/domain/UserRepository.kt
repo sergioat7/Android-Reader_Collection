@@ -32,8 +32,14 @@ class UserRepository @Inject constructor(
     val userData: UserData
         get() = userLocalDataSource.userData
 
-    val language: String
+    var language: String
         get() = userLocalDataSource.language
+        set(value) {
+            userLocalDataSource.language = value
+        }
+
+    val isLoggedIn: Boolean
+        get() = userLocalDataSource.isLoggedIn
 
     val sortParam: String?
         get() = userLocalDataSource.sortParam
@@ -64,6 +70,12 @@ class UserRepository @Inject constructor(
 
     val hasBookDetailsTutorialBeenShown: Boolean
         get() = userLocalDataSource.hasBookDetailsTutorialBeenShown
+
+    var newChangesPopupShown: Boolean
+        get() = userLocalDataSource.newChangesPopupShown
+        set(value) {
+            userLocalDataSource.newChangesPopupShown = value
+        }
     //endregion
 
     //region Public methods

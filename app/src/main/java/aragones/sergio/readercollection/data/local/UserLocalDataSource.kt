@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.LocaleList
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
+import aragones.sergio.readercollection.data.remote.ApiManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -35,8 +36,14 @@ class UserLocalDataSource @Inject constructor(
     val userData: UserData
         get() = SharedPreferencesHandler.userData
 
-    val language: String
+    var language: String
         get() = SharedPreferencesHandler.language
+        set(value) {
+            SharedPreferencesHandler.language = value
+        }
+
+    val isLoggedIn: Boolean
+        get() = SharedPreferencesHandler.isLoggedIn
 
     val sortParam: String?
         get() = SharedPreferencesHandler.sortParam
@@ -67,6 +74,12 @@ class UserLocalDataSource @Inject constructor(
 
     val hasBookDetailsTutorialBeenShown: Boolean
         get() = SharedPreferencesHandler.hasBookDetailsTutorialBeenShown
+
+    var newChangesPopupShown: Boolean
+        get() = SharedPreferencesHandler.newChangesPopupShown
+        set(value) {
+            SharedPreferencesHandler.newChangesPopupShown = value
+        }
     //endregion
 
     //region Public methods
@@ -80,15 +93,19 @@ class UserLocalDataSource @Inject constructor(
     fun storeLoginData(userData: UserData, authData: AuthData) {
 
         SharedPreferencesHandler.userData = userData
-        SharedPreferencesHandler.credentials = authData
+        storeCredentials(authData)
     }
 
     fun storeCredentials(authData: AuthData) {
+
         SharedPreferencesHandler.credentials = authData
+        ApiManager.accessToken = authData.token
     }
 
     fun removeCredentials() {
+
         SharedPreferencesHandler.removeCredentials()
+        ApiManager.accessToken = ""
     }
 
     fun storePassword(newPassword: String) {

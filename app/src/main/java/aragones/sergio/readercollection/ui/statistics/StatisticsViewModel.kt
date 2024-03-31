@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
@@ -177,7 +176,7 @@ class StatisticsViewModel @Inject constructor(
         val booksByYear = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.YEAR)
-            .getGroupedBy("yyyy", SharedPreferencesHandler.language)
+            .getGroupedBy("yyyy", userRepository.language)
 
         val entries = mutableListOf<BarEntry>()
         for (entry in booksByYear.entries) {
@@ -196,7 +195,7 @@ class StatisticsViewModel @Inject constructor(
         val booksByMonth = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.MONTH)
-            .getGroupedBy("MMM", SharedPreferencesHandler.language)
+            .getGroupedBy("MMM", userRepository.language)
 
         val entries = mutableListOf<PieEntry>()
         for (entry in booksByMonth.entries) {
