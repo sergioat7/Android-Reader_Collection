@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 21/8/2023
  */
 
@@ -19,11 +19,11 @@ import androidx.recyclerview.widget.RecyclerView
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.extensions.isDarkMode
-import aragones.sergio.readercollection.extensions.style
-import aragones.sergio.readercollection.interfaces.MenuProviderInterface
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.presentation.extensions.isDarkMode
+import aragones.sergio.readercollection.presentation.extensions.style
+import aragones.sergio.readercollection.presentation.interfaces.MenuProviderInterface
+import aragones.sergio.readercollection.presentation.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.presentation.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.ui.base.BindingFragment
 import aragones.sergio.readercollection.ui.books.BooksAdapter
 import aragones.sergio.readercollection.ui.books.BooksViewHolder

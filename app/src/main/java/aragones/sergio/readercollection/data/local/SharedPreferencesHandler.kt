@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2020 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 16/10/2020
  */
 
@@ -11,9 +11,6 @@ import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
-import aragones.sergio.readercollection.extensions.setBoolean
-import aragones.sergio.readercollection.extensions.setInt
-import aragones.sergio.readercollection.extensions.setString
 import com.aragones.sergio.util.Preferences
 import com.squareup.moshi.Moshi
 import java.util.Locale

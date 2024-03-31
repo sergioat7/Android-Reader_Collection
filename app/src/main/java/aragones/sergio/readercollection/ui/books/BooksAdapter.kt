@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 21/8/2023
  */
 
@@ -16,10 +16,10 @@ import aragones.sergio.readercollection.databinding.ItemReadingBookBinding
 import aragones.sergio.readercollection.databinding.ItemShowAllItemsBinding
 import aragones.sergio.readercollection.databinding.ItemVerticalBookBinding
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.interfaces.ItemMoveListener
-import aragones.sergio.readercollection.interfaces.OnItemClickListener
-import aragones.sergio.readercollection.interfaces.OnStartDraggingListener
-import aragones.sergio.readercollection.interfaces.OnSwitchClickListener
+import aragones.sergio.readercollection.presentation.interfaces.ItemMoveListener
+import aragones.sergio.readercollection.presentation.interfaces.OnItemClickListener
+import aragones.sergio.readercollection.presentation.interfaces.OnStartDraggingListener
+import aragones.sergio.readercollection.presentation.interfaces.OnSwitchClickListener
 import com.aragones.sergio.util.Constants
 import java.util.Collections
 

@@ -1,26 +1,22 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 5/1/2022
   -->
 
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<!--    <item-->
-<!--        android:id="@+id/action_synchronize"-->
-<!--        android:icon="@drawable/ic_synchronize"-->
-<!--        android:title="@string/synchronize"-->
-<!--        app:showAsAction="ifRoom"-->
-<!--        />-->
+    <!--    <item-->
+    <!--        android:id="@+id/action_synchronize"-->
+    <!--        android:icon="@drawable/ic_synchronize"-->
+    <!--        android:title="@string/synchronize"-->
+    <!--        app:showAsAction="ifRoom"-->
+    <!--        />-->
 
     <item
         android:id="@+id/action_sort"
         android:icon="@drawable/ic_sort_books"
         android:title="@string/sort"
-        app:showAsAction="always"
-        />
+        app:showAsAction="always" />
 
 </menu>

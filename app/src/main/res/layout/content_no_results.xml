@@ -1,19 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 31/12/2021
   -->
 
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/padding_24dp"
-        >
+        android:padding="@dimen/padding_24dp">
 
         <ImageView
             android:id="@+id/imageView"
@@ -24,8 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/image_no_results"
-            />
+            app:srcCompat="@drawable/image_no_results" />
 
         <TextView
             android:id="@+id/textView"
@@ -38,8 +33,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView"
-            style="@style/Widget.ReaderCollection.TextView.Title.Section"
-            />
+            style="@style/Widget.ReaderCollection.TextView.Title.Section" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

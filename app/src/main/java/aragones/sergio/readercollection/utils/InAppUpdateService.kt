@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 18/12/2023
  */
 
@@ -51,13 +51,14 @@ class InAppUpdateService(
         }
         appUpdateManager.registerListener(listener)
 
-        inAppUpdateLauncher = activity.registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-            if (it.resultCode == AppCompatActivity.RESULT_OK && appUpdateType == AppUpdateType.IMMEDIATE) {
-                _installStatus.value = InstallStatus.INSTALLED
-            } else if (it.resultCode != AppCompatActivity.RESULT_OK) {
-                _installStatus.value = InstallStatus.CANCELED
+        inAppUpdateLauncher =
+            activity.registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+                if (it.resultCode == AppCompatActivity.RESULT_OK && appUpdateType == AppUpdateType.IMMEDIATE) {
+                    _installStatus.value = InstallStatus.INSTALLED
+                } else if (it.resultCode != AppCompatActivity.RESULT_OK) {
+                    _installStatus.value = InstallStatus.CANCELED
+                }
             }
-        }
     }
     //endregion
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 25/1/2022
  */
 
@@ -13,7 +13,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.extensions.combineWith
+import aragones.sergio.readercollection.presentation.extensions.combineWith
 import aragones.sergio.readercollection.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.State

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023 Sergio Aragonés. All rights reserved.
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 21/8/2023
  */
 
@@ -12,7 +12,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import aragones.sergio.readercollection.R
 
-class PopupLoadingDialogFragment: DialogFragment() {
+class PopupLoadingDialogFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

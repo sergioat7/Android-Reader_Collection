@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 10/1/2022
   -->
 
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_books"
-    app:startDestination="@id/booksFragment"
-    >
+    app:startDestination="@id/booksFragment">
 
     <fragment
         android:id="@+id/booksFragment"
         android:name="aragones.sergio.readercollection.ui.books.BooksFragment"
         android:label="BooksFragment"
-        tools:layout="@layout/fragment_books"
-        >
+        tools:layout="@layout/fragment_books">
 
         <action
             android:id="@+id/action_booksFragment_to_bookDetailFragment"
@@ -25,8 +21,7 @@
             app:enterAnim="@anim/slide_left"
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
-            app:popExitAnim="@anim/slide_right"
-            />
+            app:popExitAnim="@anim/slide_right" />
 
         <action
             android:id="@+id/action_booksFragment_to_bookListFragment"
@@ -34,8 +29,7 @@
             app:enterAnim="@anim/slide_left"
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
-            app:popExitAnim="@anim/slide_right"
-            />
+            app:popExitAnim="@anim/slide_right" />
 
     </fragment>
 
@@ -43,19 +37,16 @@
         android:id="@+id/bookDetailFragment"
         android:name="aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment"
         android:label="BookDetailFragment"
-        tools:layout="@layout/fragment_book_detail"
-        >
+        tools:layout="@layout/fragment_book_detail">
 
         <argument
             android:name="bookId"
-            app:argType="string"
-            />
+            app:argType="string" />
 
         <argument
             android:name="isGoogleBook"
             android:defaultValue="false"
-            app:argType="boolean"
-            />
+            app:argType="boolean" />
 
     </fragment>
 
@@ -63,55 +54,46 @@
         android:id="@+id/bookListFragment"
         android:name="aragones.sergio.readercollection.ui.booklist.BookListFragment"
         android:label="BookListFragment"
-        tools:layout="@layout/fragment_book_list"
-        >
+        tools:layout="@layout/fragment_book_list">
 
         <argument
             android:name="state"
-            app:argType="string"
-            />
+            app:argType="string" />
 
         <argument
             android:name="sortParam"
             app:argType="string"
-            app:nullable="true"
-            />
+            app:nullable="true" />
 
         <argument
             android:name="isSortDescending"
-            app:argType="boolean"
-            />
+            app:argType="boolean" />
 
         <argument
             android:name="query"
-            app:argType="string"
-            />
+            app:argType="string" />
 
         <argument
             android:name="year"
             app:argType="integer"
-            android:defaultValue="-1"
-            />
+            android:defaultValue="-1" />
 
         <argument
             android:name="month"
             app:argType="integer"
-            android:defaultValue="-1"
-            />
+            android:defaultValue="-1" />
 
         <argument
             android:name="author"
             app:argType="string"
             app:nullable="true"
-            android:defaultValue="@null"
-            />
+            android:defaultValue="@null" />
 
         <argument
             android:name="format"
             app:argType="string"
             app:nullable="true"
-            android:defaultValue="@null"
-            />
+            android:defaultValue="@null" />
 
         <action
             android:id="@+id/action_bookListFragment_to_bookDetailFragment"
@@ -119,8 +101,7 @@
             app:enterAnim="@anim/slide_left"
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
-            app:popExitAnim="@anim/slide_right"
-            />
+            app:popExitAnim="@anim/slide_right" />
 
     </fragment>
 

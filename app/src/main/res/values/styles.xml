@@ -1,6 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2021 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 30/12/2021
   -->
 
@@ -96,18 +95,24 @@
 
     <style name="Widget.ReaderCollection.TextInputLayout.Bordered" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="boxStrokeColor">@color/color_text_input_layout_border</item>
-        <item name="editTextStyle">@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox</item>
+        <item name="editTextStyle">
+            @style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox
+        </item>
         <item name="hintTextAppearance">@style/TextAppearance.ReaderCollection.Hint</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10
+        </item>
         <item name="android:textColorHint">@color/textSecondary</item>
         <item name="android:useDefaultMargins">false</item>
     </style>
 
     <style name="Widget.ReaderCollection.TextInputLayout.BorderedDropdown" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
         <item name="boxStrokeColor">@color/color_text_input_layout_border</item>
-        <item name="editTextStyle">@style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox</item>
+        <item name="editTextStyle">
+            @style/ThemeOverlay.MaterialComponents.TextInputEditText.OutlinedBox
+        </item>
         <item name="hintTextAppearance">@style/TextAppearance.ReaderCollection.Hint</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.ReaderCollection.Rounded.10
+        </item>
         <item name="android:textColorHint">@color/textSecondary</item>
         <item name="android:useDefaultMargins">false</item>
     </style>

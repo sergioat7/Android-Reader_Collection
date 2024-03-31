@@ -1,23 +1,19 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-  ~ Copyright (c) 2022 Sergio Aragonés. All rights reserved.
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
   ~ Created by Sergio Aragonés on 10/1/2022
   -->
 
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph_search"
-    app:startDestination="@id/searchFragment"
-    >
+    app:startDestination="@id/searchFragment">
 
     <fragment
         android:id="@+id/searchFragment"
         android:name="aragones.sergio.readercollection.ui.search.SearchFragment"
         android:label="SearchFragment"
-        tools:layout="@layout/fragment_search"
-        >
+        tools:layout="@layout/fragment_search">
 
         <action
             android:id="@+id/action_searchFragment_to_bookDetailFragment"
@@ -25,8 +21,7 @@
             app:enterAnim="@anim/slide_left"
             app:exitAnim="@anim/wait_anim"
             app:popEnterAnim="@anim/wait_anim"
-            app:popExitAnim="@anim/slide_right"
-            />
+            app:popExitAnim="@anim/slide_right" />
 
     </fragment>
 
@@ -34,19 +29,16 @@
         android:id="@+id/bookDetailFragment"
         android:name="aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment"
         android:label="BookDetailFragment"
-        tools:layout="@layout/fragment_book_detail"
-        >
+        tools:layout="@layout/fragment_book_detail">
 
         <argument
             android:name="bookId"
-            app:argType="string"
-            />
+            app:argType="string" />
 
         <argument
             android:name="isGoogleBook"
             app:argType="boolean"
-            android:defaultValue="false"
-            />
+            android:defaultValue="false" />
 
     </fragment>
 
