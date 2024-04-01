@@ -54,6 +54,7 @@ class BooksRepository @Inject constructor(
 
         return booksLocalDataSource
             .getAllBooks()
+            .distinctUntilChanged()
             .map { it.map { book -> book.toDomain() } }
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
@@ -63,6 +64,7 @@ class BooksRepository @Inject constructor(
 
         return booksLocalDataSource
             .getPendingBooks()
+            .distinctUntilChanged()
             .map { it.map { book -> book.toDomain() } }
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
@@ -72,6 +74,7 @@ class BooksRepository @Inject constructor(
 
         return booksLocalDataSource
             .getReadBooks()
+            .distinctUntilChanged()
             .map { it.map { book -> book.toDomain() } }
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
