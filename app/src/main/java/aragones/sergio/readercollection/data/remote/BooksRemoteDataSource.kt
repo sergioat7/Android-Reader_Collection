@@ -17,10 +17,7 @@ import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -40,8 +37,6 @@ class BooksRemoteDataSource @Inject constructor(
     private val RESULTS_PARAM = "maxResults"
     private val ORDER_PARAM = "orderBy"
     private val RESULTS = 20
-    private val externalScheduler: Scheduler = Schedulers.io()
-    private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
     private val moshi = Moshi.Builder().build()
     //endregion
@@ -203,18 +198,11 @@ class BooksRemoteDataSource @Inject constructor(
         if (order != null) {
             params[ORDER_PARAM] = order
         }
-        return googleApiService
-            .searchGoogleBooks(params)
-            .subscribeOn(externalScheduler)
-            .observeOn(mainObserver)
+        return googleApiService.searchGoogleBooks(params)
     }
 
     fun getBook(volumeId: String): Single<GoogleBookResponse> {
-
-        return googleApiService
-            .getGoogleBook(volumeId)
-            .subscribeOn(externalScheduler)
-            .observeOn(mainObserver)
+        return googleApiService.getGoogleBook(volumeId)
     }
 
     fun fetchRemoteConfigValues(language: String) {

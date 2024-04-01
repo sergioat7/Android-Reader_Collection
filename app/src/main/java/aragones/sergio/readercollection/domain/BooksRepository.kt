@@ -33,6 +33,7 @@ class BooksRepository @Inject constructor(
 
     //region Private properties
     private val externalScheduler: Scheduler = Schedulers.io()
+    private val databaseScheduler: Scheduler = Schedulers.io()
     private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
     private val moshiAdapter = Moshi.Builder()
         .add(MoshiDateAdapter("MMM dd, yyyy"))
@@ -78,6 +79,8 @@ class BooksRepository @Inject constructor(
         val query = SimpleSQLiteQuery(queryString)
         return booksLocalDataSource
             .getBooks(query)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .map { it.map { book -> book.toDomain() } }
     }
 
@@ -85,6 +88,8 @@ class BooksRepository @Inject constructor(
 
         return booksLocalDataSource
             .getPendingBooks()
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .map { it.map { book -> book.toDomain() } }
     }
 
@@ -102,6 +107,8 @@ class BooksRepository @Inject constructor(
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
         return booksLocalDataSource
             .importDataFrom(books.map { it.toLocalData() })
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
     fun exportDataTo(): Single<String> {
@@ -109,6 +116,8 @@ class BooksRepository @Inject constructor(
         return Single.create<String> { emitter ->
             booksLocalDataSource
                 .getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
+                .subscribeOn(databaseScheduler)
+                .observeOn(mainObserver)
                 .subscribeBy(
                     onComplete = {
                         emitter.onSuccess("")
@@ -131,6 +140,8 @@ class BooksRepository @Inject constructor(
 
         return booksLocalDataSource
             .getBook(googleId)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .map { it.toDomain() }
     }
 
@@ -139,6 +150,8 @@ class BooksRepository @Inject constructor(
 
         booksLocalDataSource
             .insertBooks(listOf(newBook.toLocalData()))
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .subscribeBy(
                 onComplete = {
                     success()
@@ -162,6 +175,8 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(listOf(book.toLocalData()))
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .subscribeBy(
                 onComplete = {
                     success(book)
@@ -186,6 +201,8 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(books.map { it.toLocalData() })
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .subscribeBy(
                 onComplete = {
                     success()
@@ -225,6 +242,8 @@ class BooksRepository @Inject constructor(
 //        }, failure)
         booksLocalDataSource
             .getBook(bookId)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
             .subscribeBy(
                 onSuccess = {
 
@@ -232,6 +251,8 @@ class BooksRepository @Inject constructor(
                     book.isFavourite = isFavourite
                     booksLocalDataSource
                         .updateBooks(listOf(book.toLocalData()))
+                        .subscribeOn(databaseScheduler)
+                        .observeOn(mainObserver)
                         .subscribeBy(
                             onComplete = {
                                 success(book)
@@ -262,10 +283,13 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.deleteBook(bookId, success = {
         booksLocalDataSource
             .getBook(bookId)
+            .subscribeOn(databaseScheduler)
             .subscribeBy(
                 onSuccess = { book ->
                     booksLocalDataSource
                         .deleteBooks(listOf(book))
+                        .subscribeOn(databaseScheduler)
+                        .observeOn(mainObserver)
                         .subscribeBy(
                             onComplete = {
                                 success()
@@ -297,6 +321,8 @@ class BooksRepository @Inject constructor(
 
             booksLocalDataSource
                 .getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
+                .subscribeOn(databaseScheduler)
+                .observeOn(mainObserver)
                 .subscribeBy(
                     onComplete = {
                         emitter.onComplete()
@@ -304,6 +330,8 @@ class BooksRepository @Inject constructor(
                     onNext = { books ->
                         booksLocalDataSource
                             .deleteBooks(books)
+                            .subscribeOn(databaseScheduler)
+                            .observeOn(mainObserver)
                             .subscribeBy(
                                 onComplete = {
                                     emitter.onComplete()
@@ -328,6 +356,8 @@ class BooksRepository @Inject constructor(
 
         return booksRemoteDataSource
             .searchBooks(query, page, order)
+            .subscribeOn(externalScheduler)
+            .observeOn(mainObserver)
             .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
     }
 
@@ -335,6 +365,8 @@ class BooksRepository @Inject constructor(
 
         return booksRemoteDataSource
             .getBook(volumeId)
+            .subscribeOn(externalScheduler)
+            .observeOn(mainObserver)
             .map { it.toDomain() }
     }
 
