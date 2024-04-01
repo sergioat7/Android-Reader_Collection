@@ -36,6 +36,9 @@ interface BookDao {
     @Query("SELECT * FROM Book WHERE state == 'PENDING'")
     fun getPendingBooks(): Flowable<List<Book>>
 
+    @Query("SELECT * FROM Book WHERE state == 'READ'")
+    fun getReadBooks(): Flowable<List<Book>>
+
     @Query("SELECT * FROM Book WHERE id == :id")
     fun getBook(id: String): Single<Book>
 }

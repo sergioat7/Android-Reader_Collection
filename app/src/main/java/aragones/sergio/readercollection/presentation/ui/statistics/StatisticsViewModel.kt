@@ -15,7 +15,6 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.extensions.combineWith
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
-import com.aragones.sergio.util.State
 import com.aragones.sergio.util.extensions.getGroupedBy
 import com.aragones.sergio.util.extensions.getOrderedBy
 import com.github.mikephil.charting.data.BarEntry
@@ -90,12 +89,7 @@ class StatisticsViewModel @Inject constructor(
     fun fetchBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(
-            null,
-            State.READ,
-            null,
-            null
-        ).subscribeBy(
+        booksRepository.getReadBooks().subscribeBy(
             onComplete = {
 
                 _books.value = emptyList()

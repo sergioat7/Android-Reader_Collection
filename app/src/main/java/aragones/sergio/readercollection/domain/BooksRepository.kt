@@ -88,6 +88,15 @@ class BooksRepository @Inject constructor(
             .map { it.map { book -> book.toDomain() } }
     }
 
+    fun getReadBooks(): Flowable<List<Book>> {
+
+        return booksLocalDataSource
+            .getReadBooks()
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
+            .map { it.map { book -> book.toDomain() } }
+    }
+
     fun importDataFrom(jsonData: String): Completable {
 
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
