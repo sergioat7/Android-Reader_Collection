@@ -93,7 +93,7 @@ class StatisticsViewModel @Inject constructor(
     fun fetchBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooksDatabaseObserver(
+        booksRepository.getBooks(
             null,
             State.READ,
             null,

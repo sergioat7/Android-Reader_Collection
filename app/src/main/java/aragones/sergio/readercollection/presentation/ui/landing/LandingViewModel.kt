@@ -74,7 +74,7 @@ class LandingViewModel @Inject constructor(
     //region Private methods
     private fun resetDatabase() {
 
-        booksRepository.resetTableObserver().subscribeBy(
+        booksRepository.resetTable().subscribeBy(
             onComplete = {
                 _landingClassToStart.value = LoginActivity::class.java
             },

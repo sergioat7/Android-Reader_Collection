@@ -85,7 +85,7 @@ class BooksViewModel @Inject constructor(
     fun fetchBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooksDatabaseObserver(
+        booksRepository.getBooks(
             null,
             null,
             null,

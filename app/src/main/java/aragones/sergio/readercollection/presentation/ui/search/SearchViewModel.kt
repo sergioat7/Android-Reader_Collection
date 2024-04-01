@@ -68,7 +68,7 @@ class SearchViewModel @Inject constructor(
     fun searchBooks() {
 
         _searchLoading.value = true
-        booksRepository.searchBooksObserver(_query.value ?: "", page, null).subscribeBy(
+        booksRepository.searchBooks(_query.value ?: "", page, null).subscribeBy(
             onSuccess = { newBooks ->
 
                 page++
@@ -139,7 +139,7 @@ class SearchViewModel @Inject constructor(
     //region Private methods
     private fun fetchPendingBooks() {
 
-        booksRepository.getPendingBooksDatabaseObserver().subscribeBy(
+        booksRepository.getPendingBooks().subscribeBy(
             onComplete = {
                 pendingBooks = mutableListOf()
             },
