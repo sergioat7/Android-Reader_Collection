@@ -143,7 +143,7 @@ class SearchViewModel @Inject constructor(
             onComplete = {
                 pendingBooks = mutableListOf()
             },
-            onSuccess = {
+            onNext = {
                 pendingBooks = it.toMutableList()
             },
             onError = {

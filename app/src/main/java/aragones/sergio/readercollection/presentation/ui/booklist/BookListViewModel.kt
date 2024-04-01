@@ -78,7 +78,7 @@ class BookListViewModel @Inject constructor(
             onComplete = {
                 noBooksError()
             },
-            onSuccess = {
+            onNext = {
 
                 if (it.isEmpty()) {
                     noBooksError()

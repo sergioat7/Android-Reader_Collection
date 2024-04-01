@@ -69,7 +69,7 @@ class BookDetailViewModel @Inject constructor(
             onComplete = {
                 pendingBooks = listOf()
             },
-            onSuccess = {
+            onNext = {
                 pendingBooks = it
             },
             onError = {

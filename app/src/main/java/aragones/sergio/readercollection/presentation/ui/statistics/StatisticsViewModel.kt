@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.ui.statistics
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -24,8 +23,6 @@ import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -104,7 +101,7 @@ class StatisticsViewModel @Inject constructor(
                 _books.value = emptyList()
                 manageError(ErrorResponse("", R.string.error_database))
             },
-            onSuccess = { books ->
+            onNext = { books ->
 
                 createBooksByYearStats(books)
                 createBooksByMonthStats(books)
@@ -142,12 +139,7 @@ class StatisticsViewModel @Inject constructor(
 
         booksRepository.importDataFrom(jsonData).subscribeBy(
             onComplete = {
-
                 _infoDialogMessageId.value = R.string.data_imported
-                viewModelScope.launch {
-                    delay(500)
-                    fetchBooks()
-                }
             },
             onError = {
                 manageError(ErrorResponse("", R.string.error_file_data))

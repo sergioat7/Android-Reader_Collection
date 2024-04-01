@@ -97,7 +97,7 @@ class BooksViewModel @Inject constructor(
                 _books.value = listOf()
                 _booksLoading.value = false
             },
-            onSuccess = {
+            onNext = {
 
                 _originalBooks.value = if (isSortDescending) it.reversed() else it
                 searchBooks(query)
