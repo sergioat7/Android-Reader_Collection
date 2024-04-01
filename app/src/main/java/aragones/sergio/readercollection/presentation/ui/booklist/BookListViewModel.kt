@@ -69,12 +69,7 @@ class BookListViewModel @Inject constructor(
     fun fetchBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(
-            format,
-            state,
-            null,
-            sortParam
-        ).subscribeBy(
+        booksRepository.getBooks().subscribeBy(
             onComplete = {
                 noBooksError()
             },
@@ -132,8 +127,18 @@ class BookListViewModel @Inject constructor(
     //region Private methods
     private fun showBooks(books: List<Book>) {
 
-        val sortedBooks = if (isSortDescending) books.reversed() else books
-        var filteredBooks = sortedBooks
+        var filteredBooks = books
+            .filter { book ->
+
+                var condition = true
+                format?.let {
+                    condition = book.format == it
+                }
+                if (state.isNotEmpty()) {
+                    condition = condition && book.state == state
+                }
+                condition
+            }
             .filter { book ->
                 (book.title?.contains(query, true) ?: false)
                     || book.authorsToString().contains(query, true)
@@ -150,7 +155,15 @@ class BookListViewModel @Inject constructor(
                 book.readingDate.getMonthNumber() == month
             }
         }
-        _books.value = filteredBooks.sortedBy { it.priority }
+        val sortedBooks = when (sortParam) {
+            "title" -> filteredBooks.sortedBy { it.title }
+            "publishedDate" -> filteredBooks.sortedBy { it.publishedDate }
+            "readingDate" -> filteredBooks.sortedBy { it.readingDate }
+            "pageCount" -> filteredBooks.sortedBy { it.pageCount }
+            "rating" -> filteredBooks.sortedBy { it.rating }
+            else -> filteredBooks.sortedBy { it.id }
+        }.sortedBy { it.priority }
+        _books.value = if (isSortDescending) sortedBooks.reversed() else sortedBooks
     }
 
     private fun noBooksError() {
