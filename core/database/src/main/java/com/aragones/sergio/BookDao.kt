@@ -15,7 +15,7 @@ import androidx.room.Update
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.aragones.sergio.model.Book
 import io.reactivex.Completable
-import io.reactivex.Maybe
+import io.reactivex.Flowable
 import io.reactivex.Single
 
 @Dao
@@ -30,11 +30,11 @@ interface BookDao {
     @Delete
     fun deleteBooks(books: List<Book>): Completable
 
-    @RawQuery
-    fun getBooks(query: SupportSQLiteQuery): Maybe<List<Book>>
+    @RawQuery(observedEntities = [Book::class])
+    fun getBooks(query: SupportSQLiteQuery): Flowable<List<Book>>
 
     @Query("SELECT * FROM Book WHERE state == 'PENDING'")
-    fun getPendingBooks(): Maybe<List<Book>>
+    fun getPendingBooks(): Flowable<List<Book>>
 
     @Query("SELECT * FROM Book WHERE id == :id")
     fun getBook(id: String): Single<Book>

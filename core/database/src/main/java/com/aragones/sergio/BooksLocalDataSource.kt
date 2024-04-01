@@ -10,7 +10,7 @@ import com.aragones.sergio.model.Book
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -26,20 +26,20 @@ class BooksLocalDataSource @Inject constructor(
     //endregion
 
     //region Public methods
-    fun getBooks(query: SupportSQLiteQuery): Maybe<List<Book>> {
+    fun getBooks(query: SupportSQLiteQuery): Flowable<List<Book>> {
 
         return bookDao
             .getBooks(query)
-            .`as`(RxJavaBridge.toV3Maybe())
+            .`as`(RxJavaBridge.toV3Flowable())
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
     }
 
-    fun getPendingBooks(): Maybe<List<Book>> {
+    fun getPendingBooks(): Flowable<List<Book>> {
 
         return bookDao
             .getPendingBooks()
-            .`as`(RxJavaBridge.toV3Maybe())
+            .`as`(RxJavaBridge.toV3Flowable())
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
     }

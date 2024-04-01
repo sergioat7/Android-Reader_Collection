@@ -18,7 +18,7 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Maybe
+import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
@@ -55,7 +55,7 @@ class BooksRepository @Inject constructor(
         state: String? = null,
         isFavourite: Boolean? = null,
         sortParam: String? = null
-    ): Maybe<List<Book>> {
+    ): Flowable<List<Book>> {
 
         var queryString = "SELECT * FROM Book"
         var queryConditions = ""
@@ -81,7 +81,7 @@ class BooksRepository @Inject constructor(
             .map { it.map { book -> book.toDomain() } }
     }
 
-    fun getPendingBooks(): Maybe<List<Book>> {
+    fun getPendingBooks(): Flowable<List<Book>> {
 
         return booksLocalDataSource
             .getPendingBooks()
@@ -102,7 +102,7 @@ class BooksRepository @Inject constructor(
                     onComplete = {
                         emitter.onSuccess("")
                     },
-                    onSuccess = {
+                    onNext = {
 
                         val books = it.map { book -> book.toDomain() }
                         emitter.onSuccess(moshiAdapter.toJson(books))
@@ -277,7 +277,7 @@ class BooksRepository @Inject constructor(
                     onComplete = {
                         emitter.onComplete()
                     },
-                    onSuccess = { books ->
+                    onNext = { books ->
                         booksLocalDataSource.deleteBooks(books).subscribeBy(
                             onComplete = {
                                 emitter.onComplete()
