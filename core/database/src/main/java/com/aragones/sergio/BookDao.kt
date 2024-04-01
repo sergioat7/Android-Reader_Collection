@@ -22,20 +22,20 @@ import io.reactivex.Single
 interface BookDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBooksObserver(books: List<Book>): Completable
+    fun insertBooks(books: List<Book>): Completable
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateBooksObserver(books: List<Book>): Completable
+    fun updateBooks(books: List<Book>): Completable
 
     @Delete
-    fun deleteBooksObserver(books: List<Book>): Completable
+    fun deleteBooks(books: List<Book>): Completable
 
     @RawQuery
-    fun getBooksObserver(query: SupportSQLiteQuery): Maybe<List<Book>>
+    fun getBooks(query: SupportSQLiteQuery): Maybe<List<Book>>
 
     @Query("SELECT * FROM Book WHERE state == 'PENDING'")
-    fun getPendingBooksObserver(): Maybe<List<Book>>
+    fun getPendingBooks(): Maybe<List<Book>>
 
     @Query("SELECT * FROM Book WHERE id == :id")
-    fun getBookObserver(id: String): Single<Book>
+    fun getBook(id: String): Single<Book>
 }

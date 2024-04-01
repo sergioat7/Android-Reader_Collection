@@ -40,8 +40,8 @@ class BooksRemoteDataSource @Inject constructor(
     private val RESULTS_PARAM = "maxResults"
     private val ORDER_PARAM = "orderBy"
     private val RESULTS = 20
-    private val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
-    private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
+    private val externalScheduler: Scheduler = Schedulers.io()
+    private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
     private val moshi = Moshi.Builder().build()
     //endregion
@@ -55,7 +55,7 @@ class BooksRemoteDataSource @Inject constructor(
 //                    is RequestResult.JsonSuccess -> {
 //
 //                        val newBooks = response.body
-//                        insertBooksDatabaseObserver(newBooks).subscribeBy(
+//                        insertBooks(newBooks).subscribeBy(
 //                            onComplete = {
 //                                handleDisabledContentObserver(newBooks).subscribeBy(
 //                                    onComplete = {
@@ -155,9 +155,9 @@ class BooksRemoteDataSource @Inject constructor(
 //            try {
 //                when (val response = ApiManager.validateResponse(api.deleteBook(bookId))) {
 //                    is RequestResult.Success -> {
-//                        getBookDatabaseObserver(bookId).subscribeBy(
+//                        getBook(bookId).subscribeBy(
 //                            onSuccess = { book ->
-//                                deleteBooksDatabaseObserver(listOf(book)).subscribeBy(
+//                                deleteBooks(listOf(book)).subscribeBy(
 //                                    onComplete = {
 //                                        success()
 //                                    },
@@ -190,7 +190,7 @@ class BooksRemoteDataSource @Inject constructor(
 //        }
     }
 
-    fun searchBooksObserver(
+    fun searchBooks(
         query: String,
         page: Int,
         order: String?
@@ -205,16 +205,16 @@ class BooksRemoteDataSource @Inject constructor(
         }
         return googleApiService
             .searchGoogleBooks(params)
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(externalScheduler)
+            .observeOn(mainObserver)
     }
 
-    fun getBookObserver(volumeId: String): Single<GoogleBookResponse> {
+    fun getBook(volumeId: String): Single<GoogleBookResponse> {
 
         return googleApiService
             .getGoogleBook(volumeId)
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(externalScheduler)
+            .observeOn(mainObserver)
     }
 
     fun fetchRemoteConfigValues(language: String) {

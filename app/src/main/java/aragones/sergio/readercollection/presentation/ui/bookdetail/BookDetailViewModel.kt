@@ -65,7 +65,7 @@ class BookDetailViewModel @Inject constructor(
     //region Lifecycle methods
     init {
 
-        booksRepository.getPendingBooksDatabaseObserver().subscribeBy(
+        booksRepository.getPendingBooks().subscribeBy(
             onComplete = {
                 pendingBooks = listOf()
             },
@@ -173,7 +173,7 @@ class BookDetailViewModel @Inject constructor(
         _bookDetailLoading.value = true
         if (isGoogleBook) {
 
-            booksRepository.getBookObserver(bookId).subscribeBy(
+            booksRepository.getRemoteBook(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = it
@@ -185,7 +185,7 @@ class BookDetailViewModel @Inject constructor(
             ).addTo(disposables)
         } else {
 
-            booksRepository.getBookDatabaseObserver(bookId).subscribeBy(
+            booksRepository.getBook(bookId).subscribeBy(
                 onSuccess = {
 
                     _book.value = it

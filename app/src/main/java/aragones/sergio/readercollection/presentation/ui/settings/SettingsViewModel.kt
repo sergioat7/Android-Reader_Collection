@@ -173,7 +173,7 @@ class SettingsViewModel @Inject constructor(
     //region Private methods
     private fun resetDatabase() {
 
-        booksRepository.resetTableObserver().subscribeBy(
+        booksRepository.resetTable().subscribeBy(
             onComplete = {
 
                 _profileLoading.value = false

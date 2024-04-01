@@ -21,72 +21,72 @@ class BooksLocalDataSource @Inject constructor(
 ) {
 
     //region Private properties
-    private val SUBSCRIBER_SCHEDULER: Scheduler = Schedulers.io()
-    private val OBSERVER_SCHEDULER: Scheduler = AndroidSchedulers.mainThread()
+    private val databaseScheduler: Scheduler = Schedulers.io()
+    private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
     //endregion
 
     //region Public methods
-    fun getBooksDatabaseObserver(query: SupportSQLiteQuery): Maybe<List<Book>> {
+    fun getBooks(query: SupportSQLiteQuery): Maybe<List<Book>> {
 
         return bookDao
-            .getBooksObserver(query)
+            .getBooks(query)
             .`as`(RxJavaBridge.toV3Maybe())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
-    fun getPendingBooksDatabaseObserver(): Maybe<List<Book>> {
+    fun getPendingBooks(): Maybe<List<Book>> {
 
         return bookDao
-            .getPendingBooksObserver()
+            .getPendingBooks()
             .`as`(RxJavaBridge.toV3Maybe())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
     fun importDataFrom(books: List<Book>): Completable {
 
         return bookDao
-            .insertBooksObserver(books)
+            .insertBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
-    fun getBookDatabaseObserver(googleId: String): Single<Book> {
+    fun getBook(googleId: String): Single<Book> {
 
         return bookDao
-            .getBookObserver(googleId)
+            .getBook(googleId)
             .`as`(RxJavaBridge.toV3Single())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
-    fun insertBooksDatabaseObserver(books: List<Book>): Completable {
+    fun insertBooks(books: List<Book>): Completable {
 
         return bookDao
-            .insertBooksObserver(books)
+            .insertBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
-    fun updateBooksDatabaseObserver(books: List<Book>): Completable {
+    fun updateBooks(books: List<Book>): Completable {
 
         return bookDao
-            .updateBooksObserver(books)
+            .updateBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
 
-    fun deleteBooksDatabaseObserver(books: List<Book>): Completable {
+    fun deleteBooks(books: List<Book>): Completable {
 
         return bookDao
-            .deleteBooksObserver(books)
+            .deleteBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(SUBSCRIBER_SCHEDULER)
-            .observeOn(OBSERVER_SCHEDULER)
+            .subscribeOn(databaseScheduler)
+            .observeOn(mainObserver)
     }
     //endregion
 }
