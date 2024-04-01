@@ -60,6 +60,12 @@ class BooksFragment :
     //endregion
 
     //region Lifecycle methods
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.fetchBooks()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -86,7 +92,6 @@ class BooksFragment :
     override fun onResume() {
         super.onResume()
 
-        viewModel.fetchBooks()
         this.searchView?.clearFocus()
     }
 
@@ -160,23 +165,11 @@ class BooksFragment :
 
         when (view) {
             binding.buttonShowAllPending -> {
-                val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
-                    State.PENDING,
-                    viewModel.sortParam,
-                    viewModel.isSortDescending,
-                    viewModel.query
-                )
-                findNavController().navigate(action)
+                onShowAllItemsClick(State.PENDING)
             }
 
             binding.buttonShowAllRead -> {
-                val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
-                    State.READ,
-                    viewModel.sortParam,
-                    viewModel.isSortDescending,
-                    viewModel.query
-                )
-                findNavController().navigate(action)
+                onShowAllItemsClick(State.READ)
             }
         }
     }

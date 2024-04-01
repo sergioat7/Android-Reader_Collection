@@ -63,7 +63,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    init {
+    fun onCreate() {
 
         booksRepository.getPendingBooks().subscribeBy(
             onComplete = {

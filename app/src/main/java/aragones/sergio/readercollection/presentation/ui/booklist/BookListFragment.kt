@@ -59,6 +59,12 @@ class BookListFragment :
     //endregion
 
     //region Lifecycle methods
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.fetchBooks()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -83,8 +89,6 @@ class BookListFragment :
 
     override fun onResume() {
         super.onResume()
-
-        viewModel.fetchBooks()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
     }
 
