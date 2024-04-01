@@ -43,7 +43,7 @@ import com.aragones.sergio.util.CustomInputType
 fun TextOutlinedTextFieldPreview() {
     CustomOutlinedTextField(
         text = "Username",
-        modifier = Modifier,
+        modifier = Modifier.padding(12.dp),
         labelText = "Label",
         onTextChanged = {})
 }
@@ -53,7 +53,7 @@ fun TextOutlinedTextFieldPreview() {
 fun PasswordOutlinedTextFieldPreview() {
     CustomOutlinedTextField(
         text = "Password",
-        modifier = Modifier,
+        modifier = Modifier.padding(12.dp),
         labelText = "Label",
         endIcon = R.drawable.ic_show_password,
         onTextChanged = {},
@@ -67,7 +67,7 @@ fun ErrorOutlinedTextFieldPreview() {
     CustomOutlinedTextField(
         text = "Incorrect text",
         errorTextId = R.string.invalid_username,
-        modifier = Modifier,
+        modifier = Modifier.padding(12.dp),
         labelText = "Label",
         onTextChanged = {}
     )
