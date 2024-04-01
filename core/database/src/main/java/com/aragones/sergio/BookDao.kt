@@ -33,6 +33,9 @@ interface BookDao {
     @RawQuery(observedEntities = [Book::class])
     fun getBooks(query: SupportSQLiteQuery): Flowable<List<Book>>
 
+    @Query("SELECT * FROM Book")
+    fun getAllBooks(): Flowable<List<Book>>
+
     @Query("SELECT * FROM Book WHERE state == 'PENDING'")
     fun getPendingBooks(): Flowable<List<Book>>
 
