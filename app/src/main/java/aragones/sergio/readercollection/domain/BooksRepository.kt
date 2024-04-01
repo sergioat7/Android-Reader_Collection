@@ -115,7 +115,7 @@ class BooksRepository @Inject constructor(
 
         return Single.create<String> { emitter ->
             booksLocalDataSource
-                .getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
+                .getAllBooks()
                 .subscribeOn(databaseScheduler)
                 .observeOn(mainObserver)
                 .subscribeBy(
@@ -320,7 +320,7 @@ class BooksRepository @Inject constructor(
         return Completable.create { emitter ->
 
             booksLocalDataSource
-                .getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
+                .getAllBooks()
                 .subscribeOn(databaseScheduler)
                 .observeOn(mainObserver)
                 .subscribeBy(
