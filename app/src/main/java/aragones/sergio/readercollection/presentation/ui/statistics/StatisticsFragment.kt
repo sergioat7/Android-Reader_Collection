@@ -79,6 +79,12 @@ class StatisticsFragment :
     //endregion
 
     //region Lifecycle methods
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel.fetchBooks()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -149,12 +155,6 @@ class StatisticsFragment :
         super.onStop()
 
         toolbarSequence?.cancel()
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        viewModel.fetchBooks()
     }
 
     override fun onDestroy() {

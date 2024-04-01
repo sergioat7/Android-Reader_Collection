@@ -63,18 +63,18 @@ class BooksRepository @Inject constructor(
 
         return booksLocalDataSource
             .getPendingBooks()
+            .map { it.map { book -> book.toDomain() } }
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
-            .map { it.map { book -> book.toDomain() } }
     }
 
     fun getReadBooks(): Flowable<List<Book>> {
 
         return booksLocalDataSource
             .getReadBooks()
+            .map { it.map { book -> book.toDomain() } }
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
-            .map { it.map { book -> book.toDomain() } }
     }
 
     fun importDataFrom(jsonData: String): Completable {
