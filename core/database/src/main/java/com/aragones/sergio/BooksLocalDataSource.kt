@@ -44,6 +44,13 @@ class BooksLocalDataSource @Inject constructor(
             .observeOn(mainObserver)
     }
 
+    fun getReadBooks(): Flowable<List<Book>> {
+
+        return bookDao
+            .getReadBooks()
+            .`as`(RxJavaBridge.toV3Flowable())
+    }
+
     fun importDataFrom(books: List<Book>): Completable {
 
         return bookDao
