@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.domain
 
-import androidx.sqlite.db.SimpleSQLiteQuery
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
@@ -51,37 +50,13 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.loadBooks(success, failure)
     }
 
-    fun getBooks(
-        format: String? = null,
-        state: String? = null,
-        isFavourite: Boolean? = null,
-        sortParam: String? = null
-    ): Flowable<List<Book>> {
+    fun getBooks(): Flowable<List<Book>> {
 
-        var queryString = "SELECT * FROM Book"
-        var queryConditions = ""
-        format?.let {
-            queryConditions += "format == '${it}' AND "
-        }
-        state?.let {
-            queryConditions += "state == '${it}' AND "
-        }
-        isFavourite?.let {
-            queryConditions += if (it) "isFavourite == '1' AND " else "isFavourite == '0' AND "
-        }
-
-        if (queryConditions.isNotBlank()) queryString += " WHERE " + queryConditions.dropLast(5)
-
-        sortParam?.let {
-            queryString += " ORDER BY $it"
-        }
-
-        val query = SimpleSQLiteQuery(queryString)
         return booksLocalDataSource
-            .getBooks(query)
+            .getAllBooks()
+            .map { it.map { book -> book.toDomain() } }
             .subscribeOn(databaseScheduler)
             .observeOn(mainObserver)
-            .map { it.map { book -> book.toDomain() } }
     }
 
     fun getPendingBooks(): Flowable<List<Book>> {

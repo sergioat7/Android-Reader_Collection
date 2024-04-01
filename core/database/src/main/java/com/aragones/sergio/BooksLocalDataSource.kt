@@ -5,7 +5,6 @@
 
 package com.aragones.sergio
 
-import androidx.sqlite.db.SupportSQLiteQuery
 import com.aragones.sergio.model.Book
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
 import io.reactivex.rxjava3.core.Completable
@@ -18,13 +17,6 @@ class BooksLocalDataSource @Inject constructor(
 ) {
 
     //region Public methods
-    fun getBooks(query: SupportSQLiteQuery): Flowable<List<Book>> {
-
-        return bookDao
-            .getBooks(query)
-            .`as`(RxJavaBridge.toV3Flowable())
-    }
-
     fun getAllBooks(): Flowable<List<Book>> {
 
         return bookDao

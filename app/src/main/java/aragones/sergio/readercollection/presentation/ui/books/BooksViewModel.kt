@@ -85,12 +85,7 @@ class BooksViewModel @Inject constructor(
     fun fetchBooks() {
 
         _booksLoading.value = true
-        booksRepository.getBooks(
-            null,
-            null,
-            null,
-            sortParam
-        ).subscribeBy(
+        booksRepository.getBooks().subscribeBy(
             onComplete = {
 
                 _originalBooks.value = listOf()
@@ -99,8 +94,8 @@ class BooksViewModel @Inject constructor(
             },
             onNext = {
 
-                _originalBooks.value = if (isSortDescending) it.reversed() else it
-                searchBooks(query)
+                _originalBooks.value = it
+                sortBooks()
                 _booksLoading.value = false
             },
             onError = {
@@ -117,7 +112,7 @@ class BooksViewModel @Inject constructor(
 
             sortParam = newSortParam
             isSortDescending = newIsSortDescending
-            fetchBooks()
+            sortBooks()
             acceptHandler?.invoke()
         }
     }
@@ -125,10 +120,7 @@ class BooksViewModel @Inject constructor(
     fun searchBooks(query: String) {
 
         this.query = query
-        _books.value = _originalBooks.value?.filter { book ->
-            (book.title?.contains(query, true) ?: false)
-                || book.authorsToString().contains(query, true)
-        } ?: listOf()
+        sortBooks()
     }
 
     fun setTutorialAsShown() {
@@ -150,4 +142,21 @@ class BooksViewModel @Inject constructor(
         })
     }
     //endregion
+
+    private fun sortBooks() {
+
+        val filteredBooks = _originalBooks.value?.filter { book ->
+            (book.title?.contains(query, true) ?: false)
+                || book.authorsToString().contains(query, true)
+        } ?: listOf()
+        val sortedBooks = when (sortParam) {
+            "title" -> filteredBooks.sortedBy { it.title }
+            "publishedDate" -> filteredBooks.sortedBy { it.publishedDate }
+            "readingDate" -> filteredBooks.sortedBy { it.readingDate }
+            "pageCount" -> filteredBooks.sortedBy { it.pageCount }
+            "rating" -> filteredBooks.sortedBy { it.rating }
+            else -> filteredBooks.sortedBy { it.id }
+        }
+        _books.value = if (isSortDescending) sortedBooks.reversed() else sortedBooks
+    }
 }
