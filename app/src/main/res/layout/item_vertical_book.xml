@@ -66,7 +66,7 @@
             app:barrierDirection="bottom"
             app:constraint_referenced_ids="image_view_switch_left, image_view_switch_right" />
 
-        <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
+        <aragones.sergio.readercollection.presentation.ui.customview.ImageViewWithLoading
             android:id="@+id/image_view_book"
             android:layout_width="0dp"
             android:layout_height="@dimen/size_250dp"

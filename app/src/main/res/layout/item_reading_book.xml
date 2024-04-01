@@ -55,7 +55,7 @@
             tools:text="J.K. Rowling"
             style="@style/Widget.ReaderCollection.TextView.Subtitle.ReadingBook" />
 
-        <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
+        <aragones.sergio.readercollection.presentation.ui.customview.ImageViewWithLoading
             android:id="@+id/image_view_reading_book"
             android:layout_width="0dp"
             android:layout_height="0dp"

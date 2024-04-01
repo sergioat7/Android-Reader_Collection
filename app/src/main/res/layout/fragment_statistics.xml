@@ -13,7 +13,7 @@
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.statistics.StatisticsViewModel" />
+            type="aragones.sergio.readercollection.presentation.ui.statistics.StatisticsViewModel" />
 
     </data>
 

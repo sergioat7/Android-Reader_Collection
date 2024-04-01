@@ -98,7 +98,7 @@
             NewLineAtEndOfFile:AuthData.kt$aragones.sergio.readercollection.data.source.model.AuthData.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BaseActivity.kt$aragones.sergio.readercollection.ui.base.BaseActivity.kt
+            NewLineAtEndOfFile:BaseActivity.kt$aragones.sergio.readercollection.presentation.ui.base.BaseActivity.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BaseModel.kt$aragones.sergio.readercollection.data.remote.model.BaseModel.kt
@@ -107,13 +107,13 @@
             NewLineAtEndOfFile:BaseRepository.kt$aragones.sergio.readercollection.data.source.base.BaseRepository.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BaseViewModel.kt$aragones.sergio.readercollection.ui.base.BaseViewModel.kt
+            NewLineAtEndOfFile:BaseViewModel.kt$aragones.sergio.readercollection.presentation.ui.base.BaseViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BindingAdapters.kt$aragones.sergio.readercollection.extensions.BindingAdapters.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BindingFragment.kt$aragones.sergio.readercollection.ui.base.BindingFragment.kt
+            NewLineAtEndOfFile:BindingFragment.kt$aragones.sergio.readercollection.presentation.ui.base.BindingFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BookApiService.kt$aragones.sergio.readercollection.network.interfaces.BookApiService.kt
@@ -122,34 +122,34 @@
             NewLineAtEndOfFile:BookDao.kt$com.aragones.sergio.database.daos.BookDao.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookDetailFragment.kt$aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment.kt
+            NewLineAtEndOfFile:BookDetailFragment.kt$aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookDetailViewModel.kt$aragones.sergio.readercollection.ui.bookdetail.BookDetailViewModel.kt
+            NewLineAtEndOfFile:BookDetailViewModel.kt$aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailViewModel.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookListFragment.kt$aragones.sergio.readercollection.ui.booklist.BookListFragment.kt
+            NewLineAtEndOfFile:BookListFragment.kt$aragones.sergio.readercollection.presentation.ui.booklist.BookListFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookListViewModel.kt$aragones.sergio.readercollection.ui.booklist.BookListViewModel.kt
+            NewLineAtEndOfFile:BookListViewModel.kt$aragones.sergio.readercollection.presentation.ui.booklist.BookListViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BookResponse.kt$aragones.sergio.readercollection.data.remote.model.BookResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BooksAdapter.kt$aragones.sergio.readercollection.ui.books.BooksAdapter.kt
+            NewLineAtEndOfFile:BooksAdapter.kt$aragones.sergio.readercollection.presentation.ui.books.BooksAdapter.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BooksFragment.kt$aragones.sergio.readercollection.ui.books.BooksFragment.kt
+            NewLineAtEndOfFile:BooksFragment.kt$aragones.sergio.readercollection.presentation.ui.books.BooksFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BooksRepository.kt$aragones.sergio.readercollection.data.source.BooksRepository.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BooksViewHolder.kt$aragones.sergio.readercollection.ui.books.BooksViewHolder.kt
+            NewLineAtEndOfFile:BooksViewHolder.kt$aragones.sergio.readercollection.presentation.ui.books.BooksViewHolder.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BooksViewModel.kt$aragones.sergio.readercollection.ui.books.BooksViewModel.kt
+            NewLineAtEndOfFile:BooksViewModel.kt$aragones.sergio.readercollection.presentation.ui.books.BooksViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ChipGroupExtensions.kt$aragones.sergio.readercollection.extensions.ChipGroupExtensions.kt
@@ -209,13 +209,13 @@
             NewLineAtEndOfFile:ImageViewExtensions.kt$aragones.sergio.readercollection.extensions.ImageViewExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ImageViewWithLoading.kt$aragones.sergio.readercollection.ui.customview.ImageViewWithLoading.kt
+            NewLineAtEndOfFile:ImageViewWithLoading.kt$aragones.sergio.readercollection.presentation.ui.customview.ImageViewWithLoading.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LandingActivity.kt$aragones.sergio.readercollection.ui.landing.LandingActivity.kt
+            NewLineAtEndOfFile:LandingActivity.kt$aragones.sergio.readercollection.presentation.ui.landing.LandingActivity.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LandingViewModel.kt$aragones.sergio.readercollection.ui.landing.LandingViewModel.kt
+            NewLineAtEndOfFile:LandingViewModel.kt$aragones.sergio.readercollection.presentation.ui.landing.LandingViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ListConverter.kt$com.aragones.sergio.database.converters.ListConverter.kt
@@ -224,27 +224,28 @@
             NewLineAtEndOfFile:LiveDataExtensions.kt$aragones.sergio.readercollection.extensions.LiveDataExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoadMoreItemsViewHolder.kt$aragones.sergio.readercollection.ui.books.LoadMoreItemsViewHolder.kt
+            NewLineAtEndOfFile:LoadMoreItemsViewHolder.kt$aragones.sergio.readercollection.presentation.ui.books.LoadMoreItemsViewHolder.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginActivity.kt$aragones.sergio.readercollection.ui.login.LoginActivity.kt
+            NewLineAtEndOfFile:LoginActivity.kt$aragones.sergio.readercollection.presentation.ui.login.LoginActivity.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LoginCredentials.kt$aragones.sergio.readercollection.data.remote.model.LoginCredentials.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginFormState.kt$aragones.sergio.readercollection.ui.login.model.LoginFormState.kt
+            NewLineAtEndOfFile:LoginFormState.kt$aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LoginResponse.kt$aragones.sergio.readercollection.data.remote.model.LoginResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:LoginViewModel.kt$aragones.sergio.readercollection.ui.login.LoginViewModel.kt
-        </ID>
-        <ID>NewLineAtEndOfFile:MainActivity.kt$aragones.sergio.readercollection.ui.MainActivity.kt
+            NewLineAtEndOfFile:LoginViewModel.kt$aragones.sergio.readercollection.presentation.ui.login.LoginViewModel.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:MenuAdapter.kt$aragones.sergio.readercollection.ui.adapters.MenuAdapter.kt
+            NewLineAtEndOfFile:MainActivity.kt$aragones.sergio.readercollection.presentation.ui.MainActivity.kt
+        </ID>
+        <ID>
+            NewLineAtEndOfFile:MenuAdapter.kt$aragones.sergio.readercollection.presentation.ui.adapters.MenuAdapter.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:Navigation.kt$aragones.sergio.readercollection.extensions.Navigation.kt
@@ -262,13 +263,13 @@
             NewLineAtEndOfFile:OnItemClickListener.kt$aragones.sergio.readercollection.interfaces.OnItemClickListener.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:PopupLoadingDialogFragment.kt$aragones.sergio.readercollection.ui.modals.loading.PopupLoadingDialogFragment.kt
+            NewLineAtEndOfFile:PopupLoadingDialogFragment.kt$aragones.sergio.readercollection.presentation.ui.modals.loading.PopupLoadingDialogFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:PopupSyncAppDialogFragment.kt$aragones.sergio.readercollection.ui.modals.syncapp.PopupSyncAppDialogFragment.kt
+            NewLineAtEndOfFile:PopupSyncAppDialogFragment.kt$aragones.sergio.readercollection.presentation.ui.modals.syncapp.PopupSyncAppDialogFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:PopupSyncAppViewModel.kt$aragones.sergio.readercollection.ui.modals.syncapp.PopupSyncAppViewModel.kt
+            NewLineAtEndOfFile:PopupSyncAppViewModel.kt$aragones.sergio.readercollection.presentation.ui.modals.syncapp.PopupSyncAppViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:ReaderCollectionApplication.kt$aragones.sergio.readercollection.ReaderCollectionApplication.kt
@@ -277,25 +278,25 @@
             NewLineAtEndOfFile:ReaderCollectionDatabase.kt$com.aragones.sergio.database.ReaderCollectionDatabase.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:RegisterActivity.kt$aragones.sergio.readercollection.ui.register.RegisterActivity.kt
+            NewLineAtEndOfFile:RegisterActivity.kt$aragones.sergio.readercollection.presentation.ui.register.RegisterActivity.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:RegisterViewModel.kt$aragones.sergio.readercollection.ui.register.RegisterViewModel.kt
+            NewLineAtEndOfFile:RegisterViewModel.kt$aragones.sergio.readercollection.presentation.ui.register.RegisterViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:RequestResult.kt$aragones.sergio.readercollection.network.RequestResult.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:SearchFragment.kt$aragones.sergio.readercollection.ui.search.SearchFragment.kt
+            NewLineAtEndOfFile:SearchFragment.kt$aragones.sergio.readercollection.presentation.ui.search.SearchFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:SearchViewModel.kt$aragones.sergio.readercollection.ui.search.SearchViewModel.kt
+            NewLineAtEndOfFile:SearchViewModel.kt$aragones.sergio.readercollection.presentation.ui.search.SearchViewModel.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:SettingsFragment.kt$aragones.sergio.readercollection.ui.settings.SettingsFragment.kt
+            NewLineAtEndOfFile:SettingsFragment.kt$aragones.sergio.readercollection.presentation.ui.settings.SettingsFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:SettingsViewModel.kt$aragones.sergio.readercollection.ui.settings.SettingsViewModel.kt
+            NewLineAtEndOfFile:SettingsViewModel.kt$aragones.sergio.readercollection.presentation.ui.settings.SettingsViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:SharedPreferencesEditorExtensions.kt$aragones.sergio.readercollection.extensions.SharedPreferencesEditorExtensions.kt
@@ -304,16 +305,16 @@
             NewLineAtEndOfFile:SharedPreferencesHandler.kt$aragones.sergio.readercollection.data.source.SharedPreferencesHandler.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ShowAllItemsViewHolder.kt$aragones.sergio.readercollection.ui.books.ShowAllItemsViewHolder.kt
+            NewLineAtEndOfFile:ShowAllItemsViewHolder.kt$aragones.sergio.readercollection.presentation.ui.books.ShowAllItemsViewHolder.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StateResponse.kt$aragones.sergio.readercollection.data.remote.model.StateResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:StatisticsFragment.kt$aragones.sergio.readercollection.ui.statistics.StatisticsFragment.kt
+            NewLineAtEndOfFile:StatisticsFragment.kt$aragones.sergio.readercollection.presentation.ui.statistics.StatisticsFragment.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:StatisticsViewModel.kt$aragones.sergio.readercollection.ui.statistics.StatisticsViewModel.kt
+            NewLineAtEndOfFile:StatisticsViewModel.kt$aragones.sergio.readercollection.presentation.ui.statistics.StatisticsViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StringExtensions.kt$aragones.sergio.readercollection.extensions.StringExtensions.kt

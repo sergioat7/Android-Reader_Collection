@@ -19,11 +19,11 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.ui.bookdetail.BookDetailFragment" />
+            type="aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailFragment" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.bookdetail.BookDetailViewModel" />
+            type="aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailViewModel" />
 
         <variable
             name="editable"
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <aragones.sergio.readercollection.ui.customview.ImageViewWithLoading
+                    <aragones.sergio.readercollection.presentation.ui.customview.ImageViewWithLoading
                         android:id="@+id/image_view_book"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
