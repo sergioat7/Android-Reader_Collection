@@ -100,13 +100,15 @@ class BooksRepository @Inject constructor(
     fun importDataFrom(jsonData: String): Completable {
 
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
-        return booksLocalDataSource.importDataFrom(books.map { it.toLocalData() })
+        return booksLocalDataSource
+            .importDataFrom(books.map { it.toLocalData() })
     }
 
     fun exportDataTo(): Single<String> {
 
         return Single.create<String> { emitter ->
-            booksLocalDataSource.getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
+            booksLocalDataSource
+                .getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
                 .subscribeBy(
                     onComplete = {
                         emitter.onSuccess("")
@@ -135,19 +137,21 @@ class BooksRepository @Inject constructor(
     fun createBook(newBook: Book, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
 //        booksRemoteDataSource.createBook(newBook, success, failure)
 
-        booksLocalDataSource.insertBooks(listOf(newBook.toLocalData())).subscribeBy(
-            onComplete = {
-                success()
-            },
-            onError = {
-                failure(
-                    ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database
+        booksLocalDataSource
+            .insertBooks(listOf(newBook.toLocalData()))
+            .subscribeBy(
+                onComplete = {
+                    success()
+                },
+                onError = {
+                    failure(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database
+                        )
                     )
-                )
-            }
-        ).addTo(disposables)
+                }
+            ).addTo(disposables)
     }
 
     fun setBook(
@@ -156,19 +160,21 @@ class BooksRepository @Inject constructor(
         failure: (ErrorResponse) -> Unit
     ) {
 //        booksRemoteDataSource.setBook(book, success = {
-        booksLocalDataSource.updateBooks(listOf(book.toLocalData())).subscribeBy(
-            onComplete = {
-                success(book)
-            },
-            onError = {
-                failure(
-                    ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database
+        booksLocalDataSource
+            .updateBooks(listOf(book.toLocalData()))
+            .subscribeBy(
+                onComplete = {
+                    success(book)
+                },
+                onError = {
+                    failure(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database
+                        )
                     )
-                )
-            }
-        ).addTo(disposables)
+                }
+            ).addTo(disposables)
 //        }, failure = failure)
     }
 
@@ -178,7 +184,8 @@ class BooksRepository @Inject constructor(
         failure: (ErrorResponse) -> Unit
     ) {
 //        booksRemoteDataSource.setBook(book, success = {
-        booksLocalDataSource.updateBooks(books.map { it.toLocalData() })
+        booksLocalDataSource
+            .updateBooks(books.map { it.toLocalData() })
             .subscribeBy(
                 onComplete = {
                     success()
@@ -216,85 +223,95 @@ class BooksRepository @Inject constructor(
 //                }
 //            ).addTo(disposables)
 //        }, failure)
-        booksLocalDataSource.getBook(bookId).subscribeBy(
-            onSuccess = {
+        booksLocalDataSource
+            .getBook(bookId)
+            .subscribeBy(
+                onSuccess = {
 
-                val book = it.toDomain()
-                book.isFavourite = isFavourite
-                booksLocalDataSource.updateBooks(listOf(book.toLocalData()))
-                    .subscribeBy(
-                        onComplete = {
-                            success(book)
-                        },
-                        onError = {
-                            failure(
-                                ErrorResponse(
-                                    Constants.EMPTY_VALUE,
-                                    R.string.error_database
+                    val book = it.toDomain()
+                    book.isFavourite = isFavourite
+                    booksLocalDataSource
+                        .updateBooks(listOf(book.toLocalData()))
+                        .subscribeBy(
+                            onComplete = {
+                                success(book)
+                            },
+                            onError = {
+                                failure(
+                                    ErrorResponse(
+                                        Constants.EMPTY_VALUE,
+                                        R.string.error_database
+                                    )
                                 )
-                            )
-                        }
-                    ).addTo(disposables)
-            },
-            onError = {
-                failure(
-                    ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database
+                            }
+                        ).addTo(disposables)
+                },
+                onError = {
+                    failure(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database
+                        )
                     )
-                )
-            }
-        ).addTo(disposables)
+                }
+            ).addTo(disposables)
     }
 
     fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
 
 //        booksRemoteDataSource.deleteBook(bookId, success = {
-        booksLocalDataSource.getBook(bookId).subscribeBy(
-            onSuccess = { book ->
-                booksLocalDataSource.deleteBooks(listOf(book)).subscribeBy(
-                    onComplete = {
-                        success()
-                    },
-                    onError = {
-                        failure(
-                            ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.error_database
-                            )
+        booksLocalDataSource
+            .getBook(bookId)
+            .subscribeBy(
+                onSuccess = { book ->
+                    booksLocalDataSource
+                        .deleteBooks(listOf(book))
+                        .subscribeBy(
+                            onComplete = {
+                                success()
+                            },
+                            onError = {
+                                failure(
+                                    ErrorResponse(
+                                        Constants.EMPTY_VALUE,
+                                        R.string.error_database
+                                    )
+                                )
+                            }
+                        ).addTo(disposables)
+                },
+                onError = {
+                    failure(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database
                         )
-                    }
-                ).addTo(disposables)
-            },
-            onError = {
-                failure(
-                    ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database
                     )
-                )
-            }
-        ).addTo(disposables)
+                }
+            ).addTo(disposables)
 //        }, failure)
     }
 
     fun resetTable(): Completable {
         return Completable.create { emitter ->
 
-            booksLocalDataSource.getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
+            booksLocalDataSource
+                .getBooks(SimpleSQLiteQuery("SELECT * FROM Book"))
                 .subscribeBy(
                     onComplete = {
                         emitter.onComplete()
                     },
                     onNext = { books ->
-                        booksLocalDataSource.deleteBooks(books).subscribeBy(
-                            onComplete = {
-                                emitter.onComplete()
-                            },
-                            onError = {
-                                emitter.onError(it)
-                            }
-                        ).addTo(disposables)
+                        booksLocalDataSource
+                            .deleteBooks(books)
+                            .subscribeBy(
+                                onComplete = {
+                                    emitter.onComplete()
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                }
+                            ).addTo(disposables)
                     },
                     onError = {
                         emitter.onError(it)
@@ -308,29 +325,17 @@ class BooksRepository @Inject constructor(
         page: Int,
         order: String?
     ): Single<List<Book>> {
-        return Single.create { emitter ->
 
-            booksRemoteDataSource.searchBooks(query, page, order)
-                .subscribeBy(onSuccess = {
-
-                    val values = it.items?.map { book -> book.toDomain() } ?: listOf()
-                    emitter.onSuccess(values)
-                }, onError = {
-                    emitter.onError(it)
-                }).addTo(disposables)
-        }.subscribeOn(externalScheduler).observeOn(mainObserver)
+        return booksRemoteDataSource
+            .searchBooks(query, page, order)
+            .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
     }
 
     fun getRemoteBook(volumeId: String): Single<Book> {
-        return Single.create { emitter ->
 
-            booksRemoteDataSource.getBook(volumeId)
-                .subscribeBy(onSuccess = {
-                    emitter.onSuccess(it.toDomain())
-                }, onError = {
-                    emitter.onError(it)
-                }).addTo(disposables)
-        }.subscribeOn(externalScheduler).observeOn(mainObserver)
+        return booksRemoteDataSource
+            .getBook(volumeId)
+            .map { it.toDomain() }
     }
 
     fun fetchRemoteConfigValues(language: String) {
