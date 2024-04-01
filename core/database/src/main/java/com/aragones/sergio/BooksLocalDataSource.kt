@@ -8,22 +8,14 @@ package com.aragones.sergio
 import androidx.sqlite.db.SupportSQLiteQuery
 import com.aragones.sergio.model.Book
 import hu.akarnokd.rxjava3.bridge.RxJavaBridge
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class BooksLocalDataSource @Inject constructor(
     private val bookDao: BookDao
 ) {
-
-    //region Private properties
-    private val databaseScheduler: Scheduler = Schedulers.io()
-    private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
-    //endregion
 
     //region Public methods
     fun getBooks(query: SupportSQLiteQuery): Flowable<List<Book>> {
@@ -31,8 +23,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .getBooks(query)
             .`as`(RxJavaBridge.toV3Flowable())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
 
     fun getPendingBooks(): Flowable<List<Book>> {
@@ -40,8 +30,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .getPendingBooks()
             .`as`(RxJavaBridge.toV3Flowable())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
 
     fun getReadBooks(): Flowable<List<Book>> {
@@ -56,8 +44,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .insertBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
 
     fun getBook(googleId: String): Single<Book> {
@@ -65,8 +51,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .getBook(googleId)
             .`as`(RxJavaBridge.toV3Single())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
 
     fun insertBooks(books: List<Book>): Completable {
@@ -74,8 +58,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .insertBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
 
     fun updateBooks(books: List<Book>): Completable {
@@ -83,8 +65,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .updateBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
 
     fun deleteBooks(books: List<Book>): Completable {
@@ -92,8 +72,6 @@ class BooksLocalDataSource @Inject constructor(
         return bookDao
             .deleteBooks(books)
             .`as`(RxJavaBridge.toV3Completable())
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
     }
     //endregion
 }
