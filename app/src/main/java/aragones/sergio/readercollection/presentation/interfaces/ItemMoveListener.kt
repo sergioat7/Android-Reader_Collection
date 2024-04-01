@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.interfaces
 
-import aragones.sergio.readercollection.ui.books.BooksViewHolder
+import aragones.sergio.readercollection.presentation.ui.books.BooksViewHolder
 
 interface ItemMoveListener {
 

@@ -18,12 +18,13 @@
         android:theme="@style/Theme.ReaderCollection.NoActionBar"
         android:localeConfig="@xml/locales_config"
         tools:ignore="AllowBackup,UnusedAttribute">
-        <activity android:name=".ui.MainActivity"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name=".ui.register.RegisterActivity" />
-        <activity android:name=".ui.login.LoginActivity" />
         <activity
-            android:name=".ui.landing.LandingActivity"
+            android:name=".presentation.ui.MainActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".presentation.ui.register.RegisterActivity" />
+        <activity android:name=".presentation.ui.login.LoginActivity" />
+        <activity
+            android:name=".presentation.ui.landing.LandingActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

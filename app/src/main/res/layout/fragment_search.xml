@@ -15,11 +15,11 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.ui.search.SearchFragment" />
+            type="aragones.sergio.readercollection.presentation.ui.search.SearchFragment" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.search.SearchViewModel" />
+            type="aragones.sergio.readercollection.presentation.ui.search.SearchViewModel" />
 
     </data>
 

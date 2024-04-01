@@ -15,11 +15,11 @@
 
         <variable
             name="fragment"
-            type="aragones.sergio.readercollection.ui.booklist.BookListFragment" />
+            type="aragones.sergio.readercollection.presentation.ui.booklist.BookListFragment" />
 
         <variable
             name="viewModel"
-            type="aragones.sergio.readercollection.ui.booklist.BookListViewModel" />
+            type="aragones.sergio.readercollection.presentation.ui.booklist.BookListViewModel" />
 
         <variable
             name="isDarkMode"

@@ -15,7 +15,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.ui.components.ConfirmationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
