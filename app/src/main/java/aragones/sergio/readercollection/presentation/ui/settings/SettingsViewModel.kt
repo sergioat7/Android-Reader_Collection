@@ -5,19 +5,21 @@
 
 package aragones.sergio.readercollection.presentation.ui.settings
 
+import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
+import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,24 +29,26 @@ class SettingsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
+    private val _password = MutableLiveData(userRepository.userData.password)
     private val _profileForm = MutableLiveData<Int?>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse?>()
+    private val _language = MutableLiveData(userRepository.language)
+    private val _sortParam = MutableLiveData(userRepository.sortParam)
+    private val _isSortDescending = MutableLiveData(userRepository.isSortDescending)
+    private val _themeMode = MutableLiveData(userRepository.themeMode)
     private val _activityName = MutableLiveData<String?>()
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
-    val userData: UserData = userRepository.userData
-    var language: String
-        get() = userRepository.language
-        set(value) {
-            userRepository.storeLanguage(value)
-        }
-    var sortParam: String? = userRepository.sortParam
-    var isSortDescending: Boolean = userRepository.isSortDescending
-    var themeMode: Int = userRepository.themeMode
+    val username: String = userRepository.username
+    val password: LiveData<String> = _password
+    var language: LiveData<String> = _language
+    var sortParam: LiveData<String?> = _sortParam
+    var isSortDescending: LiveData<Boolean> = _isSortDescending
+    var themeMode: LiveData<Int> = _themeMode
     val profileForm: LiveData<Int?> = _profileForm
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse?> = _profileError
@@ -55,6 +59,21 @@ class SettingsViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
+    fun onResume() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
+            userRepository.language = locale.language
+        }
+
+        _password.value = userRepository.userData.password
+        _profileForm.value = null
+        _language.value = userRepository.language
+        _sortParam.value = userRepository.sortParam
+        _isSortDescending.value = userRepository.isSortDescending
+        _themeMode.value = userRepository.themeMode
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
@@ -73,19 +92,19 @@ class SettingsViewModel @Inject constructor(
         _activityName.value = LandingActivity::class.simpleName
     }
 
-    fun save(
-        newPassword: String,
-        newLanguage: String,
-        newSortParam: String?,
-        newIsSortDescending: Boolean,
-        newThemeMode: Int
-    ) {
+    fun save() {
+
+        val newPassword = requireNotNull(_password.value)
+        val newLanguage = requireNotNull(_language.value)
+        val newSortParam = _sortParam.value
+        val newIsSortDescending = requireNotNull(_isSortDescending.value)
+        val newThemeMode = requireNotNull(_themeMode.value)
 
         val changePassword = newPassword != userRepository.userData.password
-        val changeLanguage = newLanguage != language
-        val changeSortParam = newSortParam != sortParam
-        val changeIsSortDescending = newIsSortDescending != isSortDescending
-        val changeThemeMode = newThemeMode != themeMode
+        val changeLanguage = newLanguage != userRepository.language
+        val changeSortParam = newSortParam != userRepository.sortParam
+        val changeIsSortDescending = newIsSortDescending != userRepository.isSortDescending
+        val changeThemeMode = newThemeMode != userRepository.themeMode
 
         if (changePassword) {
 
@@ -107,18 +126,15 @@ class SettingsViewModel @Inject constructor(
 
         if (changeSortParam) {
             userRepository.storeSortParam(newSortParam)
-            sortParam = newSortParam
         }
 
         if (changeIsSortDescending) {
             userRepository.storeIsSortDescending(newIsSortDescending)
-            isSortDescending = newIsSortDescending
         }
 
         if (changeThemeMode) {
 
             userRepository.storeThemeMode(newThemeMode)
-            themeMode = newThemeMode
             when (newThemeMode) {
                 1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                 2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -141,13 +157,24 @@ class SettingsViewModel @Inject constructor(
         })
     }
 
-    fun profileDataChanged(password: String) {
+    fun profileDataChanged(
+        newPassword: String,
+        newLanguage: String,
+        newSortParam: String?,
+        newIsSortDescending: Boolean,
+        newThemeMode: Int
+    ) {
 
         var passwordError: Int? = null
-        if (!Constants.isPasswordValid(password)) {
+        if (!Constants.isPasswordValid(newPassword)) {
             passwordError = R.string.invalid_password
         }
+        _password.value = newPassword
         _profileForm.value = passwordError
+        _language.value = newLanguage
+        _sortParam.value = newSortParam
+        _isSortDescending.value = newIsSortDescending
+        _themeMode.value = newThemeMode
     }
 
     fun setTutorialAsShown() {

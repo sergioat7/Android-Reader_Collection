@@ -18,6 +18,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -29,22 +30,28 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Devices
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.ui.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
+import com.aragones.sergio.util.Preferences
 
-@Preview(device = Devices.NEXUS_5)
 @Composable
-fun SettingsScreen() {
+fun SettingsScreen(viewModel: SettingsViewModel) {
 
+    val password by viewModel.password.observeAsState(initial = "")
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+    val passwordError by viewModel.profileForm.observeAsState(initial = null)
+    val language by viewModel.language.observeAsState(initial = "")
+    val sortParam by viewModel.sortParam.observeAsState(initial = null)
+    val isSortDescending by viewModel.isSortDescending.observeAsState(initial = false)
+    val themeMode by viewModel.themeMode.observeAsState(initial = 0)
+    val loading by viewModel.profileLoading.observeAsState(initial = false)
 
     val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
@@ -61,7 +68,7 @@ fun SettingsScreen() {
             .verticalScroll(rememberScrollState())
     ) {
         CustomOutlinedTextField(
-            text = "username",
+            text = viewModel.username,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
@@ -70,12 +77,12 @@ fun SettingsScreen() {
             enabled = false,
             onTextChanged = {},
             onEndIconClicked = {
-                //TODO: show dialog
+                viewModel.showInfoDialog(R.string.username_info)
             }
         )
         CustomOutlinedTextField(
-            text = "password",
-//            errorTextId = loginFormState.passwordError,
+            text = password,
+            errorTextId = passwordError,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
@@ -86,8 +93,15 @@ fun SettingsScreen() {
                 R.drawable.ic_show_password
             },
             isLastTextField = true,
-            onTextChanged = { newPassword ->
-                //TODO: set password
+            onTextChanged = {
+
+                viewModel.profileDataChanged(
+                    it,
+                    language,
+                    sortParam,
+                    isSortDescending,
+                    themeMode
+                )
             },
             onEndIconClicked = { passwordVisibility = !passwordVisibility }
         )
@@ -99,48 +113,94 @@ fun SettingsScreen() {
             CustomRadioButton(
                 text = stringResource(id = R.string.english),
                 modifier = Modifier.weight(1f),
-                selected = true
+                selected = language == Preferences.ENGLISH_LANGUAGE_KEY
             ) {
-                //TODO:
+
+                viewModel.profileDataChanged(
+                    password,
+                    Preferences.ENGLISH_LANGUAGE_KEY,
+                    sortParam,
+                    isSortDescending,
+                    themeMode
+                )
             }
             CustomRadioButton(
                 text = stringResource(id = R.string.spanish),
                 modifier = Modifier.weight(1f),
-                selected = false
+                selected = language == Preferences.SPANISH_LANGUAGE_KEY
             ) {
-                //TODO:
+
+                viewModel.profileDataChanged(
+                    password,
+                    Preferences.SPANISH_LANGUAGE_KEY,
+                    sortParam,
+                    isSortDescending,
+                    themeMode
+                )
             }
         }
         HeaderText(
             text = stringResource(id = R.string.sort_books_param),
             modifier = Modifier.padding(top = margin20.dp, bottom = margin5.dp)
         )
+        val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
+        val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
+        val sortParamValue =
+            if (sortParam == null) sortingParamValues.first()
+            else sortingParamValues[sortingParamKeys.indexOf(sortParam)]
         CustomDropdownMenu(
-            text = "Título",//TODO:
+            currentValue = sortParamValue,
             modifier = Modifier.padding(bottom = margin8.dp),
-            values = stringArrayResource(id = R.array.sorting_param_values).toList(),
+            values = sortingParamValues,
             onOptionSelected = {
-                //TODO:
+
+                val index = sortingParamValues.indexOf(it)
+                val newSortParam =
+                    if (index == 0) null else sortingParamKeys[index]
+                viewModel.profileDataChanged(
+                    password,
+                    language,
+                    newSortParam,
+                    isSortDescending,
+                    themeMode
+                )
             }
         )
+        val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
         CustomDropdownMenu(
-            text = "Ascendente",//TODO:
+            currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
             modifier = Modifier,
-            values = stringArrayResource(id = R.array.sorting_order_values).toList(),
+            values = sortingOrderValues,
             onOptionSelected = {
-                //TODO:
+
+                val index = sortingOrderValues.indexOf(it)
+                viewModel.profileDataChanged(
+                    password,
+                    language,
+                    sortParam,
+                    index == 1,
+                    themeMode
+                )
             }
         )
         HeaderText(
             text = stringResource(id = R.string.app_theme),
             modifier = Modifier.padding(top = margin20.dp, bottom = margin5.dp)
         )
+        val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
         CustomDropdownMenu(
-            text = "Tema",//TODO:
+            currentValue = appThemes[themeMode],
             modifier = Modifier,
-            values = stringArrayResource(id = R.array.app_theme_values).toList(),
+            values = appThemes,
             onOptionSelected = {
-                //TODO:
+
+                viewModel.profileDataChanged(
+                    password,
+                    language,
+                    sortParam,
+                    isSortDescending,
+                    appThemes.indexOf(it)
+                )
             }
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -150,10 +210,14 @@ fun SettingsScreen() {
                 .width(size200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = true// loginFormState.isDataValid
+            enabled = passwordError == null
         ) {
-            //TODO: implement
+            viewModel.save()
         }
+    }
+
+    if (loading) {
+        CustomCircularProgressIndicator()
     }
 }
 
