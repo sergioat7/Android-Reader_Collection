@@ -63,6 +63,18 @@ fun PasswordOutlinedTextFieldPreview() {
 
 @Preview(showBackground = true)
 @Composable
+fun DisabledOutlinedTextFieldPreview() {
+    CustomOutlinedTextField(
+        text = "Text",
+        modifier = Modifier.padding(12.dp),
+        labelText = "Label",
+        enabled = false,
+        onTextChanged = {}
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
 fun ErrorOutlinedTextFieldPreview() {
     CustomOutlinedTextField(
         text = "Incorrect text",
@@ -161,6 +173,7 @@ fun CustomOutlinedTextField(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = colorResource(id = R.color.colorPrimary),
                 unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight),
+                disabledBorderColor = Color.Transparent,
                 errorBorderColor = Color.Red,
                 errorLabelColor = Color.Red
             ),
