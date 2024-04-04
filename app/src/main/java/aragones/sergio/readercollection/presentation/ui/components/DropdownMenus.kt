@@ -64,6 +64,7 @@ fun CustomDropdownMenu(
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val textSize12 = dimensionResource(id = R.dimen.text_size_12sp).value
+    val textSize16 = dimensionResource(id = R.dimen.text_size_16sp).value
 
     val label: @Composable (() -> Unit)? = labelText?.let {
         {
@@ -111,7 +112,7 @@ fun CustomDropdownMenu(
             ),
             textStyle = TextStyle(
                 color = textColor,
-                fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
+                fontSize = textSize16.sp,
                 fontWeight = FontWeight.Normal,
                 fontFamily = robotoSerifFamily
             ),
@@ -137,7 +138,7 @@ fun CustomDropdownMenu(
                         color = textColor,
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Normal,
-                        fontSize = textSize12.sp
+                        fontSize = textSize16.sp
                     )
                 }
             }
