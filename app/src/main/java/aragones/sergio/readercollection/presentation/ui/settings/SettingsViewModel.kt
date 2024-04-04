@@ -28,9 +28,9 @@ class SettingsViewModel @Inject constructor(
 
     //region Private properties
     private val _profileForm = MutableLiveData<Int?>()
-    private val _profileRedirection = MutableLiveData<Boolean>()
     private val _profileLoading = MutableLiveData<Boolean>()
     private val _profileError = MutableLiveData<ErrorResponse?>()
+    private val _activityName = MutableLiveData<String?>()
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
@@ -46,9 +46,9 @@ class SettingsViewModel @Inject constructor(
     var isSortDescending: Boolean = userRepository.isSortDescending
     var themeMode: Int = userRepository.themeMode
     val profileForm: LiveData<Int?> = _profileForm
-    val profileRedirection: LiveData<Boolean> = _profileRedirection
     val profileLoading: LiveData<Boolean> = _profileLoading
     val profileError: LiveData<ErrorResponse?> = _profileError
+    val activityName: LiveData<String?> = _activityName
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
     val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
@@ -70,7 +70,7 @@ class SettingsViewModel @Inject constructor(
         userRepository.logout()
 //        resetDatabase()
 
-        _profileRedirection.value = true
+        _activityName.value = LandingActivity::class.simpleName
     }
 
     fun save(
@@ -94,7 +94,7 @@ class SettingsViewModel @Inject constructor(
 
                 _profileLoading.value = false
                 if (changeLanguage || changeSortParam || changeIsSortDescending) {
-                    _profileRedirection.value = true
+                    _activityName.value = LandingActivity::class.simpleName
                 }
             }, failure = {
                 manageError(it)
@@ -127,7 +127,7 @@ class SettingsViewModel @Inject constructor(
         }
 
         if (!changePassword && (changeLanguage || changeSortParam || changeIsSortDescending)) {
-            _profileRedirection.value = true
+            _activityName.value = LandingActivity::class.simpleName
         }
     }
 
@@ -177,12 +177,12 @@ class SettingsViewModel @Inject constructor(
             onComplete = {
 
                 _profileLoading.value = false
-                _profileRedirection.value = true
+                _activityName.value = LandingActivity::class.simpleName
             },
             onError = {
 
                 _profileLoading.value = false
-                _profileRedirection.value = true
+                _activityName.value = LandingActivity::class.simpleName
             }
         ).addTo(disposables)
     }

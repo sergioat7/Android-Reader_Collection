@@ -100,6 +100,18 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
                 viewModel.closeDialogs()
             }
         }
+
+        viewModel.activityName.observe(viewLifecycleOwner) { activityName ->
+
+            when (activityName) {
+                LandingActivity::class.simpleName -> {
+                    launchActivity(LandingActivity::class.java, true)
+                    activity?.finish()
+                }
+
+                else -> Unit
+            }
+        }
     }
 
     override fun onStart() {
@@ -212,13 +224,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
 
             val passwordError = it ?: return@Observer
             binding.textInputLayoutPassword.setError(getString(passwordError))
-        })
-
-        viewModel.profileRedirection.observe(viewLifecycleOwner, Observer { redirect ->
-
-            if (!redirect) return@Observer
-            launchActivity(LandingActivity::class.java, true)
-            activity?.finish()
         })
 
         viewModel.profileLoading.observe(viewLifecycleOwner) { isLoading ->
