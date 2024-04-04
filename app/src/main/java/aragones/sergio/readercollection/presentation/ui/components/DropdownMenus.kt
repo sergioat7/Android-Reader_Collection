@@ -40,7 +40,7 @@ import aragones.sergio.readercollection.R
 @Composable
 fun CustomDropdownMenuPreview() {
     CustomDropdownMenu(
-        text = "Value",
+        currentValue = "Value",
         labelText = "Header",
         placeholderText = "Please choose",
         modifier = Modifier.padding(12.dp),
@@ -51,7 +51,7 @@ fun CustomDropdownMenuPreview() {
 
 @Composable
 fun CustomDropdownMenu(
-    text: String,
+    currentValue: String,
     modifier: Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
@@ -101,7 +101,7 @@ fun CustomDropdownMenu(
     Column(modifier = modifier) {
 
         OutlinedTextField(
-            value = text,
+            value = currentValue,
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true },
@@ -132,7 +132,10 @@ fun CustomDropdownMenu(
             modifier = modifier.fillMaxWidth()
         ) {
             for (value in values) {
-                DropdownMenuItem(onClick = { expanded = false }) {
+                DropdownMenuItem(onClick = {
+                    expanded = false
+                    onOptionSelected(value)
+                }) {
                     Text(
                         text = value,
                         color = textColor,
