@@ -49,7 +49,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        toolbar = binding.toolbar
         binding.composeView.setContent {
             SettingsScreen(viewModel)
 
@@ -141,50 +140,32 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
     //endregion
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-
-        menu.clear()
-        menuInflater.inflate(R.menu.settings_toolbar_menu, menu)
     }
 
     override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-
-        return when (menuItem.itemId) {
-            R.id.action_delete -> {
-
-                viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
-                true
-            }
-
-            R.id.action_logout -> {
-
-                viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
-                true
-            }
-
-            else -> false
-        }
+        return false
     }
 
     //region Private methods
-    private fun createTargetsForToolbar(): List<TapTarget> {
-
-        val deleteProfileItem = binding.toolbar.menu.findItem(R.id.action_delete)
-        val logoutItem = binding.toolbar.menu.findItem(R.id.action_logout)
-        return listOf(
-            TapTarget.forToolbarMenuItem(
-                binding.toolbar,
-                deleteProfileItem.itemId,
-                resources.getString(R.string.delete_profile_icon_tutorial_title),
-                resources.getString(R.string.delete_profile_icon_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true),
-            TapTarget.forToolbarMenuItem(
-                binding.toolbar,
-                logoutItem.itemId,
-                resources.getString(R.string.logout_icon_tutorial_title),
-                resources.getString(R.string.logout_icon_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true)
-        )
-    }
+//    private fun createTargetsForToolbar(): List<TapTarget> {
+//
+//        val deleteProfileItem = binding.toolbar.menu.findItem(R.id.action_delete)
+//        val logoutItem = binding.toolbar.menu.findItem(R.id.action_logout)
+//        return listOf(
+//            TapTarget.forToolbarMenuItem(
+//                binding.toolbar,
+//                deleteProfileItem.itemId,
+//                resources.getString(R.string.delete_profile_icon_tutorial_title),
+//                resources.getString(R.string.delete_profile_icon_tutorial_description)
+//            ).style(requireContext()).cancelable(true).tintTarget(true),
+//            TapTarget.forToolbarMenuItem(
+//                binding.toolbar,
+//                logoutItem.itemId,
+//                resources.getString(R.string.logout_icon_tutorial_title),
+//                resources.getString(R.string.logout_icon_tutorial_description)
+//            ).style(requireContext()).cancelable(true).tintTarget(true)
+//        )
+//    }
 
 //    private fun createTargetsForScrollView(): List<TapTarget> {
 //        return listOf(
@@ -223,7 +204,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
             lifecycleScope.launch(Dispatchers.Main) {
                 delay(500)
                 toolbarSequence = TapTargetSequence(requireActivity()).apply {
-                    targets(createTargetsForToolbar())
+//                    targets(createTargetsForToolbar())
                     continueOnCancel(false)
                     listener(object : TapTargetSequence.Listener {
                         override fun onSequenceFinish() {
