@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +40,7 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomCircula
 import aragones.sergio.readercollection.presentation.ui.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.ui.components.CustomRadioButton
+import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import com.aragones.sergio.util.Preferences
@@ -64,14 +68,30 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.colorSecondary))
-            .padding(padding24.dp)
             .verticalScroll(rememberScrollState())
     ) {
+        CustomToolbar(
+            title = stringResource(id = R.string.title_settings),
+            actions = {
+                IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_delete_confirmation) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_delete_profile),
+                        contentDescription = ""
+                    )
+                }
+                IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_logout),
+                        contentDescription = ""
+                    )
+                }
+            }
+        )
         CustomOutlinedTextField(
             text = viewModel.username,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
+                .padding(start = padding24.dp, end = padding24.dp, top = padding24.dp),
             labelText = stringResource(id = R.string.username),
             endIcon = R.drawable.ic_show_info,
             enabled = false,
@@ -85,7 +105,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             errorTextId = passwordError,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
+                .padding(start = padding24.dp, end = padding24.dp, top = margin8.dp),
             labelText = stringResource(id = R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
@@ -107,9 +127,18 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         )
         HeaderText(
             text = stringResource(id = R.string.app_language),
-            modifier = Modifier.padding(top = margin20.dp, bottom = margin5.dp)
+            modifier = Modifier.padding(
+                top = margin20.dp,
+                bottom = margin5.dp,
+                start = padding24.dp,
+                end = padding24.dp
+            )
         )
-        Row(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = padding12.dp)
+        ) {
             CustomRadioButton(
                 text = stringResource(id = R.string.english),
                 modifier = Modifier.weight(1f),
@@ -141,7 +170,12 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         }
         HeaderText(
             text = stringResource(id = R.string.sort_books_param),
-            modifier = Modifier.padding(top = margin20.dp, bottom = margin5.dp)
+            modifier = Modifier.padding(
+                top = margin20.dp,
+                bottom = margin5.dp,
+                start = padding24.dp,
+                end = padding24.dp
+            )
         )
         val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
         val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
@@ -150,7 +184,11 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             else sortingParamValues[sortingParamKeys.indexOf(sortParam)]
         CustomDropdownMenu(
             currentValue = sortParamValue,
-            modifier = Modifier.padding(bottom = margin8.dp),
+            modifier = Modifier.padding(
+                bottom = margin8.dp,
+                start = padding24.dp,
+                end = padding24.dp
+            ),
             values = sortingParamValues,
             onOptionSelected = {
 
@@ -169,7 +207,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
         CustomDropdownMenu(
             currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
-            modifier = Modifier,
+            modifier = Modifier.padding(horizontal = padding24.dp),
             values = sortingOrderValues,
             onOptionSelected = {
 
@@ -185,12 +223,17 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         )
         HeaderText(
             text = stringResource(id = R.string.app_theme),
-            modifier = Modifier.padding(top = margin20.dp, bottom = margin5.dp)
+            modifier = Modifier.padding(
+                top = margin20.dp,
+                bottom = margin5.dp,
+                start = padding24.dp,
+                end = padding24.dp
+            )
         )
         val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
         CustomDropdownMenu(
             currentValue = appThemes[themeMode],
-            modifier = Modifier,
+            modifier = Modifier.padding(horizontal = padding24.dp),
             values = appThemes,
             onOptionSelected = {
 

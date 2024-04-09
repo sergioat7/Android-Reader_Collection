@@ -59,7 +59,7 @@ fun CustomToolbar(
             )
         },
         modifier = modifier,
-        backgroundColor = colorResource(id = R.color.colorTertiary),
+        backgroundColor = colorResource(id = R.color.colorSecondary),
         elevation = 0.dp,
         navigationIcon = onBack?.let {
             {
