@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
@@ -43,6 +44,7 @@ fun CustomToolbarPreview() {
 fun CustomToolbar(
     title: String,
     modifier: Modifier = Modifier,
+    elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {}
 ) {
@@ -60,7 +62,7 @@ fun CustomToolbar(
         },
         modifier = modifier,
         backgroundColor = colorResource(id = R.color.colorSecondary),
-        elevation = 0.dp,
+        elevation = elevation,
         navigationIcon = onBack?.let {
             {
                 IconButton(onClick = { it.invoke() }) {
