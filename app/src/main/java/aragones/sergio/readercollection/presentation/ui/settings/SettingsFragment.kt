@@ -6,9 +6,6 @@
 package aragones.sergio.readercollection.presentation.ui.settings
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -16,8 +13,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentSettingsBinding
-import aragones.sergio.readercollection.presentation.extensions.style
-import aragones.sergio.readercollection.presentation.interfaces.MenuProviderInterface
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
@@ -31,10 +26,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProviderInterface {
+class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     //region Protected properties
-    override val menuProviderInterface = this
+    override val menuProviderInterface = null
     override val statusBarStyle = StatusBarStyle.PRIMARY
     //endregion
 
@@ -138,13 +133,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>(), MenuProvide
         viewModel.onDestroy()
     }
     //endregion
-
-    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-    }
-
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-        return false
-    }
 
     //region Private methods
 //    private fun createTargetsForToolbar(): List<TapTarget> {
