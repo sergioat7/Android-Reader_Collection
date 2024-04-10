@@ -159,7 +159,9 @@ fun CustomDropdownMenu(
         MyDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = modifier.fillMaxWidth()
+            modifier = modifier
+                .fillMaxWidth()
+                .background(colorResource(id = R.color.colorSecondary))
         ) {
             for (value in values) {
                 DropdownMenuItem(onClick = {
