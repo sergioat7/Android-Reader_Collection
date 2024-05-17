@@ -27,6 +27,7 @@ leak-canary = "2.9.1"
 compose-bom = "2024.06.00"
 compose-livedata = "1.6.8"
 compose-activity = "1.9.1"
+coil = "2.7.0"
 junit = "4.13.2"
 androidx-test-ext-junit = "1.2.1"
 espresso-core = "3.6.1"
@@ -115,6 +116,9 @@ compose-activity = { group = "androidx.activity", name = "activity-compose", ver
 compose-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-tooling = { module = "androidx.compose.ui:ui-tooling" }
 compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
+
+#Coil
+coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
 #Tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }
