@@ -47,7 +47,6 @@ lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-view
 #Navigation
 navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation" }
-navigation-dynamic-features-fragment = { group = "androidx.navigation", name = "navigation-dynamic-features-fragment", version.ref = "navigation" }
 
 #Moshi
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
@@ -119,7 +118,7 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 
 [bundles]
-navigation = ["navigation-fragment-ktx", "navigation-ui-ktx", "navigation-dynamic-features-fragment"]
+navigation = ["navigation-fragment-ktx", "navigation-ui-ktx"]
 retrofit = ["retrofit", "retrofit-adapter-rxjava", "okhttp3-logging-interceptor", "retrofit-converter-moshi"]
 rx = ["rxjava", "rxkotlin", "rxandroid"]
 firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-config"]
