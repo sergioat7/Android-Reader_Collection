@@ -33,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
-import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.ui.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import kotlinx.coroutines.launch
 
@@ -112,6 +112,7 @@ fun SearchScreenPreview() {
                 0
             )
         ),
+        onSearch = {},
         onBookClick = {},
     )
 }
@@ -119,7 +120,9 @@ fun SearchScreenPreview() {
 @Composable
 fun SearchScreen(
     books: List<Book>,
-    onBookClick: (String) -> Unit
+    query: String? = null,
+    onSearch: (String) -> Unit,
+    onBookClick: (String) -> Unit,
 ) {
 
     val colorSecondary = colorResource(id = R.color.colorSecondary)
@@ -140,17 +143,13 @@ fun SearchScreen(
             .fillMaxSize()
             .background(colorSecondary)
     ) {
-        CustomToolbar(
+        CustomSearchBar(
             title = stringResource(id = R.string.title_search),
+            query = query ?: "",
             modifier = Modifier.background(colorSecondary),
-            elevation = if (showTopButton) 0.dp else 4.dp,
-            actions = {
-                IconButton(onClick = { /*TODO*/ }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = ""
-                    )
-                }
+            elevation = if (showTopButton) 4.dp else 0.dp,
+            onSearch = {
+                onSearch(it)
             }
         )
         Box(modifier = Modifier.fillMaxSize()) {
