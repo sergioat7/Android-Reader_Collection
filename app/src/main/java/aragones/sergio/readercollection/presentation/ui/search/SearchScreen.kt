@@ -22,7 +22,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -121,10 +120,34 @@ fun SearchScreenPreview() {
                 null,
                 false,
                 0
+            ),
+            Book(
+                "",
+                "",
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                null,
+                0.0,
+                0,
+                0.0,
+                null,
+                null,
+                null,
+                null,
+                false,
+                0
             )
         ),
         onSearch = {},
         onBookClick = {},
+        onLoadMoreClick = {},
     )
 }
 
@@ -134,6 +157,7 @@ fun SearchScreen(
     query: String? = null,
     onSearch: (String) -> Unit,
     onBookClick: (String) -> Unit,
+    onLoadMoreClick: () -> Unit,
 ) {
 
     val colorSecondary = colorResource(id = R.color.colorSecondary)
@@ -183,6 +207,7 @@ fun SearchScreen(
                         }
                     },
                     onBookClick = onBookClick,
+                    onLoadMoreClick = onLoadMoreClick,
                 )
             }
         }
@@ -198,6 +223,7 @@ private fun SearchContent(
     onTopButtonClick: () -> Unit,
     onBottomButtonClick: () -> Unit,
     onBookClick: (String) -> Unit,
+    onLoadMoreClick: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = listState) {
@@ -205,7 +231,7 @@ private fun SearchContent(
                 if (it.id.isNotBlank()) {
                     BookItem(book = it, onBookClick = onBookClick)
                 } else {
-                    //TODO: Load More component
+                    LoadMoreButton(onLoadMoreClick)
                 }
             }
         }
