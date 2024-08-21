@@ -13,7 +13,6 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.State
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -32,7 +31,6 @@ class SearchViewModel @Inject constructor(
     private val _books = MutableLiveData<MutableList<Book>>(mutableListOf())
     private val _searchLoading = MutableLiveData(false)
     private val _searchError = MutableLiveData<ErrorResponse?>()
-    private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
     private lateinit var pendingBooks: MutableList<Book>
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
@@ -42,8 +40,6 @@ class SearchViewModel @Inject constructor(
     val books: LiveData<MutableList<Book>> = _books
     val searchLoading: LiveData<Boolean> = _searchLoading
     val searchError: LiveData<ErrorResponse?> = _searchError
-    val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
-    var tutorialShown = userRepository.hasSearchTutorialBeenShown
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     //endregion
 
@@ -120,15 +116,6 @@ class SearchViewModel @Inject constructor(
                 _searchError.value = null
             })
         }
-    }
-
-    fun setPosition(newPosition: ScrollPosition) {
-        _scrollPosition.value = newPosition
-    }
-
-    fun setTutorialAsShown() {
-        userRepository.setHasSearchTutorialBeenShown(true)
-        tutorialShown = true
     }
 
     fun closeDialogs() {
