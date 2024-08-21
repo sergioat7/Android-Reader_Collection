@@ -35,14 +35,10 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
         binding.composeView.setContent {
 
-            val books by viewModel.books.observeAsState()
-            val query by viewModel.query.observeAsState()
-            val searchLoading by viewModel.searchLoading.observeAsState()
+            val state by viewModel.state
 
             SearchScreen(
-                books = books?.toList() ?: listOf(),
-                isLoading = searchLoading ?: false,
-                query = query?.ifBlank { null },
+                state = state,
                 onBookClick = { bookId ->
                     val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(
                         bookId,
@@ -59,18 +55,9 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
                 },
             )
 
-            val error by viewModel.searchError.observeAsState()
             val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
 
-            val text = if (error != null) {
-                val errorText = StringBuilder()
-                if (requireNotNull(error).error.isNotEmpty()) {
-                    errorText.append(requireNotNull(error).error)
-                } else {
-                    errorText.append(resources.getString(requireNotNull(error).errorKey))
-                }
-                errorText.toString()
-            } else if (infoDialogMessageId != -1) {
+            val text = if (infoDialogMessageId != -1) {
                 getString(infoDialogMessageId)
             } else {
                 ""

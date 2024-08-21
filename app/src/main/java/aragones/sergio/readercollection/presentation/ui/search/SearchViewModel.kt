@@ -5,6 +5,8 @@
 
 package aragones.sergio.readercollection.presentation.ui.search
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
@@ -26,20 +28,16 @@ class SearchViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
+    private var query = ""
     private var page: Int = 1
-    private val _query = MutableLiveData("")
-    private val _books = MutableLiveData<MutableList<Book>>(mutableListOf())
-    private val _searchLoading = MutableLiveData(false)
-    private val _searchError = MutableLiveData<ErrorResponse?>()
+    private val books = mutableListOf<Book>()
     private lateinit var pendingBooks: MutableList<Book>
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
-    var query: LiveData<String> = _query
-    val books: LiveData<MutableList<Book>> = _books
-    val searchLoading: LiveData<Boolean> = _searchLoading
-    val searchError: LiveData<ErrorResponse?> = _searchError
+    var state: MutableState<SearchUiState> = mutableStateOf(SearchUiState.Empty)
+        private set
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     //endregion
 
@@ -65,56 +63,64 @@ class SearchViewModel @Inject constructor(
 
         if (reload) {
             page = 1
-            _books.value = mutableListOf()
+            books.clear()
         }
 
         if (query != null) {
-            _query.value = query
+            this.query = query
         }
 
-        _searchLoading.value = true
-        booksRepository.searchBooks(_query.value ?: "", page, null).subscribeBy(
+        state.value = when(val currentState = state.value) {
+            is SearchUiState.Empty -> SearchUiState.Success(
+                isLoading = true,
+                query = this.query,
+                books = listOf(),
+            )
+            is SearchUiState.Success -> currentState.copy(isLoading = true)
+            is SearchUiState.Error -> currentState.copy(isLoading = true)
+        }
+
+        booksRepository.searchBooks(this.query, page, null).subscribeBy(
             onSuccess = { newBooks ->
 
                 page++
-                val currentValues = _books.value ?: mutableListOf()
-                if (currentValues.isEmpty()) {
-                    currentValues.add(Book(id = ""))
+                if(books.isEmpty()) {
+                    books.add(Book(id = ""))
                 }
-                currentValues.addAll(currentValues.size - 1, newBooks)
+                books.addAll(books.size - 1, newBooks)
                 if (newBooks.isEmpty()) {
-                    currentValues.removeLast()
+                    books.removeLast()
                 }
-                _books.value = currentValues
-                _searchLoading.value = false
+
+                state.value = SearchUiState.Success(
+                    isLoading = false,
+                    query = this.query,
+                    books = books,
+                )
             },
             onError = {
 
-                _searchLoading.value = false
-                _searchError.value = ErrorResponse("", R.string.error_search)
-                _searchError.value = null
+                state.value = SearchUiState.Error(
+                    isLoading = false,
+                    query = this.query,
+                    value = ErrorResponse("", R.string.error_search),
+                )
             }
         ).addTo(disposables)
     }
 
     fun addBook(position: Int) {
-        _books.value?.get(position)?.let { newBook ->
 
-            newBook.state = BookState.PENDING
-            newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-            _searchLoading.value = true
-            booksRepository.createBook(newBook, success = {
+        val newBook = books[position]
+        newBook.state = BookState.PENDING
+        newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
+        booksRepository.createBook(newBook, success = {
 
-                pendingBooks.add(newBook)
-                _infoDialogMessageId.value = R.string.book_saved
-                _searchLoading.value = false
-            }, failure = {
-
-                _searchLoading.value = false
-                _searchError.value = it
-                _searchError.value = null
-            })
-        }
+            pendingBooks.add(newBook)
+            _infoDialogMessageId.value = R.string.book_saved
+        }, failure = {
+            _infoDialogMessageId.value = it.errorKey
+        })
     }
 
     fun closeDialogs() {

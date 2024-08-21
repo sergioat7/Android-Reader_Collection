@@ -45,6 +45,7 @@
     <string name="read">Leídos</string>
     <string name="show_all">Ver todo</string>
     <string name="no_results_text">No hemos encontrado resultados</string>
+    <string name="no_search_yet_text">Busca un libro para añadirlo a tu colección</string>
 
     //SEARCH
     <string name="title_search">Búsqueda</string>

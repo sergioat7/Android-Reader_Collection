@@ -3,6 +3,8 @@
  * Created by Sergio Aragonés on 10/4/2024
  */
 
+@file:OptIn(ExperimentalMaterialApi::class)
+
 package aragones.sergio.readercollection.presentation.ui.search
 
 import androidx.annotation.DrawableRes
@@ -44,6 +46,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
 import aragones.sergio.readercollection.presentation.ui.components.CustomSearchBar
@@ -51,105 +54,108 @@ import aragones.sergio.readercollection.presentation.ui.components.NoResultsComp
 import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import kotlinx.coroutines.launch
 
-@Preview
+@Preview(showBackground = true)
 @Composable
-fun SearchScreenPreview() {
+fun SearchScreenPreviewSuccess() {
     SearchScreen(
-        books = listOf(
-            Book(
-                "1",
-                "Harry Potter y la Piedra Filosofal",
-                null,
-                listOf("J.K. Rowling"),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                6.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0
+        state = SearchUiState.Success(
+            books = listOf(
+                Book(
+                    "1",
+                    "Harry Potter y la Piedra Filosofal",
+                    null,
+                    listOf("J.K. Rowling"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    0,
+                    null,
+                    0.0,
+                    0,
+                    6.0,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    0
+                ),
+                Book(
+                    "2",
+                    "Large title for another searched book in the list that should not be shown",
+                    null,
+                    listOf("Author"),
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    0,
+                    null,
+                    0.0,
+                    0,
+                    5.0,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    0
+                ),
+                Book(
+                    "3",
+                    "Title",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    0,
+                    null,
+                    0.0,
+                    0,
+                    0.0,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    0
+                ),
+                Book(
+                    "",
+                    "",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    0,
+                    null,
+                    0.0,
+                    0,
+                    0.0,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    0
+                )
             ),
-            Book(
-                "2",
-                "Large title for another searched book in the list",
-                null,
-                listOf("Author"),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                5.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0
-            ),
-            Book(
-                "3",
-                "Title",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                0.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0
-            ),
-            Book(
-                "",
-                "",
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                0.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0
-            )
+            isLoading = true,
+            query = null,
         ),
-        isLoading = true,
         onSearch = {},
         onBookClick = {},
         onLoadMoreClick = {},
@@ -157,12 +163,25 @@ fun SearchScreenPreview() {
     )
 }
 
-@OptIn(ExperimentalMaterialApi::class)
+@Preview(showBackground = true)
+@Composable
+fun SearchScreenPreviewError() {
+    SearchScreen(
+        state = SearchUiState.Error(
+            isLoading = false,
+            query = null,
+            value = ErrorResponse("", 0)
+        ),
+        onSearch = {},
+        onBookClick = {},
+        onLoadMoreClick = {},
+        onRefresh = {},
+    )
+}
+
 @Composable
 fun SearchScreen(
-    books: List<Book>,
-    isLoading: Boolean,
-    query: String? = null,
+    state: SearchUiState,
     onSearch: (String) -> Unit,
     onBookClick: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
@@ -181,6 +200,12 @@ fun SearchScreen(
         derivedStateOf { !listState.reachedBottom() }
     }
     val coroutineScope = rememberCoroutineScope()
+
+    val (isLoading, query) = when (state) {
+        SearchUiState.Empty -> false to null
+        is SearchUiState.Success -> state.isLoading to state.query
+        is SearchUiState.Error -> state.isLoading to state.query
+    }
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isLoading,
@@ -201,40 +226,48 @@ fun SearchScreen(
                 onSearch(it)
             }
         )
+
+        val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
+
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .pullRefresh(pullRefreshState)
+            modifier = modifier.fillMaxSize(),
         ) {
-            if (books.isEmpty() && !isLoading) {
-                NoResultsContent()
-            } else {
-                SearchContent(
-                    books = books,
-                    listState = listState,
-                    showTopButton = showTopButton,
-                    showBottomButton = showBottomButton,
-                    onTopButtonClick = {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(index = 0)
-                        }
-                    },
-                    onBottomButtonClick = {
-                        coroutineScope.launch {
-                            listState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
-                        }
-                    },
-                    onBookClick = onBookClick,
-                    onLoadMoreClick = onLoadMoreClick,
-                )
-                PullRefreshIndicator(
-                    refreshing = isLoading,
-                    state = pullRefreshState,
-                    modifier = Modifier.align(Alignment.TopCenter),
-                    backgroundColor = colorSecondary,
-                    contentColor = colorResource(id = R.color.colorPrimary),
-                )
+            when (state) {
+                is SearchUiState.Empty -> NoResultsComponent(text = stringResource(id = R.string.no_search_yet_text))
+                is SearchUiState.Success -> {
+                    if (state.books.isEmpty() && !state.isLoading) {
+                        NoResultsContent()
+                    } else {
+                        SearchContent(
+                            books = state.books,
+                            listState = listState,
+                            showTopButton = showTopButton,
+                            showBottomButton = showBottomButton,
+                            onTopButtonClick = {
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(index = 0)
+                                }
+                            },
+                            onBottomButtonClick = {
+                                coroutineScope.launch {
+                                    listState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
+                                }
+                            },
+                            onBookClick = onBookClick,
+                            onLoadMoreClick = onLoadMoreClick,
+                        )
+                    }
+                }
+
+                is SearchUiState.Error -> ErrorContent()
             }
+            PullRefreshIndicator(
+                refreshing = isLoading,
+                state = pullRefreshState,
+                modifier = Modifier.align(Alignment.TopCenter),
+                backgroundColor = colorSecondary,
+                contentColor = colorResource(id = R.color.colorPrimary),
+            )
         }
     }
 }
@@ -244,6 +277,15 @@ private fun NoResultsContent() {
     LazyColumn {
         item {
             NoResultsComponent()
+        }
+    }
+}
+
+@Composable
+private fun ErrorContent() {
+    LazyColumn {
+        item {
+            NoResultsComponent(text = stringResource(id = R.string.error_server))
         }
     }
 }
