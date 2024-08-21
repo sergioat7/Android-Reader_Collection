@@ -20,9 +20,13 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -145,19 +149,24 @@ fun SearchScreenPreview() {
                 0
             )
         ),
+        isLoading = true,
         onSearch = {},
         onBookClick = {},
         onLoadMoreClick = {},
+        onRefresh = {},
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SearchScreen(
     books: List<Book>,
+    isLoading: Boolean,
     query: String? = null,
     onSearch: (String) -> Unit,
     onBookClick: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
+    onRefresh: () -> Unit,
 ) {
 
     val colorSecondary = colorResource(id = R.color.colorSecondary)
@@ -173,6 +182,11 @@ fun SearchScreen(
     }
     val coroutineScope = rememberCoroutineScope()
 
+    val pullRefreshState = rememberPullRefreshState(
+        refreshing = isLoading,
+        onRefresh = onRefresh
+    )
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -187,9 +201,13 @@ fun SearchScreen(
                 onSearch(it)
             }
         )
-        Box(modifier = Modifier.fillMaxSize()) {
-            if (books.isEmpty()) {
-                NoResultsComponent()
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .pullRefresh(pullRefreshState)
+        ) {
+            if (books.isEmpty() && !isLoading) {
+                NoResultsContent()
             } else {
                 SearchContent(
                     books = books,
@@ -209,7 +227,23 @@ fun SearchScreen(
                     onBookClick = onBookClick,
                     onLoadMoreClick = onLoadMoreClick,
                 )
+                PullRefreshIndicator(
+                    refreshing = isLoading,
+                    state = pullRefreshState,
+                    modifier = Modifier.align(Alignment.TopCenter),
+                    backgroundColor = colorSecondary,
+                    contentColor = colorResource(id = R.color.colorPrimary),
+                )
             }
+        }
+    }
+}
+
+@Composable
+private fun NoResultsContent() {
+    LazyColumn {
+        item {
+            NoResultsComponent()
         }
     }
 }
