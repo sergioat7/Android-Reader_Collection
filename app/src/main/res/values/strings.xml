@@ -41,6 +41,7 @@
     <string name="read">Read</string>
     <string name="show_all">Show all</string>
     <string name="no_results_text">No results found</string>
+    <string name="no_search_yet_text">Search for a book in order to add it to your collection</string>
 
     //SEARCH
     <string name="title_search">Search</string>
