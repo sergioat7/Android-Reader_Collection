@@ -9,15 +9,21 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -26,15 +32,20 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
 import aragones.sergio.readercollection.presentation.ui.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
+import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import kotlinx.coroutines.launch
 
 @Preview
@@ -237,6 +248,45 @@ private fun ListButton(
             painter = painterResource(id = image),
             contentDescription = ""
         )
+    }
+}
+
+@Composable
+private fun LoadMoreButton(onClick: () -> Unit) {
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+    ) {
+        Button(
+            onClick = onClick,
+            modifier = Modifier.align(Alignment.Center),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = colorResource(id = R.color.colorPrimary),
+                disabledBackgroundColor = colorResource(id = R.color.colorPrimaryLight)
+            ),
+            shape = RoundedCornerShape(15.dp),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_add_circle_outline),
+                    contentDescription = "",
+                    tint = colorResource(id = R.color.textTertiary),
+                )
+                Text(
+                    text = stringResource(id = R.string.load_more),
+                    modifier = Modifier.padding(12.dp),
+                    style = TextStyle(
+                        color = colorResource(id = R.color.textTertiary),
+                        fontFamily = robotoSerifFamily,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
+                    ),
+                    maxLines = 1,
+                )
+            }
+        }
     }
 }
 
