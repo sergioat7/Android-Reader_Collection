@@ -44,7 +44,7 @@ import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomDropdownType
-import com.aragones.sergio.util.State
+import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.StatusBarStyle
 import com.aragones.sergio.util.extensions.isNotBlank
 import com.aragones.sergio.util.extensions.toDate
@@ -453,7 +453,7 @@ class BookDetailFragment :
                 FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
             val state =
                 STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
-            if (book?.readingDate == null && readingDate == null && state == State.READ) readingDate =
+            if (book?.readingDate == null && readingDate == null && state == BookState.READ) readingDate =
                 Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
 

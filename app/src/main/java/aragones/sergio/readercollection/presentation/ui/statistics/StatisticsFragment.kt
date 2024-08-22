@@ -32,7 +32,7 @@ import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.utils.Constants
-import com.aragones.sergio.util.State
+import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.StatusBarStyle
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.toDate
@@ -560,7 +560,7 @@ class StatisticsFragment :
     private fun showBooks(year: Int?, month: Int?, author: String?, format: String?) {
 
         val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
-            State.READ,
+            BookState.READ,
             viewModel.sortParam,
             viewModel.isSortDescending,
             "",

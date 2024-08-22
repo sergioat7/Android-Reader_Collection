@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.domain.model
 
 import androidx.room.Ignore
-import com.aragones.sergio.util.State
+import com.aragones.sergio.util.BookState
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.Date
@@ -86,10 +86,10 @@ data class Book(
     }
 
     fun isPending(): Boolean {
-        return state == State.PENDING
+        return state == BookState.PENDING
     }
 
     fun isReading(): Boolean {
-        return state == State.READING
+        return state == BookState.READING
     }
 }

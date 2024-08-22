@@ -50,11 +50,12 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
                     )
                     findNavController().navigate(action)
                 },
-                onSearch = this::searchBooks,
+                onSearch = {
+                    viewModel.searchBooks(reload = true, query = it)
+                },
                 onLoadMoreClick = viewModel::searchBooks,
                 onRefresh = {
-                    viewModel.reloadData()
-                    viewModel.searchBooks()
+                    viewModel.searchBooks(reload = true)
                 },
             )
 
@@ -90,15 +91,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         super.onDestroy()
 
         viewModel.onDestroy()
-    }
-    //endregion
-
-    //region Private methods
-    private fun searchBooks(query: String) {
-
-        viewModel.setSearch(query)
-        viewModel.reloadData()
-        viewModel.searchBooks()
     }
     //endregion
 }

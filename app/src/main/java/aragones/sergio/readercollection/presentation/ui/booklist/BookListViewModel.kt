@@ -16,7 +16,7 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import com.aragones.sergio.util.ScrollPosition
-import com.aragones.sergio.util.State
+import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -52,7 +52,7 @@ class BookListViewModel @Inject constructor(
     val booksError: LiveData<ErrorResponse> = _booksError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
     val arePendingBooks: Boolean
-        get() = state == State.PENDING
+        get() = state == BookState.PENDING
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 
