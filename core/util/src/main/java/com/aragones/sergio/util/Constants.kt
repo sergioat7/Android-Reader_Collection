@@ -49,7 +49,7 @@ object Constants {
     }
 }
 
-object State {
+object BookState {
     const val PENDING = "PENDING"
     const val READING = "READING"
     const val READ = "READ"

@@ -26,7 +26,7 @@ import aragones.sergio.readercollection.presentation.interfaces.OnStartDraggingL
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.createTargetForBottomNavigationView
 import com.aragones.sergio.util.Constants
-import com.aragones.sergio.util.State
+import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
@@ -165,11 +165,11 @@ class BooksFragment :
 
         when (view) {
             binding.buttonShowAllPending -> {
-                onShowAllItemsClick(State.PENDING)
+                onShowAllItemsClick(BookState.PENDING)
             }
 
             binding.buttonShowAllRead -> {
-                onShowAllItemsClick(State.READ)
+                onShowAllItemsClick(BookState.READ)
             }
         }
     }

@@ -13,7 +13,7 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import com.aragones.sergio.util.State
+import com.aragones.sergio.util.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -61,7 +61,16 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun searchBooks() {
+    fun searchBooks(reload: Boolean = false, query: String? = null) {
+
+        if (reload) {
+            page = 1
+            _books.value = mutableListOf()
+        }
+
+        if (query != null) {
+            _query.value = query
+        }
 
         _searchLoading.value = true
         booksRepository.searchBooks(_query.value ?: "", page, null).subscribeBy(
@@ -88,20 +97,10 @@ class SearchViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun reloadData() {
-
-        page = 1
-        _books.value = mutableListOf()
-    }
-
-    fun setSearch(query: String) {
-        _query.value = query
-    }
-
     fun addBook(position: Int) {
         _books.value?.get(position)?.let { newBook ->
 
-            newBook.state = State.PENDING
+            newBook.state = BookState.PENDING
             newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
             _searchLoading.value = true
             booksRepository.createBook(newBook, success = {
