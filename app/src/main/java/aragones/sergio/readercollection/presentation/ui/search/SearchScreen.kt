@@ -8,12 +8,14 @@
 package aragones.sergio.readercollection.presentation.ui.search
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
@@ -200,11 +202,13 @@ fun SearchScreen(
     val listState = rememberLazyListState()
     val showTopButton by remember {
         derivedStateOf {
-            listState.firstVisibleItemIndex > 0
+            listState.firstVisibleItemIndex != 0
         }
     }
     val showBottomButton by remember {
-        derivedStateOf { !listState.reachedBottom() }
+        derivedStateOf {
+            !listState.reachedBottom()
+        }
     }
     val coroutineScope = rememberCoroutineScope()
 
@@ -336,21 +340,30 @@ private fun SearchContent(
             }
         }
 
-        if (showTopButton) {
-            ListButton(
-                image = R.drawable.ic_double_arrow_up,
-                modifier = Modifier.align(Alignment.TopEnd),
-                onClick = onTopButtonClick,
-            )
-        }
+        val topOffset by animateFloatAsState(
+            targetValue = if (showTopButton) 0f else 100f,
+            label = ""
+        )
+        val bottomOffset by animateFloatAsState(
+            targetValue = if (showBottomButton) 0f else 100f,
+            label = ""
+        )
 
-        if (showBottomButton) {
-            ListButton(
-                image = R.drawable.ic_double_arrow_down,
-                modifier = Modifier.align(Alignment.BottomEnd),
-                onClick = onBottomButtonClick,
-            )
-        }
+        ListButton(
+            image = R.drawable.ic_double_arrow_up,
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset(x = topOffset.dp),
+            onClick = onTopButtonClick,
+        )
+
+        ListButton(
+            image = R.drawable.ic_double_arrow_down,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset(x = bottomOffset.dp),
+            onClick = onBottomButtonClick,
+        )
     }
 }
 
