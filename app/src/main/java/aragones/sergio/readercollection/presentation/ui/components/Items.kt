@@ -6,22 +6,34 @@
 package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -189,6 +201,88 @@ fun BookInfo(book: Book) {
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun SwipeItem(
+    direction: DismissDirection,
+    dismissValue: DismissValue,
+    threshold: Float,
+    onSwipe: () -> Unit,
+    background: @Composable RowScope.() -> Unit,
+    content: @Composable RowScope.() -> Unit,
+) {
+    val swipeState = rememberDismissState(
+        confirmStateChange = {
+            if (it == dismissValue) onSwipe()
+            false
+        }
+    )
+    SwipeToDismiss(
+        state = swipeState,
+        directions = setOf(direction),
+        dismissThresholds = {
+            FractionalThreshold(threshold)
+        },
+        background = background,
+        dismissContent = content
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SwipeItemBackgroundToLeftPreview() {
+    SwipeItemBackground(
+        dismissValue = DismissValue.DismissedToStart,
+        color = colorResource(id = R.color.colorTertiary),
+        icon = R.drawable.ic_save_book,
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SwipeItemBackgroundToRightPreview() {
+    SwipeItemBackground(
+        dismissValue = DismissValue.DismissedToEnd,
+        color = colorResource(id = R.color.colorTertiary),
+        icon = R.drawable.ic_save_book,
+    )
+}
+
+@Composable
+fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = null) {
+    Row(modifier = Modifier.fillMaxSize()) {
+
+        val alignment = when (dismissValue) {
+            DismissValue.Default -> Alignment.Center
+            DismissValue.DismissedToEnd -> Alignment.CenterStart
+            DismissValue.DismissedToStart -> Alignment.CenterEnd
+        }
+        if (dismissValue == DismissValue.DismissedToStart) {
+            Spacer(modifier = Modifier.fillMaxWidth(.1f))
+        }
+        Box(
+            modifier = Modifier
+                .background(color)
+                .fillMaxHeight()
+                .run {
+                    if (dismissValue == DismissValue.DismissedToEnd) fillMaxWidth(0.9f)
+                    else fillMaxWidth()
+                },
+            contentAlignment = alignment,
+        ) {
+            if (icon != null) {
+                Icon(
+                    painterResource(id = icon),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .size(200.dp)
+                        .padding(48.dp),
+                )
+            }
         }
     }
 }
