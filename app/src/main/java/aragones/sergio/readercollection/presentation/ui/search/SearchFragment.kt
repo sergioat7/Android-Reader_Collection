@@ -46,6 +46,7 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
                     )
                     findNavController().navigate(action)
                 },
+                onSwipe = viewModel::addBook,
                 onSearch = {
                     viewModel.searchBooks(reload = true, query = it)
                 },

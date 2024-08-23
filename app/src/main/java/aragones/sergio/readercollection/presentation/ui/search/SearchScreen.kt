@@ -22,6 +22,8 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
@@ -51,6 +53,8 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
 import aragones.sergio.readercollection.presentation.ui.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
+import aragones.sergio.readercollection.presentation.ui.components.SwipeItem
+import aragones.sergio.readercollection.presentation.ui.components.SwipeItemBackground
 import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import kotlinx.coroutines.launch
 
@@ -158,6 +162,7 @@ fun SearchScreenPreviewSuccess() {
         ),
         onSearch = {},
         onBookClick = {},
+        onSwipe = {},
         onLoadMoreClick = {},
         onRefresh = {},
     )
@@ -174,6 +179,7 @@ fun SearchScreenPreviewError() {
         ),
         onSearch = {},
         onBookClick = {},
+        onSwipe = {},
         onLoadMoreClick = {},
         onRefresh = {},
     )
@@ -184,6 +190,7 @@ fun SearchScreen(
     state: SearchUiState,
     onSearch: (String) -> Unit,
     onBookClick: (String) -> Unit,
+    onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
     onRefresh: () -> Unit,
 ) {
@@ -254,6 +261,7 @@ fun SearchScreen(
                                 }
                             },
                             onBookClick = onBookClick,
+                            onSwipe = onSwipe,
                             onLoadMoreClick = onLoadMoreClick,
                         )
                     }
@@ -299,13 +307,29 @@ private fun SearchContent(
     onTopButtonClick: () -> Unit,
     onBottomButtonClick: () -> Unit,
     onBookClick: (String) -> Unit,
+    onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = listState) {
-            items(items = books, key = { it.id }) {
-                if (it.id.isNotBlank()) {
-                    BookItem(book = it, onBookClick = onBookClick)
+            items(items = books, key = { it.id }) { book ->
+                if (book.id.isNotBlank()) {
+                    SwipeItem(
+                        direction = DismissDirection.EndToStart,
+                        dismissValue = DismissValue.DismissedToStart,
+                        threshold = 0.6f,
+                        onSwipe = { onSwipe(book.id) },
+                        background = {
+                            SwipeItemBackground(
+                                dismissValue = DismissValue.DismissedToStart,
+                                color = colorResource(id = R.color.colorTertiary),
+                                icon = R.drawable.ic_save_book,
+                            )
+                        },
+                        content = {
+                            BookItem(book = book, onBookClick = onBookClick)
+                        }
+                    )
                 } else {
                     LoadMoreButton(onLoadMoreClick)
                 }
