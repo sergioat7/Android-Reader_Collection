@@ -109,9 +109,14 @@ class SearchViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun addBook(position: Int) {
+    fun addBook(bookId: String) {
 
-        val newBook = books[position]
+        if(pendingBooks.firstOrNull { it.id == bookId } != null) {
+            _infoDialogMessageId.value = R.string.error_resource_found
+            return
+        }
+
+        val newBook = books.firstOrNull { it.id == bookId } ?: return
         newBook.state = BookState.PENDING
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         booksRepository.createBook(newBook, success = {
