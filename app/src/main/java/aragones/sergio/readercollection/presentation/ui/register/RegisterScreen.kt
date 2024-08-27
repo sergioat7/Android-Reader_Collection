@@ -14,9 +14,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,6 +44,10 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
     var confirmPasswordVisibility by rememberSaveable { mutableStateOf(false) }
     val registerFormState by viewModel.registerFormState.observeAsState(initial = LoginFormState())
     val loading by viewModel.registerLoading.observeAsState(initial = false)
+
+    val buttonEnabled by remember {
+        derivedStateOf { registerFormState.isDataValid }
+    }
 
     val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
@@ -120,7 +126,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 .width(size200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = registerFormState.isDataValid
+            enabled = buttonEnabled
         ) {
             viewModel.register(username, password)
         }

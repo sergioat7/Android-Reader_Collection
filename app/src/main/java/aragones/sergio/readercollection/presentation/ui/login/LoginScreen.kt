@@ -18,9 +18,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -48,6 +50,10 @@ fun LoginScreen(viewModel: LoginViewModel) {
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     val loginFormState by viewModel.loginFormState.observeAsState(initial = LoginFormState())
     val loading by viewModel.loginLoading.observeAsState(initial = false)
+
+    val buttonEnabled by remember {
+        derivedStateOf { loginFormState.isDataValid }
+    }
 
     val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
@@ -106,7 +112,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 .width(size200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = loginFormState.isDataValid
+            enabled = buttonEnabled
         ) {
             viewModel.login(username, password)
         }
