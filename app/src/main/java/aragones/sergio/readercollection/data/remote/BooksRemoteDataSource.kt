@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.data.remote
 
 import android.util.Log
+import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.di.MainDispatcher
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
@@ -36,6 +37,7 @@ class BooksRemoteDataSource @Inject constructor(
     private val PAGE_PARAM = "startIndex"
     private val RESULTS_PARAM = "maxResults"
     private val ORDER_PARAM = "orderBy"
+    private val API_KEY = "key"
     private val RESULTS = 20
     private val externalScope = CoroutineScope(Job() + mainDispatcher)
     private val moshi = Moshi.Builder().build()
@@ -191,10 +193,12 @@ class BooksRemoteDataSource @Inject constructor(
         order: String?
     ): Single<GoogleBookListResponse> {
 
-        val params: MutableMap<String, String> = HashMap()
-        params[SEARCH_PARAM] = query
-        params[PAGE_PARAM] = ((page - 1) * RESULTS).toString()
-        params[RESULTS_PARAM] = RESULTS.toString()
+        val params = mutableMapOf(
+            API_KEY to BuildConfig.API_KEY,
+            SEARCH_PARAM to query,
+            PAGE_PARAM to ((page - 1) * RESULTS).toString(),
+            RESULTS_PARAM to RESULTS.toString()
+        )
         if (order != null) {
             params[ORDER_PARAM] = order
         }
@@ -202,7 +206,9 @@ class BooksRemoteDataSource @Inject constructor(
     }
 
     fun getBook(volumeId: String): Single<GoogleBookResponse> {
-        return googleApiService.getGoogleBook(volumeId)
+
+        val params = mapOf(API_KEY to BuildConfig.API_KEY)
+        return googleApiService.getGoogleBook(volumeId, params)
     }
 
     fun fetchRemoteConfigValues(language: String) {

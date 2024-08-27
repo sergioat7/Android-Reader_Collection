@@ -18,5 +18,8 @@ interface GoogleApiService {
     fun searchGoogleBooks(@QueryMap queryParams: Map<String, String>): Single<GoogleBookListResponse>
 
     @GET("volumes/{volumeId}")
-    fun getGoogleBook(@Path(value = "volumeId") volumeId: String): Single<GoogleBookResponse>
+    fun getGoogleBook(
+        @Path(value = "volumeId") volumeId: String,
+        @QueryMap queryParams: Map<String, String>
+    ): Single<GoogleBookResponse>
 }

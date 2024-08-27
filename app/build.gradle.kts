@@ -47,6 +47,8 @@ android {
         versionName = "$versionMajor.$versionMinor.$versionPatch"
 
         resourceConfigurations += listOf("en", "es")
+
+        buildConfigField("String", "API_KEY", keystoreProperties.getProperty("api.key"))
     }
 
     buildTypes {
