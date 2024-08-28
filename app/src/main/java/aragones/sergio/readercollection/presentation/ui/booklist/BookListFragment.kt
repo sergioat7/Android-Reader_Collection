@@ -237,7 +237,14 @@ class BookListFragment :
     private fun setupBindings() {
 
         viewModel.books.observe(viewLifecycleOwner) {
-            booksAdapter.setBooks(it.toMutableList(), true)
+            it?.toMutableList()?.let { books ->
+
+                booksAdapter.setBooks(books, true)
+                if (books.isEmpty()) {
+                    goBack.value = true
+                }
+            }
+
         }
 
         viewModel.booksLoading.observe(viewLifecycleOwner) { isLoading ->
