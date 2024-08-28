@@ -155,15 +155,24 @@ class BookListViewModel @Inject constructor(
                 book.readingDate.getMonthNumber() == month
             }
         }
-        val sortedBooks = when (sortParam) {
-            "title" -> filteredBooks.sortedBy { it.title }
-            "publishedDate" -> filteredBooks.sortedBy { it.publishedDate }
-            "readingDate" -> filteredBooks.sortedBy { it.readingDate }
-            "pageCount" -> filteredBooks.sortedBy { it.pageCount }
-            "rating" -> filteredBooks.sortedBy { it.rating }
-            else -> filteredBooks.sortedBy { it.id }
-        }.sortedBy { it.priority }
-        _books.value = if (isSortDescending) sortedBooks.reversed() else sortedBooks
+
+        val sortComparator = compareBy<Book> {
+            when (sortParam) {
+                "title" -> it.title
+                "publishedDate" -> it.publishedDate
+                "readingDate" -> it.readingDate
+                "pageCount" -> it.pageCount
+                "rating" -> it.rating
+                else -> it.id
+            }
+        }
+        val comparator = if (arePendingBooks) {
+            compareBy<Book> { it.priority }.then(sortComparator)
+        } else {
+            sortComparator.thenBy { it.priority }
+        }
+        _books.value = filteredBooks.sortedWith(comparator)
+            .let { if (isSortDescending && !arePendingBooks) it.reversed() else it }
     }
 
     private fun noBooksError() {
