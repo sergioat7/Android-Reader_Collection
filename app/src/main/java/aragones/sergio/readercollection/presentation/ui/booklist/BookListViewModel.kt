@@ -39,7 +39,7 @@ class BookListViewModel @Inject constructor(
     private var month: Int = state["month"] ?: -1
     private var author: String? = state["author"]
     private var format: String? = state["format"]
-    private val _books = MutableLiveData<List<Book>>(listOf())
+    private val _books = MutableLiveData<List<Book>?>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
@@ -47,7 +47,7 @@ class BookListViewModel @Inject constructor(
 
     //region Public properties
     var query: String = state["query"] ?: ""
-    val books: LiveData<List<Book>> = _books
+    val books: LiveData<List<Book>?> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
     val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
