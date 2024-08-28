@@ -451,8 +451,9 @@ class BookDetailFragment :
             val rating = ratingBar.rating.toDouble() * 2
             val format =
                 FORMATS.firstOrNull { it.name == dropdownTextInputLayoutFormat.getValue() }?.id
-            val state =
+            var state =
                 STATES.firstOrNull { it.name == dropdownTextInputLayoutState.getValue() }?.id
+            if (state != BookState.READ && book?.readingDate == null && readingDate != null) state = BookState.READ
             if (book?.readingDate == null && readingDate == null && state == BookState.READ) readingDate =
                 Date()
             val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
