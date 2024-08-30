@@ -27,6 +27,7 @@ import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -46,7 +47,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -85,8 +85,8 @@ fun CustomDropdownMenu(
     modifier: Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
-    textColor: Color = colorResource(id = R.color.textPrimary),
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textColor: Color = MaterialTheme.colors.primary,
     values: List<String>,
     onOptionSelected: (String) -> Unit,
 ) {
@@ -124,6 +124,7 @@ fun CustomDropdownMenu(
                 Icon(
                     if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = "",
+                    tint = textColor,
                 )
             }
         }
@@ -137,8 +138,8 @@ fun CustomDropdownMenu(
                 .clickable { expanded = true },
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorResource(id = R.color.colorPrimary),
-                unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight)
+                focusedBorderColor = MaterialTheme.colors.primary,
+                unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
             ),
             textStyle = TextStyle(
                 color = textColor,
@@ -161,7 +162,7 @@ fun CustomDropdownMenu(
             onDismissRequest = { expanded = false },
             modifier = modifier
                 .fillMaxWidth()
-                .background(colorResource(id = R.color.colorSecondary))
+                .background(MaterialTheme.colors.background),
         ) {
             for (value in values) {
                 DropdownMenuItem(onClick = {
@@ -293,7 +294,7 @@ fun MyDropdownMenuContent(
                 transformOrigin = transformOriginState.value
             },
         elevation = MenuElevation,
-        backgroundColor = colorResource(id = R.color.colorSecondary)
+        backgroundColor = MaterialTheme.colors.background
     ) {
         Column(
             modifier = modifier

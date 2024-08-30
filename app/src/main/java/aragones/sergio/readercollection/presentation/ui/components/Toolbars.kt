@@ -16,6 +16,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -30,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -77,7 +77,7 @@ fun CustomToolbar(
             Text(
                 text = title,
                 style = TextStyle(
-                    color = colorResource(id = R.color.textPrimary),
+                    color = MaterialTheme.colors.primary,
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
@@ -85,7 +85,7 @@ fun CustomToolbar(
             )
         },
         modifier = modifier,
-        backgroundColor = colorResource(id = R.color.colorSecondary),
+        backgroundColor = MaterialTheme.colors.background,
         elevation = elevation,
         navigationIcon = onBack?.let {
             {
@@ -117,7 +117,7 @@ fun CustomSearchBar(
     title: String,
     query: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = colorResource(id = R.color.colorSecondary),
+    backgroundColor: Color = MaterialTheme.colors.background,
     elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
     onSearch: ((String) -> Unit),
@@ -137,7 +137,7 @@ fun CustomSearchBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_back_blue),
                     contentDescription = "",
-                    tint = colorResource(id = R.color.colorPrimary),
+                    tint = MaterialTheme.colors.primary,
                 )
             }
         }
@@ -165,7 +165,7 @@ fun CustomSearchBar(
                 Text(
                     text = query.ifBlank { title },
                     style = TextStyle(
-                        color = colorResource(id = R.color.textPrimary),
+                        color = MaterialTheme.colors.primary,
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
@@ -185,7 +185,7 @@ fun CustomSearchBar(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_search),
                         contentDescription = "",
-                        tint = colorResource(id = R.color.colorPrimary),
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -197,8 +197,8 @@ fun CustomSearchBar(
 fun SearchBar(
     text: String,
     modifier: Modifier = Modifier,
-    inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
-    textColor: Color = colorResource(id = R.color.textPrimary),
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textColor: Color = MaterialTheme.colors.primary,
     fontSize: Float = dimensionResource(id = R.dimen.text_size_16sp).value,
     fontWeight: FontWeight = FontWeight.Normal,
     onSearch: (String) -> Unit,
@@ -238,7 +238,7 @@ fun SearchBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_clear_text),
                     contentDescription = "",
-                    tint = colorResource(id = R.color.colorPrimary),
+                    tint = MaterialTheme.colors.primary,
                 )
             }
         }
@@ -249,8 +249,8 @@ fun SearchBar(
         modifier = modifier.focusRequester(focusRequester),
         shape = RoundedCornerShape(10.dp),
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.colorPrimary),
-            unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight),
+            focusedBorderColor = MaterialTheme.colors.primary,
+            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
         ),
         textStyle = TextStyle(
             color = textColor,

@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -27,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -40,6 +40,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.description
 
 val robotoSerifFamily = FontFamily(
     Font(R.font.roboto_serif_thin, FontWeight.Thin),
@@ -69,7 +70,7 @@ fun ConfirmationAlertDialog(
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Surface(
-                color = colorResource(id = R.color.colorSecondary),
+                color = MaterialTheme.colors.background,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.testTag("confirmationAlertDialog"),
             ) {
@@ -114,7 +115,7 @@ fun InformationAlertDialog(
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         ) {
             Surface(
-                color = colorResource(id = R.color.colorSecondary),
+                color = MaterialTheme.colors.background,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.testTag("informationAlertDialog"),
             ) {
@@ -153,17 +154,13 @@ fun TextFieldAlertDialog(
         var text by rememberSaveable { mutableStateOf("") }
         val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
         val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
-        val colorPrimary = colorResource(id = R.color.colorPrimary)
-        val colorPrimaryLight = colorResource(id = R.color.colorPrimaryLight)
-        val colorSecondary = colorResource(id = R.color.colorSecondary)
-        val textSecondary = colorResource(id = R.color.textSecondary)
 
         Dialog(
             onDismissRequest = { onCancel() },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         ) {
             Surface(
-                color = colorSecondary,
+                color = MaterialTheme.colors.background,
                 shape = RoundedCornerShape(10.dp),
                 modifier = Modifier.testTag("textFieldAlertDialog"),
             ) {
@@ -176,14 +173,14 @@ fun TextFieldAlertDialog(
                             .align(Alignment.CenterHorizontally)
                             .padding(start = padding24.dp, end = padding24.dp)
                             .border(
-                                BorderStroke(1.dp, colorResource(id = R.color.colorPrimary)),
+                                BorderStroke(1.dp, MaterialTheme.colors.primary),
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = colorPrimary,
-                            unfocusedBorderColor = colorPrimaryLight,
-                            textColor = textSecondary,
+                            focusedBorderColor = MaterialTheme.colors.primary,
+                            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+                            textColor = MaterialTheme.colors.description,
                         ),
                         shape = RoundedCornerShape(10.dp),
                         singleLine = true,
@@ -220,7 +217,7 @@ fun TextTitleAlertDialog(@StringRes textId: Int) {
             bottom = padding8.dp,
         ),
         text = stringResource(id = textId),
-        color = colorResource(id = R.color.colorPrimary),
+        color = MaterialTheme.colors.primary,
         fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
         fontFamily = robotoSerifFamily,
         fontWeight = FontWeight.Bold,
@@ -238,7 +235,7 @@ fun TextMessageAlertDialog(text: String) {
             end = padding24.dp,
         ),
         text = text,
-        color = colorResource(id = R.color.colorPrimary),
+        color = MaterialTheme.colors.primary,
         fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
         fontFamily = robotoSerifFamily,
         fontWeight = FontWeight.Normal,
@@ -258,7 +255,7 @@ fun TextButtonAlertDialog(
     ) {
         Text(
             text = stringResource(id = textId).uppercase(),
-            color = colorResource(id = R.color.colorPrimary),
+            color = MaterialTheme.colors.primary,
             fontSize = dimensionResource(id = R.dimen.text_size_14sp).value.sp,
             fontFamily = robotoSerifFamily,
             fontWeight = FontWeight.Bold,

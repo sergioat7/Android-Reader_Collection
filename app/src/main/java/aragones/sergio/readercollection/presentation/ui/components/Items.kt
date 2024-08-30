@@ -26,6 +26,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
@@ -34,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -46,6 +46,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.presentation.ui.theme.description
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
 @Preview
 @Composable
@@ -86,8 +88,6 @@ fun BookItem(
     isDraggingEnabled: Boolean = false,
 ) {
 
-    val colorPrimaryLight = colorResource(id = R.color.colorPrimaryLight)
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -97,7 +97,7 @@ fun BookItem(
             },
     ) {
 
-        Column {
+        Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
@@ -130,7 +130,7 @@ fun BookItem(
                     .fillMaxWidth()
                     .height(1.dp)
                     .padding(horizontal = 24.dp),
-                color = colorPrimaryLight
+                color = MaterialTheme.colors.primaryVariant,
             )
         }
     }
@@ -147,7 +147,7 @@ fun BookInfo(book: Book) {
         Text(
             text = book.title ?: "",
             style = TextStyle(
-                color = colorResource(id = R.color.textPrimary),
+                color = MaterialTheme.colors.primary,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
@@ -160,7 +160,7 @@ fun BookInfo(book: Book) {
                 text = book.authorsToString(),
                 modifier = Modifier.padding(top = 8.dp),
                 style = TextStyle(
-                    color = colorResource(id = R.color.textSecondary),
+                    color = MaterialTheme.colors.description,
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
@@ -180,7 +180,7 @@ fun BookInfo(book: Book) {
                     text = book.rating.toInt().toString(),
                     modifier = Modifier.padding(start = 12.dp),
                     style = TextStyle(
-                        color = colorResource(id = R.color.textQuaternary),
+                        color = MaterialTheme.colors.roseBud,
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
@@ -193,7 +193,7 @@ fun BookInfo(book: Book) {
             Text(
                 text = stringResource(id = R.string.new_book),
                 style = TextStyle(
-                    color = colorResource(id = R.color.textQuaternary),
+                    color = MaterialTheme.colors.roseBud,
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Bold,
                     fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
@@ -237,7 +237,7 @@ fun SwipeItem(
 private fun SwipeItemBackgroundToLeftPreview() {
     SwipeItemBackground(
         dismissValue = DismissValue.DismissedToStart,
-        color = colorResource(id = R.color.colorTertiary),
+        color = MaterialTheme.colors.roseBud,
         icon = R.drawable.ic_save_book,
     )
 }
@@ -247,7 +247,7 @@ private fun SwipeItemBackgroundToLeftPreview() {
 private fun SwipeItemBackgroundToRightPreview() {
     SwipeItemBackground(
         dismissValue = DismissValue.DismissedToEnd,
-        color = colorResource(id = R.color.colorTertiary),
+        color = MaterialTheme.colors.roseBud,
         icon = R.drawable.ic_save_book,
     )
 }
