@@ -24,7 +24,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -49,16 +48,11 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
         derivedStateOf { registerFormState.isDataValid }
     }
 
-    val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
-    val margin8 = dimensionResource(id = R.dimen.margin_8dp).value
-    val size200 = dimensionResource(id = R.dimen.size_200dp).value
-
     Column(
         Modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
-            .padding(padding24.dp),
+            .padding(24.dp),
     ) {
         Image(
             painter = painterResource(id = R.drawable.login_register_image),
@@ -72,7 +66,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             errorTextId = registerFormState.usernameError,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = padding24.dp),
+                .padding(start = 12.dp, end = 12.dp, top = 24.dp),
             labelText = stringResource(id = R.string.username),
             endIcon = R.drawable.ic_show_info,
             isLastTextField = false,
@@ -88,7 +82,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             errorTextId = registerFormState.passwordError,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
+                .padding(start = 12.dp, end = 12.dp, top = 8.dp),
             labelText = stringResource(id = R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
@@ -106,7 +100,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             errorTextId = registerFormState.passwordError,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = padding12.dp, end = padding12.dp, top = margin8.dp),
+                .padding(start = 12.dp, end = 12.dp, top = 8.dp),
             labelText = stringResource(id = R.string.confirm_password),
             endIcon = if (confirmPasswordVisibility) {
                 R.drawable.ic_hide_password
@@ -123,9 +117,9 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
         MainActionButton(
             text = stringResource(id = R.string.sign_up),
             modifier = Modifier
-                .width(size200.dp)
+                .width(200.dp)
                 .align(Alignment.CenterHorizontally)
-                .padding(horizontal = padding12.dp, vertical = padding24.dp),
+                .padding(horizontal = 12.dp, vertical = 24.dp),
             enabled = buttonEnabled,
         ) {
             viewModel.register(username, password)
