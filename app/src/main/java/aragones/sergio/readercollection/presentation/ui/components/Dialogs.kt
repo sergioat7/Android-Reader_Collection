@@ -27,12 +27,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
@@ -52,9 +50,6 @@ fun ConfirmationAlertDialog(
     onAccept: () -> Unit,
 ) {
     if (show) {
-
-        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-
         Dialog(
             onDismissRequest = { onCancel() },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
@@ -69,7 +64,7 @@ fun ConfirmationAlertDialog(
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp),
+                            .padding(end = 12.dp),
                     ) {
                         TextButtonAlertDialog(textId = R.string.cancel) {
                             onCancel()
@@ -97,9 +92,6 @@ fun InformationAlertDialog(
     onDismiss: () -> Unit,
 ) {
     if (show) {
-
-        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-
         Dialog(
             onDismissRequest = { onDismiss() },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
@@ -115,7 +107,7 @@ fun InformationAlertDialog(
                         textId = R.string.accept,
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp),
+                            .padding(end = 12.dp),
                     ) {
                         onDismiss()
                     }
@@ -142,8 +134,6 @@ fun TextFieldAlertDialog(
     if (show) {
 
         var text by rememberSaveable { mutableStateOf("") }
-        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-        val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
 
         Dialog(
             onDismissRequest = { onCancel() },
@@ -161,7 +151,7 @@ fun TextFieldAlertDialog(
                         onValueChange = { text = it },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(start = padding24.dp, end = padding24.dp)
+                            .padding(start = 12.dp, end = 24.dp)
                             .border(
                                 BorderStroke(1.dp, MaterialTheme.colors.primary),
                                 shape = MaterialTheme.shapes.medium,
@@ -179,7 +169,7 @@ fun TextFieldAlertDialog(
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp),
+                            .padding(end = 12.dp),
                     ) {
                         TextButtonAlertDialog(textId = R.string.cancel) {
                             onCancel()
@@ -196,15 +186,12 @@ fun TextFieldAlertDialog(
 
 @Composable
 fun TextTitleAlertDialog(@StringRes textId: Int) {
-
-    val padding8 = dimensionResource(id = R.dimen.padding_8dp).value
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
     Text(
         modifier = Modifier.padding(
-            top = padding24.dp,
-            start = padding24.dp,
-            end = padding24.dp,
-            bottom = padding8.dp,
+            top = 24.dp,
+            start = 24.dp,
+            end = 24.dp,
+            bottom = 8.dp,
         ),
         text = stringResource(id = textId),
         style = MaterialTheme.typography.h2,
@@ -214,13 +201,11 @@ fun TextTitleAlertDialog(@StringRes textId: Int) {
 
 @Composable
 fun TextMessageAlertDialog(text: String) {
-
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
     Text(
         modifier = Modifier.padding(
-            top = padding24.dp,
-            start = padding24.dp,
-            end = padding24.dp,
+            top = 24.dp,
+            start = 24.dp,
+            end = 24.dp,
         ),
         text = text,
         style = MaterialTheme.typography.body1,

@@ -27,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -54,13 +53,6 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     val themeMode by viewModel.themeMode.observeAsState(initial = 0)
     val loading by viewModel.profileLoading.observeAsState(initial = false)
     val scrollState = rememberScrollState()
-
-    val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
-    val margin20 = dimensionResource(id = R.dimen.margin_20dp).value
-    val margin8 = dimensionResource(id = R.dimen.margin_8dp).value
-    val margin5 = dimensionResource(id = R.dimen.margin_5dp).value
-    val size200 = dimensionResource(id = R.dimen.size_200dp).value
 
     Column(
         modifier = Modifier
@@ -101,7 +93,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 text = viewModel.username,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = padding24.dp, end = padding24.dp, top = padding24.dp),
+                    .padding(start = 24.dp, end = 24.dp, top = 24.dp),
                 labelText = stringResource(id = R.string.username),
                 endIcon = R.drawable.ic_show_info,
                 enabled = false,
@@ -115,7 +107,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 errorTextId = passwordError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = padding24.dp, end = padding24.dp, top = margin8.dp),
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 labelText = stringResource(id = R.string.password),
                 endIcon = if (passwordVisibility) {
                     R.drawable.ic_hide_password
@@ -138,16 +130,16 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             HeaderText(
                 text = stringResource(id = R.string.app_language),
                 modifier = Modifier.padding(
-                    top = margin20.dp,
-                    bottom = margin5.dp,
-                    start = padding24.dp,
-                    end = padding24.dp,
+                    top = 20.dp,
+                    bottom = 5.dp,
+                    start = 24.dp,
+                    end = 24.dp,
                 ),
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = padding12.dp),
+                    .padding(horizontal = 12.dp),
             ) {
                 CustomRadioButton(
                     text = stringResource(id = R.string.english),
@@ -181,10 +173,10 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             HeaderText(
                 text = stringResource(id = R.string.sort_books_param),
                 modifier = Modifier.padding(
-                    top = margin20.dp,
-                    bottom = margin5.dp,
-                    start = padding24.dp,
-                    end = padding24.dp,
+                    top = 20.dp,
+                    bottom = 5.dp,
+                    start = 24.dp,
+                    end = 24.dp,
                 ),
             )
             val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
@@ -195,9 +187,9 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             CustomDropdownMenu(
                 currentValue = sortParamValue,
                 modifier = Modifier.padding(
-                    bottom = margin8.dp,
-                    start = padding24.dp,
-                    end = padding24.dp,
+                    bottom = 8.dp,
+                    start = 24.dp,
+                    end = 24.dp,
                 ),
                 values = sortingParamValues,
                 onOptionSelected = {
@@ -217,7 +209,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
             CustomDropdownMenu(
                 currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
-                modifier = Modifier.padding(horizontal = padding24.dp),
+                modifier = Modifier.padding(horizontal = 24.dp),
                 values = sortingOrderValues,
                 onOptionSelected = {
 
@@ -234,16 +226,16 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             HeaderText(
                 text = stringResource(id = R.string.app_theme),
                 modifier = Modifier.padding(
-                    top = margin20.dp,
-                    bottom = margin5.dp,
-                    start = padding24.dp,
-                    end = padding24.dp,
+                    top = 20.dp,
+                    bottom = 5.dp,
+                    start = 24.dp,
+                    end = 24.dp,
                 ),
             )
             val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
             CustomDropdownMenu(
                 currentValue = appThemes[themeMode],
-                modifier = Modifier.padding(horizontal = padding24.dp),
+                modifier = Modifier.padding(horizontal = 24.dp),
                 values = appThemes,
                 onOptionSelected = {
 
@@ -260,9 +252,9 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             MainActionButton(
                 text = stringResource(id = R.string.save),
                 modifier = Modifier
-                    .width(size200.dp)
+                    .width(200.dp)
                     .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = padding12.dp, vertical = padding24.dp),
+                    .padding(horizontal = 12.dp, vertical = 24.dp),
                 enabled = passwordError == null,
             ) {
                 viewModel.save()
