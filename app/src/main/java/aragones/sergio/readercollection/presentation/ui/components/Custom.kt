@@ -42,14 +42,14 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Image(
             painter = painterResource(id = R.drawable.image_no_results),
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(0.5f),
         )
         Text(
             text = text,
@@ -62,7 +62,7 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
                 fontWeight = FontWeight.Bold,
                 fontSize = dimensionResource(id = R.dimen.text_size_20sp).value.sp,
                 textAlign = TextAlign.Center,
-            )
+            ),
         )
     }
 }
@@ -72,7 +72,7 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
 fun StartRatingBarPreview() {
     StarRatingBar(
         rating = 7f / 2,
-        onRatingChanged = {}
+        onRatingChanged = {},
     )
 }
 
@@ -82,7 +82,7 @@ fun StarRatingBar(
     maxStars: Int = 5,
     rating: Float,
     isSelectable: Boolean = false,
-    onRatingChanged: (Float) -> Unit
+    onRatingChanged: (Float) -> Unit,
 ) {
 
     val density = LocalDensity.current.density
@@ -94,7 +94,7 @@ fun StarRatingBar(
 
     Row(
         modifier = modifier.selectableGroup(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         for (i in 1..maxStars) {
             val (icon, tint) = when {
@@ -115,10 +115,10 @@ fun StarRatingBar(
                         selected = isSelectable,
                         onClick = {
                             onRatingChanged(i.toFloat())
-                        }
+                        },
                     )
                     .width(starSize)
-                    .height(starSize)
+                    .height(starSize),
             )
 
             if (i < maxStars) {

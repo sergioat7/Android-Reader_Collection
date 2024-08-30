@@ -36,11 +36,11 @@ fun CustomRadioButton(
     color: Color = colorResource(id = R.color.colorPrimary),
     textColor: Color = colorResource(id = R.color.textSecondary),
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(
             selected = selected,
@@ -48,7 +48,7 @@ fun CustomRadioButton(
             colors = RadioButtonDefaults.colors(
                 selectedColor = color,
                 unselectedColor = color
-            )
+            ),
         )
         Text(
             text = text,
@@ -56,8 +56,8 @@ fun CustomRadioButton(
                 color = textColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp
-            )
+                fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
+            ),
         )
     }
 }

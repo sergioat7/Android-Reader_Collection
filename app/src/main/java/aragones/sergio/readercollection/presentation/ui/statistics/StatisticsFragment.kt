@@ -124,7 +124,8 @@ class StatisticsFragment :
                         else -> Unit
                     }
                     viewModel.closeDialogs()
-                })
+                },
+            )
 
             val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             val text = if (infoMessageId != -1) {

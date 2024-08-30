@@ -29,7 +29,7 @@ import coil.compose.AsyncImage
 fun ImageWithLoadingPreview() {
     ImageWithLoading(
         imageUrl = null,
-        placeholder = R.drawable.ic_default_book_cover_blue
+        placeholder = R.drawable.ic_default_book_cover_blue,
     )
 }
 
@@ -38,7 +38,7 @@ fun ImageWithLoading(
     imageUrl: String?,
     @DrawableRes placeholder: Int,
     modifier: Modifier = Modifier,
-    cornerRadius: Int = 0
+    cornerRadius: Int = 0,
 ) {
 
     val colorPrimary = colorResource(id = R.color.colorPrimary)
@@ -56,12 +56,12 @@ fun ImageWithLoading(
             error = painterResource(id = placeholder),
             onLoading = { isLoading = true },
             onSuccess = { isLoading = false },
-            onError = { isLoading = false }
+            onError = { isLoading = false },
         )
         if (isLoading) {
             CircularProgressIndicator(
                 color = colorPrimary,
-                modifier = Modifier.align(Alignment.Center)
+                modifier = Modifier.align(Alignment.Center),
             )
         }
     }

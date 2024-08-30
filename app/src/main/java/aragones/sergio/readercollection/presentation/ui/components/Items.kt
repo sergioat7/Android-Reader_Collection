@@ -75,7 +75,7 @@ fun BookItemPreview() {
             0
         ),
         onBookClick = {},
-        isDraggingEnabled = true
+        isDraggingEnabled = true,
     )
 }
 
@@ -94,7 +94,7 @@ fun BookItem(
             .height(220.dp)
             .clickable {
                 onBookClick(book.id)
-            }
+            },
     ) {
 
         Column {
@@ -102,7 +102,7 @@ fun BookItem(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
-                    .padding(top = 24.dp, bottom = 24.dp, end = 24.dp)
+                    .padding(top = 24.dp, bottom = 24.dp, end = 24.dp),
             ) {
 
                 if (isDraggingEnabled) {
@@ -111,7 +111,7 @@ fun BookItem(
                         contentDescription = "",
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
-                            .padding(start = 24.dp)
+                            .padding(start = 24.dp),
                     )
                 }
                 ImageWithLoading(
@@ -121,7 +121,7 @@ fun BookItem(
                         .widthIn(max = 130.dp)
                         .fillMaxHeight()
                         .padding(start = 24.dp),
-                    cornerRadius = 10
+                    cornerRadius = 10,
                 )
                 BookInfo(book = book)
             }
@@ -141,7 +141,7 @@ fun BookInfo(book: Book) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 20.dp)
+            .padding(start = 20.dp),
     ) {
 
         Text(
@@ -150,7 +150,7 @@ fun BookInfo(book: Book) {
                 color = colorResource(id = R.color.textPrimary),
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Bold,
-                fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp
+                fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
             ),
             overflow = TextOverflow.Ellipsis,
             maxLines = 4,
@@ -174,7 +174,7 @@ fun BookInfo(book: Book) {
             Row(modifier = Modifier.height(30.dp), verticalAlignment = Alignment.CenterVertically) {
                 StarRatingBar(
                     rating = book.rating.toFloat() / 2,
-                    onRatingChanged = {}
+                    onRatingChanged = {},
                 )
                 Text(
                     text = book.rating.toInt().toString(),
@@ -183,7 +183,7 @@ fun BookInfo(book: Book) {
                         color = colorResource(id = R.color.textQuaternary),
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Bold,
-                        fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp
+                        fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
                     ),
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
@@ -196,7 +196,7 @@ fun BookInfo(book: Book) {
                     color = colorResource(id = R.color.textQuaternary),
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp
+                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
                 ),
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -228,7 +228,7 @@ fun SwipeItem(
             FractionalThreshold(threshold)
         },
         background = background,
-        dismissContent = content
+        dismissContent = content,
     )
 }
 

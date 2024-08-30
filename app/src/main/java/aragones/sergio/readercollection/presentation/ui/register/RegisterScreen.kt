@@ -58,14 +58,14 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
         Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.colorSecondary))
-            .padding(padding24.dp)
+            .padding(padding24.dp),
     ) {
         Image(
             painter = painterResource(id = R.drawable.login_register_image),
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .weight(5f)
+                .weight(5f),
         )
         CustomOutlinedTextField(
             text = username,
@@ -81,7 +81,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             },
             onEndIconClicked = {
                 viewModel.showInfoDialog(R.string.username_info)
-            }
+            },
         )
         CustomOutlinedTextField(
             text = password,
@@ -99,7 +99,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             onTextChanged = { newPassword ->
                 viewModel.registerDataChanged(username, newPassword, confirmPassword)
             },
-            onEndIconClicked = { passwordVisibility = !passwordVisibility }
+            onEndIconClicked = { passwordVisibility = !passwordVisibility },
         )
         CustomOutlinedTextField(
             text = confirmPassword,
@@ -117,7 +117,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
             onTextChanged = { newPassword ->
                 viewModel.registerDataChanged(username, password, newPassword)
             },
-            onEndIconClicked = { confirmPasswordVisibility = !confirmPasswordVisibility }
+            onEndIconClicked = { confirmPasswordVisibility = !confirmPasswordVisibility },
         )
         Spacer(modifier = Modifier.weight(1f))
         MainActionButton(
@@ -126,7 +126,7 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 .width(size200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = buttonEnabled
+            enabled = buttonEnabled,
         ) {
             viewModel.register(username, password)
         }
