@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,7 +38,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
-import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.ui.theme.description
 
@@ -60,8 +58,6 @@ fun LoginScreen(viewModel: LoginViewModel) {
     val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
     val margin8 = dimensionResource(id = R.dimen.margin_8dp).value
     val size200 = dimensionResource(id = R.dimen.size_200dp).value
-
-    val textSize16 = dimensionResource(id = R.dimen.text_size_16sp).value
 
     Column(
         Modifier
@@ -125,23 +121,17 @@ fun LoginScreen(viewModel: LoginViewModel) {
             Text(
                 text = stringResource(id = R.string.not_account),
                 modifier = Modifier.padding(end = 5.dp),
-                style = TextStyle(
-                    color = MaterialTheme.colors.description,
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = textSize16.sp,
-                ),
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.description,
             )
             TextButton(onClick = { viewModel.goToRegister() }) {
                 Text(
                     text = stringResource(id = R.string.create_account),
-                    style = TextStyle(
-                        color = MaterialTheme.colors.primary,
-                        fontFamily = robotoSerifFamily,
+                    style = MaterialTheme.typography.body1.copy(
                         fontWeight = FontWeight.Bold,
-                        fontSize = textSize16.sp,
-                        letterSpacing = 0.sp,
+                        letterSpacing = 0.sp
                     ),
+                    color = MaterialTheme.colors.primary,
                 )
             }
         }

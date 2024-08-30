@@ -27,14 +27,12 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import com.aragones.sergio.util.CustomInputType
 
@@ -93,9 +91,8 @@ fun CustomOutlinedTextField(
     labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textStyle: TextStyle = MaterialTheme.typography.body1,
     textColor: Color = MaterialTheme.colors.primary,
-    fontSize: Float = dimensionResource(id = R.dimen.text_size_16sp).value,
-    fontWeight: FontWeight = FontWeight.Normal,
     @DrawableRes endIcon: Int? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
     isLastTextField: Boolean? = null,
@@ -111,16 +108,12 @@ fun CustomOutlinedTextField(
 
     val margin5 = dimensionResource(id = R.dimen.margin_5dp).value
 
-    val textSize12 = dimensionResource(id = R.dimen.text_size_12sp).value
-
     val label: @Composable (() -> Unit)? = labelText?.let {
         {
             Text(
                 text = it,
+                style = MaterialTheme.typography.body2,
                 color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp,
             )
         }
     }
@@ -128,10 +121,8 @@ fun CustomOutlinedTextField(
         {
             Text(
                 text = it,
+                style = MaterialTheme.typography.body2,
                 color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp,
             )
         }
     }
@@ -181,12 +172,7 @@ fun CustomOutlinedTextField(
                 errorBorderColor = MaterialTheme.colors.error,
                 errorLabelColor = MaterialTheme.colors.error,
             ),
-            textStyle = TextStyle(
-                color = if (errorTextId != null) MaterialTheme.colors.error else textColor,
-                fontSize = fontSize.sp,
-                fontWeight = fontWeight,
-                fontFamily = robotoSerifFamily,
-            ),
+            textStyle = textStyle.copy(color = if (errorTextId != null) MaterialTheme.colors.error else textColor),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon,
@@ -216,10 +202,8 @@ fun CustomOutlinedTextField(
             Text(
                 text = stringResource(id = errorTextId),
                 modifier = Modifier.padding(start = margin5.dp, top = margin5.dp),
+                style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.error,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp,
             )
         }
     }

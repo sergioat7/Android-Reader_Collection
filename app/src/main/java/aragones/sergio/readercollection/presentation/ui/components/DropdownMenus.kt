@@ -47,9 +47,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpOffset
@@ -58,11 +55,9 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
-import aragones.sergio.readercollection.R
 import kotlin.math.max
 import kotlin.math.min
 
@@ -93,17 +88,12 @@ fun CustomDropdownMenu(
 
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    val textSize12 = dimensionResource(id = R.dimen.text_size_12sp).value
-    val textSize16 = dimensionResource(id = R.dimen.text_size_16sp).value
-
     val label: @Composable (() -> Unit)? = labelText?.let {
         {
             Text(
                 text = it,
+                style = MaterialTheme.typography.body2,
                 color = inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp,
             )
         }
     }
@@ -111,10 +101,8 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
+                style = MaterialTheme.typography.body2,
                 color = inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp,
             )
         }
     }
@@ -141,12 +129,7 @@ fun CustomDropdownMenu(
                 focusedBorderColor = MaterialTheme.colors.primary,
                 unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
             ),
-            textStyle = TextStyle(
-                color = textColor,
-                fontSize = textSize16.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = robotoSerifFamily,
-            ),
+            textStyle = MaterialTheme.typography.body1.copy(color = textColor),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon,
@@ -171,10 +154,8 @@ fun CustomDropdownMenu(
                 }) {
                     Text(
                         text = value,
+                        style = MaterialTheme.typography.body1,
                         color = textColor,
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = textSize16.sp,
                     )
                 }
             }

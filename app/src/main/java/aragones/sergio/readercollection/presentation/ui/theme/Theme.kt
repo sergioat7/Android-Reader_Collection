@@ -35,6 +35,7 @@ fun ReaderCollectionTheme(
 ) {
     MaterialTheme(
         colors = if (darkTheme) DarkColorScheme else LightColorScheme,
+        typography = Typography,
         content = content,
     )
 }

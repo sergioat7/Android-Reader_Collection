@@ -35,15 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.theme.description
@@ -146,12 +142,8 @@ fun BookInfo(book: Book) {
 
         Text(
             text = book.title ?: "",
-            style = TextStyle(
-                color = MaterialTheme.colors.primary,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
-            ),
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 4,
         )
@@ -159,12 +151,8 @@ fun BookInfo(book: Book) {
             Text(
                 text = book.authorsToString(),
                 modifier = Modifier.padding(top = 8.dp),
-                style = TextStyle(
-                    color = MaterialTheme.colors.description,
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-                ),
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.description,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -179,12 +167,8 @@ fun BookInfo(book: Book) {
                 Text(
                     text = book.rating.toInt().toString(),
                     modifier = Modifier.padding(start = 12.dp),
-                    style = TextStyle(
-                        color = MaterialTheme.colors.roseBud,
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
-                    ),
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.roseBud,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )
@@ -192,12 +176,8 @@ fun BookInfo(book: Book) {
         } else {
             Text(
                 text = stringResource(id = R.string.new_book),
-                style = TextStyle(
-                    color = MaterialTheme.colors.roseBud,
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
-                ),
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.roseBud,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )

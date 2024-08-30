@@ -13,12 +13,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 
 @Preview
 @Composable
@@ -46,10 +42,8 @@ fun MainActionButton(
         Text(
             text = text,
             modifier = Modifier.padding(8.dp),
+            style = MaterialTheme.typography.button,
             color = MaterialTheme.colors.secondary,
-            fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Bold,
-            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
             maxLines = 1,
         )
     }

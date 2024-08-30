@@ -15,13 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.description
 
 @Preview(showBackground = true)
@@ -53,12 +48,8 @@ fun CustomRadioButton(
         )
         Text(
             text = text,
-            style = TextStyle(
-                color = textColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-            ),
+            style = MaterialTheme.typography.body1,
+            color = textColor,
         )
     }
 }
