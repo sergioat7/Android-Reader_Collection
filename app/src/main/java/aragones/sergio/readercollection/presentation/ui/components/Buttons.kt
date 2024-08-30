@@ -27,8 +27,13 @@ fun CustomButtonPreview() {
 }
 
 @Composable
-fun MainActionButton(text: String, modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
-
+fun MainActionButton(
+    text: String,
+    modifier: Modifier,
+    enabled: Boolean,
+    onClick: () -> Unit,
+) {
+    
     val colorPrimary = colorResource(id = R.color.colorPrimary)
     val colorPrimaryLight = colorResource(id = R.color.colorPrimaryLight)
     val textTertiary = colorResource(id = R.color.textTertiary)
@@ -43,7 +48,7 @@ fun MainActionButton(text: String, modifier: Modifier, enabled: Boolean, onClick
             backgroundColor = colorPrimary,
             disabledBackgroundColor = colorPrimaryLight
         ),
-        shape = RoundedCornerShape(15.dp)
+        shape = RoundedCornerShape(15.dp),
     ) {
         Text(
             text = text,
@@ -51,8 +56,8 @@ fun MainActionButton(text: String, modifier: Modifier, enabled: Boolean, onClick
             color = textTertiary,
             fontFamily = robotoSerifFamily,
             fontWeight = FontWeight.Bold,
-            fontSize = textSize16.sp,
-            maxLines = 1
+            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
+            maxLines = 1,
         )
     }
 }

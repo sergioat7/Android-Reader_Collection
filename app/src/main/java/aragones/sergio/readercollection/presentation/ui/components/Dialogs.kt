@@ -58,7 +58,7 @@ fun ConfirmationAlertDialog(
     show: Boolean,
     @StringRes textId: Int,
     onCancel: () -> Unit,
-    onAccept: () -> Unit
+    onAccept: () -> Unit,
 ) {
     if (show) {
 
@@ -71,14 +71,14 @@ fun ConfirmationAlertDialog(
             Surface(
                 color = colorResource(id = R.color.colorSecondary),
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.testTag("confirmationAlertDialog")
+                modifier = Modifier.testTag("confirmationAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextMessageAlertDialog(stringResource(id = textId))
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp)
+                            .padding(end = padding12.dp),
                     ) {
                         TextButtonAlertDialog(textId = R.string.cancel) {
                             onCancel()
@@ -103,7 +103,7 @@ fun InformationAlertDialogPreview() {
 fun InformationAlertDialog(
     show: Boolean,
     text: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     if (show) {
 
@@ -111,12 +111,12 @@ fun InformationAlertDialog(
 
         Dialog(
             onDismissRequest = { onDismiss() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         ) {
             Surface(
                 color = colorResource(id = R.color.colorSecondary),
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.testTag("informationAlertDialog")
+                modifier = Modifier.testTag("informationAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextMessageAlertDialog(text)
@@ -124,7 +124,7 @@ fun InformationAlertDialog(
                         textId = R.string.accept,
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp)
+                            .padding(end = padding12.dp),
                     ) {
                         onDismiss()
                     }
@@ -146,7 +146,7 @@ fun TextFieldAlertDialog(
     @StringRes titleTextId: Int,
     type: KeyboardType,
     onCancel: () -> Unit,
-    onAccept: (String) -> Unit
+    onAccept: (String) -> Unit,
 ) {
     if (show) {
 
@@ -160,12 +160,12 @@ fun TextFieldAlertDialog(
 
         Dialog(
             onDismissRequest = { onCancel() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         ) {
             Surface(
                 color = colorSecondary,
                 shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.testTag("textFieldAlertDialog")
+                modifier = Modifier.testTag("textFieldAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextTitleAlertDialog(titleTextId)
@@ -183,16 +183,16 @@ fun TextFieldAlertDialog(
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = colorPrimary,
                             unfocusedBorderColor = colorPrimaryLight,
-                            textColor = textSecondary
+                            textColor = textSecondary,
                         ),
                         shape = RoundedCornerShape(10.dp),
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = type)
+                        keyboardOptions = KeyboardOptions(keyboardType = type),
                     )
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp)
+                            .padding(end = padding12.dp),
                     ) {
                         TextButtonAlertDialog(textId = R.string.cancel) {
                             onCancel()
@@ -217,13 +217,13 @@ fun TextTitleAlertDialog(@StringRes textId: Int) {
             top = padding24.dp,
             start = padding24.dp,
             end = padding24.dp,
-            bottom = padding8.dp
+            bottom = padding8.dp,
         ),
         text = stringResource(id = textId),
         color = colorResource(id = R.color.colorPrimary),
         fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
         fontFamily = robotoSerifFamily,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
     )
 }
 
@@ -235,13 +235,13 @@ fun TextMessageAlertDialog(text: String) {
         modifier = Modifier.padding(
             top = padding24.dp,
             start = padding24.dp,
-            end = padding24.dp
+            end = padding24.dp,
         ),
         text = text,
         color = colorResource(id = R.color.colorPrimary),
         fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
         fontFamily = robotoSerifFamily,
-        fontWeight = FontWeight.Normal
+        fontWeight = FontWeight.Normal,
     )
 }
 
@@ -249,19 +249,19 @@ fun TextMessageAlertDialog(text: String) {
 fun TextButtonAlertDialog(
     @StringRes textId: Int,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
 
     TextButton(
         onClick = { onClick() },
-        modifier = modifier.testTag("textButtonAlertDialog")
+        modifier = modifier.testTag("textButtonAlertDialog"),
     ) {
         Text(
             text = stringResource(id = textId).uppercase(),
             color = colorResource(id = R.color.colorPrimary),
             fontSize = dimensionResource(id = R.dimen.text_size_14sp).value.sp,
             fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
         )
     }
 }

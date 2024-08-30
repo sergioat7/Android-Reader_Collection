@@ -66,14 +66,14 @@ fun LoginScreen(viewModel: LoginViewModel) {
         Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.colorSecondary))
-            .padding(padding24.dp)
+            .padding(padding24.dp),
     ) {
         Image(
             painter = painterResource(id = R.drawable.login_register_image),
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .weight(5f)
+                .weight(5f),
         )
         CustomOutlinedTextField(
             text = username,
@@ -85,7 +85,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
             isLastTextField = false,
             onTextChanged = { newUsername ->
                 viewModel.loginDataChanged(newUsername, password)
-            }
+            },
         )
         CustomOutlinedTextField(
             text = password,
@@ -103,7 +103,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
             onTextChanged = { newPassword ->
                 viewModel.loginDataChanged(username, newPassword)
             },
-            onEndIconClicked = { passwordVisibility = !passwordVisibility }
+            onEndIconClicked = { passwordVisibility = !passwordVisibility },
         )
         Spacer(modifier = Modifier.weight(1f))
         MainActionButton(
@@ -112,14 +112,14 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 .width(size200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = padding12.dp, vertical = padding24.dp),
-            enabled = buttonEnabled
+            enabled = buttonEnabled,
         ) {
             viewModel.login(username, password)
         }
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.align(Alignment.CenterHorizontally)
+            modifier = Modifier.align(Alignment.CenterHorizontally),
         ) {
             Text(
                 text = stringResource(id = R.string.not_account),
@@ -128,8 +128,8 @@ fun LoginScreen(viewModel: LoginViewModel) {
                     color = colorResource(id = R.color.textSecondary),
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Normal,
-                    fontSize = textSize16.sp
-                )
+                    fontSize = textSize16.sp,
+                ),
             )
             TextButton(onClick = { viewModel.goToRegister() }) {
                 Text(
@@ -139,8 +139,8 @@ fun LoginScreen(viewModel: LoginViewModel) {
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = textSize16.sp,
-                        letterSpacing = 0.sp
-                    )
+                        letterSpacing = 0.sp,
+                    ),
                 )
             }
         }

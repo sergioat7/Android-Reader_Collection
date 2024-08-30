@@ -111,7 +111,8 @@ class BookDetailFragment :
 
                     viewModel.closeDialogs()
                     viewModel.deleteBook()
-                })
+                },
+            )
 
             val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
             val text = if (infoDialogMessageId != -1) {
@@ -137,7 +138,9 @@ class BookDetailFragment :
 
                     viewModel.closeDialogs()
                     if (it.isNotBlank()) viewModel.setBookImage(it)
-                })
+                },
+            )
+
         }
     }
 

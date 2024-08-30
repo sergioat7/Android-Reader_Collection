@@ -36,8 +36,11 @@ fun CustomCircularProgressIndicator() {
             .fillMaxSize()
             .background(Color.DarkGray.copy(alpha = 0.75f))
             .clickable {}//To avoid clicks in views behind
-            .pointerInput(Unit) { detectTapGestures(onPress = {}) }//To avoid showing shadow on click
+            .pointerInput(Unit) { detectTapGestures(onPress = {}) },//To avoid showing shadow on click
     ) {
-        CircularProgressIndicator(color = colorPrimary, modifier = Modifier.align(Alignment.Center))
+        CircularProgressIndicator(
+            color = colorPrimary,
+            modifier = Modifier.align(Alignment.Center),
+        )
     }
 }

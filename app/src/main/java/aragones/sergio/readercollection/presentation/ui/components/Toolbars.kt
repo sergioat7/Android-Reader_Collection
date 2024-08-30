@@ -60,7 +60,8 @@ fun CustomToolbarPreview() {
                     contentDescription = ""
                 )
             }
-        })
+        },
+    )
 }
 
 @Composable
@@ -69,7 +70,7 @@ fun CustomToolbar(
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = {
@@ -79,7 +80,7 @@ fun CustomToolbar(
                     color = colorResource(id = R.color.textPrimary),
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Bold,
-                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp
+                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
                 )
             )
         },
@@ -91,12 +92,12 @@ fun CustomToolbar(
                 IconButton(onClick = { it.invoke() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_back_blue),
-                        contentDescription = ""
+                        contentDescription = "",
                     )
                 }
             }
         },
-        actions = actions
+        actions = actions,
     )
 }
 
@@ -168,7 +169,7 @@ fun CustomSearchBar(
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
-                    )
+                    ),
                 )
             }
         },
@@ -261,7 +262,7 @@ fun SearchBar(
         trailingIcon = trailingIcon,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Search
+            imeAction = ImeAction.Search,
         ),
         keyboardActions = KeyboardActions(onSearch = {
             focusRequester.freeFocus()

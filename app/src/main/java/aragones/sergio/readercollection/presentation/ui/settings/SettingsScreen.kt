@@ -81,13 +81,13 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_delete_confirmation) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete_profile),
-                        contentDescription = ""
+                        contentDescription = "",
                     )
                 }
                 IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = ""
+                        contentDescription = "",
                     )
                 }
             }
@@ -95,7 +95,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         Column(
             Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
         ) {
 
             CustomOutlinedTextField(
@@ -109,7 +109,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 onTextChanged = {},
                 onEndIconClicked = {
                     viewModel.showInfoDialog(R.string.username_info)
-                }
+                },
             )
             CustomOutlinedTextField(
                 text = password,
@@ -134,7 +134,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         themeMode
                     )
                 },
-                onEndIconClicked = { passwordVisibility = !passwordVisibility }
+                onEndIconClicked = { passwordVisibility = !passwordVisibility },
             )
             HeaderText(
                 text = stringResource(id = R.string.app_language),
@@ -142,18 +142,18 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     top = margin20.dp,
                     bottom = margin5.dp,
                     start = padding24.dp,
-                    end = padding24.dp
-                )
+                    end = padding24.dp,
+                ),
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = padding12.dp)
+                    .padding(horizontal = padding12.dp),
             ) {
                 CustomRadioButton(
                     text = stringResource(id = R.string.english),
                     modifier = Modifier.weight(1f),
-                    selected = language == Preferences.ENGLISH_LANGUAGE_KEY
+                    selected = language == Preferences.ENGLISH_LANGUAGE_KEY,
                 ) {
 
                     viewModel.profileDataChanged(
@@ -167,7 +167,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 CustomRadioButton(
                     text = stringResource(id = R.string.spanish),
                     modifier = Modifier.weight(1f),
-                    selected = language == Preferences.SPANISH_LANGUAGE_KEY
+                    selected = language == Preferences.SPANISH_LANGUAGE_KEY,
                 ) {
 
                     viewModel.profileDataChanged(
@@ -185,8 +185,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     top = margin20.dp,
                     bottom = margin5.dp,
                     start = padding24.dp,
-                    end = padding24.dp
-                )
+                    end = padding24.dp,
+                ),
             )
             val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
             val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
@@ -198,7 +198,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 modifier = Modifier.padding(
                     bottom = margin8.dp,
                     start = padding24.dp,
-                    end = padding24.dp
+                    end = padding24.dp,
                 ),
                 values = sortingParamValues,
                 onOptionSelected = {
@@ -213,7 +213,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         isSortDescending,
                         themeMode
                     )
-                }
+                },
             )
             val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
             CustomDropdownMenu(
@@ -230,7 +230,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         index == 1,
                         themeMode
                     )
-                }
+                },
             )
             HeaderText(
                 text = stringResource(id = R.string.app_theme),
@@ -238,8 +238,8 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     top = margin20.dp,
                     bottom = margin5.dp,
                     start = padding24.dp,
-                    end = padding24.dp
-                )
+                    end = padding24.dp,
+                ),
             )
             val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
             CustomDropdownMenu(
@@ -255,7 +255,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         isSortDescending,
                         appThemes.indexOf(it)
                     )
-                }
+                },
             )
             Spacer(modifier = Modifier.weight(1f))
             MainActionButton(
@@ -264,7 +264,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     .width(size200.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(horizontal = padding12.dp, vertical = padding24.dp),
-                enabled = passwordError == null
+                enabled = passwordError == null,
             ) {
                 viewModel.save()
             }
@@ -285,7 +285,7 @@ fun HeaderText(text: String, modifier: Modifier) {
             color = colorResource(id = R.color.textSecondary),
             fontFamily = robotoSerifFamily,
             fontWeight = FontWeight.Normal,
-            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp
-        )
+            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
+        ),
     )
 }

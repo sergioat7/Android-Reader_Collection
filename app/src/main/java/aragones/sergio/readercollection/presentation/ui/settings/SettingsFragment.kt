@@ -70,7 +70,8 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                         else -> Unit
                     }
                     viewModel.closeDialogs()
-                })
+                },
+            )
 
             val error by viewModel.profileError.observeAsState()
             val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)

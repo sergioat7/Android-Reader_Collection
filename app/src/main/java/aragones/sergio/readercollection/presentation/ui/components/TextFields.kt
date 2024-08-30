@@ -120,7 +120,7 @@ fun CustomOutlinedTextField(
                 color = if (errorTextId != null) Color.Red else inputHintTextColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                fontSize = textSize12.sp,
             )
         }
     }
@@ -131,7 +131,7 @@ fun CustomOutlinedTextField(
                 color = if (errorTextId != null) Color.Red else inputHintTextColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                fontSize = textSize12.sp,
             )
         }
     }
@@ -181,7 +181,7 @@ fun CustomOutlinedTextField(
                 color = if (errorTextId != null) Color.Red else textColor,
                 fontSize = fontSize.sp,
                 fontWeight = fontWeight,
-                fontFamily = robotoSerifFamily
+                fontFamily = robotoSerifFamily,
             ),
             label = label,
             placeholder = placeholder,
@@ -206,7 +206,7 @@ fun CustomOutlinedTextField(
                 if (newText.length <= maxLength) {
                     onTextChanged(newText)
                 }
-            }
+            },
         )
         if (errorTextId != null) {
             Text(
@@ -215,7 +215,7 @@ fun CustomOutlinedTextField(
                 color = Color.Red,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                fontSize = textSize12.sp,
             )
         }
     }

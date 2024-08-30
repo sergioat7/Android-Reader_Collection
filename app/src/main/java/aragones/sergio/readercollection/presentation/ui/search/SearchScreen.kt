@@ -220,13 +220,13 @@ fun SearchScreen(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isLoading,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorSecondary)
+            .background(colorSecondary),
     ) {
         CustomSearchBar(
             title = stringResource(id = R.string.title_search),
@@ -235,7 +235,7 @@ fun SearchScreen(
             elevation = if (showTopButton) 4.dp else 0.dp,
             onSearch = {
                 onSearch(it)
-            }
+            },
         )
 
         val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
@@ -332,7 +332,7 @@ private fun SearchContent(
                         },
                         content = {
                             BookItem(book = book, onBookClick = onBookClick)
-                        }
+                        },
                     )
                 } else {
                     LoadMoreButton(onLoadMoreClick)
@@ -381,11 +381,11 @@ private fun ListButton(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
         contentColor = colorSecondary,
-        backgroundColor = colorPrimary
+        backgroundColor = colorPrimary,
     ) {
         Icon(
             painter = painterResource(id = image),
-            contentDescription = ""
+            contentDescription = "",
         )
     }
 }
@@ -396,14 +396,14 @@ private fun LoadMoreButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(12.dp),
     ) {
         Button(
             onClick = onClick,
             modifier = Modifier.align(Alignment.Center),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = colorResource(id = R.color.colorPrimary),
-                disabledBackgroundColor = colorResource(id = R.color.colorPrimaryLight)
+                disabledBackgroundColor = colorResource(id = R.color.colorPrimaryLight),
             ),
             shape = RoundedCornerShape(15.dp),
         ) {

@@ -75,7 +75,7 @@ fun CustomDropdownMenuPreview() {
         placeholderText = "Please choose",
         modifier = Modifier.padding(12.dp),
         values = listOf("Option 1", "Option 2", "Option 3"),
-        onOptionSelected = {}
+        onOptionSelected = {},
     )
 }
 
@@ -88,7 +88,7 @@ fun CustomDropdownMenu(
     inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
     textColor: Color = colorResource(id = R.color.textPrimary),
     values: List<String>,
-    onOptionSelected: (String) -> Unit
+    onOptionSelected: (String) -> Unit,
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -103,7 +103,7 @@ fun CustomDropdownMenu(
                 color = inputHintTextColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                fontSize = textSize12.sp,
             )
         }
     }
@@ -114,7 +114,7 @@ fun CustomDropdownMenu(
                 color = inputHintTextColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                fontSize = textSize12.sp,
             )
         }
     }
@@ -123,7 +123,7 @@ fun CustomDropdownMenu(
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
                     if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = ""
+                    contentDescription = "",
                 )
             }
         }
@@ -144,7 +144,7 @@ fun CustomDropdownMenu(
                 color = textColor,
                 fontSize = textSize16.sp,
                 fontWeight = FontWeight.Normal,
-                fontFamily = robotoSerifFamily
+                fontFamily = robotoSerifFamily,
             ),
             label = label,
             placeholder = placeholder,
@@ -154,7 +154,7 @@ fun CustomDropdownMenu(
             readOnly = true,
             onValueChange = {
                 onOptionSelected(it)
-            }
+            },
         )
         MyDropdownMenu(
             expanded = expanded,
@@ -173,7 +173,7 @@ fun CustomDropdownMenu(
                         color = textColor,
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Normal,
-                        fontSize = textSize16.sp
+                        fontSize = textSize16.sp,
                     )
                 }
             }
@@ -207,14 +207,14 @@ fun MyDropdownMenu(
         Popup(
             onDismissRequest = onDismissRequest,
             popupPositionProvider = popupPositionProvider,
-            properties = properties
+            properties = properties,
         ) {
             MyDropdownMenuContent(
                 expandedStates = expandedStates,
                 transformOriginState = transformOriginState,
                 scrollState = scrollState,
                 modifier = modifier,
-                content = content
+                content = content,
             )
         }
     }
@@ -245,13 +245,13 @@ fun MyDropdownMenuContent(
                 // Dismissed to expanded
                 tween(
                     durationMillis = InTransitionDuration,
-                    easing = LinearOutSlowInEasing
+                    easing = LinearOutSlowInEasing,
                 )
             } else {
                 // Expanded to dismissed.
                 tween(
                     durationMillis = 1,
-                    delayMillis = OutTransitionDuration - 1
+                    delayMillis = OutTransitionDuration - 1,
                 )
             }
         }, label = ""
