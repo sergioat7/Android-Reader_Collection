@@ -24,15 +24,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.lightRoseBud
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
@@ -58,13 +54,9 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(24.dp),
-            style = TextStyle(
-                color = MaterialTheme.colors.primary,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = dimensionResource(id = R.dimen.text_size_20sp).value.sp,
-                textAlign = TextAlign.Center,
-            ),
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.primary,
+            textAlign = TextAlign.Center,
         )
     }
 }

@@ -30,9 +30,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,12 +38,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.description
-
-val robotoSerifFamily = FontFamily(
-    Font(R.font.roboto_serif_thin, FontWeight.Thin),
-    Font(R.font.roboto_serif_regular, FontWeight.Normal),
-    Font(R.font.roboto_serif_bold, FontWeight.Bold)
-)
 
 @Preview
 @Composable
@@ -217,10 +208,8 @@ fun TextTitleAlertDialog(@StringRes textId: Int) {
             bottom = padding8.dp,
         ),
         text = stringResource(id = textId),
+        style = MaterialTheme.typography.h2,
         color = MaterialTheme.colors.primary,
-        fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
-        fontFamily = robotoSerifFamily,
-        fontWeight = FontWeight.Bold,
     )
 }
 
@@ -235,10 +224,8 @@ fun TextMessageAlertDialog(text: String) {
             end = padding24.dp,
         ),
         text = text,
+        style = MaterialTheme.typography.body1,
         color = MaterialTheme.colors.primary,
-        fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-        fontFamily = robotoSerifFamily,
-        fontWeight = FontWeight.Normal,
     )
 }
 
@@ -255,10 +242,8 @@ fun TextButtonAlertDialog(
     ) {
         Text(
             text = stringResource(id = textId).uppercase(),
+            style = MaterialTheme.typography.h3,
             color = MaterialTheme.colors.primary,
-            fontSize = dimensionResource(id = R.dimen.text_size_14sp).value.sp,
-            fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Bold,
         )
     }
 }

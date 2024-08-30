@@ -41,14 +41,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
@@ -57,7 +53,6 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomSearchB
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItem
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItemBackground
-import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 import kotlinx.coroutines.launch
 
@@ -412,12 +407,8 @@ private fun LoadMoreButton(onClick: () -> Unit) {
                 Text(
                     text = stringResource(id = R.string.load_more),
                     modifier = Modifier.padding(12.dp),
-                    style = TextStyle(
-                        color = MaterialTheme.colors.secondary,
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-                    ),
+                    style = MaterialTheme.typography.button,
+                    color = MaterialTheme.colors.secondary,
                     maxLines = 1,
                 )
             }

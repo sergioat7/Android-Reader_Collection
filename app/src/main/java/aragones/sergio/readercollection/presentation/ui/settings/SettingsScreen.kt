@@ -31,10 +31,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomDropdownMenu
@@ -42,7 +39,6 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomOutline
 import aragones.sergio.readercollection.presentation.ui.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
-import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import aragones.sergio.readercollection.presentation.ui.theme.description
 import com.aragones.sergio.util.Preferences
 
@@ -284,11 +280,7 @@ fun HeaderText(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = TextStyle(
-            color = MaterialTheme.colors.description,
-            fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-        ),
+        style = MaterialTheme.typography.body1,
+        color = MaterialTheme.colors.description,
     )
 }
