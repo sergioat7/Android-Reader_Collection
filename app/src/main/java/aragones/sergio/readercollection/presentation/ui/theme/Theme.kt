@@ -10,10 +10,23 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
-private val LightColorScheme = lightColors()
+private val LightColorScheme = lightColors(
+    primary = EbonyClay,
+    primaryVariant = LightEbonyClay,
+    secondary = White,
+    background = White,
+    error = Color.Red,
+)
 
-private val DarkColorScheme = darkColors()
+private val DarkColorScheme = darkColors(
+    primary = White,
+    primaryVariant = LightWhite,
+    secondary = EbonyClay,
+    background = EbonyClay,
+    error = Color.Red,
+)
 
 @Composable
 fun ReaderCollectionTheme(

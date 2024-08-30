@@ -18,12 +18,12 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.lightRoseBud
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
 @Preview(showBackground = true)
 @Composable
@@ -57,7 +59,7 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
                 .align(Alignment.CenterHorizontally)
                 .padding(24.dp),
             style = TextStyle(
-                color = colorResource(id = R.color.textPrimary),
+                color = MaterialTheme.colors.primary,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Bold,
                 fontSize = dimensionResource(id = R.dimen.text_size_20sp).value.sp,
@@ -89,22 +91,19 @@ fun StarRatingBar(
     val starSize = (12f * density).dp
     val starSpacing = (0.5f * density).dp
 
-    val colorTertiary = colorResource(id = R.color.colorTertiary)
-    val colorTertiaryLight = colorResource(id = R.color.colorTertiaryLight)
-
     Row(
         modifier = modifier.selectableGroup(),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         for (i in 1..maxStars) {
             val (icon, tint) = when {
-                i <= rating -> Pair(R.drawable.ic_round_star_24, colorTertiary)
+                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colors.roseBud)
                 i.toFloat() == rating + 0.5f -> Pair(
                     R.drawable.ic_round_star_half_24,
-                    colorTertiary
+                    MaterialTheme.colors.roseBud
                 )
 
-                else -> Pair(R.drawable.ic_round_star_border_24, colorTertiaryLight)
+                else -> Pair(R.drawable.ic_round_star_border_24, MaterialTheme.colors.lightRoseBud)
             }
             Icon(
                 painter = painterResource(id = icon),

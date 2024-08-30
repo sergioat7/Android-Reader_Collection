@@ -14,6 +14,7 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -22,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -92,8 +92,8 @@ fun CustomOutlinedTextField(
     modifier: Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
-    textColor: Color = colorResource(id = R.color.textPrimary),
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textColor: Color = MaterialTheme.colors.primary,
     fontSize: Float = dimensionResource(id = R.dimen.text_size_16sp).value,
     fontWeight: FontWeight = FontWeight.Normal,
     @DrawableRes endIcon: Int? = null,
@@ -117,7 +117,7 @@ fun CustomOutlinedTextField(
         {
             Text(
                 text = it,
-                color = if (errorTextId != null) Color.Red else inputHintTextColor,
+                color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = textSize12.sp,
@@ -128,7 +128,7 @@ fun CustomOutlinedTextField(
         {
             Text(
                 text = it,
-                color = if (errorTextId != null) Color.Red else inputHintTextColor,
+                color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = textSize12.sp,
@@ -138,7 +138,11 @@ fun CustomOutlinedTextField(
     val trailingIcon: @Composable (() -> Unit)? = endIcon?.let {
         {
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
-                Icon(painter = painterResource(id = it), contentDescription = "")
+                Icon(
+                    painter = painterResource(id = it),
+                    contentDescription = "",
+                    tint = MaterialTheme.colors.primary,
+                )
             }
         }
     }
@@ -171,14 +175,14 @@ fun CustomOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(10.dp),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorResource(id = R.color.colorPrimary),
-                unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight),
+                focusedBorderColor = MaterialTheme.colors.primary,
+                unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
                 disabledBorderColor = Color.Transparent,
-                errorBorderColor = Color.Red,
-                errorLabelColor = Color.Red
+                errorBorderColor = MaterialTheme.colors.error,
+                errorLabelColor = MaterialTheme.colors.error,
             ),
             textStyle = TextStyle(
-                color = if (errorTextId != null) Color.Red else textColor,
+                color = if (errorTextId != null) MaterialTheme.colors.error else textColor,
                 fontSize = fontSize.sp,
                 fontWeight = fontWeight,
                 fontFamily = robotoSerifFamily,
@@ -212,7 +216,7 @@ fun CustomOutlinedTextField(
             Text(
                 text = stringResource(id = errorTextId),
                 modifier = Modifier.padding(start = margin5.dp, top = margin5.dp),
-                color = Color.Red,
+                color = MaterialTheme.colors.error,
                 fontFamily = robotoSerifFamily,
                 fontWeight = FontWeight.Normal,
                 fontSize = textSize12.sp,

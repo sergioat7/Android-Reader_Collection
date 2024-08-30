@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -27,7 +28,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -41,6 +41,7 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomOutline
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
 import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
+import aragones.sergio.readercollection.presentation.ui.theme.description
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel) {
@@ -65,7 +66,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
     Column(
         Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.colorSecondary))
+            .background(MaterialTheme.colors.background)
             .padding(padding24.dp),
     ) {
         Image(
@@ -125,7 +126,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 text = stringResource(id = R.string.not_account),
                 modifier = Modifier.padding(end = 5.dp),
                 style = TextStyle(
-                    color = colorResource(id = R.color.textSecondary),
+                    color = MaterialTheme.colors.description,
                     fontFamily = robotoSerifFamily,
                     fontWeight = FontWeight.Normal,
                     fontSize = textSize16.sp,
@@ -135,7 +136,7 @@ fun LoginScreen(viewModel: LoginViewModel) {
                 Text(
                     text = stringResource(id = R.string.create_account),
                     style = TextStyle(
-                        color = colorResource(id = R.color.textPrimary),
+                        color = MaterialTheme.colors.primary,
                         fontFamily = robotoSerifFamily,
                         fontWeight = FontWeight.Bold,
                         fontSize = textSize16.sp,

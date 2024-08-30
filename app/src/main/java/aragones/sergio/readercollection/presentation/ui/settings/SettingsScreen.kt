@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,7 +27,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
@@ -43,6 +43,7 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomRadioBu
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
+import aragones.sergio.readercollection.presentation.ui.theme.description
 import com.aragones.sergio.util.Preferences
 
 @Composable
@@ -68,11 +69,11 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.colorSecondary))
+            .background(MaterialTheme.colors.background),
     ) {
         CustomToolbar(
             title = stringResource(id = R.string.title_settings),
-            modifier = Modifier.background(colorResource(id = R.color.colorSecondary)),
+            modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = when (scrollState.value) {
                 0 -> 0.dp
                 else -> 4.dp
@@ -82,12 +83,14 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete_profile),
                         contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
                 IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_logout),
                         contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -282,7 +285,7 @@ fun HeaderText(text: String, modifier: Modifier) {
         text = text,
         modifier = modifier,
         style = TextStyle(
-            color = colorResource(id = R.color.textSecondary),
+            color = MaterialTheme.colors.description,
             fontFamily = robotoSerifFamily,
             fontWeight = FontWeight.Normal,
             fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
