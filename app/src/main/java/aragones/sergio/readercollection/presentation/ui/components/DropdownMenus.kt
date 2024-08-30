@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
@@ -124,7 +123,7 @@ fun CustomDropdownMenu(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true },
-            shape = RoundedCornerShape(10.dp),
+            shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.primary,
                 unfocusedBorderColor = MaterialTheme.colors.primaryVariant,

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -62,7 +61,7 @@ fun ConfirmationAlertDialog(
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
-                shape = RoundedCornerShape(10.dp),
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("confirmationAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
@@ -107,7 +106,7 @@ fun InformationAlertDialog(
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
-                shape = RoundedCornerShape(10.dp),
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("informationAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
@@ -152,7 +151,7 @@ fun TextFieldAlertDialog(
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
-                shape = RoundedCornerShape(10.dp),
+                shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("textFieldAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
@@ -165,7 +164,7 @@ fun TextFieldAlertDialog(
                             .padding(start = padding24.dp, end = padding24.dp)
                             .border(
                                 BorderStroke(1.dp, MaterialTheme.colors.primary),
-                                shape = RoundedCornerShape(10.dp)
+                                shape = MaterialTheme.shapes.medium,
                             )
                             .testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -173,7 +172,7 @@ fun TextFieldAlertDialog(
                             unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
                             textColor = MaterialTheme.colors.description,
                         ),
-                        shape = RoundedCornerShape(10.dp),
+                        shape = MaterialTheme.shapes.medium,
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = type),
                     )

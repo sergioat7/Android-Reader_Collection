@@ -117,7 +117,7 @@ fun BookItem(
                         .widthIn(max = 130.dp)
                         .fillMaxHeight()
                         .padding(start = 24.dp),
-                    cornerRadius = 10,
+                    shape = MaterialTheme.shapes.medium,
                 )
                 BookInfo(book = book)
             }
