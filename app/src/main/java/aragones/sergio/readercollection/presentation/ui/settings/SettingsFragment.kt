@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
@@ -45,52 +46,55 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
-            SettingsScreen(viewModel)
+            ReaderCollectionTheme {
 
-            val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-                initial = -1
-            )
-            ConfirmationAlertDialog(
-                show = confirmationMessageId != -1,
-                textId = confirmationMessageId,
-                onCancel = {
-                    viewModel.closeDialogs()
-                },
-                onAccept = {
+                SettingsScreen(viewModel)
 
-                    when (confirmationMessageId) {
-                        R.string.profile_delete_confirmation -> {
-                            viewModel.deleteUser()
+                val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
+                    initial = -1
+                )
+                ConfirmationAlertDialog(
+                    show = confirmationMessageId != -1,
+                    textId = confirmationMessageId,
+                    onCancel = {
+                        viewModel.closeDialogs()
+                    },
+                    onAccept = {
+
+                        when (confirmationMessageId) {
+                            R.string.profile_delete_confirmation -> {
+                                viewModel.deleteUser()
+                            }
+
+                            R.string.profile_logout_confirmation -> {
+                                viewModel.logout()
+                            }
+
+                            else -> Unit
                         }
+                        viewModel.closeDialogs()
+                    },
+                )
 
-                        R.string.profile_logout_confirmation -> {
-                            viewModel.logout()
-                        }
+                val error by viewModel.profileError.observeAsState()
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
 
-                        else -> Unit
+                val text = if (error != null) {
+                    val errorText = StringBuilder()
+                    if (requireNotNull(error).error.isNotEmpty()) {
+                        errorText.append(requireNotNull(error).error)
+                    } else {
+                        errorText.append(resources.getString(requireNotNull(error).errorKey))
                     }
-                    viewModel.closeDialogs()
-                },
-            )
-
-            val error by viewModel.profileError.observeAsState()
-            val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-
-            val text = if (error != null) {
-                val errorText = StringBuilder()
-                if (requireNotNull(error).error.isNotEmpty()) {
-                    errorText.append(requireNotNull(error).error)
+                    errorText.toString()
+                } else if (infoDialogMessageId != -1) {
+                    getString(infoDialogMessageId)
                 } else {
-                    errorText.append(resources.getString(requireNotNull(error).errorKey))
+                    ""
                 }
-                errorText.toString()
-            } else if (infoDialogMessageId != -1) {
-                getString(infoDialogMessageId)
-            } else {
-                ""
-            }
-            InformationAlertDialog(show = text.isNotEmpty(), text = text) {
-                viewModel.closeDialogs()
+                InformationAlertDialog(show = text.isNotEmpty(), text = text) {
+                    viewModel.closeDialogs()
+                }
             }
         }
 
