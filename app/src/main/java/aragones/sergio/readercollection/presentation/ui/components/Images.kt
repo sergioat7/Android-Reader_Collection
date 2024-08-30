@@ -8,7 +8,7 @@ package aragones.sergio.readercollection.presentation.ui.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -38,7 +38,7 @@ fun ImageWithLoading(
     imageUrl: String?,
     @DrawableRes placeholder: Int,
     modifier: Modifier = Modifier,
-    cornerRadius: Int = 0,
+    shape: CornerBasedShape? = null,
 ) {
 
     var isLoading by rememberSaveable { mutableStateOf(true) }
@@ -49,7 +49,9 @@ fun ImageWithLoading(
             contentDescription = "",
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(cornerRadius)),
+                .run {
+                   if(shape != null) clip(shape) else this
+                },
             placeholder = painterResource(id = placeholder),
             error = painterResource(id = placeholder),
             onLoading = { isLoading = true },

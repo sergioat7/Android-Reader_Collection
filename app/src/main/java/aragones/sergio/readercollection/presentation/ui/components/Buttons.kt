@@ -6,7 +6,6 @@
 package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
@@ -37,7 +36,7 @@ fun MainActionButton(
             backgroundColor = MaterialTheme.colors.primary,
             disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
         ),
-        shape = RoundedCornerShape(15.dp),
+        shape = MaterialTheme.shapes.large,
     ) {
         Text(
             text = text,

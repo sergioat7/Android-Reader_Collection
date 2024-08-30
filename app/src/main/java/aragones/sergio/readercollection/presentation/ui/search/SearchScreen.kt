@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DismissDirection
@@ -396,7 +395,7 @@ private fun LoadMoreButton(onClick: () -> Unit) {
                 backgroundColor = MaterialTheme.colors.primary,
                 disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
             ),
-            shape = RoundedCornerShape(15.dp),
+            shape = MaterialTheme.shapes.large,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
