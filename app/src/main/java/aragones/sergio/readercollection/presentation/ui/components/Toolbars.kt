@@ -85,6 +85,7 @@ fun CustomToolbar(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_back_blue),
                         contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -146,7 +147,7 @@ fun CustomSearchBar(
                             .padding(vertical = 4.dp),
                         onSearch = {
                             isSearching = false
-                            if(it.isNotBlank()) {
+                            if (it.isNotBlank()) {
                                 onSearch(it)
                             }
                         },

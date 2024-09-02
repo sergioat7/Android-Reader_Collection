@@ -376,6 +376,7 @@ private fun ListButton(
         Icon(
             painter = painterResource(id = image),
             contentDescription = "",
+            tint = MaterialTheme.colors.secondary,
         )
     }
 }
