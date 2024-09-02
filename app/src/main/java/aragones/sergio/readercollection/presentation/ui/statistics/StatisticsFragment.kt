@@ -31,6 +31,7 @@ import aragones.sergio.readercollection.presentation.interfaces.OnItemClickListe
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.StatusBarStyle
@@ -91,49 +92,52 @@ class StatisticsFragment :
         toolbar = binding.toolbar
         initializeUi()
         binding.composeView.setContent {
+            ReaderCollectionTheme {
 
-            val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-                initial = -1
-            )
-            ConfirmationAlertDialog(
-                show = confirmationMessageId != -1,
-                textId = confirmationMessageId,
-                onCancel = {
-                    viewModel.closeDialogs()
-                },
-                onAccept = {
+                val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
+                    initial = -1
+                )
+                ConfirmationAlertDialog(
+                    show = confirmationMessageId != -1,
+                    textId = confirmationMessageId,
+                    onCancel = {
+                        viewModel.closeDialogs()
+                    },
+                    onAccept = {
 
-                    when (confirmationMessageId) {
-                        R.string.import_confirmation -> {
+                        when (confirmationMessageId) {
+                            R.string.import_confirmation -> {
 
-                            val intent = Intent(Intent.ACTION_GET_CONTENT)
-                            intent.type = "*/*"
-                            openFileLauncher.launch(intent)
-                        }
-
-                        R.string.export_confirmation -> {
-
-                            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
-                                addCategory(Intent.CATEGORY_OPENABLE)
-                                type = "text/txt"
-                                putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
+                                val intent = Intent(Intent.ACTION_GET_CONTENT)
+                                intent.type = "*/*"
+                                openFileLauncher.launch(intent)
                             }
-                            newFileLauncher.launch(intent)
+
+                            R.string.export_confirmation -> {
+
+                                val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+                                    addCategory(Intent.CATEGORY_OPENABLE)
+                                    type = "text/txt"
+                                    putExtra(Intent.EXTRA_TITLE, "database_backup.txt")
+                                }
+                                newFileLauncher.launch(intent)
+                            }
+
+                            else -> Unit
                         }
+                        viewModel.closeDialogs()
+                    },
+                )
 
-                        else -> Unit
-                    }
+                val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                val text = if (infoMessageId != -1) {
+                    getString(infoMessageId)
+                } else {
+                    ""
+                }
+                InformationAlertDialog(show = infoMessageId != -1, text = text) {
                     viewModel.closeDialogs()
-                })
-
-            val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-            val text = if (infoMessageId != -1) {
-                getString(infoMessageId)
-            } else {
-                ""
-            }
-            InformationAlertDialog(show = infoMessageId != -1, text = text) {
-                viewModel.closeDialogs()
+                }
             }
         }
     }

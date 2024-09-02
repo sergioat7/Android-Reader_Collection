@@ -9,11 +9,11 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -22,19 +22,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import com.aragones.sergio.util.CustomInputType
 
@@ -92,10 +88,9 @@ fun CustomOutlinedTextField(
     modifier: Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
-    textColor: Color = colorResource(id = R.color.textPrimary),
-    fontSize: Float = dimensionResource(id = R.dimen.text_size_16sp).value,
-    fontWeight: FontWeight = FontWeight.Normal,
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textColor: Color = MaterialTheme.colors.primary,
     @DrawableRes endIcon: Int? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
     isLastTextField: Boolean? = null,
@@ -109,18 +104,12 @@ fun CustomOutlinedTextField(
     val keyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
-    val margin5 = dimensionResource(id = R.dimen.margin_5dp).value
-
-    val textSize12 = dimensionResource(id = R.dimen.text_size_12sp).value
-
     val label: @Composable (() -> Unit)? = labelText?.let {
         {
             Text(
                 text = it,
-                color = if (errorTextId != null) Color.Red else inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                style = MaterialTheme.typography.body2,
+                color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
             )
         }
     }
@@ -128,17 +117,19 @@ fun CustomOutlinedTextField(
         {
             Text(
                 text = it,
-                color = if (errorTextId != null) Color.Red else inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                style = MaterialTheme.typography.body2,
+                color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
             )
         }
     }
     val trailingIcon: @Composable (() -> Unit)? = endIcon?.let {
         {
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
-                Icon(painter = painterResource(id = it), contentDescription = "")
+                Icon(
+                    painter = painterResource(id = it),
+                    contentDescription = "",
+                    tint = MaterialTheme.colors.primary,
+                )
             }
         }
     }
@@ -169,20 +160,15 @@ fun CustomOutlinedTextField(
         OutlinedTextField(
             value = text,
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(10.dp),
+            shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorResource(id = R.color.colorPrimary),
-                unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight),
+                focusedBorderColor = MaterialTheme.colors.primary,
+                unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
                 disabledBorderColor = Color.Transparent,
-                errorBorderColor = Color.Red,
-                errorLabelColor = Color.Red
+                errorBorderColor = MaterialTheme.colors.error,
+                errorLabelColor = MaterialTheme.colors.error,
             ),
-            textStyle = TextStyle(
-                color = if (errorTextId != null) Color.Red else textColor,
-                fontSize = fontSize.sp,
-                fontWeight = fontWeight,
-                fontFamily = robotoSerifFamily
-            ),
+            textStyle = textStyle.copy(color = if (errorTextId != null) MaterialTheme.colors.error else textColor),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon,
@@ -206,16 +192,14 @@ fun CustomOutlinedTextField(
                 if (newText.length <= maxLength) {
                     onTextChanged(newText)
                 }
-            }
+            },
         )
         if (errorTextId != null) {
             Text(
                 text = stringResource(id = errorTextId),
-                modifier = Modifier.padding(start = margin5.dp, top = margin5.dp),
-                color = Color.Red,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
+                modifier = Modifier.padding(start = 5.dp, top = 5.dp),
+                style = MaterialTheme.typography.body2,
+                color = MaterialTheme.colors.error,
             )
         }
     }

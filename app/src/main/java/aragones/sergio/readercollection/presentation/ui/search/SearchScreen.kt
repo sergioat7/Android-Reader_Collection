@@ -21,7 +21,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DismissDirection
@@ -29,6 +28,7 @@ import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
@@ -40,15 +40,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
@@ -57,7 +52,7 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomSearchB
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItem
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItemBackground
-import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -197,8 +192,6 @@ fun SearchScreen(
     onRefresh: () -> Unit,
 ) {
 
-    val colorSecondary = colorResource(id = R.color.colorSecondary)
-
     val listState = rememberLazyListState()
     val showTopButton by remember {
         derivedStateOf {
@@ -220,22 +213,22 @@ fun SearchScreen(
 
     val pullRefreshState = rememberPullRefreshState(
         refreshing = isLoading,
-        onRefresh = onRefresh
+        onRefresh = onRefresh,
     )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorSecondary)
+            .background(MaterialTheme.colors.background),
     ) {
         CustomSearchBar(
             title = stringResource(id = R.string.title_search),
             query = query ?: "",
-            modifier = Modifier.background(colorSecondary),
+            modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = if (showTopButton) 4.dp else 0.dp,
             onSearch = {
                 onSearch(it)
-            }
+            },
         )
 
         val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
@@ -277,8 +270,8 @@ fun SearchScreen(
                 refreshing = isLoading,
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = colorSecondary,
-                contentColor = colorResource(id = R.color.colorPrimary),
+                backgroundColor = MaterialTheme.colors.secondary,
+                contentColor = MaterialTheme.colors.primary,
             )
         }
     }
@@ -326,13 +319,13 @@ private fun SearchContent(
                         background = {
                             SwipeItemBackground(
                                 dismissValue = DismissValue.DismissedToStart,
-                                color = colorResource(id = R.color.colorTertiary),
+                                color = MaterialTheme.colors.roseBud,
                                 icon = R.drawable.ic_save_book,
                             )
                         },
                         content = {
                             BookItem(book = book, onBookClick = onBookClick)
-                        }
+                        },
                     )
                 } else {
                     LoadMoreButton(onLoadMoreClick)
@@ -374,18 +367,16 @@ private fun ListButton(
     onClick: () -> Unit
 ) {
 
-    val colorPrimary = colorResource(id = R.color.colorPrimary)
-    val colorSecondary = colorResource(id = R.color.colorSecondary)
-
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
-        contentColor = colorSecondary,
-        backgroundColor = colorPrimary
+        contentColor = MaterialTheme.colors.secondary,
+        backgroundColor = MaterialTheme.colors.primary,
     ) {
         Icon(
             painter = painterResource(id = image),
-            contentDescription = ""
+            contentDescription = "",
+            tint = MaterialTheme.colors.secondary,
         )
     }
 }
@@ -396,32 +387,28 @@ private fun LoadMoreButton(onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(12.dp)
+            .padding(12.dp),
     ) {
         Button(
             onClick = onClick,
             modifier = Modifier.align(Alignment.Center),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = colorResource(id = R.color.colorPrimary),
-                disabledBackgroundColor = colorResource(id = R.color.colorPrimaryLight)
+                backgroundColor = MaterialTheme.colors.primary,
+                disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
             ),
-            shape = RoundedCornerShape(15.dp),
+            shape = MaterialTheme.shapes.large,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add_circle_outline),
                     contentDescription = "",
-                    tint = colorResource(id = R.color.textTertiary),
+                    tint = MaterialTheme.colors.secondary,
                 )
                 Text(
                     text = stringResource(id = R.string.load_more),
                     modifier = Modifier.padding(12.dp),
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textTertiary),
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-                    ),
+                    style = MaterialTheme.typography.button,
+                    color = MaterialTheme.colors.secondary,
                     maxLines = 1,
                 )
             }

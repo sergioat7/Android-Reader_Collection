@@ -26,6 +26,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
@@ -34,18 +35,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.presentation.ui.theme.description
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
 @Preview
 @Composable
@@ -75,7 +73,7 @@ fun BookItemPreview() {
             0
         ),
         onBookClick = {},
-        isDraggingEnabled = true
+        isDraggingEnabled = true,
     )
 }
 
@@ -86,32 +84,31 @@ fun BookItem(
     isDraggingEnabled: Boolean = false,
 ) {
 
-    val colorPrimaryLight = colorResource(id = R.color.colorPrimaryLight)
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .height(220.dp)
             .clickable {
                 onBookClick(book.id)
-            }
+            },
     ) {
 
-        Column {
+        Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
             Row(
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f)
-                    .padding(top = 24.dp, bottom = 24.dp, end = 24.dp)
+                    .padding(top = 24.dp, bottom = 24.dp, end = 24.dp),
             ) {
 
                 if (isDraggingEnabled) {
-                    Image(
+                    Icon(
                         painter = painterResource(id = R.drawable.ic_enable_drag),
                         contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
-                            .padding(start = 24.dp)
+                            .padding(start = 24.dp),
                     )
                 }
                 ImageWithLoading(
@@ -121,7 +118,7 @@ fun BookItem(
                         .widthIn(max = 130.dp)
                         .fillMaxHeight()
                         .padding(start = 24.dp),
-                    cornerRadius = 10
+                    shape = MaterialTheme.shapes.medium,
                 )
                 BookInfo(book = book)
             }
@@ -130,7 +127,7 @@ fun BookItem(
                     .fillMaxWidth()
                     .height(1.dp)
                     .padding(horizontal = 24.dp),
-                color = colorPrimaryLight
+                color = MaterialTheme.colors.primaryVariant,
             )
         }
     }
@@ -141,17 +138,13 @@ fun BookInfo(book: Book) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(start = 20.dp)
+            .padding(start = 20.dp),
     ) {
 
         Text(
             text = book.title ?: "",
-            style = TextStyle(
-                color = colorResource(id = R.color.textPrimary),
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp
-            ),
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 4,
         )
@@ -159,12 +152,8 @@ fun BookInfo(book: Book) {
             Text(
                 text = book.authorsToString(),
                 modifier = Modifier.padding(top = 8.dp),
-                style = TextStyle(
-                    color = colorResource(id = R.color.textSecondary),
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-                ),
+                style = MaterialTheme.typography.body1,
+                color = MaterialTheme.colors.description,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -174,17 +163,13 @@ fun BookInfo(book: Book) {
             Row(modifier = Modifier.height(30.dp), verticalAlignment = Alignment.CenterVertically) {
                 StarRatingBar(
                     rating = book.rating.toFloat() / 2,
-                    onRatingChanged = {}
+                    onRatingChanged = {},
                 )
                 Text(
                     text = book.rating.toInt().toString(),
                     modifier = Modifier.padding(start = 12.dp),
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textQuaternary),
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp
-                    ),
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.roseBud,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )
@@ -192,12 +177,8 @@ fun BookInfo(book: Book) {
         } else {
             Text(
                 text = stringResource(id = R.string.new_book),
-                style = TextStyle(
-                    color = colorResource(id = R.color.textQuaternary),
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp
-                ),
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.roseBud,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -228,7 +209,7 @@ fun SwipeItem(
             FractionalThreshold(threshold)
         },
         background = background,
-        dismissContent = content
+        dismissContent = content,
     )
 }
 
@@ -237,7 +218,7 @@ fun SwipeItem(
 private fun SwipeItemBackgroundToLeftPreview() {
     SwipeItemBackground(
         dismissValue = DismissValue.DismissedToStart,
-        color = colorResource(id = R.color.colorTertiary),
+        color = MaterialTheme.colors.roseBud,
         icon = R.drawable.ic_save_book,
     )
 }
@@ -247,7 +228,7 @@ private fun SwipeItemBackgroundToLeftPreview() {
 private fun SwipeItemBackgroundToRightPreview() {
     SwipeItemBackground(
         dismissValue = DismissValue.DismissedToEnd,
-        color = colorResource(id = R.color.colorTertiary),
+        color = MaterialTheme.colors.roseBud,
         icon = R.drawable.ic_save_book,
     )
 }
