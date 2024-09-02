@@ -26,6 +26,26 @@ jobs:
       - name: Grant execution permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: Decode Keystore
+        env:
+          KEYSTORE_ENCODED: ${{ secrets.KEYSTORE_ENCODED }}
+          KEYSTORE_PATH: ${{ secrets.KEYSTORE_PATH }}
+        run: |
+          echo $KEYSTORE_ENCODED > keystore-encoded.txt
+          base64 -d keystore-encoded.txt > $KEYSTORE_PATH
+
+      - name: Load Keystore properties
+        env:
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+          ALIAS: ${{ secrets.ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          echo "keystore.storePassword=$KEY_STORE_PASSWORD" >> keystore.properties
+          echo "keystore.keyAlias=$ALIAS" >> keystore.properties
+          echo "keystore.keyPassword=$KEY_PASSWORD" >> keystore.properties
+          echo "api.key=$API_KEY" >> keystore.properties
+
       - name: Build with Gradle
         run: ./gradlew build
 
@@ -35,19 +55,8 @@ jobs:
       - name: Run detekt validation
         run: ./gradlew detekt
 
-      - name: Decode Keystore
-        id: decode_keystore
-        uses: timheuer/base64-to-file@v1
-        with:
-          fileName: ${{ secrets.KEYSTORE_PATH }}
-          encodedString: ${{ secrets.KEYSTORE }}
-
       - name: Assemble release bundle
         run: ./gradlew bundleRelease
-        env:
-          SIGNING_KEY_ALIAS: ${{ secrets.ALIAS }}
-          SIGNING_KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-          SIGNING_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
 
       - name: Create service_account.json
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
