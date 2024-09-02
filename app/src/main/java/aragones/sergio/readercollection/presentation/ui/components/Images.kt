@@ -8,8 +8,9 @@ package aragones.sergio.readercollection.presentation.ui.components
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,7 +19,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import aragones.sergio.readercollection.R
@@ -29,7 +29,7 @@ import coil.compose.AsyncImage
 fun ImageWithLoadingPreview() {
     ImageWithLoading(
         imageUrl = null,
-        placeholder = R.drawable.ic_default_book_cover_blue
+        placeholder = R.drawable.ic_default_book_cover_blue,
     )
 }
 
@@ -38,10 +38,8 @@ fun ImageWithLoading(
     imageUrl: String?,
     @DrawableRes placeholder: Int,
     modifier: Modifier = Modifier,
-    cornerRadius: Int = 0
+    shape: CornerBasedShape? = null,
 ) {
-
-    val colorPrimary = colorResource(id = R.color.colorPrimary)
 
     var isLoading by rememberSaveable { mutableStateOf(true) }
 
@@ -51,17 +49,19 @@ fun ImageWithLoading(
             contentDescription = "",
             modifier = Modifier
                 .fillMaxSize()
-                .clip(RoundedCornerShape(cornerRadius)),
+                .run {
+                   if(shape != null) clip(shape) else this
+                },
             placeholder = painterResource(id = placeholder),
             error = painterResource(id = placeholder),
             onLoading = { isLoading = true },
             onSuccess = { isLoading = false },
-            onError = { isLoading = false }
+            onError = { isLoading = false },
         )
         if (isLoading) {
             CircularProgressIndicator(
-                color = colorPrimary,
-                modifier = Modifier.align(Alignment.Center)
+                color = MaterialTheme.colors.primary,
+                modifier = Modifier.align(Alignment.Center),
             )
         }
     }
