@@ -309,7 +309,7 @@ private fun SearchContent(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = listState) {
-            items(items = books, key = { it.id }) { book ->
+            items(items = books) { book ->
                 if (book.id.isNotBlank()) {
                     SwipeItem(
                         direction = DismissDirection.EndToStart,
