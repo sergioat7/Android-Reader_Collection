@@ -29,7 +29,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(keystoreProperties.getProperty("keystore.storeFile"))
+            storeFile = file("readercollection-keystore.jks")
             storePassword = keystoreProperties.getProperty("keystore.storePassword")
             keyAlias = keystoreProperties.getProperty("keystore.keyAlias")
             keyPassword = keystoreProperties.getProperty("keystore.keyPassword")
