@@ -102,9 +102,10 @@ fun BookItem(
             ) {
 
                 if (isDraggingEnabled) {
-                    Image(
+                    Icon(
                         painter = painterResource(id = R.drawable.ic_enable_drag),
                         contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
                             .padding(start = 24.dp),
