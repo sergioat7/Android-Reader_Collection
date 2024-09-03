@@ -40,6 +40,7 @@ import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.TextFieldAlertDialog
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.util.Constants
@@ -97,47 +98,51 @@ class BookDetailFragment :
         toolbar = binding.toolbar
         initializeUi()
         binding.composeView.setContent {
+            ReaderCollectionTheme {
 
-            val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-                initial = -1
-            )
-            ConfirmationAlertDialog(
-                show = confirmationMessageId != -1,
-                textId = confirmationMessageId,
-                onCancel = {
+                val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
+                    initial = -1
+                )
+                ConfirmationAlertDialog(
+                    show = confirmationMessageId != -1,
+                    textId = confirmationMessageId,
+                    onCancel = {
+                        viewModel.closeDialogs()
+                    },
+                    onAccept = {
+
+                        viewModel.closeDialogs()
+                        viewModel.deleteBook()
+                    },
+                )
+
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                val text = if (infoDialogMessageId != -1) {
+                    getString(infoDialogMessageId)
+                } else {
+                    ""
+                }
+                InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
+
                     viewModel.closeDialogs()
-                },
-                onAccept = {
+                    findNavController().popBackStack()
+                }
 
-                    viewModel.closeDialogs()
-                    viewModel.deleteBook()
-                })
+                val imageDialogMessageId by viewModel.imageDialogMessageId.observeAsState(initial = -1)
+                TextFieldAlertDialog(
+                    show = imageDialogMessageId != -1,
+                    titleTextId = imageDialogMessageId,
+                    type = KeyboardType.Uri,
+                    onCancel = {
+                        viewModel.closeDialogs()
+                    },
+                    onAccept = {
 
-            val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-            val text = if (infoDialogMessageId != -1) {
-                getString(infoDialogMessageId)
-            } else {
-                ""
+                        viewModel.closeDialogs()
+                        if (it.isNotBlank()) viewModel.setBookImage(it)
+                    },
+                )
             }
-            InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
-
-                viewModel.closeDialogs()
-                findNavController().popBackStack()
-            }
-
-            val imageDialogMessageId by viewModel.imageDialogMessageId.observeAsState(initial = -1)
-            TextFieldAlertDialog(
-                show = imageDialogMessageId != -1,
-                titleTextId = imageDialogMessageId,
-                type = KeyboardType.Uri,
-                onCancel = {
-                    viewModel.closeDialogs()
-                },
-                onAccept = {
-
-                    viewModel.closeDialogs()
-                    if (it.isNotBlank()) viewModel.setBookImage(it)
-                })
         }
     }
 

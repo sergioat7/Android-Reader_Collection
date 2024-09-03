@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
 import androidx.compose.material.Text
@@ -14,14 +15,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.description
 
 @Preview(showBackground = true)
 @Composable
@@ -33,14 +29,14 @@ fun CustomRadioButtonPreview() {
 fun CustomRadioButton(
     text: String,
     modifier: Modifier,
-    color: Color = colorResource(id = R.color.colorPrimary),
-    textColor: Color = colorResource(id = R.color.textSecondary),
+    color: Color = MaterialTheme.colors.primary,
+    textColor: Color = MaterialTheme.colors.description,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
         modifier = modifier,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         RadioButton(
             selected = selected,
@@ -48,16 +44,12 @@ fun CustomRadioButton(
             colors = RadioButtonDefaults.colors(
                 selectedColor = color,
                 unselectedColor = color
-            )
+            ),
         )
         Text(
             text = text,
-            style = TextStyle(
-                color = textColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp
-            )
+            style = MaterialTheme.typography.body1,
+            color = textColor,
         )
     }
 }

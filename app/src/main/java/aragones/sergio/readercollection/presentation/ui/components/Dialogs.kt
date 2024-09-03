@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -27,25 +27,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
-
-val robotoSerifFamily = FontFamily(
-    Font(R.font.roboto_serif_thin, FontWeight.Thin),
-    Font(R.font.roboto_serif_regular, FontWeight.Normal),
-    Font(R.font.roboto_serif_bold, FontWeight.Bold)
-)
+import aragones.sergio.readercollection.presentation.ui.theme.description
 
 @Preview
 @Composable
@@ -58,27 +47,24 @@ fun ConfirmationAlertDialog(
     show: Boolean,
     @StringRes textId: Int,
     onCancel: () -> Unit,
-    onAccept: () -> Unit
+    onAccept: () -> Unit,
 ) {
     if (show) {
-
-        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-
         Dialog(
             onDismissRequest = { onCancel() },
             properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
         ) {
             Surface(
-                color = colorResource(id = R.color.colorSecondary),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.testTag("confirmationAlertDialog")
+                color = MaterialTheme.colors.background,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.testTag("confirmationAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextMessageAlertDialog(stringResource(id = textId))
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp)
+                            .padding(end = 12.dp),
                     ) {
                         TextButtonAlertDialog(textId = R.string.cancel) {
                             onCancel()
@@ -103,20 +89,17 @@ fun InformationAlertDialogPreview() {
 fun InformationAlertDialog(
     show: Boolean,
     text: String,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
 ) {
     if (show) {
-
-        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-
         Dialog(
             onDismissRequest = { onDismiss() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         ) {
             Surface(
-                color = colorResource(id = R.color.colorSecondary),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.testTag("informationAlertDialog")
+                color = MaterialTheme.colors.background,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.testTag("informationAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextMessageAlertDialog(text)
@@ -124,7 +107,7 @@ fun InformationAlertDialog(
                         textId = R.string.accept,
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp)
+                            .padding(end = 12.dp),
                     ) {
                         onDismiss()
                     }
@@ -146,26 +129,20 @@ fun TextFieldAlertDialog(
     @StringRes titleTextId: Int,
     type: KeyboardType,
     onCancel: () -> Unit,
-    onAccept: (String) -> Unit
+    onAccept: (String) -> Unit,
 ) {
     if (show) {
 
         var text by rememberSaveable { mutableStateOf("") }
-        val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-        val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
-        val colorPrimary = colorResource(id = R.color.colorPrimary)
-        val colorPrimaryLight = colorResource(id = R.color.colorPrimaryLight)
-        val colorSecondary = colorResource(id = R.color.colorSecondary)
-        val textSecondary = colorResource(id = R.color.textSecondary)
 
         Dialog(
             onDismissRequest = { onCancel() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
         ) {
             Surface(
-                color = colorSecondary,
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.testTag("textFieldAlertDialog")
+                color = MaterialTheme.colors.background,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.testTag("textFieldAlertDialog"),
             ) {
                 Column(Modifier.fillMaxWidth()) {
                     TextTitleAlertDialog(titleTextId)
@@ -174,25 +151,25 @@ fun TextFieldAlertDialog(
                         onValueChange = { text = it },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(start = padding24.dp, end = padding24.dp)
+                            .padding(start = 12.dp, end = 24.dp)
                             .border(
-                                BorderStroke(1.dp, colorResource(id = R.color.colorPrimary)),
-                                shape = RoundedCornerShape(10.dp)
+                                BorderStroke(1.dp, MaterialTheme.colors.primary),
+                                shape = MaterialTheme.shapes.medium,
                             )
                             .testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = colorPrimary,
-                            unfocusedBorderColor = colorPrimaryLight,
-                            textColor = textSecondary
+                            focusedBorderColor = MaterialTheme.colors.primary,
+                            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+                            textColor = MaterialTheme.colors.description,
                         ),
-                        shape = RoundedCornerShape(10.dp),
+                        shape = MaterialTheme.shapes.medium,
                         singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = type)
+                        keyboardOptions = KeyboardOptions(keyboardType = type),
                     )
                     Row(
                         modifier = Modifier
                             .align(Alignment.End)
-                            .padding(end = padding12.dp)
+                            .padding(end = 12.dp),
                     ) {
                         TextButtonAlertDialog(textId = R.string.cancel) {
                             onCancel()
@@ -209,39 +186,30 @@ fun TextFieldAlertDialog(
 
 @Composable
 fun TextTitleAlertDialog(@StringRes textId: Int) {
-
-    val padding8 = dimensionResource(id = R.dimen.padding_8dp).value
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
     Text(
         modifier = Modifier.padding(
-            top = padding24.dp,
-            start = padding24.dp,
-            end = padding24.dp,
-            bottom = padding8.dp
+            top = 24.dp,
+            start = 24.dp,
+            end = 24.dp,
+            bottom = 8.dp,
         ),
         text = stringResource(id = textId),
-        color = colorResource(id = R.color.colorPrimary),
-        fontSize = dimensionResource(id = R.dimen.text_size_18sp).value.sp,
-        fontFamily = robotoSerifFamily,
-        fontWeight = FontWeight.Bold
+        style = MaterialTheme.typography.h2,
+        color = MaterialTheme.colors.primary,
     )
 }
 
 @Composable
 fun TextMessageAlertDialog(text: String) {
-
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
     Text(
         modifier = Modifier.padding(
-            top = padding24.dp,
-            start = padding24.dp,
-            end = padding24.dp
+            top = 24.dp,
+            start = 24.dp,
+            end = 24.dp,
         ),
         text = text,
-        color = colorResource(id = R.color.colorPrimary),
-        fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
-        fontFamily = robotoSerifFamily,
-        fontWeight = FontWeight.Normal
+        style = MaterialTheme.typography.body1,
+        color = MaterialTheme.colors.primary,
     )
 }
 
@@ -249,19 +217,17 @@ fun TextMessageAlertDialog(text: String) {
 fun TextButtonAlertDialog(
     @StringRes textId: Int,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
 
     TextButton(
         onClick = { onClick() },
-        modifier = modifier.testTag("textButtonAlertDialog")
+        modifier = modifier.testTag("textButtonAlertDialog"),
     ) {
         Text(
             text = stringResource(id = textId).uppercase(),
-            color = colorResource(id = R.color.colorPrimary),
-            fontSize = dimensionResource(id = R.dimen.text_size_14sp).value.sp,
-            fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Bold
+            style = MaterialTheme.typography.h3,
+            color = MaterialTheme.colors.primary,
         )
     }
 }

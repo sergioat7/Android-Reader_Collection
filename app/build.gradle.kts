@@ -19,7 +19,7 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 5
-val versionPatch = 4
+val versionPatch = 5
 val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
@@ -29,7 +29,7 @@ android {
 
     signingConfigs {
         create("release") {
-            storeFile = file(keystoreProperties.getProperty("keystore.storeFile"))
+            storeFile = file("readercollection-keystore.jks")
             storePassword = keystoreProperties.getProperty("keystore.storePassword")
             keyAlias = keystoreProperties.getProperty("keystore.keyAlias")
             keyPassword = keystoreProperties.getProperty("keystore.keyPassword")
