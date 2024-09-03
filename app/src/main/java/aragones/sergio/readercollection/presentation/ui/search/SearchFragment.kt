@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.databinding.FragmentSearchBinding
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.StatusBarStyle
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -34,38 +35,41 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.composeView.setContent {
+            ReaderCollectionTheme {
 
-            val state by viewModel.state
+                val state by viewModel.state
 
-            SearchScreen(
-                state = state,
-                onBookClick = { bookId ->
-                    val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(
-                        bookId,
-                        true
-                    )
-                    findNavController().navigate(action)
-                },
-                onSwipe = viewModel::addBook,
-                onSearch = {
-                    viewModel.searchBooks(reload = true, query = it)
-                },
-                onLoadMoreClick = viewModel::searchBooks,
-                onRefresh = {
-                    viewModel.searchBooks(reload = true)
-                },
-            )
+                SearchScreen(
+                    state = state,
+                    onBookClick = { bookId ->
+                        val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(
+                            bookId,
+                            true
+                        )
+                        findNavController().navigate(action)
+                    },
+                    onSwipe = viewModel::addBook,
+                    onSearch = {
+                        viewModel.searchBooks(reload = true, query = it)
+                    },
+                    onLoadMoreClick = viewModel::searchBooks,
+                    onRefresh = {
+                        viewModel.searchBooks(reload = true)
+                    },
+                )
 
-            val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
 
-            val text = if (infoDialogMessageId != -1) {
-                getString(infoDialogMessageId)
-            } else {
-                ""
+                val text = if (infoDialogMessageId != -1) {
+                    getString(infoDialogMessageId)
+                } else {
+                    ""
+                }
+                InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
+                    viewModel.closeDialogs()
+                }
             }
-            InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
-                viewModel.closeDialogs()
-            }
+
         }
     }
 

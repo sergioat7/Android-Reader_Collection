@@ -17,6 +17,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,15 +27,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomDropdownMenu
@@ -42,7 +38,7 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomOutline
 import aragones.sergio.readercollection.presentation.ui.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
-import aragones.sergio.readercollection.presentation.ui.components.robotoSerifFamily
+import aragones.sergio.readercollection.presentation.ui.theme.description
 import com.aragones.sergio.util.Preferences
 
 @Composable
@@ -58,21 +54,14 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
     val loading by viewModel.profileLoading.observeAsState(initial = false)
     val scrollState = rememberScrollState()
 
-    val padding12 = dimensionResource(id = R.dimen.padding_12dp).value
-    val padding24 = dimensionResource(id = R.dimen.padding_24dp).value
-    val margin20 = dimensionResource(id = R.dimen.margin_20dp).value
-    val margin8 = dimensionResource(id = R.dimen.margin_8dp).value
-    val margin5 = dimensionResource(id = R.dimen.margin_5dp).value
-    val size200 = dimensionResource(id = R.dimen.size_200dp).value
-
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.colorSecondary))
+            .background(MaterialTheme.colors.background),
     ) {
         CustomToolbar(
             title = stringResource(id = R.string.title_settings),
-            modifier = Modifier.background(colorResource(id = R.color.colorSecondary)),
+            modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = when (scrollState.value) {
                 0 -> 0.dp
                 else -> 4.dp
@@ -81,13 +70,15 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_delete_confirmation) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_delete_profile),
-                        contentDescription = ""
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
                 IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = ""
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -95,28 +86,28 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
         Column(
             Modifier
                 .fillMaxSize()
-                .verticalScroll(scrollState)
+                .verticalScroll(scrollState),
         ) {
 
             CustomOutlinedTextField(
                 text = viewModel.username,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = padding24.dp, end = padding24.dp, top = padding24.dp),
+                    .padding(start = 24.dp, end = 24.dp, top = 24.dp),
                 labelText = stringResource(id = R.string.username),
                 endIcon = R.drawable.ic_show_info,
                 enabled = false,
                 onTextChanged = {},
                 onEndIconClicked = {
                     viewModel.showInfoDialog(R.string.username_info)
-                }
+                },
             )
             CustomOutlinedTextField(
                 text = password,
                 errorTextId = passwordError,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = padding24.dp, end = padding24.dp, top = margin8.dp),
+                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
                 labelText = stringResource(id = R.string.password),
                 endIcon = if (passwordVisibility) {
                     R.drawable.ic_hide_password
@@ -134,26 +125,26 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         themeMode
                     )
                 },
-                onEndIconClicked = { passwordVisibility = !passwordVisibility }
+                onEndIconClicked = { passwordVisibility = !passwordVisibility },
             )
             HeaderText(
                 text = stringResource(id = R.string.app_language),
                 modifier = Modifier.padding(
-                    top = margin20.dp,
-                    bottom = margin5.dp,
-                    start = padding24.dp,
-                    end = padding24.dp
-                )
+                    top = 20.dp,
+                    bottom = 5.dp,
+                    start = 24.dp,
+                    end = 24.dp,
+                ),
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = padding12.dp)
+                    .padding(horizontal = 12.dp),
             ) {
                 CustomRadioButton(
                     text = stringResource(id = R.string.english),
                     modifier = Modifier.weight(1f),
-                    selected = language == Preferences.ENGLISH_LANGUAGE_KEY
+                    selected = language == Preferences.ENGLISH_LANGUAGE_KEY,
                 ) {
 
                     viewModel.profileDataChanged(
@@ -167,7 +158,7 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 CustomRadioButton(
                     text = stringResource(id = R.string.spanish),
                     modifier = Modifier.weight(1f),
-                    selected = language == Preferences.SPANISH_LANGUAGE_KEY
+                    selected = language == Preferences.SPANISH_LANGUAGE_KEY,
                 ) {
 
                     viewModel.profileDataChanged(
@@ -182,11 +173,11 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             HeaderText(
                 text = stringResource(id = R.string.sort_books_param),
                 modifier = Modifier.padding(
-                    top = margin20.dp,
-                    bottom = margin5.dp,
-                    start = padding24.dp,
-                    end = padding24.dp
-                )
+                    top = 20.dp,
+                    bottom = 5.dp,
+                    start = 24.dp,
+                    end = 24.dp,
+                ),
             )
             val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
             val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
@@ -196,9 +187,9 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
             CustomDropdownMenu(
                 currentValue = sortParamValue,
                 modifier = Modifier.padding(
-                    bottom = margin8.dp,
-                    start = padding24.dp,
-                    end = padding24.dp
+                    bottom = 8.dp,
+                    start = 24.dp,
+                    end = 24.dp,
                 ),
                 values = sortingParamValues,
                 onOptionSelected = {
@@ -213,12 +204,12 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         isSortDescending,
                         themeMode
                     )
-                }
+                },
             )
             val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
             CustomDropdownMenu(
                 currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
-                modifier = Modifier.padding(horizontal = padding24.dp),
+                modifier = Modifier.padding(horizontal = 24.dp),
                 values = sortingOrderValues,
                 onOptionSelected = {
 
@@ -230,21 +221,21 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         index == 1,
                         themeMode
                     )
-                }
+                },
             )
             HeaderText(
                 text = stringResource(id = R.string.app_theme),
                 modifier = Modifier.padding(
-                    top = margin20.dp,
-                    bottom = margin5.dp,
-                    start = padding24.dp,
-                    end = padding24.dp
-                )
+                    top = 20.dp,
+                    bottom = 5.dp,
+                    start = 24.dp,
+                    end = 24.dp,
+                ),
             )
             val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
             CustomDropdownMenu(
                 currentValue = appThemes[themeMode],
-                modifier = Modifier.padding(horizontal = padding24.dp),
+                modifier = Modifier.padding(horizontal = 24.dp),
                 values = appThemes,
                 onOptionSelected = {
 
@@ -255,16 +246,16 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                         isSortDescending,
                         appThemes.indexOf(it)
                     )
-                }
+                },
             )
             Spacer(modifier = Modifier.weight(1f))
             MainActionButton(
                 text = stringResource(id = R.string.save),
                 modifier = Modifier
-                    .width(size200.dp)
+                    .width(200.dp)
                     .align(Alignment.CenterHorizontally)
-                    .padding(horizontal = padding12.dp, vertical = padding24.dp),
-                enabled = passwordError == null
+                    .padding(horizontal = 12.dp, vertical = 24.dp),
+                enabled = passwordError == null,
             ) {
                 viewModel.save()
             }
@@ -281,11 +272,7 @@ fun HeaderText(text: String, modifier: Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = TextStyle(
-            color = colorResource(id = R.color.textSecondary),
-            fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp
-        )
+        style = MaterialTheme.typography.body1,
+        color = MaterialTheme.colors.description,
     )
 }

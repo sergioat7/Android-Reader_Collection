@@ -11,11 +11,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -30,20 +30,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 
 @Preview
@@ -60,7 +56,8 @@ fun CustomToolbarPreview() {
                     contentDescription = ""
                 )
             }
-        })
+        },
+    )
 }
 
 @Composable
@@ -69,34 +66,31 @@ fun CustomToolbar(
     modifier: Modifier = Modifier,
     elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
-    actions: @Composable RowScope.() -> Unit = {}
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = {
             Text(
                 text = title,
-                style = TextStyle(
-                    color = colorResource(id = R.color.textPrimary),
-                    fontFamily = robotoSerifFamily,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp
-                )
+                style = MaterialTheme.typography.h1,
+                color = MaterialTheme.colors.primary,
             )
         },
         modifier = modifier,
-        backgroundColor = colorResource(id = R.color.colorSecondary),
+        backgroundColor = MaterialTheme.colors.background,
         elevation = elevation,
         navigationIcon = onBack?.let {
             {
                 IconButton(onClick = { it.invoke() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_back_blue),
-                        contentDescription = ""
+                        contentDescription = "",
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
         },
-        actions = actions
+        actions = actions,
     )
 }
 
@@ -116,7 +110,7 @@ fun CustomSearchBar(
     title: String,
     query: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = colorResource(id = R.color.colorSecondary),
+    backgroundColor: Color = MaterialTheme.colors.background,
     elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
     onSearch: ((String) -> Unit),
@@ -136,7 +130,7 @@ fun CustomSearchBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_back_blue),
                     contentDescription = "",
-                    tint = colorResource(id = R.color.colorPrimary),
+                    tint = MaterialTheme.colors.primary,
                 )
             }
         }
@@ -153,7 +147,7 @@ fun CustomSearchBar(
                             .padding(vertical = 4.dp),
                         onSearch = {
                             isSearching = false
-                            if(it.isNotBlank()) {
+                            if (it.isNotBlank()) {
                                 onSearch(it)
                             }
                         },
@@ -163,12 +157,8 @@ fun CustomSearchBar(
             } else {
                 Text(
                     text = query.ifBlank { title },
-                    style = TextStyle(
-                        color = colorResource(id = R.color.textPrimary),
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = dimensionResource(id = R.dimen.text_size_24sp).value.sp,
-                    )
+                    style = MaterialTheme.typography.h1,
+                    color = MaterialTheme.colors.primary,
                 )
             }
         },
@@ -184,7 +174,7 @@ fun CustomSearchBar(
                     Icon(
                         painter = painterResource(id = R.drawable.ic_search),
                         contentDescription = "",
-                        tint = colorResource(id = R.color.colorPrimary),
+                        tint = MaterialTheme.colors.primary,
                     )
                 }
             }
@@ -196,10 +186,9 @@ fun CustomSearchBar(
 fun SearchBar(
     text: String,
     modifier: Modifier = Modifier,
-    inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
-    textColor: Color = colorResource(id = R.color.textPrimary),
-    fontSize: Float = dimensionResource(id = R.dimen.text_size_16sp).value,
-    fontWeight: FontWeight = FontWeight.Normal,
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textColor: Color = MaterialTheme.colors.primary,
+    textStyle: TextStyle = MaterialTheme.typography.body1,
     onSearch: (String) -> Unit,
 ) {
 
@@ -224,9 +213,7 @@ fun SearchBar(
         Text(
             text = stringResource(R.string.search),
             color = inputHintTextColor,
-            fontFamily = robotoSerifFamily,
-            fontWeight = FontWeight.Normal,
-            fontSize = dimensionResource(id = R.dimen.text_size_16sp).value.sp,
+            style = MaterialTheme.typography.body1,
         )
     }
     val trailingIcon: @Composable (() -> Unit)? = if (textFieldValueState.text.isNotBlank()) {
@@ -237,7 +224,7 @@ fun SearchBar(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_clear_text),
                     contentDescription = "",
-                    tint = colorResource(id = R.color.colorPrimary),
+                    tint = MaterialTheme.colors.primary,
                 )
             }
         }
@@ -246,22 +233,17 @@ fun SearchBar(
     OutlinedTextField(
         value = textFieldValueState,
         modifier = modifier.focusRequester(focusRequester),
-        shape = RoundedCornerShape(10.dp),
+        shape = MaterialTheme.shapes.medium,
         colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = colorResource(id = R.color.colorPrimary),
-            unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight),
+            focusedBorderColor = MaterialTheme.colors.primary,
+            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
         ),
-        textStyle = TextStyle(
-            color = textColor,
-            fontSize = fontSize.sp,
-            fontWeight = fontWeight,
-            fontFamily = robotoSerifFamily,
-        ),
+        textStyle = textStyle.copy(color = textColor),
         placeholder = placeholder,
         trailingIcon = trailingIcon,
         keyboardOptions = KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Search
+            imeAction = ImeAction.Search,
         ),
         keyboardActions = KeyboardActions(onSearch = {
             focusRequester.freeFocus()

@@ -20,13 +20,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -46,10 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpOffset
@@ -58,11 +54,9 @@ import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
-import aragones.sergio.readercollection.R
 import kotlin.math.max
 import kotlin.math.min
 
@@ -75,7 +69,7 @@ fun CustomDropdownMenuPreview() {
         placeholderText = "Please choose",
         modifier = Modifier.padding(12.dp),
         values = listOf("Option 1", "Option 2", "Option 3"),
-        onOptionSelected = {}
+        onOptionSelected = {},
     )
 }
 
@@ -85,25 +79,20 @@ fun CustomDropdownMenu(
     modifier: Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = colorResource(id = R.color.textPrimaryLight),
-    textColor: Color = colorResource(id = R.color.textPrimary),
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textColor: Color = MaterialTheme.colors.primary,
     values: List<String>,
-    onOptionSelected: (String) -> Unit
+    onOptionSelected: (String) -> Unit,
 ) {
 
     var expanded by rememberSaveable { mutableStateOf(false) }
-
-    val textSize12 = dimensionResource(id = R.dimen.text_size_12sp).value
-    val textSize16 = dimensionResource(id = R.dimen.text_size_16sp).value
 
     val label: @Composable (() -> Unit)? = labelText?.let {
         {
             Text(
                 text = it,
+                style = MaterialTheme.typography.body2,
                 color = inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
             )
         }
     }
@@ -111,10 +100,8 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
+                style = MaterialTheme.typography.body2,
                 color = inputHintTextColor,
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Normal,
-                fontSize = textSize12.sp
             )
         }
     }
@@ -123,7 +110,8 @@ fun CustomDropdownMenu(
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
                     if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = ""
+                    contentDescription = "",
+                    tint = textColor,
                 )
             }
         }
@@ -135,17 +123,12 @@ fun CustomDropdownMenu(
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable { expanded = true },
-            shape = RoundedCornerShape(10.dp),
+            shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = colorResource(id = R.color.colorPrimary),
-                unfocusedBorderColor = colorResource(id = R.color.colorPrimaryLight)
+                focusedBorderColor = MaterialTheme.colors.primary,
+                unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
             ),
-            textStyle = TextStyle(
-                color = textColor,
-                fontSize = textSize16.sp,
-                fontWeight = FontWeight.Normal,
-                fontFamily = robotoSerifFamily
-            ),
+            textStyle = MaterialTheme.typography.body1.copy(color = textColor),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon,
@@ -154,14 +137,14 @@ fun CustomDropdownMenu(
             readOnly = true,
             onValueChange = {
                 onOptionSelected(it)
-            }
+            },
         )
         MyDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = modifier
                 .fillMaxWidth()
-                .background(colorResource(id = R.color.colorSecondary))
+                .background(MaterialTheme.colors.background),
         ) {
             for (value in values) {
                 DropdownMenuItem(onClick = {
@@ -170,10 +153,8 @@ fun CustomDropdownMenu(
                 }) {
                     Text(
                         text = value,
+                        style = MaterialTheme.typography.body1,
                         color = textColor,
-                        fontFamily = robotoSerifFamily,
-                        fontWeight = FontWeight.Normal,
-                        fontSize = textSize16.sp
                     )
                 }
             }
@@ -207,14 +188,14 @@ fun MyDropdownMenu(
         Popup(
             onDismissRequest = onDismissRequest,
             popupPositionProvider = popupPositionProvider,
-            properties = properties
+            properties = properties,
         ) {
             MyDropdownMenuContent(
                 expandedStates = expandedStates,
                 transformOriginState = transformOriginState,
                 scrollState = scrollState,
                 modifier = modifier,
-                content = content
+                content = content,
             )
         }
     }
@@ -245,13 +226,13 @@ fun MyDropdownMenuContent(
                 // Dismissed to expanded
                 tween(
                     durationMillis = InTransitionDuration,
-                    easing = LinearOutSlowInEasing
+                    easing = LinearOutSlowInEasing,
                 )
             } else {
                 // Expanded to dismissed.
                 tween(
                     durationMillis = 1,
-                    delayMillis = OutTransitionDuration - 1
+                    delayMillis = OutTransitionDuration - 1,
                 )
             }
         }, label = ""
@@ -293,7 +274,7 @@ fun MyDropdownMenuContent(
                 transformOrigin = transformOriginState.value
             },
         elevation = MenuElevation,
-        backgroundColor = colorResource(id = R.color.colorSecondary)
+        backgroundColor = MaterialTheme.colors.background
     ) {
         Column(
             modifier = modifier

@@ -19,6 +19,7 @@ import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.register.RegisterActivity
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -41,19 +42,22 @@ class LoginActivity : BaseActivity() {
             setContentView(root)
 
             composeView.setContent {
-                LoginScreen(viewModel)
+                ReaderCollectionTheme {
 
-                val error by viewModel.loginError.observeAsState()
-                val errorText = StringBuilder()
-                error?.let {
-                    if (it.error.isNotEmpty()) {
-                        errorText.append(it.error)
-                    } else {
-                        errorText.append(resources.getString(it.errorKey))
+                    LoginScreen(viewModel)
+
+                    val error by viewModel.loginError.observeAsState()
+                    val errorText = StringBuilder()
+                    error?.let {
+                        if (it.error.isNotEmpty()) {
+                            errorText.append(it.error)
+                        } else {
+                            errorText.append(resources.getString(it.errorKey))
+                        }
                     }
-                }
-                InformationAlertDialog(show = error != null, text = errorText.toString()) {
-                    viewModel.closeDialogs()
+                    InformationAlertDialog(show = error != null, text = errorText.toString()) {
+                        viewModel.closeDialogs()
+                    }
                 }
             }
         }

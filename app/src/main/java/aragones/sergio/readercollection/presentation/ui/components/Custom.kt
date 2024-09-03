@@ -18,22 +18,20 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.lightRoseBud
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
 @Preview(showBackground = true)
 @Composable
@@ -42,27 +40,23 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
         modifier = Modifier
             .fillMaxSize()
             .padding(24.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Image(
             painter = painterResource(id = R.drawable.image_no_results),
             contentDescription = "",
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
-                .fillMaxWidth(0.5f)
+                .fillMaxWidth(0.5f),
         )
         Text(
             text = text,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(24.dp),
-            style = TextStyle(
-                color = colorResource(id = R.color.textPrimary),
-                fontFamily = robotoSerifFamily,
-                fontWeight = FontWeight.Bold,
-                fontSize = dimensionResource(id = R.dimen.text_size_20sp).value.sp,
-                textAlign = TextAlign.Center,
-            )
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.primary,
+            textAlign = TextAlign.Center,
         )
     }
 }
@@ -72,7 +66,7 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
 fun StartRatingBarPreview() {
     StarRatingBar(
         rating = 7f / 2,
-        onRatingChanged = {}
+        onRatingChanged = {},
     )
 }
 
@@ -82,29 +76,26 @@ fun StarRatingBar(
     maxStars: Int = 5,
     rating: Float,
     isSelectable: Boolean = false,
-    onRatingChanged: (Float) -> Unit
+    onRatingChanged: (Float) -> Unit,
 ) {
 
     val density = LocalDensity.current.density
     val starSize = (12f * density).dp
     val starSpacing = (0.5f * density).dp
 
-    val colorTertiary = colorResource(id = R.color.colorTertiary)
-    val colorTertiaryLight = colorResource(id = R.color.colorTertiaryLight)
-
     Row(
         modifier = modifier.selectableGroup(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         for (i in 1..maxStars) {
             val (icon, tint) = when {
-                i <= rating -> Pair(R.drawable.ic_round_star_24, colorTertiary)
+                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colors.roseBud)
                 i.toFloat() == rating + 0.5f -> Pair(
                     R.drawable.ic_round_star_half_24,
-                    colorTertiary
+                    MaterialTheme.colors.roseBud
                 )
 
-                else -> Pair(R.drawable.ic_round_star_border_24, colorTertiaryLight)
+                else -> Pair(R.drawable.ic_round_star_border_24, MaterialTheme.colors.lightRoseBud)
             }
             Icon(
                 painter = painterResource(id = icon),
@@ -115,10 +106,10 @@ fun StarRatingBar(
                         selected = isSelectable,
                         onClick = {
                             onRatingChanged(i.toFloat())
-                        }
+                        },
                     )
                     .width(starSize)
-                    .height(starSize)
+                    .height(starSize),
             )
 
             if (i < maxStars) {

@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.presentation.extensions.setStatusBarStyl
 import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,26 +40,29 @@ class RegisterActivity : BaseActivity() {
             setContentView(root)
 
             composeView.setContent {
-                RegisterScreen(viewModel)
+                ReaderCollectionTheme {
 
-                val error by viewModel.registerError.observeAsState()
-                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                    RegisterScreen(viewModel)
 
-                val text = if (error != null) {
-                    val errorText = StringBuilder()
-                    if (requireNotNull(error).error.isNotEmpty()) {
-                        errorText.append(requireNotNull(error).error)
+                    val error by viewModel.registerError.observeAsState()
+                    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+
+                    val text = if (error != null) {
+                        val errorText = StringBuilder()
+                        if (requireNotNull(error).error.isNotEmpty()) {
+                            errorText.append(requireNotNull(error).error)
+                        } else {
+                            errorText.append(resources.getString(requireNotNull(error).errorKey))
+                        }
+                        errorText.toString()
+                    } else if (infoDialogMessageId != -1) {
+                        getString(infoDialogMessageId)
                     } else {
-                        errorText.append(resources.getString(requireNotNull(error).errorKey))
+                        ""
                     }
-                    errorText.toString()
-                } else if (infoDialogMessageId != -1) {
-                    getString(infoDialogMessageId)
-                } else {
-                    ""
-                }
-                InformationAlertDialog(show = text.isNotEmpty(), text = text) {
-                    viewModel.closeDialogs()
+                    InformationAlertDialog(show = text.isNotEmpty(), text = text) {
+                        viewModel.closeDialogs()
+                    }
                 }
             }
         }
