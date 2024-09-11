@@ -15,7 +15,6 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import com.aragones.sergio.util.ScrollPosition
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
@@ -39,10 +38,12 @@ class BookListViewModel @Inject constructor(
     private var month: Int = state["month"] ?: -1
     private var author: String? = state["author"]
     private var format: String? = state["format"]
+    private val arePendingBooks: Boolean
+        get() = state == BookState.PENDING
     private val _books = MutableLiveData<List<Book>?>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
+    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
@@ -50,9 +51,7 @@ class BookListViewModel @Inject constructor(
     val books: LiveData<List<Book>?> = _books
     val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
-    val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
-    val arePendingBooks: Boolean
-        get() = state == BookState.PENDING
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 
@@ -89,8 +88,8 @@ class BookListViewModel @Inject constructor(
         ).addTo(disposables)
     }
 
-    fun setPosition(newPosition: ScrollPosition) {
-        _scrollPosition.value = newPosition
+    fun closeDialogs() {
+        _infoDialogMessageId.value = -1
     }
 
     fun sort(context: Context, acceptHandler: (() -> Unit)?) {

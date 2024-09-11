@@ -55,10 +55,6 @@ object BookState {
     const val READ = "READ"
 }
 
-enum class ScrollPosition {
-    TOP, MIDDLE, END
-}
-
 enum class StatusBarStyle {
     PRIMARY,
     SECONDARY
