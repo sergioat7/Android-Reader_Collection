@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.ui.booklist
 
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
 
 sealed class BookListUiState {
@@ -16,9 +15,5 @@ sealed class BookListUiState {
         val isLoading: Boolean,
         val books: List<Book>,
         val isDraggingEnabled: Boolean,
-    ) : BookListUiState()
-
-    data class Error(
-        val value: ErrorResponse,
     ) : BookListUiState()
 }

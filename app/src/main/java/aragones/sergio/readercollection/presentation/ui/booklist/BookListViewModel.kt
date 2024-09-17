@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.presentation.ui.booklist
 
 import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -40,17 +42,15 @@ class BookListViewModel @Inject constructor(
     private var format: String? = state["format"]
     private val arePendingBooks: Boolean
         get() = state == BookState.PENDING
-    private val _books = MutableLiveData<List<Book>?>()
-    private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
     var query: String = state["query"] ?: ""
-    val books: LiveData<List<Book>?> = _books
-    val booksLoading: LiveData<Boolean> = _booksLoading
     val booksError: LiveData<ErrorResponse> = _booksError
+    var uiState: MutableState<BookListUiState> = mutableStateOf(BookListUiState.Empty)
+        private set
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
@@ -67,23 +67,35 @@ class BookListViewModel @Inject constructor(
     //region Public methods
     fun fetchBooks() {
 
-        _booksLoading.value = true
+        uiState.value = when (val currentState = uiState.value) {
+            is BookListUiState.Empty -> BookListUiState.Success(
+                isLoading = true,
+                books = emptyList(),
+                isDraggingEnabled = false,
+            )
+
+            is BookListUiState.Success -> currentState.copy(isLoading = true)
+        }
+
         booksRepository.getBooks().subscribeBy(
             onComplete = {
-                noBooksError()
+                showError()
             },
             onNext = {
 
                 if (it.isEmpty()) {
-                    noBooksError()
+                    showError()
                 } else {
 
-                    showBooks(it)
-                    _booksLoading.value = false
+                    uiState.value = BookListUiState.Success(
+                        isLoading = false,
+                        books = getFilteredBooksFor(it),
+                        isDraggingEnabled = false,
+                    )
                 }
             },
             onError = {
-                noBooksError()
+                showError()
             }
         ).addTo(disposables)
     }
@@ -104,15 +116,24 @@ class BookListViewModel @Inject constructor(
 
     fun setPriorityFor(books: List<Book>) {
 
-        _booksLoading.value = true
+        uiState.value = when (val currentState = uiState.value) {
+            is BookListUiState.Empty -> BookListUiState.Success(
+                isLoading = true,
+                books = emptyList(),
+                isDraggingEnabled = false,
+            )
+
+            is BookListUiState.Success -> currentState.copy(isLoading = true)
+        }
         booksRepository.setBooks(books, success = {
 
-            showBooks(books)
-            _booksLoading.value = false
+            uiState.value = BookListUiState.Success(
+                isLoading = false,
+                books = getFilteredBooksFor(books),
+                isDraggingEnabled = false,
+            )
         }, failure = {
-
-            _booksLoading.value = false
-            _booksError.value = it
+            showError(it)
         })
     }
 
@@ -124,7 +145,7 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun showBooks(books: List<Book>) {
+    private fun getFilteredBooksFor(books: List<Book>): List<Book> {
 
         var filteredBooks = books
             .filter { book ->
@@ -170,14 +191,18 @@ class BookListViewModel @Inject constructor(
         } else {
             sortComparator.thenBy { it.priority }
         }
-        _books.value = filteredBooks.sortedWith(comparator)
+        return filteredBooks.sortedWith(comparator)
             .let { if (isSortDescending && !arePendingBooks) it.reversed() else it }
     }
 
-    private fun noBooksError() {
+    private fun showError(error: ErrorResponse = ErrorResponse("", R.string.error_database)) {
 
-        _booksLoading.value = false
-        _booksError.value = ErrorResponse("", R.string.error_database)
+        uiState.value = BookListUiState.Success(
+            isLoading = false,
+            books = emptyList(),
+            isDraggingEnabled = false,
+        )
+        _booksError.value = error
     }
     //endregion
 }

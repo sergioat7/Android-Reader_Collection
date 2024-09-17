@@ -53,17 +53,17 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
             setContent {
                 ReaderCollectionTheme {
 
-                    val isLoading by viewModel.booksLoading.observeAsState()
-                    val books by viewModel.books.observeAsState()
-                    val state = BookListUiState.Success(
-                        isLoading = isLoading ?: false,
-                        books = books ?: listOf(),
-                        isDraggingEnabled = false,
-                    )
+                    val state by viewModel.uiState
 
-                    if (books?.isEmpty() == true && isLoading == false) {
-                        findNavController().popBackStack()
-                        return@ReaderCollectionTheme
+                    when (val currentState = state) {
+                        is BookListUiState.Success -> {
+                            if (currentState.books.isEmpty() && !currentState.isLoading) {
+                                findNavController().popBackStack()
+                                return@ReaderCollectionTheme
+                            }
+                        }
+
+                        else -> Unit
                     }
 
                     BookListScreen(

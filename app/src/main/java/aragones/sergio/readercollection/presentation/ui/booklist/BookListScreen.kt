@@ -128,8 +128,6 @@ fun BookListScreen(
                         )
                     }
                 }
-
-                is BookListUiState.Error -> NoResultsComponent(text = stringResource(id = state.value.errorKey))
             }
 
             if (state is BookListUiState.Success && state.isLoading) {
@@ -300,20 +298,6 @@ private fun ReadBookListScreenSuccessPreview() {
                 )
             ),
             isDraggingEnabled = true,
-        ),
-        onBookClick = {},
-        onBack = {},
-        onDragClick = {},
-        onSortClick = {},
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-private fun BookListScreenErrorPreview() {
-    BookListScreen(
-        state = BookListUiState.Error(
-            value = ErrorResponse("", R.string.error_database)
         ),
         onBookClick = {},
         onBack = {},
