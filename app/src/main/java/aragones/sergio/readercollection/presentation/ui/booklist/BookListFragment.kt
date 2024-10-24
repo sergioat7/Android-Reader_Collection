@@ -83,6 +83,12 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                         onSortClick = {
                             viewModel.sort(requireContext()) {}
                         },
+                        onDrag = {
+                            viewModel.updateBookOrdering(it)
+                        },
+                        onDragEnd = {
+                            viewModel.setPriorityFor(it)
+                        }
                     )
 
                     val error by viewModel.booksError.observeAsState()

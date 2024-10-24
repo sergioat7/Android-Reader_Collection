@@ -127,24 +127,25 @@ class BookListViewModel @Inject constructor(
         }
     }
 
-    fun setPriorityFor(books: List<Book>) {
+    fun updateBookOrdering(books: List<Book>) {
 
+        for ((index, book) in books.withIndex()) {
+            book.priority = index
+        }
         uiState.value = when (val currentState = uiState.value) {
             is BookListUiState.Empty -> BookListUiState.Success(
-                isLoading = true,
-                books = emptyList(),
-                isDraggingEnabled = false,
-            )
-
-            is BookListUiState.Success -> currentState.copy(isLoading = true)
-        }
-        booksRepository.setBooks(books, success = {
-
-            uiState.value = BookListUiState.Success(
                 isLoading = false,
                 books = getFilteredBooksFor(books),
-                isDraggingEnabled = false,
+                isDraggingEnabled = true,
             )
+
+            is BookListUiState.Success -> currentState.copy(books = getFilteredBooksFor(books))
+        }
+    }
+
+    fun setPriorityFor(books: List<Book>) {
+        booksRepository.setBooks(books, success = {
+            /* no-op due to database is being observed */
         }, failure = {
             showError(it)
         })

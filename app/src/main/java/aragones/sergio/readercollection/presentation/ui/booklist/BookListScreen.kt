@@ -7,6 +7,8 @@ package aragones.sergio.readercollection.presentation.ui.booklist
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
@@ -14,22 +16,27 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
@@ -39,6 +46,7 @@ import aragones.sergio.readercollection.presentation.ui.components.NoResultsComp
 import aragones.sergio.readercollection.presentation.ui.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.ui.search.reachedBottom
 import com.aragones.sergio.util.BookState
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 @Composable
@@ -48,6 +56,8 @@ fun BookListScreen(
     onBack: () -> Unit,
     onDragClick: () -> Unit,
     onSortClick: () -> Unit,
+    onDrag: (List<Book>) -> Unit,
+    onDragEnd: (List<Book>) -> Unit,
 ) {
 
     val listState = rememberLazyListState()
@@ -61,7 +71,6 @@ fun BookListScreen(
             !listState.reachedBottom()
         }
     }
-    val coroutineScope = rememberCoroutineScope()
 
     val title = if (state is BookListUiState.Success && state.books.isNotEmpty()) {
         pluralStringResource(
@@ -114,21 +123,13 @@ fun BookListScreen(
                         NoResultsComponent()
                     } else {
                         BookListContent(
-                            books = state.books,
+                            state = state,
                             listState = listState,
                             showTopButton = showTopButton,
                             showBottomButton = showBottomButton,
-                            onTopButtonClick = {
-                                coroutineScope.launch {
-                                    listState.animateScrollToItem(index = 0)
-                                }
-                            },
-                            onBottomButtonClick = {
-                                coroutineScope.launch {
-                                    listState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
-                                }
-                            },
                             onBookClick = onBookClick,
+                            onDrag = onDrag,
+                            onDragEnd = onDragEnd,
                         )
                     }
                 }
@@ -143,14 +144,66 @@ fun BookListScreen(
 
 @Composable
 private fun BookListContent(
-    books: List<Book>,
+    state: BookListUiState.Success,
     listState: LazyListState,
     showTopButton: Boolean,
     showBottomButton: Boolean,
-    onTopButtonClick: () -> Unit,
-    onBottomButtonClick: () -> Unit,
     onBookClick: (String) -> Unit,
+    onDrag: (List<Book>) -> Unit,
+    onDragEnd: (List<Book>) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+
+    val books = state.books.toMutableStateList()
+    val dragAndDropListState =
+        rememberDragAndDropListState(listState) { from, to ->
+            books.move(from, to)
+            onDrag(books)
+        }
+
+    val coroutineScope = rememberCoroutineScope()
+    var overscrollJob by remember { mutableStateOf<Job?>(null) }
+
+    var draggingIndex by remember { mutableIntStateOf(-1) }
+
+    val draggingModifier = if (state.isDraggingEnabled) {
+        Modifier.pointerInput(Unit) {
+            detectDragGesturesAfterLongPress(
+                onDrag = { change, offset ->
+                    change.consume()
+                    dragAndDropListState.onDrag(offset)
+
+                    if (overscrollJob?.isActive == true) return@detectDragGesturesAfterLongPress
+
+                    dragAndDropListState
+                        .checkOverscroll()
+                        .takeIf { it != 0f }
+                        ?.let {
+                            overscrollJob = coroutineScope.launch {
+                                dragAndDropListState.lazyListState.scrollBy(
+                                    it
+                                )
+                            }
+                        } ?: kotlin.run { overscrollJob?.cancel() }
+
+                    draggingIndex = dragAndDropListState.currentIndexOfDraggedItem ?: -1
+                },
+                onDragStart = { offset ->
+                    dragAndDropListState.onDragStart(offset)
+                    draggingIndex = dragAndDropListState.currentIndexOfDraggedItem ?: -1
+                },
+                onDragEnd = {
+                    dragAndDropListState.onDragInterrupted()
+                    onDragEnd(books)
+                    draggingIndex = -1
+                },
+                onDragCancel = {
+                    dragAndDropListState.onDragInterrupted()
+                    draggingIndex = -1
+                }
+            )
+        }
+    } else Modifier
 
     val topOffset by animateFloatAsState(
         targetValue = if (showTopButton) 0f else 100f,
@@ -161,10 +214,27 @@ private fun BookListContent(
         label = ""
     )
 
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = listState) {
-            items(items = books) { book ->
-                BookItem(book = book, onBookClick = onBookClick)
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            state = dragAndDropListState.lazyListState,
+            modifier = draggingModifier,
+        ) {
+            itemsIndexed(books) { index, book ->
+                BookItem(
+                    book = book,
+                    onBookClick = onBookClick,
+                    modifier = Modifier.composed {
+                        val offset =
+                            dragAndDropListState.elementDisplacement.takeIf {
+                                index == dragAndDropListState.currentIndexOfDraggedItem
+                            } ?: 0f
+                        Modifier.graphicsLayer {
+                            translationY = offset
+                        }
+                    },
+                    isDraggingEnabled = state.isDraggingEnabled,
+                    isDragging = index == draggingIndex,
+                )
             }
         }
         ListButton(
@@ -172,14 +242,22 @@ private fun BookListContent(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .offset(x = topOffset.dp),
-            onClick = onTopButtonClick,
+            onClick = {
+                coroutineScope.launch {
+                    dragAndDropListState.lazyListState.animateScrollToItem(index = 0)
+                }
+            },
         )
         ListButton(
             image = R.drawable.ic_double_arrow_down,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .offset(x = bottomOffset.dp),
-            onClick = onBottomButtonClick,
+            onClick = {
+                coroutineScope.launch {
+                    dragAndDropListState.lazyListState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
+                }
+            },
         )
     }
 }
@@ -244,6 +322,8 @@ private fun PendingBookListScreenSuccessPreview() {
         onBack = {},
         onDragClick = {},
         onSortClick = {},
+        onDrag = {},
+        onDragEnd = {},
     )
 }
 
@@ -307,5 +387,13 @@ private fun ReadBookListScreenSuccessPreview() {
         onBack = {},
         onDragClick = {},
         onSortClick = {},
+        onDrag = {},
+        onDragEnd = {},
     )
+}
+
+fun <T> MutableList<T>.move(from: Int, to: Int) {
+    if (from == to) return
+    val element = this.removeAt(from)
+    this.add(to, element)
 }
