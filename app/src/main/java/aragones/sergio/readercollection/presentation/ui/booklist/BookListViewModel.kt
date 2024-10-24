@@ -81,17 +81,24 @@ class BookListViewModel @Inject constructor(
             onComplete = {
                 showError()
             },
-            onNext = {
+            onNext = { books ->
 
-                if (it.isEmpty()) {
+                if (books.isEmpty()) {
                     showError()
                 } else {
 
-                    uiState.value = BookListUiState.Success(
-                        isLoading = false,
-                        books = getFilteredBooksFor(it),
-                        isDraggingEnabled = false,
-                    )
+                    uiState.value = when (val currentState = uiState.value) {
+                        is BookListUiState.Empty -> BookListUiState.Success(
+                            isLoading = true,
+                            books = getFilteredBooksFor(books),
+                            isDraggingEnabled = false,
+                        )
+
+                        is BookListUiState.Success -> currentState.copy(
+                            isLoading = false,
+                            books = getFilteredBooksFor(books),
+                        )
+                    }
                 }
             },
             onError = {
@@ -102,6 +109,12 @@ class BookListViewModel @Inject constructor(
 
     fun closeDialogs() {
         _infoDialogMessageId.value = -1
+    }
+
+    fun switchDraggingState() {
+        (uiState.value as? BookListUiState.Success)?.let { state ->
+            uiState.value = state.copy(isDraggingEnabled = state.isDraggingEnabled.not())
+        }
     }
 
     fun sort(context: Context, acceptHandler: (() -> Unit)?) {

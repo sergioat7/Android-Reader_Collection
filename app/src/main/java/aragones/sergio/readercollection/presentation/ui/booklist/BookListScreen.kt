@@ -9,6 +9,7 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.lazy.LazyColumn
@@ -69,12 +70,26 @@ fun BookListScreen(
             state.books.size
         )
     } else ""
-    val (showActions, isDraggingEnabled) = when (state) {
+    val actions: @Composable RowScope.() -> Unit = when (state) {
         is BookListUiState.Success -> {
-            (state.books.firstOrNull()?.isPending() == false) to state.isDraggingEnabled
+            {
+                if (state.books.any { it.isPending() }) {
+                    TopAppBarIcon(
+                        icon = if (state.isDraggingEnabled) R.drawable.ic_disable_drag else R.drawable.ic_enable_drag,
+                        onClick = onDragClick,
+                    )
+                } else {
+                    TopAppBarIcon(
+                        icon = R.drawable.ic_sort_books,
+                        onClick = onSortClick,
+                    )
+                }
+            }
         }
 
-        else -> false to false
+        else -> {
+            {}
+        }
     }
 
     Column(
@@ -87,18 +102,7 @@ fun BookListScreen(
             modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = if (showTopButton) 4.dp else 0.dp,
             onBack = onBack,
-            actions = {
-                if (showActions) {
-                    TopAppBarIcon(
-                        icon = if (isDraggingEnabled) R.drawable.ic_enable_drag else R.drawable.ic_disable_drag,
-                        onClick = onDragClick,
-                    )
-                    TopAppBarIcon(
-                        icon = R.drawable.ic_sort_books,
-                        onClick = onSortClick,
-                    )
-                }
-            }
+            actions = actions
         )
         Box(
             modifier = Modifier.fillMaxSize(),

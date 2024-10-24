@@ -77,7 +77,9 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                             findNavController().navigate(action)
                         },
                         onBack = { findNavController().popBackStack() },
-                        onDragClick = {},
+                        onDragClick = {
+                            viewModel.switchDraggingState()
+                        },
                         onSortClick = {
                             viewModel.sort(requireContext()) {}
                         },
