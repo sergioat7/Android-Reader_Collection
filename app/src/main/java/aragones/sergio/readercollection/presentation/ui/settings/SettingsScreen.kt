@@ -15,8 +15,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -27,7 +25,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -38,6 +35,7 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomOutline
 import aragones.sergio.readercollection.presentation.ui.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
+import aragones.sergio.readercollection.presentation.ui.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.ui.theme.description
 import com.aragones.sergio.util.Preferences
 
@@ -67,20 +65,14 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                 else -> 4.dp
             },
             actions = {
-                IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_delete_confirmation) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_delete_profile),
-                        contentDescription = "",
-                        tint = MaterialTheme.colors.primary,
-                    )
-                }
-                IconButton(onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_logout),
-                        contentDescription = "",
-                        tint = MaterialTheme.colors.primary,
-                    )
-                }
+                TopAppBarIcon(
+                    icon = R.drawable.ic_delete_profile,
+                    onClick = { viewModel.showConfirmationDialog(R.string.profile_delete_confirmation) },
+                )
+                TopAppBarIcon(
+                    icon = R.drawable.ic_logout,
+                    onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) },
+                )
             }
         )
         Column(

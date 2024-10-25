@@ -7,7 +7,6 @@
 
 package aragones.sergio.readercollection.presentation.ui.search
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -49,6 +47,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
 import aragones.sergio.readercollection.presentation.ui.components.CustomSearchBar
+import aragones.sergio.readercollection.presentation.ui.components.ListButton
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItem
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItemBackground
@@ -356,27 +355,6 @@ private fun SearchContent(
                 .align(Alignment.BottomEnd)
                 .offset(x = bottomOffset.dp),
             onClick = onBottomButtonClick,
-        )
-    }
-}
-
-@Composable
-private fun ListButton(
-    @DrawableRes image: Int,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-
-    FloatingActionButton(
-        onClick = onClick,
-        modifier = modifier.padding(12.dp),
-        contentColor = MaterialTheme.colors.secondary,
-        backgroundColor = MaterialTheme.colors.primary,
-    ) {
-        Icon(
-            painter = painterResource(id = image),
-            contentDescription = "",
-            tint = MaterialTheme.colors.secondary,
         )
     }
 }

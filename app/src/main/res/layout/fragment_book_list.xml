@@ -3,86 +3,10 @@
   ~ Created by Sergio Aragonés on 17/1/2022
   -->
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <import type="android.view.View" />
-
-        <import type="com.aragones.sergio.util.ScrollPosition" />
-
-        <variable
-            name="fragment"
-            type="aragones.sergio.readercollection.presentation.ui.booklist.BookListFragment" />
-
-        <variable
-            name="viewModel"
-            type="aragones.sergio.readercollection.presentation.ui.booklist.BookListViewModel" />
-
-        <variable
-            name="isDarkMode"
-            type="Boolean" />
-
-    </data>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.booklist.BookListFragment">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:navigationIcon="@{isDarkMode ? @drawable/ic_arrow_back_white : @drawable/ic_arrow_back_blue}"
-            app:title='@{viewModel.books.empty ? "" : @plurals/title_books_count(viewModel.books.size(), viewModel.books.size())}'
-            app:titleTextAppearance="@style/Widget.ReaderCollection.TextView.Subtitle.Main" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view_books"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button_start_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_12dp"
-            android:layout_marginEnd="@dimen/margin_12dp"
-            android:onClick="@{fragment::goToStartEndList}"
-            android:visibility="@{viewModel.books.empty || viewModel.scrollPosition == ScrollPosition.TOP ? View.GONE : View.VISIBLE}"
-            app:fabSize="mini"
-            app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
-            app:layout_constraintTop_toTopOf="@id/recycler_view_books"
-            app:maxImageSize="@dimen/size_10dp"
-            app:srcCompat="@drawable/ic_double_arrow_up"
-            style="@style/Widget.ReaderCollection.FloatingActionButton" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floating_action_button_end_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/margin_12dp"
-            android:layout_marginBottom="@dimen/margin_12dp"
-            android:onClick="@{fragment::goToStartEndList}"
-            android:visibility="@{viewModel.books.empty || viewModel.scrollPosition == ScrollPosition.END ? View.GONE : View.VISIBLE}"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="@id/recycler_view_books"
-            app:layout_constraintEnd_toEndOf="@id/recycler_view_books"
-            app:maxImageSize="@dimen/size_10dp"
-            app:srcCompat="@drawable/ic_double_arrow_down"
-            style="@style/Widget.ReaderCollection.FloatingActionButton" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="match_parent" />
 
 </layout>

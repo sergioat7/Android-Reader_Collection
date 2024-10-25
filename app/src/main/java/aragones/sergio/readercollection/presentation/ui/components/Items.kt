@@ -81,11 +81,13 @@ fun BookItemPreview() {
 fun BookItem(
     book: Book,
     onBookClick: (String) -> Unit,
+    modifier: Modifier = Modifier,
     isDraggingEnabled: Boolean = false,
+    isDragging: Boolean = false,
 ) {
 
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(220.dp)
             .clickable {
@@ -96,6 +98,7 @@ fun BookItem(
         Column(modifier = Modifier.background(MaterialTheme.colors.background)) {
             Row(
                 modifier = Modifier
+                    .background(if(isDragging) Color.Gray else Color.Transparent)
                     .fillMaxSize()
                     .weight(1f)
                     .padding(top = 24.dp, bottom = 24.dp, end = 24.dp),

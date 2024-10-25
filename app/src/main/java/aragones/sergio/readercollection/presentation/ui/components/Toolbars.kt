@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.ui.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
@@ -50,12 +51,7 @@ fun CustomToolbarPreview() {
         title = "Toolbar",
         onBack = {},
         actions = {
-            IconButton(onClick = {}) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_sort_books),
-                    contentDescription = ""
-                )
-            }
+            TopAppBarIconPreview()
         },
     )
 }
@@ -81,13 +77,10 @@ fun CustomToolbar(
         elevation = elevation,
         navigationIcon = onBack?.let {
             {
-                IconButton(onClick = { it.invoke() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_arrow_back_blue),
-                        contentDescription = "",
-                        tint = MaterialTheme.colors.primary,
-                    )
-                }
+                TopAppBarIcon(
+                    icon = R.drawable.ic_arrow_back_blue,
+                    onClick = { it.invoke() },
+                )
             }
         },
         actions = actions,
@@ -120,19 +113,16 @@ fun CustomSearchBar(
 
     val backIcon: @Composable (() -> Unit)? = if (isSearching || onBack != null) {
         {
-            IconButton(onClick = {
-                if (isSearching) {
-                    isSearching = false
-                } else {
-                    onBack?.invoke()
+            TopAppBarIcon(
+                icon = R.drawable.ic_arrow_back_blue,
+                onClick = {
+                    if (isSearching) {
+                        isSearching = false
+                    } else {
+                        onBack?.invoke()
+                    }
                 }
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_arrow_back_blue),
-                    contentDescription = "",
-                    tint = MaterialTheme.colors.primary,
-                )
-            }
+            )
         }
     } else null
 
@@ -168,15 +158,10 @@ fun CustomSearchBar(
         navigationIcon = backIcon,
         actions = {
             if (!isSearching) {
-                IconButton(onClick = {
-                    isSearching = true
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_search),
-                        contentDescription = "",
-                        tint = MaterialTheme.colors.primary,
-                    )
-                }
+                TopAppBarIcon(
+                    icon = R.drawable.ic_search,
+                    onClick = { isSearching = true },
+                )
             }
         }
     )
@@ -218,15 +203,10 @@ fun SearchBar(
     }
     val trailingIcon: @Composable (() -> Unit)? = if (textFieldValueState.text.isNotBlank()) {
         {
-            IconButton(onClick = {
-                textFieldValueState = textFieldValueState.copy("")
-            }) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_clear_text),
-                    contentDescription = "",
-                    tint = MaterialTheme.colors.primary,
-                )
-            }
+            TopAppBarIcon(
+                icon = R.drawable.ic_clear_text,
+                onClick = { textFieldValueState = textFieldValueState.copy("") },
+            )
         }
     } else null
 
@@ -253,5 +233,33 @@ fun SearchBar(
         onValueChange = {
             textFieldValueState = it
         },
+    )
+}
+
+@Composable
+fun TopAppBarIcon(
+    @DrawableRes icon: Int,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    tint: Color = MaterialTheme.colors.primary,
+) {
+    IconButton(
+        onClick = onClick,
+        modifier = modifier
+    ) {
+        Icon(
+            painter = painterResource(id = icon),
+            contentDescription = "",
+            tint = tint,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TopAppBarIconPreview() {
+    TopAppBarIcon(
+        icon = R.drawable.ic_sort_books,
+        onClick = {}
     )
 }

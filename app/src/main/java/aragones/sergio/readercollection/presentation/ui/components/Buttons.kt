@@ -5,13 +5,17 @@
 
 package aragones.sergio.readercollection.presentation.ui.components
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -44,6 +48,27 @@ fun MainActionButton(
             style = MaterialTheme.typography.button,
             color = MaterialTheme.colors.secondary,
             maxLines = 1,
+        )
+    }
+}
+
+@Composable
+fun ListButton(
+    @DrawableRes image: Int,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier.padding(12.dp),
+        contentColor = MaterialTheme.colors.secondary,
+        backgroundColor = MaterialTheme.colors.primary,
+    ) {
+        Icon(
+            painter = painterResource(id = image),
+            contentDescription = "",
+            tint = MaterialTheme.colors.secondary,
         )
     }
 }
