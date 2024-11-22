@@ -25,7 +25,7 @@ val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 android {
 
     namespace = appName
-    compileSdk = 34
+    compileSdk = 35
 
     signingConfigs {
         create("release") {
@@ -40,7 +40,7 @@ android {
 
         applicationId = appName
         minSdk = 23
-        targetSdk = 34
+        targetSdk = 35
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         versionCode = versionMajor * 100000 + versionMinor * 1000 + versionPatch * 10 + versionBuild
