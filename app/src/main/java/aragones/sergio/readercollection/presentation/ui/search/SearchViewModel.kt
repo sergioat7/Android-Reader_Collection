@@ -89,7 +89,7 @@ class SearchViewModel @Inject constructor(
                 }
                 books.addAll(books.size - 1, newBooks)
                 if (newBooks.isEmpty()) {
-                    books.removeLast()
+                    books.removeAt(books.lastIndex)
                 }
 
                 state.value = SearchUiState.Success(

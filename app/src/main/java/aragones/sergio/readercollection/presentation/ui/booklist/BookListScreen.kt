@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
@@ -206,11 +207,11 @@ private fun BookListContent(
     } else Modifier
 
     val topOffset by animateFloatAsState(
-        targetValue = if (showTopButton) 0f else 100f,
+        targetValue = if (showTopButton) 0f else 200f,
         label = ""
     )
     val bottomOffset by animateFloatAsState(
-        targetValue = if (showBottomButton) 0f else 100f,
+        targetValue = if (showBottomButton) 0f else 200f,
         label = ""
     )
 
@@ -241,7 +242,7 @@ private fun BookListContent(
             image = R.drawable.ic_double_arrow_up,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = topOffset.dp),
+                .offset { IntOffset(topOffset.toInt(), 0) },
             onClick = {
                 coroutineScope.launch {
                     dragAndDropListState.lazyListState.animateScrollToItem(index = 0)
@@ -252,7 +253,7 @@ private fun BookListContent(
             image = R.drawable.ic_double_arrow_down,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .offset(x = bottomOffset.dp),
+                .offset { IntOffset(bottomOffset.toInt(), 0) },
             onClick = {
                 coroutineScope.launch {
                     dragAndDropListState.lazyListState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
