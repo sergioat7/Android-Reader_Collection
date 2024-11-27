@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -309,7 +309,7 @@ private fun SearchContent(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         LazyColumn(state = listState) {
-            items(items = books) { book ->
+            itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
                     SwipeItem(
                         direction = DismissDirection.EndToStart,
@@ -324,7 +324,11 @@ private fun SearchContent(
                             )
                         },
                         content = {
-                            BookItem(book = book, onBookClick = onBookClick)
+                            BookItem(
+                                book = book,
+                                onBookClick = onBookClick,
+                                showDivider = index < books.size - 1,
+                            )
                         },
                     )
                 } else {

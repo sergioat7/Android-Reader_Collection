@@ -81,6 +81,7 @@ fun BookItem(
     book: Book,
     onBookClick: (String) -> Unit,
     modifier: Modifier = Modifier,
+    showDivider: Boolean = true,
     isDraggingEnabled: Boolean = false,
     isDragging: Boolean = false,
 ) {
@@ -124,13 +125,15 @@ fun BookItem(
                 )
                 BookInfo(book = book)
             }
-            Divider(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(1.dp)
-                    .padding(horizontal = 24.dp),
-                color = MaterialTheme.colors.primaryVariant,
-            )
+            if (showDivider) {
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .padding(horizontal = 24.dp),
+                    color = MaterialTheme.colors.primaryVariant,
+                )
+            }
         }
     }
 }

@@ -233,6 +233,7 @@ private fun BookListContent(
                             translationY = offset
                         }
                     },
+                    showDivider = index < books.size - 1,
                     isDraggingEnabled = state.isDraggingEnabled,
                     isDragging = index == draggingIndex,
                 )
