@@ -48,11 +48,41 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         binding.composeView.setContent {
             ReaderCollectionTheme {
 
-                SettingsScreen(viewModel)
-
+                val password by viewModel.password.observeAsState(initial = "")
+                val passwordError by viewModel.profileForm.observeAsState(initial = null)
+                val language by viewModel.language.observeAsState(initial = "")
+                val sortParam by viewModel.sortParam.observeAsState(initial = null)
+                val isSortDescending by viewModel.isSortDescending.observeAsState(initial = false)
+                val themeMode by viewModel.themeMode.observeAsState(initial = 0)
+                val loading by viewModel.profileLoading.observeAsState(initial = false)
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
                     initial = -1
                 )
+                val error by viewModel.profileError.observeAsState()
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+
+                SettingsScreen(
+                    username = viewModel.username,
+                    password = password,
+                    passwordError = passwordError,
+                    language = language,
+                    sortParam = sortParam,
+                    isSortDescending = isSortDescending,
+                    themeMode = themeMode,
+                    isLoading = loading,
+                    onShowInfo = {
+                        viewModel.showInfoDialog(R.string.username_info)
+                    },
+                    onProfileDataChange = viewModel::profileDataChanged,
+                    onDeleteProfile = {
+                        viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+                    },
+                    onLogout = {
+                        viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
+                    },
+                    onSave = viewModel::save,
+                )
+
                 ConfirmationAlertDialog(
                     show = confirmationMessageId != -1,
                     textId = confirmationMessageId,
@@ -75,9 +105,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                         viewModel.closeDialogs()
                     },
                 )
-
-                val error by viewModel.profileError.observeAsState()
-                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
 
                 val text = if (error != null) {
                     val errorText = StringBuilder()

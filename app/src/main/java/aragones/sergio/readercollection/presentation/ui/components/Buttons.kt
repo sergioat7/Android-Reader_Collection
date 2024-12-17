@@ -18,12 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-
-@Preview
-@Composable
-fun CustomButtonPreview() {
-    MainActionButton(text = "Log-in", modifier = Modifier, enabled = true) {}
-}
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 
 @Composable
 fun MainActionButton(
@@ -33,7 +29,7 @@ fun MainActionButton(
     onClick: () -> Unit,
 ) {
     Button(
-        onClick = { onClick() },
+        onClick = onClick,
         modifier = modifier,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
@@ -55,10 +51,9 @@ fun MainActionButton(
 @Composable
 fun ListButton(
     @DrawableRes image: Int,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
 ) {
-
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
@@ -67,8 +62,32 @@ fun ListButton(
     ) {
         Icon(
             painter = painterResource(id = image),
-            contentDescription = "",
+            contentDescription = null,
             tint = MaterialTheme.colors.secondary,
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun MainActionButtonPreview() {
+    ReaderCollectionTheme {
+        MainActionButton(
+            text = "Log-in",
+            modifier = Modifier,
+            enabled = true,
+            onClick = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ListButtonPreview() {
+    ReaderCollectionTheme {
+        ListButton(
+            image = R.drawable.ic_double_arrow_up,
+            onClick = {},
         )
     }
 }

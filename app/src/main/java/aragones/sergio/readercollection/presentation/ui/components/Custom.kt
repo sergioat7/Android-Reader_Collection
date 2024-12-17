@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
@@ -30,10 +30,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.lightRoseBud
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
-@Preview(showBackground = true)
 @Composable
 fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_text)) {
     Column(
@@ -44,7 +44,7 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
     ) {
         Image(
             painter = painterResource(id = R.drawable.image_no_results),
-            contentDescription = "",
+            contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.5f),
@@ -61,27 +61,17 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun StartRatingBarPreview() {
-    StarRatingBar(
-        rating = 7f / 2,
-        onRatingChanged = {},
-    )
-}
-
 @Composable
 fun StarRatingBar(
+    rating: Float,
+    onRatingChanged: (Float) -> Unit,
     modifier: Modifier = Modifier,
     maxStars: Int = 5,
-    rating: Float,
     isSelectable: Boolean = false,
-    onRatingChanged: (Float) -> Unit,
 ) {
 
-    val density = LocalDensity.current.density
-    val starSize = (12f * density).dp
-    val starSpacing = (0.5f * density).dp
+    val starSize = with(LocalDensity.current) { (12f * density).dp }
+    val starSpacing = with(LocalDensity.current) { (0.5f * density).dp }
 
     Row(
         modifier = modifier.selectableGroup(),
@@ -108,13 +98,30 @@ fun StarRatingBar(
                             onRatingChanged(i.toFloat())
                         },
                     )
-                    .width(starSize)
-                    .height(starSize),
+                    .size(starSize),
             )
-
             if (i < maxStars) {
                 Spacer(modifier = Modifier.width(starSpacing))
             }
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun NoResultsComponentPreview() {
+    ReaderCollectionTheme {
+        NoResultsComponent()
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun StartRatingBarPreview() {
+    ReaderCollectionTheme {
+        StarRatingBar(
+            rating = 7f / 2,
+            onRatingChanged = {},
+        )
     }
 }

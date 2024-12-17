@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.presentation.extensions.setStatusBarStyl
 import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,10 +43,24 @@ class RegisterActivity : BaseActivity() {
             composeView.setContent {
                 ReaderCollectionTheme {
 
-                    RegisterScreen(viewModel)
-
+                    val username by viewModel.username.observeAsState(initial = "")
+                    val password by viewModel.password.observeAsState(initial = "")
+                    val confirmPassword by viewModel.confirmPassword.observeAsState(initial = "")
+                    val registerFormState by viewModel.registerFormState.observeAsState(initial = LoginFormState())
+                    val loading by viewModel.registerLoading.observeAsState(initial = false)
                     val error by viewModel.registerError.observeAsState()
                     val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+
+                    RegisterScreen(
+                        username = username,
+                        password = password,
+                        confirmPassword = confirmPassword,
+                        formState = registerFormState,
+                        isLoading = loading,
+                        onShowInfo = { viewModel.showInfoDialog(R.string.username_info) },
+                        onRegisterDataChange = viewModel::registerDataChanged,
+                        onRegister = viewModel::register,
+                    )
 
                     val text = if (error != null) {
                         val errorText = StringBuilder()

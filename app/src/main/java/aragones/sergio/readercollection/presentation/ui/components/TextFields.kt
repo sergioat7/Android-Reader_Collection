@@ -7,7 +7,9 @@ package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,60 +34,15 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
-
-@Preview(showBackground = true)
-@Composable
-fun TextOutlinedTextFieldPreview() {
-    CustomOutlinedTextField(
-        text = "Username",
-        modifier = Modifier.padding(12.dp),
-        labelText = "Label",
-        onTextChanged = {})
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PasswordOutlinedTextFieldPreview() {
-    CustomOutlinedTextField(
-        text = "Password",
-        modifier = Modifier.padding(12.dp),
-        labelText = "Label",
-        endIcon = R.drawable.ic_show_password,
-        onTextChanged = {},
-        onEndIconClicked = {}
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DisabledOutlinedTextFieldPreview() {
-    CustomOutlinedTextField(
-        text = "Text",
-        modifier = Modifier.padding(12.dp),
-        labelText = "Label",
-        enabled = false,
-        onTextChanged = {}
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ErrorOutlinedTextFieldPreview() {
-    CustomOutlinedTextField(
-        text = "Incorrect text",
-        errorTextId = R.string.invalid_username,
-        modifier = Modifier.padding(12.dp),
-        labelText = "Label",
-        onTextChanged = {}
-    )
-}
 
 @Composable
 fun CustomOutlinedTextField(
     text: String,
+    onTextChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
     errorTextId: Int? = null,
-    modifier: Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
@@ -97,8 +54,7 @@ fun CustomOutlinedTextField(
     maxLength: Int = Integer.MAX_VALUE,
     maxLines: Int = Integer.MAX_VALUE,
     enabled: Boolean = true,
-    onTextChanged: (String) -> Unit,
-    onEndIconClicked: (() -> Unit)? = null
+    onEndIconClicked: (() -> Unit)? = null,
 ) {
 
     val keyboard = LocalSoftwareKeyboardController.current
@@ -127,7 +83,7 @@ fun CustomOutlinedTextField(
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
                 Icon(
                     painter = painterResource(id = it),
-                    contentDescription = "",
+                    contentDescription = null,
                     tint = MaterialTheme.colors.primary,
                 )
             }
@@ -141,22 +97,21 @@ fun CustomOutlinedTextField(
     val keyboardOptions = when (inputType) {
         CustomInputType.NUMBER -> KeyboardOptions(
             keyboardType = KeyboardType.Number,
-            imeAction = keyboardAction
+            imeAction = keyboardAction,
         )
 
         CustomInputType.PASSWORD -> KeyboardOptions(
             keyboardType = KeyboardType.Password,
-            imeAction = keyboardAction
+            imeAction = keyboardAction,
         )
 
         else -> KeyboardOptions(
             keyboardType = KeyboardType.Text,
-            imeAction = keyboardAction
+            imeAction = keyboardAction,
         )
     }
 
-    Column(modifier = modifier) {
-
+    Column(modifier) {
         OutlinedTextField(
             value = text,
             modifier = Modifier.fillMaxWidth(),
@@ -173,11 +128,12 @@ fun CustomOutlinedTextField(
             placeholder = placeholder,
             trailingIcon = trailingIcon,
             keyboardOptions = keyboardOptions,
-            keyboardActions = KeyboardActions(onDone = {
-
-                keyboard?.hide()
-                focusManager.clearFocus()
-            }),
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    keyboard?.hide()
+                    focusManager.clearFocus()
+                }
+            ),
             visualTransformation = if (endIcon == R.drawable.ic_show_password) {
                 PasswordVisualTransformation()
             } else {
@@ -195,12 +151,69 @@ fun CustomOutlinedTextField(
             },
         )
         if (errorTextId != null) {
+            Spacer(Modifier.height(5.dp))
             Text(
                 text = stringResource(id = errorTextId),
-                modifier = Modifier.padding(start = 5.dp, top = 5.dp),
+                modifier = Modifier.padding(horizontal = 5.dp),
                 style = MaterialTheme.typography.body2,
                 color = MaterialTheme.colors.error,
             )
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun TextOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        CustomOutlinedTextField(
+            text = "Username",
+            onTextChanged = {},
+            modifier = Modifier.padding(12.dp),
+            labelText = "Label",
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PasswordOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        CustomOutlinedTextField(
+            text = "Password",
+            onTextChanged = {},
+            modifier = Modifier.padding(12.dp),
+            labelText = "Label",
+            endIcon = R.drawable.ic_show_password,
+            onEndIconClicked = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DisabledOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        CustomOutlinedTextField(
+            text = "Text",
+            onTextChanged = {},
+            modifier = Modifier.padding(12.dp),
+            labelText = "Label",
+            enabled = false,
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ErrorOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        CustomOutlinedTextField(
+            text = "Incorrect text",
+            onTextChanged = {},
+            modifier = Modifier.padding(12.dp),
+            errorTextId = R.string.invalid_username,
+            labelText = "Label",
+        )
     }
 }

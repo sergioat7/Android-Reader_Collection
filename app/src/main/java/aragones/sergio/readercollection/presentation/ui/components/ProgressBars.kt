@@ -18,12 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
-
-@Preview(showBackground = true)
-@Composable
-fun CustomCircularProgressIndicatorPreview() {
-    CustomCircularProgressIndicator()
-}
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 
 @Composable
 fun CustomCircularProgressIndicator() {
@@ -38,5 +33,13 @@ fun CustomCircularProgressIndicator() {
             color = MaterialTheme.colors.primary,
             modifier = Modifier.align(Alignment.Center),
         )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CustomCircularProgressIndicatorPreview() {
+    ReaderCollectionTheme {
+        CustomCircularProgressIndicator()
     }
 }

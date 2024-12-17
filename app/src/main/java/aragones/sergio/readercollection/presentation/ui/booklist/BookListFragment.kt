@@ -54,6 +54,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                 ReaderCollectionTheme {
 
                     val state by viewModel.uiState
+                    val error by viewModel.booksError.observeAsState()
 
                     when (val currentState = state) {
                         is BookListUiState.Success -> {
@@ -90,8 +91,6 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                             viewModel.setPriorityFor(it)
                         }
                     )
-
-                    val error by viewModel.booksError.observeAsState()
 
                     val text = if (error != null) {
                         val errorText = StringBuilder()

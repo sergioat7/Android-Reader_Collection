@@ -46,6 +46,7 @@ import aragones.sergio.readercollection.presentation.ui.components.ListButton
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.ui.search.reachedBottom
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -112,7 +113,7 @@ fun BookListScreen(
             modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = if (showTopButton) 4.dp else 0.dp,
             onBack = onBack,
-            actions = actions
+            actions = actions,
         )
         Box(
             modifier = Modifier.fillMaxSize(),
@@ -201,18 +202,18 @@ private fun BookListContent(
                 onDragCancel = {
                     dragAndDropListState.onDragInterrupted()
                     draggingIndex = -1
-                }
+                },
             )
         }
     } else Modifier
 
     val topOffset by animateFloatAsState(
         targetValue = if (showTopButton) 0f else 200f,
-        label = ""
+        label = "",
     )
     val bottomOffset by animateFloatAsState(
         targetValue = if (showBottomButton) 0f else 200f,
-        label = ""
+        label = "",
     )
 
     Box(modifier = modifier.fillMaxSize()) {
@@ -241,161 +242,165 @@ private fun BookListContent(
         }
         ListButton(
             image = R.drawable.ic_double_arrow_up,
-            modifier = Modifier
-                .align(Alignment.TopEnd)
-                .offset { IntOffset(topOffset.toInt(), 0) },
             onClick = {
                 coroutineScope.launch {
                     dragAndDropListState.lazyListState.animateScrollToItem(index = 0)
                 }
             },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .offset { IntOffset(topOffset.toInt(), 0) },
         )
         ListButton(
             image = R.drawable.ic_double_arrow_down,
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .offset { IntOffset(bottomOffset.toInt(), 0) },
             onClick = {
                 coroutineScope.launch {
                     dragAndDropListState.lazyListState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
                 }
             },
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .offset { IntOffset(bottomOffset.toInt(), 0) },
+        )
+    }
+}
+
+private fun <T> MutableList<T>.move(from: Int, to: Int) {
+    if (from == to) return
+    val element = this.removeAt(from)
+    this.add(to, element)
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PendingBookListScreenSuccessPreview() {
+    ReaderCollectionTheme {
+        BookListScreen(
+            state = BookListUiState.Success(
+                isLoading = false,
+                books = listOf(
+                    Book(
+                        "1",
+                        "Large title for stored book in the list that should not be shown",
+                        null,
+                        listOf("Author"),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        5.0,
+                        null,
+                        null,
+                        null,
+                        BookState.PENDING,
+                        false,
+                        0
+                    ),
+                    Book(
+                        "2",
+                        "Title",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        0.0,
+                        null,
+                        null,
+                        null,
+                        BookState.PENDING,
+                        false,
+                        0
+                    )
+                ),
+                isDraggingEnabled = false,
+            ),
+            onBookClick = {},
+            onBack = {},
+            onDragClick = {},
+            onSortClick = {},
+            onDrag = {},
+            onDragEnd = {},
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-private fun PendingBookListScreenSuccessPreview() {
-    BookListScreen(
-        state = BookListUiState.Success(
-            isLoading = true,
-            books = listOf(
-                Book(
-                    "1",
-                    "Large title for stored book in the list that should not be shown",
-                    null,
-                    listOf("Author"),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    5.0,
-                    null,
-                    null,
-                    null,
-                    BookState.PENDING,
-                    false,
-                    0
-                ),
-                Book(
-                    "2",
-                    "Title",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    0.0,
-                    null,
-                    null,
-                    null,
-                    BookState.PENDING,
-                    false,
-                    0
-                )
-            ),
-            isDraggingEnabled = false,
-        ),
-        onBookClick = {},
-        onBack = {},
-        onDragClick = {},
-        onSortClick = {},
-        onDrag = {},
-        onDragEnd = {},
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
 private fun ReadBookListScreenSuccessPreview() {
-    BookListScreen(
-        state = BookListUiState.Success(
-            isLoading = true,
-            books = listOf(
-                Book(
-                    "1",
-                    "Large title for stored book in the list that should not be shown",
-                    null,
-                    listOf("Author"),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    5.0,
-                    null,
-                    null,
-                    null,
-                    BookState.READ,
-                    false,
-                    0
+    ReaderCollectionTheme {
+        BookListScreen(
+            state = BookListUiState.Success(
+                isLoading = true,
+                books = listOf(
+                    Book(
+                        "1",
+                        "Large title for stored book in the list that should not be shown",
+                        null,
+                        listOf("Author"),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        5.0,
+                        null,
+                        null,
+                        null,
+                        BookState.READ,
+                        false,
+                        0
+                    ),
+                    Book(
+                        "2",
+                        "Title",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        0.0,
+                        null,
+                        null,
+                        null,
+                        BookState.READ,
+                        false,
+                        0
+                    )
                 ),
-                Book(
-                    "2",
-                    "Title",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    0.0,
-                    null,
-                    null,
-                    null,
-                    BookState.READ,
-                    false,
-                    0
-                )
+                isDraggingEnabled = true,
             ),
-            isDraggingEnabled = true,
-        ),
-        onBookClick = {},
-        onBack = {},
-        onDragClick = {},
-        onSortClick = {},
-        onDrag = {},
-        onDragEnd = {},
-    )
-}
-
-fun <T> MutableList<T>.move(from: Int, to: Int) {
-    if (from == to) return
-    val element = this.removeAt(from)
-    this.add(to, element)
+            onBookClick = {},
+            onBack = {},
+            onDragClick = {},
+            onSortClick = {},
+            onDrag = {},
+            onDragEnd = {},
+        )
+    }
 }

@@ -25,3 +25,5 @@ val Colors.lightRoseBud: Color
     @Composable get() = if (isLight) LightRoseBud else LightRoseBud
 val Colors.description: Color
     @Composable get() = if(isLight) Scorpion else PaleSlate
+val Colors.selector: Color
+    @Composable get() = if(isLight) PaleSlate else Boulder
