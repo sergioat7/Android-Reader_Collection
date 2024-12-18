@@ -5,6 +5,8 @@
 
 package aragones.sergio.readercollection.presentation.ui.components
 
+import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -107,7 +109,7 @@ fun StarRatingBar(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun NoResultsComponentPreview() {
     ReaderCollectionTheme {
@@ -115,7 +117,7 @@ private fun NoResultsComponentPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun StartRatingBarPreview() {
     ReaderCollectionTheme {
@@ -125,3 +127,12 @@ private fun StartRatingBarPreview() {
         )
     }
 }
+
+@Retention(AnnotationRetention.BINARY)
+@Target(
+    AnnotationTarget.ANNOTATION_CLASS,
+    AnnotationTarget.FUNCTION
+)
+@Preview(name = "Light", showBackground = true)
+@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, showBackground = true)
+annotation class PreviewLightDarkWithBackground

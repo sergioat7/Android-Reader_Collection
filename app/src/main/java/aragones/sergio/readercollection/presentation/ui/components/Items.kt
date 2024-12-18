@@ -37,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
@@ -242,7 +241,7 @@ fun SwipeItemBackground(
     }
 }
 
-@Preview
+@PreviewLightDarkWithBackground
 @Composable
 private fun BookItemPreview() {
     ReaderCollectionTheme {
@@ -276,7 +275,7 @@ private fun BookItemPreview() {
     }
 }
 
-@Preview
+@PreviewLightDarkWithBackground
 @Composable
 private fun BookItemWithDraggingPreview() {
     ReaderCollectionTheme {
@@ -311,7 +310,7 @@ private fun BookItemWithDraggingPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun SwipeItemToLeftPreview() {
     ReaderCollectionTheme {
@@ -334,7 +333,7 @@ private fun SwipeItemToLeftPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun SwipeItemToRightPreview() {
     ReaderCollectionTheme {

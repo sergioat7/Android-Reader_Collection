@@ -16,7 +16,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
@@ -68,7 +68,7 @@ fun ListButton(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun MainActionButtonPreview() {
     ReaderCollectionTheme {
@@ -81,7 +81,7 @@ private fun MainActionButtonPreview() {
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun ListButtonPreview() {
     ReaderCollectionTheme {

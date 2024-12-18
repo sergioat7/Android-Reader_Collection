@@ -39,7 +39,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -235,7 +235,7 @@ private fun SearchBar(
     )
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun CustomToolbarPreview() {
     ReaderCollectionTheme {
@@ -249,7 +249,7 @@ private fun CustomToolbarPreview() {
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun CustomSearchBarPreview() {
     ReaderCollectionTheme {
@@ -261,7 +261,7 @@ private fun CustomSearchBarPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun TopAppBarIconPreview() {
     ReaderCollectionTheme {

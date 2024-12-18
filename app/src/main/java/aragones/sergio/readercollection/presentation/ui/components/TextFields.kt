@@ -31,7 +31,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
@@ -162,7 +161,7 @@ fun CustomOutlinedTextField(
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun TextOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -175,7 +174,7 @@ private fun TextOutlinedTextFieldPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun PasswordOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -190,7 +189,7 @@ private fun PasswordOutlinedTextFieldPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun DisabledOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -204,7 +203,7 @@ private fun DisabledOutlinedTextFieldPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDarkWithBackground
 @Composable
 private fun ErrorOutlinedTextFieldPreview() {
     ReaderCollectionTheme {

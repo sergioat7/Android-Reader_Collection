@@ -34,7 +34,7 @@ import androidx.compose.ui.composed
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -271,7 +271,7 @@ private fun <T> MutableList<T>.move(from: Int, to: Int) {
     this.add(to, element)
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun PendingBookListScreenSuccessPreview() {
     ReaderCollectionTheme {
@@ -338,7 +338,7 @@ private fun PendingBookListScreenSuccessPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun ReadBookListScreenSuccessPreview() {
     ReaderCollectionTheme {

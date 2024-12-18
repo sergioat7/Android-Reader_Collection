@@ -40,7 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -286,7 +286,7 @@ internal fun LazyListState.reachedBottom(buffer: Int = 1): Boolean {
     return lastVisibleItem?.index != 0 && lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun SearchScreenPreview() {
     ReaderCollectionTheme {
@@ -398,7 +398,7 @@ private fun SearchScreenPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun SearchScreenWithoutBooksPreview() {
     ReaderCollectionTheme {
@@ -417,7 +417,7 @@ private fun SearchScreenWithoutBooksPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun SearchScreenEmptyPreview() {
     ReaderCollectionTheme {
@@ -432,7 +432,7 @@ private fun SearchScreenEmptyPreview() {
     }
 }
 
-@Preview(showBackground = true)
+@PreviewLightDark
 @Composable
 private fun SearchScreenErrorPreview() {
     ReaderCollectionTheme {
