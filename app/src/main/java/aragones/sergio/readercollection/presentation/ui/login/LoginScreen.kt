@@ -43,10 +43,7 @@ import com.aragones.sergio.util.CustomInputType
 
 @Composable
 fun LoginScreen(
-    username: String,
-    password: String,
-    formState: LoginFormState,
-    isLoading: Boolean,
+    state: LoginUiState,
     onLoginDataChange: (String, String) -> Unit,
     onLogin: (String, String) -> Unit,
     onGoToRegister: () -> Unit,
@@ -70,27 +67,27 @@ fun LoginScreen(
         )
         Spacer(Modifier.height(24.dp))
         CustomOutlinedTextField(
-            text = username,
+            text = state.username,
             onTextChanged = { newUsername ->
-                onLoginDataChange(newUsername, password)
+                onLoginDataChange(newUsername, state.password)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = formState.usernameError,
+            errorTextId = state.formState.usernameError,
             labelText = stringResource(id = R.string.username),
             isLastTextField = false,
         )
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
-            text = password,
+            text = state.password,
             onTextChanged = { newPassword ->
-                onLoginDataChange(username, newPassword)
+                onLoginDataChange(state.username, newPassword)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = formState.passwordError,
+            errorTextId = state.formState.passwordError,
             labelText = stringResource(id = R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
@@ -108,9 +105,9 @@ fun LoginScreen(
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 12.dp, vertical = 24.dp),
-            enabled = formState.isDataValid,
+            enabled = state.formState.isDataValid,
             onClick = {
-                onLogin(username, password)
+                onLogin(state.username, state.password)
             },
         )
         Row(
@@ -136,7 +133,7 @@ fun LoginScreen(
             }
         }
     }
-    if (isLoading) {
+    if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
 }
@@ -146,14 +143,16 @@ fun LoginScreen(
 private fun LoginScreenPreview() {
     ReaderCollectionTheme {
         LoginScreen(
-            username = "User",
-            password = "",
-            formState = LoginFormState(
-                usernameError = null,
-                passwordError = R.string.invalid_password,
-                isDataValid = false,
+            state = LoginUiState(
+                username = "User",
+                password = "",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = R.string.invalid_password,
+                    isDataValid = false,
+                ),
+                isLoading = false,
             ),
-            isLoading = false,
             onLoginDataChange = { _, _ -> },
             onLogin = { _, _ -> },
             onGoToRegister = {},

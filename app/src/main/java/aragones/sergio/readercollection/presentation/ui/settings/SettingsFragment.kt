@@ -48,13 +48,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         binding.composeView.setContent {
             ReaderCollectionTheme {
 
-                val password by viewModel.password.observeAsState(initial = "")
-                val passwordError by viewModel.profileForm.observeAsState(initial = null)
-                val language by viewModel.language.observeAsState(initial = "")
-                val sortParam by viewModel.sortParam.observeAsState(initial = null)
-                val isSortDescending by viewModel.isSortDescending.observeAsState(initial = false)
-                val themeMode by viewModel.themeMode.observeAsState(initial = 0)
-                val loading by viewModel.profileLoading.observeAsState(initial = false)
+                val state by viewModel.uiState
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
                     initial = -1
                 )
@@ -62,14 +56,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                 val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
 
                 SettingsScreen(
-                    username = viewModel.username,
-                    password = password,
-                    passwordError = passwordError,
-                    language = language,
-                    sortParam = sortParam,
-                    isSortDescending = isSortDescending,
-                    themeMode = themeMode,
-                    isLoading = loading,
+                    state = state,
                     onShowInfo = {
                         viewModel.showInfoDialog(R.string.username_info)
                     },

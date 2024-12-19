@@ -36,11 +36,7 @@ import com.aragones.sergio.util.CustomInputType
 
 @Composable
 fun RegisterScreen(
-    username: String,
-    password: String,
-    confirmPassword: String,
-    formState: LoginFormState,
-    isLoading: Boolean,
+    state: RegisterUiState,
     onShowInfo: () -> Unit,
     onRegisterDataChange: (String, String, String) -> Unit,
     onRegister: (String, String) -> Unit,
@@ -65,14 +61,18 @@ fun RegisterScreen(
         )
         Spacer(Modifier.height(24.dp))
         CustomOutlinedTextField(
-            text = username,
+            text = state.username,
             onTextChanged = { newUsername ->
-                onRegisterDataChange(newUsername, password, confirmPassword)
+                onRegisterDataChange(
+                    newUsername,
+                    state.password,
+                    state.confirmPassword
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = formState.usernameError,
+            errorTextId = state.formState.usernameError,
             labelText = stringResource(id = R.string.username),
             endIcon = R.drawable.ic_show_info,
             isLastTextField = false,
@@ -80,14 +80,18 @@ fun RegisterScreen(
         )
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
-            text = password,
+            text = state.password,
             onTextChanged = { newPassword ->
-                onRegisterDataChange(username, newPassword, confirmPassword)
+                onRegisterDataChange(
+                    state.username,
+                    newPassword,
+                    state.confirmPassword
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = formState.passwordError,
+            errorTextId = state.formState.passwordError,
             labelText = stringResource(id = R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
@@ -100,14 +104,18 @@ fun RegisterScreen(
         )
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
-            text = confirmPassword,
+            text = state.confirmPassword,
             onTextChanged = { newPassword ->
-                onRegisterDataChange(username, password, newPassword)
+                onRegisterDataChange(
+                    state.username,
+                    state.password,
+                    newPassword
+                )
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = formState.passwordError,
+            errorTextId = state.formState.passwordError,
             labelText = stringResource(id = R.string.confirm_password),
             endIcon = if (confirmPasswordVisibility) {
                 R.drawable.ic_hide_password
@@ -125,13 +133,13 @@ fun RegisterScreen(
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 12.dp, vertical = 24.dp),
-            enabled = formState.isDataValid,
+            enabled = state.formState.isDataValid,
             onClick = {
-                onRegister(username, password)
+                onRegister(state.username, state.password)
             },
         )
     }
-    if (isLoading) {
+    if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
 }
@@ -141,15 +149,17 @@ fun RegisterScreen(
 private fun RegisterScreenPreview() {
     ReaderCollectionTheme {
         RegisterScreen(
-            username = "User",
-            password = "Password123",
-            confirmPassword = "",
-            formState = LoginFormState(
-                usernameError = null,
-                passwordError = R.string.invalid_repeat_password,
-                isDataValid = false,
+            state = RegisterUiState(
+                username = "User",
+                password = "Password123",
+                confirmPassword = "",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = R.string.invalid_repeat_password,
+                    isDataValid = false,
+                ),
+                isLoading = false,
             ),
-            isLoading = false,
             onShowInfo = {},
             onRegisterDataChange = { _, _, _ -> },
             onRegister = { _, _ -> },

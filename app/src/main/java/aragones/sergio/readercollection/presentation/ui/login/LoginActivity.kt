@@ -18,7 +18,6 @@ import aragones.sergio.readercollection.presentation.extensions.setStatusBarStyl
 import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
-import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.ui.register.RegisterActivity
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -45,17 +44,11 @@ class LoginActivity : BaseActivity() {
             composeView.setContent {
                 ReaderCollectionTheme {
 
-                    val username by viewModel.username.observeAsState(initial = "")
-                    val password by viewModel.password.observeAsState(initial = "")
-                    val loginFormState by viewModel.loginFormState.observeAsState(initial = LoginFormState())
-                    val loading by viewModel.loginLoading.observeAsState(initial = false)
+                    val state by viewModel.uiState
                     val error by viewModel.loginError.observeAsState()
 
                     LoginScreen(
-                        username = username,
-                        password = password,
-                        formState = loginFormState,
-                        isLoading = loading,
+                        state = state,
                         onLoginDataChange = viewModel::loginDataChanged,
                         onLogin = viewModel::login,
                         onGoToRegister = viewModel::goToRegister,

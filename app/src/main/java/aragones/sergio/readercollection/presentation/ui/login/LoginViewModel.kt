@@ -5,6 +5,9 @@
 
 package aragones.sergio.readercollection.presentation.ui.login
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
@@ -26,19 +29,15 @@ class LoginViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _username = MutableLiveData(userRepository.username)
-    private val _password = MutableLiveData<String>()
-    private val _loginForm = MutableLiveData<LoginFormState>()
-    private val _loginLoading = MutableLiveData<Boolean>()
+    private var _uiState: MutableState<LoginUiState> = mutableStateOf(
+        LoginUiState.empty().copy(username = userRepository.username)
+    )
     private val _loginError = MutableLiveData<ErrorResponse?>()
     private val _activityName = MutableLiveData<String?>()
     //endregion
 
     //region Public properties
-    val username: LiveData<String> = _username
-    val password: LiveData<String> = _password
-    val loginFormState: LiveData<LoginFormState> = _loginForm
-    val loginLoading: LiveData<Boolean> = _loginLoading
+    val uiState: State<LoginUiState> = _uiState
     val loginError: LiveData<ErrorResponse?> = _loginError
     val activityName: LiveData<String?> = _activityName
     //endregion
@@ -55,11 +54,11 @@ class LoginViewModel @Inject constructor(
     //region Public methods
     fun login(username: String, password: String) {
 
-        _loginLoading.value = true
+        _uiState.value = _uiState.value.copy(isLoading = true)
         userRepository.login(username, password, success = {
 //            booksRepository.loadBooks(success = {
 
-            _loginLoading.value = false
+            _uiState.value = _uiState.value.copy(isLoading = false)
             _activityName.value = MainActivity::class.simpleName
             _activityName.value = null
 //            }, failure = {
@@ -69,7 +68,7 @@ class LoginViewModel @Inject constructor(
 //            })
         }, failure = {
 
-            _loginLoading.value = false
+            _uiState.value = _uiState.value.copy(isLoading = false)
             _loginError.value = it
         })
     }
@@ -89,9 +88,11 @@ class LoginViewModel @Inject constructor(
             isDataValid = false
         }
 
-        _username.value = username
-        _password.value = password
-        _loginForm.value = LoginFormState(usernameError, passwordError, isDataValid)
+        _uiState.value = _uiState.value.copy(
+            username = username,
+            password = password,
+            formState = LoginFormState(usernameError, passwordError, isDataValid),
+        )
     }
 
     fun goToRegister() {

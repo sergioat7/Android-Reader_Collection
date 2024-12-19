@@ -45,14 +45,7 @@ import com.aragones.sergio.util.Preferences
 
 @Composable
 fun SettingsScreen(
-    username: String,
-    password: String,
-    passwordError: Int?,
-    language: String,
-    sortParam: String?,
-    isSortDescending: Boolean,
-    themeMode: Int,
-    isLoading: Boolean,
+    state: SettingsUiState,
     onShowInfo: () -> Unit,
     onProfileDataChange: (String, String, String?, Boolean, Int) -> Unit,
     onDeleteProfile: () -> Unit,
@@ -80,65 +73,65 @@ fun SettingsScreen(
         ) {
             Spacer(Modifier.height(24.dp))
             ProfileInfo(
-                username = username,
-                password = password,
-                passwordError = passwordError,
+                username = state.username,
+                password = state.password,
+                passwordError = state.passwordError,
                 onShowInfo = onShowInfo,
                 onPasswordChange = {
                     onProfileDataChange(
                         it,
-                        language,
-                        sortParam,
-                        isSortDescending,
-                        themeMode
+                        state.language,
+                        state.sortParam,
+                        state.isSortDescending,
+                        state.themeMode
                     )
                 },
             )
             Spacer(Modifier.height(20.dp))
             LanguageInfo(
-                language = language,
+                language = state.language,
                 onLanguageChange = {
                     onProfileDataChange(
-                        password,
+                        state.password,
                         it,
-                        sortParam,
-                        isSortDescending,
-                        themeMode
+                        state.sortParam,
+                        state.isSortDescending,
+                        state.themeMode
                     )
                 }
             )
             Spacer(Modifier.height(20.dp))
             SortingInfo(
-                sortParam = sortParam,
-                isSortDescending = isSortDescending,
+                sortParam = state.sortParam,
+                isSortDescending = state.isSortDescending,
                 onSortParamValueChange = {
                     onProfileDataChange(
-                        password,
-                        language,
+                        state.password,
+                        state.language,
                         it,
-                        isSortDescending,
-                        themeMode
+                        state.isSortDescending,
+                        state.themeMode
                     )
                 },
                 onSortOrderValueChange = {
                     onProfileDataChange(
-                        password,
-                        language,
-                        sortParam,
+                        state.password,
+                        state.language,
+                        state.sortParam,
                         it,
-                        themeMode
+                        state.themeMode
                     )
                 }
             )
             Spacer(Modifier.height(20.dp))
             AppThemeInfo(
-                selectedThemeIndex = themeMode,
+                selectedThemeIndex = state.themeMode,
                 onThemeChange = {
                     onProfileDataChange(
-                        password,
-                        language,
-                        sortParam,
-                        isSortDescending,
+                        state.password,
+                        state.language,
+                        state.sortParam,
+                        state.isSortDescending,
                         it,
                     )
                 }
@@ -150,12 +143,12 @@ fun SettingsScreen(
                     .width(200.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 12.dp, vertical = 24.dp),
-                enabled = passwordError == null,
+                enabled = state.passwordError == null,
                 onClick = onSave,
             )
         }
     }
-    if (isLoading) {
+    if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
 }
@@ -342,14 +335,16 @@ private fun HeaderText(
 private fun SettingsScreenPreview() {
     ReaderCollectionTheme {
         SettingsScreen(
-            username = "User",
-            password = "Password",
-            passwordError = null,
-            language = "en",
-            sortParam = null,
-            isSortDescending = false,
-            themeMode = 0,
-            isLoading = false,
+            state = SettingsUiState(
+                username = "User",
+                password = "Password",
+                passwordError = null,
+                language = "en",
+                sortParam = null,
+                isSortDescending = false,
+                themeMode = 0,
+                isLoading = false,
+            ),
             onShowInfo = {},
             onProfileDataChange = { _, _, _, _, _ -> },
             onDeleteProfile = {},
