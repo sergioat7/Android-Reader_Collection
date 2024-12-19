@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 28/3/2024
  */
 
-package aragones.sergio.readercollection.presentation.ui.components
+package aragones.sergio.readercollection.presentation.ui.components.dialogs
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertTextContains
