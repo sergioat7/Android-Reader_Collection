@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 28/3/2024
+ * Created by Sergio Aragonés on 19/12/2024
  */
 
-package aragones.sergio.readercollection.presentation.ui.components
+package aragones.sergio.readercollection.presentation.ui.components.dialogs
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertTextContains
@@ -12,6 +12,7 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test

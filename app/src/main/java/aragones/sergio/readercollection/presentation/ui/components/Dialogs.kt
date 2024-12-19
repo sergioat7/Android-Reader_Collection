@@ -8,12 +8,14 @@ package aragones.sergio.readercollection.presentation.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -28,6 +30,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -196,6 +199,87 @@ fun TextFieldAlertDialog(
 }
 
 @Composable
+fun SortingPickerAlertDialog(
+    state: UiSortingPickerState,
+    onCancel: () -> Unit,
+    onAccept: (newSortParam: String?, newIsSortDescending: Boolean) -> Unit,
+) {
+    if (state.show) {
+
+        var newSortParam by rememberSaveable { mutableStateOf(state.sortParam) }
+        var newIsSortDescending by rememberSaveable { mutableStateOf(state.isSortDescending) }
+
+        val context = LocalContext.current
+        val sortParamKeys = context.resources.getStringArray(R.array.sorting_param_keys).toList()
+        val sortParamValues =
+            context.resources.getStringArray(R.array.sorting_param_values).toList()
+        val sortOrderValues =
+            context.resources.getStringArray(R.array.sorting_order_values).toList()
+
+        Dialog(
+            onDismissRequest = { onCancel() },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false
+            ),
+        ) {
+            Surface(
+                color = MaterialTheme.colors.background,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.testTag("sortingPickerAlertDialog"),
+            ) {
+                Column {
+                    Spacer(Modifier.height(24.dp))
+                    TextTitleAlertDialog(
+                        text = stringResource(id = R.string.order_by),
+                        modifier = Modifier.padding(horizontal = 24.dp),
+                    )
+                    Row(horizontalArrangement = Arrangement.Center) {
+                        Picker(
+                            items = sortParamValues,
+                            onSelect = {
+                                newSortParam = sortParamKeys[it]
+                            },
+                            modifier = Modifier.weight(1f),
+                            currentIndexSelected = state.sortParam?.let {
+                                sortParamKeys.indexOf(it)
+                            } ?: 0,
+                        )
+                        Picker(
+                            items = sortOrderValues,
+                            onSelect = {
+                                newIsSortDescending = it == 1
+                            },
+                            modifier = Modifier.weight(1f),
+                            currentIndexSelected = if (newIsSortDescending) 1 else 0,
+                        )
+                    }
+                    Row(modifier = Modifier.align(Alignment.End)) {
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.cancel),
+                            onClick = onCancel,
+                        )
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.accept),
+                            onClick = {
+                                onAccept(newSortParam, newIsSortDescending)
+                            },
+                        )
+                        Spacer(Modifier.width(12.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+data class UiSortingPickerState(
+    val show: Boolean,
+    val sortParam: String?,
+    val isSortDescending: Boolean,
+)
+
+@Composable
 private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
@@ -271,6 +355,22 @@ private fun TextFieldAlertDialogPreview() {
             type = KeyboardType.Uri,
             onCancel = {},
             onAccept = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun SortingPickerAlertDialogPreview() {
+    ReaderCollectionTheme {
+        SortingPickerAlertDialog(
+            state = UiSortingPickerState(
+                show = true,
+                sortParam = "readingDate",
+                isSortDescending = false,
+            ),
+            onCancel = {},
+            onAccept = { _, _ -> },
         )
     }
 }
