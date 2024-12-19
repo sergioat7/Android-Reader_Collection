@@ -35,7 +35,7 @@ class BooksRepository @Inject constructor(
     private val databaseScheduler: Scheduler = Schedulers.io()
     private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
     private val moshiAdapter = Moshi.Builder()
-        .add(MoshiDateAdapter("MMM dd, yyyy"))
+        .add(MoshiDateAdapter("dd/MM/yyyy"))
         .build().adapter<List<Book?>?>(
             Types.newParameterizedType(
                 List::class.java,

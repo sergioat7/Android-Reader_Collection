@@ -5,12 +5,14 @@
 
 package aragones.sergio.readercollection.presentation.ui.settings
 
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
@@ -19,7 +21,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -27,6 +28,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
@@ -36,209 +40,103 @@ import aragones.sergio.readercollection.presentation.ui.components.CustomRadioBu
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.TopAppBarIcon
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.description
+import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.Preferences
 
 @Composable
-fun SettingsScreen(viewModel: SettingsViewModel) {
+fun SettingsScreen(
+    state: SettingsUiState,
+    onShowInfo: () -> Unit,
+    onProfileDataChange: (String, String, String?, Boolean, Int) -> Unit,
+    onDeleteProfile: () -> Unit,
+    onLogout: () -> Unit,
+    onSave: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
 
-    val password by viewModel.password.observeAsState(initial = "")
-    var passwordVisibility by rememberSaveable { mutableStateOf(false) }
-    val passwordError by viewModel.profileForm.observeAsState(initial = null)
-    val language by viewModel.language.observeAsState(initial = "")
-    val sortParam by viewModel.sortParam.observeAsState(initial = null)
-    val isSortDescending by viewModel.isSortDescending.observeAsState(initial = false)
-    val themeMode by viewModel.themeMode.observeAsState(initial = 0)
-    val loading by viewModel.profileLoading.observeAsState(initial = false)
     val scrollState = rememberScrollState()
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background),
     ) {
-        CustomToolbar(
-            title = stringResource(id = R.string.title_settings),
-            modifier = Modifier.background(MaterialTheme.colors.background),
-            elevation = when (scrollState.value) {
-                0 -> 0.dp
-                else -> 4.dp
-            },
-            actions = {
-                TopAppBarIcon(
-                    icon = R.drawable.ic_delete_profile,
-                    onClick = { viewModel.showConfirmationDialog(R.string.profile_delete_confirmation) },
-                )
-                TopAppBarIcon(
-                    icon = R.drawable.ic_logout,
-                    onClick = { viewModel.showConfirmationDialog(R.string.profile_logout_confirmation) },
-                )
-            }
+        SettingsToolbar(
+            scrollState = scrollState,
+            onDeleteProfile = onDeleteProfile,
+            onLogout = onLogout,
         )
         Column(
-            Modifier
+            modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(scrollState),
         ) {
-
-            CustomOutlinedTextField(
-                text = viewModel.username,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, top = 24.dp),
-                labelText = stringResource(id = R.string.username),
-                endIcon = R.drawable.ic_show_info,
-                enabled = false,
-                onTextChanged = {},
-                onEndIconClicked = {
-                    viewModel.showInfoDialog(R.string.username_info)
-                },
-            )
-            CustomOutlinedTextField(
-                text = password,
-                errorTextId = passwordError,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 24.dp, end = 24.dp, top = 8.dp),
-                labelText = stringResource(id = R.string.password),
-                endIcon = if (passwordVisibility) {
-                    R.drawable.ic_hide_password
-                } else {
-                    R.drawable.ic_show_password
-                },
-                isLastTextField = true,
-                onTextChanged = {
-
-                    viewModel.profileDataChanged(
+            Spacer(Modifier.height(24.dp))
+            ProfileInfo(
+                username = state.username,
+                password = state.password,
+                passwordError = state.passwordError,
+                onShowInfo = onShowInfo,
+                onPasswordChange = {
+                    onProfileDataChange(
                         it,
-                        language,
-                        sortParam,
-                        isSortDescending,
-                        themeMode
+                        state.language,
+                        state.sortParam,
+                        state.isSortDescending,
+                        state.themeMode
                     )
                 },
-                onEndIconClicked = { passwordVisibility = !passwordVisibility },
             )
-            HeaderText(
-                text = stringResource(id = R.string.app_language),
-                modifier = Modifier.padding(
-                    top = 20.dp,
-                    bottom = 5.dp,
-                    start = 24.dp,
-                    end = 24.dp,
-                ),
-            )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-            ) {
-                CustomRadioButton(
-                    text = stringResource(id = R.string.english),
-                    modifier = Modifier.weight(1f),
-                    selected = language == Preferences.ENGLISH_LANGUAGE_KEY,
-                ) {
-
-                    viewModel.profileDataChanged(
-                        password,
-                        Preferences.ENGLISH_LANGUAGE_KEY,
-                        sortParam,
-                        isSortDescending,
-                        themeMode
+            Spacer(Modifier.height(20.dp))
+            LanguageInfo(
+                language = state.language,
+                onLanguageChange = {
+                    onProfileDataChange(
+                        state.password,
+                        it,
+                        state.sortParam,
+                        state.isSortDescending,
+                        state.themeMode
                     )
                 }
-                CustomRadioButton(
-                    text = stringResource(id = R.string.spanish),
-                    modifier = Modifier.weight(1f),
-                    selected = language == Preferences.SPANISH_LANGUAGE_KEY,
-                ) {
-
-                    viewModel.profileDataChanged(
-                        password,
-                        Preferences.SPANISH_LANGUAGE_KEY,
-                        sortParam,
-                        isSortDescending,
-                        themeMode
+            )
+            Spacer(Modifier.height(20.dp))
+            SortingInfo(
+                sortParam = state.sortParam,
+                isSortDescending = state.isSortDescending,
+                onSortParamValueChange = {
+                    onProfileDataChange(
+                        state.password,
+                        state.language,
+                        it,
+                        state.isSortDescending,
+                        state.themeMode
+                    )
+                },
+                onSortOrderValueChange = {
+                    onProfileDataChange(
+                        state.password,
+                        state.language,
+                        state.sortParam,
+                        it,
+                        state.themeMode
                     )
                 }
-            }
-            HeaderText(
-                text = stringResource(id = R.string.sort_books_param),
-                modifier = Modifier.padding(
-                    top = 20.dp,
-                    bottom = 5.dp,
-                    start = 24.dp,
-                    end = 24.dp,
-                ),
             )
-            val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
-            val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
-            val sortParamValue =
-                if (sortParam == null) sortingParamValues.first()
-                else sortingParamValues[sortingParamKeys.indexOf(sortParam)]
-            CustomDropdownMenu(
-                currentValue = sortParamValue,
-                modifier = Modifier.padding(
-                    bottom = 8.dp,
-                    start = 24.dp,
-                    end = 24.dp,
-                ),
-                values = sortingParamValues,
-                onOptionSelected = {
-
-                    val index = sortingParamValues.indexOf(it)
-                    val newSortParam =
-                        if (index == 0) null else sortingParamKeys[index]
-                    viewModel.profileDataChanged(
-                        password,
-                        language,
-                        newSortParam,
-                        isSortDescending,
-                        themeMode
+            Spacer(Modifier.height(20.dp))
+            AppThemeInfo(
+                selectedThemeIndex = state.themeMode,
+                onThemeChange = {
+                    onProfileDataChange(
+                        state.password,
+                        state.language,
+                        state.sortParam,
+                        state.isSortDescending,
+                        it,
                     )
-                },
-            )
-            val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
-            CustomDropdownMenu(
-                currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
-                modifier = Modifier.padding(horizontal = 24.dp),
-                values = sortingOrderValues,
-                onOptionSelected = {
-
-                    val index = sortingOrderValues.indexOf(it)
-                    viewModel.profileDataChanged(
-                        password,
-                        language,
-                        sortParam,
-                        index == 1,
-                        themeMode
-                    )
-                },
-            )
-            HeaderText(
-                text = stringResource(id = R.string.app_theme),
-                modifier = Modifier.padding(
-                    top = 20.dp,
-                    bottom = 5.dp,
-                    start = 24.dp,
-                    end = 24.dp,
-                ),
-            )
-            val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
-            CustomDropdownMenu(
-                currentValue = appThemes[themeMode],
-                modifier = Modifier.padding(horizontal = 24.dp),
-                values = appThemes,
-                onOptionSelected = {
-
-                    viewModel.profileDataChanged(
-                        password,
-                        language,
-                        sortParam,
-                        isSortDescending,
-                        appThemes.indexOf(it)
-                    )
-                },
+                }
             )
             Spacer(modifier = Modifier.weight(1f))
             MainActionButton(
@@ -247,24 +145,244 @@ fun SettingsScreen(viewModel: SettingsViewModel) {
                     .width(200.dp)
                     .align(Alignment.CenterHorizontally)
                     .padding(horizontal = 12.dp, vertical = 24.dp),
-                enabled = passwordError == null,
-            ) {
-                viewModel.save()
-            }
+                enabled = state.passwordError == null,
+                onClick = onSave,
+            )
         }
     }
-
-    if (loading) {
+    if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
 }
 
 @Composable
-fun HeaderText(text: String, modifier: Modifier) {
+private fun SettingsToolbar(
+    scrollState: ScrollState,
+    onDeleteProfile: () -> Unit,
+    onLogout: () -> Unit,
+) {
+    CustomToolbar(
+        title = stringResource(id = R.string.title_settings),
+        modifier = Modifier.background(MaterialTheme.colors.background),
+        elevation = when (scrollState.value) {
+            0 -> 0.dp
+            else -> 4.dp
+        },
+        actions = {
+            TopAppBarIcon(
+                icon = R.drawable.ic_delete_profile,
+                onClick = onDeleteProfile,
+            )
+            TopAppBarIcon(
+                icon = R.drawable.ic_logout,
+                onClick = onLogout,
+            )
+        },
+    )
+}
+
+@Composable
+private fun ProfileInfo(
+    username: String,
+    password: String,
+    passwordError: Int?,
+    onShowInfo: () -> Unit,
+    onPasswordChange: (String) -> Unit,
+) {
+    var passwordVisibility by rememberSaveable { mutableStateOf(false) }
+    CustomOutlinedTextField(
+        text = username,
+        onTextChanged = {},
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp),
+        labelText = stringResource(id = R.string.username),
+        endIcon = R.drawable.ic_show_info,
+        enabled = false,
+        onEndIconClicked = onShowInfo,
+    )
+    Spacer(Modifier.height(8.dp))
+    CustomOutlinedTextField(
+        text = password,
+        onTextChanged = onPasswordChange,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp),
+        errorTextId = passwordError,
+        labelText = stringResource(id = R.string.password),
+        endIcon = if (passwordVisibility) {
+            R.drawable.ic_hide_password
+        } else {
+            R.drawable.ic_show_password
+        },
+        inputType = CustomInputType.PASSWORD,
+        isLastTextField = true,
+        onEndIconClicked = { passwordVisibility = !passwordVisibility },
+    )
+}
+
+@Composable
+private fun LanguageInfo(
+    language: String,
+    onLanguageChange: (String) -> Unit,
+) {
+    HeaderText(
+        text = stringResource(id = R.string.app_language),
+        modifier = Modifier.padding(horizontal = 24.dp),
+    )
+    Spacer(Modifier.height(5.dp))
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
+    ) {
+        CustomRadioButton(
+            text = stringResource(id = R.string.english),
+            selected = language == Preferences.ENGLISH_LANGUAGE_KEY,
+            onClick = {
+                onLanguageChange(Preferences.ENGLISH_LANGUAGE_KEY)
+            },
+            modifier = Modifier.weight(1f),
+        )
+        CustomRadioButton(
+            text = stringResource(id = R.string.spanish),
+            selected = language == Preferences.SPANISH_LANGUAGE_KEY,
+            onClick = {
+                onLanguageChange(Preferences.SPANISH_LANGUAGE_KEY)
+            },
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+private fun SortingInfo(
+    sortParam: String?,
+    isSortDescending: Boolean,
+    onSortParamValueChange: (String?) -> Unit,
+    onSortOrderValueChange: (Boolean) -> Unit,
+) {
+    val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
+    val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
+    val sortParamValue =
+        if (sortParam == null) sortingParamValues.first()
+        else sortingParamValues[sortingParamKeys.indexOf(sortParam)]
+    val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
+
+    HeaderText(
+        text = stringResource(id = R.string.sort_books_param),
+        modifier = Modifier.padding(horizontal = 24.dp),
+    )
+    Spacer(Modifier.height(5.dp))
+    CustomDropdownMenu(
+        currentValue = sortParamValue,
+        modifier = Modifier.padding(horizontal = 24.dp),
+        values = sortingParamValues,
+        onOptionSelected = {
+
+            val index = sortingParamValues.indexOf(it)
+            val newSortParam = sortingParamKeys[index].takeIf { index != 0 }
+            onSortParamValueChange(newSortParam)
+        },
+    )
+    Spacer(Modifier.height(8.dp))
+    CustomDropdownMenu(
+        currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
+        modifier = Modifier.padding(horizontal = 24.dp),
+        values = sortingOrderValues,
+        onOptionSelected = {
+
+            val index = sortingOrderValues.indexOf(it)
+            onSortOrderValueChange(index == 1)
+        },
+    )
+}
+
+@Composable
+private fun AppThemeInfo(
+    selectedThemeIndex: Int,
+    onThemeChange: (Int) -> Unit,
+) {
+    val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
+    HeaderText(
+        text = stringResource(id = R.string.app_theme),
+        modifier = Modifier.padding(horizontal = 24.dp),
+    )
+    Spacer(Modifier.height(5.dp))
+    CustomDropdownMenu(
+        currentValue = appThemes[selectedThemeIndex],
+        modifier = Modifier.padding(horizontal = 24.dp),
+        values = appThemes,
+        onOptionSelected = {
+            onThemeChange(appThemes.indexOf(it))
+        },
+    )
+}
+
+@Composable
+private fun HeaderText(
+    text: String,
+    modifier: Modifier = Modifier,
+) {
     Text(
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.body1,
         color = MaterialTheme.colors.description,
     )
+}
+
+@PreviewLightDark
+@Composable
+private fun SettingsScreenPreview(
+    @PreviewParameter(SettingsScreenPreviewParameterProvider::class) state: SettingsUiState,
+) {
+    ReaderCollectionTheme {
+        SettingsScreen(
+            state = state,
+            onShowInfo = {},
+            onProfileDataChange = { _, _, _, _, _ -> },
+            onDeleteProfile = {},
+            onLogout = {},
+            onSave = {},
+        )
+    }
+}
+
+private class SettingsScreenPreviewParameterProvider :
+    PreviewParameterProvider<SettingsUiState> {
+
+    override val values: Sequence<SettingsUiState>
+        get() = sequenceOf(
+            SettingsUiState(
+                username = "User",
+                password = "Password",
+                passwordError = null,
+                language = "en",
+                sortParam = null,
+                isSortDescending = false,
+                themeMode = 0,
+                isLoading = false,
+            ),
+            SettingsUiState(
+                username = "Username very very very very very very very long",
+                password = "",
+                passwordError = R.string.invalid_password,
+                language = "es",
+                sortParam = "pageCount",
+                isSortDescending = true,
+                themeMode = 1,
+                isLoading = false,
+            ),
+            SettingsUiState(
+                username = "User",
+                password = "Password",
+                passwordError = null,
+                language = "en",
+                sortParam = null,
+                isSortDescending = false,
+                themeMode = 0,
+                isLoading = true,
+            ),
+        )
 }

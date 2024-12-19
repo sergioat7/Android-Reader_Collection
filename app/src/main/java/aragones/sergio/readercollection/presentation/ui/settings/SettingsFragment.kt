@@ -48,11 +48,28 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
         binding.composeView.setContent {
             ReaderCollectionTheme {
 
-                SettingsScreen(viewModel)
-
+                val state by viewModel.uiState
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
                     initial = -1
                 )
+                val error by viewModel.profileError.observeAsState()
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+
+                SettingsScreen(
+                    state = state,
+                    onShowInfo = {
+                        viewModel.showInfoDialog(R.string.username_info)
+                    },
+                    onProfileDataChange = viewModel::profileDataChanged,
+                    onDeleteProfile = {
+                        viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+                    },
+                    onLogout = {
+                        viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
+                    },
+                    onSave = viewModel::save,
+                )
+
                 ConfirmationAlertDialog(
                     show = confirmationMessageId != -1,
                     textId = confirmationMessageId,
@@ -75,9 +92,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                         viewModel.closeDialogs()
                     },
                 )
-
-                val error by viewModel.profileError.observeAsState()
-                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
 
                 val text = if (error != null) {
                     val errorText = StringBuilder()

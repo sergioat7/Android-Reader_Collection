@@ -11,106 +11,121 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import com.aragones.sergio.util.CustomInputType
 
 @Composable
-fun RegisterScreen(viewModel: RegisterViewModel) {
+fun RegisterScreen(
+    state: RegisterUiState,
+    onShowInfo: () -> Unit,
+    onRegisterDataChange: (String, String, String) -> Unit,
+    onRegister: (String, String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
 
-    val username by viewModel.username.observeAsState(initial = "")
-    val password by viewModel.password.observeAsState(initial = "")
-    val confirmPassword by viewModel.confirmPassword.observeAsState(initial = "")
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     var confirmPasswordVisibility by rememberSaveable { mutableStateOf(false) }
-    val registerFormState by viewModel.registerFormState.observeAsState(initial = LoginFormState())
-    val loading by viewModel.registerLoading.observeAsState(initial = false)
-
-    val buttonEnabled by remember {
-        derivedStateOf { registerFormState.isDataValid }
-    }
 
     Column(
-        Modifier
+        modifier = modifier
             .fillMaxSize()
             .background(MaterialTheme.colors.background)
             .padding(24.dp),
     ) {
         Image(
             painter = painterResource(id = R.drawable.login_register_image),
-            contentDescription = "",
+            contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .weight(5f),
         )
+        Spacer(Modifier.height(24.dp))
         CustomOutlinedTextField(
-            text = username,
-            errorTextId = registerFormState.usernameError,
+            text = state.username,
+            onTextChanged = { newUsername ->
+                onRegisterDataChange(
+                    newUsername,
+                    state.password,
+                    state.confirmPassword
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, top = 24.dp),
+                .padding(horizontal = 12.dp),
+            errorTextId = state.formState.usernameError,
             labelText = stringResource(id = R.string.username),
             endIcon = R.drawable.ic_show_info,
             isLastTextField = false,
-            onTextChanged = { newUsername ->
-                viewModel.registerDataChanged(newUsername, password, confirmPassword)
-            },
-            onEndIconClicked = {
-                viewModel.showInfoDialog(R.string.username_info)
-            },
+            onEndIconClicked = onShowInfo,
         )
+        Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
-            text = password,
-            errorTextId = registerFormState.passwordError,
+            text = state.password,
+            onTextChanged = { newPassword ->
+                onRegisterDataChange(
+                    state.username,
+                    newPassword,
+                    state.confirmPassword
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, top = 8.dp),
+                .padding(horizontal = 12.dp),
+            errorTextId = state.formState.passwordError,
             labelText = stringResource(id = R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
             } else {
                 R.drawable.ic_show_password
             },
+            inputType = CustomInputType.PASSWORD,
             isLastTextField = false,
-            onTextChanged = { newPassword ->
-                viewModel.registerDataChanged(username, newPassword, confirmPassword)
-            },
             onEndIconClicked = { passwordVisibility = !passwordVisibility },
         )
+        Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
-            text = confirmPassword,
-            errorTextId = registerFormState.passwordError,
+            text = state.confirmPassword,
+            onTextChanged = { newPassword ->
+                onRegisterDataChange(
+                    state.username,
+                    state.password,
+                    newPassword
+                )
+            },
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, top = 8.dp),
+                .padding(horizontal = 12.dp),
+            errorTextId = state.formState.passwordError,
             labelText = stringResource(id = R.string.confirm_password),
             endIcon = if (confirmPasswordVisibility) {
                 R.drawable.ic_hide_password
             } else {
                 R.drawable.ic_show_password
             },
+            inputType = CustomInputType.PASSWORD,
             isLastTextField = true,
-            onTextChanged = { newPassword ->
-                viewModel.registerDataChanged(username, password, newPassword)
-            },
             onEndIconClicked = { confirmPasswordVisibility = !confirmPasswordVisibility },
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -120,13 +135,69 @@ fun RegisterScreen(viewModel: RegisterViewModel) {
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 12.dp, vertical = 24.dp),
-            enabled = buttonEnabled,
-        ) {
-            viewModel.register(username, password)
-        }
+            enabled = state.formState.isDataValid,
+            onClick = {
+                onRegister(state.username, state.password)
+            },
+        )
     }
-
-    if (loading) {
+    if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
+}
+
+@PreviewLightDark
+@Composable
+private fun RegisterScreenPreview(
+    @PreviewParameter(RegisterScreenPreviewParameterProvider::class) state: RegisterUiState,
+) {
+    ReaderCollectionTheme {
+        RegisterScreen(
+            state = state,
+            onShowInfo = {},
+            onRegisterDataChange = { _, _, _ -> },
+            onRegister = { _, _ -> },
+        )
+    }
+}
+
+private class RegisterScreenPreviewParameterProvider :
+    PreviewParameterProvider<RegisterUiState> {
+
+    override val values: Sequence<RegisterUiState>
+        get() = sequenceOf(
+            RegisterUiState(
+                username = "User",
+                password = "Password",
+                confirmPassword = "Password",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = null,
+                    isDataValid = true,
+                ),
+                isLoading = false,
+            ),
+            RegisterUiState(
+                username = "",
+                password = "Password123",
+                confirmPassword = "",
+                formState = LoginFormState(
+                    usernameError = R.string.invalid_username,
+                    passwordError = R.string.invalid_repeat_password,
+                    isDataValid = false,
+                ),
+                isLoading = false,
+            ),
+            RegisterUiState(
+                username = "User",
+                password = "Password",
+                confirmPassword = "Password",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = null,
+                    isDataValid = true,
+                ),
+                isLoading = true,
+            ),
+        )
 }

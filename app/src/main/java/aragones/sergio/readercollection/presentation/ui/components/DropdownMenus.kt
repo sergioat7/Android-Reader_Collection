@@ -46,7 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
@@ -57,21 +56,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import kotlin.math.max
 import kotlin.math.min
-
-@Preview(showBackground = true)
-@Composable
-fun CustomDropdownMenuPreview() {
-    CustomDropdownMenu(
-        currentValue = "Value",
-        labelText = "Header",
-        placeholderText = "Please choose",
-        modifier = Modifier.padding(12.dp),
-        values = listOf("Option 1", "Option 2", "Option 3"),
-        onOptionSelected = {},
-    )
-}
 
 @Composable
 fun CustomDropdownMenu(
@@ -110,14 +97,13 @@ fun CustomDropdownMenu(
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
                     if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "",
+                    contentDescription = null,
                     tint = textColor,
                 )
             }
         }
 
-    Column(modifier = modifier) {
-
+    Column(modifier) {
         OutlinedTextField(
             value = currentValue,
             modifier = Modifier
@@ -135,9 +121,7 @@ fun CustomDropdownMenu(
             singleLine = true,
             enabled = false,
             readOnly = true,
-            onValueChange = {
-                onOptionSelected(it)
-            },
+            onValueChange = onOptionSelected,
         )
         MyDropdownMenu(
             expanded = expanded,
@@ -147,10 +131,12 @@ fun CustomDropdownMenu(
                 .background(MaterialTheme.colors.background),
         ) {
             for (value in values) {
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    onOptionSelected(value)
-                }) {
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = false
+                        onOptionSelected(value)
+                    },
+                ) {
                     Text(
                         text = value,
                         style = MaterialTheme.typography.body1,
@@ -163,7 +149,7 @@ fun CustomDropdownMenu(
 }
 
 @Composable
-fun MyDropdownMenu(
+private fun MyDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
@@ -202,15 +188,15 @@ fun MyDropdownMenu(
 }
 
 // Menu open/close animation.
-internal const val InTransitionDuration = 120
-internal const val OutTransitionDuration = 75
+private const val InTransitionDuration = 120
+private const val OutTransitionDuration = 75
 
 // Size defaults.
 private val MenuElevation = 8.dp
-internal val MenuVerticalMargin = 48.dp
+private val MenuVerticalMargin = 48.dp
 
 @Composable
-fun MyDropdownMenuContent(
+private fun MyDropdownMenuContent(
     expandedStates: MutableTransitionState<Boolean>,
     transformOriginState: MutableState<TransformOrigin>,
     scrollState: ScrollState,
@@ -291,7 +277,7 @@ fun MyDropdownMenuContent(
  * Calculates the position of a Material [DropdownMenu].
  */
 @Immutable
-internal data class DropdownMenuPositionProvider(
+private data class DropdownMenuPositionProvider(
     val contentOffset: DpOffset,
     val density: Density,
     val onPositionCalculated: (IntRect, IntRect) -> Unit = { _, _ -> }
@@ -358,7 +344,7 @@ internal data class DropdownMenuPositionProvider(
     }
 }
 
-internal fun calculateTransformOrigin(
+private fun calculateTransformOrigin(
     parentBounds: IntRect,
     menuBounds: IntRect
 ): TransformOrigin {
@@ -389,4 +375,19 @@ internal fun calculateTransformOrigin(
         }
     }
     return TransformOrigin(pivotX, pivotY)
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun CustomDropdownMenuPreview() {
+    ReaderCollectionTheme {
+        CustomDropdownMenu(
+            currentValue = "Value",
+            labelText = "Header",
+            placeholderText = "Please choose",
+            modifier = Modifier.padding(12.dp),
+            values = listOf("Option 1", "Option 2", "Option 3"),
+            onOptionSelected = {},
+        )
+    }
 }

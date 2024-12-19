@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.ui.booklist
 
 import android.content.Context
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -42,15 +43,15 @@ class BookListViewModel @Inject constructor(
     private var format: String? = state["format"]
     private val arePendingBooks: Boolean
         get() = state == BookState.PENDING
+    private var _uiState: MutableState<BookListUiState> = mutableStateOf(BookListUiState.Empty)
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
     var query: String = state["query"] ?: ""
+    val uiState: State<BookListUiState> = _uiState
     val booksError: LiveData<ErrorResponse> = _booksError
-    var uiState: MutableState<BookListUiState> = mutableStateOf(BookListUiState.Empty)
-        private set
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
@@ -67,7 +68,7 @@ class BookListViewModel @Inject constructor(
     //region Public methods
     fun fetchBooks() {
 
-        uiState.value = when (val currentState = uiState.value) {
+        _uiState.value = when (val currentState = _uiState.value) {
             is BookListUiState.Empty -> BookListUiState.Success(
                 isLoading = true,
                 books = emptyList(),
@@ -87,7 +88,7 @@ class BookListViewModel @Inject constructor(
                     showError()
                 } else {
 
-                    uiState.value = when (val currentState = uiState.value) {
+                    _uiState.value = when (val currentState = _uiState.value) {
                         is BookListUiState.Empty -> BookListUiState.Success(
                             isLoading = true,
                             books = getFilteredBooksFor(books),
@@ -112,8 +113,8 @@ class BookListViewModel @Inject constructor(
     }
 
     fun switchDraggingState() {
-        (uiState.value as? BookListUiState.Success)?.let { state ->
-            uiState.value = state.copy(isDraggingEnabled = state.isDraggingEnabled.not())
+        (_uiState.value as? BookListUiState.Success)?.let { state ->
+            _uiState.value = state.copy(isDraggingEnabled = state.isDraggingEnabled.not())
         }
     }
 
@@ -132,7 +133,7 @@ class BookListViewModel @Inject constructor(
         for ((index, book) in books.withIndex()) {
             book.priority = index
         }
-        uiState.value = when (val currentState = uiState.value) {
+        _uiState.value = when (val currentState = _uiState.value) {
             is BookListUiState.Empty -> BookListUiState.Success(
                 isLoading = false,
                 books = getFilteredBooksFor(books),
@@ -211,7 +212,7 @@ class BookListViewModel @Inject constructor(
 
     private fun showError(error: ErrorResponse = ErrorResponse("", R.string.error_database)) {
 
-        uiState.value = BookListUiState.Success(
+        _uiState.value = BookListUiState.Success(
             isLoading = false,
             books = emptyList(),
             isDraggingEnabled = false,
