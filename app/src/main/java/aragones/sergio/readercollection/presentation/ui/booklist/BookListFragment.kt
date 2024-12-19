@@ -19,6 +19,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.components.SortingPickerAlertDialog
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.StatusBarStyle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -54,6 +55,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                 ReaderCollectionTheme {
 
                     val state by viewModel.uiState
+                    val sortingPickerState by viewModel.sortingPickerState
                     val error by viewModel.booksError.observeAsState()
 
                     when (val currentState = state) {
@@ -82,7 +84,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                             viewModel.switchDraggingState()
                         },
                         onSortClick = {
-                            viewModel.sort(requireContext()) {}
+                            viewModel.showSortingPickerState()
                         },
                         onDrag = {
                             viewModel.updateBookOrdering(it)
@@ -90,6 +92,16 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                         onDragEnd = {
                             viewModel.setPriorityFor(it)
                         }
+                    )
+
+                    SortingPickerAlertDialog(
+                        state = sortingPickerState,
+                        onCancel = {
+                            viewModel.updatePickerState(sortingPickerState.sortParam, sortingPickerState.isSortDescending)
+                        },
+                        onAccept = { newSortParam, newIsSortDescending ->
+                            viewModel.updatePickerState(newSortParam, newIsSortDescending)
+                        },
                     )
 
                     val text = if (error != null) {

@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
+import aragones.sergio.readercollection.presentation.ui.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
@@ -35,8 +36,6 @@ class BookListViewModel @Inject constructor(
 
     //region Private properties
     private var state: String = state["state"] ?: ""
-    private var sortParam: String? = state["sortParam"]
-    private var isSortDescending: Boolean = state["isSortDescending"] ?: false
     private var year: Int = state["year"] ?: -1
     private var month: Int = state["month"] ?: -1
     private var author: String? = state["author"]
@@ -44,6 +43,13 @@ class BookListViewModel @Inject constructor(
     private val arePendingBooks: Boolean
         get() = state == BookState.PENDING
     private var _uiState: MutableState<BookListUiState> = mutableStateOf(BookListUiState.Empty)
+    private var _sortingPickerState: MutableState<UiSortingPickerState> = mutableStateOf(
+        UiSortingPickerState(
+            show = false,
+            sortParam = state["sortParam"],
+            isSortDescending = state["isSortDescending"] ?: false
+        )
+    )
     private val _booksError = MutableLiveData<ErrorResponse>()
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
@@ -51,6 +57,7 @@ class BookListViewModel @Inject constructor(
     //region Public properties
     var query: String = state["query"] ?: ""
     val uiState: State<BookListUiState> = _uiState
+    val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
     val booksError: LiveData<ErrorResponse> = _booksError
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var tutorialShown = userRepository.hasDragTutorialBeenShown
@@ -118,16 +125,6 @@ class BookListViewModel @Inject constructor(
         }
     }
 
-    fun sort(context: Context, acceptHandler: (() -> Unit)?) {
-        super.sort(context, sortParam, isSortDescending) { newSortParam, newIsSortDescending ->
-
-            sortParam = newSortParam
-            isSortDescending = newIsSortDescending
-            fetchBooks()
-            acceptHandler?.invoke()
-        }
-    }
-
     fun updateBookOrdering(books: List<Book>) {
 
         for ((index, book) in books.withIndex()) {
@@ -150,6 +147,20 @@ class BookListViewModel @Inject constructor(
         }, failure = {
             showError(it)
         })
+    }
+
+    fun showSortingPickerState() {
+        _sortingPickerState.value = _sortingPickerState.value.copy(show = true)
+    }
+
+    fun updatePickerState(newSortParam: String?, newIsSortDescending: Boolean) {
+
+        _sortingPickerState.value = UiSortingPickerState(
+            show = false,
+            sortParam = newSortParam,
+            isSortDescending = newIsSortDescending
+        )
+        fetchBooks()
     }
 
     fun setTutorialAsShown() {
@@ -192,7 +203,7 @@ class BookListViewModel @Inject constructor(
         }
 
         val sortComparator = compareBy<Book> {
-            when (sortParam) {
+            when (_sortingPickerState.value.sortParam) {
                 "title" -> it.title
                 "publishedDate" -> it.publishedDate
                 "readingDate" -> it.readingDate
@@ -207,7 +218,7 @@ class BookListViewModel @Inject constructor(
             sortComparator.thenBy { it.priority }
         }
         return filteredBooks.sortedWith(comparator)
-            .let { if (isSortDescending && !arePendingBooks) it.reversed() else it }
+            .let { if (_sortingPickerState.value.isSortDescending && !arePendingBooks) it.reversed() else it }
     }
 
     private fun showError(error: ErrorResponse = ErrorResponse("", R.string.error_database)) {
