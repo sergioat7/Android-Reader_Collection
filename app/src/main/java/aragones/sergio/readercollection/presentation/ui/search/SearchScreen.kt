@@ -41,6 +41,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -288,10 +290,27 @@ internal fun LazyListState.reachedBottom(buffer: Int = 1): Boolean {
 
 @PreviewLightDark
 @Composable
-private fun SearchScreenPreview() {
+private fun SearchScreenPreview(
+    @PreviewParameter(SearchScreenPreviewParameterProvider::class) state: SearchUiState,
+) {
     ReaderCollectionTheme {
         SearchScreen(
-            state = SearchUiState.Success(
+            state = state,
+            onSearch = {},
+            onBookClick = {},
+            onSwipe = {},
+            onLoadMoreClick = {},
+            onRefresh = {},
+        )
+    }
+}
+
+private class SearchScreenPreviewParameterProvider :
+    PreviewParameterProvider<SearchUiState> {
+
+    override val values: Sequence<SearchUiState>
+        get() = sequenceOf(
+            SearchUiState.Success(
                 books = listOf(
                     Book(
                         "1",
@@ -389,64 +408,16 @@ private fun SearchScreenPreview() {
                 isLoading = true,
                 query = null,
             ),
-            onSearch = {},
-            onBookClick = {},
-            onSwipe = {},
-            onLoadMoreClick = {},
-            onRefresh = {},
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun SearchScreenWithoutBooksPreview() {
-    ReaderCollectionTheme {
-        SearchScreen(
-            state = SearchUiState.Success(
+            SearchUiState.Success(
                 books = emptyList(),
                 isLoading = false,
                 query = null,
             ),
-            onSearch = {},
-            onBookClick = {},
-            onSwipe = {},
-            onLoadMoreClick = {},
-            onRefresh = {},
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun SearchScreenEmptyPreview() {
-    ReaderCollectionTheme {
-        SearchScreen(
-            state = SearchUiState.Empty,
-            onSearch = {},
-            onBookClick = {},
-            onSwipe = {},
-            onLoadMoreClick = {},
-            onRefresh = {},
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun SearchScreenErrorPreview() {
-    ReaderCollectionTheme {
-        SearchScreen(
-            state = SearchUiState.Error(
+            SearchUiState.Empty,
+            SearchUiState.Error(
                 isLoading = false,
                 query = null,
                 value = ErrorResponse("", 0),
             ),
-            onSearch = {},
-            onBookClick = {},
-            onSwipe = {},
-            onLoadMoreClick = {},
-            onRefresh = {},
         )
-    }
 }

@@ -30,6 +30,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
@@ -140,22 +142,53 @@ fun LoginScreen(
 
 @PreviewLightDark
 @Composable
-private fun LoginScreenPreview() {
+private fun LoginScreenPreview(
+    @PreviewParameter(LoginScreenPreviewParameterProvider::class) state: LoginUiState,
+) {
     ReaderCollectionTheme {
         LoginScreen(
-            state = LoginUiState(
-                username = "User",
-                password = "",
-                formState = LoginFormState(
-                    usernameError = null,
-                    passwordError = R.string.invalid_password,
-                    isDataValid = false,
-                ),
-                isLoading = false,
-            ),
+            state = state,
             onLoginDataChange = { _, _ -> },
             onLogin = { _, _ -> },
             onGoToRegister = {},
         )
     }
+}
+
+private class LoginScreenPreviewParameterProvider :
+    PreviewParameterProvider<LoginUiState> {
+
+    override val values: Sequence<LoginUiState>
+        get() = sequenceOf(
+            LoginUiState(
+                username = "User",
+                password = "Password",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = null,
+                    isDataValid = true,
+                ),
+                isLoading = false,
+            ),
+            LoginUiState(
+                username = "",
+                password = "",
+                formState = LoginFormState(
+                    usernameError = R.string.invalid_username,
+                    passwordError = R.string.invalid_password,
+                    isDataValid = false,
+                ),
+                isLoading = false,
+            ),
+            LoginUiState(
+                username = "User",
+                password = "Password",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = null,
+                    isDataValid = true,
+                ),
+                isLoading = true,
+            ),
+        )
 }

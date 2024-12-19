@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -273,15 +275,33 @@ private fun <T> MutableList<T>.move(from: Int, to: Int) {
 
 @PreviewLightDark
 @Composable
-private fun PendingBookListScreenSuccessPreview() {
+private fun BookListScreenPreview(
+    @PreviewParameter(BookListScreenPreviewParameterProvider::class) state: BookListUiState,
+) {
     ReaderCollectionTheme {
         BookListScreen(
-            state = BookListUiState.Success(
+            state = state,
+            onBookClick = {},
+            onBack = {},
+            onDragClick = {},
+            onSortClick = {},
+            onDrag = {},
+            onDragEnd = {},
+        )
+    }
+}
+
+private class BookListScreenPreviewParameterProvider :
+    PreviewParameterProvider<BookListUiState> {
+
+    override val values: Sequence<BookListUiState>
+        get() = sequenceOf(
+            BookListUiState.Success(
                 isLoading = false,
                 books = listOf(
                     Book(
                         "1",
-                        "Large title for stored book in the list that should not be shown",
+                        "Title 1",
                         null,
                         listOf("Author"),
                         null,
@@ -304,7 +324,7 @@ private fun PendingBookListScreenSuccessPreview() {
                     ),
                     Book(
                         "2",
-                        "Title",
+                        "Title 2",
                         null,
                         null,
                         null,
@@ -328,22 +348,7 @@ private fun PendingBookListScreenSuccessPreview() {
                 ),
                 isDraggingEnabled = false,
             ),
-            onBookClick = {},
-            onBack = {},
-            onDragClick = {},
-            onSortClick = {},
-            onDrag = {},
-            onDragEnd = {},
-        )
-    }
-}
-
-@PreviewLightDark
-@Composable
-private fun ReadBookListScreenSuccessPreview() {
-    ReaderCollectionTheme {
-        BookListScreen(
-            state = BookListUiState.Success(
+            BookListUiState.Success(
                 isLoading = true,
                 books = listOf(
                     Book(
@@ -395,12 +400,5 @@ private fun ReadBookListScreenSuccessPreview() {
                 ),
                 isDraggingEnabled = true,
             ),
-            onBookClick = {},
-            onBack = {},
-            onDragClick = {},
-            onSortClick = {},
-            onDrag = {},
-            onDragEnd = {},
         )
-    }
 }

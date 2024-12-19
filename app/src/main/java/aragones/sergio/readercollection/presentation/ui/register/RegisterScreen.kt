@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
@@ -146,23 +148,56 @@ fun RegisterScreen(
 
 @PreviewLightDark
 @Composable
-private fun RegisterScreenPreview() {
+private fun RegisterScreenPreview(
+    @PreviewParameter(RegisterScreenPreviewParameterProvider::class) state: RegisterUiState,
+) {
     ReaderCollectionTheme {
         RegisterScreen(
-            state = RegisterUiState(
-                username = "User",
-                password = "Password123",
-                confirmPassword = "",
-                formState = LoginFormState(
-                    usernameError = null,
-                    passwordError = R.string.invalid_repeat_password,
-                    isDataValid = false,
-                ),
-                isLoading = false,
-            ),
+            state = state,
             onShowInfo = {},
             onRegisterDataChange = { _, _, _ -> },
             onRegister = { _, _ -> },
         )
     }
+}
+
+private class RegisterScreenPreviewParameterProvider :
+    PreviewParameterProvider<RegisterUiState> {
+
+    override val values: Sequence<RegisterUiState>
+        get() = sequenceOf(
+            RegisterUiState(
+                username = "User",
+                password = "Password",
+                confirmPassword = "Password",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = null,
+                    isDataValid = true,
+                ),
+                isLoading = false,
+            ),
+            RegisterUiState(
+                username = "",
+                password = "Password123",
+                confirmPassword = "",
+                formState = LoginFormState(
+                    usernameError = R.string.invalid_username,
+                    passwordError = R.string.invalid_repeat_password,
+                    isDataValid = false,
+                ),
+                isLoading = false,
+            ),
+            RegisterUiState(
+                username = "User",
+                password = "Password",
+                confirmPassword = "Password",
+                formState = LoginFormState(
+                    usernameError = null,
+                    passwordError = null,
+                    isDataValid = true,
+                ),
+                isLoading = true,
+            ),
+        )
 }

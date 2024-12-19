@@ -29,6 +29,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
@@ -332,10 +334,27 @@ private fun HeaderText(
 
 @PreviewLightDark
 @Composable
-private fun SettingsScreenPreview() {
+private fun SettingsScreenPreview(
+    @PreviewParameter(SettingsScreenPreviewParameterProvider::class) state: SettingsUiState,
+) {
     ReaderCollectionTheme {
         SettingsScreen(
-            state = SettingsUiState(
+            state = state,
+            onShowInfo = {},
+            onProfileDataChange = { _, _, _, _, _ -> },
+            onDeleteProfile = {},
+            onLogout = {},
+            onSave = {},
+        )
+    }
+}
+
+private class SettingsScreenPreviewParameterProvider :
+    PreviewParameterProvider<SettingsUiState> {
+
+    override val values: Sequence<SettingsUiState>
+        get() = sequenceOf(
+            SettingsUiState(
                 username = "User",
                 password = "Password",
                 passwordError = null,
@@ -345,11 +364,25 @@ private fun SettingsScreenPreview() {
                 themeMode = 0,
                 isLoading = false,
             ),
-            onShowInfo = {},
-            onProfileDataChange = { _, _, _, _, _ -> },
-            onDeleteProfile = {},
-            onLogout = {},
-            onSave = {},
+            SettingsUiState(
+                username = "Username very very very very very very very long",
+                password = "",
+                passwordError = R.string.invalid_password,
+                language = "es",
+                sortParam = "pageCount",
+                isSortDescending = true,
+                themeMode = 1,
+                isLoading = false,
+            ),
+            SettingsUiState(
+                username = "User",
+                password = "Password",
+                passwordError = null,
+                language = "en",
+                sortParam = null,
+                isSortDescending = false,
+                themeMode = 0,
+                isLoading = true,
+            ),
         )
-    }
 }
