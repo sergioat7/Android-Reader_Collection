@@ -11,8 +11,9 @@ plugins {
     alias(libs.plugins.detekt)
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.androidLibrary) apply false
+    alias(libs.plugins.spotless)
 }
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+tasks.register("cleanProject", Delete::class) {
+    delete(rootProject.layout.buildDirectory)
 }
