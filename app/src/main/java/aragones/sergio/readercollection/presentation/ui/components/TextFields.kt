@@ -55,7 +55,6 @@ fun CustomOutlinedTextField(
     enabled: Boolean = true,
     onEndIconClicked: (() -> Unit)? = null,
 ) {
-
     val keyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
 
@@ -98,12 +97,10 @@ fun CustomOutlinedTextField(
             keyboardType = KeyboardType.Number,
             imeAction = keyboardAction,
         )
-
         CustomInputType.PASSWORD -> KeyboardOptions(
             keyboardType = KeyboardType.Password,
             imeAction = keyboardAction,
         )
-
         else -> KeyboardOptions(
             keyboardType = KeyboardType.Text,
             imeAction = keyboardAction,
@@ -122,7 +119,9 @@ fun CustomOutlinedTextField(
                 errorBorderColor = MaterialTheme.colors.error,
                 errorLabelColor = MaterialTheme.colors.error,
             ),
-            textStyle = textStyle.copy(color = if (errorTextId != null) MaterialTheme.colors.error else textColor),
+            textStyle = textStyle.copy(
+                color = if (errorTextId != null) MaterialTheme.colors.error else textColor,
+            ),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon,
@@ -131,7 +130,7 @@ fun CustomOutlinedTextField(
                 onDone = {
                     keyboard?.hide()
                     focusManager.clearFocus()
-                }
+                },
             ),
             visualTransformation = if (endIcon == R.drawable.ic_show_password) {
                 PasswordVisualTransformation()

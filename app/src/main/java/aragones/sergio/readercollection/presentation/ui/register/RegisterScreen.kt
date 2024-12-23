@@ -44,7 +44,6 @@ fun RegisterScreen(
     onRegister: (String, String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     var confirmPasswordVisibility by rememberSaveable { mutableStateOf(false) }
 
@@ -68,7 +67,7 @@ fun RegisterScreen(
                 onRegisterDataChange(
                     newUsername,
                     state.password,
-                    state.confirmPassword
+                    state.confirmPassword,
                 )
             },
             modifier = Modifier
@@ -87,7 +86,7 @@ fun RegisterScreen(
                 onRegisterDataChange(
                     state.username,
                     newPassword,
-                    state.confirmPassword
+                    state.confirmPassword,
                 )
             },
             modifier = Modifier
@@ -111,7 +110,7 @@ fun RegisterScreen(
                 onRegisterDataChange(
                     state.username,
                     state.password,
-                    newPassword
+                    newPassword,
                 )
             },
             modifier = Modifier

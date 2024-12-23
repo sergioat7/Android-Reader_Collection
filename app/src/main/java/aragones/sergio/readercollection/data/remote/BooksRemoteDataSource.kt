@@ -19,17 +19,17 @@ import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.core.Single
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.json.JSONObject
-import javax.inject.Inject
 
 class BooksRemoteDataSource @Inject constructor(
     private val booksApiService: BookApiService,
     private val googleApiService: GoogleApiService,
     @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
-    private val remoteConfig: FirebaseRemoteConfig
+    private val remoteConfig: FirebaseRemoteConfig,
 ) {
 
     //region Private properties
@@ -105,7 +105,7 @@ class BooksRemoteDataSource @Inject constructor(
     fun setBook(
         book: BookResponse,
         success: (BookResponse) -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
 //        externalScope.launch {
 //
@@ -125,7 +125,7 @@ class BooksRemoteDataSource @Inject constructor(
         bookId: String,
         isFavourite: Boolean,
         success: (BookResponse) -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
 //        externalScope.launch {
 //
@@ -187,17 +187,12 @@ class BooksRemoteDataSource @Inject constructor(
 //        }
     }
 
-    fun searchBooks(
-        query: String,
-        page: Int,
-        order: String?
-    ): Single<GoogleBookListResponse> {
-
+    fun searchBooks(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
         val params = mutableMapOf(
             API_KEY to BuildConfig.API_KEY,
             SEARCH_PARAM to query,
             PAGE_PARAM to ((page - 1) * RESULTS).toString(),
-            RESULTS_PARAM to RESULTS.toString()
+            RESULTS_PARAM to RESULTS.toString(),
         )
         if (order != null) {
             params[ORDER_PARAM] = order
@@ -206,13 +201,11 @@ class BooksRemoteDataSource @Inject constructor(
     }
 
     fun getBook(volumeId: String): Single<GoogleBookResponse> {
-
         val params = mapOf(API_KEY to BuildConfig.API_KEY)
         return googleApiService.getGoogleBook(volumeId, params)
     }
 
     fun fetchRemoteConfigValues(language: String) {
-
         setupFormats(remoteConfig.getString("formats"), language)
         setupStates(remoteConfig.getString("states"), language)
 
@@ -225,14 +218,15 @@ class BooksRemoteDataSource @Inject constructor(
 
     //region Private methods
     private fun setupFormats(formatsString: String, language: String) {
-
         if (formatsString.isNotEmpty()) {
             var formats = listOf<FormatResponse>()
             try {
                 val languagedFormats =
                     JSONObject(formatsString).get(language).toString()
-                formats = moshi.adapter(Array<FormatResponse>::class.java)
-                    .fromJson(languagedFormats)?.asList() ?: listOf()
+                formats = moshi
+                    .adapter(Array<FormatResponse>::class.java)
+                    .fromJson(languagedFormats)
+                    ?.asList() ?: listOf()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }
@@ -242,14 +236,15 @@ class BooksRemoteDataSource @Inject constructor(
     }
 
     private fun setupStates(statesString: String, language: String) {
-
         if (statesString.isNotEmpty()) {
             var states = listOf<StateResponse>()
             try {
                 val languagedStates =
                     JSONObject(statesString).get(language).toString()
-                states = moshi.adapter(Array<StateResponse>::class.java)
-                    .fromJson(languagedStates)?.asList() ?: listOf()
+                states = moshi
+                    .adapter(Array<StateResponse>::class.java)
+                    .fromJson(languagedStates)
+                    ?.asList() ?: listOf()
             } catch (e: Exception) {
                 Log.e("LandingActivity", e.message ?: "")
             }

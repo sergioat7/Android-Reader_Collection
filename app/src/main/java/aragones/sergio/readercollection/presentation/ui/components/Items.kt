@@ -57,10 +57,12 @@ fun BookItem(
     Column(
         modifier = modifier
             .background(
-                if (isDragging) MaterialTheme.colors.selector
-                else MaterialTheme.colors.background
-            )
-            .fillMaxWidth()
+                if (isDragging) {
+                    MaterialTheme.colors.selector
+                } else {
+                    MaterialTheme.colors.background
+                },
+            ).fillMaxWidth()
             .height(220.dp)
             .clickable {
                 onBookClick(book.id)
@@ -111,10 +113,7 @@ fun BookItem(
 }
 
 @Composable
-private fun BookInfo(
-    book: Book,
-    modifier: Modifier = Modifier,
-) {
+private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = book.title ?: "",
@@ -152,10 +151,7 @@ private fun BookInfo(
 }
 
 @Composable
-private fun RatingStars(
-    rating: Double,
-    modifier: Modifier = Modifier,
-) {
+private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
@@ -189,7 +185,7 @@ fun SwipeItem(
         confirmStateChange = {
             if (it == dismissValue) onSwipe()
             false
-        }
+        },
     )
     SwipeToDismiss(
         state = swipeState,
@@ -203,13 +199,8 @@ fun SwipeItem(
 }
 
 @Composable
-fun SwipeItemBackground(
-    dismissValue: DismissValue,
-    color: Color,
-    icon: Int? = null,
-) {
+fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = null) {
     Row(modifier = Modifier.fillMaxSize()) {
-
         val alignment = when (dismissValue) {
             DismissValue.Default -> Alignment.Center
             DismissValue.DismissedToEnd -> Alignment.CenterStart
@@ -223,8 +214,11 @@ fun SwipeItemBackground(
                 .background(color)
                 .fillMaxHeight()
                 .run {
-                    if (dismissValue == DismissValue.DismissedToEnd) fillMaxWidth(0.9f)
-                    else fillMaxWidth()
+                    if (dismissValue == DismissValue.DismissedToEnd) {
+                        fillMaxWidth(0.9f)
+                    } else {
+                        fillMaxWidth()
+                    }
                 },
             contentAlignment = alignment,
         ) {
@@ -267,7 +261,7 @@ private fun BookItemPreview() {
                 null,
                 null,
                 false,
-                0
+                0,
             ),
             onBookClick = {},
             isDraggingEnabled = false,
@@ -301,7 +295,7 @@ private fun BookItemWithDraggingPreview() {
                 null,
                 null,
                 false,
-                0
+                0,
             ),
             onBookClick = {},
             isDraggingEnabled = true,

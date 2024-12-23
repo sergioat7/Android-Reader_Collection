@@ -28,14 +28,14 @@ class TextFieldAlertDialogTest {
 
     @Test
     fun whenSendTrueToComponent_thenShowDialog() {
-
         composeTestRule.setContent {
             TextFieldAlertDialog(
                 show = true,
                 titleTextId = R.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {},
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         composeTestRule.onNodeWithTag("textFieldAlertDialog").assertExists()
@@ -43,14 +43,14 @@ class TextFieldAlertDialogTest {
 
     @Test
     fun whenSendFalseToComponent_thenDoNotShowDialog() {
-
         composeTestRule.setContent {
             TextFieldAlertDialog(
                 show = false,
                 titleTextId = R.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {},
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         composeTestRule.onNodeWithTag("textFieldAlertDialog").assertDoesNotExist()
@@ -58,14 +58,14 @@ class TextFieldAlertDialogTest {
 
     @Test
     fun whenShowDialog_thenShowTextFieldAndButton() {
-
         composeTestRule.setContent {
             TextFieldAlertDialog(
                 show = true,
                 titleTextId = R.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {},
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         val acceptText = composeTestRule.activity.getString(R.string.accept)
@@ -79,7 +79,6 @@ class TextFieldAlertDialogTest {
 
     @Test
     fun whenCancelDialog_thenCloseDialog() {
-
         var isClosed = false
         composeTestRule.setContent {
             TextFieldAlertDialog(
@@ -89,7 +88,8 @@ class TextFieldAlertDialogTest {
                 onCancel = {
                     isClosed = true
                 },
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onFirst().performClick()
@@ -98,7 +98,6 @@ class TextFieldAlertDialogTest {
 
     @Test
     fun whenAcceptDialog_thenCloseDialogAndReturnText() {
-
         var isClosed = false
         var text = ""
         composeTestRule.setContent {
@@ -110,7 +109,8 @@ class TextFieldAlertDialogTest {
                 onAccept = {
                     isClosed = true
                     text = it
-                })
+                },
+            )
         }
 
         composeTestRule.onNodeWithTag("textField").performTextReplacement("New text to return")

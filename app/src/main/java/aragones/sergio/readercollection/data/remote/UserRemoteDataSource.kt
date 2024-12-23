@@ -8,14 +8,14 @@ package aragones.sergio.readercollection.data.remote
 import aragones.sergio.readercollection.data.remote.di.IoDispatcher
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.services.UserApiService
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor(
     private val api: UserApiService,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     //region Private properties
@@ -27,7 +27,7 @@ class UserRemoteDataSource @Inject constructor(
         username: String,
         password: String,
         success: (String) -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
 //        externalScope.launch {
 //
@@ -60,7 +60,7 @@ class UserRemoteDataSource @Inject constructor(
         username: String,
         password: String,
         success: () -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
 //        externalScope.launch {
 //

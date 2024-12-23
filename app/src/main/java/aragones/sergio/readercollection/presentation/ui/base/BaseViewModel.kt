@@ -28,9 +28,8 @@ open class BaseViewModel : ViewModel() {
         context: Context,
         sortParam: String?,
         isSortDescending: Boolean,
-        acceptHandler: ((newSortParam: String?, newIsSortDescending: Boolean) -> Unit)?
+        acceptHandler: ((newSortParam: String?, newIsSortDescending: Boolean) -> Unit)?,
     ) {
-
         val sortingKeys = context.resources.getStringArray(R.array.sorting_param_keys)
         val sortingValues = context.resources.getStringArray(R.array.sorting_param_values)
 
@@ -63,13 +62,11 @@ open class BaseViewModel : ViewModel() {
                 val sortValue = sortingKeys[sortKeysPicker.value]
                 acceptHandler?.invoke(
                     sortValue.ifBlank { null },
-                    sortOrdersPicker.value == 1
+                    sortOrdersPicker.value == 1,
                 )
                 dialog.dismiss()
-            }
-            .setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
+            }.setNegativeButton(context.resources.getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
-            }
-            .show()
+            }.show()
     }
 }

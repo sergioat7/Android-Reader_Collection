@@ -28,7 +28,6 @@ class SortingPickerAlertDialogTest {
 
     @Test
     fun whenSendTrueToComponent_thenShowDialog() {
-
         composeTestRule.setContent {
             SortingPickerAlertDialog(
                 state = UiSortingPickerState(
@@ -46,7 +45,6 @@ class SortingPickerAlertDialogTest {
 
     @Test
     fun whenSendFalseToComponent_thenDoNotShowDialog() {
-
         composeTestRule.setContent {
             SortingPickerAlertDialog(
                 state = UiSortingPickerState(
@@ -64,7 +62,6 @@ class SortingPickerAlertDialogTest {
 
     @Test
     fun whenShowDialog_thenShowTextAndButtonsAndSelectedOptions() {
-
         val sortParam = "readingDate"
         composeTestRule.setContent {
             SortingPickerAlertDialog(
@@ -99,7 +96,6 @@ class SortingPickerAlertDialogTest {
 
     @Test
     fun whenCancelDialog_thenCloseDialog() {
-
         var isClosed = false
         composeTestRule.setContent {
             SortingPickerAlertDialog(
@@ -121,7 +117,6 @@ class SortingPickerAlertDialogTest {
 
     @Test
     fun whenAcceptDialog_thenCloseDialogAndSetSelectedOptions() {
-
         var isClosed = false
         var sortParam: String? = null
         var isSortDescending = false

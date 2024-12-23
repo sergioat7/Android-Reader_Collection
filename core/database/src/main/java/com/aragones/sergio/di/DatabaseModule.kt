@@ -39,21 +39,15 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideAppDatabase(@ApplicationContext context: Context): ReaderCollectionDatabase {
-
-        return Room
-            .databaseBuilder(
-                context.applicationContext,
-                ReaderCollectionDatabase::class.java,
-                DATABASE_NAME
-            )
-            .addMigrations(MIGRATION_1_2)
-            .addMigrations(MIGRATION_2_3)
-            .build()
-    }
+    fun provideAppDatabase(@ApplicationContext context: Context): ReaderCollectionDatabase = Room
+        .databaseBuilder(
+            context.applicationContext,
+            ReaderCollectionDatabase::class.java,
+            DATABASE_NAME,
+        ).addMigrations(MIGRATION_1_2)
+        .addMigrations(MIGRATION_2_3)
+        .build()
 
     @Provides
-    fun provideBookDao(database: ReaderCollectionDatabase): BookDao {
-        return database.bookDao()
-    }
+    fun provideBookDao(database: ReaderCollectionDatabase): BookDao = database.bookDao()
 }

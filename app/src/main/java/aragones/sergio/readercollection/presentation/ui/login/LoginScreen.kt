@@ -51,7 +51,6 @@ fun LoginScreen(
     onGoToRegister: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
 
     Column(

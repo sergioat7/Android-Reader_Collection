@@ -8,9 +8,7 @@ package aragones.sergio.readercollection.presentation.extensions
 import android.widget.LinearLayout
 import android.widget.NumberPicker
 
-
 fun NumberPicker.setup(values: Array<String>) {
-
     this.minValue = 0
     this.maxValue = values.size - 1
     this.wrapSelectorWheel = true
@@ -19,10 +17,9 @@ fun NumberPicker.setup(values: Array<String>) {
 }
 
 fun getPickerParams(): LinearLayout.LayoutParams {
-
     val params = LinearLayout.LayoutParams(
         LinearLayout.LayoutParams.MATCH_PARENT,
-        LinearLayout.LayoutParams.WRAP_CONTENT
+        LinearLayout.LayoutParams.WRAP_CONTENT,
     )
     params.weight = 1f
     return params

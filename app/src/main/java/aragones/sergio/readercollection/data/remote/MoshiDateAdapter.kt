@@ -14,12 +14,8 @@ import java.util.Date
 class MoshiDateAdapter(private val format: String) {
 
     @FromJson
-    fun fromJson(dateString: String): Date? {
-        return dateString.toDate(format)
-    }
+    fun fromJson(dateString: String): Date? = dateString.toDate(format)
 
     @ToJson
-    fun toJson(date: Date?): String? {
-        return date.toString(format)
-    }
+    fun toJson(date: Date?): String? = date.toString(format)
 }

@@ -25,8 +25,8 @@ import aragones.sergio.readercollection.presentation.interfaces.OnItemClickListe
 import aragones.sergio.readercollection.presentation.interfaces.OnStartDraggingListener
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.utils.Constants.createTargetForBottomNavigationView
-import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.BookState
+import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.StatusBarStyle
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
@@ -104,7 +104,6 @@ class BooksFragment :
 
     //region Interface methods
     override fun onItemClick(bookId: String) {
-
         val action = BooksFragmentDirections.actionBooksFragmentToBookDetailFragment(bookId, false)
         findNavController().navigate(action)
     }
@@ -112,43 +111,38 @@ class BooksFragment :
     override fun onLoadMoreItemsClick() {}
 
     override fun onShowAllItemsClick(state: String) {
-
         val action = BooksFragmentDirections.actionBooksFragmentToBookListFragment(
             state,
             viewModel.sortParam,
             viewModel.isSortDescending,
-            viewModel.query
+            viewModel.query,
         )
         findNavController().navigate(action)
     }
 
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-
         menu.clear()
         menuInflater.inflate(R.menu.books_toolbar_menu, menu)
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-
-        return when (menuItem.itemId) {
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
 //            R.id.action_synchronize -> {
 //
 //                openSyncPopup()
 //                true
 //            }
-            R.id.action_sort -> {
-
-                viewModel.sort(requireContext()) {
-                    binding.apply {
-                        recyclerViewReadingBooks.scrollToPosition(0)
-                        recyclerViewPendingBooks.scrollToPosition(0)
-                        recyclerViewBooks.scrollToPosition(0)
-                    }
+        R.id.action_sort -> {
+            viewModel.sort(requireContext()) {
+                binding.apply {
+                    recyclerViewReadingBooks.scrollToPosition(0)
+                    recyclerViewPendingBooks.scrollToPosition(0)
+                    recyclerViewBooks.scrollToPosition(0)
                 }
-                true
             }
-
-            else -> false
+            true
+        }
+        else -> {
+            false
         }
     }
 
@@ -162,12 +156,10 @@ class BooksFragment :
 
     //region Public methods
     fun showAllBooks(view: View) {
-
         when (view) {
             binding.buttonShowAllPending -> {
                 onShowAllItemsClick(BookState.PENDING)
             }
-
             binding.buttonShowAllRead -> {
                 onShowAllItemsClick(BookState.READ)
             }
@@ -180,52 +172,56 @@ class BooksFragment :
         super.initializeUi()
 
         readingBooksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { it.isReading() }?.toMutableList()
+            books = viewModel.books.value
+                ?.filter { it.isReading() }
+                ?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = false,
             isGoogleBook = false,
-            onItemClickListener = this
+            onItemClickListener = this,
         )
         pendingBooksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { it.isPending() }?.toMutableList()
-                ?: mutableListOf(),
-            isVerticalDesign = true,
-            isGoogleBook = false,
-            onItemClickListener = this,
-            onStartDraggingListener = this
-        ).apply {
-            setSwitching(viewModel.query.isEmpty())
-        }
-        booksAdapter = BooksAdapter(
-            books = viewModel.books.value?.filter { !it.isReading() && !it.isPending() }
+            books = viewModel.books.value
+                ?.filter { it.isPending() }
                 ?.toMutableList()
                 ?: mutableListOf(),
             isVerticalDesign = true,
             isGoogleBook = false,
-            onItemClickListener = this
+            onItemClickListener = this,
+            onStartDraggingListener = this,
+        ).apply {
+            setSwitching(viewModel.query.isEmpty())
+        }
+        booksAdapter = BooksAdapter(
+            books = viewModel.books.value
+                ?.filter { !it.isReading() && !it.isPending() }
+                ?.toMutableList()
+                ?: mutableListOf(),
+            isVerticalDesign = true,
+            isGoogleBook = false,
+            onItemClickListener = this,
         )
         setupBindings()
 
         with(binding) {
-
             recyclerViewReadingBooks.layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
-                false
+                false,
             )
             recyclerViewReadingBooks.adapter = readingBooksAdapter
 
             recyclerViewPendingBooks.layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
-                false
+                false,
             )
             recyclerViewPendingBooks.adapter = pendingBooksAdapter
 
             recyclerViewBooks.layoutManager = LinearLayoutManager(
                 requireContext(),
                 LinearLayoutManager.HORIZONTAL,
-                false
+                false,
             )
             recyclerViewBooks.adapter = booksAdapter
 
@@ -239,7 +235,6 @@ class BooksFragment :
 
     //region Private methods
     private fun setupBindings() {
-
         viewModel.readingBooks.observe(viewLifecycleOwner) { booksResponse ->
             readingBooksAdapter.setBooks(booksResponse.toMutableList(), true)
         }
@@ -273,12 +268,10 @@ class BooksFragment :
     }
 
     private fun setupSearchView() {
-
         this.searchView = binding.searchViewBooks
         this.searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
 
             override fun onQueryTextChange(newText: String): Boolean {
-
                 viewModel.searchBooks(newText)
                 binding.apply {
                     recyclerViewReadingBooks.scrollToPosition(0)
@@ -290,7 +283,6 @@ class BooksFragment :
             }
 
             override fun onQueryTextSubmit(query: String): Boolean {
-
                 requireActivity().hideSoftKeyboard()
                 searchView?.clearFocus()
                 return true
@@ -299,37 +291,34 @@ class BooksFragment :
         this.setupSearchView(R.color.colorSecondary, "")
     }
 
-    private fun createTargetsForBottomNavigationView(): List<TapTarget> {
-        return listOf(
-            createTargetForBottomNavigationView(
-                activity,
-                R.id.nav_graph_books,
-                resources.getString(R.string.books_view_tutorial_title),
-                resources.getString(R.string.books_view_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true),
-            createTargetForBottomNavigationView(
-                activity,
-                R.id.nav_graph_search,
-                resources.getString(R.string.search_view_tutorial_title),
-                resources.getString(R.string.search_view_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true),
-            createTargetForBottomNavigationView(
-                activity,
-                R.id.nav_graph_stats,
-                resources.getString(R.string.stats_view_tutorial_title),
-                resources.getString(R.string.stats_view_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true),
-            createTargetForBottomNavigationView(
-                activity,
-                R.id.nav_graph_settings,
-                resources.getString(R.string.settings_view_tutorial_title),
-                resources.getString(R.string.settings_view_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true)
-        )
-    }
+    private fun createTargetsForBottomNavigationView(): List<TapTarget> = listOf(
+        createTargetForBottomNavigationView(
+            activity,
+            R.id.nav_graph_books,
+            resources.getString(R.string.books_view_tutorial_title),
+            resources.getString(R.string.books_view_tutorial_description),
+        ).style(requireContext()).cancelable(true).tintTarget(true),
+        createTargetForBottomNavigationView(
+            activity,
+            R.id.nav_graph_search,
+            resources.getString(R.string.search_view_tutorial_title),
+            resources.getString(R.string.search_view_tutorial_description),
+        ).style(requireContext()).cancelable(true).tintTarget(true),
+        createTargetForBottomNavigationView(
+            activity,
+            R.id.nav_graph_stats,
+            resources.getString(R.string.stats_view_tutorial_title),
+            resources.getString(R.string.stats_view_tutorial_description),
+        ).style(requireContext()).cancelable(true).tintTarget(true),
+        createTargetForBottomNavigationView(
+            activity,
+            R.id.nav_graph_settings,
+            resources.getString(R.string.settings_view_tutorial_title),
+            resources.getString(R.string.settings_view_tutorial_description),
+        ).style(requireContext()).cancelable(true).tintTarget(true),
+    )
 
     private fun createTargetsForToolbar(): List<TapTarget> {
-
 //        val syncItem = binding.toolbar.menu.findItem(R.id.action_synchronize)
         val sortItem = binding.toolbar.menu.findItem(R.id.action_sort)
         return listOf(
@@ -339,27 +328,30 @@ class BooksFragment :
 //                resources.getString(R.string.sync_icon_tutorial_title),
 //                resources.getString(R.string.sync_icon_tutorial_description)
 //            ).style(requireContext()).cancelable(true).tintTarget(true),
-            TapTarget.forToolbarMenuItem(
-                binding.toolbar,
-                sortItem.itemId,
-                resources.getString(R.string.sort_icon_tutorial_title),
-                resources.getString(R.string.sort_icon_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(true)
+            TapTarget
+                .forToolbarMenuItem(
+                    binding.toolbar,
+                    sortItem.itemId,
+                    resources.getString(R.string.sort_icon_tutorial_title),
+                    resources.getString(R.string.sort_icon_tutorial_description),
+                ).style(requireContext())
+                .cancelable(true)
+                .tintTarget(true),
         )
     }
 
-    private fun createTargetsForScrollView(): List<TapTarget> {
-        return listOf(
-            TapTarget.forView(
+    private fun createTargetsForScrollView(): List<TapTarget> = listOf(
+        TapTarget
+            .forView(
                 binding.searchViewBooks,
                 resources.getString(R.string.search_bar_books_tutorial_title),
-                resources.getString(R.string.search_bar_books_tutorial_description)
-            ).style(requireContext()).cancelable(true).tintTarget(false)
-        )
-    }
+                resources.getString(R.string.search_bar_books_tutorial_description),
+            ).style(requireContext())
+            .cancelable(true)
+            .tintTarget(false),
+    )
 
     private fun createSequence() {
-
         if (!viewModel.tutorialShown) {
             bottomNavigationBarSequence = TapTargetSequence(requireActivity()).apply {
                 targets(createTargetsForBottomNavigationView())
@@ -410,10 +402,7 @@ class BooksFragment :
                             viewModel.setTutorialAsShown()
                         }
 
-                        override fun onSequenceStep(
-                            lastTarget: TapTarget,
-                            targetClicked: Boolean
-                        ) {
+                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {
                         }
 
                         override fun onSequenceCanceled(lastTarget: TapTarget) {}

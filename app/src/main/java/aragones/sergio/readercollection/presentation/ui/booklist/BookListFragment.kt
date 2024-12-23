@@ -47,13 +47,12 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         return ComposeView(requireContext()).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ReaderCollectionTheme {
-
                     val state by viewModel.uiState
                     val sortingPickerState by viewModel.sortingPickerState
                     val error by viewModel.booksError.observeAsState()
@@ -65,18 +64,20 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                                 return@ReaderCollectionTheme
                             }
                         }
-
-                        else -> Unit
+                        else -> {
+                            Unit
+                        }
                     }
 
                     BookListScreen(
                         state = state,
                         onBookClick = { bookId ->
                             val action =
-                                BookListFragmentDirections.actionBookListFragmentToBookDetailFragment(
-                                    bookId,
-                                    false
-                                )
+                                BookListFragmentDirections
+                                    .actionBookListFragmentToBookDetailFragment(
+                                        bookId,
+                                        false,
+                                    )
                             findNavController().navigate(action)
                         },
                         onBack = { findNavController().popBackStack() },
@@ -91,13 +92,16 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                         },
                         onDragEnd = {
                             viewModel.setPriorityFor(it)
-                        }
+                        },
                     )
 
                     SortingPickerAlertDialog(
                         state = sortingPickerState,
                         onCancel = {
-                            viewModel.updatePickerState(sortingPickerState.sortParam, sortingPickerState.isSortDescending)
+                            viewModel.updatePickerState(
+                                sortingPickerState.sortParam,
+                                sortingPickerState.isSortDescending,
+                            )
                         },
                         onAccept = { newSortParam, newIsSortDescending ->
                             viewModel.updatePickerState(newSortParam, newIsSortDescending)

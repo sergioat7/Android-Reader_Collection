@@ -20,7 +20,7 @@ object SharedPreferencesHandler {
     //region Private properties
     private val appPreferences = ReaderCollectionApplication.context.getSharedPreferences(
         Preferences.PREFERENCES_NAME,
-        Context.MODE_PRIVATE
+        Context.MODE_PRIVATE,
     )
     private val editor = appPreferences.edit()
     private val appEncryptedPreferences = EncryptedSharedPreferences.create(
@@ -28,7 +28,7 @@ object SharedPreferencesHandler {
         MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
         ReaderCollectionApplication.context,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
+        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
     )
     private val encryptedEditor = appEncryptedPreferences.edit()
     private val moshi = Moshi.Builder().build()
@@ -45,7 +45,8 @@ object SharedPreferencesHandler {
         set(value) = editor.setString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
     var credentials: AuthData
         get() {
-            return appEncryptedPreferences.getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
+            return appEncryptedPreferences
+                .getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
                 ?.let {
                     moshi.adapter(AuthData::class.java).fromJson(it)
                 } ?: run {
@@ -54,11 +55,12 @@ object SharedPreferencesHandler {
         }
         set(value) = encryptedEditor.setString(
             Preferences.AUTH_DATA_PREFERENCES_NAME,
-            moshi.adapter(AuthData::class.java).toJson(value)
+            moshi.adapter(AuthData::class.java).toJson(value),
         )
     var userData: UserData
         get() {
-            return appEncryptedPreferences.getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
+            return appEncryptedPreferences
+                .getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
                 ?.let {
                     moshi.adapter(UserData::class.java).fromJson(it)
                 } ?: run {
@@ -67,7 +69,7 @@ object SharedPreferencesHandler {
         }
         set(value) = encryptedEditor.setString(
             Preferences.USER_DATA_PREFERENCES_NAME,
-            moshi.adapter(UserData::class.java).toJson(value)
+            moshi.adapter(UserData::class.java).toJson(value),
         )
     val isLoggedIn: Boolean
         get() = userData.isLoggedIn && credentials.token.isNotEmpty()

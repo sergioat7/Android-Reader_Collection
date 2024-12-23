@@ -71,7 +71,6 @@ fun StarRatingBar(
     maxStars: Int = 5,
     isSelectable: Boolean = false,
 ) {
-
     val starSize = with(LocalDensity.current) { (12f * density).dp }
     val starSpacing = with(LocalDensity.current) { (0.5f * density).dp }
 
@@ -84,9 +83,8 @@ fun StarRatingBar(
                 i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colors.roseBud)
                 i.toFloat() == rating + 0.5f -> Pair(
                     R.drawable.ic_round_star_half_24,
-                    MaterialTheme.colors.roseBud
+                    MaterialTheme.colors.roseBud,
                 )
-
                 else -> Pair(R.drawable.ic_round_star_border_24, MaterialTheme.colors.lightRoseBud)
             }
             Icon(
@@ -99,8 +97,7 @@ fun StarRatingBar(
                         onClick = {
                             onRatingChanged(i.toFloat())
                         },
-                    )
-                    .size(starSize),
+                    ).size(starSize),
             )
             if (i < maxStars) {
                 Spacer(modifier = Modifier.width(starSpacing))
@@ -131,7 +128,7 @@ private fun StartRatingBarPreview() {
 @Retention(AnnotationRetention.BINARY)
 @Target(
     AnnotationTarget.ANNOTATION_CLASS,
-    AnnotationTarget.FUNCTION
+    AnnotationTarget.FUNCTION,
 )
 @Preview(name = "Light", showBackground = true)
 @Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, showBackground = true)

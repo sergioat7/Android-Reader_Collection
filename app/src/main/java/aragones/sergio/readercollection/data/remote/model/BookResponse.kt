@@ -51,5 +51,5 @@ data class BookResponse(
     var state: String?,
     @Json(name = "isFavourite")
     var isFavourite: Boolean,
-    var priority: Int
+    var priority: Int,
 ) : BaseModel<String>

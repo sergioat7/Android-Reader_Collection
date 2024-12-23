@@ -11,5 +11,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class NewPassword(
     @Json(name = "password")
-    val password: String
+    val password: String,
 )

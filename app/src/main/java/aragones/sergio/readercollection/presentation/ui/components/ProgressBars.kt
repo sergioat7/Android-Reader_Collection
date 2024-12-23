@@ -25,8 +25,10 @@ fun CustomCircularProgressIndicator() {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.DarkGray.copy(alpha = 0.75f))
-            .clickable {}//To avoid clicks in views behind
-            .pointerInput(Unit) { detectTapGestures(onPress = {}) },//To avoid showing shadow on click
+            .clickable {} // To avoid clicks in views behind
+            .pointerInput(Unit) {
+                detectTapGestures(onPress = {})
+            }, // To avoid showing shadow on click
     ) {
         CircularProgressIndicator(
             color = MaterialTheme.colors.primary,

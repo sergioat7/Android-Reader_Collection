@@ -89,11 +89,7 @@ fun ConfirmationAlertDialog(
 }
 
 @Composable
-fun InformationAlertDialog(
-    show: Boolean,
-    text: String,
-    onDismiss: () -> Unit,
-) {
+fun InformationAlertDialog(show: Boolean, text: String, onDismiss: () -> Unit) {
     if (show) {
         Dialog(
             onDismissRequest = onDismiss,
@@ -137,7 +133,6 @@ fun TextFieldAlertDialog(
     onAccept: (String) -> Unit,
 ) {
     if (show) {
-
         var text by rememberSaveable { mutableStateOf("") }
 
         Dialog(
@@ -171,8 +166,7 @@ fun TextFieldAlertDialog(
                             .border(
                                 BorderStroke(1.dp, MaterialTheme.colors.primary),
                                 shape = MaterialTheme.shapes.medium,
-                            )
-                            .testTag("textField"),
+                            ).testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = MaterialTheme.colors.primary,
                             unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
@@ -205,7 +199,6 @@ fun SortingPickerAlertDialog(
     onAccept: (newSortParam: String?, newIsSortDescending: Boolean) -> Unit,
 ) {
     if (state.show) {
-
         var newSortParam by rememberSaveable { mutableStateOf(state.sortParam) }
         var newIsSortDescending by rememberSaveable { mutableStateOf(state.isSortDescending) }
 
@@ -220,7 +213,7 @@ fun SortingPickerAlertDialog(
             onDismissRequest = { onCancel() },
             properties = DialogProperties(
                 dismissOnBackPress = false,
-                dismissOnClickOutside = false
+                dismissOnClickOutside = false,
             ),
         ) {
             Surface(
@@ -290,10 +283,7 @@ private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun TextMessageAlertDialog(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+private fun TextMessageAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         modifier = modifier,

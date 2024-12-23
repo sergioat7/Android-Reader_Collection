@@ -15,14 +15,12 @@ data class RegisterUiState(
     val isLoading: Boolean,
 ) {
     companion object {
-        fun empty(): RegisterUiState {
-            return RegisterUiState(
-                username = "",
-                password = "",
-                confirmPassword = "",
-                formState = LoginFormState(),
-                isLoading = false,
-            )
-        }
+        fun empty(): RegisterUiState = RegisterUiState(
+            username = "",
+            password = "",
+            confirmPassword = "",
+            formState = LoginFormState(),
+            isLoading = false,
+        )
     }
 }

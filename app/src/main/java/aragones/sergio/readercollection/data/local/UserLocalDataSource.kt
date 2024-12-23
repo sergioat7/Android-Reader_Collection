@@ -17,7 +17,7 @@ import java.util.Locale
 import javax.inject.Inject
 
 class UserLocalDataSource @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
 ) {
 
     //region Private properties
@@ -84,26 +84,22 @@ class UserLocalDataSource @Inject constructor(
 
     //region Public methods
     fun logout() {
-
         SharedPreferencesHandler.removePassword()
         removeCredentials()
         SharedPreferencesHandler.logout()
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
-
         SharedPreferencesHandler.userData = userData
         storeCredentials(authData)
     }
 
     fun storeCredentials(authData: AuthData) {
-
         SharedPreferencesHandler.credentials = authData
         ApiManager.accessToken = authData.token
     }
 
     fun removeCredentials() {
-
         SharedPreferencesHandler.removeCredentials()
         ApiManager.accessToken = ""
     }
@@ -117,7 +113,6 @@ class UserLocalDataSource @Inject constructor(
     }
 
     fun storeLanguage(language: String) {
-
         SharedPreferencesHandler.language = language
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             localeManager?.applicationLocales = LocaleList(Locale.forLanguageTag(language))

@@ -21,8 +21,9 @@ import aragones.sergio.readercollection.presentation.interfaces.OnStartDraggingL
 import aragones.sergio.readercollection.presentation.interfaces.OnSwitchClickListener
 import kotlin.math.ceil
 
-class BooksViewHolder(private val binding: ViewDataBinding) :
-    RecyclerView.ViewHolder(binding.root) {
+class BooksViewHolder(
+    private val binding: ViewDataBinding,
+) : RecyclerView.ViewHolder(binding.root) {
 
     //region Public methods
     @SuppressLint("ClickableViewAccessibility")
@@ -34,17 +35,15 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
         isLast: Boolean,
         onItemClickListener: OnItemClickListener,
         onStartDraggingListener: OnStartDraggingListener?,
-        onSwitchClickListener: OnSwitchClickListener?
+        onSwitchClickListener: OnSwitchClickListener?,
     ) {
         binding.apply {
             when (this) {
-
                 is ItemReadingBookBinding -> {
                     this.book = book
                     this.onItemClickListener = onItemClickListener
                     this.isDarkMode = binding.root.context.isDarkMode()
                 }
-
                 is ItemVerticalBookBinding -> {
                     this.book = book
                     this.onItemClickListener = onItemClickListener
@@ -58,7 +57,6 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                         onSwitchClickListener?.onSwitchRight(adapterPosition)
                     }
                 }
-
                 is ItemBookBinding -> {
                     this.book = book
                     this.onItemClickListener = onItemClickListener
@@ -75,35 +73,35 @@ class BooksViewHolder(private val binding: ViewDataBinding) :
                         false
                     }
                 }
-
-                else -> Unit
+                else -> {
+                    Unit
+                }
             }
         }
     }
 
     fun setSelected(isSelected: Boolean) {
-
         val colorId = if (isSelected) R.color.colorQuaternary else R.color.colorSecondary
         when (binding) {
             is ItemVerticalBookBinding -> {
                 binding.constraintLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         binding.root.context,
-                        colorId
-                    )
+                        colorId,
+                    ),
                 )
             }
-
             is ItemBookBinding -> {
                 binding.constraintLayout.setBackgroundColor(
                     ContextCompat.getColor(
                         binding.root.context,
-                        colorId
-                    )
+                        colorId,
+                    ),
                 )
             }
-
-            else -> Unit
+            else -> {
+                Unit
+            }
         }
     }
     //endregion

@@ -53,7 +53,7 @@ data class Book(
     var state: String?,
     @Json(name = "isFavourite")
     var isFavourite: Boolean,
-    var priority: Int
+    var priority: Int,
 ) {
 
     @Ignore
@@ -78,18 +78,12 @@ data class Book(
         null,
         null,
         false,
-        -1
+        -1,
     )
 
-    fun authorsToString(): String {
-        return authors?.joinToString(separator = ", ") ?: ""
-    }
+    fun authorsToString(): String = authors?.joinToString(separator = ", ") ?: ""
 
-    fun isPending(): Boolean {
-        return state == BookState.PENDING
-    }
+    fun isPending(): Boolean = state == BookState.PENDING
 
-    fun isReading(): Boolean {
-        return state == BookState.READING
-    }
+    fun isReading(): Boolean = state == BookState.READING
 }

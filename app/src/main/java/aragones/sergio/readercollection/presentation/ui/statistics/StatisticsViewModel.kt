@@ -28,7 +28,7 @@ import javax.inject.Inject
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -60,8 +60,14 @@ class StatisticsViewModel @Inject constructor(
         booksByAuthorStats,
         longerBook,
         shorterBook,
-        booksByFormatStats
-    ) { booksByYearStats, booksByMonthStats, booksByAuthorStats, longerBook, shorterBook, booksByFormatStats ->
+        booksByFormatStats,
+    ) { booksByYearStats,
+        booksByMonthStats,
+        booksByAuthorStats,
+        longerBook,
+        shorterBook,
+        booksByFormatStats,
+        ->
         booksByYearStats?.isEmpty() == true &&
             booksByMonthStats?.isEmpty() == true &&
             booksByAuthorStats?.isEmpty() == true &&
@@ -87,31 +93,34 @@ class StatisticsViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-
         _booksLoading.value = true
-        booksRepository.getReadBooks().subscribeBy(
-            onComplete = {
+        booksRepository
+            .getReadBooks()
+            .subscribeBy(
+                onComplete = {
+                    _books.value = emptyList()
+                    manageError(ErrorResponse("", R.string.error_database))
+                },
+                onNext = { books ->
 
-                _books.value = emptyList()
-                manageError(ErrorResponse("", R.string.error_database))
-            },
-            onNext = { books ->
-
-                createBooksByYearStats(books)
-                createBooksByMonthStats(books)
-                createBooksByAuthorStats(books.filter { it.authorsToString().isNotBlank() })
-                _longerBook.value = books.filter { it.pageCount > 0 }.maxByOrNull { it.pageCount }
-                _shorterBook.value = books.filter { it.pageCount > 0 }.minByOrNull { it.pageCount }
-                createFormatStats(books.filter { it.format != null })
-                _books.value = books
-                _booksLoading.value = false
-            },
-            onError = {
-
-                _books.value = emptyList()
-                manageError(ErrorResponse("", R.string.error_database))
-            }
-        ).addTo(disposables)
+                    createBooksByYearStats(books)
+                    createBooksByMonthStats(books)
+                    createBooksByAuthorStats(books.filter { it.authorsToString().isNotBlank() })
+                    _longerBook.value = books
+                        .filter { it.pageCount > 0 }
+                        .maxByOrNull { it.pageCount }
+                    _shorterBook.value = books
+                        .filter { it.pageCount > 0 }
+                        .minByOrNull { it.pageCount }
+                    createFormatStats(books.filter { it.format != null })
+                    _books.value = books
+                    _booksLoading.value = false
+                },
+                onError = {
+                    _books.value = emptyList()
+                    manageError(ErrorResponse("", R.string.error_database))
+                },
+            ).addTo(disposables)
     }
 
     fun setTutorialAsShown() {
@@ -124,41 +133,41 @@ class StatisticsViewModel @Inject constructor(
     }
 
     fun closeDialogs() {
-
         _confirmationDialogMessageId.value = -1
         _infoDialogMessageId.value = -1
     }
 
     fun importData(jsonData: String) {
-
-        booksRepository.importDataFrom(jsonData).subscribeBy(
-            onComplete = {
-                _infoDialogMessageId.value = R.string.data_imported
-            },
-            onError = {
-                manageError(ErrorResponse("", R.string.error_file_data))
-            }
-        ).addTo(disposables)
+        booksRepository
+            .importDataFrom(jsonData)
+            .subscribeBy(
+                onComplete = {
+                    _infoDialogMessageId.value = R.string.data_imported
+                },
+                onError = {
+                    manageError(ErrorResponse("", R.string.error_file_data))
+                },
+            ).addTo(disposables)
     }
 
     fun getDataToExport(completion: (String?) -> Unit) {
-
-        booksRepository.exportDataTo().subscribeBy(
-            onSuccess = {
-
-                completion(it)
-                _infoDialogMessageId.value = R.string.file_created
-            }, onError = {
-                completion(null)
-                manageError(ErrorResponse("", R.string.error_database))
-            }
-        ).addTo(disposables)
+        booksRepository
+            .exportDataTo()
+            .subscribeBy(
+                onSuccess = {
+                    completion(it)
+                    _infoDialogMessageId.value = R.string.file_created
+                },
+                onError = {
+                    completion(null)
+                    manageError(ErrorResponse("", R.string.error_database))
+                },
+            ).addTo(disposables)
     }
     //endregion
 
     //region Private methods
     private fun createBooksByYearStats(books: List<Book>) {
-
         val booksByYear = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.YEAR)
@@ -169,15 +178,14 @@ class StatisticsViewModel @Inject constructor(
             entries.add(
                 BarEntry(
                     entry.key.toFloat(),
-                    entry.value.size.toFloat()
-                )
+                    entry.value.size.toFloat(),
+                ),
             )
         }
         _booksByYearStats.value = entries
     }
 
     private fun createBooksByMonthStats(books: List<Book>) {
-
         val booksByMonth = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.MONTH)
@@ -188,15 +196,14 @@ class StatisticsViewModel @Inject constructor(
             entries.add(
                 PieEntry(
                     entry.value.size.toFloat(),
-                    entry.key
-                )
+                    entry.key,
+                ),
             )
         }
         _booksByMonthStats.value = entries
     }
 
     private fun createBooksByAuthorStats(books: List<Book>) {
-
         _booksByAuthorStats.value = books
             .groupBy { it.authorsToString() }
             .toList()
@@ -206,7 +213,6 @@ class StatisticsViewModel @Inject constructor(
     }
 
     private fun createFormatStats(books: List<Book>) {
-
         val booksByFormat = books
             .filter { it.format?.isNotEmpty() == true }
             .groupBy { it.format }
@@ -216,15 +222,14 @@ class StatisticsViewModel @Inject constructor(
             entries.add(
                 PieEntry(
                     entry.value.size.toFloat(),
-                    Constants.FORMATS.first { it.id == entry.key }.name
-                )
+                    Constants.FORMATS.first { it.id == entry.key }.name,
+                ),
             )
         }
         _booksByFormatStats.value = entries
     }
 
     private fun manageError(error: ErrorResponse) {
-
         _booksLoading.value = false
         _booksError.value = error
         _booksError.value = null

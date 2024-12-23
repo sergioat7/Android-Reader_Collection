@@ -12,5 +12,5 @@ import com.squareup.moshi.JsonClass
 data class ErrorResponse(
     @Json(name = "error")
     val error: String,
-    val errorKey: Int
+    val errorKey: Int,
 )

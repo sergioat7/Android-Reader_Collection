@@ -14,7 +14,6 @@ class ShowAllItemsViewHolder(private val binding: ItemShowAllItemsBinding) :
 
     //region Public methods
     fun bind(state: String, onItemClickListener: OnItemClickListener) {
-
         binding.apply {
             this.state = state
             this.onItemClickListener = onItemClickListener

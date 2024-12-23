@@ -71,7 +71,6 @@ fun CustomDropdownMenu(
     values: List<String>,
     onOptionSelected: (String) -> Unit,
 ) {
-
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val label: @Composable (() -> Unit)? = labelText?.let {
@@ -96,7 +95,11 @@ fun CustomDropdownMenu(
         {
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
-                    if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
+                    imageVector = if (expanded) {
+                        Icons.Default.KeyboardArrowUp
+                    } else {
+                        Icons.Default.KeyboardArrowDown
+                    },
                     contentDescription = null,
                     tint = textColor,
                 )
@@ -156,7 +159,7 @@ private fun MyDropdownMenu(
     offset: DpOffset = DpOffset(0.dp, 0.dp),
     scrollState: ScrollState = rememberScrollState(),
     properties: PopupProperties = PopupProperties(focusable = true),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
     expandedStates.targetState = expanded
@@ -166,7 +169,7 @@ private fun MyDropdownMenu(
         val density = LocalDensity.current
         val popupPositionProvider = DropdownMenuPositionProvider(
             offset,
-            density
+            density,
         ) { parentBounds, menuBounds ->
             transformOriginState.value = calculateTransformOrigin(parentBounds, menuBounds)
         }
@@ -201,7 +204,7 @@ private fun MyDropdownMenuContent(
     transformOriginState: MutableState<TransformOrigin>,
     scrollState: ScrollState,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     // Menu open/close animation.
     val transition = updateTransition(expandedStates, "DropDownMenu")
@@ -221,7 +224,8 @@ private fun MyDropdownMenuContent(
                     delayMillis = OutTransitionDuration - 1,
                 )
             }
-        }, label = ""
+        },
+        label = "",
     ) {
         if (it) {
             // Menu is expanded.
@@ -241,7 +245,8 @@ private fun MyDropdownMenuContent(
                 // Expanded to dismissed.
                 tween(durationMillis = OutTransitionDuration)
             }
-        }, label = ""
+        },
+        label = "",
     ) {
         if (it) {
             // Menu is expanded.
@@ -260,13 +265,13 @@ private fun MyDropdownMenuContent(
                 transformOrigin = transformOriginState.value
             },
         elevation = MenuElevation,
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
     ) {
         Column(
             modifier = modifier
                 .width(IntrinsicSize.Max)
                 .verticalScroll(scrollState),
-            content = content
+            content = content,
         )
     }
 }
@@ -280,13 +285,13 @@ private fun MyDropdownMenuContent(
 private data class DropdownMenuPositionProvider(
     val contentOffset: DpOffset,
     val density: Density,
-    val onPositionCalculated: (IntRect, IntRect) -> Unit = { _, _ -> }
+    val onPositionCalculated: (IntRect, IntRect) -> Unit = { _, _ -> },
 ) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
         windowSize: IntSize,
         layoutDirection: LayoutDirection,
-        popupContentSize: IntSize
+        popupContentSize: IntSize,
     ): IntOffset {
         // The min margin above and below the menu, relative to the screen.
         val verticalMargin = with(density) { MenuVerticalMargin.roundToPx() }
@@ -307,7 +312,7 @@ private data class DropdownMenuPositionProvider(
                 rightToAnchorRight,
                 // If the anchor gets outside of the window on the left, we want to position
                 // toDisplayLeft for proximity to the anchor. Otherwise, toDisplayRight.
-                if (anchorBounds.left >= 0) rightToWindowRight else leftToWindowLeft
+                if (anchorBounds.left >= 0) rightToWindowRight else leftToWindowLeft,
             )
         } else {
             sequenceOf(
@@ -315,7 +320,11 @@ private data class DropdownMenuPositionProvider(
                 leftToAnchorLeft,
                 // If the anchor gets outside of the window on the right, we want to position
                 // toDisplayRight for proximity to the anchor. Otherwise, toDisplayLeft.
-                if (anchorBounds.right <= windowSize.width) leftToWindowLeft else rightToWindowRight
+                if (anchorBounds.right <= windowSize.width) {
+                    leftToWindowLeft
+                } else {
+                    rightToWindowRight
+                },
             )
         }.firstOrNull {
             it >= 0 && it + popupContentSize.width <= windowSize.width
@@ -330,7 +339,7 @@ private data class DropdownMenuPositionProvider(
             topToAnchorBottom,
             bottomToAnchorTop,
             centerToAnchorTop,
-            bottomToWindowBottom
+            bottomToWindowBottom,
         ).firstOrNull {
             it >= verticalMargin &&
                 it + popupContentSize.height <= windowSize.height - verticalMargin
@@ -338,20 +347,23 @@ private data class DropdownMenuPositionProvider(
 
         onPositionCalculated(
             anchorBounds,
-            IntRect(x, y, x + popupContentSize.width, y + popupContentSize.height)
+            IntRect(x, y, x + popupContentSize.width, y + popupContentSize.height),
         )
         return IntOffset(x, y)
     }
 }
 
-private fun calculateTransformOrigin(
-    parentBounds: IntRect,
-    menuBounds: IntRect
-): TransformOrigin {
+private fun calculateTransformOrigin(parentBounds: IntRect, menuBounds: IntRect): TransformOrigin {
     val pivotX = when {
-        menuBounds.left >= parentBounds.right -> 0f
-        menuBounds.right <= parentBounds.left -> 1f
-        menuBounds.width == 0 -> 0f
+        menuBounds.left >= parentBounds.right -> {
+            0f
+        }
+        menuBounds.right <= parentBounds.left -> {
+            1f
+        }
+        menuBounds.width == 0 -> {
+            0f
+        }
         else -> {
             val intersectionCenter =
                 (
@@ -362,9 +374,15 @@ private fun calculateTransformOrigin(
         }
     }
     val pivotY = when {
-        menuBounds.top >= parentBounds.bottom -> 0f
-        menuBounds.bottom <= parentBounds.top -> 1f
-        menuBounds.height == 0 -> 0f
+        menuBounds.top >= parentBounds.bottom -> {
+            0f
+        }
+        menuBounds.bottom <= parentBounds.top -> {
+            1f
+        }
+        menuBounds.height == 0 -> {
+            0f
+        }
         else -> {
             val intersectionCenter =
                 (

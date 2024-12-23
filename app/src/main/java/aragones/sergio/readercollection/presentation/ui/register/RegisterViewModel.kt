@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -48,28 +48,23 @@ class RegisterViewModel @Inject constructor(
 
     //region Public methods
     fun register(username: String, password: String) {
-
         _uiState.value = _uiState.value.copy(isLoading = true)
         userRepository.register(username, password, success = {
             userRepository.login(username, password, success = {
-
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _activityName.value = MainActivity::class.simpleName
                 _activityName.value = null
             }, failure = {
-
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _registerError.value = it
             })
         }, failure = {
-
             _uiState.value = _uiState.value.copy(isLoading = false)
             _registerError.value = it
         })
     }
 
     fun registerDataChanged(username: String, password: String, confirmPassword: String) {
-
         var usernameError: Int? = null
         var passwordError: Int? = null
         var isDataValid = true
@@ -100,7 +95,6 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun closeDialogs() {
-
         _registerError.value = null
         _infoDialogMessageId.value = -1
     }

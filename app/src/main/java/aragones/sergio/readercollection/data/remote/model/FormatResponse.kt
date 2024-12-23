@@ -10,5 +10,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FormatResponse(
     override val id: String,
-    val name: String
+    val name: String,
 ) : BaseModel<String>

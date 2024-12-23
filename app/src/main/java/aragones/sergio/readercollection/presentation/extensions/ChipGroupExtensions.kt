@@ -11,11 +11,13 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 
 fun ChipGroup.addChip(inflater: LayoutInflater, text: String?) {
-    (inflater.inflate(
-        R.layout.content_chip,
-        this,
-        false
-    ) as Chip).also { chip ->
+    (
+        inflater.inflate(
+            R.layout.content_chip,
+            this,
+            false,
+        ) as Chip
+        ).also { chip ->
         chip.text = text
         chip.setOnCloseIconClickListener {
             this.removeView(it)

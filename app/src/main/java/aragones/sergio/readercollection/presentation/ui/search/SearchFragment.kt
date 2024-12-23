@@ -36,16 +36,16 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
         binding.composeView.setContent {
             ReaderCollectionTheme {
-
                 val state by viewModel.state
 
                 SearchScreen(
                     state = state,
                     onBookClick = { bookId ->
-                        val action = SearchFragmentDirections.actionSearchFragmentToBookDetailFragment(
-                            bookId,
-                            true
-                        )
+                        val action = SearchFragmentDirections
+                            .actionSearchFragmentToBookDetailFragment(
+                                bookId,
+                                true,
+                            )
                         findNavController().navigate(action)
                     },
                     onSwipe = viewModel::addBook,
@@ -58,7 +58,9 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
                     },
                 )
 
-                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
+                    initial = -1,
+                )
 
                 val text = if (infoDialogMessageId != -1) {
                     getString(infoDialogMessageId)
@@ -69,7 +71,6 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
                     viewModel.closeDialogs()
                 }
             }
-
         }
     }
 
