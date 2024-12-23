@@ -15,5 +15,5 @@ data class LoginFormState(
     @Json(name = "passwordError")
     val passwordError: Int? = null,
     @Json(name = "isDataValid")
-    val isDataValid: Boolean = false
+    val isDataValid: Boolean = false,
 )

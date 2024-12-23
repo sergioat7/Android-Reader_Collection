@@ -20,7 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class LandingViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -44,7 +44,6 @@ class LandingViewModel @Inject constructor(
 
     //region Public methods
     fun checkIsLoggedIn() {
-
         userRepository.newChangesPopupShown = true
         _landingClassToStart.value = if (userRepository.isLoggedIn) {
             MainActivity::class.java
@@ -54,11 +53,12 @@ class LandingViewModel @Inject constructor(
     }
 
     fun checkTheme() {
-
         when (userRepository.themeMode) {
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+            else -> AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+            )
         }
     }
 
@@ -73,15 +73,16 @@ class LandingViewModel @Inject constructor(
 
     //region Private methods
     private fun resetDatabase() {
-
-        booksRepository.resetTable().subscribeBy(
-            onComplete = {
-                _landingClassToStart.value = LoginActivity::class.java
-            },
-            onError = {
-                _landingClassToStart.value = LoginActivity::class.java
-            }
-        ).addTo(disposables)
+        booksRepository
+            .resetTable()
+            .subscribeBy(
+                onComplete = {
+                    _landingClassToStart.value = LoginActivity::class.java
+                },
+                onError = {
+                    _landingClassToStart.value = LoginActivity::class.java
+                },
+            ).addTo(disposables)
     }
     //endregion
 }

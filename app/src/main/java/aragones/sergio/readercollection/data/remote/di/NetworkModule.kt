@@ -41,12 +41,11 @@ object NetworkModule {
     @Singleton
     @Provides
     fun providesFirebaseRemoteConfig(): FirebaseRemoteConfig {
-
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
             remoteConfigSettings {
                 minimumFetchIntervalInSeconds = 3600
-            }
+            },
         )
         return remoteConfig
     }

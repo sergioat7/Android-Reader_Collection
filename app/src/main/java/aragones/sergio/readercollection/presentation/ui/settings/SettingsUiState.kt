@@ -16,17 +16,15 @@ data class SettingsUiState(
     val isLoading: Boolean,
 ) {
     companion object {
-        fun empty(): SettingsUiState {
-            return SettingsUiState(
-                username = "",
-                password = "",
-                passwordError = null,
-                language = "",
-                sortParam = null,
-                isSortDescending = false,
-                themeMode = 0,
-                isLoading = false,
-            )
-        }
+        fun empty(): SettingsUiState = SettingsUiState(
+            username = "",
+            password = "",
+            passwordError = null,
+            language = "",
+            sortParam = null,
+            isSortDescending = false,
+            themeMode = 0,
+            isLoading = false,
+        )
     }
 }

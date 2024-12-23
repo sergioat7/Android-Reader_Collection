@@ -27,20 +27,22 @@ import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
     private val booksLocalDataSource: BooksLocalDataSource,
-    private val booksRemoteDataSource: BooksRemoteDataSource
+    private val booksRemoteDataSource: BooksRemoteDataSource,
 ) : BaseRepository() {
 
     //region Private properties
     private val externalScheduler: Scheduler = Schedulers.io()
     private val databaseScheduler: Scheduler = Schedulers.io()
     private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
-    private val moshiAdapter = Moshi.Builder()
+    private val moshiAdapter = Moshi
+        .Builder()
         .add(MoshiDateAdapter("dd/MM/yyyy"))
-        .build().adapter<List<Book?>?>(
+        .build()
+        .adapter<List<Book?>?>(
             Types.newParameterizedType(
                 List::class.java,
-                Book::class.java
-            )
+                Book::class.java,
+            ),
         )
     //endregion
 
@@ -50,38 +52,28 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.loadBooks(success, failure)
     }
 
-    fun getBooks(): Flowable<List<Book>> {
+    fun getBooks(): Flowable<List<Book>> = booksLocalDataSource
+        .getAllBooks()
+        .distinctUntilChanged()
+        .map { it.map { book -> book.toDomain() } }
+        .subscribeOn(databaseScheduler)
+        .observeOn(mainObserver)
 
-        return booksLocalDataSource
-            .getAllBooks()
-            .distinctUntilChanged()
-            .map { it.map { book -> book.toDomain() } }
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
-    }
+    fun getPendingBooks(): Flowable<List<Book>> = booksLocalDataSource
+        .getPendingBooks()
+        .distinctUntilChanged()
+        .map { it.map { book -> book.toDomain() } }
+        .subscribeOn(databaseScheduler)
+        .observeOn(mainObserver)
 
-    fun getPendingBooks(): Flowable<List<Book>> {
-
-        return booksLocalDataSource
-            .getPendingBooks()
-            .distinctUntilChanged()
-            .map { it.map { book -> book.toDomain() } }
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
-    }
-
-    fun getReadBooks(): Flowable<List<Book>> {
-
-        return booksLocalDataSource
-            .getReadBooks()
-            .distinctUntilChanged()
-            .map { it.map { book -> book.toDomain() } }
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
-    }
+    fun getReadBooks(): Flowable<List<Book>> = booksLocalDataSource
+        .getReadBooks()
+        .distinctUntilChanged()
+        .map { it.map { book -> book.toDomain() } }
+        .subscribeOn(databaseScheduler)
+        .observeOn(mainObserver)
 
     fun importDataFrom(jsonData: String): Completable {
-
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
         return booksLocalDataSource
             .importDataFrom(books.map { it.toLocalData() })
@@ -89,9 +81,8 @@ class BooksRepository @Inject constructor(
             .observeOn(mainObserver)
     }
 
-    fun exportDataTo(): Single<String> {
-
-        return Single.create<String> { emitter ->
+    fun exportDataTo(): Single<String> = Single
+        .create<String> { emitter ->
             booksLocalDataSource
                 .getAllBooks()
                 .subscribeOn(databaseScheduler)
@@ -101,27 +92,21 @@ class BooksRepository @Inject constructor(
                         emitter.onSuccess("")
                     },
                     onNext = {
-
                         val books = it.map { book -> book.toDomain() }
                         emitter.onSuccess(moshiAdapter.toJson(books))
                     },
                     onError = {
                         emitter.onError(it)
-                    }
+                    },
                 ).addTo(disposables)
-        }
-            .subscribeOn(externalScheduler)
-            .observeOn(mainObserver)
-    }
+        }.subscribeOn(externalScheduler)
+        .observeOn(mainObserver)
 
-    fun getBook(googleId: String): Single<Book> {
-
-        return booksLocalDataSource
-            .getBook(googleId)
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
-            .map { it.toDomain() }
-    }
+    fun getBook(googleId: String): Single<Book> = booksLocalDataSource
+        .getBook(googleId)
+        .subscribeOn(databaseScheduler)
+        .observeOn(mainObserver)
+        .map { it.toDomain() }
 
     fun createBook(newBook: Book, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
 //        booksRemoteDataSource.createBook(newBook, success, failure)
@@ -138,18 +123,14 @@ class BooksRepository @Inject constructor(
                     failure(
                         ErrorResponse(
                             Constants.EMPTY_VALUE,
-                            R.string.error_database
-                        )
+                            R.string.error_database,
+                        ),
                     )
-                }
+                },
             ).addTo(disposables)
     }
 
-    fun setBook(
-        book: Book,
-        success: (Book) -> Unit,
-        failure: (ErrorResponse) -> Unit
-    ) {
+    fun setBook(book: Book, success: (Book) -> Unit, failure: (ErrorResponse) -> Unit) {
 //        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(listOf(book.toLocalData()))
@@ -163,19 +144,15 @@ class BooksRepository @Inject constructor(
                     failure(
                         ErrorResponse(
                             Constants.EMPTY_VALUE,
-                            R.string.error_database
-                        )
+                            R.string.error_database,
+                        ),
                     )
-                }
+                },
             ).addTo(disposables)
 //        }, failure = failure)
     }
 
-    fun setBooks(
-        books: List<Book>,
-        success: () -> Unit,
-        failure: (ErrorResponse) -> Unit
-    ) {
+    fun setBooks(books: List<Book>, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
 //        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(books.map { it.toLocalData() })
@@ -189,10 +166,10 @@ class BooksRepository @Inject constructor(
                     failure(
                         ErrorResponse(
                             Constants.EMPTY_VALUE,
-                            R.string.error_database
-                        )
+                            R.string.error_database,
+                        ),
                     )
-                }
+                },
             ).addTo(disposables)
 //        }, failure = failure)
     }
@@ -201,7 +178,7 @@ class BooksRepository @Inject constructor(
         bookId: String,
         isFavourite: Boolean,
         success: (Book) -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
 //        booksRemoteDataSource.setFavouriteBook(bookId = , success = { book ->
 //            booksLocalDataSource.updateBooks(listOf(book)).subscribeBy(
@@ -224,7 +201,6 @@ class BooksRepository @Inject constructor(
             .observeOn(mainObserver)
             .subscribeBy(
                 onSuccess = {
-
                     val book = it.toDomain()
                     book.isFavourite = isFavourite
                     booksLocalDataSource
@@ -239,25 +215,24 @@ class BooksRepository @Inject constructor(
                                 failure(
                                     ErrorResponse(
                                         Constants.EMPTY_VALUE,
-                                        R.string.error_database
-                                    )
+                                        R.string.error_database,
+                                    ),
                                 )
-                            }
+                            },
                         ).addTo(disposables)
                 },
                 onError = {
                     failure(
                         ErrorResponse(
                             Constants.EMPTY_VALUE,
-                            R.string.error_database
-                        )
+                            R.string.error_database,
+                        ),
                     )
-                }
+                },
             ).addTo(disposables)
     }
 
     fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-
 //        booksRemoteDataSource.deleteBook(bookId, success = {
         booksLocalDataSource
             .getBook(bookId)
@@ -276,26 +251,26 @@ class BooksRepository @Inject constructor(
                                 failure(
                                     ErrorResponse(
                                         Constants.EMPTY_VALUE,
-                                        R.string.error_database
-                                    )
+                                        R.string.error_database,
+                                    ),
                                 )
-                            }
+                            },
                         ).addTo(disposables)
                 },
                 onError = {
                     failure(
                         ErrorResponse(
                             Constants.EMPTY_VALUE,
-                            R.string.error_database
-                        )
+                            R.string.error_database,
+                        ),
                     )
-                }
+                },
             ).addTo(disposables)
 //        }, failure)
     }
 
-    fun resetTable(): Completable {
-        return Completable.create { emitter ->
+    fun resetTable(): Completable = Completable
+        .create { emitter ->
 
             booksLocalDataSource
                 .getAllBooks()
@@ -316,37 +291,28 @@ class BooksRepository @Inject constructor(
                                 },
                                 onError = {
                                     emitter.onError(it)
-                                }
+                                },
                             ).addTo(disposables)
                     },
                     onError = {
                         emitter.onError(it)
-                    }
+                    },
                 ).addTo(disposables)
-        }.subscribeOn(externalScheduler).observeOn(mainObserver)
-    }
+        }.subscribeOn(externalScheduler)
+        .observeOn(mainObserver)
 
-    fun searchBooks(
-        query: String,
-        page: Int,
-        order: String?
-    ): Single<List<Book>> {
-
-        return booksRemoteDataSource
+    fun searchBooks(query: String, page: Int, order: String?): Single<List<Book>> =
+        booksRemoteDataSource
             .searchBooks(query, page, order)
             .subscribeOn(externalScheduler)
             .observeOn(mainObserver)
             .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
-    }
 
-    fun getRemoteBook(volumeId: String): Single<Book> {
-
-        return booksRemoteDataSource
-            .getBook(volumeId)
-            .subscribeOn(externalScheduler)
-            .observeOn(mainObserver)
-            .map { it.toDomain() }
-    }
+    fun getRemoteBook(volumeId: String): Single<Book> = booksRemoteDataSource
+        .getBook(volumeId)
+        .subscribeOn(externalScheduler)
+        .observeOn(mainObserver)
+        .map { it.toDomain() }
 
     fun fetchRemoteConfigValues(language: String) {
         booksRemoteDataSource.fetchRemoteConfigValues(language)

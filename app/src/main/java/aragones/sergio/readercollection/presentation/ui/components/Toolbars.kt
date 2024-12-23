@@ -105,7 +105,6 @@ fun CustomSearchBar(
     elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
 ) {
-
     var isSearching by rememberSaveable { mutableStateOf(false) }
 
     val backIcon: @Composable (() -> Unit)? = if (isSearching || onBack != null) {
@@ -121,7 +120,9 @@ fun CustomSearchBar(
                 },
             )
         }
-    } else null
+    } else {
+        null
+    }
 
     TopAppBar(
         title = {
@@ -173,7 +174,6 @@ private fun SearchBar(
     textColor: Color = MaterialTheme.colors.primary,
     textStyle: TextStyle = MaterialTheme.typography.body1,
 ) {
-
     var textFieldValueState by remember {
         mutableStateOf(
             TextFieldValue(
@@ -182,7 +182,7 @@ private fun SearchBar(
                     text.isEmpty() -> TextRange.Zero
                     else -> TextRange(text.length, text.length)
                 },
-            )
+            ),
         )
     }
 
@@ -205,7 +205,9 @@ private fun SearchBar(
                 onClick = { textFieldValueState = textFieldValueState.copy("") },
             )
         }
-    } else null
+    } else {
+        null
+    }
 
     OutlinedTextField(
         value = textFieldValueState,
@@ -226,7 +228,7 @@ private fun SearchBar(
             onSearch = {
                 focusRequester.freeFocus()
                 onSearch(textFieldValueState.text)
-            }
+            },
         ),
         singleLine = true,
         onValueChange = {

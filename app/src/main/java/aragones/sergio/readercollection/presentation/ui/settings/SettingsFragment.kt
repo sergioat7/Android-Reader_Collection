@@ -47,13 +47,14 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
         binding.composeView.setContent {
             ReaderCollectionTheme {
-
                 val state by viewModel.uiState
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-                    initial = -1
+                    initial = -1,
                 )
                 val error by viewModel.profileError.observeAsState()
-                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
+                    initial = -1,
+                )
 
                 SettingsScreen(
                     state = state,
@@ -77,17 +78,16 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                         viewModel.closeDialogs()
                     },
                     onAccept = {
-
                         when (confirmationMessageId) {
                             R.string.profile_delete_confirmation -> {
                                 viewModel.deleteUser()
                             }
-
                             R.string.profile_logout_confirmation -> {
                                 viewModel.logout()
                             }
-
-                            else -> Unit
+                            else -> {
+                                Unit
+                            }
                         }
                         viewModel.closeDialogs()
                     },
@@ -119,8 +119,9 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                     launchActivity(LandingActivity::class.java, true)
                     activity?.finish()
                 }
-
-                else -> Unit
+                else -> {
+                    Unit
+                }
             }
         }
     }
@@ -185,7 +186,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 //    }
 
     private fun createSequence() {
-
         if (!viewModel.tutorialShown) {
             mainContentSequence = TapTargetSequence(requireActivity()).apply {
 //                targets(createTargetsForScrollView())
@@ -218,10 +218,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
                             viewModel.setTutorialAsShown()
                         }
 
-                        override fun onSequenceStep(
-                            lastTarget: TapTarget,
-                            targetClicked: Boolean
-                        ) {
+                        override fun onSequenceStep(lastTarget: TapTarget, targetClicked: Boolean) {
                         }
 
                         override fun onSequenceCanceled(lastTarget: TapTarget) {}

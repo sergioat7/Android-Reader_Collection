@@ -24,11 +24,11 @@ import javax.inject.Inject
 @HiltViewModel
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _originalBooks = MutableLiveData<List<Book>>()
+    private val originalBooks = MutableLiveData<List<Book>>()
     private val _books = MutableLiveData<List<Book>>()
     private val _booksLoading = MutableLiveData<Boolean>()
     private val _booksError = MutableLiveData<ErrorResponse?>()
@@ -83,28 +83,26 @@ class BooksViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-
         _booksLoading.value = true
-        booksRepository.getBooks().subscribeBy(
-            onComplete = {
-
-                _originalBooks.value = listOf()
-                _books.value = listOf()
-                _booksLoading.value = false
-            },
-            onNext = {
-
-                _originalBooks.value = it
-                sortBooks()
-                _booksLoading.value = false
-            },
-            onError = {
-
-                _booksLoading.value = false
-                _booksError.value = ApiManager.handleError(it)
-                _booksError.value = null
-            }
-        ).addTo(disposables)
+        booksRepository
+            .getBooks()
+            .subscribeBy(
+                onComplete = {
+                    originalBooks.value = listOf()
+                    _books.value = listOf()
+                    _booksLoading.value = false
+                },
+                onNext = {
+                    originalBooks.value = it
+                    sortBooks()
+                    _booksLoading.value = false
+                },
+                onError = {
+                    _booksLoading.value = false
+                    _booksError.value = ApiManager.handleError(it)
+                    _booksError.value = null
+                },
+            ).addTo(disposables)
     }
 
     fun sort(context: Context, acceptHandler: (() -> Unit)?) {
@@ -118,7 +116,6 @@ class BooksViewModel @Inject constructor(
     }
 
     fun searchBooks(query: String) {
-
         this.query = query
         sortBooks()
     }
@@ -129,14 +126,11 @@ class BooksViewModel @Inject constructor(
     }
 
     fun setPriorityFor(books: List<Book>) {
-
         _booksLoading.value = true
         booksRepository.setBooks(books, success = {
-
             searchBooks(query)
             _booksLoading.value = false
         }, failure = {
-
             _booksLoading.value = false
             _booksError.value = it
         })
@@ -144,10 +138,9 @@ class BooksViewModel @Inject constructor(
     //endregion
 
     private fun sortBooks() {
-
-        val filteredBooks = _originalBooks.value?.filter { book ->
-            (book.title?.contains(query, true) ?: false)
-                || book.authorsToString().contains(query, true)
+        val filteredBooks = originalBooks.value?.filter { book ->
+            (book.title?.contains(query, true) ?: false) ||
+                book.authorsToString().contains(query, true)
         } ?: listOf()
         val sortedBooks = when (sortParam) {
             "title" -> filteredBooks.sortedBy { it.title }

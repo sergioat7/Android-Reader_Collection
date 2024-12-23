@@ -7,15 +7,15 @@ package aragones.sergio.readercollection.presentation.ui.modals.syncapp
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class PopupSyncAppViewModel @Inject constructor(
-    private val booksRepository: BooksRepository
+    private val booksRepository: BooksRepository,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -36,7 +36,6 @@ class PopupSyncAppViewModel @Inject constructor(
 
     //region Public methods
     fun loadContent() {
-
         booksRepository.loadBooks(success = {
             _loginError.value = null
         }, failure = {

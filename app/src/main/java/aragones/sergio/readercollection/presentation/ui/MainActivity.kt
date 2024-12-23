@@ -65,22 +65,17 @@ class MainActivity : BaseActivity() {
         setupBottomNavigationBar()
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return currentNavController?.value?.navigateUp() ?: false
-    }
+    override fun onSupportNavigateUp(): Boolean = currentNavController?.value?.navigateUp() ?: false
     //endregion
 
     //region Private methods
-    /**
-     * Called on first creation and when restoring state.
-     */
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.navView
         val navGraphIds = listOf(
             R.navigation.nav_graph_books,
             R.navigation.nav_graph_search,
             R.navigation.nav_graph_stats,
-            R.navigation.nav_graph_settings
+            R.navigation.nav_graph_settings,
         )
 
         // Setup the bottom navigation view with a list of navigation graphs
@@ -88,7 +83,7 @@ class MainActivity : BaseActivity() {
             navGraphIds = navGraphIds,
             fragmentManager = supportFragmentManager,
             containerId = R.id.nav_host_fragment,
-            intent = intent
+            intent = intent,
         )
         currentNavController = controller
     }

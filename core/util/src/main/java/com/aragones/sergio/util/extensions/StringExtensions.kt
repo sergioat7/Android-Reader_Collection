@@ -11,21 +11,21 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-fun <T> String?.toList(): List<T> {
-
-    return if (this != null && this.isNotBlank()) {
-        this.trimStart().trimEnd().split(",").toList() as List<T>
-    } else {
-        ArrayList()
-    }
+fun <T> String?.toList(): List<T> = if (this != null && this.isNotBlank()) {
+    this
+        .trimStart()
+        .trimEnd()
+        .split(",")
+        .toList() as List<T>
+} else {
+    ArrayList()
 }
 
 fun String?.toDate(
     format: String? = null,
     language: String? = null,
-    timeZone: TimeZone? = null
+    timeZone: TimeZone? = null,
 ): Date? {
-
     val dateFormat = format ?: Constants.DATE_FORMAT
     val locale = language?.let {
         Locale.forLanguageTag(it)
@@ -36,7 +36,6 @@ fun String?.toDate(
     simpleDateFormat.timeZone = timeZone ?: TimeZone.getDefault()
 
     this?.let {
-
         return try {
             simpleDateFormat.parse(it)
         } catch (e: Exception) {
@@ -47,6 +46,4 @@ fun String?.toDate(
     }
 }
 
-fun String?.isNotBlank(): Boolean {
-    return !this.isNullOrBlank()
-}
+fun String?.isNotBlank(): Boolean = !this.isNullOrBlank()

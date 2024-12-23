@@ -54,7 +54,6 @@ fun Picker(
     currentIndexSelected: Int = 0,
     visibleItemsCount: Int = 3,
 ) {
-
     val fadingEdgeGradient = remember {
         Brush.verticalGradient(
             0f to Color.Transparent,

@@ -27,13 +27,13 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenSendTrueToComponent_thenShowDialog() {
-
         composeTestRule.setContent {
             ConfirmationAlertDialog(
                 show = true,
                 textId = R.string.profile_logout_confirmation,
                 onCancel = {},
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         composeTestRule.onNodeWithTag("confirmationAlertDialog").assertExists()
@@ -41,12 +41,12 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenSendFalseToComponent_thenDoNotShowDialog() {
-
         composeTestRule.setContent {
             ConfirmationAlertDialog(
                 show = false,
                 textId = R.string.profile_logout_confirmation,
-                onCancel = {}) {}
+                onCancel = {},
+            ) {}
         }
 
         composeTestRule.onNodeWithTag("confirmationAlertDialog").assertDoesNotExist()
@@ -54,7 +54,6 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenShowDialog_thenShowTextAndButtons() {
-
         val textId = R.string.profile_logout_confirmation
         composeTestRule.setContent {
             ConfirmationAlertDialog(show = true, textId = textId, onCancel = {}) {}
@@ -72,7 +71,6 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenCancelDialog_thenCloseDialog() {
-
         var isClosed = false
         composeTestRule.setContent {
             ConfirmationAlertDialog(
@@ -81,7 +79,8 @@ class ConfirmationAlertDialogTest {
                 onCancel = {
                     isClosed = true
                 },
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onFirst().performClick()
@@ -90,7 +89,6 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenAcceptDialog_thenCloseDialog() {
-
         var isClosed = false
         composeTestRule.setContent {
             ConfirmationAlertDialog(
@@ -99,7 +97,8 @@ class ConfirmationAlertDialogTest {
                 onCancel = {},
                 onAccept = {
                     isClosed = true
-                })
+                },
+            )
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()

@@ -31,7 +31,6 @@ fun ImageWithLoading(
     modifier: Modifier = Modifier,
     shape: CornerBasedShape? = null,
 ) {
-
     var isLoading by rememberSaveable { mutableStateOf(true) }
 
     Box(modifier) {

@@ -32,5 +32,5 @@ data class Book(
     val format: String?,
     var state: String?,
     var isFavourite: Boolean,
-    var priority: Int
+    var priority: Int,
 ) : BaseEntity<String>

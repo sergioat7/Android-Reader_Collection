@@ -63,7 +63,6 @@ fun BookListScreen(
     onDrag: (List<Book>) -> Unit,
     onDragEnd: (List<Book>) -> Unit,
 ) {
-
     val listState = rememberLazyListState()
     val showTopButton by remember {
         derivedStateOf {
@@ -80,15 +79,21 @@ fun BookListScreen(
         pluralStringResource(
             R.plurals.title_books_count,
             state.books.size,
-            state.books.size
+            state.books.size,
         )
-    } else ""
+    } else {
+        ""
+    }
     val actions: @Composable RowScope.() -> Unit = when (state) {
         is BookListUiState.Success -> {
             {
                 if (state.books.any { it.isPending() }) {
                     TopAppBarIcon(
-                        icon = if (state.isDraggingEnabled) R.drawable.ic_disable_drag else R.drawable.ic_enable_drag,
+                        icon = if (state.isDraggingEnabled) {
+                            R.drawable.ic_disable_drag
+                        } else {
+                            R.drawable.ic_enable_drag
+                        },
                         onClick = onDragClick,
                     )
                 } else {
@@ -99,7 +104,6 @@ fun BookListScreen(
                 }
             }
         }
-
         else -> {
             {}
         }
@@ -121,7 +125,9 @@ fun BookListScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             when (state) {
-                is BookListUiState.Empty -> onBack()
+                is BookListUiState.Empty -> {
+                    onBack()
+                }
                 is BookListUiState.Success -> {
                     if (state.books.isEmpty()) {
                         NoResultsComponent()
@@ -157,7 +163,6 @@ private fun BookListContent(
     onDragEnd: (List<Book>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val books = state.books.toMutableStateList()
     val dragAndDropListState =
         rememberDragAndDropListState(listState) { from, to ->
@@ -184,9 +189,7 @@ private fun BookListContent(
                         .takeIf { it != 0f }
                         ?.let {
                             overscrollJob = coroutineScope.launch {
-                                dragAndDropListState.lazyListState.scrollBy(
-                                    it
-                                )
+                                dragAndDropListState.lazyListState.scrollBy(it)
                             }
                         } ?: kotlin.run { overscrollJob?.cancel() }
 
@@ -207,7 +210,9 @@ private fun BookListContent(
                 },
             )
         }
-    } else Modifier
+    } else {
+        Modifier
+    }
 
     val topOffset by animateFloatAsState(
         targetValue = if (showTopButton) 0f else 200f,
@@ -257,7 +262,9 @@ private fun BookListContent(
             image = R.drawable.ic_double_arrow_down,
             onClick = {
                 coroutineScope.launch {
-                    dragAndDropListState.lazyListState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
+                    dragAndDropListState.lazyListState.animateScrollToItem(
+                        index = listState.layoutInfo.totalItemsCount - 1,
+                    )
                 }
             },
             modifier = Modifier
@@ -320,7 +327,7 @@ private class BookListScreenPreviewParameterProvider :
                         null,
                         BookState.PENDING,
                         false,
-                        0
+                        0,
                     ),
                     Book(
                         "2",
@@ -343,8 +350,8 @@ private class BookListScreenPreviewParameterProvider :
                         null,
                         BookState.PENDING,
                         false,
-                        0
-                    )
+                        0,
+                    ),
                 ),
                 isDraggingEnabled = false,
             ),
@@ -372,7 +379,7 @@ private class BookListScreenPreviewParameterProvider :
                         null,
                         BookState.READ,
                         false,
-                        0
+                        0,
                     ),
                     Book(
                         "2",
@@ -395,8 +402,8 @@ private class BookListScreenPreviewParameterProvider :
                         null,
                         BookState.READ,
                         false,
-                        0
-                    )
+                        0,
+                    ),
                 ),
                 isDraggingEnabled = true,
             ),

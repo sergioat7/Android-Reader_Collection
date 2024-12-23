@@ -28,7 +28,7 @@ class BooksAdapter(
     private val isVerticalDesign: Boolean,
     private val isGoogleBook: Boolean,
     private var onItemClickListener: OnItemClickListener,
-    private var onStartDraggingListener: OnStartDraggingListener? = null
+    private var onStartDraggingListener: OnStartDraggingListener? = null,
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder?>(), ItemMoveListener, OnSwitchClickListener {
 
     //region Private properties
@@ -40,7 +40,6 @@ class BooksAdapter(
 
     //region Lifecycle methods
     override fun getItemViewType(position: Int): Int {
-
         val book = books[position]
         return when {
             book.isReading() -> R.layout.item_reading_book
@@ -51,73 +50,65 @@ class BooksAdapter(
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-
-        return when (viewType) {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        when (viewType) {
             R.layout.item_reading_book -> {
                 BooksViewHolder(
                     ItemReadingBookBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
             }
-
             R.layout.item_vertical_book -> {
                 BooksViewHolder(
                     ItemVerticalBookBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
             }
-
             R.layout.item_book -> {
                 BooksViewHolder(
                     ItemBookBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
             }
-
             R.layout.item_show_all_items -> {
                 ShowAllItemsViewHolder(
                     ItemShowAllItemsBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
             }
-
             else -> {
                 LoadMoreItemsViewHolder(
                     ItemLoadMoreItemsBinding.inflate(
                         LayoutInflater.from(parent.context),
                         parent,
-                        false
-                    )
+                        false,
+                    ),
                 )
             }
         }
-    }
 
-    override fun getItemCount(): Int {
-        return books.size
-    }
+    override fun getItemCount(): Int = books.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-
         when (holder) {
             is BooksViewHolder -> {
-
                 val isFirst = position == 0 || !isSwitchingEnabled
                 val isLast =
-                    position == Constants.BOOKS_TO_SHOW - 1 || position == books.count() - 1 || !isSwitchingEnabled
+                    position == Constants.BOOKS_TO_SHOW - 1 ||
+                        position == books.count() - 1 ||
+                        !isSwitchingEnabled
                 holder.bind(
                     books[position],
                     isGoogleBook,
@@ -126,12 +117,15 @@ class BooksAdapter(
                     isLast,
                     onItemClickListener,
                     onStartDraggingListener,
-                    this
+                    this,
                 )
             }
-
-            is ShowAllItemsViewHolder -> holder.bind(books.first().state ?: "", onItemClickListener)
-            else -> (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
+            is ShowAllItemsViewHolder -> {
+                holder.bind(books.first().state ?: "", onItemClickListener)
+            }
+            else -> {
+                (holder as LoadMoreItemsViewHolder).bind(onItemClickListener)
+            }
         }
     }
 
@@ -145,7 +139,6 @@ class BooksAdapter(
     //region Public methods
     @SuppressLint("NotifyDataSetChanged")
     fun setBooks(newBooks: MutableList<Book>, reset: Boolean) {
-
         if (reset) {
             resetList()
         }
@@ -160,7 +153,6 @@ class BooksAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun resetList() {
-
         position = 0
         this.books = ArrayList<Book>()
         notifyDataSetChanged()
@@ -168,14 +160,12 @@ class BooksAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun setDragging(enable: Boolean) {
-
         isDraggingEnabled = enable
         notifyDataSetChanged()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     fun setSwitching(enable: Boolean) {
-
         isSwitchingEnabled = enable
         notifyDataSetChanged()
     }
@@ -183,7 +173,6 @@ class BooksAdapter(
 
     //region Interface methods
     override fun onRowMoved(fromPosition: Int, toPosition: Int) {
-
         if (fromPosition < toPosition) {
             for (i in fromPosition until toPosition) {
                 Collections.swap(books, i, i + 1)
@@ -201,7 +190,6 @@ class BooksAdapter(
     }
 
     override fun onRowClear(myViewHolder: BooksViewHolder) {
-
         myViewHolder.setSelected(false)
         for ((index, book) in books.withIndex()) {
             book.priority = index
@@ -210,7 +198,6 @@ class BooksAdapter(
     }
 
     override fun onSwitchLeft(fromPosition: Int) {
-
         val toPosition = fromPosition - 1
         books[fromPosition].priority = toPosition
         books[toPosition].priority = fromPosition
@@ -220,7 +207,6 @@ class BooksAdapter(
     }
 
     override fun onSwitchRight(fromPosition: Int) {
-
         val toPosition = fromPosition + 1
         books[fromPosition].priority = toPosition
         books[toPosition].priority = fromPosition

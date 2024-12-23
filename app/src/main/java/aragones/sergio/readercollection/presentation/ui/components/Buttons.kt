@@ -22,12 +22,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 
 @Composable
-fun MainActionButton(
-    text: String,
-    modifier: Modifier,
-    enabled: Boolean,
-    onClick: () -> Unit,
-) {
+fun MainActionButton(text: String, modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
     Button(
         onClick = onClick,
         modifier = modifier,
@@ -49,11 +44,7 @@ fun MainActionButton(
 }
 
 @Composable
-fun ListButton(
-    @DrawableRes image: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier.padding(12.dp),

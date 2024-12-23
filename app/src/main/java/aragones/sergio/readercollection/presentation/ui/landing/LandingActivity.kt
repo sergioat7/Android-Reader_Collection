@@ -44,7 +44,6 @@ class LandingActivity : BaseActivity() {
 
     //region Private methods
     private fun initializeUI() {
-
         setupBindings()
 
         configLanguage()
@@ -54,20 +53,25 @@ class LandingActivity : BaseActivity() {
         inAppUpdateService.checkVersion()
         inAppUpdateService.installStatus.observe(this) {
             when (it) {
-
-                InstallStatus.DOWNLOADING, InstallStatus.DOWNLOADED, InstallStatus.INSTALLED, InstallStatus.CANCELED -> {
+                InstallStatus.DOWNLOADING,
+                InstallStatus.DOWNLOADED,
+                InstallStatus.INSTALLED,
+                InstallStatus.CANCELED,
+                -> {
                     launchApp()
                     inAppUpdateService.onDestroy()
                 }
-
-                InstallStatus.FAILED -> inAppUpdateService.checkVersion()
-                else -> Unit
+                InstallStatus.FAILED -> {
+                    inAppUpdateService.checkVersion()
+                }
+                else -> {
+                    Unit
+                }
             }
         }
     }
 
     private fun launchApp() {
-
         if (!viewModel.newChangesPopupShown) {
             showPopupActionDialog(getString(R.string.new_version_changes), acceptHandler = {
                 viewModel.checkIsLoggedIn()
@@ -78,9 +82,7 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun setupBindings() {
-
         viewModel.landingClassToStart.observe(this) {
-
             val intent = Intent(this, it)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
@@ -88,31 +90,26 @@ class LandingActivity : BaseActivity() {
     }
 
     private fun configLanguage() {
-
         ApiManager.language = viewModel.language
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-
             val language = viewModel.language
             val conf = resources.configuration
             conf.setLocale(Locale(language))
             resources.updateConfiguration(conf, resources.displayMetrics)
         } else {
-
             val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
             viewModel.setLanguage(locale.language)
         }
     }
 
     private fun showPopupActionDialog(message: String, acceptHandler: () -> Unit) {
-
         MaterialAlertDialogBuilder(this)
             .setMessage(message)
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
                 acceptHandler()
                 dialog.dismiss()
-            }
-            .show()
+            }.show()
     }
     //endregion
 }

@@ -36,24 +36,26 @@ fun CustomTextInputLayoutBinding.setError(text: String?) {
 }
 
 inline fun CustomTextInputLayoutBinding.doAfterTextChanged(
-    crossinline action: (text: Editable?) -> Unit
+    crossinline action: (text: Editable?) -> Unit,
 ): TextWatcher = textInputEditText.doAfterTextChanged(action)
 
 fun CustomTextInputLayoutBinding.setOnClickListener(onClickListener: View.OnClickListener) {
     textInputEditText.setOnClickListener(onClickListener)
 }
 
-fun CustomTextInputLayoutBinding.setEndIconOnClickListener(endIconOnClickListener: View.OnClickListener) {
+fun CustomTextInputLayoutBinding.setEndIconOnClickListener(
+    endIconOnClickListener: View.OnClickListener,
+) {
     textInputLayout.setEndIconOnClickListener(endIconOnClickListener)
 }
 
-fun CustomTextInputLayoutBinding.getValue(): String {
-    return this.textInputEditText.text.toString().trimStart().trimEnd()
-}
+fun CustomTextInputLayoutBinding.getValue(): String = this.textInputEditText.text
+    .toString()
+    .trimStart()
+    .trimEnd()
 
-fun CustomTextInputLayoutBinding.isBlank(): Boolean {
-    return this.getValue().isBlank() || this.textInputEditText.text.toString() == Constants.NO_VALUE
-}
+fun CustomTextInputLayoutBinding.isBlank(): Boolean =
+    this.getValue().isBlank() || this.textInputEditText.text.toString() == Constants.NO_VALUE
 
 fun CustomTextInputLayoutBinding.setHintStyle(id: Int) {
     this.textInputLayout.doOnLayout {
@@ -62,7 +64,6 @@ fun CustomTextInputLayoutBinding.setHintStyle(id: Int) {
 }
 
 fun CustomTextInputLayoutBinding.getSpannableFor(style: Int): SpannableStringBuilder {
-
     val text = textInputEditText.text.toString()
     val spannable = SpannableStringBuilder(text)
     val regex = Regex("\\*(.*?)\\*")
@@ -70,14 +71,13 @@ fun CustomTextInputLayoutBinding.getSpannableFor(style: Int): SpannableStringBui
     val asterisksIndices = mutableListOf<Int>()
     val matches = regex.findAll(text)
     for (match in matches) {
-
         val initPosition = match.range.first + 1
         val endPosition = initPosition + match.groupValues[1].length
         spannable.setSpan(
             StyleSpan(style),
             initPosition,
             endPosition,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
         asterisksIndices.add(initPosition - 1)
         asterisksIndices.add(endPosition)
@@ -88,19 +88,18 @@ fun CustomTextInputLayoutBinding.getSpannableFor(style: Int): SpannableStringBui
             ForegroundColorSpan(
                 ContextCompat.getColor(
                     textInputEditText.context,
-                    R.color.textSecondaryThin
-                )
+                    R.color.textSecondaryThin,
+                ),
             ),
             index,
             index + 1,
-            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            Spannable.SPAN_EXCLUSIVE_EXCLUSIVE,
         )
     }
     return spannable
 }
 
 fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity, language: String) {
-
     this.textInputEditText.setOnFocusChangeListener { _, hasFocus ->
         if (hasFocus) {
             val datePicker = getPicker(this.textInputEditText, activity, language)
@@ -117,23 +116,24 @@ fun CustomTextInputLayoutBinding.showDatePicker(activity: FragmentActivity, lang
 private fun getPicker(
     editText: TextInputEditText,
     context: Context,
-    language: String
+    language: String,
 ): MaterialDatePicker<Long> {
-
     val dateFormat = Constants.getDateFormatToShow(language)
-    val currentDateInMillis = editText.text.toString().toDate(
-        dateFormat,
-        language,
-        TimeZone.getTimeZone("UTC")
-    )?.time ?: MaterialDatePicker.todayInUtcMilliseconds()
+    val currentDateInMillis = editText.text
+        .toString()
+        .toDate(
+            dateFormat,
+            language,
+            TimeZone.getTimeZone("UTC"),
+        )?.time ?: MaterialDatePicker.todayInUtcMilliseconds()
 
     return MaterialDatePicker.Builder
         .datePicker()
         .setTitleText(context.resources.getString(R.string.select_a_date))
         .setSelection(currentDateInMillis)
-        .build().apply {
+        .build()
+        .apply {
             addOnPositiveButtonClickListener {
-
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
                 val dateString = calendar.time.toString(dateFormat, language)

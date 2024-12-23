@@ -15,11 +15,11 @@ import com.aragones.sergio.model.Book
 
 @Database(
     entities = [Book::class],
-    version = 3
+    version = 3,
 )
 @TypeConverters(
     ListConverter::class,
-    DateConverter::class
+    DateConverter::class,
 )
 abstract class ReaderCollectionDatabase : RoomDatabase() {
 
@@ -32,12 +32,10 @@ abstract class ReaderCollectionDatabase : RoomDatabase() {
         //region Public methods
         fun <T> getDisabledContent(
             currentValues: List<BaseEntity<T>>,
-            newValues: List<BaseEntity<T>>
+            newValues: List<BaseEntity<T>>,
         ): List<BaseEntity<T>> {
-
             val disabledContent = arrayListOf<BaseEntity<T>>()
             for (currentValue in currentValues) {
-
                 if (newValues.firstOrNull { it.id == currentValue.id } == null) {
                     disabledContent.add(currentValue)
                 }

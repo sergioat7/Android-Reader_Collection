@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor(
     private val userLocalDataSource: UserLocalDataSource,
-    private val userRemoteDataSource: UserRemoteDataSource
+    private val userRemoteDataSource: UserRemoteDataSource,
 ) : BaseRepository() {
 
     //region Private properties
@@ -83,7 +83,7 @@ class UserRepository @Inject constructor(
         username: String,
         password: String,
         success: () -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
         userRemoteDataSource.login(username, password, success = { token ->
 
@@ -110,7 +110,6 @@ class UserRepository @Inject constructor(
     }
 
     fun logout() {
-
         userLocalDataSource.logout()
         userRemoteDataSource.logout()
     }
@@ -119,11 +118,9 @@ class UserRepository @Inject constructor(
         username: String,
         password: String,
         success: () -> Unit,
-        failure: (ErrorResponse) -> Unit
+        failure: (ErrorResponse) -> Unit,
     ) {
-
         userRemoteDataSource.register(username, password, success = {
-
             val userData = UserData(username, password, false)
             val authData = AuthData("-")
             userLocalDataSource.storeLoginData(userData, authData)
@@ -132,9 +129,7 @@ class UserRepository @Inject constructor(
     }
 
     fun updatePassword(password: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-
         userRemoteDataSource.updatePassword(password, success = {
-
             userLocalDataSource.storePassword(password)
             userRemoteDataSource.login(userLocalDataSource.username, password, success = { token ->
 
@@ -145,9 +140,7 @@ class UserRepository @Inject constructor(
     }
 
     fun deleteUser(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-
         userRemoteDataSource.deleteUser(success = {
-
             userLocalDataSource.removeUserData()
             userLocalDataSource.removeCredentials()
             success()

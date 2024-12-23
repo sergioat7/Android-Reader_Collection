@@ -25,12 +25,12 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
     private var _uiState: MutableState<LoginUiState> = mutableStateOf(
-        LoginUiState.empty().copy(username = userRepository.username)
+        LoginUiState.empty().copy(username = userRepository.username),
     )
     private val _loginError = MutableLiveData<ErrorResponse?>()
     private val _activityName = MutableLiveData<String?>()
@@ -53,7 +53,6 @@ class LoginViewModel @Inject constructor(
 
     //region Public methods
     fun login(username: String, password: String) {
-
         _uiState.value = _uiState.value.copy(isLoading = true)
         userRepository.login(username, password, success = {
 //            booksRepository.loadBooks(success = {
@@ -67,14 +66,12 @@ class LoginViewModel @Inject constructor(
 //                _loginError.value = it
 //            })
         }, failure = {
-
             _uiState.value = _uiState.value.copy(isLoading = false)
             _loginError.value = it
         })
     }
 
     fun loginDataChanged(username: String, password: String) {
-
         var usernameError: Int? = null
         var passwordError: Int? = null
         var isDataValid = true
@@ -96,7 +93,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun goToRegister() {
-
         _activityName.value = RegisterActivity::class.simpleName
         _activityName.value = null
     }

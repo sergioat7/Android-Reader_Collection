@@ -23,7 +23,7 @@ import javax.inject.Inject
 class BookDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -64,18 +64,19 @@ class BookDetailViewModel @Inject constructor(
 
     //region Lifecycle methods
     fun onCreate() {
-
-        booksRepository.getPendingBooks().subscribeBy(
-            onComplete = {
-                pendingBooks = listOf()
-            },
-            onNext = {
-                pendingBooks = it
-            },
-            onError = {
-                pendingBooks = listOf()
-            }
-        ).addTo(disposables)
+        booksRepository
+            .getPendingBooks()
+            .subscribeBy(
+                onComplete = {
+                    pendingBooks = listOf()
+                },
+                onNext = {
+                    pendingBooks = it
+                },
+                onError = {
+                    pendingBooks = listOf()
+                },
+            ).addTo(disposables)
         fetchBook()
     }
 
@@ -89,11 +90,9 @@ class BookDetailViewModel @Inject constructor(
 
     //region Public methods
     fun createBook(newBook: Book) {
-
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         _bookDetailLoading.value = true
         booksRepository.createBook(newBook, success = {
-
             _bookDetailLoading.value = false
             _infoDialogMessageId.value = R.string.book_saved
         }, failure = {
@@ -102,10 +101,8 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun setBook(book: Book) {
-
         _bookDetailLoading.value = true
         booksRepository.setBook(book, success = {
-
             _book.value = it
             _bookDetailLoading.value = false
         }, failure = {
@@ -114,10 +111,8 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun deleteBook() {
-
         _bookDetailLoading.value = true
         booksRepository.deleteBook(bookId, success = {
-
             _bookDetailLoading.value = false
             _infoDialogMessageId.value = R.string.book_removed
         }, failure = {
@@ -130,10 +125,8 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun setFavourite(isFavourite: Boolean) {
-
         _bookDetailFavouriteLoading.value = true
         booksRepository.setFavouriteBook(bookId, isFavourite, success = {
-
             _isFavourite.value = it.isFavourite
             _bookDetailFavouriteLoading.value = false
         }, failure = {
@@ -160,7 +153,6 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun closeDialogs() {
-
         _confirmationDialogMessageId.value = -1
         _infoDialogMessageId.value = -1
         _imageDialogMessageId.value = -1
@@ -169,38 +161,36 @@ class BookDetailViewModel @Inject constructor(
 
     //region Private methods
     private fun fetchBook() {
-
         _bookDetailLoading.value = true
         if (isGoogleBook) {
-
-            booksRepository.getRemoteBook(bookId).subscribeBy(
-                onSuccess = {
-
-                    _book.value = it
-                    _bookDetailLoading.value = false
-                },
-                onError = {
-                    manageError(ErrorResponse("", R.string.error_server))
-                }
-            ).addTo(disposables)
+            booksRepository
+                .getRemoteBook(bookId)
+                .subscribeBy(
+                    onSuccess = {
+                        _book.value = it
+                        _bookDetailLoading.value = false
+                    },
+                    onError = {
+                        manageError(ErrorResponse("", R.string.error_server))
+                    },
+                ).addTo(disposables)
         } else {
-
-            booksRepository.getBook(bookId).subscribeBy(
-                onSuccess = {
-
-                    _book.value = it
-                    _isFavourite.value = it.isFavourite
-                    _bookDetailLoading.value = false
-                },
-                onError = {
-                    manageError(ErrorResponse("", R.string.error_no_book))
-                }
-            ).addTo(disposables)
+            booksRepository
+                .getBook(bookId)
+                .subscribeBy(
+                    onSuccess = {
+                        _book.value = it
+                        _isFavourite.value = it.isFavourite
+                        _bookDetailLoading.value = false
+                    },
+                    onError = {
+                        manageError(ErrorResponse("", R.string.error_no_book))
+                    },
+                ).addTo(disposables)
         }
     }
 
     private fun manageError(error: ErrorResponse) {
-
         _bookDetailLoading.value = false
         _bookDetailError.value = error
         _bookDetailError.value = null

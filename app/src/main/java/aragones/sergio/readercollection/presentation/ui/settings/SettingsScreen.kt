@@ -55,7 +55,6 @@ fun SettingsScreen(
     onSave: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-
     val scrollState = rememberScrollState()
 
     Column(
@@ -85,7 +84,7 @@ fun SettingsScreen(
                         state.language,
                         state.sortParam,
                         state.isSortDescending,
-                        state.themeMode
+                        state.themeMode,
                     )
                 },
             )
@@ -98,9 +97,9 @@ fun SettingsScreen(
                         it,
                         state.sortParam,
                         state.isSortDescending,
-                        state.themeMode
+                        state.themeMode,
                     )
-                }
+                },
             )
             Spacer(Modifier.height(20.dp))
             SortingInfo(
@@ -112,7 +111,7 @@ fun SettingsScreen(
                         state.language,
                         it,
                         state.isSortDescending,
-                        state.themeMode
+                        state.themeMode,
                     )
                 },
                 onSortOrderValueChange = {
@@ -121,9 +120,9 @@ fun SettingsScreen(
                         state.language,
                         state.sortParam,
                         it,
-                        state.themeMode
+                        state.themeMode,
                     )
-                }
+                },
             )
             Spacer(Modifier.height(20.dp))
             AppThemeInfo(
@@ -136,7 +135,7 @@ fun SettingsScreen(
                         state.isSortDescending,
                         it,
                     )
-                }
+                },
             )
             Spacer(modifier = Modifier.weight(1f))
             MainActionButton(
@@ -222,10 +221,7 @@ private fun ProfileInfo(
 }
 
 @Composable
-private fun LanguageInfo(
-    language: String,
-    onLanguageChange: (String) -> Unit,
-) {
+private fun LanguageInfo(language: String, onLanguageChange: (String) -> Unit) {
     HeaderText(
         text = stringResource(id = R.string.app_language),
         modifier = Modifier.padding(horizontal = 24.dp),
@@ -265,8 +261,11 @@ private fun SortingInfo(
     val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
     val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
     val sortParamValue =
-        if (sortParam == null) sortingParamValues.first()
-        else sortingParamValues[sortingParamKeys.indexOf(sortParam)]
+        if (sortParam == null) {
+            sortingParamValues.first()
+        } else {
+            sortingParamValues[sortingParamKeys.indexOf(sortParam)]
+        }
     val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
 
     HeaderText(
@@ -279,7 +278,6 @@ private fun SortingInfo(
         modifier = Modifier.padding(horizontal = 24.dp),
         values = sortingParamValues,
         onOptionSelected = {
-
             val index = sortingParamValues.indexOf(it)
             val newSortParam = sortingParamKeys[index].takeIf { index != 0 }
             onSortParamValueChange(newSortParam)
@@ -287,11 +285,15 @@ private fun SortingInfo(
     )
     Spacer(Modifier.height(8.dp))
     CustomDropdownMenu(
-        currentValue = if (isSortDescending) sortingOrderValues.last() else sortingOrderValues.first(),
+        currentValue = if (isSortDescending) {
+            sortingOrderValues.last()
+        } else {
+            sortingOrderValues
+                .first()
+        },
         modifier = Modifier.padding(horizontal = 24.dp),
         values = sortingOrderValues,
         onOptionSelected = {
-
             val index = sortingOrderValues.indexOf(it)
             onSortOrderValueChange(index == 1)
         },
@@ -299,10 +301,7 @@ private fun SortingInfo(
 }
 
 @Composable
-private fun AppThemeInfo(
-    selectedThemeIndex: Int,
-    onThemeChange: (Int) -> Unit,
-) {
+private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) {
     val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
     HeaderText(
         text = stringResource(id = R.string.app_theme),
@@ -320,10 +319,7 @@ private fun AppThemeInfo(
 }
 
 @Composable
-private fun HeaderText(
-    text: String,
-    modifier: Modifier = Modifier,
-) {
+private fun HeaderText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         modifier = modifier,

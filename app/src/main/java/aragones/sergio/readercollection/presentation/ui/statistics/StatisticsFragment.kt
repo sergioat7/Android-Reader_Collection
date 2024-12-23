@@ -53,12 +53,12 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class StatisticsFragment :
@@ -93,9 +93,8 @@ class StatisticsFragment :
         initializeUi()
         binding.composeView.setContent {
             ReaderCollectionTheme {
-
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-                    initial = -1
+                    initial = -1,
                 )
                 ConfirmationAlertDialog(
                     show = confirmationMessageId != -1,
@@ -104,17 +103,13 @@ class StatisticsFragment :
                         viewModel.closeDialogs()
                     },
                     onAccept = {
-
                         when (confirmationMessageId) {
                             R.string.import_confirmation -> {
-
                                 val intent = Intent(Intent.ACTION_GET_CONTENT)
                                 intent.type = "*/*"
                                 openFileLauncher.launch(intent)
                             }
-
                             R.string.export_confirmation -> {
-
                                 val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                                     addCategory(Intent.CATEGORY_OPENABLE)
                                     type = "text/txt"
@@ -122,8 +117,9 @@ class StatisticsFragment :
                                 }
                                 newFileLauncher.launch(intent)
                             }
-
-                            else -> Unit
+                            else -> {
+                                Unit
+                            }
                         }
                         viewModel.closeDialogs()
                     },
@@ -170,32 +166,25 @@ class StatisticsFragment :
 
     //region Interface methods
     override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-
         menu.clear()
         menuInflater.inflate(R.menu.statistics_toolbar_menu, menu)
     }
 
-    override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-
-        return when (menuItem.itemId) {
-            R.id.action_import -> {
-
-                viewModel.showConfirmationDialog(R.string.import_confirmation)
-                true
-            }
-
-            R.id.action_export -> {
-
-                viewModel.showConfirmationDialog(R.string.export_confirmation)
-                true
-            }
-
-            else -> false
+    override fun onMenuItemSelected(menuItem: MenuItem): Boolean = when (menuItem.itemId) {
+        R.id.action_import -> {
+            viewModel.showConfirmationDialog(R.string.import_confirmation)
+            true
+        }
+        R.id.action_export -> {
+            viewModel.showConfirmationDialog(R.string.export_confirmation)
+            true
+        }
+        else -> {
+            false
         }
     }
 
     override fun onItemClick(bookId: String) {
-
         val action =
             StatisticsFragmentDirections.actionStatisticsFragmentToBookDetailFragment(bookId, false)
         findNavController().navigate(action)
@@ -234,7 +223,9 @@ class StatisticsFragment :
 
                         viewModel.getDataToExport {
                             it?.let {
-                                context?.contentResolver?.openOutputStream(uri)
+                                context
+                                    ?.contentResolver
+                                    ?.openOutputStream(uri)
                                     ?.use { outputStream ->
                                         outputStream.write(it.toByteArray())
                                         outputStream.close()
@@ -250,7 +241,6 @@ class StatisticsFragment :
         setupBindings()
 
         binding.barChartBooksByYear.apply {
-
             isDoubleTapToZoomEnabled = false
             isHighlightPerDragEnabled = false
             legend.isEnabled = false
@@ -280,7 +270,7 @@ class StatisticsFragment :
                         e?.x?.toInt(),
                         null,
                         null,
-                        null
+                        null,
                     )
                 }
 
@@ -289,7 +279,6 @@ class StatisticsFragment :
         }
 
         binding.pieChartBooksByMonth.apply {
-
             isRotationEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
@@ -306,13 +295,12 @@ class StatisticsFragment :
             setHoleColor(Color.TRANSPARENT)
             setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                 override fun onValueSelected(e: Entry?, h: Highlight?) {
-
                     val month = (e as PieEntry).label.toDate("MMM").getMonthNumber()
                     showBooks(
                         null,
                         month,
                         null,
-                        null
+                        null,
                     )
                 }
 
@@ -321,7 +309,6 @@ class StatisticsFragment :
         }
 
         binding.horizontalBarChartBooksByAuthor.apply {
-
             isDoubleTapToZoomEnabled = false
             isHighlightPerDragEnabled = false
             legend.isEnabled = false
@@ -350,9 +337,11 @@ class StatisticsFragment :
                     showBooks(
                         null,
                         null,
-                        viewModel.booksByAuthorStats.value?.keys?.toMutableList()
+                        viewModel.booksByAuthorStats.value
+                            ?.keys
+                            ?.toMutableList()
                             ?.get(e?.x?.toInt() ?: 0),
-                        null
+                        null,
                     )
                 }
 
@@ -361,7 +350,6 @@ class StatisticsFragment :
         }
 
         binding.pieChartBooksByFormat.apply {
-
             isRotationEnabled = false
             legend.isEnabled = false
             description.isEnabled = false
@@ -382,7 +370,7 @@ class StatisticsFragment :
                         null,
                         null,
                         null,
-                        Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id
+                        Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id,
                     )
                 }
 
@@ -397,7 +385,6 @@ class StatisticsFragment :
 
     //region Private methods
     private fun setupBindings() {
-
         viewModel.booksLoading.observe(viewLifecycleOwner) { isLoading ->
 
             if (isLoading) {
@@ -440,7 +427,6 @@ class StatisticsFragment :
         }
 
         viewModel.booksByMonthStats.observe(viewLifecycleOwner) {
-
             binding.pieChartBooksByMonth.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = PieDataSet(it, "").apply {
@@ -477,8 +463,8 @@ class StatisticsFragment :
                 entries.add(
                     BarEntry(
                         index.toFloat(),
-                        entry.second.size.toFloat()
-                    )
+                        entry.second.size.toFloat(),
+                    ),
                 )
             }
 
@@ -510,7 +496,6 @@ class StatisticsFragment :
         }
 
         viewModel.shorterBook.observe(viewLifecycleOwner) {
-
             binding.textViewShorterBookTitle.visibility =
                 if (it == null) View.GONE else View.VISIBLE
             binding.layoutShorterBook.apply {
@@ -522,7 +507,6 @@ class StatisticsFragment :
         }
 
         viewModel.longerBook.observe(viewLifecycleOwner) {
-
             binding.textViewLongerBookTitle.visibility = if (it == null) View.GONE else View.VISIBLE
             binding.layoutLongerBook.apply {
                 root.visibility = if (it == null) View.GONE else View.VISIBLE
@@ -533,7 +517,6 @@ class StatisticsFragment :
         }
 
         viewModel.booksByFormatStats.observe(viewLifecycleOwner) {
-
             binding.pieChartBooksByFormat.visibility = if (it.isEmpty()) View.GONE else View.VISIBLE
 
             val dataSet = PieDataSet(it, "").apply {
@@ -562,7 +545,6 @@ class StatisticsFragment :
     }
 
     private fun showBooks(year: Int?, month: Int?, author: String?, format: String?) {
-
         val action = StatisticsFragmentDirections.actionStatisticsFragmentToBookListFragment(
             BookState.READ,
             viewModel.sortParam,
@@ -571,28 +553,37 @@ class StatisticsFragment :
             year ?: -1,
             month ?: -1,
             author,
-            format
+            format,
         )
         findNavController().navigate(action)
     }
 
     private fun createSequence() {
-
         if (!viewModel.tutorialShown) {
             toolbarSequence = TapTargetSequence(requireActivity()).apply {
                 targets(
-                    TapTarget.forToolbarMenuItem(
-                        binding.toolbar,
-                        binding.toolbar.menu.findItem(R.id.action_import).itemId,
-                        resources.getString(R.string.import_file_icon_tutorial_title),
-                        resources.getString(R.string.import_file_icon_tutorial_description)
-                    ).style(requireContext()).cancelable(true).tintTarget(true),
-                    TapTarget.forToolbarMenuItem(
-                        binding.toolbar,
-                        binding.toolbar.menu.findItem(R.id.action_export).itemId,
-                        resources.getString(R.string.export_file_icon_tutorial_title),
-                        resources.getString(R.string.export_file_icon_tutorial_description)
-                    ).style(requireContext()).cancelable(true).tintTarget(true)
+                    TapTarget
+                        .forToolbarMenuItem(
+                            binding.toolbar,
+                            binding.toolbar.menu
+                                .findItem(R.id.action_import)
+                                .itemId,
+                            resources.getString(R.string.import_file_icon_tutorial_title),
+                            resources.getString(R.string.import_file_icon_tutorial_description),
+                        ).style(requireContext())
+                        .cancelable(true)
+                        .tintTarget(true),
+                    TapTarget
+                        .forToolbarMenuItem(
+                            binding.toolbar,
+                            binding.toolbar.menu
+                                .findItem(R.id.action_export)
+                                .itemId,
+                            resources.getString(R.string.export_file_icon_tutorial_title),
+                            resources.getString(R.string.export_file_icon_tutorial_description),
+                        ).style(requireContext())
+                        .cancelable(true)
+                        .tintTarget(true),
                 )
                 continueOnCancel(false)
                 listener(object : TapTargetSequence.Listener {
@@ -613,18 +604,15 @@ class StatisticsFragment :
     //region NumberValueFormatter
     inner class NumberValueFormatter : ValueFormatter() {
 
-        override fun getFormattedValue(value: Float): String {
-            return value.toInt().toString()
-        }
+        override fun getFormattedValue(value: Float): String = value.toInt().toString()
     }
     //endregion
 
     //region StringValueFormatter
     inner class StringValueFormatter(private val map: Map<String, List<Any>>) : ValueFormatter() {
 
-        override fun getFormattedValue(value: Float): String {
-            return if (value < 0 || value > map.size - 1) "" else map.keys.elementAt(value.toInt())
-        }
+        override fun getFormattedValue(value: Float): String =
+            if (value < 0 || value > map.size - 1) "" else map.keys.elementAt(value.toInt())
     }
     //endregion
 }

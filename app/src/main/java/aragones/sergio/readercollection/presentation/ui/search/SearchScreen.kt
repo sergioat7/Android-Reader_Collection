@@ -67,7 +67,6 @@ fun SearchScreen(
     onLoadMoreClick: () -> Unit,
     onRefresh: () -> Unit,
 ) {
-
     val listState = rememberLazyListState()
     val showTopButton by remember {
         derivedStateOf {
@@ -114,7 +113,6 @@ fun SearchScreen(
                 is SearchUiState.Empty -> {
                     NoResultsComponent(text = stringResource(R.string.no_search_yet_text))
                 }
-
                 is SearchUiState.Success -> {
                     if (state.books.isEmpty() && !state.isLoading) {
                         NoResultsContent()
@@ -131,7 +129,9 @@ fun SearchScreen(
                             },
                             onBottomButtonClick = {
                                 coroutineScope.launch {
-                                    listState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
+                                    listState.animateScrollToItem(
+                                        index = listState.layoutInfo.totalItemsCount - 1,
+                                    )
                                 }
                             },
                             onBookClick = onBookClick,
@@ -141,8 +141,9 @@ fun SearchScreen(
                         )
                     }
                 }
-
-                is SearchUiState.Error -> ErrorContent()
+                is SearchUiState.Error -> {
+                    ErrorContent()
+                }
             }
             PullRefreshIndicator(
                 refreshing = isLoading,
@@ -253,10 +254,7 @@ private fun SearchContent(
 }
 
 @Composable
-private fun LoadMoreButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
@@ -285,7 +283,8 @@ private fun LoadMoreButton(
 
 internal fun LazyListState.reachedBottom(buffer: Int = 1): Boolean {
     val lastVisibleItem = this.layoutInfo.visibleItemsInfo.lastOrNull()
-    return lastVisibleItem?.index != 0 && lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
+    return lastVisibleItem?.index != 0 &&
+        lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
 }
 
 @PreviewLightDark
@@ -333,7 +332,7 @@ private class SearchScreenPreviewParameterProvider :
                         null,
                         null,
                         false,
-                        0
+                        0,
                     ),
                     Book(
                         "2",
@@ -356,7 +355,7 @@ private class SearchScreenPreviewParameterProvider :
                         null,
                         null,
                         false,
-                        0
+                        0,
                     ),
                     Book(
                         "3",
@@ -379,7 +378,7 @@ private class SearchScreenPreviewParameterProvider :
                         null,
                         null,
                         false,
-                        0
+                        0,
                     ),
                     Book(
                         "",
@@ -402,8 +401,8 @@ private class SearchScreenPreviewParameterProvider :
                         null,
                         null,
                         false,
-                        0
-                    )
+                        0,
+                    ),
                 ),
                 isLoading = true,
                 query = null,
