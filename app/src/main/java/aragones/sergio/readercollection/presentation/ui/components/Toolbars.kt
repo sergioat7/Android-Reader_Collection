@@ -6,10 +6,12 @@
 package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
@@ -44,6 +46,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.ui.theme.description
+import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
 fun TopAppBarIcon(
@@ -68,17 +72,28 @@ fun TopAppBarIcon(
 fun CustomToolbar(
     title: String,
     modifier: Modifier = Modifier,
+    subtitle: String = "",
     elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     TopAppBar(
         title = {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.h1,
-                color = MaterialTheme.colors.primary,
-            )
+            Column {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.h1,
+                    color = MaterialTheme.colors.primary,
+                )
+                if (subtitle.isNotBlank()) {
+                    Spacer(Modifier.height(8.dp))
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.description,
+                    )
+                }
+            }
         },
         modifier = modifier,
         backgroundColor = MaterialTheme.colors.background,
@@ -243,6 +258,7 @@ private fun CustomToolbarPreview() {
     ReaderCollectionTheme {
         CustomToolbar(
             title = "Toolbar",
+            subtitle = "Subtitle",
             onBack = {},
             actions = {
                 TopAppBarIconPreview()
