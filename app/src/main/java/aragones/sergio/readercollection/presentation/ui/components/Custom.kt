@@ -34,10 +34,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
@@ -146,9 +147,11 @@ fun SearchBar(
         )
     }
 
-    val focusRequester = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
+
     LaunchedEffect(Unit) {
-        if (requestFocusByDefault) focusRequester.requestFocus()
+        if (requestFocusByDefault) focusManager.moveFocus(FocusDirection.Down)
     }
 
     val placeholder: @Composable (() -> Unit) = {
@@ -175,7 +178,11 @@ fun SearchBar(
                 icon = R.drawable.ic_clear_text,
                 onClick = {
                     textFieldValueState = textFieldValueState.copy("")
-                    onSearch("")
+                    if (!requestFocusByDefault) {
+                        keyboard?.hide()
+                        focusManager.clearFocus()
+                        onSearch("")
+                    }
                 },
             )
         }
@@ -185,7 +192,7 @@ fun SearchBar(
 
     OutlinedTextField(
         value = textFieldValueState,
-        modifier = modifier.focusRequester(focusRequester),
+        modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = MaterialTheme.colors.primary,
@@ -201,7 +208,8 @@ fun SearchBar(
         ),
         keyboardActions = KeyboardActions(
             onSearch = {
-                focusRequester.freeFocus()
+                keyboard?.hide()
+                focusManager.clearFocus()
                 onSearch(textFieldValueState.text)
             },
         ),
