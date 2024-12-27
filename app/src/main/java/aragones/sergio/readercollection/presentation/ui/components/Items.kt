@@ -38,6 +38,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
@@ -45,6 +46,7 @@ import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTh
 import aragones.sergio.readercollection.presentation.ui.theme.description
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 import aragones.sergio.readercollection.presentation.ui.theme.selector
+import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
 fun BookItem(
@@ -166,6 +168,49 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
             text = rating.toInt().toString(),
             style = MaterialTheme.typography.h2,
             color = MaterialTheme.colors.roseBud,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+        )
+    }
+}
+
+@Composable
+fun ReadingBookItem(book: Book, onBookClick: (String) -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colors.background)
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth()
+            .clickable {
+                onBookClick(book.id)
+            },
+    ) {
+        BookBasicInfo(title = book.title ?: "", subtitle = book.authorsToString())
+        Spacer(Modifier.height(8.dp))
+        ImageWithLoading(
+            imageUrl = book.thumbnail,
+            placeholder = R.drawable.ic_default_book_cover_blue,
+            contentScale = ContentScale.FillWidth,
+            shape = MaterialTheme.shapes.small,
+        )
+    }
+}
+
+@Composable
+private fun BookBasicInfo(title: String, subtitle: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.h3,
+        color = MaterialTheme.colors.primary,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+    )
+    if (subtitle.isNotBlank()) {
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colors.description,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -301,6 +346,40 @@ private fun BookItemWithDraggingPreview() {
             onBookClick = {},
             isDraggingEnabled = true,
             isDragging = true,
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun ReadingBookItemPreview() {
+    ReaderCollectionTheme {
+        ReadingBookItem(
+            book = Book(
+                "1",
+                "Book title with a very very very very very very very very long text",
+                null,
+                listOf("Author with a very long name"),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                null,
+                0.0,
+                0,
+                0.0,
+                null,
+                null,
+                null,
+                null,
+                false,
+                0,
+            ),
+            onBookClick = {},
+            modifier = Modifier.height(250.dp),
         )
     }
 }
