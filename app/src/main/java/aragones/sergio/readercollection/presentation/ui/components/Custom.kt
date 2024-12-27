@@ -19,15 +19,32 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -106,6 +123,92 @@ fun StarRatingBar(
     }
 }
 
+@Composable
+fun SearchBar(
+    text: String,
+    onSearch: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    showLeadingIcon: Boolean = false,
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textColor: Color = MaterialTheme.colors.primary,
+    textStyle: TextStyle = MaterialTheme.typography.body1,
+    requestFocusByDefault: Boolean = true,
+) {
+    var textFieldValueState by remember {
+        mutableStateOf(
+            TextFieldValue(
+                text = text,
+                selection = when {
+                    text.isEmpty() -> TextRange.Zero
+                    else -> TextRange(text.length, text.length)
+                },
+            ),
+        )
+    }
+
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        if (requestFocusByDefault) focusRequester.requestFocus()
+    }
+
+    val placeholder: @Composable (() -> Unit) = {
+        Text(
+            text = stringResource(R.string.search),
+            color = inputHintTextColor,
+            style = MaterialTheme.typography.body1,
+        )
+    }
+    val leadingIcon: @Composable (() -> Unit)? = if (showLeadingIcon) {
+        {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = null,
+                tint = MaterialTheme.colors.primary,
+            )
+        }
+    } else {
+        null
+    }
+    val trailingIcon: @Composable (() -> Unit)? = if (textFieldValueState.text.isNotBlank()) {
+        {
+            TopAppBarIcon(
+                icon = R.drawable.ic_clear_text,
+                onClick = { textFieldValueState = textFieldValueState.copy("") },
+            )
+        }
+    } else {
+        null
+    }
+
+    OutlinedTextField(
+        value = textFieldValueState,
+        modifier = modifier.focusRequester(focusRequester),
+        shape = MaterialTheme.shapes.medium,
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = MaterialTheme.colors.primary,
+            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+        ),
+        textStyle = textStyle.copy(color = textColor),
+        placeholder = placeholder,
+        leadingIcon = leadingIcon,
+        trailingIcon = trailingIcon,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Search,
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = {
+                focusRequester.freeFocus()
+                onSearch(textFieldValueState.text)
+            },
+        ),
+        singleLine = true,
+        onValueChange = {
+            textFieldValueState = it
+        },
+    )
+}
+
 @PreviewLightDarkWithBackground
 @Composable
 private fun NoResultsComponentPreview() {
@@ -122,6 +225,14 @@ private fun StartRatingBarPreview() {
             rating = 7f / 2,
             onRatingChanged = {},
         )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun SearchBarPreview() {
+    ReaderCollectionTheme {
+        SearchBar(text = "text", onSearch = {}, showLeadingIcon = true)
     }
 }
 
