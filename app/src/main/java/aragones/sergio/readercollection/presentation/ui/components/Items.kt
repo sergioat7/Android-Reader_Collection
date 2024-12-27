@@ -26,6 +26,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
@@ -217,6 +218,61 @@ private fun BookBasicInfo(title: String, subtitle: String) {
     }
 }
 
+@Composable
+fun VerticalBookItem(
+    book: Book,
+    isSwitchLeftIconEnabled: Boolean,
+    isSwitchRightIconEnabled: Boolean,
+    onClick: () -> Unit,
+    onSwitchToLeft: () -> Unit,
+    onSwitchToRight: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .width(160.dp),
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            if (isSwitchLeftIconEnabled) {
+                IconButton(onClick = onSwitchToLeft) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_round_switch_left),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary,
+                    )
+                }
+            }
+            Spacer(Modifier.weight(1f))
+            if (isSwitchRightIconEnabled) {
+                IconButton(onClick = onSwitchToRight) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_round_switch_right),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary,
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .clickable(onClick = onClick),
+        ) {
+            ImageWithLoading(
+                imageUrl = book.thumbnail,
+                placeholder = R.drawable.ic_default_book_cover_blue,
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                contentScale = ContentScale.Crop,
+            )
+            Spacer(Modifier.height(8.dp))
+            BookBasicInfo(title = book.title ?: "", subtitle = book.authorsToString())
+        }
+    }
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeItem(
@@ -380,6 +436,43 @@ private fun ReadingBookItemPreview() {
             ),
             onBookClick = {},
             modifier = Modifier.height(250.dp),
+        )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun VerticalBookItemPreview() {
+    ReaderCollectionTheme {
+        VerticalBookItem(
+            book = Book(
+                "1",
+                "Book title with a very very very very very very very very long text",
+                null,
+                listOf("Author with a very long name"),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                null,
+                0.0,
+                0,
+                0.0,
+                null,
+                null,
+                null,
+                null,
+                false,
+                0,
+            ),
+            isSwitchLeftIconEnabled = true,
+            isSwitchRightIconEnabled = true,
+            onClick = {},
+            onSwitchToLeft = {},
+            onSwitchToRight = {},
         )
     }
 }
