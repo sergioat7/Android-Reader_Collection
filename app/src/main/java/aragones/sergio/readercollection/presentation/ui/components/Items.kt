@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -83,16 +84,16 @@ fun BookItem(
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
             }
-            Spacer(Modifier.width(24.dp))
             ImageWithLoading(
                 imageUrl = book.thumbnail,
                 placeholder = R.drawable.ic_default_book_cover_blue,
                 modifier = Modifier
-                    .widthIn(max = 130.dp)
+                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 115.dp)
                     .fillMaxHeight(),
                 shape = MaterialTheme.shapes.medium,
+                contentScale = ContentScale.FillWidth,
             )
-            Spacer(Modifier.width(16.dp))
             BookInfo(
                 book = book,
                 modifier = Modifier

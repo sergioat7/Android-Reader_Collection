@@ -173,7 +173,10 @@ fun SearchBar(
         {
             TopAppBarIcon(
                 icon = R.drawable.ic_clear_text,
-                onClick = { textFieldValueState = textFieldValueState.copy("") },
+                onClick = {
+                    textFieldValueState = textFieldValueState.copy("")
+                    onSearch("")
+                },
             )
         }
     } else {
