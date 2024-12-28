@@ -137,9 +137,6 @@
             NewLineAtEndOfFile:BookResponse.kt$aragones.sergio.readercollection.data.remote.model.BookResponse.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BooksAdapter.kt$aragones.sergio.readercollection.presentation.ui.books.BooksAdapter.kt
-        </ID>
-        <ID>
             NewLineAtEndOfFile:BooksFragment.kt$aragones.sergio.readercollection.presentation.ui.books.BooksFragment.kt
         </ID>
         <ID>
@@ -209,9 +206,6 @@
             NewLineAtEndOfFile:ImageViewExtensions.kt$aragones.sergio.readercollection.extensions.ImageViewExtensions.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:ImageViewWithLoading.kt$aragones.sergio.readercollection.presentation.ui.customview.ImageViewWithLoading.kt
-        </ID>
-        <ID>
             NewLineAtEndOfFile:LandingActivity.kt$aragones.sergio.readercollection.presentation.ui.landing.LandingActivity.kt
         </ID>
         <ID>
@@ -222,9 +216,6 @@
         </ID>
         <ID>
             NewLineAtEndOfFile:LiveDataExtensions.kt$aragones.sergio.readercollection.extensions.LiveDataExtensions.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:LoadMoreItemsViewHolder.kt$aragones.sergio.readercollection.presentation.ui.books.LoadMoreItemsViewHolder.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:LoginActivity.kt$aragones.sergio.readercollection.presentation.ui.login.LoginActivity.kt
@@ -303,9 +294,6 @@
         </ID>
         <ID>
             NewLineAtEndOfFile:SharedPreferencesHandler.kt$aragones.sergio.readercollection.data.source.SharedPreferencesHandler.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:ShowAllItemsViewHolder.kt$aragones.sergio.readercollection.presentation.ui.books.ShowAllItemsViewHolder.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StateResponse.kt$aragones.sergio.readercollection.data.remote.model.StateResponse.kt

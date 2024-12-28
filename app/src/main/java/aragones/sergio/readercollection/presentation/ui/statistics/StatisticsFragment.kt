@@ -189,10 +189,6 @@ class StatisticsFragment :
             StatisticsFragmentDirections.actionStatisticsFragmentToBookDetailFragment(bookId, false)
         findNavController().navigate(action)
     }
-
-    override fun onLoadMoreItemsClick() {}
-
-    override fun onShowAllItemsClick(state: String) {}
     //endregion
 
     //region Protected methods

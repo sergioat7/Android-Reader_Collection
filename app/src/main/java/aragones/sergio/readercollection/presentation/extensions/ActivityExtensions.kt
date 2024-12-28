@@ -19,15 +19,6 @@ fun Activity.getScreenSize(): Pair<Int, Int> {
     return Pair(displayMetrics.widthPixels, displayMetrics.heightPixels)
 }
 
-fun Activity.hideSoftKeyboard() {
-    currentFocus?.let { currentFocus ->
-
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.hideSoftInputFromWindow(currentFocus.windowToken, 0)
-    } ?: return
-}
-
 fun Context.getCustomColor(colorId: Int): Int = ResourcesCompat.getColor(resources, colorId, null)
 
 fun Context.getCustomFont(fontId: Int): Typeface? = ResourcesCompat.getFont(this, fontId)
