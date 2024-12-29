@@ -48,7 +48,6 @@ class BooksRepository @Inject constructor(
     //region Public methods
     fun loadBooks(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
         success()
-//        booksRemoteDataSource.loadBooks(success, failure)
     }
 
     fun getBooks(): Flowable<List<Book>> = booksLocalDataSource
@@ -108,8 +107,6 @@ class BooksRepository @Inject constructor(
         .map { it.toDomain() }
 
     fun createBook(newBook: Book, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        booksRemoteDataSource.createBook(newBook, success, failure)
-
         booksLocalDataSource
             .insertBooks(listOf(newBook.toLocalData()))
             .subscribeOn(ioScheduler)
@@ -130,7 +127,6 @@ class BooksRepository @Inject constructor(
     }
 
     fun setBook(book: Book, success: (Book) -> Unit, failure: (ErrorResponse) -> Unit) {
-//        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(listOf(book.toLocalData()))
             .subscribeOn(ioScheduler)
@@ -148,11 +144,9 @@ class BooksRepository @Inject constructor(
                     )
                 },
             ).addTo(disposables)
-//        }, failure = failure)
     }
 
     fun setBooks(books: List<Book>, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(books.map { it.toLocalData() })
             .subscribeOn(ioScheduler)
@@ -170,7 +164,6 @@ class BooksRepository @Inject constructor(
                     )
                 },
             ).addTo(disposables)
-//        }, failure = failure)
     }
 
     fun setFavouriteBook(
@@ -179,21 +172,6 @@ class BooksRepository @Inject constructor(
         success: (Book) -> Unit,
         failure: (ErrorResponse) -> Unit,
     ) {
-//        booksRemoteDataSource.setFavouriteBook(bookId = , success = { book ->
-//            booksLocalDataSource.updateBooks(listOf(book)).subscribeBy(
-//                onComplete = {
-//                    success(book)
-//                },
-//                onError = {
-//                    failure(
-//                        ErrorResponse(
-//                            Constants.EMPTY_VALUE,
-//                            R.string.error_database
-//                        )
-//                    )
-//                }
-//            ).addTo(disposables)
-//        }, failure)
         booksLocalDataSource
             .getBook(bookId)
             .subscribeOn(ioScheduler)
@@ -232,7 +210,6 @@ class BooksRepository @Inject constructor(
     }
 
     fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        booksRemoteDataSource.deleteBook(bookId, success = {
         booksLocalDataSource
             .getBook(bookId)
             .subscribeOn(ioScheduler)
@@ -265,7 +242,6 @@ class BooksRepository @Inject constructor(
                     )
                 },
             ).addTo(disposables)
-//        }, failure)
     }
 
     fun resetTable(): Completable = Completable

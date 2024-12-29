@@ -84,10 +84,7 @@ class SettingsViewModel @Inject constructor(
 
     //region Public methods
     fun logout() {
-//        _profileLoading.value = true
         userRepository.logout()
-//        resetDatabase()
-
         _activityName.value = LandingActivity::class.simpleName
     }
 

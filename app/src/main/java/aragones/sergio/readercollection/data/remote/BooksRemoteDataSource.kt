@@ -7,29 +7,20 @@ package aragones.sergio.readercollection.data.remote
 
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
-import aragones.sergio.readercollection.data.remote.di.MainDispatcher
-import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
-import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.utils.Constants
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import org.json.JSONObject
 
 class BooksRemoteDataSource @Inject constructor(
-    private val booksApiService: BookApiService,
     private val googleApiService: GoogleApiService,
-    @MainDispatcher private val mainDispatcher: CoroutineDispatcher,
     private val remoteConfig: FirebaseRemoteConfig,
 ) {
 
@@ -40,154 +31,10 @@ class BooksRemoteDataSource @Inject constructor(
     private val ORDER_PARAM = "orderBy"
     private val API_KEY = "key"
     private val RESULTS = 20
-    private val externalScope = CoroutineScope(Job() + mainDispatcher)
     private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Public methods
-    fun loadBooks(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.getBooks())) {
-//                    is RequestResult.JsonSuccess -> {
-//
-//                        val newBooks = response.body
-//                        insertBooks(newBooks).subscribeBy(
-//                            onComplete = {
-//                                handleDisabledContentObserver(newBooks).subscribeBy(
-//                                    onComplete = {
-//                                        success()
-//                                    },
-//                                    onError = {
-//                                        failure(
-//                                            ErrorResponse(
-//                                                Constants.EMPTY_VALUE,
-//                                                R.string.error_database
-//                                            )
-//                                        )
-//                                    }
-//                                ).addTo(disposables)
-//                            },
-//                            onError = {
-//                                failure(
-//                                    ErrorResponse(
-//                                        Constants.EMPTY_VALUE,
-//                                        R.string.error_database
-//                                    )
-//                                )
-//                            }
-//                        ).addTo(disposables)
-//                    }
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-    }
-
-    fun createBook(newBook: BookResponse, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.createBook(newBook))) {
-//                    is RequestResult.Success -> loadBooks(success, failure)
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-    }
-
-    fun setBook(
-        book: BookResponse,
-        success: (BookResponse) -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.setBook(book.id, book))) {
-//                    is RequestResult.JsonSuccess -> success(book)
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-    }
-
-    fun setFavouriteBook(
-        bookId: String,
-        isFavourite: Boolean,
-        success: (BookResponse) -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(
-//                    api.setFavouriteBook(
-//                        bookId,
-//                        FavouriteBook(isFavourite)
-//                    )
-//                )) {
-//                    is RequestResult.JsonSuccess -> success(response.body)
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-    }
-
-    fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.deleteBook(bookId))) {
-//                    is RequestResult.Success -> {
-//                        getBook(bookId).subscribeBy(
-//                            onSuccess = { book ->
-//                                deleteBooks(listOf(book)).subscribeBy(
-//                                    onComplete = {
-//                                        success()
-//                                    },
-//                                    onError = {
-//                                        failure(
-//                                            ErrorResponse(
-//                                                Constants.EMPTY_VALUE,
-//                                                R.string.error_database
-//                                            )
-//                                        )
-//                                    }
-//                                ).addTo(disposables)
-//                            },
-//                            onError = {
-//                                failure(
-//                                    ErrorResponse(
-//                                        Constants.EMPTY_VALUE,
-//                                        R.string.error_database
-//                                    )
-//                                )
-//                            }
-//                        ).addTo(disposables)
-//                    }
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-    }
-
     fun searchBooks(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
         val params = mutableMapOf(
             API_KEY to BuildConfig.API_KEY,

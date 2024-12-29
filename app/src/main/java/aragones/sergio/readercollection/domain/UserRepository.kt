@@ -101,11 +101,6 @@ class UserRepository @Inject constructor(
             } else {
                 failure(ErrorResponse(EMPTY_VALUE, R.string.wrong_credentials))
             }
-
-//            val userData = UserData(username, password, true)
-//            val authData = AuthData(token)
-//            userLocalDataSource.storeLoginData(userData, authData)
-//            success()
         }, failure = failure)
     }
 

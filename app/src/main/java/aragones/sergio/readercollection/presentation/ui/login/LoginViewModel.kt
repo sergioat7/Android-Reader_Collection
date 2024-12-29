@@ -55,16 +55,10 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
         userRepository.login(username, password, success = {
-//            booksRepository.loadBooks(success = {
 
             _uiState.value = _uiState.value.copy(isLoading = false)
             _activityName.value = MainActivity::class.simpleName
             _activityName.value = null
-//            }, failure = {
-//
-//                _loginLoading.value = false
-//                _loginError.value = it
-//            })
         }, failure = {
             _uiState.value = _uiState.value.copy(isLoading = false)
             _loginError.value = it
