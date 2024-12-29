@@ -10,29 +10,29 @@ import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Flowable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
-import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
     private val booksLocalDataSource: BooksLocalDataSource,
     private val booksRemoteDataSource: BooksRemoteDataSource,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseRepository() {
 
     //region Private properties
-    private val ioScheduler: Scheduler = Schedulers.io()
-    private val mainScheduler: Scheduler = AndroidSchedulers.mainThread()
     private val moshiAdapter = Moshi
         .Builder()
         .add(MoshiDateAdapter("dd/MM/yyyy"))
