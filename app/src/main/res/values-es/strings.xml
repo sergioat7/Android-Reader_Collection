@@ -116,6 +116,7 @@
         <item>Fecha de lectura</item>
         <item>Nº de páginas</item>
         <item>Puntuación</item>
+        <item>Autor(es)</item>
     </string-array>
     <string-array name="sorting_order_values">
         <item>Ascendente</item>

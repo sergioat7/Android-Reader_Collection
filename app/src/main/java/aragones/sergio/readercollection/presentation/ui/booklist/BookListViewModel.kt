@@ -200,6 +200,7 @@ class BookListViewModel @Inject constructor(
                 "readingDate" -> it.readingDate
                 "pageCount" -> it.pageCount
                 "rating" -> it.rating
+                "authors" -> it.authorsToString()
                 else -> it.id
             }
         }

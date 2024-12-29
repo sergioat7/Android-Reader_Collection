@@ -176,6 +176,7 @@ class BooksViewModel @Inject constructor(
             "readingDate" -> filteredBooks.sortedBy { it.readingDate }
             "pageCount" -> filteredBooks.sortedBy { it.pageCount }
             "rating" -> filteredBooks.sortedBy { it.rating }
+            "authors" -> filteredBooks.sortedBy { it.authorsToString() }
             else -> filteredBooks.sortedBy { it.id }
         }
         return if (_sortingPickerState.value.isSortDescending) {
