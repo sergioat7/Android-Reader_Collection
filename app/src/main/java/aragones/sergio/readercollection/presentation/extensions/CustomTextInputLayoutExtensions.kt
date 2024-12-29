@@ -27,14 +27,6 @@ import com.google.android.material.textfield.TextInputEditText
 import java.util.Calendar
 import java.util.TimeZone
 
-fun CustomTextInputLayoutBinding.setError(text: String?) {
-    if (textInputLayout.error != text) {
-        textInputLayout.error = text
-        textInputLayout.errorIconDrawable = null
-        textInputLayout.isErrorEnabled = text != null
-    }
-}
-
 inline fun CustomTextInputLayoutBinding.doAfterTextChanged(
     crossinline action: (text: Editable?) -> Unit,
 ): TextWatcher = textInputEditText.doAfterTextChanged(action)

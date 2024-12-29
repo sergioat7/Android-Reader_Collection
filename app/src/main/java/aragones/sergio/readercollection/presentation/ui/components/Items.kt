@@ -26,6 +26,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
@@ -34,9 +35,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
@@ -44,6 +47,7 @@ import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTh
 import aragones.sergio.readercollection.presentation.ui.theme.description
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 import aragones.sergio.readercollection.presentation.ui.theme.selector
+import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
 fun BookItem(
@@ -83,16 +87,16 @@ fun BookItem(
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
             }
-            Spacer(Modifier.width(24.dp))
             ImageWithLoading(
                 imageUrl = book.thumbnail,
                 placeholder = R.drawable.ic_default_book_cover_blue,
                 modifier = Modifier
-                    .widthIn(max = 130.dp)
+                    .padding(horizontal = 24.dp)
+                    .widthIn(max = 115.dp)
                     .fillMaxHeight(),
                 shape = MaterialTheme.shapes.medium,
+                contentScale = ContentScale.FillWidth,
             )
-            Spacer(Modifier.width(16.dp))
             BookInfo(
                 book = book,
                 modifier = Modifier
@@ -168,6 +172,104 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
+    }
+}
+
+@Composable
+fun ReadingBookItem(book: Book, onBookClick: (String) -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .background(MaterialTheme.colors.background)
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth()
+            .clickable {
+                onBookClick(book.id)
+            },
+    ) {
+        BookBasicInfo(title = book.title ?: "", subtitle = book.authorsToString())
+        Spacer(Modifier.height(8.dp))
+        ImageWithLoading(
+            imageUrl = book.thumbnail,
+            placeholder = R.drawable.ic_default_book_cover_blue,
+            contentScale = ContentScale.FillWidth,
+            shape = MaterialTheme.shapes.small,
+        )
+    }
+}
+
+@Composable
+private fun BookBasicInfo(title: String, subtitle: String) {
+    Text(
+        text = title,
+        style = MaterialTheme.typography.h3,
+        color = MaterialTheme.colors.primary,
+        overflow = TextOverflow.Ellipsis,
+        maxLines = 2,
+    )
+    if (subtitle.isNotBlank()) {
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = subtitle,
+            style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colors.description,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+        )
+    }
+}
+
+@Composable
+fun VerticalBookItem(
+    book: Book,
+    isSwitchLeftIconEnabled: Boolean,
+    isSwitchRightIconEnabled: Boolean,
+    onClick: () -> Unit,
+    onSwitchToLeft: () -> Unit,
+    onSwitchToRight: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier
+            .width(160.dp),
+    ) {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            if (isSwitchLeftIconEnabled) {
+                IconButton(onClick = onSwitchToLeft) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_round_switch_left),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary,
+                    )
+                }
+            }
+            Spacer(Modifier.weight(1f))
+            if (isSwitchRightIconEnabled) {
+                IconButton(onClick = onSwitchToRight) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_round_switch_right),
+                        contentDescription = null,
+                        tint = MaterialTheme.colors.primary,
+                    )
+                }
+            }
+        }
+        Column(
+            modifier = Modifier
+                .padding(horizontal = 12.dp)
+                .clickable(onClick = onClick),
+        ) {
+            ImageWithLoading(
+                imageUrl = book.thumbnail,
+                placeholder = R.drawable.ic_default_book_cover_blue,
+                modifier = Modifier
+                    .height(200.dp)
+                    .fillMaxWidth(),
+                shape = MaterialTheme.shapes.medium,
+                contentScale = ContentScale.Crop,
+            )
+            Spacer(Modifier.height(8.dp))
+            BookBasicInfo(title = book.title ?: "", subtitle = book.authorsToString())
+        }
     }
 }
 
@@ -300,6 +402,77 @@ private fun BookItemWithDraggingPreview() {
             onBookClick = {},
             isDraggingEnabled = true,
             isDragging = true,
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun ReadingBookItemPreview() {
+    ReaderCollectionTheme {
+        ReadingBookItem(
+            book = Book(
+                "1",
+                "Book title with a very very very very very very very very long text",
+                null,
+                listOf("Author with a very long name"),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                null,
+                0.0,
+                0,
+                0.0,
+                null,
+                null,
+                null,
+                null,
+                false,
+                0,
+            ),
+            onBookClick = {},
+            modifier = Modifier.height(250.dp),
+        )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun VerticalBookItemPreview() {
+    ReaderCollectionTheme {
+        VerticalBookItem(
+            book = Book(
+                "1",
+                "Book title with a very very very very very very very very long text",
+                null,
+                listOf("Author with a very long name"),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                0,
+                null,
+                0.0,
+                0,
+                0.0,
+                null,
+                null,
+                null,
+                null,
+                false,
+                0,
+            ),
+            isSwitchLeftIconEnabled = true,
+            isSwitchRightIconEnabled = true,
+            onClick = {},
+            onSwitchToLeft = {},
+            onSwitchToRight = {},
         )
     }
 }
