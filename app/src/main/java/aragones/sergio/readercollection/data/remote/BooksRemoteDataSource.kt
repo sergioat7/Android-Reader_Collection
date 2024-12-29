@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
+import aragones.sergio.readercollection.utils.Constants
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.core.Single
@@ -228,10 +229,9 @@ class BooksRemoteDataSource @Inject constructor(
                     .fromJson(languagedFormats)
                     ?.asList() ?: listOf()
             } catch (e: Exception) {
-                Log.e("LandingActivity", e.message ?: "")
+                Log.e("BooksRemoteDataSource", e.message ?: "")
             }
-
-            aragones.sergio.readercollection.utils.Constants.FORMATS = formats
+            Constants.FORMATS = formats
         }
     }
 
@@ -246,10 +246,9 @@ class BooksRemoteDataSource @Inject constructor(
                     .fromJson(languagedStates)
                     ?.asList() ?: listOf()
             } catch (e: Exception) {
-                Log.e("LandingActivity", e.message ?: "")
+                Log.e("BooksRemoteDataSource", e.message ?: "")
             }
-
-            aragones.sergio.readercollection.utils.Constants.STATES = states
+            Constants.STATES = states
         }
     }
     //endregion

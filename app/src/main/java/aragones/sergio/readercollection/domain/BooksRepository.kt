@@ -31,9 +31,8 @@ class BooksRepository @Inject constructor(
 ) : BaseRepository() {
 
     //region Private properties
-    private val externalScheduler: Scheduler = Schedulers.io()
-    private val databaseScheduler: Scheduler = Schedulers.io()
-    private val mainObserver: Scheduler = AndroidSchedulers.mainThread()
+    private val ioScheduler: Scheduler = Schedulers.io()
+    private val mainScheduler: Scheduler = AndroidSchedulers.mainThread()
     private val moshiAdapter = Moshi
         .Builder()
         .add(MoshiDateAdapter("dd/MM/yyyy"))
@@ -56,37 +55,37 @@ class BooksRepository @Inject constructor(
         .getAllBooks()
         .distinctUntilChanged()
         .map { it.map { book -> book.toDomain() } }
-        .subscribeOn(databaseScheduler)
-        .observeOn(mainObserver)
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun getPendingBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getPendingBooks()
         .distinctUntilChanged()
         .map { it.map { book -> book.toDomain() } }
-        .subscribeOn(databaseScheduler)
-        .observeOn(mainObserver)
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun getReadBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getReadBooks()
         .distinctUntilChanged()
         .map { it.map { book -> book.toDomain() } }
-        .subscribeOn(databaseScheduler)
-        .observeOn(mainObserver)
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun importDataFrom(jsonData: String): Completable {
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
         return booksLocalDataSource
             .importDataFrom(books.map { it.toLocalData() })
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
     }
 
     fun exportDataTo(): Single<String> = Single
         .create<String> { emitter ->
             booksLocalDataSource
                 .getAllBooks()
-                .subscribeOn(databaseScheduler)
-                .observeOn(mainObserver)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
                         emitter.onSuccess("")
@@ -99,13 +98,13 @@ class BooksRepository @Inject constructor(
                         emitter.onError(it)
                     },
                 ).addTo(disposables)
-        }.subscribeOn(externalScheduler)
-        .observeOn(mainObserver)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun getBook(googleId: String): Single<Book> = booksLocalDataSource
         .getBook(googleId)
-        .subscribeOn(databaseScheduler)
-        .observeOn(mainObserver)
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
         .map { it.toDomain() }
 
     fun createBook(newBook: Book, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
@@ -113,8 +112,8 @@ class BooksRepository @Inject constructor(
 
         booksLocalDataSource
             .insertBooks(listOf(newBook.toLocalData()))
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     success()
@@ -134,8 +133,8 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(listOf(book.toLocalData()))
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     success(book)
@@ -156,8 +155,8 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.setBook(book, success = {
         booksLocalDataSource
             .updateBooks(books.map { it.toLocalData() })
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     success()
@@ -197,16 +196,16 @@ class BooksRepository @Inject constructor(
 //        }, failure)
         booksLocalDataSource
             .getBook(bookId)
-            .subscribeOn(databaseScheduler)
-            .observeOn(mainObserver)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
                     val book = it.toDomain()
                     book.isFavourite = isFavourite
                     booksLocalDataSource
                         .updateBooks(listOf(book.toLocalData()))
-                        .subscribeOn(databaseScheduler)
-                        .observeOn(mainObserver)
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
                         .subscribeBy(
                             onComplete = {
                                 success(book)
@@ -236,13 +235,13 @@ class BooksRepository @Inject constructor(
 //        booksRemoteDataSource.deleteBook(bookId, success = {
         booksLocalDataSource
             .getBook(bookId)
-            .subscribeOn(databaseScheduler)
+            .subscribeOn(ioScheduler)
             .subscribeBy(
                 onSuccess = { book ->
                     booksLocalDataSource
                         .deleteBooks(listOf(book))
-                        .subscribeOn(databaseScheduler)
-                        .observeOn(mainObserver)
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
                         .subscribeBy(
                             onComplete = {
                                 success()
@@ -274,8 +273,8 @@ class BooksRepository @Inject constructor(
 
             booksLocalDataSource
                 .getAllBooks()
-                .subscribeOn(databaseScheduler)
-                .observeOn(mainObserver)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
                         emitter.onComplete()
@@ -283,8 +282,8 @@ class BooksRepository @Inject constructor(
                     onNext = { books ->
                         booksLocalDataSource
                             .deleteBooks(books)
-                            .subscribeOn(databaseScheduler)
-                            .observeOn(mainObserver)
+                            .subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
                             .subscribeBy(
                                 onComplete = {
                                     emitter.onComplete()
@@ -298,24 +297,23 @@ class BooksRepository @Inject constructor(
                         emitter.onError(it)
                     },
                 ).addTo(disposables)
-        }.subscribeOn(externalScheduler)
-        .observeOn(mainObserver)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun searchBooks(query: String, page: Int, order: String?): Single<List<Book>> =
         booksRemoteDataSource
             .searchBooks(query, page, order)
-            .subscribeOn(externalScheduler)
-            .observeOn(mainObserver)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
 
     fun getRemoteBook(volumeId: String): Single<Book> = booksRemoteDataSource
         .getBook(volumeId)
-        .subscribeOn(externalScheduler)
-        .observeOn(mainObserver)
+        .subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
         .map { it.toDomain() }
 
-    fun fetchRemoteConfigValues(language: String) {
+    fun fetchRemoteConfigValues(language: String) =
         booksRemoteDataSource.fetchRemoteConfigValues(language)
-    }
     //endregion
 }

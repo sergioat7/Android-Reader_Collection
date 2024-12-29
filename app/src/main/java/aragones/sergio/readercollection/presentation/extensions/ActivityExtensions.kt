@@ -10,7 +10,6 @@ import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Typeface
 import android.util.DisplayMetrics
-import android.view.inputmethod.InputMethodManager
 import androidx.core.content.res.ResourcesCompat
 
 fun Activity.getScreenSize(): Pair<Int, Int> {

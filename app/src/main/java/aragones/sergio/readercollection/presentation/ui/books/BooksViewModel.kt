@@ -113,7 +113,7 @@ class BooksViewModel @Inject constructor(
     }
 
     fun switchBooksPriority(fromIndex: Int, toIndex: Int) {
-        val books = when(val currentState = state.value) {
+        val books = when (val currentState = state.value) {
             is BooksUiState.Empty -> emptyList()
             is BooksUiState.Success -> currentState.books
         }.filter { it.isPending() }.sortedBy { it.priority }

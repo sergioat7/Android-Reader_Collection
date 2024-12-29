@@ -3,9 +3,7 @@
  * Created by Sergio Aragonés on 29/3/2024
  */
 
-package aragones.sergio.readercollection.data.remote
-
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+package aragones.sergio.readercollection.data.remote.model
 
 sealed class RequestResult<out T> {
     data object Success : RequestResult<Nothing>()
