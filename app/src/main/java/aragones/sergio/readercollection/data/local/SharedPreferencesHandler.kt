@@ -15,7 +15,7 @@ import com.aragones.sergio.util.Preferences
 import com.squareup.moshi.Moshi
 import java.util.Locale
 
-object SharedPreferencesHandler {
+class SharedPreferencesHandler {
 
     //region Private properties
     private val appPreferences = ReaderCollectionApplication.context.getSharedPreferences(

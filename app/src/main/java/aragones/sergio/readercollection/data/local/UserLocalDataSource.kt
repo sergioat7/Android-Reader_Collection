@@ -18,6 +18,7 @@ import javax.inject.Inject
 
 class UserLocalDataSource @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val preferences: SharedPreferencesHandler,
 ) {
 
     //region Private properties
@@ -31,132 +32,132 @@ class UserLocalDataSource @Inject constructor(
 
     //region Public properties
     val username: String
-        get() = SharedPreferencesHandler.userData.username
+        get() = preferences.userData.username
 
     val userData: UserData
-        get() = SharedPreferencesHandler.userData
+        get() = preferences.userData
 
     var language: String
-        get() = SharedPreferencesHandler.language
+        get() = preferences.language
         set(value) {
-            SharedPreferencesHandler.language = value
+            preferences.language = value
         }
 
     val isLoggedIn: Boolean
-        get() = SharedPreferencesHandler.isLoggedIn
+        get() = preferences.isLoggedIn
 
     val sortParam: String?
-        get() = SharedPreferencesHandler.sortParam
+        get() = preferences.sortParam
 
     val isSortDescending: Boolean
-        get() = SharedPreferencesHandler.isSortDescending
+        get() = preferences.isSortDescending
 
     val themeMode: Int
-        get() = SharedPreferencesHandler.themeMode
+        get() = preferences.themeMode
 
     val hasBooksTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasBooksTutorialBeenShown
+        get() = preferences.hasBooksTutorialBeenShown
 
     val hasDragTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasDragTutorialBeenShown
+        get() = preferences.hasDragTutorialBeenShown
 
     val hasSearchTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasSearchTutorialBeenShown
+        get() = preferences.hasSearchTutorialBeenShown
 
     val hasStatisticsTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasStatisticsTutorialBeenShown
+        get() = preferences.hasStatisticsTutorialBeenShown
 
     val hasSettingsTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasSettingsTutorialBeenShown
+        get() = preferences.hasSettingsTutorialBeenShown
 
     val hasNewBookTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasNewBookTutorialBeenShown
+        get() = preferences.hasNewBookTutorialBeenShown
 
     val hasBookDetailsTutorialBeenShown: Boolean
-        get() = SharedPreferencesHandler.hasBookDetailsTutorialBeenShown
+        get() = preferences.hasBookDetailsTutorialBeenShown
 
     var newChangesPopupShown: Boolean
-        get() = SharedPreferencesHandler.newChangesPopupShown
+        get() = preferences.newChangesPopupShown
         set(value) {
-            SharedPreferencesHandler.newChangesPopupShown = value
+            preferences.newChangesPopupShown = value
         }
     //endregion
 
     //region Public methods
     fun logout() {
-        SharedPreferencesHandler.removePassword()
+        preferences.removePassword()
         removeCredentials()
-        SharedPreferencesHandler.logout()
+        preferences.logout()
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
-        SharedPreferencesHandler.userData = userData
+        preferences.userData = userData
         storeCredentials(authData)
     }
 
     fun storeCredentials(authData: AuthData) {
-        SharedPreferencesHandler.credentials = authData
+        preferences.credentials = authData
         ApiManager.accessToken = authData.token
     }
 
     fun removeCredentials() {
-        SharedPreferencesHandler.removeCredentials()
+        preferences.removeCredentials()
         ApiManager.accessToken = ""
     }
 
     fun storePassword(newPassword: String) {
-        SharedPreferencesHandler.storePassword(newPassword)
+        preferences.storePassword(newPassword)
     }
 
     fun removeUserData() {
-        SharedPreferencesHandler.removeUserData()
+        preferences.removeUserData()
     }
 
     fun storeLanguage(language: String) {
-        SharedPreferencesHandler.language = language
+        preferences.language = language
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             localeManager?.applicationLocales = LocaleList(Locale.forLanguageTag(language))
         }
     }
 
     fun storeSortParam(sortParam: String?) {
-        SharedPreferencesHandler.sortParam = sortParam
+        preferences.sortParam = sortParam
     }
 
     fun storeIsSortDescending(isSortDescending: Boolean) {
-        SharedPreferencesHandler.isSortDescending = isSortDescending
+        preferences.isSortDescending = isSortDescending
     }
 
     fun storeThemeMode(themeMode: Int) {
-        SharedPreferencesHandler.themeMode = themeMode
+        preferences.themeMode = themeMode
     }
 
     fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasBooksTutorialBeenShown = hasBooksTutorialBeenShown
+        preferences.hasBooksTutorialBeenShown = hasBooksTutorialBeenShown
     }
 
     fun setHasDragTutorialBeenShown(hasDragTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasDragTutorialBeenShown = hasDragTutorialBeenShown
+        preferences.hasDragTutorialBeenShown = hasDragTutorialBeenShown
     }
 
     fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasSearchTutorialBeenShown = hasSearchTutorialBeenShown
+        preferences.hasSearchTutorialBeenShown = hasSearchTutorialBeenShown
     }
 
     fun setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasStatisticsTutorialBeenShown = hasStatisticsTutorialBeenShown
+        preferences.hasStatisticsTutorialBeenShown = hasStatisticsTutorialBeenShown
     }
 
     fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasSettingsTutorialBeenShown = hasSettingsTutorialBeenShown
+        preferences.hasSettingsTutorialBeenShown = hasSettingsTutorialBeenShown
     }
 
     fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasNewBookTutorialBeenShown = hasNewBookTutorialBeenShown
+        preferences.hasNewBookTutorialBeenShown = hasNewBookTutorialBeenShown
     }
 
     fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
-        SharedPreferencesHandler.hasBookDetailsTutorialBeenShown = hasBookDetailsTutorialBeenShown
+        preferences.hasBookDetailsTutorialBeenShown = hasBookDetailsTutorialBeenShown
     }
     //endregion
 }
