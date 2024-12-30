@@ -5,16 +5,13 @@
 
 package aragones.sergio.readercollection.domain
 
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.IoScheduler
 import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
 import com.aragones.sergio.BooksLocalDataSource
-import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
 import io.reactivex.rxjava3.core.Completable
@@ -46,9 +43,11 @@ class BooksRepository @Inject constructor(
     //endregion
 
     //region Public methods
-    fun loadBooks(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        success()
-    }
+    fun loadBooks(): Completable = Completable
+        .create { emitter ->
+            emitter.onComplete()
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun getBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getAllBooks()
@@ -106,147 +105,116 @@ class BooksRepository @Inject constructor(
         .observeOn(mainScheduler)
         .map { it.toDomain() }
 
-    fun createBook(newBook: Book, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        booksLocalDataSource
-            .insertBooks(listOf(newBook.toLocalData()))
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    success()
-                },
-                onError = {
-                    failure(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
-                    )
-                },
-            ).addTo(disposables)
-    }
+    fun createBook(newBook: Book): Completable = Completable
+        .create { emitter ->
+            booksLocalDataSource
+                .insertBooks(listOf(newBook.toLocalData()))
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
-    fun setBook(book: Book, success: (Book) -> Unit, failure: (ErrorResponse) -> Unit) {
-        booksLocalDataSource
-            .updateBooks(listOf(book.toLocalData()))
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    success(book)
-                },
-                onError = {
-                    failure(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
-                    )
-                },
-            ).addTo(disposables)
-    }
+    fun setBook(book: Book): Single<Book> = Single
+        .create { emitter ->
+            booksLocalDataSource
+                .updateBooks(listOf(book.toLocalData()))
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onSuccess(book)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
-    fun setBooks(books: List<Book>, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        booksLocalDataSource
-            .updateBooks(books.map { it.toLocalData() })
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    success()
-                },
-                onError = {
-                    failure(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
-                    )
-                },
-            ).addTo(disposables)
-    }
+    fun setBooks(books: List<Book>): Completable = Completable
+        .create { emitter ->
+            booksLocalDataSource
+                .updateBooks(books.map { it.toLocalData() })
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
-    fun setFavouriteBook(
-        bookId: String,
-        isFavourite: Boolean,
-        success: (Book) -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-        booksLocalDataSource
-            .getBook(bookId)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = {
-                    val book = it.toDomain()
-                    book.isFavourite = isFavourite
-                    booksLocalDataSource
-                        .updateBooks(listOf(book.toLocalData()))
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .subscribeBy(
-                            onComplete = {
-                                success(book)
-                            },
-                            onError = {
-                                failure(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_database,
-                                    ),
-                                )
-                            },
-                        ).addTo(disposables)
-                },
-                onError = {
-                    failure(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
-                    )
-                },
-            ).addTo(disposables)
-    }
+    fun setFavouriteBook(bookId: String, isFavourite: Boolean): Single<Book> = Single
+        .create { emitter ->
+            booksLocalDataSource
+                .getBook(bookId)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = {
+                        val book = it.toDomain()
+                        book.isFavourite = isFavourite
+                        booksLocalDataSource
+                            .updateBooks(listOf(book.toLocalData()))
+                            .subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribeBy(
+                                onComplete = {
+                                    emitter.onSuccess(book)
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                },
+                            ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
-    fun deleteBook(bookId: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        booksLocalDataSource
-            .getBook(bookId)
-            .subscribeOn(ioScheduler)
-            .subscribeBy(
-                onSuccess = { book ->
-                    booksLocalDataSource
-                        .deleteBooks(listOf(book))
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .subscribeBy(
-                            onComplete = {
-                                success()
-                            },
-                            onError = {
-                                failure(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_database,
-                                    ),
-                                )
-                            },
-                        ).addTo(disposables)
-                },
-                onError = {
-                    failure(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
-                    )
-                },
-            ).addTo(disposables)
-    }
+    fun deleteBook(bookId: String): Completable = Completable
+        .create { emitter ->
+            booksLocalDataSource
+                .getBook(bookId)
+                .subscribeOn(ioScheduler)
+                .subscribeBy(
+                    onSuccess = { book ->
+                        booksLocalDataSource
+                            .deleteBooks(listOf(book))
+                            .subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribeBy(
+                                onComplete = {
+                                    emitter.onComplete()
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                },
+                            ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
 
     fun resetTable(): Completable = Completable
         .create { emitter ->
-
             booksLocalDataSource
                 .getAllBooks()
                 .subscribeOn(ioScheduler)

@@ -118,12 +118,17 @@ class SearchViewModel @Inject constructor(
         val newBook = books.firstOrNull { it.id == bookId } ?: return
         newBook.state = BookState.PENDING
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository.createBook(newBook, success = {
-            pendingBooks.add(newBook)
-            _infoDialogMessageId.value = R.string.book_saved
-        }, failure = {
-            _infoDialogMessageId.value = it.errorKey
-        })
+        booksRepository
+            .createBook(newBook)
+            .subscribeBy(
+                onComplete = {
+                    pendingBooks.add(newBook)
+                    _infoDialogMessageId.value = R.string.book_saved
+                },
+                onError = {
+                    _infoDialogMessageId.value = R.string.error_database
+                },
+            ).addTo(disposables)
     }
 
     fun closeDialogs() {

@@ -5,38 +5,31 @@
 
 package aragones.sergio.readercollection.data.remote
 
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class UserRemoteDataSource @Inject constructor() {
 
     //region Public methods
-    fun login(
-        username: String,
-        password: String,
-        success: (String) -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-        success("-")
+    fun login(username: String, password: String): Single<String> = Single.create {
+        it.onSuccess("-")
     }
 
-    fun logout() {}
-
-    fun register(
-        username: String,
-        password: String,
-        success: () -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-        success()
+    fun logout(): Completable = Completable.create {
+        it.onComplete()
     }
 
-    fun updatePassword(password: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        success()
+    fun register(username: String, password: String): Completable = Completable.create {
+        it.onComplete()
     }
 
-    fun deleteUser(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-        success()
+    fun updatePassword(password: String): Completable = Completable.create {
+        it.onComplete()
+    }
+
+    fun deleteUser(): Completable = Completable.create {
+        it.onComplete()
     }
     //endregion
 }

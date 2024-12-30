@@ -10,6 +10,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -17,6 +18,7 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.ui.components.UiSortingPickerState
+import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -138,15 +140,23 @@ class BooksViewModel @Inject constructor(
             is BooksUiState.Success -> currentState.copy(isLoading = true)
         }
 
-        booksRepository.setBooks(books, success = {
-            searchBooks(_state.value.query)
-        }, failure = {
-            _state.value = when (val currentState = _state.value) {
-                is BooksUiState.Empty -> currentState.copy(isLoading = false)
-                is BooksUiState.Success -> currentState.copy(isLoading = false)
-            }
-            _booksError.value = it
-        })
+        booksRepository
+            .setBooks(books)
+            .subscribeBy(
+                onComplete = {
+                    searchBooks(_state.value.query)
+                },
+                onError = {
+                    _state.value = when (val currentState = _state.value) {
+                        is BooksUiState.Empty -> currentState.copy(isLoading = false)
+                        is BooksUiState.Success -> currentState.copy(isLoading = false)
+                    }
+                    _booksError.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database,
+                    )
+                },
+            ).addTo(disposables)
     }
     //endregion
 
