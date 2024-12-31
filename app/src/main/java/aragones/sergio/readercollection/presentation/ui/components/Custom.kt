@@ -8,21 +8,31 @@ package aragones.sergio.readercollection.presentation.ui.components
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.Button
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetState
+import androidx.compose.material.ModalBottomSheetValue.Expanded
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
@@ -220,6 +230,47 @@ fun SearchBar(
     )
 }
 
+@Composable
+fun ModalBottomSheet(
+    sheetState: ModalBottomSheetState,
+    sheetContent: @Composable ColumnScope.() -> Unit,
+    background: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    ModalBottomSheetLayout(
+        sheetContent = {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Spacer(Modifier.height(8.dp))
+                Box(
+                    modifier = Modifier
+                        .height(5.dp)
+                        .width(32.dp)
+                        .background(
+                            color = MaterialTheme.colors.primary,
+                            shape = MaterialTheme.shapes.medium,
+                        ),
+                )
+                Spacer(Modifier.height(24.dp))
+                sheetContent()
+                Spacer(Modifier.height(8.dp))
+            }
+        },
+        modifier = modifier,
+        sheetState = sheetState,
+        sheetShape = MaterialTheme.shapes.large.copy(
+            bottomStart = CornerSize(0.dp),
+            bottomEnd = CornerSize(0.dp),
+        ),
+        content = background,
+    )
+}
+
 @PreviewLightDarkWithBackground
 @Composable
 private fun NoResultsComponentPreview() {
@@ -244,6 +295,34 @@ private fun StartRatingBarPreview() {
 private fun SearchBarPreview() {
     ReaderCollectionTheme {
         SearchBar(text = "text", onSearch = {}, showLeadingIcon = true)
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun ModalBottomSheetPreview() {
+    ReaderCollectionTheme {
+        ModalBottomSheet(
+            sheetState = ModalBottomSheetState(Expanded, LocalDensity.current),
+            sheetContent = {
+                Text("Title")
+                Divider(Modifier.padding(vertical = 24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                ) {
+                    Button({}) {
+                        Text("Button 1")
+                    }
+                    Button({}) {
+                        Text("Button 2")
+                    }
+                }
+            },
+            background = {
+                Box(Modifier.fillMaxSize())
+            },
+        )
     }
 }
 
