@@ -56,13 +56,6 @@ class BooksRepository @Inject constructor(
         .subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
-    fun getPendingBooks(): Flowable<List<Book>> = booksLocalDataSource
-        .getPendingBooks()
-        .distinctUntilChanged()
-        .map { it.map { book -> book.toDomain() } }
-        .subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
     fun getReadBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getReadBooks()
         .distinctUntilChanged()

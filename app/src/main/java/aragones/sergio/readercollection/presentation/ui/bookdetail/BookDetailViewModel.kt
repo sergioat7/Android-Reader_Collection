@@ -38,7 +38,9 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
-    private lateinit var pendingBooks: List<Book>
+    private lateinit var savedBooks: List<Book>
+    private val pendingBooks: List<Book>
+        get() = savedBooks.filter { it.isPending() }
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     private val _imageDialogMessageId = MutableLiveData(-1)
@@ -66,16 +68,16 @@ class BookDetailViewModel @Inject constructor(
     //region Lifecycle methods
     fun onCreate() {
         booksRepository
-            .getPendingBooks()
+            .getBooks()
             .subscribeBy(
                 onComplete = {
-                    pendingBooks = listOf()
+                    savedBooks = listOf()
                 },
                 onNext = {
-                    pendingBooks = it
+                    savedBooks = it
                 },
                 onError = {
-                    pendingBooks = listOf()
+                    savedBooks = listOf()
                 },
             ).addTo(disposables)
         fetchBook()
@@ -91,6 +93,10 @@ class BookDetailViewModel @Inject constructor(
 
     //region Public methods
     fun createBook(newBook: Book) {
+        if (savedBooks.firstOrNull { it.id == newBook.id } != null) {
+            _infoDialogMessageId.value = R.string.error_resource_found
+            return
+        }
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         _bookDetailLoading.value = true
         booksRepository

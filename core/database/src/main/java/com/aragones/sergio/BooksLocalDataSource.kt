@@ -21,10 +21,6 @@ class BooksLocalDataSource @Inject constructor(
         .getAllBooks()
         .`as`(RxJavaBridge.toV3Flowable())
 
-    fun getPendingBooks(): Flowable<List<Book>> = bookDao
-        .getPendingBooks()
-        .`as`(RxJavaBridge.toV3Flowable())
-
     fun getReadBooks(): Flowable<List<Book>> = bookDao
         .getReadBooks()
         .`as`(RxJavaBridge.toV3Flowable())
