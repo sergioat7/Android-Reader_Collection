@@ -9,6 +9,7 @@ import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.RequestResult
 import com.aragones.sergio.util.Constants
 import com.squareup.moshi.Moshi
 import java.util.concurrent.TimeUnit

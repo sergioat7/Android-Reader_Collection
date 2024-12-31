@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
+import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -37,7 +38,9 @@ class BookDetailViewModel @Inject constructor(
     private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
     private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
     private val _bookDetailError = MutableLiveData<ErrorResponse?>()
-    private lateinit var pendingBooks: List<Book>
+    private lateinit var savedBooks: List<Book>
+    private val pendingBooks: List<Book>
+        get() = savedBooks.filter { it.isPending() }
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     private val _imageDialogMessageId = MutableLiveData(-1)
@@ -65,16 +68,16 @@ class BookDetailViewModel @Inject constructor(
     //region Lifecycle methods
     fun onCreate() {
         booksRepository
-            .getPendingBooks()
+            .getBooks()
             .subscribeBy(
                 onComplete = {
-                    pendingBooks = listOf()
+                    savedBooks = listOf()
                 },
                 onNext = {
-                    pendingBooks = it
+                    savedBooks = it
                 },
                 onError = {
-                    pendingBooks = listOf()
+                    savedBooks = listOf()
                 },
             ).addTo(disposables)
         fetchBook()
@@ -90,34 +93,63 @@ class BookDetailViewModel @Inject constructor(
 
     //region Public methods
     fun createBook(newBook: Book) {
+        if (savedBooks.firstOrNull { it.id == newBook.id } != null) {
+            _infoDialogMessageId.value = R.string.error_resource_found
+            return
+        }
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         _bookDetailLoading.value = true
-        booksRepository.createBook(newBook, success = {
-            _bookDetailLoading.value = false
-            _infoDialogMessageId.value = R.string.book_saved
-        }, failure = {
-            manageError(it)
-        })
+        booksRepository
+            .createBook(newBook)
+            .subscribeBy(
+                onComplete = {
+                    _bookDetailLoading.value = false
+                    _infoDialogMessageId.value = R.string.book_saved
+                },
+                onError = {
+                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database))
+                },
+            ).addTo(disposables)
     }
 
     fun setBook(book: Book) {
         _bookDetailLoading.value = true
-        booksRepository.setBook(book, success = {
-            _book.value = it
-            _bookDetailLoading.value = false
-        }, failure = {
-            manageError(it)
-        })
+        booksRepository
+            .setBook(book)
+            .subscribeBy(
+                onSuccess = {
+                    _book.value = it
+                    _bookDetailLoading.value = false
+                },
+                onError = {
+                    manageError(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database,
+                        ),
+                    )
+                },
+            ).addTo(disposables)
     }
 
     fun deleteBook() {
         _bookDetailLoading.value = true
-        booksRepository.deleteBook(bookId, success = {
-            _bookDetailLoading.value = false
-            _infoDialogMessageId.value = R.string.book_removed
-        }, failure = {
-            manageError(it)
-        })
+        booksRepository
+            .deleteBook(bookId)
+            .subscribeBy(
+                onComplete = {
+                    _bookDetailLoading.value = false
+                    _infoDialogMessageId.value = R.string.book_removed
+                },
+                onError = {
+                    manageError(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_database,
+                        ),
+                    )
+                },
+            ).addTo(disposables)
     }
 
     fun setBookImage(imageUri: String?) {
@@ -126,12 +158,17 @@ class BookDetailViewModel @Inject constructor(
 
     fun setFavourite(isFavourite: Boolean) {
         _bookDetailFavouriteLoading.value = true
-        booksRepository.setFavouriteBook(bookId, isFavourite, success = {
-            _isFavourite.value = it.isFavourite
-            _bookDetailFavouriteLoading.value = false
-        }, failure = {
-            _bookDetailFavouriteLoading.value = false
-        })
+        booksRepository
+            .setFavouriteBook(bookId, isFavourite)
+            .subscribeBy(
+                onSuccess = {
+                    _isFavourite.value = it.isFavourite
+                    _bookDetailFavouriteLoading.value = false
+                },
+                onError = {
+                    _bookDetailFavouriteLoading.value = false
+                },
+            ).addTo(disposables)
     }
 
     fun setNewBookTutorialAsShown() {

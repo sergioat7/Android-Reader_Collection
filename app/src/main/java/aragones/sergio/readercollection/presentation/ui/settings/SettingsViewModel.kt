@@ -84,10 +84,7 @@ class SettingsViewModel @Inject constructor(
 
     //region Public methods
     fun logout() {
-//        _profileLoading.value = true
         userRepository.logout()
-//        resetDatabase()
-
         _activityName.value = LandingActivity::class.simpleName
     }
 
@@ -106,14 +103,19 @@ class SettingsViewModel @Inject constructor(
 
         if (changePassword) {
             _uiState.value = _uiState.value.copy(isLoading = true)
-            userRepository.updatePassword(newPassword, success = {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                if (changeLanguage || changeSortParam || changeIsSortDescending) {
-                    _activityName.value = LandingActivity::class.simpleName
-                }
-            }, failure = {
-                manageError(it)
-            })
+            userRepository
+                .updatePassword(newPassword)
+                .subscribeBy(
+                    onComplete = {
+                        _uiState.value = _uiState.value.copy(isLoading = false)
+                        if (changeLanguage || changeSortParam || changeIsSortDescending) {
+                            _activityName.value = LandingActivity::class.simpleName
+                        }
+                    },
+                    onError = {
+                        manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                    },
+                ).addTo(disposables)
         }
 
         if (changeLanguage) {
@@ -146,11 +148,16 @@ class SettingsViewModel @Inject constructor(
 
     fun deleteUser() {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        userRepository.deleteUser(success = {
-            resetDatabase()
-        }, failure = {
-            manageError(it)
-        })
+        userRepository
+            .deleteUser()
+            .subscribeBy(
+                onComplete = {
+                    resetDatabase()
+                },
+                onError = {
+                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                },
+            ).addTo(disposables)
     }
 
     fun profileDataChanged(

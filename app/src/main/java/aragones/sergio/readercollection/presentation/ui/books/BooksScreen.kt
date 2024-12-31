@@ -63,7 +63,7 @@ fun BooksScreen(
     onSwitchToRight: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val subtitle = when(state) {
+    val subtitle = when (state) {
         is BooksUiState.Empty -> pluralStringResource(
             R.plurals.title_books_count,
             0,

@@ -18,6 +18,8 @@ import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,19 +51,37 @@ class RegisterViewModel @Inject constructor(
     //region Public methods
     fun register(username: String, password: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        userRepository.register(username, password, success = {
-            userRepository.login(username, password, success = {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                _activityName.value = MainActivity::class.simpleName
-                _activityName.value = null
-            }, failure = {
-                _uiState.value = _uiState.value.copy(isLoading = false)
-                _registerError.value = it
-            })
-        }, failure = {
-            _uiState.value = _uiState.value.copy(isLoading = false)
-            _registerError.value = it
-        })
+        userRepository
+            .register(username, password)
+            .subscribeBy(
+                onComplete = {
+                    userRepository
+                        .login(username, password)
+                        .subscribeBy(
+                            onComplete = {
+                                _uiState.value = _uiState.value.copy(isLoading = false)
+                                _activityName.value = MainActivity::class.simpleName
+                                _activityName.value = null
+                            },
+                            onError = {
+                                manageError(
+                                    ErrorResponse(
+                                        Constants.EMPTY_VALUE,
+                                        R.string.error_server,
+                                    ),
+                                )
+                            },
+                        ).addTo(disposables)
+                },
+                onError = {
+                    manageError(
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_server,
+                        ),
+                    )
+                },
+            ).addTo(disposables)
     }
 
     fun registerDataChanged(username: String, password: String, confirmPassword: String) {
@@ -97,6 +117,13 @@ class RegisterViewModel @Inject constructor(
     fun closeDialogs() {
         _registerError.value = null
         _infoDialogMessageId.value = -1
+    }
+    //endregion
+
+    //region Private methods
+    private fun manageError(error: ErrorResponse) {
+        _uiState.value = _uiState.value.copy(isLoading = false)
+        _registerError.value = error
     }
     //endregion
 }

@@ -31,9 +31,6 @@ interface BookDao {
     @Query("SELECT * FROM Book")
     fun getAllBooks(): Flowable<List<Book>>
 
-    @Query("SELECT * FROM Book WHERE state == 'PENDING'")
-    fun getPendingBooks(): Flowable<List<Book>>
-
     @Query("SELECT * FROM Book WHERE state == 'READ'")
     fun getReadBooks(): Flowable<List<Book>>
 

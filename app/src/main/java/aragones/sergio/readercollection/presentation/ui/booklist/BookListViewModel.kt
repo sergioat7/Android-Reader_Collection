@@ -19,6 +19,7 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.ui.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
+import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -137,11 +138,16 @@ class BookListViewModel @Inject constructor(
     }
 
     fun setPriorityFor(books: List<Book>) {
-        booksRepository.setBooks(books, success = {
-            /* no-op due to database is being observed */
-        }, failure = {
-            showError(it)
-        })
+        booksRepository
+            .setBooks(books)
+            .subscribeBy(
+                onComplete = {
+                    /* no-op due to database is being observed */
+                },
+                onError = {
+                    showError()
+                },
+            ).addTo(disposables)
     }
 
     fun showSortingPickerState() {
@@ -200,6 +206,7 @@ class BookListViewModel @Inject constructor(
                 "readingDate" -> it.readingDate
                 "pageCount" -> it.pageCount
                 "rating" -> it.rating
+                "authors" -> it.authorsToString()
                 else -> it.id
             }
         }
@@ -219,7 +226,9 @@ class BookListViewModel @Inject constructor(
             }
     }
 
-    private fun showError(error: ErrorResponse = ErrorResponse("", R.string.error_database)) {
+    private fun showError(
+        error: ErrorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database),
+    ) {
         _uiState.value = BookListUiState.Success(
             isLoading = false,
             books = emptyList(),

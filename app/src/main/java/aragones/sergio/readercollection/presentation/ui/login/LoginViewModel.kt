@@ -20,6 +20,8 @@ import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormSta
 import aragones.sergio.readercollection.presentation.ui.register.RegisterActivity
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.kotlin.addTo
+import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,21 +56,22 @@ class LoginViewModel @Inject constructor(
     //region Public methods
     fun login(username: String, password: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        userRepository.login(username, password, success = {
-//            booksRepository.loadBooks(success = {
-
-            _uiState.value = _uiState.value.copy(isLoading = false)
-            _activityName.value = MainActivity::class.simpleName
-            _activityName.value = null
-//            }, failure = {
-//
-//                _loginLoading.value = false
-//                _loginError.value = it
-//            })
-        }, failure = {
-            _uiState.value = _uiState.value.copy(isLoading = false)
-            _loginError.value = it
-        })
+        userRepository
+            .login(username, password)
+            .subscribeBy(
+                onComplete = {
+                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    _activityName.value = MainActivity::class.simpleName
+                    _activityName.value = null
+                },
+                onError = {
+                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    _loginError.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.wrong_credentials,
+                    )
+                },
+            ).addTo(disposables)
     }
 
     fun loginDataChanged(username: String, password: String) {

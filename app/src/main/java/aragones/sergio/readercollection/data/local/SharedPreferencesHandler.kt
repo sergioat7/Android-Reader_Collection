@@ -15,7 +15,7 @@ import com.aragones.sergio.util.Preferences
 import com.squareup.moshi.Moshi
 import java.util.Locale
 
-object SharedPreferencesHandler {
+class SharedPreferencesHandler {
 
     //region Private properties
     private val appPreferences = ReaderCollectionApplication.context.getSharedPreferences(
@@ -117,9 +117,7 @@ object SharedPreferencesHandler {
         userData = UserData(userData.username, password, userData.isLoggedIn)
     }
 
-    fun removePassword() {
-//        this.userData = UserData(userData.username, "", false)
-    }
+    fun removePassword() {}
 
     fun logout() {
         userData = UserData(userData.username, userData.password, false)

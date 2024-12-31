@@ -31,7 +31,9 @@ class SearchViewModel @Inject constructor(
     private var query = ""
     private var page: Int = 1
     private val books = mutableListOf<Book>()
-    private lateinit var pendingBooks: MutableList<Book>
+    private lateinit var savedBooks: MutableList<Book>
+    private val pendingBooks: List<Book>
+        get() = savedBooks.filter { it.isPending() }
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
@@ -110,7 +112,7 @@ class SearchViewModel @Inject constructor(
     }
 
     fun addBook(bookId: String) {
-        if (pendingBooks.firstOrNull { it.id == bookId } != null) {
+        if (savedBooks.firstOrNull { it.id == bookId } != null) {
             _infoDialogMessageId.value = R.string.error_resource_found
             return
         }
@@ -118,12 +120,17 @@ class SearchViewModel @Inject constructor(
         val newBook = books.firstOrNull { it.id == bookId } ?: return
         newBook.state = BookState.PENDING
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository.createBook(newBook, success = {
-            pendingBooks.add(newBook)
-            _infoDialogMessageId.value = R.string.book_saved
-        }, failure = {
-            _infoDialogMessageId.value = it.errorKey
-        })
+        booksRepository
+            .createBook(newBook)
+            .subscribeBy(
+                onComplete = {
+                    savedBooks.add(newBook)
+                    _infoDialogMessageId.value = R.string.book_saved
+                },
+                onError = {
+                    _infoDialogMessageId.value = R.string.error_database
+                },
+            ).addTo(disposables)
     }
 
     fun closeDialogs() {
@@ -134,16 +141,16 @@ class SearchViewModel @Inject constructor(
     //region Private methods
     private fun fetchPendingBooks() {
         booksRepository
-            .getPendingBooks()
+            .getBooks()
             .subscribeBy(
                 onComplete = {
-                    pendingBooks = mutableListOf()
+                    savedBooks = mutableListOf()
                 },
                 onNext = {
-                    pendingBooks = it.toMutableList()
+                    savedBooks = it.toMutableList()
                 },
                 onError = {
-                    pendingBooks = mutableListOf()
+                    savedBooks = mutableListOf()
                 },
             ).addTo(disposables)
     }

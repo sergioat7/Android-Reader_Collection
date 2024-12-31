@@ -5,110 +5,31 @@
 
 package aragones.sergio.readercollection.data.remote
 
-import aragones.sergio.readercollection.data.remote.di.IoDispatcher
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
-import aragones.sergio.readercollection.data.remote.services.UserApiService
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 
-class UserRemoteDataSource @Inject constructor(
-    private val api: UserApiService,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
-) {
-
-    //region Private properties
-    private val externalScope = CoroutineScope(Job() + ioDispatcher)
-    //endregion
+class UserRemoteDataSource @Inject constructor() {
 
     //region Public methods
-    fun login(
-        username: String,
-        password: String,
-        success: (String) -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-//        externalScope.launch {
-//
-//            val body = LoginCredentials(username, password)
-//            try {
-//                when (val response = ApiManager.validateResponse(api.login(body))) {
-//                    is RequestResult.JsonSuccess -> success(response.body.token)
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-        success("-")
+    fun login(username: String, password: String): Single<String> = Single.create {
+        it.onSuccess("-")
     }
 
-    fun logout() {
-//        externalScope.launch {
-//
-//            try {
-//                api.logout()
-//            } catch (e: Exception) {
-//                println(e)
-//            }
-//        }
+    fun logout(): Completable = Completable.create {
+        it.onComplete()
     }
 
-    fun register(
-        username: String,
-        password: String,
-        success: () -> Unit,
-        failure: (ErrorResponse) -> Unit,
-    ) {
-//        externalScope.launch {
-//
-//            val body = LoginCredentials(username, password)
-//            try {
-//                when (val response = ApiManager.validateResponse(api.register(body))) {
-//                    is RequestResult.Success -> success()
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse("", R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse("", R.string.error_server))
-//            }
-//        }
-        success()
+    fun register(username: String, password: String): Completable = Completable.create {
+        it.onComplete()
     }
 
-    fun updatePassword(password: String, success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        externalScope.launch {
-//
-//            try {
-//                val body = NewPassword(password)
-//                when (val response = ApiManager.validateResponse(api.updatePassword(body))) {
-//                    is RequestResult.Success -> success()
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-        success()
+    fun updatePassword(password: String): Completable = Completable.create {
+        it.onComplete()
     }
 
-    fun deleteUser(success: () -> Unit, failure: (ErrorResponse) -> Unit) {
-//        externalScope.launch {
-//
-//            try {
-//                when (val response = ApiManager.validateResponse(api.deleteUser())) {
-//                    is RequestResult.Success -> success()
-//                    is RequestResult.Failure -> failure(response.error)
-//                    else -> failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//                }
-//            } catch (e: Exception) {
-//                failure(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-//            }
-//        }
-        success()
+    fun deleteUser(): Completable = Completable.create {
+        it.onComplete()
     }
     //endregion
 }
