@@ -3,10 +3,14 @@
  * Created by Sergio Aragonés on 17/5/2024
  */
 
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package aragones.sergio.readercollection.presentation.ui.components
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -176,15 +180,25 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ReadingBookItem(book: Book, onBookClick: (String) -> Unit, modifier: Modifier = Modifier) {
+fun ReadingBookItem(
+    book: Book,
+    onBookClick: (String) -> Unit,
+    onLongClick: (Book) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier
             .background(MaterialTheme.colors.background)
             .padding(horizontal = 24.dp)
             .fillMaxWidth()
-            .clickable {
-                onBookClick(book.id)
-            },
+            .combinedClickable(
+                onClick = {
+                    onBookClick(book.id)
+                },
+                onLongClick = {
+                    onLongClick(book)
+                },
+            ),
     ) {
         BookBasicInfo(title = book.title ?: "", subtitle = book.authorsToString())
         Spacer(Modifier.height(8.dp))
@@ -226,6 +240,7 @@ fun VerticalBookItem(
     onClick: () -> Unit,
     onSwitchToLeft: () -> Unit,
     onSwitchToRight: () -> Unit,
+    onLongClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -256,7 +271,10 @@ fun VerticalBookItem(
         Column(
             modifier = Modifier
                 .padding(horizontal = 12.dp)
-                .clickable(onClick = onClick),
+                .combinedClickable(
+                    onClick = onClick,
+                    onLongClick = onLongClick,
+                ),
         ) {
             ImageWithLoading(
                 imageUrl = book.thumbnail,
@@ -435,6 +453,7 @@ private fun ReadingBookItemPreview() {
                 0,
             ),
             onBookClick = {},
+            onLongClick = {},
             modifier = Modifier.height(250.dp),
         )
     }
@@ -473,6 +492,7 @@ private fun VerticalBookItemPreview() {
             onClick = {},
             onSwitchToLeft = {},
             onSwitchToRight = {},
+            onLongClick = {},
         )
     }
 }

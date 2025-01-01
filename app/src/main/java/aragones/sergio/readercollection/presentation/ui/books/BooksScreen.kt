@@ -25,9 +25,16 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -43,6 +50,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.ui.components.ModalBottomSheet
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.ReadingBookItem
 import aragones.sergio.readercollection.presentation.ui.components.SearchBar
@@ -51,6 +59,7 @@ import aragones.sergio.readercollection.presentation.ui.components.VerticalBookI
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
+import kotlinx.coroutines.launch
 
 @Composable
 fun BooksScreen(
@@ -63,6 +72,10 @@ fun BooksScreen(
     onSwitchToRight: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
+    var selectedBook by remember { mutableStateOf<Book?>(null) }
+
     val subtitle = when (state) {
         is BooksUiState.Empty -> pluralStringResource(
             R.plurals.title_books_count,
@@ -75,47 +88,62 @@ fun BooksScreen(
             state.books.size,
         )
     }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-    ) {
-        CustomToolbar(
-            title = stringResource(R.string.title_books),
-            modifier = Modifier.background(MaterialTheme.colors.background),
-            subtitle = subtitle,
-            actions = {
-                TopAppBarIcon(
-                    icon = R.drawable.ic_sort_books,
-                    onClick = onSortClick,
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        sheetContent = {
+            Column {}
+        },
+        background = {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+            ) {
+                CustomToolbar(
+                    title = stringResource(R.string.title_books),
+                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    subtitle = subtitle,
+                    actions = {
+                        TopAppBarIcon(
+                            icon = R.drawable.ic_sort_books,
+                            onClick = onSortClick,
+                        )
+                    },
                 )
-            },
-        )
-        Spacer(Modifier.height(16.dp))
-        SearchBar(
-            text = state.query,
-            onSearch = onSearch,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            showLeadingIcon = true,
-            requestFocusByDefault = false,
-        )
-        Spacer(Modifier.height(16.dp))
-        when (state) {
-            is BooksUiState.Empty -> NoResultsComponent()
-            is BooksUiState.Success -> BooksScreenContent(
-                books = state.books,
-                isSwitchingEnabled = state.query.isBlank(),
-                onBookClick = onBookClick,
-                onShowAll = onShowAll,
-                onSwitchToLeft = onSwitchToLeft,
-                onSwitchToRight = onSwitchToRight,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-        Spacer(Modifier.height(24.dp))
-    }
+                Spacer(Modifier.height(16.dp))
+                SearchBar(
+                    text = state.query,
+                    onSearch = onSearch,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    showLeadingIcon = true,
+                    requestFocusByDefault = false,
+                )
+                Spacer(Modifier.height(16.dp))
+                when (state) {
+                    is BooksUiState.Empty -> NoResultsComponent()
+                    is BooksUiState.Success -> BooksScreenContent(
+                        books = state.books,
+                        isSwitchingEnabled = state.query.isBlank(),
+                        onBookClick = onBookClick,
+                        onLongClickBook = { book ->
+                            selectedBook = book
+                            coroutineScope.launch {
+                                sheetState.show()
+                            }
+                        },
+                        onShowAll = onShowAll,
+                        onSwitchToLeft = onSwitchToLeft,
+                        onSwitchToRight = onSwitchToRight,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+                Spacer(Modifier.height(24.dp))
+            }
+        },
+    )
     if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
@@ -126,6 +154,7 @@ private fun BooksScreenContent(
     books: List<Book>,
     isSwitchingEnabled: Boolean,
     onBookClick: (String) -> Unit,
+    onLongClickBook: (Book) -> Unit,
     onShowAll: (String) -> Unit,
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
@@ -140,6 +169,7 @@ private fun BooksScreenContent(
             ReadingBooksSection(
                 books = readingBooks,
                 onBookClick = onBookClick,
+                onLongClick = onLongClickBook,
                 modifier = Modifier
                     .height(275.dp)
                     .fillMaxWidth(),
@@ -157,6 +187,7 @@ private fun BooksScreenContent(
                 onBookClick = onBookClick,
                 onSwitchToLeft = onSwitchToLeft,
                 onSwitchToRight = onSwitchToRight,
+                onLongClickBook = onLongClickBook,
             )
         }
         item {
@@ -172,6 +203,7 @@ private fun BooksScreenContent(
                 showDivider = false,
                 onSwitchToLeft = {},
                 onSwitchToRight = {},
+                onLongClickBook = onLongClickBook,
             )
         }
     }
@@ -181,6 +213,7 @@ private fun BooksScreenContent(
 private fun ReadingBooksSection(
     books: List<Book>,
     onBookClick: (String) -> Unit,
+    onLongClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -188,6 +221,7 @@ private fun ReadingBooksSection(
             ReadingBooksContentSection(
                 books = books,
                 onBookClick = onBookClick,
+                onLongClick = onLongClick,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f),
@@ -218,6 +252,7 @@ private fun ReadingBooksSection(
 private fun ReadingBooksContentSection(
     books: List<Book>,
     onBookClick: (String) -> Unit,
+    onLongClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -226,6 +261,7 @@ private fun ReadingBooksContentSection(
             ReadingBookItem(
                 book = book,
                 onBookClick = onBookClick,
+                onLongClick = onLongClick,
                 modifier = Modifier.width(screenWidthDp.dp),
             )
         }
@@ -242,6 +278,7 @@ private fun BooksSection(
     onBookClick: (String) -> Unit,
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
+    onLongClickBook: (Book) -> Unit,
     modifier: Modifier = Modifier,
     showDivider: Boolean = true,
 ) {
@@ -267,6 +304,7 @@ private fun BooksSection(
                         onSwitchToRight = {
                             onSwitchToRight(index)
                         },
+                        onLongClick = { onLongClickBook(book) },
                     )
                 }
                 if (showAll) {
