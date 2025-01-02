@@ -7,6 +7,8 @@ package aragones.sergio.readercollection.presentation.ui.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,7 +29,10 @@ import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
+import androidx.compose.material.ChipDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FilterChip
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetLayout
@@ -36,6 +41,8 @@ import androidx.compose.material.ModalBottomSheetValue.Expanded
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -46,6 +53,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -53,10 +61,12 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -271,6 +281,52 @@ fun ModalBottomSheet(
     )
 }
 
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun CustomFilterChip(
+    title: String,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    border: BorderStroke? = null,
+    @DrawableRes selectedIcon: Int? = null,
+    selectedImage: ImageVector? = null,
+) {
+    FilterChip(
+        selected = selected,
+        onClick = onClick,
+        modifier = modifier,
+        border = border,
+        selectedIcon = selectedIcon?.let {
+            {
+                Icon(
+                    painter = painterResource(id = it),
+                    contentDescription = null,
+                )
+            }
+        } ?: selectedImage?.let {
+            {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                )
+            }
+        },
+        content = {
+            Text(
+                text = title,
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.h3.copy(
+                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                ),
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+        },
+    )
+}
+
 @PreviewLightDarkWithBackground
 @Composable
 private fun NoResultsComponentPreview() {
@@ -323,6 +379,36 @@ private fun ModalBottomSheetPreview() {
                 Box(Modifier.fillMaxSize())
             },
         )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun FilterChipPreview() {
+    ReaderCollectionTheme {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+        ) {
+            CustomFilterChip(
+                title = "Value 1",
+                selected = true,
+                onClick = {},
+                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                selectedImage = Icons.Default.Done,
+            )
+            CustomFilterChip(
+                title = "Value 2",
+                selected = false,
+                onClick = {},
+            )
+            CustomFilterChip(
+                title = "Value 3",
+                selected = true,
+                onClick = {},
+                selectedIcon = R.drawable.ic_arrow_back_blue,
+            )
+        }
     }
 }
 
