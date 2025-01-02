@@ -78,6 +78,7 @@ fun BooksScreen(
     onShowAll: (String) -> Unit,
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
+    onBookStateChange: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -106,6 +107,7 @@ fun BooksScreen(
                     onStateClick = { newState ->
                         if (newState != book.state) {
                             val modifiedBook = book.copy(state = newState)
+                            onBookStateChange(modifiedBook)
                             selectedBook = modifiedBook
                         }
                     },
@@ -462,6 +464,7 @@ fun BooksScreenPreview(
             onShowAll = {},
             onSwitchToLeft = {},
             onSwitchToRight = {},
+            onBookStateChange = {},
         )
     }
 }

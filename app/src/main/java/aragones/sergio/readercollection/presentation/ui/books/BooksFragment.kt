@@ -86,6 +86,7 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>() {
                     onSwitchToRight = { fromIndex ->
                         viewModel.switchBooksPriority(fromIndex, fromIndex + 1)
                     },
+                    onBookStateChange = viewModel::setBook,
                 )
 
                 SortingPickerAlertDialog(
