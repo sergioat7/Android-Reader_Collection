@@ -17,6 +17,7 @@ private val LightColorScheme = lightColors(
     primaryVariant = LightEbonyClay,
     secondary = White,
     background = White,
+    surface = White,
     error = Color.Red,
 )
 
@@ -25,6 +26,7 @@ private val DarkColorScheme = darkColors(
     primaryVariant = LightWhite,
     secondary = EbonyClay,
     background = EbonyClay,
+    surface = EbonyClay,
     error = Color.Red,
 )
 

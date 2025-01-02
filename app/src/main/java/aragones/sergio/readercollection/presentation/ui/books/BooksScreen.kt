@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.ui.books
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -25,15 +27,25 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -42,15 +54,20 @@ import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
+import aragones.sergio.readercollection.presentation.ui.components.CustomFilterChip
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
+import aragones.sergio.readercollection.presentation.ui.components.ModalBottomSheet
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.ReadingBookItem
 import aragones.sergio.readercollection.presentation.ui.components.SearchBar
 import aragones.sergio.readercollection.presentation.ui.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.ui.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.utils.Constants as MyConstants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
+import kotlinx.coroutines.launch
 
 @Composable
 fun BooksScreen(
@@ -61,8 +78,13 @@ fun BooksScreen(
     onShowAll: (String) -> Unit,
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
+    onBookStateChange: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val coroutineScope = rememberCoroutineScope()
+    var selectedBook by remember { mutableStateOf<Book?>(null) }
+
     val subtitle = when (state) {
         is BooksUiState.Empty -> pluralStringResource(
             R.plurals.title_books_count,
@@ -75,47 +97,79 @@ fun BooksScreen(
             state.books.size,
         )
     }
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-    ) {
-        CustomToolbar(
-            title = stringResource(R.string.title_books),
-            modifier = Modifier.background(MaterialTheme.colors.background),
-            subtitle = subtitle,
-            actions = {
-                TopAppBarIcon(
-                    icon = R.drawable.ic_sort_books,
-                    onClick = onSortClick,
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        sheetContent = {
+            selectedBook?.let { book ->
+                BottomSheetContent(
+                    book = book,
+                    onStateClick = { newState ->
+                        if (newState != book.state) {
+                            val modifiedBook = book.copy(state = newState)
+                            onBookStateChange(modifiedBook)
+                            selectedBook = modifiedBook
+                        }
+                    },
+                    onDone = {
+                        coroutineScope.launch {
+                            sheetState.hide()
+                            selectedBook = null
+                        }
+                    },
                 )
-            },
-        )
-        Spacer(Modifier.height(16.dp))
-        SearchBar(
-            text = state.query,
-            onSearch = onSearch,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            showLeadingIcon = true,
-            requestFocusByDefault = false,
-        )
-        Spacer(Modifier.height(16.dp))
-        when (state) {
-            is BooksUiState.Empty -> NoResultsComponent()
-            is BooksUiState.Success -> BooksScreenContent(
-                books = state.books,
-                isSwitchingEnabled = state.query.isBlank(),
-                onBookClick = onBookClick,
-                onShowAll = onShowAll,
-                onSwitchToLeft = onSwitchToLeft,
-                onSwitchToRight = onSwitchToRight,
-                modifier = Modifier.fillMaxSize(),
-            )
-        }
-        Spacer(Modifier.height(24.dp))
-    }
+            }
+        },
+        background = {
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+            ) {
+                CustomToolbar(
+                    title = stringResource(R.string.title_books),
+                    modifier = Modifier.background(MaterialTheme.colors.background),
+                    subtitle = subtitle,
+                    actions = {
+                        TopAppBarIcon(
+                            icon = R.drawable.ic_sort_books,
+                            onClick = onSortClick,
+                        )
+                    },
+                )
+                Spacer(Modifier.height(16.dp))
+                SearchBar(
+                    text = state.query,
+                    onSearch = onSearch,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    showLeadingIcon = true,
+                    requestFocusByDefault = false,
+                )
+                Spacer(Modifier.height(16.dp))
+                when (state) {
+                    is BooksUiState.Empty -> NoResultsComponent()
+                    is BooksUiState.Success -> BooksScreenContent(
+                        books = state.books,
+                        isSwitchingEnabled = state.query.isBlank(),
+                        onBookClick = onBookClick,
+                        onLongClickBook = { book ->
+                            selectedBook = book
+                            coroutineScope.launch {
+                                sheetState.show()
+                            }
+                        },
+                        onShowAll = onShowAll,
+                        onSwitchToLeft = onSwitchToLeft,
+                        onSwitchToRight = onSwitchToRight,
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
+                Spacer(Modifier.height(24.dp))
+            }
+        },
+    )
     if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
@@ -126,6 +180,7 @@ private fun BooksScreenContent(
     books: List<Book>,
     isSwitchingEnabled: Boolean,
     onBookClick: (String) -> Unit,
+    onLongClickBook: (Book) -> Unit,
     onShowAll: (String) -> Unit,
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
@@ -140,6 +195,7 @@ private fun BooksScreenContent(
             ReadingBooksSection(
                 books = readingBooks,
                 onBookClick = onBookClick,
+                onLongClick = onLongClickBook,
                 modifier = Modifier
                     .height(275.dp)
                     .fillMaxWidth(),
@@ -157,6 +213,7 @@ private fun BooksScreenContent(
                 onBookClick = onBookClick,
                 onSwitchToLeft = onSwitchToLeft,
                 onSwitchToRight = onSwitchToRight,
+                onLongClickBook = onLongClickBook,
             )
         }
         item {
@@ -172,6 +229,7 @@ private fun BooksScreenContent(
                 showDivider = false,
                 onSwitchToLeft = {},
                 onSwitchToRight = {},
+                onLongClickBook = onLongClickBook,
             )
         }
     }
@@ -181,6 +239,7 @@ private fun BooksScreenContent(
 private fun ReadingBooksSection(
     books: List<Book>,
     onBookClick: (String) -> Unit,
+    onLongClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier) {
@@ -188,6 +247,7 @@ private fun ReadingBooksSection(
             ReadingBooksContentSection(
                 books = books,
                 onBookClick = onBookClick,
+                onLongClick = onLongClick,
                 modifier = Modifier
                     .fillMaxSize()
                     .weight(1f),
@@ -218,6 +278,7 @@ private fun ReadingBooksSection(
 private fun ReadingBooksContentSection(
     books: List<Book>,
     onBookClick: (String) -> Unit,
+    onLongClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val screenWidthDp = LocalConfiguration.current.screenWidthDp
@@ -226,6 +287,7 @@ private fun ReadingBooksContentSection(
             ReadingBookItem(
                 book = book,
                 onBookClick = onBookClick,
+                onLongClick = onLongClick,
                 modifier = Modifier.width(screenWidthDp.dp),
             )
         }
@@ -242,6 +304,7 @@ private fun BooksSection(
     onBookClick: (String) -> Unit,
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
+    onLongClickBook: (Book) -> Unit,
     modifier: Modifier = Modifier,
     showDivider: Boolean = true,
 ) {
@@ -267,6 +330,7 @@ private fun BooksSection(
                         onSwitchToRight = {
                             onSwitchToRight(index)
                         },
+                        onLongClick = { onLongClickBook(book) },
                     )
                 }
                 if (showAll) {
@@ -344,6 +408,48 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDone: () -> Unit) {
+    Text(
+        text = book.title ?: "",
+        style = MaterialTheme.typography.h1,
+        color = MaterialTheme.colors.primary,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+    )
+    Spacer(Modifier.height(8.dp))
+    Divider(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colors.primaryVariant,
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        for (state in MyConstants.STATES) {
+            CustomFilterChip(
+                title = state.name,
+                selected = state.id == book.state,
+                onClick = { onStateClick(state.id) },
+                modifier = Modifier.widthIn(min = 100.dp),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colors.primaryVariant,
+                ).takeIf { state.id == book.state },
+                selectedImage = Icons.Default.Done,
+            )
+        }
+    }
+    MainActionButton(
+        text = stringResource(id = R.string.accept),
+        modifier = Modifier.fillMaxWidth(),
+        enabled = true,
+        onClick = onDone,
+    )
+}
+
 @PreviewLightDark
 @Composable
 fun BooksScreenPreview(
@@ -358,6 +464,7 @@ fun BooksScreenPreview(
             onShowAll = {},
             onSwitchToLeft = {},
             onSwitchToRight = {},
+            onBookStateChange = {},
         )
     }
 }

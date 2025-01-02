@@ -18,10 +18,12 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.ui.components.UiSortingPickerState
+import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -129,6 +131,40 @@ class BooksViewModel @Inject constructor(
         setPriorityFor(books)
     }
 
+    fun setBook(book: Book) {
+        _state.value = when (val currentState = _state.value) {
+            is BooksUiState.Empty -> currentState.copy(isLoading = true)
+            is BooksUiState.Success -> currentState.copy(isLoading = true)
+        }
+        var selectedBook = book
+        if (book.readingDate == null && book.state == BookState.READ) {
+            selectedBook = selectedBook.copy(readingDate = Date())
+        }
+        if (book.priority == -1 && book.state == BookState.PENDING) {
+            val pendingBooks = when (val currentState = _state.value) {
+                is BooksUiState.Empty -> emptyList()
+                is BooksUiState.Success -> currentState.books
+            }
+            selectedBook = selectedBook.copy(
+                priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1,
+            )
+        }
+        booksRepository
+            .setBook(selectedBook)
+            .subscribeBy(
+                onSuccess = {
+                    /* no-op due to database is being observed */
+                },
+                onError = {
+                    _state.value = when (val currentState = _state.value) {
+                        is BooksUiState.Empty -> currentState.copy(isLoading = false)
+                        is BooksUiState.Success -> currentState.copy(isLoading = false)
+                    }
+                    _booksError.value = ApiManager.handleError(it)
+                },
+            ).addTo(disposables)
+    }
+
     fun setTutorialAsShown() {
         userRepository.setHasBooksTutorialBeenShown(true)
         tutorialShown = true
@@ -144,7 +180,7 @@ class BooksViewModel @Inject constructor(
             .setBooks(books)
             .subscribeBy(
                 onComplete = {
-                    searchBooks(_state.value.query)
+                    /* no-op due to database is being observed */
                 },
                 onError = {
                     _state.value = when (val currentState = _state.value) {
