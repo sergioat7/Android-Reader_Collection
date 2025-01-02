@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.ui.books
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -28,6 +30,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,6 +45,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -49,7 +54,9 @@ import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
+import aragones.sergio.readercollection.presentation.ui.components.CustomFilterChip
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.ModalBottomSheet
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.ReadingBookItem
@@ -57,6 +64,7 @@ import aragones.sergio.readercollection.presentation.ui.components.SearchBar
 import aragones.sergio.readercollection.presentation.ui.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.ui.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.utils.Constants as MyConstants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
@@ -92,7 +100,23 @@ fun BooksScreen(
     ModalBottomSheet(
         sheetState = sheetState,
         sheetContent = {
-            Column {}
+            selectedBook?.let { book ->
+                BottomSheetContent(
+                    book = book,
+                    onStateClick = { newState ->
+                        if (newState != book.state) {
+                            val modifiedBook = book.copy(state = newState)
+                            selectedBook = modifiedBook
+                        }
+                    },
+                    onDone = {
+                        coroutineScope.launch {
+                            sheetState.hide()
+                            selectedBook = null
+                        }
+                    },
+                )
+            }
         },
         background = {
             Column(
@@ -380,6 +404,48 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
             maxLines = 1,
         )
     }
+}
+
+@Composable
+private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDone: () -> Unit) {
+    Text(
+        text = book.title ?: "",
+        style = MaterialTheme.typography.h1,
+        color = MaterialTheme.colors.primary,
+        textAlign = TextAlign.Center,
+        overflow = TextOverflow.Ellipsis,
+    )
+    Spacer(Modifier.height(8.dp))
+    Divider(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colors.primaryVariant,
+    )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 24.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        for (state in MyConstants.STATES) {
+            CustomFilterChip(
+                title = state.name,
+                selected = state.id == book.state,
+                onClick = { onStateClick(state.id) },
+                modifier = Modifier.widthIn(min = 100.dp),
+                border = BorderStroke(
+                    1.dp,
+                    MaterialTheme.colors.primaryVariant,
+                ).takeIf { state.id == book.state },
+                selectedImage = Icons.Default.Done,
+            )
+        }
+    }
+    MainActionButton(
+        text = stringResource(id = R.string.accept),
+        modifier = Modifier.fillMaxWidth(),
+        enabled = true,
+        onClick = onDone,
+    )
 }
 
 @PreviewLightDark
