@@ -66,6 +66,7 @@ fun SearchScreen(
     onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
     onRefresh: () -> Unit,
+    onBack: () -> Unit,
 ) {
     val listState = rememberLazyListState()
     val showTopButton by remember {
@@ -102,6 +103,7 @@ fun SearchScreen(
             onSearch = onSearch,
             modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = if (showTopButton) 4.dp else 0.dp,
+            onBack = onBack,
         )
 
         val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
@@ -300,6 +302,7 @@ private fun SearchScreenPreview(
             onSwipe = {},
             onLoadMoreClick = {},
             onRefresh = {},
+            onBack = {},
         )
     }
 }

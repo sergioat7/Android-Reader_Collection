@@ -88,6 +88,8 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>() {
                     },
                     onBookStateChange = viewModel::setBook,
                     onAddBook = {
+                        val action = BooksFragmentDirections.actionBooksFragmentToSearchFragment()
+                        findNavController().navigate(action)
                     },
                 )
 
