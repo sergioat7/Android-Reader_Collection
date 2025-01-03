@@ -73,7 +73,6 @@ class MainActivity : BaseActivity() {
         val bottomNavigationView = binding.navView
         val navGraphIds = listOf(
             R.navigation.nav_graph_books,
-            R.navigation.nav_graph_search,
             R.navigation.nav_graph_stats,
             R.navigation.nav_graph_settings,
         )
