@@ -9,6 +9,7 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,6 +57,7 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.ui.components.CustomFilterChip
 import aragones.sergio.readercollection.presentation.ui.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.ui.components.ListButton
 import aragones.sergio.readercollection.presentation.ui.components.MainActionButton
 import aragones.sergio.readercollection.presentation.ui.components.ModalBottomSheet
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
@@ -79,6 +81,7 @@ fun BooksScreen(
     onSwitchToLeft: (Int) -> Unit,
     onSwitchToRight: (Int) -> Unit,
     onBookStateChange: (Book) -> Unit,
+    onAddBook: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
@@ -108,22 +111,32 @@ fun BooksScreen(
             }
         },
         background = {
-            BooksScreenContent(
-                state = state,
-                onSortClick = onSortClick,
-                onSearch = onSearch,
-                onBookClick = onBookClick,
-                onLongClickBook = { book ->
-                    selectedBook = book
-                    coroutineScope.launch {
-                        sheetState.show()
-                    }
-                },
-                onShowAll = onShowAll,
-                onSwitchToLeft = onSwitchToLeft,
-                onSwitchToRight = onSwitchToRight,
-                modifier = modifier,
-            )
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colors.background),
+            ) {
+                BooksScreenContent(
+                    state = state,
+                    onSortClick = onSortClick,
+                    onSearch = onSearch,
+                    onBookClick = onBookClick,
+                    onLongClickBook = { book ->
+                        selectedBook = book
+                        coroutineScope.launch {
+                            sheetState.show()
+                        }
+                    },
+                    onShowAll = onShowAll,
+                    onSwitchToLeft = onSwitchToLeft,
+                    onSwitchToRight = onSwitchToRight,
+                )
+                ListButton(
+                    image = R.drawable.ic_save_book,
+                    onClick = onAddBook,
+                    modifier = Modifier.align(Alignment.BottomEnd),
+                )
+            }
         },
     )
     if (state.isLoading) {
@@ -156,11 +169,7 @@ private fun BooksScreenContent(
         )
     }
 
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background),
-    ) {
+    Column(modifier = modifier) {
         CustomToolbar(
             title = stringResource(R.string.title_books),
             modifier = Modifier.background(MaterialTheme.colors.background),
@@ -490,6 +499,7 @@ fun BooksScreenPreview(
             onSwitchToLeft = {},
             onSwitchToRight = {},
             onBookStateChange = {},
+            onAddBook = {},
         )
     }
 }
