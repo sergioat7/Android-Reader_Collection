@@ -113,7 +113,10 @@ fun SearchScreen(
         ) {
             when (state) {
                 is SearchUiState.Empty -> {
-                    NoResultsComponent(text = stringResource(R.string.no_search_yet_text))
+                    NoResultsComponent(
+                        text = stringResource(R.string.no_search_yet_text),
+                        image = R.drawable.image_no_search,
+                    )
                 }
                 is SearchUiState.Success -> {
                     if (state.books.isEmpty() && !state.isLoading) {
