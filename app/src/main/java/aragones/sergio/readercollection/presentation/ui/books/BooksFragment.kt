@@ -87,6 +87,10 @@ class BooksFragment : BindingFragment<FragmentBooksBinding>() {
                         viewModel.switchBooksPriority(fromIndex, fromIndex + 1)
                     },
                     onBookStateChange = viewModel::setBook,
+                    onAddBook = {
+                        val action = BooksFragmentDirections.actionBooksFragmentToSearchFragment()
+                        findNavController().navigate(action)
+                    },
                 )
 
                 SortingPickerAlertDialog(

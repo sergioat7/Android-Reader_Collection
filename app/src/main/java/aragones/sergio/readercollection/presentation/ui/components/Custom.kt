@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -74,7 +75,10 @@ import aragones.sergio.readercollection.presentation.ui.theme.lightRoseBud
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
 @Composable
-fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_text)) {
+fun NoResultsComponent(
+    text: String = stringResource(id = R.string.no_results_text),
+    @DrawableRes image: Int = R.drawable.image_no_results,
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,11 +86,12 @@ fun NoResultsComponent(text: String = stringResource(id = R.string.no_results_te
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(id = R.drawable.image_no_results),
+            painter = painterResource(id = image),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.5f),
+            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
         )
         Text(
             text = text,
