@@ -1,1 +1,6 @@
-- Solucionados algunos bugs menores
+- La pantalla de búsqueda para añadir un nuevo libro ahora es accesible desde un botón en la pantalla principal
+- Se ha añadido una opción para ordenar los libros por autor (alfabéticamente)
+- Al mantener pulsado sobre un libro, se abre una hoja inferior para cambiar su estado más cómodamente
+- Se han solucionado algunos bugs menores
+- Se han hecho mejoras visuales
+- Se ha añadido compatibilidad con Android 15
