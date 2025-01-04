@@ -167,11 +167,19 @@ class BookDetailFragment :
     override fun onResume() {
         super.onResume()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
+        activity
+            ?.findViewById<View>(
+                R.id.top_inset,
+            )?.setBackgroundColor(resources.getColor(R.color.colorPrimary, null))
     }
 
     override fun onPause() {
         super.onPause()
         activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
+        activity
+            ?.findViewById<View>(
+                R.id.top_inset,
+            )?.setBackgroundColor(resources.getColor(R.color.colorSecondary, null))
     }
 
     override fun onDestroy() {

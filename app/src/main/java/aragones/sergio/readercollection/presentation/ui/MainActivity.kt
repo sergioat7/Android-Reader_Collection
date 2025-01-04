@@ -5,7 +5,9 @@
 
 package aragones.sergio.readercollection.presentation.ui
 
+import android.os.Build
 import android.os.Bundle
+import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
 import androidx.navigation.NavController
@@ -32,6 +34,10 @@ class MainActivity : BaseActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         setContentView(binding.root)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            binding.topInset.visibility = View.VISIBLE
+        }
 
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
