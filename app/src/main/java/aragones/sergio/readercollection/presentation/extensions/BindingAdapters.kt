@@ -22,7 +22,7 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar
 
 @BindingAdapter(
     value = ["src", "center", "placeholder", "radius", "loadingColor"],
-    requireAll = false
+    requireAll = false,
 )
 fun setImageUri(
     imageViewWithLoading: ImageViewWithLoading,
@@ -30,9 +30,8 @@ fun setImageUri(
     center: Boolean?,
     placeholder: Drawable?,
     radius: Float?,
-    loadingColor: Int?
+    loadingColor: Int?,
 ) {
-
     loadingColor?.let {
         imageViewWithLoading.binding.progressBarImageLoading.indeterminateTintList =
             ColorStateList.valueOf(it)
@@ -49,22 +48,24 @@ fun setImageUri(
             placeholder?.let {
                 error(it)
             }
-        }
-        .into(imageViewWithLoading.binding.imageView, object : Callback {
+        }.into(
+            imageViewWithLoading.binding.imageView,
+            object : Callback {
 
-            override fun onSuccess() {
-                if (radius != null && radius >= 0) {
-                    imageViewWithLoading.binding.imageView.apply {
-                        this.setImageDrawable(this.getRoundImageView(radius))
+                override fun onSuccess() {
+                    if (radius != null && radius >= 0) {
+                        imageViewWithLoading.binding.imageView.apply {
+                            this.setImageDrawable(this.getRoundImageView(radius))
+                        }
                     }
+                    imageViewWithLoading.binding.progressBarImageLoading.visibility = View.GONE
                 }
-                imageViewWithLoading.binding.progressBarImageLoading.visibility = View.GONE
-            }
 
-            override fun onError(e: Exception) {
-                imageViewWithLoading.binding.progressBarImageLoading.visibility = View.GONE
-            }
-        })
+                override fun onError(e: Exception) {
+                    imageViewWithLoading.binding.progressBarImageLoading.visibility = View.GONE
+                }
+            },
+        )
 }
 
 @BindingAdapter("rating")
@@ -95,11 +96,21 @@ fun setClickable(textInputLayout: TextInputLayout, clickable: Boolean?) {
 @BindingAdapter("customInputType")
 fun setInputType(view: TextInputEditText, inputType: CustomInputType?) {
     view.inputType = when (inputType) {
-        CustomInputType.TEXT -> InputType.TYPE_CLASS_TEXT
-        CustomInputType.MULTI_LINE_TEXT -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
-        CustomInputType.NUMBER -> InputType.TYPE_CLASS_NUMBER
-        CustomInputType.PASSWORD -> InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-        else -> InputType.TYPE_NULL
+        CustomInputType.TEXT -> {
+            InputType.TYPE_CLASS_TEXT
+        }
+        CustomInputType.MULTI_LINE_TEXT -> {
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_FLAG_MULTI_LINE
+        }
+        CustomInputType.NUMBER -> {
+            InputType.TYPE_CLASS_NUMBER
+        }
+        CustomInputType.PASSWORD -> {
+            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+        }
+        else -> {
+            InputType.TYPE_NULL
+        }
     }
 }
 

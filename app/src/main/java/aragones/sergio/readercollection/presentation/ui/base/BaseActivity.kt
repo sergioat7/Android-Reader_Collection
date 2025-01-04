@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 open class BaseActivity : AppCompatActivity() {
 
     protected fun <T> launchActivity(activity: Class<T>, clearStack: Boolean = false) {
-
         val intent = Intent(this, activity)
         if (clearStack) {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

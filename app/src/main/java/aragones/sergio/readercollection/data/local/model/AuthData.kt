@@ -9,5 +9,5 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AuthData(
-    var token: String
+    var token: String,
 )

@@ -15,13 +15,12 @@ class ListConverter {
     private val moshiAdapter = Moshi.Builder().build().adapter<List<String?>?>(
         Types.newParameterizedType(
             List::class.java,
-            String::class.java
-        )
+            String::class.java,
+        ),
     )
 
     @TypeConverter
     fun stringToStringList(data: String?): List<String?>? {
-
         if (data == null) {
             return Collections.emptyList()
         }
@@ -29,7 +28,5 @@ class ListConverter {
     }
 
     @TypeConverter
-    fun stringListToString(elements: List<String?>?): String? {
-        return moshiAdapter.toJson(elements)
-    }
+    fun stringListToString(elements: List<String?>?): String? = moshiAdapter.toJson(elements)
 }

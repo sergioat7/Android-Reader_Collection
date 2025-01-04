@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 28/3/2024
+ * Created by Sergio Aragonés on 19/12/2024
  */
 
-package aragones.sergio.readercollection.presentation.ui.components
+package aragones.sergio.readercollection.presentation.ui.components.dialogs
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertTextContains
@@ -24,7 +24,6 @@ class InformationAlertDialogTest {
 
     @Test
     fun whenSendTrueToComponent_thenShowDialog() {
-
         composeTestRule.setContent {
             InformationAlertDialog(show = true, text = "") {}
         }
@@ -34,7 +33,6 @@ class InformationAlertDialogTest {
 
     @Test
     fun whenSendFalseToComponent_thenDoNotShowDialog() {
-
         composeTestRule.setContent {
             InformationAlertDialog(show = false, text = "") {}
         }
@@ -44,7 +42,6 @@ class InformationAlertDialogTest {
 
     @Test
     fun whenShowDialog_thenShowTextAndButton() {
-
         val text = "Information text"
         composeTestRule.setContent {
             InformationAlertDialog(show = true, text = text) {}
@@ -52,13 +49,13 @@ class InformationAlertDialogTest {
 
         val acceptText = composeTestRule.activity.getString(R.string.accept)
         composeTestRule.onNodeWithText(text).assertExists()
-        composeTestRule.onNodeWithTag("textButtonAlertDialog")
+        composeTestRule
+            .onNodeWithTag("textButtonAlertDialog")
             .assertTextContains(acceptText, ignoreCase = true)
     }
 
     @Test
     fun whenAcceptDialog_thenCloseDialog() {
-
         var isClosed = false
         composeTestRule.setContent {
             InformationAlertDialog(show = true, text = "") {

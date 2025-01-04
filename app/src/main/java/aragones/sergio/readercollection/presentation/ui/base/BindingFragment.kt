@@ -62,15 +62,15 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
-
         val bindingType =
-            (this.javaClass.genericSuperclass as ParameterizedType).actualTypeArguments
+            (this.javaClass.genericSuperclass as ParameterizedType)
+                .actualTypeArguments
                 .firstOrNull {
                     (it as? Class<*>)?.let { clazz ->
                         ViewDataBinding::class.java.isAssignableFrom(
-                            clazz
+                            clazz,
                         )
                     } == true
                 }
@@ -79,15 +79,15 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
             "inflate",
             LayoutInflater::class.java,
             ViewGroup::class.java,
-            Boolean::class.javaPrimitiveType
+            Boolean::class.javaPrimitiveType,
         )
         @Suppress("UNCHECKED_CAST")
         mBinding = (inflateMethod.invoke(null, inflater, container, false) as Binding).also {
             it.root.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
-                    R.color.colorSecondary
-                )
+                    R.color.colorSecondary,
+                ),
             )
         }
         return mBinding?.root
@@ -97,32 +97,32 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         activity?.apply {
-
             when (statusBarStyle) {
                 StatusBarStyle.PRIMARY -> {
                     window.setStatusBarStyle(
                         ContextCompat.getColor(this, R.color.colorSecondary),
-                        !isDarkMode()
+                        !isDarkMode(),
                     )
                 }
-
                 StatusBarStyle.SECONDARY -> {
                     window.setStatusBarStyle(
                         ContextCompat.getColor(this, R.color.colorPrimary),
-                        isDarkMode()
+                        isDarkMode(),
                     )
                 }
             }
 
-            addMenuProvider(object : MenuProvider {
-                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuProviderInterface?.onCreateMenu(menu, menuInflater)
-                }
+            addMenuProvider(
+                object : MenuProvider {
+                    override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                        menuProviderInterface?.onCreateMenu(menu, menuInflater)
+                    }
 
-                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                    return menuProviderInterface?.onMenuItemSelected(menuItem) ?: false
-                }
-            }, viewLifecycleOwner)
+                    override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                        menuProviderInterface?.onMenuItemSelected(menuItem) ?: false
+                },
+                viewLifecycleOwner,
+            )
         }
     }
 
@@ -149,7 +149,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
 
     //region Public methods
     fun manageError(errorResponse: ErrorResponse, goBack: MutableLiveData<Boolean>? = null) {
-
         val error = StringBuilder()
         if (errorResponse.error.isNotEmpty()) {
             error.append(errorResponse.error)
@@ -160,7 +159,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     }
 
     fun <T> launchActivity(activity: Class<T>, clearStack: Boolean = false) {
-
         val intent = Intent(context, activity)
         if (clearStack) {
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -171,9 +169,8 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     fun <T> launchActivityWithExtras(
         activity: Class<T>,
         params: Map<String, Serializable>,
-        clearStack: Boolean = false
+        clearStack: Boolean = false,
     ) {
-
         val intent = Intent(context, activity)
         for (param in params) {
             intent.putExtra(param.key, param.value)
@@ -185,7 +182,6 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     }
 
     fun showLoading() {
-
         val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
         val prev = activity?.supportFragmentManager?.findFragmentByTag("loadingDialog")
         if (prev != null) {
@@ -200,20 +196,17 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     }
 
     fun hideLoading() {
-
         loadingFragment?.dismiss()
         loadingFragment = null
     }
 
     fun openSyncPopup() {
-
         showPopupConfirmationDialog(R.string.sync_confirmation, acceptHandler = {
             showSyncPopup()
         })
     }
 
     fun setupSearchView(colorId: Int, query: String) {
-
         val color = ContextCompat.getColor(requireActivity(), colorId)
 
         searchView?.let { searchView ->
@@ -228,22 +221,26 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                 searchView.setQuery(query, false)
             }
 
-            searchView.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_mag_icon)?.imageTintList =
-                ColorStateList.valueOf(color)
+            searchView
+                .findViewById<AppCompatImageView>(
+                    androidx.appcompat.R.id.search_mag_icon,
+                )?.imageTintList = ColorStateList.valueOf(color)
 
-            searchView.findViewById<View>(androidx.appcompat.R.id.search_plate)
+            searchView
+                .findViewById<View>(androidx.appcompat.R.id.search_plate)
                 ?.let { searchPlate ->
 
                     val searchText =
                         searchPlate.findViewById<TextView>(androidx.appcompat.R.id.search_src_text)
                     if (searchText != null) {
-
                         searchText.setTextColor(color)
                         searchText.setHintTextColor(color)
                     }
 
-                    searchPlate.findViewById<AppCompatImageView>(androidx.appcompat.R.id.search_close_btn)?.imageTintList =
-                        ColorStateList.valueOf(color)
+                    searchPlate
+                        .findViewById<AppCompatImageView>(
+                            androidx.appcompat.R.id.search_close_btn,
+                        )?.imageTintList = ColorStateList.valueOf(color)
                 }
         }
     }
@@ -253,29 +250,24 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     private fun showPopupConfirmationDialog(
         messageId: Int,
         acceptHandler: () -> Unit,
-        cancelHandler: (() -> Unit)? = null
+        cancelHandler: (() -> Unit)? = null,
     ) {
-
         MaterialAlertDialogBuilder(
             requireContext(),
-            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
-        )
-            .setMessage(resources.getString(messageId))
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog,
+        ).setMessage(resources.getString(messageId))
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
 
                 acceptHandler()
                 dialog.dismiss()
-            }
-            .setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
+            }.setNegativeButton(resources.getString(R.string.cancel)) { dialog, _ ->
                 cancelHandler?.invoke()
                 dialog.dismiss()
-            }
-            .show()
+            }.show()
     }
 
     private fun showSyncPopup() {
-
         val ft: FragmentTransaction = activity?.supportFragmentManager?.beginTransaction() ?: return
         val prev = activity?.supportFragmentManager?.findFragmentByTag("syncDialog")
         if (prev != null) {
@@ -288,12 +280,10 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
     }
 
     private fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
-
         MaterialAlertDialogBuilder(
             requireContext(),
-            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
-        )
-            .setMessage(message)
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog,
+        ).setMessage(message)
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
 
@@ -301,8 +291,7 @@ abstract class BindingFragment<Binding : ViewDataBinding> : Fragment() {
                 goBack?.let {
                     it.value = true
                 }
-            }
-            .show()
+            }.show()
     }
     //endregion
 }

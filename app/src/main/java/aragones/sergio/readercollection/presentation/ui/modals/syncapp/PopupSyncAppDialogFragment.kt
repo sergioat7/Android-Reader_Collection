@@ -26,11 +26,10 @@ class PopupSyncAppDialogFragment : DialogFragment() {
 
     //region Lifecycle methods
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.dialog_fragment_popup_sync_app, container, false)
-    }
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View? = inflater.inflate(R.layout.dialog_fragment_popup_sync_app, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,14 +44,12 @@ class PopupSyncAppDialogFragment : DialogFragment() {
 
     //region Private functions
     private fun initializeUI() {
-
         setupBindings()
 
         viewModel.loadContent()
     }
 
     private fun setupBindings() {
-
         viewModel.loginError.observe(viewLifecycleOwner) { error ->
 
             if (error == null) {
@@ -65,24 +62,20 @@ class PopupSyncAppDialogFragment : DialogFragment() {
     }
 
     private fun goToMainView() {
-
         val intent = Intent(context, LandingActivity::class.java).apply {}
         startActivity(intent)
         activity?.finish()
     }
 
     private fun showPopupDialog(message: String) {
-
         MaterialAlertDialogBuilder(
             requireContext(),
-            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog
-        )
-            .setMessage(message)
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog,
+        ).setMessage(message)
             .setCancelable(false)
             .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
                 dialog.dismiss()
-            }
-            .show()
+            }.show()
     }
     //endregion
 }

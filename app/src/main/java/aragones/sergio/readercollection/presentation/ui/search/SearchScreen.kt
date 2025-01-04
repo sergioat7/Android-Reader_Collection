@@ -7,26 +7,24 @@
 
 package aragones.sergio.readercollection.presentation.ui.search
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DismissDirection
 import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -42,145 +40,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.components.BookItem
 import aragones.sergio.readercollection.presentation.ui.components.CustomSearchBar
+import aragones.sergio.readercollection.presentation.ui.components.ListButton
 import aragones.sergio.readercollection.presentation.ui.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItem
 import aragones.sergio.readercollection.presentation.ui.components.SwipeItemBackground
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 import kotlinx.coroutines.launch
-
-@Preview(showBackground = true)
-@Composable
-fun SearchScreenPreviewSuccess() {
-    SearchScreen(
-        state = SearchUiState.Success(
-            books = listOf(
-                Book(
-                    "1",
-                    "Harry Potter y la Piedra Filosofal",
-                    null,
-                    listOf("J.K. Rowling"),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    6.0,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false,
-                    0
-                ),
-                Book(
-                    "2",
-                    "Large title for another searched book in the list that should not be shown",
-                    null,
-                    listOf("Author"),
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    5.0,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false,
-                    0
-                ),
-                Book(
-                    "3",
-                    "Title",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    0.0,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false,
-                    0
-                ),
-                Book(
-                    "",
-                    "",
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    0,
-                    null,
-                    0.0,
-                    0,
-                    0.0,
-                    null,
-                    null,
-                    null,
-                    null,
-                    false,
-                    0
-                )
-            ),
-            isLoading = true,
-            query = null,
-        ),
-        onSearch = {},
-        onBookClick = {},
-        onSwipe = {},
-        onLoadMoreClick = {},
-        onRefresh = {},
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SearchScreenPreviewError() {
-    SearchScreen(
-        state = SearchUiState.Error(
-            isLoading = false,
-            query = null,
-            value = ErrorResponse("", 0)
-        ),
-        onSearch = {},
-        onBookClick = {},
-        onSwipe = {},
-        onLoadMoreClick = {},
-        onRefresh = {},
-    )
-}
 
 @Composable
 fun SearchScreen(
@@ -190,8 +66,8 @@ fun SearchScreen(
     onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
     onRefresh: () -> Unit,
+    onBack: () -> Unit,
 ) {
-
     val listState = rememberLazyListState()
     val showTopButton by remember {
         derivedStateOf {
@@ -224,11 +100,10 @@ fun SearchScreen(
         CustomSearchBar(
             title = stringResource(id = R.string.title_search),
             query = query ?: "",
+            onSearch = onSearch,
             modifier = Modifier.background(MaterialTheme.colors.background),
             elevation = if (showTopButton) 4.dp else 0.dp,
-            onSearch = {
-                onSearch(it)
-            },
+            onBack = onBack,
         )
 
         val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
@@ -237,7 +112,12 @@ fun SearchScreen(
             modifier = modifier.fillMaxSize(),
         ) {
             when (state) {
-                is SearchUiState.Empty -> NoResultsComponent(text = stringResource(id = R.string.no_search_yet_text))
+                is SearchUiState.Empty -> {
+                    NoResultsComponent(
+                        text = stringResource(R.string.no_search_yet_text),
+                        image = R.drawable.image_no_search,
+                    )
+                }
                 is SearchUiState.Success -> {
                     if (state.books.isEmpty() && !state.isLoading) {
                         NoResultsContent()
@@ -254,17 +134,21 @@ fun SearchScreen(
                             },
                             onBottomButtonClick = {
                                 coroutineScope.launch {
-                                    listState.animateScrollToItem(index = listState.layoutInfo.totalItemsCount - 1)
+                                    listState.animateScrollToItem(
+                                        index = listState.layoutInfo.totalItemsCount - 1,
+                                    )
                                 }
                             },
                             onBookClick = onBookClick,
                             onSwipe = onSwipe,
                             onLoadMoreClick = onLoadMoreClick,
+                            modifier = Modifier.fillMaxSize(),
                         )
                     }
                 }
-
-                is SearchUiState.Error -> ErrorContent()
+                is SearchUiState.Error -> {
+                    ErrorContent()
+                }
             }
             PullRefreshIndicator(
                 refreshing = isLoading,
@@ -279,7 +163,10 @@ fun SearchScreen(
 
 @Composable
 private fun NoResultsContent() {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+    ) {
         item {
             NoResultsComponent()
         }
@@ -288,9 +175,12 @@ private fun NoResultsContent() {
 
 @Composable
 private fun ErrorContent() {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+    ) {
         item {
-            NoResultsComponent(text = stringResource(id = R.string.error_server))
+            NoResultsComponent(text = stringResource(R.string.error_server))
         }
     }
 }
@@ -306,10 +196,14 @@ private fun SearchContent(
     onBookClick: (String) -> Unit,
     onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        LazyColumn(state = listState) {
-            items(items = books) { book ->
+    Box(modifier) {
+        LazyColumn(
+            state = listState,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
                     SwipeItem(
                         direction = DismissDirection.EndToStart,
@@ -324,7 +218,11 @@ private fun SearchContent(
                             )
                         },
                         content = {
-                            BookItem(book = book, onBookClick = onBookClick)
+                            BookItem(
+                                book = book,
+                                onBookClick = onBookClick,
+                                showDivider = index < books.size - 1,
+                            )
                         },
                     )
                 } else {
@@ -334,89 +232,197 @@ private fun SearchContent(
         }
 
         val topOffset by animateFloatAsState(
-            targetValue = if (showTopButton) 0f else 100f,
-            label = ""
+            targetValue = if (showTopButton) 0f else 200f,
+            label = "",
         )
         val bottomOffset by animateFloatAsState(
-            targetValue = if (showBottomButton) 0f else 100f,
-            label = ""
+            targetValue = if (showBottomButton) 0f else 200f,
+            label = "",
         )
 
         ListButton(
             image = R.drawable.ic_double_arrow_up,
+            onClick = onTopButtonClick,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .offset(x = topOffset.dp),
-            onClick = onTopButtonClick,
+                .offset { IntOffset(topOffset.toInt(), 0) },
         )
 
         ListButton(
             image = R.drawable.ic_double_arrow_down,
+            onClick = onBottomButtonClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
-                .offset(x = bottomOffset.dp),
-            onClick = onBottomButtonClick,
+                .offset { IntOffset(bottomOffset.toInt(), 0) },
         )
     }
 }
 
 @Composable
-private fun ListButton(
-    @DrawableRes image: Int,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-
-    FloatingActionButton(
+private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    Button(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
-        contentColor = MaterialTheme.colors.secondary,
-        backgroundColor = MaterialTheme.colors.primary,
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = MaterialTheme.colors.primary,
+            disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
+        ),
+        shape = MaterialTheme.shapes.large,
     ) {
-        Icon(
-            painter = painterResource(id = image),
-            contentDescription = "",
-            tint = MaterialTheme.colors.secondary,
-        )
-    }
-}
-
-@Composable
-private fun LoadMoreButton(onClick: () -> Unit) {
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp),
-    ) {
-        Button(
-            onClick = onClick,
-            modifier = Modifier.align(Alignment.Center),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = MaterialTheme.colors.primary,
-                disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
-            ),
-            shape = MaterialTheme.shapes.large,
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_add_circle_outline),
-                    contentDescription = "",
-                    tint = MaterialTheme.colors.secondary,
-                )
-                Text(
-                    text = stringResource(id = R.string.load_more),
-                    modifier = Modifier.padding(12.dp),
-                    style = MaterialTheme.typography.button,
-                    color = MaterialTheme.colors.secondary,
-                    maxLines = 1,
-                )
-            }
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_add_circle_outline),
+                contentDescription = null,
+                tint = MaterialTheme.colors.secondary,
+            )
+            Text(
+                text = stringResource(id = R.string.load_more),
+                modifier = Modifier.padding(12.dp),
+                style = MaterialTheme.typography.button,
+                color = MaterialTheme.colors.secondary,
+                maxLines = 1,
+            )
         }
     }
 }
 
 internal fun LazyListState.reachedBottom(buffer: Int = 1): Boolean {
     val lastVisibleItem = this.layoutInfo.visibleItemsInfo.lastOrNull()
-    return lastVisibleItem?.index != 0 && lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
+    return lastVisibleItem?.index != 0 &&
+        lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
+}
+
+@PreviewLightDark
+@Composable
+private fun SearchScreenPreview(
+    @PreviewParameter(SearchScreenPreviewParameterProvider::class) state: SearchUiState,
+) {
+    ReaderCollectionTheme {
+        SearchScreen(
+            state = state,
+            onSearch = {},
+            onBookClick = {},
+            onSwipe = {},
+            onLoadMoreClick = {},
+            onRefresh = {},
+            onBack = {},
+        )
+    }
+}
+
+private class SearchScreenPreviewParameterProvider :
+    PreviewParameterProvider<SearchUiState> {
+
+    override val values: Sequence<SearchUiState>
+        get() = sequenceOf(
+            SearchUiState.Success(
+                books = listOf(
+                    Book(
+                        "1",
+                        "Book 1",
+                        null,
+                        listOf("Author"),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        6.0,
+                        null,
+                        null,
+                        null,
+                        null,
+                        false,
+                        0,
+                    ),
+                    Book(
+                        "2",
+                        "Book 2",
+                        null,
+                        listOf("Author"),
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        5.0,
+                        null,
+                        null,
+                        null,
+                        null,
+                        false,
+                        0,
+                    ),
+                    Book(
+                        "3",
+                        "Book 3",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        0.0,
+                        null,
+                        null,
+                        null,
+                        null,
+                        false,
+                        0,
+                    ),
+                    Book(
+                        "",
+                        "",
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        0,
+                        null,
+                        0.0,
+                        0,
+                        0.0,
+                        null,
+                        null,
+                        null,
+                        null,
+                        false,
+                        0,
+                    ),
+                ),
+                isLoading = true,
+                query = null,
+            ),
+            SearchUiState.Success(
+                books = emptyList(),
+                isLoading = false,
+                query = null,
+            ),
+            SearchUiState.Empty,
+            SearchUiState.Error(
+                isLoading = false,
+                query = null,
+                value = ErrorResponse("", 0),
+            ),
+        )
 }

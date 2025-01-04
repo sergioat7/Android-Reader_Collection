@@ -46,7 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
@@ -57,21 +56,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import kotlin.math.max
 import kotlin.math.min
-
-@Preview(showBackground = true)
-@Composable
-fun CustomDropdownMenuPreview() {
-    CustomDropdownMenu(
-        currentValue = "Value",
-        labelText = "Header",
-        placeholderText = "Please choose",
-        modifier = Modifier.padding(12.dp),
-        values = listOf("Option 1", "Option 2", "Option 3"),
-        onOptionSelected = {},
-    )
-}
 
 @Composable
 fun CustomDropdownMenu(
@@ -84,7 +71,6 @@ fun CustomDropdownMenu(
     values: List<String>,
     onOptionSelected: (String) -> Unit,
 ) {
-
     var expanded by rememberSaveable { mutableStateOf(false) }
 
     val label: @Composable (() -> Unit)? = labelText?.let {
@@ -109,15 +95,18 @@ fun CustomDropdownMenu(
         {
             IconButton(onClick = { expanded = !expanded }) {
                 Icon(
-                    if (expanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = "",
+                    imageVector = if (expanded) {
+                        Icons.Default.KeyboardArrowUp
+                    } else {
+                        Icons.Default.KeyboardArrowDown
+                    },
+                    contentDescription = null,
                     tint = textColor,
                 )
             }
         }
 
-    Column(modifier = modifier) {
-
+    Column(modifier) {
         OutlinedTextField(
             value = currentValue,
             modifier = Modifier
@@ -135,9 +124,7 @@ fun CustomDropdownMenu(
             singleLine = true,
             enabled = false,
             readOnly = true,
-            onValueChange = {
-                onOptionSelected(it)
-            },
+            onValueChange = onOptionSelected,
         )
         MyDropdownMenu(
             expanded = expanded,
@@ -147,10 +134,12 @@ fun CustomDropdownMenu(
                 .background(MaterialTheme.colors.background),
         ) {
             for (value in values) {
-                DropdownMenuItem(onClick = {
-                    expanded = false
-                    onOptionSelected(value)
-                }) {
+                DropdownMenuItem(
+                    onClick = {
+                        expanded = false
+                        onOptionSelected(value)
+                    },
+                ) {
                     Text(
                         text = value,
                         style = MaterialTheme.typography.body1,
@@ -163,14 +152,14 @@ fun CustomDropdownMenu(
 }
 
 @Composable
-fun MyDropdownMenu(
+private fun MyDropdownMenu(
     expanded: Boolean,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     offset: DpOffset = DpOffset(0.dp, 0.dp),
     scrollState: ScrollState = rememberScrollState(),
     properties: PopupProperties = PopupProperties(focusable = true),
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     val expandedStates = remember { MutableTransitionState(false) }
     expandedStates.targetState = expanded
@@ -180,7 +169,7 @@ fun MyDropdownMenu(
         val density = LocalDensity.current
         val popupPositionProvider = DropdownMenuPositionProvider(
             offset,
-            density
+            density,
         ) { parentBounds, menuBounds ->
             transformOriginState.value = calculateTransformOrigin(parentBounds, menuBounds)
         }
@@ -202,20 +191,20 @@ fun MyDropdownMenu(
 }
 
 // Menu open/close animation.
-internal const val InTransitionDuration = 120
-internal const val OutTransitionDuration = 75
+private const val InTransitionDuration = 120
+private const val OutTransitionDuration = 75
 
 // Size defaults.
 private val MenuElevation = 8.dp
-internal val MenuVerticalMargin = 48.dp
+private val MenuVerticalMargin = 48.dp
 
 @Composable
-fun MyDropdownMenuContent(
+private fun MyDropdownMenuContent(
     expandedStates: MutableTransitionState<Boolean>,
     transformOriginState: MutableState<TransformOrigin>,
     scrollState: ScrollState,
     modifier: Modifier = Modifier,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     // Menu open/close animation.
     val transition = updateTransition(expandedStates, "DropDownMenu")
@@ -235,7 +224,8 @@ fun MyDropdownMenuContent(
                     delayMillis = OutTransitionDuration - 1,
                 )
             }
-        }, label = ""
+        },
+        label = "",
     ) {
         if (it) {
             // Menu is expanded.
@@ -255,7 +245,8 @@ fun MyDropdownMenuContent(
                 // Expanded to dismissed.
                 tween(durationMillis = OutTransitionDuration)
             }
-        }, label = ""
+        },
+        label = "",
     ) {
         if (it) {
             // Menu is expanded.
@@ -274,13 +265,13 @@ fun MyDropdownMenuContent(
                 transformOrigin = transformOriginState.value
             },
         elevation = MenuElevation,
-        backgroundColor = MaterialTheme.colors.background
+        backgroundColor = MaterialTheme.colors.background,
     ) {
         Column(
             modifier = modifier
                 .width(IntrinsicSize.Max)
                 .verticalScroll(scrollState),
-            content = content
+            content = content,
         )
     }
 }
@@ -291,16 +282,16 @@ fun MyDropdownMenuContent(
  * Calculates the position of a Material [DropdownMenu].
  */
 @Immutable
-internal data class DropdownMenuPositionProvider(
+private data class DropdownMenuPositionProvider(
     val contentOffset: DpOffset,
     val density: Density,
-    val onPositionCalculated: (IntRect, IntRect) -> Unit = { _, _ -> }
+    val onPositionCalculated: (IntRect, IntRect) -> Unit = { _, _ -> },
 ) : PopupPositionProvider {
     override fun calculatePosition(
         anchorBounds: IntRect,
         windowSize: IntSize,
         layoutDirection: LayoutDirection,
-        popupContentSize: IntSize
+        popupContentSize: IntSize,
     ): IntOffset {
         // The min margin above and below the menu, relative to the screen.
         val verticalMargin = with(density) { MenuVerticalMargin.roundToPx() }
@@ -321,7 +312,7 @@ internal data class DropdownMenuPositionProvider(
                 rightToAnchorRight,
                 // If the anchor gets outside of the window on the left, we want to position
                 // toDisplayLeft for proximity to the anchor. Otherwise, toDisplayRight.
-                if (anchorBounds.left >= 0) rightToWindowRight else leftToWindowLeft
+                if (anchorBounds.left >= 0) rightToWindowRight else leftToWindowLeft,
             )
         } else {
             sequenceOf(
@@ -329,7 +320,11 @@ internal data class DropdownMenuPositionProvider(
                 leftToAnchorLeft,
                 // If the anchor gets outside of the window on the right, we want to position
                 // toDisplayRight for proximity to the anchor. Otherwise, toDisplayLeft.
-                if (anchorBounds.right <= windowSize.width) leftToWindowLeft else rightToWindowRight
+                if (anchorBounds.right <= windowSize.width) {
+                    leftToWindowLeft
+                } else {
+                    rightToWindowRight
+                },
             )
         }.firstOrNull {
             it >= 0 && it + popupContentSize.width <= windowSize.width
@@ -344,7 +339,7 @@ internal data class DropdownMenuPositionProvider(
             topToAnchorBottom,
             bottomToAnchorTop,
             centerToAnchorTop,
-            bottomToWindowBottom
+            bottomToWindowBottom,
         ).firstOrNull {
             it >= verticalMargin &&
                 it + popupContentSize.height <= windowSize.height - verticalMargin
@@ -352,20 +347,23 @@ internal data class DropdownMenuPositionProvider(
 
         onPositionCalculated(
             anchorBounds,
-            IntRect(x, y, x + popupContentSize.width, y + popupContentSize.height)
+            IntRect(x, y, x + popupContentSize.width, y + popupContentSize.height),
         )
         return IntOffset(x, y)
     }
 }
 
-internal fun calculateTransformOrigin(
-    parentBounds: IntRect,
-    menuBounds: IntRect
-): TransformOrigin {
+private fun calculateTransformOrigin(parentBounds: IntRect, menuBounds: IntRect): TransformOrigin {
     val pivotX = when {
-        menuBounds.left >= parentBounds.right -> 0f
-        menuBounds.right <= parentBounds.left -> 1f
-        menuBounds.width == 0 -> 0f
+        menuBounds.left >= parentBounds.right -> {
+            0f
+        }
+        menuBounds.right <= parentBounds.left -> {
+            1f
+        }
+        menuBounds.width == 0 -> {
+            0f
+        }
         else -> {
             val intersectionCenter =
                 (
@@ -376,9 +374,15 @@ internal fun calculateTransformOrigin(
         }
     }
     val pivotY = when {
-        menuBounds.top >= parentBounds.bottom -> 0f
-        menuBounds.bottom <= parentBounds.top -> 1f
-        menuBounds.height == 0 -> 0f
+        menuBounds.top >= parentBounds.bottom -> {
+            0f
+        }
+        menuBounds.bottom <= parentBounds.top -> {
+            1f
+        }
+        menuBounds.height == 0 -> {
+            0f
+        }
         else -> {
             val intersectionCenter =
                 (
@@ -389,4 +393,19 @@ internal fun calculateTransformOrigin(
         }
     }
     return TransformOrigin(pivotX, pivotY)
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun CustomDropdownMenuPreview() {
+    ReaderCollectionTheme {
+        CustomDropdownMenu(
+            currentValue = "Value",
+            labelText = "Header",
+            placeholderText = "Please choose",
+            modifier = Modifier.padding(12.dp),
+            values = listOf("Option 1", "Option 2", "Option 3"),
+            onOptionSelected = {},
+        )
+    }
 }

@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 28/3/2024
  */
 
-package aragones.sergio.readercollection.presentation.ui.components
+package aragones.sergio.readercollection.presentation.ui.components.dialogs
 
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.assertTextContains
@@ -12,58 +12,65 @@ import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
-import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextReplacement
+import androidx.compose.ui.text.input.KeyboardType
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.components.TextFieldAlertDialog
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
 
-class ConfirmationAlertDialogTest {
+class TextFieldAlertDialogTest {
 
     @get:Rule
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
     fun whenSendTrueToComponent_thenShowDialog() {
-
         composeTestRule.setContent {
-            ConfirmationAlertDialog(
+            TextFieldAlertDialog(
                 show = true,
-                textId = R.string.profile_logout_confirmation,
+                titleTextId = R.string.enter_valid_url,
+                type = KeyboardType.Text,
                 onCancel = {},
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
-        composeTestRule.onNodeWithTag("confirmationAlertDialog").assertExists()
+        composeTestRule.onNodeWithTag("textFieldAlertDialog").assertExists()
     }
 
     @Test
     fun whenSendFalseToComponent_thenDoNotShowDialog() {
-
         composeTestRule.setContent {
-            ConfirmationAlertDialog(
+            TextFieldAlertDialog(
                 show = false,
-                textId = R.string.profile_logout_confirmation,
-                onCancel = {}) {}
+                titleTextId = R.string.enter_valid_url,
+                type = KeyboardType.Text,
+                onCancel = {},
+                onAccept = {},
+            )
         }
 
-        composeTestRule.onNodeWithTag("confirmationAlertDialog").assertDoesNotExist()
+        composeTestRule.onNodeWithTag("textFieldAlertDialog").assertDoesNotExist()
     }
 
     @Test
-    fun whenShowDialog_thenShowTextAndButtons() {
-
-        val textId = R.string.profile_logout_confirmation
+    fun whenShowDialog_thenShowTextFieldAndButton() {
         composeTestRule.setContent {
-            ConfirmationAlertDialog(show = true, textId = textId, onCancel = {}) {}
+            TextFieldAlertDialog(
+                show = true,
+                titleTextId = R.string.enter_valid_url,
+                type = KeyboardType.Text,
+                onCancel = {},
+                onAccept = {},
+            )
         }
 
-        val text = composeTestRule.activity.getString(textId)
         val acceptText = composeTestRule.activity.getString(R.string.accept)
         val cancelText = composeTestRule.activity.getString(R.string.cancel)
-        composeTestRule.onNodeWithText(text).assertExists()
+        composeTestRule.onNodeWithTag("textField").assertExists()
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").apply {
             onFirst().assertTextContains(cancelText, ignoreCase = true)
             onLast().assertTextContains(acceptText, ignoreCase = true)
@@ -72,16 +79,17 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenCancelDialog_thenCloseDialog() {
-
         var isClosed = false
         composeTestRule.setContent {
-            ConfirmationAlertDialog(
+            TextFieldAlertDialog(
                 show = true,
-                textId = R.string.profile_logout_confirmation,
+                titleTextId = R.string.enter_valid_url,
+                type = KeyboardType.Text,
                 onCancel = {
                     isClosed = true
                 },
-                onAccept = {})
+                onAccept = {},
+            )
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onFirst().performClick()
@@ -89,20 +97,25 @@ class ConfirmationAlertDialogTest {
     }
 
     @Test
-    fun whenAcceptDialog_thenCloseDialog() {
-
+    fun whenAcceptDialog_thenCloseDialogAndReturnText() {
         var isClosed = false
+        var text = ""
         composeTestRule.setContent {
-            ConfirmationAlertDialog(
+            TextFieldAlertDialog(
                 show = true,
-                textId = R.string.profile_logout_confirmation,
+                titleTextId = R.string.enter_valid_url,
+                type = KeyboardType.Text,
                 onCancel = {},
                 onAccept = {
                     isClosed = true
-                })
+                    text = it
+                },
+            )
         }
 
+        composeTestRule.onNodeWithTag("textField").performTextReplacement("New text to return")
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()
         Assert.assertTrue(isClosed)
+        Assert.assertEquals("New text to return", text)
     }
 }

@@ -16,24 +16,22 @@ object Constants {
 
     var FORMATS = listOf(
         FormatResponse("DIGITAL", "Digital"),
-        FormatResponse("PHYSICAL", "Physical")
+        FormatResponse("PHYSICAL", "Physical"),
     )
     var STATES = listOf(
         StateResponse("PENDING", "Pending"),
         StateResponse("READ", "Read"),
-        StateResponse("READING", "Reading")
+        StateResponse("READING", "Reading"),
     )
 
     fun createTargetForBottomNavigationView(
         activity: FragmentActivity?,
         id: Int,
         title: String,
-        description: String?
-    ): TapTarget {
-        return TapTarget.forView(
-            activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.findViewById(id),
-            title,
-            description
-        )
-    }
+        description: String?,
+    ): TapTarget = TapTarget.forView(
+        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.findViewById(id),
+        title,
+        description,
+    )
 }

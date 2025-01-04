@@ -8,10 +8,14 @@ package aragones.sergio.readercollection.presentation.ui.components
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
@@ -26,21 +30,17 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.description
-
-@Preview
-@Composable
-fun ConfirmationAlertDialogPreview() {
-    ConfirmationAlertDialog(true, R.string.book_remove_confirmation, {}, {})
-}
 
 @Composable
 fun ConfirmationAlertDialog(
@@ -51,27 +51,36 @@ fun ConfirmationAlertDialog(
 ) {
     if (show) {
         Dialog(
-            onDismissRequest = { onCancel() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
+            onDismissRequest = onCancel,
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+            ),
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("confirmationAlertDialog"),
             ) {
-                Column(Modifier.fillMaxWidth()) {
-                    TextMessageAlertDialog(stringResource(id = textId))
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(end = 12.dp),
-                    ) {
-                        TextButtonAlertDialog(textId = R.string.cancel) {
-                            onCancel()
-                        }
-                        TextButtonAlertDialog(textId = R.string.accept) {
-                            onAccept()
-                        }
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                ) {
+                    Spacer(Modifier.height(24.dp))
+                    TextMessageAlertDialog(
+                        text = stringResource(id = textId),
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
+                    Row(modifier = Modifier.align(Alignment.End)) {
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.cancel),
+                            onClick = onCancel,
+                        )
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.accept),
+                            onClick = onAccept,
+                        )
                     }
                 }
             }
@@ -79,48 +88,40 @@ fun ConfirmationAlertDialog(
     }
 }
 
-@Preview
 @Composable
-fun InformationAlertDialogPreview() {
-    InformationAlertDialog(true, stringResource(id = R.string.book_saved)) {}
-}
-
-@Composable
-fun InformationAlertDialog(
-    show: Boolean,
-    text: String,
-    onDismiss: () -> Unit,
-) {
+fun InformationAlertDialog(show: Boolean, text: String, onDismiss: () -> Unit) {
     if (show) {
         Dialog(
-            onDismissRequest = { onDismiss() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+            onDismissRequest = onDismiss,
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+            ),
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("informationAlertDialog"),
             ) {
-                Column(Modifier.fillMaxWidth()) {
-                    TextMessageAlertDialog(text)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                ) {
+                    Spacer(Modifier.height(24.dp))
+                    TextMessageAlertDialog(
+                        text = text,
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
                     TextButtonAlertDialog(
-                        textId = R.string.accept,
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(end = 12.dp),
-                    ) {
-                        onDismiss()
-                    }
+                        text = stringResource(R.string.accept),
+                        modifier = Modifier.align(Alignment.End),
+                        onClick = onDismiss,
+                    )
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun TextFieldAlertDialogPreview() {
-    TextFieldAlertDialog(true, R.string.enter_valid_url, type = KeyboardType.Uri, {}, {})
 }
 
 @Composable
@@ -132,31 +133,40 @@ fun TextFieldAlertDialog(
     onAccept: (String) -> Unit,
 ) {
     if (show) {
-
         var text by rememberSaveable { mutableStateOf("") }
 
         Dialog(
-            onDismissRequest = { onCancel() },
-            properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false),
+            onDismissRequest = onCancel,
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+            ),
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("textFieldAlertDialog"),
             ) {
-                Column(Modifier.fillMaxWidth()) {
-                    TextTitleAlertDialog(titleTextId)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp),
+                ) {
+                    Spacer(Modifier.height(24.dp))
+                    TextTitleAlertDialog(
+                        text = stringResource(id = titleTextId),
+                        modifier = Modifier.padding(horizontal = 12.dp),
+                    )
+                    Spacer(Modifier.height(8.dp))
                     OutlinedTextField(
                         value = text,
                         onValueChange = { text = it },
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
-                            .padding(start = 12.dp, end = 24.dp)
                             .border(
                                 BorderStroke(1.dp, MaterialTheme.colors.primary),
                                 shape = MaterialTheme.shapes.medium,
-                            )
-                            .testTag("textField"),
+                            ).testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
                             focusedBorderColor = MaterialTheme.colors.primary,
                             unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
@@ -166,17 +176,15 @@ fun TextFieldAlertDialog(
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = type),
                     )
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.End)
-                            .padding(end = 12.dp),
-                    ) {
-                        TextButtonAlertDialog(textId = R.string.cancel) {
-                            onCancel()
-                        }
-                        TextButtonAlertDialog(textId = R.string.accept) {
-                            onAccept(text)
-                        }
+                    Row(modifier = Modifier.align(Alignment.End)) {
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.cancel),
+                            onClick = onCancel,
+                        )
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.accept),
+                            onClick = { onAccept(text) },
+                        )
                     }
                 }
             }
@@ -185,49 +193,174 @@ fun TextFieldAlertDialog(
 }
 
 @Composable
-fun TextTitleAlertDialog(@StringRes textId: Int) {
+fun SortingPickerAlertDialog(
+    state: UiSortingPickerState,
+    onCancel: () -> Unit,
+    onAccept: (newSortParam: String?, newIsSortDescending: Boolean) -> Unit,
+) {
+    if (state.show) {
+        var newSortParam by rememberSaveable { mutableStateOf(state.sortParam) }
+        var newIsSortDescending by rememberSaveable { mutableStateOf(state.isSortDescending) }
+
+        val context = LocalContext.current
+        val sortParamKeys = context.resources.getStringArray(R.array.sorting_param_keys).toList()
+        val sortParamValues =
+            context.resources.getStringArray(R.array.sorting_param_values).toList()
+        val sortOrderValues =
+            context.resources.getStringArray(R.array.sorting_order_values).toList()
+
+        Dialog(
+            onDismissRequest = { onCancel() },
+            properties = DialogProperties(
+                dismissOnBackPress = false,
+                dismissOnClickOutside = false,
+            ),
+        ) {
+            Surface(
+                color = MaterialTheme.colors.background,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.testTag("sortingPickerAlertDialog"),
+            ) {
+                Column {
+                    Spacer(Modifier.height(24.dp))
+                    TextTitleAlertDialog(
+                        text = stringResource(id = R.string.order_by),
+                        modifier = Modifier.padding(horizontal = 24.dp),
+                    )
+                    Row(horizontalArrangement = Arrangement.Center) {
+                        Picker(
+                            items = sortParamValues,
+                            onSelect = {
+                                newSortParam = sortParamKeys[it]
+                            },
+                            modifier = Modifier.weight(1f),
+                            currentIndexSelected = state.sortParam?.let {
+                                sortParamKeys.indexOf(it)
+                            } ?: 0,
+                        )
+                        Picker(
+                            items = sortOrderValues,
+                            onSelect = {
+                                newIsSortDescending = it == 1
+                            },
+                            modifier = Modifier.weight(1f),
+                            currentIndexSelected = if (newIsSortDescending) 1 else 0,
+                        )
+                    }
+                    Row(modifier = Modifier.align(Alignment.End)) {
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.cancel),
+                            onClick = onCancel,
+                        )
+                        TextButtonAlertDialog(
+                            text = stringResource(R.string.accept),
+                            onClick = {
+                                onAccept(newSortParam, newIsSortDescending)
+                            },
+                        )
+                        Spacer(Modifier.width(12.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+data class UiSortingPickerState(
+    val show: Boolean,
+    val sortParam: String?,
+    val isSortDescending: Boolean,
+)
+
+@Composable
+private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
-        modifier = Modifier.padding(
-            top = 24.dp,
-            start = 24.dp,
-            end = 24.dp,
-            bottom = 8.dp,
-        ),
-        text = stringResource(id = textId),
+        text = text,
+        modifier = modifier,
         style = MaterialTheme.typography.h2,
         color = MaterialTheme.colors.primary,
     )
 }
 
 @Composable
-fun TextMessageAlertDialog(text: String) {
+private fun TextMessageAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
-        modifier = Modifier.padding(
-            top = 24.dp,
-            start = 24.dp,
-            end = 24.dp,
-        ),
         text = text,
+        modifier = modifier,
         style = MaterialTheme.typography.body1,
         color = MaterialTheme.colors.primary,
     )
 }
 
 @Composable
-fun TextButtonAlertDialog(
-    @StringRes textId: Int,
+private fun TextButtonAlertDialog(
+    text: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
-
     TextButton(
-        onClick = { onClick() },
+        onClick = onClick,
         modifier = modifier.testTag("textButtonAlertDialog"),
     ) {
         Text(
-            text = stringResource(id = textId).uppercase(),
+            text = text.uppercase(),
             style = MaterialTheme.typography.h3,
             color = MaterialTheme.colors.primary,
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun ConfirmationAlertDialogPreview() {
+    ReaderCollectionTheme {
+        ConfirmationAlertDialog(
+            show = true,
+            textId = R.string.book_remove_confirmation,
+            onCancel = {},
+            onAccept = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun InformationAlertDialogPreview() {
+    ReaderCollectionTheme {
+        InformationAlertDialog(
+            show = true,
+            text = stringResource(id = R.string.book_saved),
+            onDismiss = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun TextFieldAlertDialogPreview() {
+    ReaderCollectionTheme {
+        TextFieldAlertDialog(
+            show = true,
+            titleTextId = R.string.enter_valid_url,
+            type = KeyboardType.Uri,
+            onCancel = {},
+            onAccept = {},
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun SortingPickerAlertDialogPreview() {
+    ReaderCollectionTheme {
+        SortingPickerAlertDialog(
+            state = UiSortingPickerState(
+                show = true,
+                sortParam = "readingDate",
+                isSortDescending = false,
+            ),
+            onCancel = {},
+            onAccept = { _, _ -> },
         )
     }
 }

@@ -25,10 +25,9 @@ import com.google.android.play.core.ktx.installStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.security.Permissions
 
 class InAppUpdateService(
-    private val activity: ComponentActivity
+    private val activity: ComponentActivity,
 ) {
 
     //region Private properties
@@ -52,8 +51,12 @@ class InAppUpdateService(
         appUpdateManager.registerListener(listener)
 
         inAppUpdateLauncher =
-            activity.registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
-                if (it.resultCode == AppCompatActivity.RESULT_OK && appUpdateType == AppUpdateType.IMMEDIATE) {
+            activity.registerForActivityResult(
+                ActivityResultContracts.StartIntentSenderForResult(),
+            ) {
+                if (it.resultCode == AppCompatActivity.RESULT_OK &&
+                    appUpdateType == AppUpdateType.IMMEDIATE
+                ) {
                     _installStatus.value = InstallStatus.INSTALLED
                 } else if (it.resultCode != AppCompatActivity.RESULT_OK) {
                     _installStatus.value = InstallStatus.CANCELED
@@ -64,13 +67,12 @@ class InAppUpdateService(
 
     //region Public methods
     fun checkVersion() {
-
         appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
 
+            @Suppress("ktlint:standard:max-line-length")
             if (info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
                 _installStatus.value = InstallStatus.DOWNLOADED
             } else if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-
                 CoroutineScope(Dispatchers.IO).launch {
                     startUpdate(info, AppUpdateType.FLEXIBLE)
                 }
@@ -86,9 +88,12 @@ class InAppUpdateService(
     fun onResume() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
 
+            @Suppress("ktlint:standard:max-line-length")
             if (appUpdateType == AppUpdateType.FLEXIBLE && info.installStatus == InstallStatus.DOWNLOADED) {
                 flexibleUpdateDownloadCompleted()
-            } else if (appUpdateType == AppUpdateType.IMMEDIATE && info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+            } else if (appUpdateType == AppUpdateType.IMMEDIATE &&
+                info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+            ) {
                 startUpdate(info, AppUpdateType.IMMEDIATE)
             }
         }
@@ -101,27 +106,28 @@ class InAppUpdateService(
 
     //region Private methods
     private fun startUpdate(info: AppUpdateInfo, type: Int) {
-
         appUpdateManager.startUpdateFlowForResult(
             info,
             inAppUpdateLauncher,
-            AppUpdateOptions.newBuilder(type).build()
+            AppUpdateOptions.newBuilder(type).build(),
         )
         appUpdateType = type
     }
 
     private fun flexibleUpdateDownloadCompleted() {
-
-        Snackbar.make(
-            activity.findViewById(R.id.container),
-            activity.getString(R.string.message_app_update_downloaded),
-            Snackbar.LENGTH_INDEFINITE
-        ).apply {
-            setAction(activity.getString(R.string.restart)) { appUpdateManager.completeUpdate() }
-            setBackgroundTint(activity.getColor(R.color.colorPrimary))
-            setActionTextColor(activity.getColor(R.color.colorSecondary))
-            show()
-        }
+        Snackbar
+            .make(
+                activity.findViewById(R.id.container),
+                activity.getString(R.string.message_app_update_downloaded),
+                Snackbar.LENGTH_INDEFINITE,
+            ).apply {
+                setAction(
+                    activity.getString(R.string.restart),
+                ) { appUpdateManager.completeUpdate() }
+                setBackgroundTint(activity.getColor(R.color.colorPrimary))
+                setActionTextColor(activity.getColor(R.color.colorSecondary))
+                show()
+            }
     }
     //endregion
 }

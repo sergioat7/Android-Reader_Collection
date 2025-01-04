@@ -35,7 +35,7 @@ class LoginActivity : BaseActivity() {
 
         window.setStatusBarStyle(
             ContextCompat.getColor(this, R.color.colorSecondary),
-            !isDarkMode()
+            !isDarkMode(),
         )
 
         ActivityLoginBinding.inflate(layoutInflater).apply {
@@ -43,10 +43,16 @@ class LoginActivity : BaseActivity() {
 
             composeView.setContent {
                 ReaderCollectionTheme {
-
-                    LoginScreen(viewModel)
-
+                    val state by viewModel.uiState
                     val error by viewModel.loginError.observeAsState()
+
+                    LoginScreen(
+                        state = state,
+                        onLoginDataChange = viewModel::loginDataChanged,
+                        onLogin = viewModel::login,
+                        onGoToRegister = viewModel::goToRegister,
+                    )
+
                     val errorText = StringBuilder()
                     error?.let {
                         if (it.error.isNotEmpty()) {

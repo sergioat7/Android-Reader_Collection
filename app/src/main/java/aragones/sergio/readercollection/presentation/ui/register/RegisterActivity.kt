@@ -33,7 +33,7 @@ class RegisterActivity : BaseActivity() {
 
         window.setStatusBarStyle(
             ContextCompat.getColor(this, R.color.colorSecondary),
-            !isDarkMode()
+            !isDarkMode(),
         )
 
         ActivityRegisterBinding.inflate(layoutInflater).apply {
@@ -41,11 +41,18 @@ class RegisterActivity : BaseActivity() {
 
             composeView.setContent {
                 ReaderCollectionTheme {
-
-                    RegisterScreen(viewModel)
-
+                    val state by viewModel.uiState
                     val error by viewModel.registerError.observeAsState()
-                    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+                    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
+                        initial = -1,
+                    )
+
+                    RegisterScreen(
+                        state = state,
+                        onShowInfo = { viewModel.showInfoDialog(R.string.username_info) },
+                        onRegisterDataChange = viewModel::registerDataChanged,
+                        onRegister = viewModel::register,
+                    )
 
                     val text = if (error != null) {
                         val errorText = StringBuilder()

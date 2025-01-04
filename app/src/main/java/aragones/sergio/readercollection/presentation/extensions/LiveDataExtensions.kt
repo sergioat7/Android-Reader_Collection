@@ -14,9 +14,8 @@ fun <T, S1, S2, S3, S4, S5, R> LiveData<T>.combineWith(
     source3: LiveData<S3>,
     source4: LiveData<S4>,
     source5: LiveData<S5>,
-    block: (T?, S1?, S2?, S3?, S4?, S5?) -> R
+    block: (T?, S1?, S2?, S3?, S4?, S5?) -> R,
 ): LiveData<R> {
-
     val result = MediatorLiveData<R>()
     arrayOf(this, source1, source2, source3, source4, source5).forEach {
         result.addSource(it) {
@@ -26,7 +25,7 @@ fun <T, S1, S2, S3, S4, S5, R> LiveData<T>.combineWith(
                 source2.value,
                 source3.value,
                 source4.value,
-                source5.value
+                source5.value,
             )
         }
     }

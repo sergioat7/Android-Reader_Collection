@@ -24,14 +24,16 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
     private var query = ""
     private var page: Int = 1
     private val books = mutableListOf<Book>()
-    private lateinit var pendingBooks: MutableList<Book>
+    private lateinit var savedBooks: MutableList<Book>
+    private val pendingBooks: List<Book>
+        get() = savedBooks.filter { it.isPending() }
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
@@ -60,7 +62,6 @@ class SearchViewModel @Inject constructor(
 
     //region Public methods
     fun searchBooks(reload: Boolean = false, query: String? = null) {
-
         if (reload) {
             page = 1
             books.clear()
@@ -70,7 +71,7 @@ class SearchViewModel @Inject constructor(
             this.query = query
         }
 
-        state.value = when(val currentState = state.value) {
+        state.value = when (val currentState = state.value) {
             is SearchUiState.Empty -> SearchUiState.Success(
                 isLoading = true,
                 query = this.query,
@@ -80,38 +81,38 @@ class SearchViewModel @Inject constructor(
             is SearchUiState.Error -> currentState.copy(isLoading = true)
         }
 
-        booksRepository.searchBooks(this.query, page, null).subscribeBy(
-            onSuccess = { newBooks ->
+        booksRepository
+            .searchBooks(this.query, page, null)
+            .subscribeBy(
+                onSuccess = { newBooks ->
 
-                page++
-                if(books.isEmpty()) {
-                    books.add(Book(id = ""))
-                }
-                books.addAll(books.size - 1, newBooks)
-                if (newBooks.isEmpty()) {
-                    books.removeLast()
-                }
+                    page++
+                    if (books.isEmpty()) {
+                        books.add(Book(id = ""))
+                    }
+                    books.addAll(books.size - 1, newBooks)
+                    if (newBooks.isEmpty()) {
+                        books.removeAt(books.lastIndex)
+                    }
 
-                state.value = SearchUiState.Success(
-                    isLoading = false,
-                    query = this.query,
-                    books = books,
-                )
-            },
-            onError = {
-
-                state.value = SearchUiState.Error(
-                    isLoading = false,
-                    query = this.query,
-                    value = ErrorResponse("", R.string.error_search),
-                )
-            }
-        ).addTo(disposables)
+                    state.value = SearchUiState.Success(
+                        isLoading = false,
+                        query = this.query,
+                        books = books,
+                    )
+                },
+                onError = {
+                    state.value = SearchUiState.Error(
+                        isLoading = false,
+                        query = this.query,
+                        value = ErrorResponse("", R.string.error_search),
+                    )
+                },
+            ).addTo(disposables)
     }
 
     fun addBook(bookId: String) {
-
-        if(pendingBooks.firstOrNull { it.id == bookId } != null) {
+        if (savedBooks.firstOrNull { it.id == bookId } != null) {
             _infoDialogMessageId.value = R.string.error_resource_found
             return
         }
@@ -119,13 +120,17 @@ class SearchViewModel @Inject constructor(
         val newBook = books.firstOrNull { it.id == bookId } ?: return
         newBook.state = BookState.PENDING
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository.createBook(newBook, success = {
-
-            pendingBooks.add(newBook)
-            _infoDialogMessageId.value = R.string.book_saved
-        }, failure = {
-            _infoDialogMessageId.value = it.errorKey
-        })
+        booksRepository
+            .createBook(newBook)
+            .subscribeBy(
+                onComplete = {
+                    savedBooks.add(newBook)
+                    _infoDialogMessageId.value = R.string.book_saved
+                },
+                onError = {
+                    _infoDialogMessageId.value = R.string.error_database
+                },
+            ).addTo(disposables)
     }
 
     fun closeDialogs() {
@@ -135,18 +140,19 @@ class SearchViewModel @Inject constructor(
 
     //region Private methods
     private fun fetchPendingBooks() {
-
-        booksRepository.getPendingBooks().subscribeBy(
-            onComplete = {
-                pendingBooks = mutableListOf()
-            },
-            onNext = {
-                pendingBooks = it.toMutableList()
-            },
-            onError = {
-                pendingBooks = mutableListOf()
-            }
-        ).addTo(disposables)
+        booksRepository
+            .getBooks()
+            .subscribeBy(
+                onComplete = {
+                    savedBooks = mutableListOf()
+                },
+                onNext = {
+                    savedBooks = it.toMutableList()
+                },
+                onError = {
+                    savedBooks = mutableListOf()
+                },
+            ).addTo(disposables)
     }
     //endregion
 }

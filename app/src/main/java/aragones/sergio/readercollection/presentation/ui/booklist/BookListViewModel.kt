@@ -5,7 +5,9 @@
 
 package aragones.sergio.readercollection.presentation.ui.booklist
 
-import android.content.Context
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -15,8 +17,9 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import com.aragones.sergio.util.ScrollPosition
+import aragones.sergio.readercollection.presentation.ui.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
+import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,31 +31,35 @@ import javax.inject.Inject
 class BookListViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
     private var state: String = state["state"] ?: ""
-    private var sortParam: String? = state["sortParam"]
-    private var isSortDescending: Boolean = state["isSortDescending"] ?: false
     private var year: Int = state["year"] ?: -1
     private var month: Int = state["month"] ?: -1
     private var author: String? = state["author"]
     private var format: String? = state["format"]
-    private val _books = MutableLiveData<List<Book>?>()
-    private val _booksLoading = MutableLiveData<Boolean>()
+    private val arePendingBooks: Boolean
+        get() = state == BookState.PENDING
+    private var _uiState: MutableState<BookListUiState> = mutableStateOf(BookListUiState.Empty)
+    private var _sortingPickerState: MutableState<UiSortingPickerState> = mutableStateOf(
+        UiSortingPickerState(
+            show = false,
+            sortParam = state["sortParam"],
+            isSortDescending = state["isSortDescending"] ?: false,
+        ),
+    )
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private val _scrollPosition = MutableLiveData(ScrollPosition.TOP)
+    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
     var query: String = state["query"] ?: ""
-    val books: LiveData<List<Book>?> = _books
-    val booksLoading: LiveData<Boolean> = _booksLoading
+    val uiState: State<BookListUiState> = _uiState
+    val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
     val booksError: LiveData<ErrorResponse> = _booksError
-    val scrollPosition: LiveData<ScrollPosition> = _scrollPosition
-    val arePendingBooks: Boolean
-        get() = state == BookState.PENDING
+    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 
@@ -67,66 +74,103 @@ class BookListViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
+        _uiState.value = when (val currentState = _uiState.value) {
+            is BookListUiState.Empty -> BookListUiState.Success(
+                isLoading = true,
+                books = emptyList(),
+                isDraggingEnabled = false,
+            )
+            is BookListUiState.Success -> currentState.copy(isLoading = true)
+        }
 
-        _booksLoading.value = true
-        booksRepository.getBooks().subscribeBy(
-            onComplete = {
-                noBooksError()
-            },
-            onNext = {
+        booksRepository
+            .getBooks()
+            .subscribeBy(
+                onComplete = {
+                    showError()
+                },
+                onNext = { books ->
 
-                if (it.isEmpty()) {
-                    noBooksError()
-                } else {
-
-                    showBooks(it)
-                    _booksLoading.value = false
-                }
-            },
-            onError = {
-                noBooksError()
-            }
-        ).addTo(disposables)
+                    if (books.isEmpty()) {
+                        showError()
+                    } else {
+                        _uiState.value = when (val currentState = _uiState.value) {
+                            is BookListUiState.Empty -> BookListUiState.Success(
+                                isLoading = true,
+                                books = getFilteredBooksFor(books),
+                                isDraggingEnabled = false,
+                            )
+                            is BookListUiState.Success -> currentState.copy(
+                                isLoading = false,
+                                books = getFilteredBooksFor(books),
+                            )
+                        }
+                    }
+                },
+                onError = {
+                    showError()
+                },
+            ).addTo(disposables)
     }
 
-    fun setPosition(newPosition: ScrollPosition) {
-        _scrollPosition.value = newPosition
+    fun closeDialogs() {
+        _infoDialogMessageId.value = -1
     }
 
-    fun sort(context: Context, acceptHandler: (() -> Unit)?) {
-        super.sort(context, sortParam, isSortDescending) { newSortParam, newIsSortDescending ->
+    fun switchDraggingState() {
+        (_uiState.value as? BookListUiState.Success)?.let { state ->
+            _uiState.value = state.copy(isDraggingEnabled = state.isDraggingEnabled.not())
+        }
+    }
 
-            sortParam = newSortParam
-            isSortDescending = newIsSortDescending
-            fetchBooks()
-            acceptHandler?.invoke()
+    fun updateBookOrdering(books: List<Book>) {
+        for ((index, book) in books.withIndex()) {
+            book.priority = index
+        }
+        _uiState.value = when (val currentState = _uiState.value) {
+            is BookListUiState.Empty -> BookListUiState.Success(
+                isLoading = false,
+                books = getFilteredBooksFor(books),
+                isDraggingEnabled = true,
+            )
+            is BookListUiState.Success -> currentState.copy(books = getFilteredBooksFor(books))
         }
     }
 
     fun setPriorityFor(books: List<Book>) {
+        booksRepository
+            .setBooks(books)
+            .subscribeBy(
+                onComplete = {
+                    /* no-op due to database is being observed */
+                },
+                onError = {
+                    showError()
+                },
+            ).addTo(disposables)
+    }
 
-        _booksLoading.value = true
-        booksRepository.setBooks(books, success = {
+    fun showSortingPickerState() {
+        _sortingPickerState.value = _sortingPickerState.value.copy(show = true)
+    }
 
-            showBooks(books)
-            _booksLoading.value = false
-        }, failure = {
-
-            _booksLoading.value = false
-            _booksError.value = it
-        })
+    fun updatePickerState(newSortParam: String?, newIsSortDescending: Boolean) {
+        _sortingPickerState.value = UiSortingPickerState(
+            show = false,
+            sortParam = newSortParam,
+            isSortDescending = newIsSortDescending,
+        )
+        fetchBooks()
     }
 
     fun setTutorialAsShown() {
-
         userRepository.setHasDragTutorialBeenShown(true)
         tutorialShown = true
     }
     //endregion
 
     //region Private methods
-    private fun showBooks(books: List<Book>) {
-
+    private fun getFilteredBooksFor(books: List<Book>): List<Book> {
         var filteredBooks = books
             .filter { book ->
 
@@ -138,10 +182,9 @@ class BookListViewModel @Inject constructor(
                     condition = condition && book.state == state
                 }
                 condition
-            }
-            .filter { book ->
-                (book.title?.contains(query, true) ?: false)
-                    || book.authorsToString().contains(query, true)
+            }.filter { book ->
+                (book.title?.contains(query, true) ?: false) ||
+                    book.authorsToString().contains(query, true)
             }.filter { book ->
                 book.authorsToString().contains(author ?: "")
             }
@@ -157,12 +200,13 @@ class BookListViewModel @Inject constructor(
         }
 
         val sortComparator = compareBy<Book> {
-            when (sortParam) {
+            when (_sortingPickerState.value.sortParam) {
                 "title" -> it.title
                 "publishedDate" -> it.publishedDate
                 "readingDate" -> it.readingDate
                 "pageCount" -> it.pageCount
                 "rating" -> it.rating
+                "authors" -> it.authorsToString()
                 else -> it.id
             }
         }
@@ -171,14 +215,26 @@ class BookListViewModel @Inject constructor(
         } else {
             sortComparator.thenBy { it.priority }
         }
-        _books.value = filteredBooks.sortedWith(comparator)
-            .let { if (isSortDescending && !arePendingBooks) it.reversed() else it }
+        return filteredBooks
+            .sortedWith(comparator)
+            .let {
+                if (_sortingPickerState.value.isSortDescending && !arePendingBooks) {
+                    it.reversed()
+                } else {
+                    it
+                }
+            }
     }
 
-    private fun noBooksError() {
-
-        _booksLoading.value = false
-        _booksError.value = ErrorResponse("", R.string.error_database)
+    private fun showError(
+        error: ErrorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database),
+    ) {
+        _uiState.value = BookListUiState.Success(
+            isLoading = false,
+            books = emptyList(),
+            isDraggingEnabled = false,
+        )
+        _booksError.value = error
     }
     //endregion
 }

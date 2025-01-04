@@ -11,5 +11,5 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FavouriteBook(
     @Json(name = "isFavourite")
-    val isFavourite: Boolean
+    val isFavourite: Boolean,
 )

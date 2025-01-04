@@ -113,6 +113,7 @@
         <item>readingDate</item>
         <item>pageCount</item>
         <item>rating</item>
+        <item>authors</item>
     </string-array>
     <string-array name="sorting_param_values">
         <item>None</item>
@@ -121,6 +122,7 @@
         <item>Reading date</item>
         <item>Page count</item>
         <item>Rating</item>
+        <item>Author(s)</item>
     </string-array>
     <string-array name="sorting_order_keys" translatable="false">
         <item />

@@ -33,19 +33,13 @@ object Constants {
     const val NO_VALUE = "-"
     const val BOOKS_TO_SHOW = 7
 
-    fun isUserNameValid(username: String): Boolean {
-        return username.isNotBlank()
-    }
+    fun isUserNameValid(username: String): Boolean = username.isNotBlank()
 
-    fun isPasswordValid(password: String): Boolean {
-        return password.length > 3
-    }
+    fun isPasswordValid(password: String): Boolean = password.length > 3
 
-    fun getDateFormatToShow(language: String): String {
-        return when (language) {
-            "es" -> "d MMMM yyyy"
-            else -> "MMMM d, yyyy"
-        }
+    fun getDateFormatToShow(language: String): String = when (language) {
+        "es" -> "d MMMM yyyy"
+        else -> "MMMM d, yyyy"
     }
 }
 
@@ -55,13 +49,9 @@ object BookState {
     const val READ = "READ"
 }
 
-enum class ScrollPosition {
-    TOP, MIDDLE, END
-}
-
 enum class StatusBarStyle {
     PRIMARY,
-    SECONDARY
+    SECONDARY,
 }
 
 enum class CustomInputType {
@@ -69,7 +59,7 @@ enum class CustomInputType {
     MULTI_LINE_TEXT,
     NUMBER,
     PASSWORD,
-    DATE
+    DATE,
 }
 
 enum class CustomDropdownType {
@@ -77,5 +67,5 @@ enum class CustomDropdownType {
     STATE,
     SORT_PARAM,
     SORT_ORDER,
-    APP_THEME
+    APP_THEME,
 }
