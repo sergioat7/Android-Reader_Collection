@@ -215,11 +215,11 @@ private fun BookListContent(
     }
 
     val topOffset by animateFloatAsState(
-        targetValue = if (showTopButton) 0f else 200f,
+        targetValue = if (showTopButton) 0f else 250f,
         label = "",
     )
     val bottomOffset by animateFloatAsState(
-        targetValue = if (showBottomButton) 0f else 200f,
+        targetValue = if (showBottomButton) 0f else 250f,
         label = "",
     )
 
