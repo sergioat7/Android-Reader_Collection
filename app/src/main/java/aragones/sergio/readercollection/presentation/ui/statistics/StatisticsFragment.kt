@@ -93,9 +93,12 @@ class StatisticsFragment :
         initializeUi()
         binding.composeView.setContent {
             ReaderCollectionTheme {
+                val error by viewModel.booksError.observeAsState()
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
                     initial = -1,
                 )
+                val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+
                 ConfirmationAlertDialog(
                     show = confirmationMessageId != -1,
                     textId = confirmationMessageId,
@@ -125,8 +128,15 @@ class StatisticsFragment :
                     },
                 )
 
-                val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
-                val text = if (infoMessageId != -1) {
+                val text = if (error != null) {
+                    val errorText = StringBuilder()
+                    if (requireNotNull(error).error.isNotEmpty()) {
+                        errorText.append(requireNotNull(error).error)
+                    } else {
+                        errorText.append(resources.getString(requireNotNull(error).errorKey))
+                    }
+                    errorText.toString()
+                } else if (infoMessageId != -1) {
                     getString(infoMessageId)
                 } else {
                     ""
@@ -388,10 +398,6 @@ class StatisticsFragment :
             } else {
                 hideLoading()
             }
-        }
-
-        viewModel.booksError.observe(viewLifecycleOwner) {
-            it?.let { manageError(it) }
         }
 
         viewModel.booksByYearStats.observe(viewLifecycleOwner) { entries ->
