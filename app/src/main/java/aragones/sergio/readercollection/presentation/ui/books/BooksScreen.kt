@@ -344,8 +344,10 @@ private fun BooksSection(
 ) {
     if (books.isNotEmpty()) {
         Column(modifier) {
-            BooksSectionHeader(title = title, onShowAll = onShowAll)
-            Spacer(Modifier.height(8.dp))
+            if (showAll) {
+                BooksSectionHeader(title = title, onShowAll = onShowAll)
+                Spacer(Modifier.height(8.dp))
+            }
             LazyRow {
                 itemsIndexed(books) { index, book ->
 

@@ -5,6 +5,9 @@
 
 package aragones.sergio.readercollection.presentation.ui.statistics
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
@@ -12,7 +15,6 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.presentation.extensions.combineWith
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.extensions.getGroupedBy
@@ -32,49 +34,15 @@ class StatisticsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _books = MutableLiveData<List<Book>>()
-    private val _booksLoading = MutableLiveData<Boolean>()
+    private var _state: MutableState<StatisticsUiState> = mutableStateOf(StatisticsUiState.Empty)
     private val _booksError = MutableLiveData<ErrorResponse?>()
-    private val _booksByYearStats = MutableLiveData<List<BarEntry>>()
-    private val _booksByMonthStats = MutableLiveData<List<PieEntry>>()
-    private val _booksByAuthorStats = MutableLiveData<Map<String, List<Book>>>()
-    private val _longerBook = MutableLiveData<Book?>()
-    private val _shorterBook = MutableLiveData<Book?>()
-    private val _booksByFormatStats = MutableLiveData<List<PieEntry>>()
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
-    val books: LiveData<List<Book>> = _books
-    val booksLoading: LiveData<Boolean> = _booksLoading
+    val state: State<StatisticsUiState> = _state
     val booksError: LiveData<ErrorResponse?> = _booksError
-    val booksByYearStats: LiveData<List<BarEntry>> = _booksByYearStats
-    val booksByMonthStats: LiveData<List<PieEntry>> = _booksByMonthStats
-    val booksByAuthorStats: LiveData<Map<String, List<Book>>> = _booksByAuthorStats
-    val longerBook: LiveData<Book?> = _longerBook
-    val shorterBook: LiveData<Book?> = _shorterBook
-    val booksByFormatStats: LiveData<List<PieEntry>> = _booksByFormatStats
-    val noResultsVisible: LiveData<Boolean> = booksByYearStats.combineWith(
-        booksByMonthStats,
-        booksByAuthorStats,
-        longerBook,
-        shorterBook,
-        booksByFormatStats,
-    ) { booksByYearStats,
-        booksByMonthStats,
-        booksByAuthorStats,
-        longerBook,
-        shorterBook,
-        booksByFormatStats,
-        ->
-        booksByYearStats?.isEmpty() == true &&
-            booksByMonthStats?.isEmpty() == true &&
-            booksByAuthorStats?.isEmpty() == true &&
-            longerBook == null &&
-            shorterBook == null &&
-            booksByFormatStats?.isEmpty() == true
-    }
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
@@ -93,32 +61,38 @@ class StatisticsViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-        _booksLoading.value = true
+        _state.value = when (val currentState = _state.value) {
+            is StatisticsUiState.Empty -> StatisticsUiState.Success.empty().copy(isLoading = true)
+            is StatisticsUiState.Success -> currentState.copy(isLoading = true)
+        }
+
         booksRepository
             .getReadBooks()
             .subscribeBy(
                 onComplete = {
-                    _books.value = emptyList()
-                    manageError(ErrorResponse("", R.string.error_database))
+                    _state.value = StatisticsUiState.Empty
+                    _booksError.value = ErrorResponse("", R.string.error_database)
                 },
                 onNext = { books ->
 
-                    createBooksByYearStats(books)
-                    createBooksByMonthStats(books)
-                    createBooksByAuthorStats(books.filter { it.authorsToString().isNotBlank() })
-                    _longerBook.value = books
-                        .filter { it.pageCount > 0 }
-                        .maxByOrNull { it.pageCount }
-                    _shorterBook.value = books
-                        .filter { it.pageCount > 0 }
-                        .minByOrNull { it.pageCount }
-                    createFormatStats(books.filter { it.format != null })
-                    _books.value = books
-                    _booksLoading.value = false
+                    _state.value = StatisticsUiState.Success(
+                        totalBooksRead = books.size,
+                        booksByYearEntries = createBooksByYearStats(books),
+                        booksByMonthEntries = createBooksByMonthStats(books),
+                        booksByAuthorStats = createBooksByAuthorStats(books),
+                        shorterBook = books
+                            .filter { it.pageCount > 0 }
+                            .minByOrNull { it.pageCount },
+                        longerBook = books
+                            .filter { it.pageCount > 0 }
+                            .maxByOrNull { it.pageCount },
+                        booksByFormatEntries = createFormatStats(books),
+                        isLoading = false,
+                    )
                 },
                 onError = {
-                    _books.value = emptyList()
-                    manageError(ErrorResponse("", R.string.error_database))
+                    _state.value = StatisticsUiState.Empty
+                    _booksError.value = ErrorResponse("", R.string.error_database)
                 },
             ).addTo(disposables)
     }
@@ -133,8 +107,10 @@ class StatisticsViewModel @Inject constructor(
     }
 
     fun closeDialogs() {
+        _booksError.value = null
         _confirmationDialogMessageId.value = -1
         _infoDialogMessageId.value = -1
+        _booksError.value = null
     }
 
     fun importData(jsonData: String) {
@@ -145,7 +121,7 @@ class StatisticsViewModel @Inject constructor(
                     _infoDialogMessageId.value = R.string.data_imported
                 },
                 onError = {
-                    manageError(ErrorResponse("", R.string.error_file_data))
+                    _booksError.value = ErrorResponse("", R.string.error_file_data)
                 },
             ).addTo(disposables)
     }
@@ -160,14 +136,14 @@ class StatisticsViewModel @Inject constructor(
                 },
                 onError = {
                     completion(null)
-                    manageError(ErrorResponse("", R.string.error_database))
+                    _booksError.value = ErrorResponse("", R.string.error_database)
                 },
             ).addTo(disposables)
     }
     //endregion
 
     //region Private methods
-    private fun createBooksByYearStats(books: List<Book>) {
+    private fun createBooksByYearStats(books: List<Book>): List<BarEntry> {
         val booksByYear = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.YEAR)
@@ -182,10 +158,10 @@ class StatisticsViewModel @Inject constructor(
                 ),
             )
         }
-        _booksByYearStats.value = entries
+        return entries
     }
 
-    private fun createBooksByMonthStats(books: List<Book>) {
+    private fun createBooksByMonthStats(books: List<Book>): List<PieEntry> {
         val booksByMonth = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.MONTH)
@@ -200,21 +176,20 @@ class StatisticsViewModel @Inject constructor(
                 ),
             )
         }
-        _booksByMonthStats.value = entries
+        return entries
     }
 
-    private fun createBooksByAuthorStats(books: List<Book>) {
-        _booksByAuthorStats.value = books
-            .groupBy { it.authorsToString() }
-            .toList()
-            .sortedBy { it.second.size }
-            .takeLast(5)
-            .toMap()
-    }
+    private fun createBooksByAuthorStats(books: List<Book>): Map<String, List<Book>> = books
+        .filter { it.authorsToString().isNotBlank() }
+        .groupBy { it.authorsToString() }
+        .toList()
+        .sortedBy { it.second.size }
+        .takeLast(5)
+        .toMap()
 
-    private fun createFormatStats(books: List<Book>) {
+    private fun createFormatStats(books: List<Book>): List<PieEntry> {
         val booksByFormat = books
-            .filter { it.format?.isNotEmpty() == true }
+            .filter { !it.format.isNullOrEmpty() }
             .groupBy { it.format }
 
         val entries = mutableListOf<PieEntry>()
@@ -226,13 +201,7 @@ class StatisticsViewModel @Inject constructor(
                 ),
             )
         }
-        _booksByFormatStats.value = entries
-    }
-
-    private fun manageError(error: ErrorResponse) {
-        _booksLoading.value = false
-        _booksError.value = error
-        _booksError.value = null
+        return entries
     }
     //endregion
 }
