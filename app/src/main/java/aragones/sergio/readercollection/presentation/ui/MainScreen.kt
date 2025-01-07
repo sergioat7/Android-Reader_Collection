@@ -5,17 +5,35 @@
 
 package aragones.sergio.readercollection.presentation.ui
 
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewLightDark
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.ui.navigation.Route
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
 @Composable
 fun MainScreen() {
@@ -23,8 +41,60 @@ fun MainScreen() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            BottomNavigationBar(navController, navBackStackEntry)
+        },
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
+        }
+    }
+}
+
+@Composable
+private fun BottomNavigationBar(
+    navController: NavHostController,
+    navBackStackEntry: NavBackStackEntry?,
+) {
+    BottomNavigation(
+        backgroundColor = MaterialTheme.colors.primary,
+        contentColor = MaterialTheme.colors.secondary,
+    ) {
+        val currentDestination = navBackStackEntry?.destination
+        for (item in NavItem.entries) {
+            val selected = currentDestination?.hierarchy?.any {
+                it.hasRoute(item.route::class)
+            } == true
+            val title = stringResource(item.title)
+            BottomNavigationItem(
+                selected = selected,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                icon = {
+                    Icon(painter = painterResource(item.icon), contentDescription = title)
+                },
+                label = {
+                    Text(
+                        text = title,
+                        style = if (selected) {
+                            MaterialTheme.typography.h3
+                        } else {
+                            MaterialTheme.typography.body2
+                        },
+                        color = MaterialTheme.colors.secondary,
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 1,
+                    )
+                },
+                selectedContentColor = MaterialTheme.colors.roseBud,
+                unselectedContentColor = MaterialTheme.colors.secondary,
+            )
         }
     }
 }
@@ -35,4 +105,14 @@ private fun MainScreenPreview() {
     ReaderCollectionTheme {
         MainScreen()
     }
+}
+
+private enum class NavItem(
+    val route: Route,
+    @DrawableRes val icon: Int,
+    @StringRes val title: Int,
+) {
+    BOOKS(Route.Books, R.drawable.ic_bookshelf, R.string.title_books),
+    STATISTICS(Route.Statistics, R.drawable.ic_book_statistics, R.string.title_stats),
+    SETTINGS(Route.Settings, R.drawable.ic_settings, R.string.title_settings),
 }
