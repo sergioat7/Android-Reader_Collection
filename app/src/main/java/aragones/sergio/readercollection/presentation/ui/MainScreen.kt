@@ -7,6 +7,8 @@ package aragones.sergio.readercollection.presentation.ui
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -18,6 +20,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -28,10 +31,15 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.navigation.Route
+import aragones.sergio.readercollection.presentation.ui.navigation.booksGraph
+import aragones.sergio.readercollection.presentation.ui.navigation.settingsGraph
+import aragones.sergio.readercollection.presentation.ui.navigation.statisticsGraph
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.roseBud
 
@@ -52,6 +60,7 @@ fun MainScreen() {
         },
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
+            NavigationStack(navController)
         }
     }
 }
@@ -103,6 +112,23 @@ private fun BottomNavigationBar(
             )
         }
     }
+}
+
+@Composable
+private fun NavigationStack(navController: NavHostController) {
+    val navGraph = remember(navController) {
+        navController.createGraph(startDestination = Route.Books) {
+            booksGraph(navController)
+            statisticsGraph(navController)
+            settingsGraph()
+        }
+    }
+    NavHost(
+        navController = navController,
+        graph = navGraph,
+        enterTransition = { EnterTransition.None },
+        exitTransition = { ExitTransition.None },
+    )
 }
 
 @PreviewLightDark
