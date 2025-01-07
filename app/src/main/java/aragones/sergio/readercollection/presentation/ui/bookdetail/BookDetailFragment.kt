@@ -55,7 +55,6 @@ import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 import kotlin.math.abs
@@ -162,24 +161,6 @@ class BookDetailFragment :
         if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
             bookDetailsToolbarSequence?.cancel()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
-        activity
-            ?.findViewById<View>(
-                R.id.top_inset,
-            )?.setBackgroundColor(resources.getColor(R.color.colorPrimary, null))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
-        activity
-            ?.findViewById<View>(
-                R.id.top_inset,
-            )?.setBackgroundColor(resources.getColor(R.color.colorSecondary, null))
     }
 
     override fun onDestroy() {

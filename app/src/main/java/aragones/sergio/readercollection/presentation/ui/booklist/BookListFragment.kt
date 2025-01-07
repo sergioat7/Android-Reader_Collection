@@ -15,14 +15,12 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.databinding.FragmentBookListBinding
 import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.SortingPickerAlertDialog
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.StatusBarStyle
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -126,16 +124,6 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
                 }
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
     }
 
     override fun onDestroy() {
