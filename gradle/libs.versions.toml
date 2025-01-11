@@ -39,6 +39,7 @@ google-services = "4.4.2"
 detekt = "1.23.1"
 spotless-version = "7.0.0.BETA4"
 ktlint = "1.5.0"
+kotlinx-serialization="1.6.3"
 
 [libraries]
 #Android
@@ -124,6 +125,9 @@ compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 #Coil
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 
+#Kotlin
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+
 #Tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
@@ -143,6 +147,7 @@ hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 
 [bundles]
 navigation = ["navigation-fragment-ktx", "navigation-ui-ktx"]
