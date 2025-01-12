@@ -42,7 +42,13 @@ fun MainScreen() {
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         bottomBar = {
-            BottomNavigationBar(navController, navBackStackEntry)
+            val showBottomNavigationBar = navBackStackEntry?.destination?.route?.contains(
+                "home",
+                true,
+            ) ?: false
+            if (showBottomNavigationBar) {
+                BottomNavigationBar(navController, navBackStackEntry)
+            }
         },
     ) { padding ->
         Box(modifier = Modifier.padding(padding)) {
