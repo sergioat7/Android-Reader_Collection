@@ -40,6 +40,7 @@ detekt = "1.23.1"
 spotless-version = "7.0.0.BETA4"
 ktlint = "1.5.0"
 kotlinx-serialization="1.6.3"
+androidx-hilt = "1.2.0"
 
 [libraries]
 #Android
@@ -103,6 +104,7 @@ tap-target-view = { group = "com.getkeepsafe.taptargetview", name = "taptargetvi
 #Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
 
 #In-app update
 app-update-ktx = { group = "com.google.android.play", name = "app-update-ktx", version.ref = "app-update" }
