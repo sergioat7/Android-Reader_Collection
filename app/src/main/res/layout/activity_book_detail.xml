@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+  ~ Created by Sergio Aragonés on 11/11/2020
+  -->
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.aragones.sergio.util.extensions.StringExtensionsKt" />
+
+        <import type="com.aragones.sergio.util.Constants" />
+
+        <import type="com.aragones.sergio.util.CustomInputType" />
+
+        <variable
+            name="activity"
+            type="aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailActivity" />
+
+        <variable
+            name="viewModel"
+            type="aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailViewModel" />
+
+        <variable
+            name="editable"
+            type="Boolean" />
+
+        <variable
+            name="isDarkMode"
+            type="Boolean" />
+
+    </data>
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="50dp"
+        android:paddingBottom="50dp"
+        tools:context=".ui.bookdetail.BookDetailFragment">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/app_bar_layout_book_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:elevation="0dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraint_layout_image_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <aragones.sergio.readercollection.presentation.ui.customview.ImageViewWithLoading
+                        android:id="@+id/image_view_book"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:layout_margin="@dimen/margin_24dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        src="@{viewModel.bookImage}"
+                        placeholder="@{isDarkMode ? @drawable/ic_default_book_cover_blue : @drawable/ic_default_book_cover_white}"
+                        loadingColor="@{@color/colorSecondary}" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/floating_action_button_add_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{() -> activity.setImage()}"
+                        android:visibility="@{editable ? View.VISIBLE : View.GONE}"
+                        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="1.0"
+                        app:srcCompat="@drawable/ic_add_a_photo"
+                        style="@style/Widget.ReaderCollection.FloatingActionButton" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/size_48dp"
+                    android:layout_marginBottom="@dimen/margin_8dp"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@{isDarkMode ? @drawable/ic_arrow_back_blue : @drawable/ic_arrow_back_white}"
+                    app:title=" " />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bordered_scroll_view"
+                android:paddingStart="@dimen/padding_12dp"
+                android:paddingTop="@dimen/padding_24dp"
+                android:paddingEnd="@dimen/padding_12dp"
+                android:paddingBottom="@dimen/padding_32dp">
+
+                <View
+                    android:id="@+id/view_scrolling_indicator"
+                    android:layout_width="@dimen/size_100dp"
+                    android:layout_height="@dimen/size_5dp"
+                    android:background="@drawable/rounded_background_search_view"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                    android:id="@+id/rating_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_30dp"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    android:isIndicator="@{!editable}"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/view_scrolling_indicator"
+                    rating="@{viewModel.isGoogleBook ? viewModel.book.averageRating / 2 : viewModel.book.rating / 2}"
+                    style="@style/Widget.ReaderCollection.RatingBar" />
+
+                <include
+                    android:id="@+id/text_input_layout_title"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_12dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_title}"
+                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
+                    app:isBold="@{true}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rating_bar"
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.title) ? viewModel.book.title : editable ? null : Constants.NO_VALUE}'
+                    app:textSize="@{@dimen/text_size_24sp}" />
+
+                <include
+                    android:id="@+id/text_input_layout_author"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_author}"
+                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_title"
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.authorsToString()) ? viewModel.book.authorsToString() : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}" />
+
+                <HorizontalScrollView
+                    android:id="@+id/horizontal_scroll_view_categories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="none"
+                    android:visibility="@{viewModel.book.categories.size() > 0 ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_author">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chip_group_categories"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:singleLine="true" />
+
+                </HorizontalScrollView>
+
+                <include
+                    android:id="@+id/text_input_layout_description"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_24dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_description}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
+                    app:labelHintText="@{@string/description}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/horizontal_scroll_view_categories"
+                    app:maxLength="@{10240}"
+                    app:maxLines="@{7}"
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.description) ? viewModel.book.description : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}" />
+
+                <Button
+                    android:id="@+id/button_read_more_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_12dp"
+                    android:layout_marginBottom="@dimen/margin_5dp_negative"
+                    android:onClick="@{activity::readMore}"
+                    android:text="@string/read_more"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_description"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_layout_description"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action" />
+
+                <include
+                    android:id="@+id/text_input_layout_summary"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_summary}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
+                    app:labelHintText="@{@string/summary}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_description"
+                    app:maxLength="@{10240}"
+                    app:maxLines="@{7}"
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.summary) ? viewModel.book.summary : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}" />
+
+                <Button
+                    android:id="@+id/button_read_more_summary"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_12dp"
+                    android:layout_marginBottom="@dimen/margin_5dp_negative"
+                    android:onClick="@{activity::readMore}"
+                    android:text="@string/read_more"
+                    app:layout_constraintStart_toStartOf="@+id/text_input_layout_summary"
+                    app:layout_constraintBottom_toBottomOf="@+id/text_input_layout_summary"
+                    style="@style/Widget.ReaderCollection.TextButton.Main.Action" />
+
+                <include
+                    android:id="@+id/dropdown_text_input_layout_state"
+                    layout="@layout/custom_dropdown_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_32dp"
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_state}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:labelHintText="@{@string/state}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/button_read_more_summary"
+                    app:showText="true"
+                    app:textColor="@{@color/textSecondary}" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_states"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_20dp"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:visibility="@{viewModel.bookDetailStatesLoading ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/dropdown_text_input_layout_state"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_state"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_state"
+                    app:layout_constraintTop_toTopOf="@+id/dropdown_text_input_layout_state" />
+
+                <include
+                    android:id="@+id/text_input_layout_reading_date"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/select_a_date}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.DATE}"
+                    app:labelHintText="@{@string/reading_date}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_state"
+                    app:textColor="@{@color/textSecondary}" />
+
+                <include
+                    android:id="@+id/dropdown_text_input_layout_format"
+                    layout="@layout/custom_dropdown_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    app:enabled="@{editable}"
+                    app:inputHintText="@{@string/select_format}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:labelHintText="@{@string/format}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_reading_date"
+                    app:showText="true"
+                    app:textColor="@{@color/textSecondary}" />
+
+                <ProgressBar
+                    android:id="@+id/progress_bar_loading_formats"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/size_20dp"
+                    android:indeterminateTint="@color/colorPrimary"
+                    android:visibility="@{viewModel.bookDetailFormatsLoading ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="@+id/dropdown_text_input_layout_format"
+                    app:layout_constraintEnd_toEndOf="@+id/dropdown_text_input_layout_format"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/dropdown_text_input_layout_format"
+                    app:layout_constraintTop_toTopOf="@+id/dropdown_text_input_layout_format" />
+
+                <include
+                    android:id="@+id/text_input_layout_pages"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_pages}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.NUMBER}"
+                    app:labelHintText="@{@string/pages}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/dropdown_text_input_layout_format"
+                    app:maxLength="@{10}"
+                    app:text="@{viewModel.book.pageCount > 0 ? String.valueOf(viewModel.book.pageCount) : editable ? null : Constants.NO_VALUE}"
+                    app:textColor="@{@color/textSecondary}" />
+
+                <include
+                    android:id="@+id/text_input_layout_isbn"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_isbn}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.NUMBER}"
+                    app:labelHintText="@{@string/isbn}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_pages"
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.isbn) ? viewModel.book.isbn : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}" />
+
+                <include
+                    android:id="@+id/text_input_layout_publisher"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/add_publisher}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.MULTI_LINE_TEXT}"
+                    app:labelHintText="@{@string/publisher}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_isbn"
+                    app:text='@{StringExtensionsKt.isNotBlank(viewModel.book.publisher) ? viewModel.book.publisher : editable ? null : Constants.NO_VALUE}'
+                    app:textColor="@{@color/textSecondary}" />
+
+                <include
+                    android:id="@+id/text_input_layout_published_date"
+                    layout="@layout/custom_text_input_layout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_8dp"
+                    app:enabled="@{editable}"
+                    app:endIconSrc="@{editable ? @drawable/ic_clear_text : null}"
+                    app:inputHintText="@{@string/select_a_date}"
+                    app:inputHintTextColor="@{@color/textSecondaryLight}"
+                    app:inputType="@{CustomInputType.DATE}"
+                    app:labelHintText="@{@string/published_date}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/text_input_layout_publisher"
+                    app:textColor="@{@color/textSecondary}" />
+
+                <androidx.compose.ui.platform.ComposeView
+                    android:id="@+id/compose_view"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="gone" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floating_action_button_favourite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/margin_24dp_negative"
+            android:layout_marginEnd="@dimen/margin_20dp"
+            android:src="@{viewModel.isFavourite() ? @drawable/ic_favourite_full : @drawable/ic_favourite_empty}"
+            android:onClick="@{() -> viewModel.setFavourite(!viewModel.isFavourite)}"
+            android:visibility="@{viewModel.bookDetailFavouriteLoading || viewModel.isGoogleBook ? View.GONE : View.VISIBLE}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:srcCompat="@drawable/ic_favourite_empty"
+            style="@style/Widget.ReaderCollection.FloatingActionButton" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar_loading_favourite"
+            android:layout_width="@dimen/size_56dp"
+            android:layout_height="@dimen/size_56dp"
+            android:layout_gravity="top|end"
+            android:layout_marginTop="@dimen/margin_24dp_negative"
+            android:layout_marginEnd="@dimen/margin_20dp"
+            android:background="@drawable/circular_background_progress_bar"
+            android:indeterminateTint="@color/colorSecondary"
+            android:visibility="@{viewModel.bookDetailFavouriteLoading ? View.VISIBLE : View.GONE}"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

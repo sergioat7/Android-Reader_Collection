@@ -5,12 +5,15 @@
 
 package aragones.sergio.readercollection.presentation.ui.navigation
 
+import android.content.Intent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailActivity
 import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
 import aragones.sergio.readercollection.presentation.ui.books.BooksView
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
@@ -24,8 +27,13 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
+            val context = LocalContext.current
             BooksView(
                 onBookClick = { bookId ->
+                    val intent = Intent(context, BookDetailActivity::class.java)
+                    intent.putExtra("bookId", bookId)
+                    intent.putExtra("isGoogleBook", false)
+                    context.startActivity(intent)
                 },
                 onShowAll = { bookState, sortParam, isSortDescending, query ->
                     navController.navigate(
@@ -50,8 +58,13 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
+            val context = LocalContext.current
             SearchView(
                 onBookClick = { bookId ->
+                    val intent = Intent(context, BookDetailActivity::class.java)
+                    intent.putExtra("bookId", bookId)
+                    intent.putExtra("isGoogleBook", true)
+                    context.startActivity(intent)
                 },
                 onBack = {
                     navController.navigateUp()
@@ -62,8 +75,13 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
+            val context = LocalContext.current
             BookListView(
                 onBookClick = { bookId ->
+                    val intent = Intent(context, BookDetailActivity::class.java)
+                    intent.putExtra("bookId", bookId)
+                    intent.putExtra("isGoogleBook", false)
+                    context.startActivity(intent)
                 },
                 onBack = {
                     navController.navigateUp()
@@ -84,8 +102,13 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
+            val context = LocalContext.current
             StatisticsView(
                 onBookClick = { bookId ->
+                    val intent = Intent(context, BookDetailActivity::class.java)
+                    intent.putExtra("bookId", bookId)
+                    intent.putExtra("isGoogleBook", false)
+                    context.startActivity(intent)
                 },
                 onShowAll = { sortParam, isSortDescending, year, month, author, format ->
                     navController.navigate(
@@ -107,8 +130,13 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
+            val context = LocalContext.current
             BookListView(
                 onBookClick = { bookId ->
+                    val intent = Intent(context, BookDetailActivity::class.java)
+                    intent.putExtra("bookId", bookId)
+                    intent.putExtra("isGoogleBook", false)
+                    context.startActivity(intent)
                 },
                 onBack = {
                     navController.navigateUp()

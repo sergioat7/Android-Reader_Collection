@@ -23,6 +23,7 @@
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".presentation.ui.register.RegisterActivity" />
         <activity android:name=".presentation.ui.login.LoginActivity" />
+        <activity android:name=".presentation.ui.bookdetail.BookDetailActivity" />
         <activity
             android:name=".presentation.ui.landing.LandingActivity"
             android:exported="true">
