@@ -190,11 +190,5 @@ class StatisticsFragment : BindingFragment<FragmentStatisticsBinding>() {
                 }
             }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 }

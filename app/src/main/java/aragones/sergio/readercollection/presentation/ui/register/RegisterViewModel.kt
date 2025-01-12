@@ -42,8 +42,9 @@ class RegisterViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
+
         userRepository.onDestroy()
     }
     //endregion

@@ -45,8 +45,8 @@ class LoginViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
 
         booksRepository.onDestroy()
         userRepository.onDestroy()

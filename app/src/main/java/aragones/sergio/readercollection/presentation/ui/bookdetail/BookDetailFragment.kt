@@ -162,12 +162,6 @@ class BookDetailFragment :
             bookDetailsToolbarSequence?.cancel()
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 
     //region Interface methods

@@ -74,8 +74,8 @@ class SettingsViewModel @Inject constructor(
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
 
         booksRepository.onDestroy()
         userRepository.onDestroy()

@@ -80,11 +80,5 @@ class SearchFragment : BindingFragment<FragmentSearchBinding>() {
 
         viewModel.onResume()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 }

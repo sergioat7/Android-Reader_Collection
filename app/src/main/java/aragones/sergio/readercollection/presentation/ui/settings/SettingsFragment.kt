@@ -146,12 +146,6 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
         viewModel.onResume()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 
     //region Private methods

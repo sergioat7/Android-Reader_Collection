@@ -81,11 +81,5 @@ class LoginActivity : BaseActivity() {
             moveTaskToBack(true)
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 }

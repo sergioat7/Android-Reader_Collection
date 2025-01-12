@@ -82,11 +82,5 @@ class RegisterActivity : BaseActivity() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 }

@@ -125,11 +125,5 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
             }
         }
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
-    }
     //endregion
 }

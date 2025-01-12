@@ -37,7 +37,6 @@ class LandingActivity : BaseActivity() {
     override fun onDestroy() {
         super.onDestroy()
 
-        viewModel.onDestroy()
         inAppUpdateService.onDestroy()
     }
     //endregion

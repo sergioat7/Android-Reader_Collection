@@ -20,7 +20,9 @@ open class BaseViewModel : ViewModel() {
 
     val disposables = CompositeDisposable()
 
-    open fun onDestroy() {
+    override fun onCleared() {
+        super.onCleared()
+
         disposables.clear()
     }
 

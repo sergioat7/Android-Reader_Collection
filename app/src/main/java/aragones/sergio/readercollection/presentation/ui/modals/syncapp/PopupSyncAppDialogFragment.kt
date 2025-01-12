@@ -35,11 +35,6 @@ class PopupSyncAppDialogFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         initializeUI()
     }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewModel.onDestroy()
-    }
     //endregion
 
     //region Private functions
