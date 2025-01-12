@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.presentation.ui.books.BooksView
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
 import aragones.sergio.readercollection.presentation.ui.settings.SettingsView
 import aragones.sergio.readercollection.presentation.ui.statistics.StatisticsView
+import com.aragones.sergio.util.BookState
 
 fun NavGraphBuilder.booksGraph(navController: NavHostController) {
     navigation<Route.Books>(startDestination = Route.BooksHome) {
@@ -27,8 +28,21 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
                 onBookClick = { bookId ->
                 },
                 onShowAll = { bookState, sortParam, isSortDescending, query ->
+                    navController.navigate(
+                        Route.BookList(
+                            state = bookState,
+                            sortParam = sortParam,
+                            isSortDescending = isSortDescending,
+                            query = query,
+                            year = -1,
+                            month = -1,
+                            author = null,
+                            format = null,
+                        ),
+                    )
                 },
                 onAddBook = {
+                    navController.navigate(Route.Search)
                 },
             )
         }
@@ -40,6 +54,7 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
                 onBookClick = { bookId ->
                 },
                 onBack = {
+                    navController.navigateUp()
                 },
             )
         }
@@ -51,6 +66,7 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
                 onBookClick = { bookId ->
                 },
                 onBack = {
+                    navController.navigateUp()
                 },
             )
         }
@@ -72,6 +88,18 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
                 onBookClick = { bookId ->
                 },
                 onShowAll = { sortParam, isSortDescending, year, month, author, format ->
+                    navController.navigate(
+                        Route.BookList(
+                            state = BookState.READ,
+                            sortParam = sortParam,
+                            isSortDescending = isSortDescending,
+                            query = "",
+                            year = year,
+                            month = month,
+                            author = author,
+                            format = format,
+                        ),
+                    )
                 },
             )
         }
@@ -83,6 +111,7 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
                 onBookClick = { bookId ->
                 },
                 onBack = {
+                    navController.navigateUp()
                 },
             )
         }
