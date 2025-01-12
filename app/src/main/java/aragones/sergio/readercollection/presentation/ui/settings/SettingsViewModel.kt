@@ -108,7 +108,7 @@ class SettingsViewModel @Inject constructor(
                 .subscribeBy(
                     onComplete = {
                         _state.value = _state.value.copy(isLoading = false)
-                        if (changeLanguage || changeSortParam || changeIsSortDescending) {
+                        if (changeSortParam || changeIsSortDescending) {
                             _activityName.value = LandingActivity::class.simpleName
                         }
                     },
@@ -141,7 +141,7 @@ class SettingsViewModel @Inject constructor(
             }
         }
 
-        if (!changePassword && (changeLanguage || changeSortParam || changeIsSortDescending)) {
+        if (!changePassword && (changeSortParam || changeIsSortDescending)) {
             _activityName.value = LandingActivity::class.simpleName
         }
     }
