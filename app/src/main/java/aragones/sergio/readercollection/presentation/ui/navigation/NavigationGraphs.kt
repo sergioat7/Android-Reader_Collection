@@ -11,6 +11,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
 import aragones.sergio.readercollection.presentation.ui.books.BooksView
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
 
@@ -44,6 +45,12 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
+            BookListView(
+                onBookClick = { bookId ->
+                },
+                onBack = {
+                },
+            )
         }
         composable<Route.BookDetail>(
             enterTransition = { slideIntoContainer() },
@@ -64,6 +71,12 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
+            BookListView(
+                onBookClick = { bookId ->
+                },
+                onBack = {
+                },
+            )
         }
         composable<Route.BookDetail>(
             enterTransition = { slideIntoContainer() },

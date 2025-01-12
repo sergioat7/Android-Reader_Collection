@@ -51,7 +51,7 @@ class BookListFragment : BindingFragment<FragmentBookListBinding>() {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnViewTreeLifecycleDestroyed)
             setContent {
                 ReaderCollectionTheme {
-                    val state by viewModel.uiState
+                    val state by viewModel.state
                     val sortingPickerState by viewModel.sortingPickerState
                     val error by viewModel.booksError.observeAsState()
 
