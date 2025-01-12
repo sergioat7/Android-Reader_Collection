@@ -47,7 +47,7 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
         binding.composeView.setContent {
             ReaderCollectionTheme {
-                val state by viewModel.uiState
+                val state by viewModel.state
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
                     initial = -1,
                 )

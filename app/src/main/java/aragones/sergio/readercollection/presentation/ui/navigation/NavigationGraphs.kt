@@ -14,6 +14,7 @@ import androidx.navigation.compose.navigation
 import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
 import aragones.sergio.readercollection.presentation.ui.books.BooksView
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
+import aragones.sergio.readercollection.presentation.ui.settings.SettingsView
 import aragones.sergio.readercollection.presentation.ui.statistics.StatisticsView
 
 fun NavGraphBuilder.booksGraph(navController: NavHostController) {
@@ -99,6 +100,7 @@ fun NavGraphBuilder.settingsGraph() {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
+            SettingsView()
         }
     }
 }
