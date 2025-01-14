@@ -6,12 +6,12 @@
 package aragones.sergio.readercollection.presentation.ui.booklist
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.components.LaunchedEffectOnce
 import aragones.sergio.readercollection.presentation.ui.components.SortingPickerAlertDialog
 
 @Composable
@@ -83,7 +83,7 @@ fun BookListView(
         onBack()
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffectOnce {
         viewModel.fetchBooks()
     }
 }

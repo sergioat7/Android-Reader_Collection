@@ -10,7 +10,6 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +18,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.components.LaunchedEffectOnce
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -142,7 +142,7 @@ fun StatisticsView(
         viewModel.closeDialogs()
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffectOnce {
         viewModel.fetchBooks()
     }
 }
