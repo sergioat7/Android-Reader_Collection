@@ -113,31 +113,19 @@
             NewLineAtEndOfFile:BindingAdapters.kt$aragones.sergio.readercollection.extensions.BindingAdapters.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BindingFragment.kt$aragones.sergio.readercollection.presentation.ui.base.BindingFragment.kt
-        </ID>
-        <ID>
             NewLineAtEndOfFile:BookApiService.kt$aragones.sergio.readercollection.network.interfaces.BookApiService.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BookDao.kt$com.aragones.sergio.database.daos.BookDao.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:BookDetailFragment.kt$aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailFragment.kt
-        </ID>
-        <ID>
             NewLineAtEndOfFile:BookDetailViewModel.kt$aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailViewModel.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:BookListFragment.kt$aragones.sergio.readercollection.presentation.ui.booklist.BookListFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BookListViewModel.kt$aragones.sergio.readercollection.presentation.ui.booklist.BookListViewModel.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BookResponse.kt$aragones.sergio.readercollection.data.remote.model.BookResponse.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:BooksFragment.kt$aragones.sergio.readercollection.presentation.ui.books.BooksFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:BooksRepository.kt$aragones.sergio.readercollection.data.source.BooksRepository.kt
@@ -278,13 +266,7 @@
             NewLineAtEndOfFile:RequestResult.kt$aragones.sergio.readercollection.network.RequestResult.kt
         </ID>
         <ID>
-            NewLineAtEndOfFile:SearchFragment.kt$aragones.sergio.readercollection.presentation.ui.search.SearchFragment.kt
-        </ID>
-        <ID>
             NewLineAtEndOfFile:SearchViewModel.kt$aragones.sergio.readercollection.presentation.ui.search.SearchViewModel.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:SettingsFragment.kt$aragones.sergio.readercollection.presentation.ui.settings.SettingsFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:SettingsViewModel.kt$aragones.sergio.readercollection.presentation.ui.settings.SettingsViewModel.kt
@@ -297,9 +279,6 @@
         </ID>
         <ID>
             NewLineAtEndOfFile:StateResponse.kt$aragones.sergio.readercollection.data.remote.model.StateResponse.kt
-        </ID>
-        <ID>
-            NewLineAtEndOfFile:StatisticsFragment.kt$aragones.sergio.readercollection.presentation.ui.statistics.StatisticsFragment.kt
         </ID>
         <ID>
             NewLineAtEndOfFile:StatisticsViewModel.kt$aragones.sergio.readercollection.presentation.ui.statistics.StatisticsViewModel.kt
