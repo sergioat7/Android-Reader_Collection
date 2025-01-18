@@ -9,6 +9,8 @@ import kotlinx.serialization.Serializable
 
 sealed class Route {
 
+    // Graph routes
+
     @Serializable
     data object Books : Route()
 
@@ -17,6 +19,8 @@ sealed class Route {
 
     @Serializable
     data object Settings : Route()
+
+    // Screen routes
 
     @Serializable
     data object BooksHome : Route()

@@ -5,12 +5,10 @@
 
 package aragones.sergio.readercollection.presentation.ui.settings
 
-import android.content.Intent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
@@ -19,7 +17,7 @@ import aragones.sergio.readercollection.presentation.ui.components.InformationAl
 import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 
 @Composable
-fun SettingsView(viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsView(onLogout: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
     val state by viewModel.state
     val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
         initial = -1,
@@ -31,10 +29,8 @@ fun SettingsView(viewModel: SettingsViewModel = hiltViewModel()) {
 
     val activityName = viewModel.activityName.observeAsState()
     if (activityName.value == LandingActivity::class.simpleName) {
-        val context = LocalContext.current
-        val intent = Intent(context, LandingActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        context.startActivity(intent)
+        onLogout()
+        return
     }
 
     SettingsScreen(

@@ -75,20 +75,23 @@ class StatisticsViewModel @Inject constructor(
                 },
                 onNext = { books ->
 
-                    _state.value = StatisticsUiState.Success(
-                        totalBooksRead = books.size,
-                        booksByYearEntries = createBooksByYearStats(books),
-                        booksByMonthEntries = createBooksByMonthStats(books),
-                        booksByAuthorStats = createBooksByAuthorStats(books),
-                        shorterBook = books
-                            .filter { it.pageCount > 0 }
-                            .minByOrNull { it.pageCount },
-                        longerBook = books
-                            .filter { it.pageCount > 0 }
-                            .maxByOrNull { it.pageCount },
-                        booksByFormatEntries = createFormatStats(books),
-                        isLoading = false,
-                    )
+                    _state.value = when (books.isEmpty()) {
+                        true -> StatisticsUiState.Empty
+                        false -> StatisticsUiState.Success(
+                            totalBooksRead = books.size,
+                            booksByYearEntries = createBooksByYearStats(books),
+                            booksByMonthEntries = createBooksByMonthStats(books),
+                            booksByAuthorStats = createBooksByAuthorStats(books),
+                            shorterBook = books
+                                .filter { it.pageCount > 0 }
+                                .minByOrNull { it.pageCount },
+                            longerBook = books
+                                .filter { it.pageCount > 0 }
+                                .maxByOrNull { it.pageCount },
+                            booksByFormatEntries = createFormatStats(books),
+                            isLoading = false,
+                        )
+                    }
                 },
                 onError = {
                     _state.value = StatisticsUiState.Empty

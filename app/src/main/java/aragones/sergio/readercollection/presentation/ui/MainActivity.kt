@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
@@ -44,6 +45,10 @@ class MainActivity : ComponentActivity() {
                 inAppUpdateService.onResume()
             }
         }
+
+        onBackPressedDispatcher.addCallback {
+            moveTaskToBack(true)
+        }
     }
 
     override fun onResume() {
@@ -62,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun ReaderCollectionScreen(content: @Composable () -> Unit) {
-    ReaderCollectionTheme {
+    ReaderCollectionTheme(navigationBarSameAsBackground = false) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()

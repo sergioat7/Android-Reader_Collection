@@ -16,6 +16,7 @@ import androidx.navigation.compose.navigation
 import aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailActivity
 import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
 import aragones.sergio.readercollection.presentation.ui.books.BooksView
+import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
 import aragones.sergio.readercollection.presentation.ui.settings.SettingsView
 import aragones.sergio.readercollection.presentation.ui.statistics.StatisticsView
@@ -30,9 +31,10 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             val context = LocalContext.current
             BooksView(
                 onBookClick = { bookId ->
-                    val intent = Intent(context, BookDetailActivity::class.java)
-                    intent.putExtra("bookId", bookId)
-                    intent.putExtra("isGoogleBook", false)
+                    val intent = Intent(context, BookDetailActivity::class.java).apply {
+                        putExtra("bookId", bookId)
+                        putExtra("isGoogleBook", false)
+                    }
                     context.startActivity(intent)
                 },
                 onShowAll = { bookState, sortParam, isSortDescending, query ->
@@ -61,9 +63,10 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             val context = LocalContext.current
             SearchView(
                 onBookClick = { bookId ->
-                    val intent = Intent(context, BookDetailActivity::class.java)
-                    intent.putExtra("bookId", bookId)
-                    intent.putExtra("isGoogleBook", true)
+                    val intent = Intent(context, BookDetailActivity::class.java).apply {
+                        putExtra("bookId", bookId)
+                        putExtra("isGoogleBook", true)
+                    }
                     context.startActivity(intent)
                 },
                 onBack = {
@@ -78,9 +81,10 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             val context = LocalContext.current
             BookListView(
                 onBookClick = { bookId ->
-                    val intent = Intent(context, BookDetailActivity::class.java)
-                    intent.putExtra("bookId", bookId)
-                    intent.putExtra("isGoogleBook", false)
+                    val intent = Intent(context, BookDetailActivity::class.java).apply {
+                        putExtra("bookId", bookId)
+                        putExtra("isGoogleBook", false)
+                    }
                     context.startActivity(intent)
                 },
                 onBack = {
@@ -105,9 +109,10 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
             val context = LocalContext.current
             StatisticsView(
                 onBookClick = { bookId ->
-                    val intent = Intent(context, BookDetailActivity::class.java)
-                    intent.putExtra("bookId", bookId)
-                    intent.putExtra("isGoogleBook", false)
+                    val intent = Intent(context, BookDetailActivity::class.java).apply {
+                        putExtra("bookId", bookId)
+                        putExtra("isGoogleBook", false)
+                    }
                     context.startActivity(intent)
                 },
                 onShowAll = { sortParam, isSortDescending, year, month, author, format ->
@@ -133,9 +138,10 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
             val context = LocalContext.current
             BookListView(
                 onBookClick = { bookId ->
-                    val intent = Intent(context, BookDetailActivity::class.java)
-                    intent.putExtra("bookId", bookId)
-                    intent.putExtra("isGoogleBook", false)
+                    val intent = Intent(context, BookDetailActivity::class.java).apply {
+                        putExtra("bookId", bookId)
+                        putExtra("isGoogleBook", false)
+                    }
                     context.startActivity(intent)
                 },
                 onBack = {
@@ -157,7 +163,15 @@ fun NavGraphBuilder.settingsGraph() {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            SettingsView()
+            val context = LocalContext.current
+            SettingsView(
+                onLogout = {
+                    val intent = Intent(context, LandingActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    context.startActivity(intent)
+                },
+            )
         }
     }
 }

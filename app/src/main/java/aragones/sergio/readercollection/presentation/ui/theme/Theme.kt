@@ -38,22 +38,40 @@ private val DarkColorScheme = darkColors(
 
 @Composable
 fun ReaderCollectionTheme(
+    statusBarSameAsBackground: Boolean = true,
+    navigationBarSameAsBackground: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     val colors = if (darkTheme) DarkColorScheme else LightColorScheme
-    val (statusBarStyle, navigationBarStyle) = if (darkTheme) {
+
+    val systemBarAsBackground = if (darkTheme) {
         SystemBarStyle.dark(
             colors.secondary.toArgb(),
-        ) to SystemBarStyle.light(
-            colors.primary.toArgb(),
-            colors.primary.toArgb(),
         )
     } else {
         SystemBarStyle.light(
             colors.secondary.toArgb(),
             colors.secondary.toArgb(),
-        ) to SystemBarStyle.dark(colors.primary.toArgb())
+        )
+    }
+    val systemBarOppositeToBackground = if (darkTheme) {
+        SystemBarStyle.light(
+            colors.primary.toArgb(),
+            colors.primary.toArgb(),
+        )
+    } else {
+        SystemBarStyle.dark(colors.primary.toArgb())
+    }
+    val statusBarStyle = if (statusBarSameAsBackground) {
+        systemBarAsBackground
+    } else {
+        systemBarOppositeToBackground
+    }
+    val navigationBarStyle = if (navigationBarSameAsBackground) {
+        systemBarAsBackground
+    } else {
+        systemBarOppositeToBackground
     }
 
     val context = LocalContext.current as ComponentActivity
