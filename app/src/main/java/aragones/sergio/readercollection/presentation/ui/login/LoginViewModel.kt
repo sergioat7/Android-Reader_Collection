@@ -17,7 +17,6 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.ui.login.model.LoginFormState
-import aragones.sergio.readercollection.presentation.ui.register.RegisterActivity
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -62,7 +61,6 @@ class LoginViewModel @Inject constructor(
                 onComplete = {
                     _uiState.value = _uiState.value.copy(isLoading = false)
                     _activityName.value = MainActivity::class.simpleName
-                    _activityName.value = null
                 },
                 onError = {
                     _uiState.value = _uiState.value.copy(isLoading = false)
@@ -93,11 +91,6 @@ class LoginViewModel @Inject constructor(
             password = password,
             formState = LoginFormState(usernameError, passwordError, isDataValid),
         )
-    }
-
-    fun goToRegister() {
-        _activityName.value = RegisterActivity::class.simpleName
-        _activityName.value = null
     }
 
     fun closeDialogs() {

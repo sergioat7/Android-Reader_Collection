@@ -6,74 +6,62 @@
 package aragones.sergio.readercollection.presentation.ui.login
 
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
-import androidx.activity.viewModels
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.core.content.ContextCompat
-import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.databinding.ActivityLoginBinding
-import aragones.sergio.readercollection.presentation.extensions.isDarkMode
-import aragones.sergio.readercollection.presentation.extensions.setStatusBarStyle
-import aragones.sergio.readercollection.presentation.ui.MainActivity
-import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
-import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
-import aragones.sergio.readercollection.presentation.ui.register.RegisterActivity
+import androidx.activity.compose.setContent
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
+import aragones.sergio.readercollection.presentation.ui.navigation.Route
+import aragones.sergio.readercollection.presentation.ui.navigation.authGraph
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginActivity : BaseActivity() {
-
-    //region Private properties
-    private val viewModel: LoginViewModel by viewModels()
-    //endregion
+class LoginActivity : ComponentActivity() {
 
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.setStatusBarStyle(
-            ContextCompat.getColor(this, R.color.colorSecondary),
-            !isDarkMode(),
-        )
-
-        ActivityLoginBinding.inflate(layoutInflater).apply {
-            setContentView(root)
-
-            composeView.setContent {
-                ReaderCollectionTheme {
-                    val state by viewModel.uiState
-                    val error by viewModel.loginError.observeAsState()
-
-                    LoginScreen(
-                        state = state,
-                        onLoginDataChange = viewModel::loginDataChanged,
-                        onLogin = viewModel::login,
-                        onGoToRegister = viewModel::goToRegister,
-                    )
-
-                    val errorText = StringBuilder()
-                    error?.let {
-                        if (it.error.isNotEmpty()) {
-                            errorText.append(it.error)
-                        } else {
-                            errorText.append(resources.getString(it.errorKey))
+        setContent {
+            ReaderCollectionTheme {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(WindowInsets.safeDrawing.asPaddingValues()),
+                ) {
+                    val navController = rememberNavController()
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                    ) { padding ->
+                        Box(modifier = Modifier.padding(padding)) {
+                            val navGraph = remember(navController) {
+                                navController.createGraph(startDestination = Route.Auth) {
+                                    authGraph(navController)
+                                }
+                            }
+                            NavHost(
+                                navController = navController,
+                                graph = navGraph,
+                                enterTransition = { EnterTransition.None },
+                                exitTransition = { ExitTransition.None },
+                            )
                         }
                     }
-                    InformationAlertDialog(show = error != null, text = errorText.toString()) {
-                        viewModel.closeDialogs()
-                    }
                 }
-            }
-        }
-
-        viewModel.activityName.observe(this) { activityName ->
-
-            when (activityName) {
-                MainActivity::class.simpleName -> launchActivity(MainActivity::class.java, true)
-                RegisterActivity::class.simpleName -> launchActivity(RegisterActivity::class.java)
-                else -> Unit
             }
         }
 

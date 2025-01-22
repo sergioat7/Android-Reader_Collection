@@ -13,10 +13,12 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailActivity
 import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
 import aragones.sergio.readercollection.presentation.ui.books.BooksView
 import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
+import aragones.sergio.readercollection.presentation.ui.login.LoginView
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
 import aragones.sergio.readercollection.presentation.ui.settings.SettingsView
 import aragones.sergio.readercollection.presentation.ui.statistics.StatisticsView
@@ -28,6 +30,18 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
+            val context = LocalContext.current
+            LoginView(
+                onGoToMain = {
+                    val intent = Intent(context, MainActivity::class.java).apply {
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    context.startActivity(intent)
+                },
+                onGoToRegister = {
+                    navController.navigate(Route.Register)
+                },
+            )
         }
         composable<Route.Register>(
             enterTransition = { slideIntoContainer() },
