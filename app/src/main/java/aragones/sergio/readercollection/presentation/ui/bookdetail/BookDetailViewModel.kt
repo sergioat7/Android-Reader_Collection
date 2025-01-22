@@ -8,12 +8,14 @@ package aragones.sergio.readercollection.presentation.ui.bookdetail
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
+import aragones.sergio.readercollection.presentation.ui.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -28,8 +30,7 @@ class BookDetailViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val bookId: String =
-        state["bookId"] ?: throw IllegalStateException("Book id not found in the state handle")
+    private val params = state.toRoute<Route.BookDetail>()
     private val _book = MutableLiveData<Book>()
     private val _bookImage = MutableLiveData<String?>()
     private val _isFavourite = MutableLiveData<Boolean>()
@@ -47,7 +48,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    var isGoogleBook: Boolean = state["isGoogleBook"] ?: false
+    var isGoogleBook: Boolean = params.isGoogleBook
     val book: LiveData<Book> = _book
     val bookImage: LiveData<String?> = _bookImage
     val isFavourite: LiveData<Boolean> = _isFavourite
@@ -83,8 +84,8 @@ class BookDetailViewModel @Inject constructor(
         fetchBook()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
 
         booksRepository.onDestroy()
         userRepository.onDestroy()
@@ -135,7 +136,7 @@ class BookDetailViewModel @Inject constructor(
     fun deleteBook() {
         _bookDetailLoading.value = true
         booksRepository
-            .deleteBook(bookId)
+            .deleteBook(params.bookId)
             .subscribeBy(
                 onComplete = {
                     _bookDetailLoading.value = false
@@ -159,7 +160,7 @@ class BookDetailViewModel @Inject constructor(
     fun setFavourite(isFavourite: Boolean) {
         _bookDetailFavouriteLoading.value = true
         booksRepository
-            .setFavouriteBook(bookId, isFavourite)
+            .setFavouriteBook(params.bookId, isFavourite)
             .subscribeBy(
                 onSuccess = {
                     _isFavourite.value = it.isFavourite
@@ -199,9 +200,9 @@ class BookDetailViewModel @Inject constructor(
     //region Private methods
     private fun fetchBook() {
         _bookDetailLoading.value = true
-        if (isGoogleBook) {
+        if (params.isGoogleBook) {
             booksRepository
-                .getRemoteBook(bookId)
+                .getRemoteBook(params.bookId)
                 .subscribeBy(
                     onSuccess = {
                         _book.value = it
@@ -213,7 +214,7 @@ class BookDetailViewModel @Inject constructor(
                 ).addTo(disposables)
         } else {
             booksRepository
-                .getBook(bookId)
+                .getBook(params.bookId)
                 .subscribeBy(
                     onSuccess = {
                         _book.value = it

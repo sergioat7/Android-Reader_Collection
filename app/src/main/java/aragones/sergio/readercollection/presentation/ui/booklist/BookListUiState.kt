@@ -15,5 +15,13 @@ sealed class BookListUiState {
         val isLoading: Boolean,
         val books: List<Book>,
         val isDraggingEnabled: Boolean,
-    ) : BookListUiState()
+    ) : BookListUiState() {
+        companion object {
+            fun initial(): Success = Success(
+                isLoading = true,
+                books = listOf(),
+                isDraggingEnabled = false,
+            )
+        }
+    }
 }

@@ -9,6 +9,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
     alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -134,6 +135,10 @@ dependencies {
 
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.hilt.navigation.compose)
+
+    implementation(libs.kotlinx.serialization.json)
 
     implementation(libs.coil)
 

@@ -49,11 +49,6 @@ object BookState {
     const val READ = "READ"
 }
 
-enum class StatusBarStyle {
-    PRIMARY,
-    SECONDARY,
-}
-
 enum class CustomInputType {
     TEXT,
     MULTI_LINE_TEXT,

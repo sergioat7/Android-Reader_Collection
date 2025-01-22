@@ -117,7 +117,7 @@ class InAppUpdateService(
     private fun flexibleUpdateDownloadCompleted() {
         Snackbar
             .make(
-                activity.findViewById(R.id.container),
+                activity.findViewById(android.R.id.content),
                 activity.getString(R.string.message_app_update_downloaded),
                 Snackbar.LENGTH_INDEFINITE,
             ).apply {

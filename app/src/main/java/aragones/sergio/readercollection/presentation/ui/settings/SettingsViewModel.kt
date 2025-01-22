@@ -32,7 +32,7 @@ class SettingsViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private var _uiState: MutableState<SettingsUiState> = mutableStateOf(
+    private var _state: MutableState<SettingsUiState> = mutableStateOf(
         SettingsUiState.empty().copy(
             username = userRepository.username,
             password = userRepository.userData.password,
@@ -49,7 +49,7 @@ class SettingsViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    val uiState: State<SettingsUiState> = _uiState
+    val state: State<SettingsUiState> = _state
     val profileError: LiveData<ErrorResponse?> = _profileError
     val activityName: LiveData<String?> = _activityName
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
@@ -64,7 +64,7 @@ class SettingsViewModel @Inject constructor(
             userRepository.language = locale.language
         }
 
-        _uiState.value = _uiState.value.copy(
+        _state.value = _state.value.copy(
             password = userRepository.userData.password,
             passwordError = null,
             language = userRepository.language,
@@ -74,8 +74,8 @@ class SettingsViewModel @Inject constructor(
         )
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
 
         booksRepository.onDestroy()
         userRepository.onDestroy()
@@ -89,11 +89,11 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun save() {
-        val newPassword = requireNotNull(_uiState.value.password)
-        val newLanguage = requireNotNull(_uiState.value.language)
-        val newSortParam = _uiState.value.sortParam
-        val newIsSortDescending = requireNotNull(_uiState.value.isSortDescending)
-        val newThemeMode = requireNotNull(_uiState.value.themeMode)
+        val newPassword = requireNotNull(_state.value.password)
+        val newLanguage = requireNotNull(_state.value.language)
+        val newSortParam = _state.value.sortParam
+        val newIsSortDescending = requireNotNull(_state.value.isSortDescending)
+        val newThemeMode = requireNotNull(_state.value.themeMode)
 
         val changePassword = newPassword != userRepository.userData.password
         val changeLanguage = newLanguage != userRepository.language
@@ -102,13 +102,13 @@ class SettingsViewModel @Inject constructor(
         val changeThemeMode = newThemeMode != userRepository.themeMode
 
         if (changePassword) {
-            _uiState.value = _uiState.value.copy(isLoading = true)
+            _state.value = _state.value.copy(isLoading = true)
             userRepository
                 .updatePassword(newPassword)
                 .subscribeBy(
                     onComplete = {
-                        _uiState.value = _uiState.value.copy(isLoading = false)
-                        if (changeLanguage || changeSortParam || changeIsSortDescending) {
+                        _state.value = _state.value.copy(isLoading = false)
+                        if (changeSortParam || changeIsSortDescending) {
                             _activityName.value = LandingActivity::class.simpleName
                         }
                     },
@@ -141,13 +141,13 @@ class SettingsViewModel @Inject constructor(
             }
         }
 
-        if (!changePassword && (changeLanguage || changeSortParam || changeIsSortDescending)) {
+        if (!changePassword && (changeSortParam || changeIsSortDescending)) {
             _activityName.value = LandingActivity::class.simpleName
         }
     }
 
     fun deleteUser() {
-        _uiState.value = _uiState.value.copy(isLoading = true)
+        _state.value = _state.value.copy(isLoading = true)
         userRepository
             .deleteUser()
             .subscribeBy(
@@ -171,7 +171,7 @@ class SettingsViewModel @Inject constructor(
         if (!Constants.isPasswordValid(newPassword)) {
             passwordError = R.string.invalid_password
         }
-        _uiState.value = _uiState.value.copy(
+        _state.value = _state.value.copy(
             password = newPassword,
             passwordError = passwordError,
             language = newLanguage,
@@ -206,18 +206,18 @@ class SettingsViewModel @Inject constructor(
             .resetTable()
             .subscribeBy(
                 onComplete = {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    _state.value = _state.value.copy(isLoading = false)
                     _activityName.value = LandingActivity::class.simpleName
                 },
                 onError = {
-                    _uiState.value = _uiState.value.copy(isLoading = false)
+                    _state.value = _state.value.copy(isLoading = false)
                     _activityName.value = LandingActivity::class.simpleName
                 },
             ).addTo(disposables)
     }
 
     private fun manageError(error: ErrorResponse) {
-        _uiState.value = _uiState.value.copy(isLoading = false)
+        _state.value = _state.value.copy(isLoading = false)
         _profileError.value = error
         _profileError.value = null
     }

@@ -12,7 +12,6 @@
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorSecondary</item>
         <item name="colorSwitchThumbNormal">@color/colorSecondary</item>
-        <item name="bottomNavigationStyle">@style/Widget.ReaderCollection.BottomNavigationView</item>
         <item name="materialAlertDialogTheme">@style/ThemeOverlay.ReaderCollection.MaterialAlertDialog</item>
         <item name="android:colorBackground">@color/colorSecondary</item>
     </style>

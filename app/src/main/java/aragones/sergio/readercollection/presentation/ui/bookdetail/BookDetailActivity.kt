@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 11/11/2020
+ * Copyright (c) 2025 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 11/1/2025
  */
 
 package aragones.sergio.readercollection.presentation.ui.bookdetail
@@ -12,15 +12,24 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.addCallback
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.databinding.ActivityBookDetailBinding
 import aragones.sergio.readercollection.databinding.CustomTextInputLayoutBinding
-import aragones.sergio.readercollection.databinding.FragmentBookDetailBinding
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.extensions.addChip
 import aragones.sergio.readercollection.presentation.extensions.doAfterTextChanged
@@ -36,17 +45,16 @@ import aragones.sergio.readercollection.presentation.extensions.setValue
 import aragones.sergio.readercollection.presentation.extensions.showDatePicker
 import aragones.sergio.readercollection.presentation.extensions.style
 import aragones.sergio.readercollection.presentation.interfaces.MenuProviderInterface
-import aragones.sergio.readercollection.presentation.ui.base.BindingFragment
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.TextFieldAlertDialog
+import aragones.sergio.readercollection.presentation.ui.modals.loading.PopupLoadingDialogFragment
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomDropdownType
-import com.aragones.sergio.util.StatusBarStyle
 import com.aragones.sergio.util.extensions.isNotBlank
 import com.aragones.sergio.util.extensions.toDate
 import com.aragones.sergio.util.extensions.toList
@@ -55,7 +63,7 @@ import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetSequence
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 import kotlin.math.abs
@@ -64,18 +72,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class BookDetailFragment :
-    BindingFragment<FragmentBookDetailBinding>(),
+class BookDetailActivity :
+    AppCompatActivity(),
     MenuProviderInterface,
     AppBarLayout.OnOffsetChangedListener {
 
-    //region Protected properties
-    override val menuProviderInterface = this
-    override val statusBarStyle = StatusBarStyle.SECONDARY
-    //endregion
-
     //region Private properties
     private val viewModel: BookDetailViewModel by viewModels()
+    private lateinit var binding: ActivityBookDetailBinding
+    private lateinit var toolbar: Toolbar
+    private var loadingFragment: PopupLoadingDialogFragment? = null
     private var book: Book? = null
     private lateinit var menu: Menu
     private lateinit var mainContentSequence: TapTargetSequence
@@ -83,25 +89,37 @@ class BookDetailFragment :
     private var bookDetailsToolbarSequence: TapTargetSequence? = null
     private var mainContentSequenceShown = false
     private var isStyleBeingApplied = false
+    private val menuProviderInterface = this
     //endregion
 
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.onCreate()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        toolbar = binding.toolbar
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_book_detail)
+        binding.also {
+            it.root.setBackgroundColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.colorSecondary,
+                ),
+            )
+        }
+        setContentView(binding.root)
         initializeUi()
+
         binding.composeView.setContent {
             ReaderCollectionTheme {
                 val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
                     initial = -1,
                 )
+                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
+                    initial = -1,
+                )
+                val imageDialogMessageId by viewModel.imageDialogMessageId.observeAsState(
+                    initial = -1,
+                )
+
                 ConfirmationAlertDialog(
                     show = confirmationMessageId != -1,
                     textId = confirmationMessageId,
@@ -114,9 +132,6 @@ class BookDetailFragment :
                     },
                 )
 
-                val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
-                    initial = -1,
-                )
                 val text = if (infoDialogMessageId != -1) {
                     getString(infoDialogMessageId)
                 } else {
@@ -124,12 +139,9 @@ class BookDetailFragment :
                 }
                 InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
                     viewModel.closeDialogs()
-                    findNavController().popBackStack()
+                    finish()
                 }
 
-                val imageDialogMessageId by viewModel.imageDialogMessageId.observeAsState(
-                    initial = -1,
-                )
                 TextFieldAlertDialog(
                     show = imageDialogMessageId != -1,
                     titleTextId = imageDialogMessageId,
@@ -144,6 +156,24 @@ class BookDetailFragment :
                 )
             }
         }
+
+        addMenuProvider(
+            object : MenuProvider {
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    menuProviderInterface.onCreateMenu(menu, menuInflater)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                    menuProviderInterface.onMenuItemSelected(menuItem)
+            },
+            this,
+        )
+
+        onBackPressedDispatcher.addCallback {
+            finish()
+        }
+
+        viewModel.onCreate()
     }
 
     override fun onStart() {
@@ -162,30 +192,6 @@ class BookDetailFragment :
         if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
             bookDetailsToolbarSequence?.cancel()
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.GONE
-        activity
-            ?.findViewById<View>(
-                R.id.top_inset,
-            )?.setBackgroundColor(resources.getColor(R.color.colorPrimary, null))
-    }
-
-    override fun onPause() {
-        super.onPause()
-        activity?.findViewById<BottomNavigationView>(R.id.nav_view)?.visibility = View.VISIBLE
-        activity
-            ?.findViewById<View>(
-                R.id.top_inset,
-            )?.setBackgroundColor(resources.getColor(R.color.colorSecondary, null))
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        viewModel.onDestroy()
     }
     //endregion
 
@@ -274,16 +280,21 @@ class BookDetailFragment :
     //endregion
 
     //region Protected methods
-    override fun initializeUi() {
-        super.initializeUi()
+    private fun initializeUi() {
+        toolbar = binding.toolbar.also {
+            setSupportActionBar(it)
+            it.setNavigationOnClickListener {
+                onBackPressedDispatcher.onBackPressed()
+            }
+        }
 
         setupBindings()
 
         val language = viewModel.language
         with(binding) {
-            appBarLayoutBookDetail.addOnOffsetChangedListener(this@BookDetailFragment)
+            appBarLayoutBookDetail.addOnOffsetChangedListener(this@BookDetailActivity)
 
-            val screenSize = requireActivity().getScreenSize()
+            val screenSize = getScreenSize()
             constraintLayoutImageToolbar.layoutParams = CollapsingToolbarLayout.LayoutParams(
                 CollapsingToolbarLayout.LayoutParams.MATCH_PARENT,
                 (screenSize.second * 0.5).toInt(),
@@ -341,7 +352,7 @@ class BookDetailFragment :
             applyStyleTo(textInputLayoutSummary)
 
             textInputLayoutReadingDate.setOnClickListener {
-                textInputLayoutReadingDate.showDatePicker(requireActivity(), language)
+                textInputLayoutReadingDate.showDatePicker(this@BookDetailActivity, language)
             }
 
             dropdownTextInputLayoutFormat.setHintStyle(
@@ -353,27 +364,27 @@ class BookDetailFragment :
             )
 
             textInputLayoutPublishedDate.setOnClickListener {
-                textInputLayoutPublishedDate.showDatePicker(requireActivity(), language)
+                textInputLayoutPublishedDate.showDatePicker(this@BookDetailActivity, language)
             }
 
-            fragment = this@BookDetailFragment
-            viewModel = this@BookDetailFragment.viewModel
-            lifecycleOwner = this@BookDetailFragment
+            activity = this@BookDetailActivity
+            viewModel = this@BookDetailActivity.viewModel
+            lifecycleOwner = this@BookDetailActivity
             editable = false
-            isDarkMode = context?.isDarkMode()
+            isDarkMode = isDarkMode()
         }
     }
     //endregion
 
     //region Private methods
     private fun setupBindings() {
-        viewModel.book.observe(viewLifecycleOwner) {
+        viewModel.book.observe(this) {
             book = it
             showData(it)
             binding.editable = viewModel.isGoogleBook || it == null
         }
 
-        viewModel.bookDetailLoading.observe(viewLifecycleOwner) { isLoading ->
+        viewModel.bookDetailLoading.observe(this) { isLoading ->
 
             if (isLoading) {
                 showLoading()
@@ -382,7 +393,7 @@ class BookDetailFragment :
             }
         }
 
-        viewModel.bookDetailError.observe(viewLifecycleOwner) {
+        viewModel.bookDetailError.observe(this) {
             book?.let { b -> showData(b) }
             it?.let { manageError(it) }
         }
@@ -468,7 +479,7 @@ class BookDetailFragment :
             if (book?.readingDate == null && readingDate == null && state == BookState.READ) {
                 readingDate = Date()
             }
-            val isFavourite = this@BookDetailFragment.viewModel.isFavourite.value ?: false
+            val isFavourite = this@BookDetailActivity.viewModel.isFavourite.value ?: false
 
             return Book(
                 id = book?.id ?: "",
@@ -486,7 +497,7 @@ class BookDetailFragment :
                 averageRating = book?.averageRating ?: 0.0,
                 ratingsCount = book?.ratingsCount ?: 0,
                 rating = rating,
-                thumbnail = this@BookDetailFragment.viewModel.bookImage.value,
+                thumbnail = this@BookDetailActivity.viewModel.bookImage.value,
                 image = book?.image,
                 format = format,
                 state = state,
@@ -509,6 +520,38 @@ class BookDetailFragment :
         binding.textInputLayoutPublishedDate.text = getTextDate(viewModel.book.value?.publishedDate)
     }
 
+    private fun manageError(
+        errorResponse: ErrorResponse,
+        goBack: MutableLiveData<Boolean>? = null,
+    ) {
+        val error = StringBuilder()
+        if (errorResponse.error.isNotEmpty()) {
+            error.append(errorResponse.error)
+        } else {
+            error.append(resources.getString(errorResponse.errorKey))
+        }
+        showPopupDialog(error.toString(), goBack)
+    }
+
+    private fun showLoading() {
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+        val prev = supportFragmentManager.findFragmentByTag("loadingDialog")
+        if (prev != null) {
+            ft.remove(prev)
+        }
+        ft.addToBackStack(null)
+        loadingFragment = PopupLoadingDialogFragment()
+        loadingFragment?.let {
+            it.isCancelable = false
+            it.show(ft, "loadingDialog")
+        }
+    }
+
+    private fun hideLoading() {
+        loadingFragment?.dismiss()
+        loadingFragment = null
+    }
+
     private fun createTargetsForNewBookToolbar(): List<TapTarget> {
         val saveBookItem = binding.toolbar.menu.findItem(R.id.action_save)
         return listOf(
@@ -518,7 +561,7 @@ class BookDetailFragment :
                     saveBookItem.itemId,
                     resources.getString(R.string.add_book_icon_tutorial_title),
                     resources.getString(R.string.add_book_icon_tutorial_description),
-                ).style(requireContext(), true)
+                ).style(this, true)
                 .cancelable(true)
                 .tintTarget(true),
         )
@@ -530,7 +573,7 @@ class BookDetailFragment :
                 binding.floatingActionButtonAddPhoto,
                 resources.getString(R.string.add_image_button_tutorial_title),
                 resources.getString(R.string.add_image_button_tutorial_description),
-            ).style(requireContext(), true)
+            ).style(this, true)
             .cancelable(true)
             .tintTarget(false),
         TapTarget
@@ -538,7 +581,7 @@ class BookDetailFragment :
                 binding.ratingBar,
                 resources.getString(R.string.rate_view_tutorial_title),
                 resources.getString(R.string.rate_view_tutorial_description),
-            ).style(requireContext())
+            ).style(this)
             .cancelable(true)
             .tintTarget(true),
     )
@@ -553,7 +596,7 @@ class BookDetailFragment :
                     editBookItem.itemId,
                     resources.getString(R.string.edit_book_icon_tutorial_title),
                     resources.getString(R.string.edit_book_icon_tutorial_description),
-                ).style(requireContext(), true)
+                ).style(this, true)
                 .cancelable(true)
                 .tintTarget(true),
             TapTarget
@@ -562,7 +605,7 @@ class BookDetailFragment :
                     deleteBookItem.itemId,
                     resources.getString(R.string.delete_book_icon_tutorial_title),
                     resources.getString(R.string.delete_book_icon_tutorial_description),
-                ).style(requireContext(), true)
+                ).style(this, true)
                 .cancelable(true)
                 .tintTarget(true),
         )
@@ -570,7 +613,7 @@ class BookDetailFragment :
 
     private fun createSequence() {
         if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
-            mainContentSequence = TapTargetSequence(requireActivity()).apply {
+            mainContentSequence = TapTargetSequence(this).apply {
                 targets(createTargetsForScrollView())
                 continueOnCancel(false)
                 listener(object : TapTargetSequence.Listener {
@@ -596,7 +639,7 @@ class BookDetailFragment :
             delay(500)
 
             if (!viewModel.newBookTutorialShown && viewModel.isGoogleBook) {
-                newBookToolbarSequence = TapTargetSequence(requireActivity()).apply {
+                newBookToolbarSequence = TapTargetSequence(this@BookDetailActivity).apply {
                     targets(createTargetsForNewBookToolbar())
                     continueOnCancel(false)
                     listener(object : TapTargetSequence.Listener {
@@ -617,7 +660,7 @@ class BookDetailFragment :
                     }
                 }
             } else if (!viewModel.bookDetailsTutorialShown && !viewModel.isGoogleBook) {
-                bookDetailsToolbarSequence = TapTargetSequence(requireActivity()).apply {
+                bookDetailsToolbarSequence = TapTargetSequence(this@BookDetailActivity).apply {
                     targets(createTargetsForBookDetailsToolbar())
                     continueOnCancel(false)
                     listener(object : TapTargetSequence.Listener {
@@ -648,6 +691,21 @@ class BookDetailFragment :
             input.textInputEditText.setSelection(selection)
             isStyleBeingApplied = false
         }
+    }
+
+    private fun showPopupDialog(message: String, goBack: MutableLiveData<Boolean>? = null) {
+        MaterialAlertDialogBuilder(
+            this,
+            R.style.ThemeOverlay_ReaderCollection_MaterialAlertDialog,
+        ).setMessage(message)
+            .setCancelable(false)
+            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
+
+                dialog.dismiss()
+                goBack?.let {
+                    it.value = true
+                }
+            }.show()
     }
     //endregion
 }

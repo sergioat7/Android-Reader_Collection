@@ -55,8 +55,8 @@ class BooksViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
 
         booksRepository.onDestroy()
         userRepository.onDestroy()
@@ -196,6 +196,7 @@ class BooksViewModel @Inject constructor(
     }
     //endregion
 
+    //region Private methods
     private fun sortBooks() {
         val sortedBooks = getSortedBooks()
         _state.value = when {
@@ -231,4 +232,5 @@ class BooksViewModel @Inject constructor(
             sortedBooks
         }
     }
+    //endregion
 }

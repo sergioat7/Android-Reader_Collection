@@ -5,26 +5,27 @@
 
 package aragones.sergio.readercollection.presentation.ui
 
-import android.os.Build
 import android.os.Bundle
-import android.view.View
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.LiveData
-import androidx.navigation.NavController
-import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.databinding.ActivityMainBinding
-import aragones.sergio.readercollection.presentation.extensions.setupWithNavController
-import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
+import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : BaseActivity() {
+class MainActivity : ComponentActivity() {
 
     //region Private properties
-    private lateinit var binding: ActivityMainBinding
-    private var currentNavController: LiveData<NavController>? = null
     private lateinit var inAppUpdateService: InAppUpdateService
     //endregion
 
@@ -32,22 +33,21 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        setContentView(binding.root)
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-            binding.topInset.visibility = View.VISIBLE
+        setContent {
+            ReaderCollectionScreen {
+                MainScreen()
+            }
         }
-
-        if (savedInstanceState == null) {
-            setupBottomNavigationBar()
-        } // Else, need to wait for onRestoreInstanceState
 
         inAppUpdateService = InAppUpdateService(this)
         inAppUpdateService.installStatus.observe(this) {
             if (it == InstallStatus.DOWNLOADED) {
                 inAppUpdateService.onResume()
             }
+        }
+
+        onBackPressedDispatcher.addCallback {
+            moveTaskToBack(true)
         }
     }
 
@@ -62,35 +62,17 @@ class MainActivity : BaseActivity() {
 
         inAppUpdateService.onDestroy()
     }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        // Now that BottomNavigationBar has restored its instance state
-        // and its selectedItemId, we can proceed with setting up the
-        // BottomNavigationBar with Navigation
-        setupBottomNavigationBar()
-    }
-
-    override fun onSupportNavigateUp(): Boolean = currentNavController?.value?.navigateUp() ?: false
     //endregion
+}
 
-    //region Private methods
-    private fun setupBottomNavigationBar() {
-        val bottomNavigationView = binding.navView
-        val navGraphIds = listOf(
-            R.navigation.nav_graph_books,
-            R.navigation.nav_graph_stats,
-            R.navigation.nav_graph_settings,
+@Composable
+private fun ReaderCollectionScreen(content: @Composable () -> Unit) {
+    ReaderCollectionTheme(navigationBarSameAsBackground = false) {
+        Surface(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(WindowInsets.safeDrawing.asPaddingValues()),
+            content = content,
         )
-
-        // Setup the bottom navigation view with a list of navigation graphs
-        val controller = bottomNavigationView.setupWithNavController(
-            navGraphIds = navGraphIds,
-            fragmentManager = supportFragmentManager,
-            containerId = R.id.nav_host_fragment,
-            intent = intent,
-        )
-        currentNavController = controller
     }
-    //endregion
 }

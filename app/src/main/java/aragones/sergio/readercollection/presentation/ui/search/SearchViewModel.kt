@@ -52,8 +52,8 @@ class SearchViewModel @Inject constructor(
         fetchPendingBooks()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
 
         booksRepository.onDestroy()
         userRepository.onDestroy()

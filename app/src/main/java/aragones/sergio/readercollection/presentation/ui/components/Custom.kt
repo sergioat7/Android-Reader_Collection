@@ -47,6 +47,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -424,3 +425,14 @@ private fun FilterChipPreview() {
 @Preview(name = "Light", showBackground = true)
 @Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, showBackground = true)
 annotation class PreviewLightDarkWithBackground
+
+@Composable
+internal fun LaunchedEffectOnce(block: () -> Unit) {
+    var isLaunched by rememberSaveable { mutableStateOf(false) }
+    if (!isLaunched) {
+        LaunchedEffect(block) {
+            block()
+            isLaunched = true
+        }
+    }
+}

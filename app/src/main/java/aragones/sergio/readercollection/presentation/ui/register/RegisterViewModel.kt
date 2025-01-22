@@ -42,8 +42,9 @@ class RegisterViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onCleared() {
+        super.onCleared()
+
         userRepository.onDestroy()
     }
     //endregion
@@ -61,7 +62,6 @@ class RegisterViewModel @Inject constructor(
                             onComplete = {
                                 _uiState.value = _uiState.value.copy(isLoading = false)
                                 _activityName.value = MainActivity::class.simpleName
-                                _activityName.value = null
                             },
                             onError = {
                                 manageError(
