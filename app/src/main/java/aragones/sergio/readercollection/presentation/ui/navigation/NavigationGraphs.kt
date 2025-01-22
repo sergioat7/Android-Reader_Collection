@@ -22,6 +22,21 @@ import aragones.sergio.readercollection.presentation.ui.settings.SettingsView
 import aragones.sergio.readercollection.presentation.ui.statistics.StatisticsView
 import com.aragones.sergio.util.BookState
 
+fun NavGraphBuilder.authGraph(navController: NavHostController) {
+    navigation<Route.Auth>(startDestination = Route.Login) {
+        composable<Route.Login>(
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+        ) {
+        }
+        composable<Route.Register>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+        }
+    }
+}
+
 fun NavGraphBuilder.booksGraph(navController: NavHostController) {
     navigation<Route.Books>(startDestination = Route.BooksHome) {
         composable<Route.BooksHome>(

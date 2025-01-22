@@ -12,6 +12,9 @@ sealed class Route {
     // Graph routes
 
     @Serializable
+    data object Auth : Route()
+
+    @Serializable
     data object Books : Route()
 
     @Serializable
@@ -21,6 +24,12 @@ sealed class Route {
     data object Settings : Route()
 
     // Screen routes
+
+    @Serializable
+    data object Login : Route()
+
+    @Serializable
+    data object Register : Route()
 
     @Serializable
     data object BooksHome : Route()
