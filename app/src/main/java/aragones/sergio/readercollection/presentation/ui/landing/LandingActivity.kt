@@ -9,10 +9,10 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
-import aragones.sergio.readercollection.presentation.ui.base.BaseActivity
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.install.model.InstallStatus
@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 @AndroidEntryPoint
-class LandingActivity : BaseActivity() {
+class LandingActivity : AppCompatActivity() {
 
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()

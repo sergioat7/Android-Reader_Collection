@@ -19,6 +19,7 @@ import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
 import aragones.sergio.readercollection.presentation.ui.books.BooksView
 import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.ui.login.LoginView
+import aragones.sergio.readercollection.presentation.ui.register.RegisterView
 import aragones.sergio.readercollection.presentation.ui.search.SearchView
 import aragones.sergio.readercollection.presentation.ui.settings.SettingsView
 import aragones.sergio.readercollection.presentation.ui.statistics.StatisticsView
@@ -47,6 +48,15 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
+            val context = LocalContext.current
+            RegisterView(
+                onGoToMain = {
+                    val intent = Intent(context, MainActivity::class.java).apply {
+                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    context.startActivity(intent)
+                },
+            )
         }
     }
 }

@@ -62,7 +62,6 @@ class RegisterViewModel @Inject constructor(
                             onComplete = {
                                 _uiState.value = _uiState.value.copy(isLoading = false)
                                 _activityName.value = MainActivity::class.simpleName
-                                _activityName.value = null
                             },
                             onError = {
                                 manageError(
