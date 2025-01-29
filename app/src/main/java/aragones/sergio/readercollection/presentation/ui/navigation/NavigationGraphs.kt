@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.ui.navigation
 
+import android.app.ActivityOptions
 import android.content.Intent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -13,6 +14,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.MainActivity
 import aragones.sergio.readercollection.presentation.ui.bookdetail.BookDetailActivity
 import aragones.sergio.readercollection.presentation.ui.booklist.BookListView
@@ -37,7 +39,13 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
                     val intent = Intent(context, MainActivity::class.java).apply {
                         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
-                    context.startActivity(intent)
+                    val options = ActivityOptions
+                        .makeCustomAnimation(
+                            context,
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                        ).toBundle()
+                    context.startActivity(intent, options)
                 },
                 onGoToRegister = {
                     navController.navigate(Route.Register)
@@ -54,7 +62,13 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
                     val intent = Intent(context, MainActivity::class.java).apply {
                         Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
-                    context.startActivity(intent)
+                    val options = ActivityOptions
+                        .makeCustomAnimation(
+                            context,
+                            R.anim.slide_in_right,
+                            R.anim.slide_out_left,
+                        ).toBundle()
+                    context.startActivity(intent, options)
                 },
             )
         }
@@ -215,7 +229,13 @@ fun NavGraphBuilder.settingsGraph() {
                         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         putExtra("SKIP_ANIMATION", true)
                     }
-                    context.startActivity(intent)
+                    val options = ActivityOptions
+                        .makeCustomAnimation(
+                            context,
+                            R.anim.slide_in_left,
+                            R.anim.slide_out_right,
+                        ).toBundle()
+                    context.startActivity(intent, options)
                 },
             )
         }

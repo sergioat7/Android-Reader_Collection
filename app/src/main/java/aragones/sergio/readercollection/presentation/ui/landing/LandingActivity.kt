@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.ui.landing
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -191,7 +192,13 @@ class LandingActivity : ComponentActivity() {
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
-        startActivity(intent)
+        val options = ActivityOptions
+            .makeCustomAnimation(
+                this,
+                R.anim.slide_in_right,
+                R.anim.slide_out_left,
+            ).toBundle()
+        startActivity(intent, options)
     }
     //endregion
 }
