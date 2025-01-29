@@ -25,9 +25,11 @@ class UserRepository @Inject constructor(
     @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseRepository() {
 
-    //region Private properties
-    private val GOOGLE_USER_TEST = "googleTest"
-    private val GOOGLE_PASSWORD_TEST = "d9MqzK3k1&07"
+    //region Static properties
+    companion object {
+        private const val GOOGLE_USER_TEST = "googleTest"
+        private const val GOOGLE_PASSWORD_TEST = "d9MqzK3k1&07"
+    }
     //endregion
 
     //region Public properties

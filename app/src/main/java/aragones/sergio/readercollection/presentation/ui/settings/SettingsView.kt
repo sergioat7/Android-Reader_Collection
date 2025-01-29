@@ -14,10 +14,13 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
-import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 
 @Composable
-fun SettingsView(onLogout: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsView(
+    onRelaunch: () -> Unit,
+    onLogout: () -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel(),
+) {
     val state by viewModel.state
     val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
         initial = -1,
@@ -27,8 +30,14 @@ fun SettingsView(onLogout: () -> Unit, viewModel: SettingsViewModel = hiltViewMo
         initial = -1,
     )
 
-    val activityName = viewModel.activityName.observeAsState()
-    if (activityName.value == LandingActivity::class.simpleName) {
+    val relaunch = viewModel.relaunch.observeAsState()
+    if (relaunch.value == true) {
+        onRelaunch()
+        return
+    }
+
+    val logOut = viewModel.logOut.observeAsState()
+    if (logOut.value == true) {
         onLogout()
         return
     }

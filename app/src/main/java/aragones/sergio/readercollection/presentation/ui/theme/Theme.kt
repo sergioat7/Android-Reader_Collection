@@ -37,7 +37,7 @@ private val DarkColorScheme = darkColors(
 )
 
 @Composable
-fun ReaderCollectionTheme(
+fun ReaderCollectionApp(
     statusBarSameAsBackground: Boolean = true,
     navigationBarSameAsBackground: Boolean = true,
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -82,8 +82,19 @@ fun ReaderCollectionTheme(
         )
     }
 
+    ReaderCollectionTheme(
+        darkTheme = darkTheme,
+        content = content,
+    )
+}
+
+@Composable
+fun ReaderCollectionTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    content: @Composable () -> Unit,
+) {
     MaterialTheme(
-        colors = colors,
+        colors = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content,

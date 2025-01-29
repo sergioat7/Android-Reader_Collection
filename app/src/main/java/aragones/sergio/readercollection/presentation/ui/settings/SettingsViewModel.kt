@@ -17,7 +17,6 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
@@ -43,7 +42,8 @@ class SettingsViewModel @Inject constructor(
         ),
     )
     private val _profileError = MutableLiveData<ErrorResponse?>()
-    private val _activityName = MutableLiveData<String?>()
+    private val _logOut = MutableLiveData(false)
+    private val _relaunch = MutableLiveData(false)
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
@@ -51,7 +51,8 @@ class SettingsViewModel @Inject constructor(
     //region Public properties
     val state: State<SettingsUiState> = _state
     val profileError: LiveData<ErrorResponse?> = _profileError
-    val activityName: LiveData<String?> = _activityName
+    val logOut: LiveData<Boolean> = _logOut
+    val relaunch: LiveData<Boolean> = _relaunch
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
     val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
@@ -85,7 +86,7 @@ class SettingsViewModel @Inject constructor(
     //region Public methods
     fun logout() {
         userRepository.logout()
-        _activityName.value = LandingActivity::class.simpleName
+        _logOut.value = true
     }
 
     fun save() {
@@ -109,7 +110,7 @@ class SettingsViewModel @Inject constructor(
                     onComplete = {
                         _state.value = _state.value.copy(isLoading = false)
                         if (changeSortParam || changeIsSortDescending) {
-                            _activityName.value = LandingActivity::class.simpleName
+                            _relaunch.value = true
                         }
                     },
                     onError = {
@@ -142,7 +143,7 @@ class SettingsViewModel @Inject constructor(
         }
 
         if (!changePassword && (changeSortParam || changeIsSortDescending)) {
-            _activityName.value = LandingActivity::class.simpleName
+            _relaunch.value = true
         }
     }
 
@@ -207,11 +208,11 @@ class SettingsViewModel @Inject constructor(
             .subscribeBy(
                 onComplete = {
                     _state.value = _state.value.copy(isLoading = false)
-                    _activityName.value = LandingActivity::class.simpleName
+                    _logOut.value = true
                 },
                 onError = {
                     _state.value = _state.value.copy(isLoading = false)
-                    _activityName.value = LandingActivity::class.simpleName
+                    _logOut.value = true
                 },
             ).addTo(disposables)
     }

@@ -26,7 +26,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import aragones.sergio.readercollection.presentation.ui.navigation.Route
 import aragones.sergio.readercollection.presentation.ui.navigation.authGraph
-import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionApp
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -37,7 +37,7 @@ class LoginActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ReaderCollectionTheme {
+            ReaderCollectionApp {
                 Surface(
                     modifier = Modifier
                         .fillMaxSize()

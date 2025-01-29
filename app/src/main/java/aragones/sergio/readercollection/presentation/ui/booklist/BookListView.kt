@@ -79,7 +79,6 @@ fun BookListView(
         ""
     }
     InformationAlertDialog(show = text.isNotEmpty(), text = text) {
-        viewModel.closeDialogs()
         onBack()
     }
 

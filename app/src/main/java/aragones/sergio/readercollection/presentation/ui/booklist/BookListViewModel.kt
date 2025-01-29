@@ -50,14 +50,12 @@ class BookListViewModel @Inject constructor(
         ),
     )
     private val _booksError = MutableLiveData<ErrorResponse>()
-    private val _infoDialogMessageId = MutableLiveData(-1)
     //endregion
 
     //region Public properties
     val state: State<BookListUiState> = _state
     val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
     val booksError: LiveData<ErrorResponse> = _booksError
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 
@@ -109,10 +107,6 @@ class BookListViewModel @Inject constructor(
                     showError()
                 },
             ).addTo(disposables)
-    }
-
-    fun closeDialogs() {
-        _infoDialogMessageId.value = -1
     }
 
     fun switchDraggingState() {

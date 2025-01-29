@@ -24,13 +24,18 @@ class BooksRemoteDataSource @Inject constructor(
     private val remoteConfig: FirebaseRemoteConfig,
 ) {
 
+    //region Static properties
+    companion object {
+        private const val SEARCH_PARAM = "q"
+        private const val PAGE_PARAM = "startIndex"
+        private const val RESULTS_PARAM = "maxResults"
+        private const val ORDER_PARAM = "orderBy"
+        private const val API_KEY = "key"
+        private const val RESULTS = 20
+    }
+    //endregion
+
     //region Private properties
-    private val SEARCH_PARAM = "q"
-    private val PAGE_PARAM = "startIndex"
-    private val RESULTS_PARAM = "maxResults"
-    private val ORDER_PARAM = "orderBy"
-    private val API_KEY = "key"
-    private val RESULTS = 20
     private val moshi = Moshi.Builder().build()
     //endregion
 

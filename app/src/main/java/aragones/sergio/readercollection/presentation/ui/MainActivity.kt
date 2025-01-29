@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -67,7 +67,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun ReaderCollectionScreen(content: @Composable () -> Unit) {
-    ReaderCollectionTheme(navigationBarSameAsBackground = false) {
+    ReaderCollectionApp(navigationBarSameAsBackground = false) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
