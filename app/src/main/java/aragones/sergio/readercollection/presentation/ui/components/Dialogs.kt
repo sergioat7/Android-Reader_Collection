@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.ui.components
 
+import android.content.res.Configuration
 import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
@@ -30,6 +31,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -209,17 +211,23 @@ fun SortingPickerAlertDialog(
         val sortOrderValues =
             context.resources.getStringArray(R.array.sorting_order_values).toList()
 
+        val isPortrait =
+            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+
         Dialog(
             onDismissRequest = { onCancel() },
             properties = DialogProperties(
                 dismissOnBackPress = false,
                 dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
             ),
         ) {
             Surface(
                 color = MaterialTheme.colors.background,
                 shape = MaterialTheme.shapes.medium,
-                modifier = Modifier.testTag("sortingPickerAlertDialog"),
+                modifier = Modifier
+                    .fillMaxWidth(if (isPortrait) 0.9f else 0.5f)
+                    .testTag("sortingPickerAlertDialog"),
             ) {
                 Column {
                     Spacer(Modifier.height(24.dp))
