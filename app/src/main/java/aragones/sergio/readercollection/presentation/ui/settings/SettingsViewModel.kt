@@ -109,7 +109,7 @@ class SettingsViewModel @Inject constructor(
                 .subscribeBy(
                     onComplete = {
                         _state.value = _state.value.copy(isLoading = false)
-                        if (changeSortParam || changeIsSortDescending) {
+                        if (changeSortParam || changeIsSortDescending || changeThemeMode) {
                             _relaunch.value = true
                         }
                     },
@@ -142,7 +142,7 @@ class SettingsViewModel @Inject constructor(
             }
         }
 
-        if (!changePassword && (changeSortParam || changeIsSortDescending)) {
+        if (!changePassword && (changeSortParam || changeIsSortDescending || changeThemeMode)) {
             _relaunch.value = true
         }
     }

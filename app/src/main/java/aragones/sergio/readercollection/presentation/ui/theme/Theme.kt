@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.presentation.ui.theme
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -40,9 +41,13 @@ private val DarkColorScheme = darkColors(
 fun ReaderCollectionApp(
     statusBarSameAsBackground: Boolean = true,
     navigationBarSameAsBackground: Boolean = true,
-    darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
+    val darkTheme = when (AppCompatDelegate.getDefaultNightMode()) {
+        AppCompatDelegate.MODE_NIGHT_YES -> true
+        AppCompatDelegate.MODE_NIGHT_NO -> false
+        else -> isSystemInDarkTheme()
+    }
     val colors = if (darkTheme) DarkColorScheme else LightColorScheme
 
     val systemBarAsBackground = if (darkTheme) {
