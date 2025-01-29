@@ -61,6 +61,8 @@ class LandingActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val skipAnimation = intent.getBooleanExtra("SKIP_ANIMATION", false)
+
         setUp()
 
         setContent {
@@ -96,9 +98,13 @@ class LandingActivity : ComponentActivity() {
                                     )
                                 }
                                 else -> {
-                                    LandingScreen(onAnimationFinished = {
+                                    if (skipAnimation) {
                                         animationFinished.value = true
-                                    })
+                                    } else {
+                                        LandingScreen(onAnimationFinished = {
+                                            animationFinished.value = true
+                                        })
+                                    }
                                 }
                             }
                         }
