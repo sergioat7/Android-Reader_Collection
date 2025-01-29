@@ -65,6 +65,7 @@ class LandingActivity : ComponentActivity() {
 
         setContent {
             val showDialog = rememberSaveable { mutableStateOf(false) }
+            val animationFinished = rememberSaveable { mutableStateOf(false) }
             ReaderCollectionApp {
                 Surface(
                     modifier = Modifier
@@ -95,7 +96,9 @@ class LandingActivity : ComponentActivity() {
                                     )
                                 }
                                 else -> {
-                                    Box(modifier = Modifier.fillMaxSize())
+                                    LandingScreen(onAnimationFinished = {
+                                        animationFinished.value = true
+                                    })
                                 }
                             }
                         }
@@ -112,8 +115,8 @@ class LandingActivity : ComponentActivity() {
                     }
                 }
 
-                LaunchedEffect(appUpdated) {
-                    if (appUpdated) {
+                LaunchedEffect(appUpdated, animationFinished.value) {
+                    if (appUpdated && animationFinished.value) {
                         if (!viewModel.newChangesPopupShown) {
                             showDialog.value = true
                         } else {
