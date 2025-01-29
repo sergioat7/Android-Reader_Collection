@@ -10,8 +10,8 @@ import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -69,11 +69,9 @@ fun StatisticsView(
     )
 
     val state by viewModel.state
-    val error by viewModel.booksError.observeAsState()
-    val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-        initial = -1,
-    )
-    val infoMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+    val error by viewModel.booksError.collectAsState()
+    val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
+    val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
 
     StatisticsScreen(
         state = state,

@@ -11,6 +11,7 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.utils.InAppUpdateService
@@ -18,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LandingActivity : AppCompatActivity() {
@@ -50,21 +52,23 @@ class LandingActivity : AppCompatActivity() {
         viewModel.checkTheme()
 
         inAppUpdateService.checkVersion()
-        inAppUpdateService.installStatus.observe(this) {
-            when (it) {
-                InstallStatus.DOWNLOADING,
-                InstallStatus.DOWNLOADED,
-                InstallStatus.INSTALLED,
-                InstallStatus.CANCELED,
-                -> {
-                    launchApp()
-                    inAppUpdateService.onDestroy()
-                }
-                InstallStatus.FAILED -> {
-                    inAppUpdateService.checkVersion()
-                }
-                else -> {
-                    Unit
+        lifecycleScope.launch {
+            inAppUpdateService.installStatus.collect {
+                when (it) {
+                    InstallStatus.DOWNLOADING,
+                    InstallStatus.DOWNLOADED,
+                    InstallStatus.INSTALLED,
+                    InstallStatus.CANCELED,
+                    -> {
+                        launchApp()
+                        inAppUpdateService.onDestroy()
+                    }
+                    InstallStatus.FAILED -> {
+                        inAppUpdateService.checkVersion()
+                    }
+                    else -> {
+                        Unit
+                    }
                 }
             }
         }
@@ -81,10 +85,12 @@ class LandingActivity : AppCompatActivity() {
     }
 
     private fun setupBindings() {
-        viewModel.landingClassToStart.observe(this) {
-            val intent = Intent(this, it)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
+        lifecycleScope.launch {
+            viewModel.landingClassToStart.collect {
+                val intent = Intent(this@LandingActivity, it)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+            }
         }
     }
 

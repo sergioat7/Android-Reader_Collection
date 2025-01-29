@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.presentation.ui.login
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.ui.MainActivity
@@ -20,9 +20,9 @@ fun LoginView(
     viewModel: LoginViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState
-    val error by viewModel.loginError.observeAsState()
+    val error by viewModel.loginError.collectAsState()
 
-    val activityName = viewModel.activityName.observeAsState()
+    val activityName = viewModel.activityName.collectAsState()
     when (activityName.value) {
         MainActivity::class.simpleName -> onGoToMain()
         else -> Unit

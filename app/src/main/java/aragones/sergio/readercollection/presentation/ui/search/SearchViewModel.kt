@@ -7,8 +7,6 @@ package aragones.sergio.readercollection.presentation.ui.search
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -20,6 +18,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
@@ -34,13 +34,13 @@ class SearchViewModel @Inject constructor(
     private lateinit var savedBooks: MutableList<Book>
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
-    private val _infoDialogMessageId = MutableLiveData(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     var state: MutableState<SearchUiState> = mutableStateOf(SearchUiState.Empty)
         private set
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

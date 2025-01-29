@@ -7,8 +7,8 @@ package aragones.sergio.readercollection.presentation.ui.settings
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
@@ -22,22 +22,18 @@ fun SettingsView(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state
-    val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-        initial = -1,
-    )
-    val error by viewModel.profileError.observeAsState()
-    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
-        initial = -1,
-    )
+    val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
+    val error by viewModel.profileError.collectAsState()
+    val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
 
-    val relaunch = viewModel.relaunch.observeAsState()
-    if (relaunch.value == true) {
+    val relaunch by viewModel.relaunch.collectAsState()
+    if (relaunch) {
         onRelaunch()
         return
     }
 
-    val logOut = viewModel.logOut.observeAsState()
-    if (logOut.value == true) {
+    val logOut by viewModel.logOut.collectAsState()
+    if (logOut) {
         onLogout()
         return
     }

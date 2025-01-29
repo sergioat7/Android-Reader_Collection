@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.presentation.ui.booklist
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
@@ -28,6 +26,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class BookListViewModel @Inject constructor(
@@ -49,13 +49,13 @@ class BookListViewModel @Inject constructor(
             isSortDescending = params.isSortDescending,
         ),
     )
-    private val _booksError = MutableLiveData<ErrorResponse>()
+    private val _booksError = MutableStateFlow<ErrorResponse?>(null)
     //endregion
 
     //region Public properties
     val state: State<BookListUiState> = _state
     val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
-    val booksError: LiveData<ErrorResponse> = _booksError
+    val booksError: StateFlow<ErrorResponse?> = _booksError
     var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 

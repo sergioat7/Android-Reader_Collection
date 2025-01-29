@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.presentation.ui.register
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.UserRepository
@@ -21,6 +19,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
@@ -29,16 +29,16 @@ class RegisterViewModel @Inject constructor(
 
     //region Private properties
     private var _uiState: MutableState<RegisterUiState> = mutableStateOf(RegisterUiState.empty())
-    private val _registerError = MutableLiveData<ErrorResponse?>()
-    private val _infoDialogMessageId = MutableLiveData(-1)
-    private val _activityName = MutableLiveData<String?>()
+    private val _registerError = MutableStateFlow<ErrorResponse?>(null)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _activityName = MutableStateFlow<String?>(null)
     //endregion
 
     //region Public properties
     val uiState: State<RegisterUiState> = _uiState
-    val registerError: LiveData<ErrorResponse?> = _registerError
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
-    val activityName: LiveData<String?> = _activityName
+    val registerError: StateFlow<ErrorResponse?> = _registerError
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val activityName: StateFlow<String?> = _activityName
     //endregion
 
     //region Lifecycle methods

@@ -10,8 +10,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -23,6 +21,8 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Locale
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -41,21 +41,21 @@ class SettingsViewModel @Inject constructor(
             themeMode = userRepository.themeMode,
         ),
     )
-    private val _profileError = MutableLiveData<ErrorResponse?>()
-    private val _logOut = MutableLiveData(false)
-    private val _relaunch = MutableLiveData(false)
-    private val _confirmationDialogMessageId = MutableLiveData(-1)
-    private val _infoDialogMessageId = MutableLiveData(-1)
+    private val _profileError = MutableStateFlow<ErrorResponse?>(null)
+    private val _logOut = MutableStateFlow(false)
+    private val _relaunch = MutableStateFlow(false)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val state: State<SettingsUiState> = _state
-    val profileError: LiveData<ErrorResponse?> = _profileError
-    val logOut: LiveData<Boolean> = _logOut
-    val relaunch: LiveData<Boolean> = _relaunch
+    val profileError: StateFlow<ErrorResponse?> = _profileError
+    val logOut: StateFlow<Boolean> = _logOut
+    val relaunch: StateFlow<Boolean> = _relaunch
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
-    val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

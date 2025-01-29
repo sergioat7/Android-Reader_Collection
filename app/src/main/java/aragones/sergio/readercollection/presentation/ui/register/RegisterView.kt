@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.presentation.ui.register
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
@@ -17,12 +17,10 @@ import aragones.sergio.readercollection.presentation.ui.components.InformationAl
 @Composable
 fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = hiltViewModel()) {
     val state by viewModel.uiState
-    val error by viewModel.registerError.observeAsState()
-    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
-        initial = -1,
-    )
+    val error by viewModel.registerError.collectAsState()
+    val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
 
-    val activityName = viewModel.activityName.observeAsState()
+    val activityName = viewModel.activityName.collectAsState()
     when (activityName.value) {
         MainActivity::class.simpleName -> onGoToMain()
         else -> Unit

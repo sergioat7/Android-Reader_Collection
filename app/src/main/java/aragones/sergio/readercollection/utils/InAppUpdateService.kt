@@ -10,8 +10,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
@@ -24,6 +22,8 @@ import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.installStatus
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class InAppUpdateService(
@@ -34,12 +34,12 @@ class InAppUpdateService(
     private val appUpdateManager = AppUpdateManagerFactory.create(activity)
     private val listener: InstallStateUpdatedListener
     private var appUpdateType = AppUpdateType.FLEXIBLE
-    private val _installStatus = MutableLiveData<Int>()
+    private val _installStatus = MutableStateFlow(InstallStatus.UNKNOWN)
     private val inAppUpdateLauncher: ActivityResultLauncher<IntentSenderRequest>
     //endregion
 
     //region Public properties
-    val installStatus: LiveData<Int> = _installStatus
+    val installStatus: StateFlow<Int> = _installStatus
     //endregion
 
     //region Lifecycle methods
