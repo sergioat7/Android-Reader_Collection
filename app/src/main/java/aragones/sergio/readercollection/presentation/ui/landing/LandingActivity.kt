@@ -8,32 +8,125 @@ package aragones.sergio.readercollection.presentation.ui.landing
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.addCallback
+import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Surface
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.createGraph
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
+import aragones.sergio.readercollection.presentation.ui.MainActivity
+import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.ui.login.LoginActivity
+import aragones.sergio.readercollection.presentation.ui.navigation.Route
+import aragones.sergio.readercollection.presentation.ui.navigation.authGraph
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class LandingActivity : AppCompatActivity() {
+class LandingActivity : ComponentActivity() {
 
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()
     private val inAppUpdateService by lazy { InAppUpdateService(this) }
+    private var appUpdated = false
     //endregion
 
     //region Lifecycle methods
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        initializeUI()
+        setUp()
+
+        setContent {
+            val showDialog = rememberSaveable { mutableStateOf(false) }
+            ReaderCollectionApp {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(WindowInsets.safeDrawing.asPaddingValues()),
+                ) {
+                    val navController = rememberNavController()
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                    ) { padding ->
+                        Box(modifier = Modifier.padding(padding)) {
+                            val cls = viewModel.landingClassToStart.collectAsState()
+                            when (cls.value) {
+                                MainActivity::class.java -> {
+                                    launchMainActivity()
+                                }
+                                LoginActivity::class.java -> {
+                                    val navGraph = remember(navController) {
+                                        navController.createGraph(startDestination = Route.Auth) {
+                                            authGraph(navController)
+                                        }
+                                    }
+                                    NavHost(
+                                        navController = navController,
+                                        graph = navGraph,
+                                        enterTransition = { EnterTransition.None },
+                                        exitTransition = { ExitTransition.None },
+                                    )
+                                }
+                                else -> {
+                                    Box(modifier = Modifier.fillMaxSize())
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if (showDialog.value) {
+                    InformationAlertDialog(
+                        show = true,
+                        text = stringResource(R.string.new_version_changes),
+                    ) {
+                        viewModel.checkIsLoggedIn()
+                        showDialog.value = false
+                    }
+                }
+
+                LaunchedEffect(appUpdated) {
+                    if (appUpdated) {
+                        if (!viewModel.newChangesPopupShown) {
+                            showDialog.value = true
+                        } else {
+                            viewModel.checkIsLoggedIn()
+                        }
+                    }
+                }
+            }
+        }
+
+        onBackPressedDispatcher.addCallback {
+            moveTaskToBack(true)
+        }
     }
 
     override fun onDestroy() {
@@ -44,9 +137,7 @@ class LandingActivity : AppCompatActivity() {
     //endregion
 
     //region Private methods
-    private fun initializeUI() {
-        setupBindings()
-
+    private fun setUp() {
         configLanguage()
         viewModel.fetchRemoteConfigValues()
         viewModel.checkTheme()
@@ -60,7 +151,7 @@ class LandingActivity : AppCompatActivity() {
                     InstallStatus.INSTALLED,
                     InstallStatus.CANCELED,
                     -> {
-                        launchApp()
+                        appUpdated = true
                         inAppUpdateService.onDestroy()
                     }
                     InstallStatus.FAILED -> {
@@ -70,26 +161,6 @@ class LandingActivity : AppCompatActivity() {
                         Unit
                     }
                 }
-            }
-        }
-    }
-
-    private fun launchApp() {
-        if (!viewModel.newChangesPopupShown) {
-            showPopupActionDialog(getString(R.string.new_version_changes), acceptHandler = {
-                viewModel.checkIsLoggedIn()
-            })
-        } else {
-            viewModel.checkIsLoggedIn()
-        }
-    }
-
-    private fun setupBindings() {
-        lifecycleScope.launch {
-            viewModel.landingClassToStart.collect {
-                val intent = Intent(this@LandingActivity, it)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
             }
         }
     }
@@ -107,14 +178,11 @@ class LandingActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPopupActionDialog(message: String, acceptHandler: () -> Unit) {
-        MaterialAlertDialogBuilder(this)
-            .setMessage(message)
-            .setCancelable(false)
-            .setPositiveButton(resources.getString(R.string.accept)) { dialog, _ ->
-                acceptHandler()
-                dialog.dismiss()
-            }.show()
+    private fun launchMainActivity() {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
     }
     //endregion
 }
