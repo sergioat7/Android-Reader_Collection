@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.ui.theme
 
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
+import androidx.activity.compose.LocalActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -17,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalContext
 
 private val LightColorScheme = lightColors(
     primary = EbonyClay,
@@ -79,9 +79,9 @@ fun ReaderCollectionApp(
         systemBarOppositeToBackground
     }
 
-    val context = LocalContext.current as ComponentActivity
+    val activity = LocalActivity.current as ComponentActivity
     SideEffect {
-        context.enableEdgeToEdge(
+        activity.enableEdgeToEdge(
             statusBarStyle = statusBarStyle,
             navigationBarStyle = navigationBarStyle,
         )

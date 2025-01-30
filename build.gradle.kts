@@ -16,6 +16,8 @@ plugins {
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.spotless)
     alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.ksp) apply false
 }
 
 tasks.register("cleanProject", Delete::class) {

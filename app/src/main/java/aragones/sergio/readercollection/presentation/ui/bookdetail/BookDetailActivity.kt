@@ -466,7 +466,7 @@ class BookDetailActivity :
         val language = viewModel.language
         val dateFormatToShow = Constants.getDateFormatToShow(language)
         with(binding) {
-            val authors = textInputLayoutAuthor.getValue().toList<String>().map {
+            val authors = textInputLayoutAuthor.getValue().toList().map {
                 it.trimStart().trimEnd()
             }
             val publishedDate = textInputLayoutPublishedDate.getValue().toDate(

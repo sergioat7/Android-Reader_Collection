@@ -10,6 +10,8 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.ksp)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -85,13 +87,6 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-    kapt {
-        correctErrorTypes = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
     kotlin {
         jvmToolchain(17)
     }
@@ -114,7 +109,7 @@ dependencies {
 
     implementation(libs.bundles.navigation)
     implementation(libs.moshi)
-    kapt(libs.moshi.kotlin.codegen)
+    ksp(libs.moshi.kotlin.codegen)
     implementation(libs.bundles.retrofit)
     implementation(libs.bundles.rx)
     implementation(libs.picasso)
@@ -128,7 +123,7 @@ dependencies {
     implementation(libs.android.chart)
     implementation(libs.tap.target.view)
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
     implementation(libs.app.update.ktx)
 
     debugImplementation(libs.leak.canary)

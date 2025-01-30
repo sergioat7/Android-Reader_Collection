@@ -33,7 +33,8 @@ androidx-test-ext-junit = "1.2.1"
 espresso-core = "3.6.1"
 compose-test = "1.7.5"
 agp = "8.7.2"
-kotlin = "1.9.25"
+kotlin = "2.0.0"
+ksp = "2.0.0-1.0.24"
 crashlytics = "2.9.8"
 google-services = "4.4.2"
 detekt = "1.23.1"
@@ -154,6 +155,8 @@ kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 spotless = { id = "com.diffplug.spotless", version.ref = "spotless-version" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
 [bundles]
 navigation = ["navigation-fragment-ktx", "navigation-ui-ktx"]

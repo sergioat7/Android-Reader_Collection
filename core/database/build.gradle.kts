@@ -6,7 +6,7 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -37,8 +37,8 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
-    kapt {
-        correctErrorTypes = true
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
 
@@ -51,8 +51,8 @@ dependencies {
     implementation(libs.rxandroid)
     implementation(libs.room.rxjava)
     implementation(libs.room.rxjava3.bridge)
-    kapt(libs.room.compiler)
+    ksp(libs.room.compiler)
 
     implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
+    ksp(libs.hilt.android.compiler)
 }

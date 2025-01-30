@@ -12,7 +12,7 @@ import java.util.Collections
 
 class ListConverter {
 
-    private val moshiAdapter = Moshi.Builder().build().adapter<List<String?>?>(
+    private val moshiAdapter = Moshi.Builder().build().adapter<List<String>?>(
         Types.newParameterizedType(
             List::class.java,
             String::class.java,
@@ -20,7 +20,7 @@ class ListConverter {
     )
 
     @TypeConverter
-    fun stringToStringList(data: String?): List<String?>? {
+    fun stringToStringList(data: String?): List<String>? {
         if (data == null) {
             return Collections.emptyList()
         }
@@ -28,5 +28,5 @@ class ListConverter {
     }
 
     @TypeConverter
-    fun stringListToString(elements: List<String?>?): String? = moshiAdapter.toJson(elements)
+    fun stringListToString(elements: List<String>?): String? = moshiAdapter.toJson(elements)
 }
