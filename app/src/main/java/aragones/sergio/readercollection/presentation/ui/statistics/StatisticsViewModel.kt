@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.presentation.ui.statistics
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -26,6 +24,8 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Calendar
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
@@ -35,19 +35,19 @@ class StatisticsViewModel @Inject constructor(
 
     //region Private properties
     private var _state: MutableState<StatisticsUiState> = mutableStateOf(StatisticsUiState.Empty)
-    private val _booksError = MutableLiveData<ErrorResponse?>()
-    private val _confirmationDialogMessageId = MutableLiveData(-1)
-    private val _infoDialogMessageId = MutableLiveData(-1)
+    private val _booksError = MutableStateFlow<ErrorResponse?>(null)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val state: State<StatisticsUiState> = _state
-    val booksError: LiveData<ErrorResponse?> = _booksError
+    val booksError: StateFlow<ErrorResponse?> = _booksError
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
-    val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods

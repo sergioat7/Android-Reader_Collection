@@ -21,12 +21,10 @@
         <activity
             android:name=".presentation.ui.MainActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".presentation.ui.login.LoginActivity"
-            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".presentation.ui.bookdetail.BookDetailActivity" />
         <activity
             android:name=".presentation.ui.landing.LandingActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

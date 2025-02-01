@@ -6,7 +6,6 @@
 package aragones.sergio.readercollection.presentation.ui.landing
 
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.ui.MainActivity
@@ -16,6 +15,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class LandingViewModel @Inject constructor(
@@ -24,7 +25,7 @@ class LandingViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val _landingClassToStart = MutableLiveData<Class<*>>()
+    private val _landingClassToStart = MutableStateFlow<Class<*>?>(null)
     //endregion
 
     //region Public properties
@@ -32,7 +33,7 @@ class LandingViewModel @Inject constructor(
         get() = userRepository.language
     val newChangesPopupShown: Boolean
         get() = userRepository.newChangesPopupShown
-    val landingClassToStart = _landingClassToStart
+    val landingClassToStart: StateFlow<Class<*>?> = _landingClassToStart
     //endregion
 
     //region Lifecycle methods

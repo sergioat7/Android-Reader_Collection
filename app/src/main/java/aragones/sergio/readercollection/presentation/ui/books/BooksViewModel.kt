@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.presentation.ui.books
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
@@ -25,6 +23,8 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Date
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
@@ -33,7 +33,7 @@ class BooksViewModel @Inject constructor(
 ) : BaseViewModel() {
 
     //region Private properties
-    private val originalBooks = MutableLiveData<List<Book>>()
+    private var originalBooks = emptyList<Book>()
     private val _state: MutableState<BooksUiState> = mutableStateOf(
         BooksUiState.Empty(query = "", isLoading = false),
     )
@@ -44,13 +44,13 @@ class BooksViewModel @Inject constructor(
             isSortDescending = userRepository.isSortDescending,
         ),
     )
-    private val _booksError = MutableLiveData<ErrorResponse?>()
+    private val _booksError = MutableStateFlow<ErrorResponse?>(null)
     //endregion
 
     //region Public properties
     val state: State<BooksUiState> = _state
     val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
-    val booksError: LiveData<ErrorResponse?> = _booksError
+    val booksError: StateFlow<ErrorResponse?> = _booksError
     var tutorialShown = userRepository.hasBooksTutorialBeenShown
     //endregion
 
@@ -74,11 +74,11 @@ class BooksViewModel @Inject constructor(
             .getBooks()
             .subscribeBy(
                 onComplete = {
-                    originalBooks.value = listOf()
+                    originalBooks = emptyList()
                     _state.value = BooksUiState.Empty(query = _state.value.query, isLoading = false)
                 },
                 onNext = {
-                    originalBooks.value = it
+                    originalBooks = it
                     sortBooks()
                 },
                 onError = {
@@ -169,8 +169,46 @@ class BooksViewModel @Inject constructor(
         userRepository.setHasBooksTutorialBeenShown(true)
         tutorialShown = true
     }
+    //endregion
 
-    fun setPriorityFor(books: List<Book>) {
+    //region Private methods
+    private fun sortBooks() {
+        val sortedBooks = getSortedBooks()
+        _state.value = when {
+            sortedBooks.isEmpty() -> BooksUiState.Empty(
+                query = _state.value.query,
+                isLoading = false,
+            )
+            else -> BooksUiState.Success(
+                books = sortedBooks,
+                query = _state.value.query,
+                isLoading = false,
+            )
+        }
+    }
+
+    private fun getSortedBooks(): List<Book> {
+        val filteredBooks = originalBooks.filter { book ->
+            (book.title?.contains(_state.value.query, true) ?: false) ||
+                book.authorsToString().contains(_state.value.query, true)
+        }
+        val sortedBooks = when (_sortingPickerState.value.sortParam) {
+            "title" -> filteredBooks.sortedBy { it.title }
+            "publishedDate" -> filteredBooks.sortedBy { it.publishedDate }
+            "readingDate" -> filteredBooks.sortedBy { it.readingDate }
+            "pageCount" -> filteredBooks.sortedBy { it.pageCount }
+            "rating" -> filteredBooks.sortedBy { it.rating }
+            "authors" -> filteredBooks.sortedBy { it.authorsToString() }
+            else -> filteredBooks.sortedBy { it.id }
+        }
+        return if (_sortingPickerState.value.isSortDescending) {
+            sortedBooks.reversed()
+        } else {
+            sortedBooks
+        }
+    }
+
+    private fun setPriorityFor(books: List<Book>) {
         _state.value = when (val currentState = _state.value) {
             is BooksUiState.Empty -> currentState.copy(isLoading = true)
             is BooksUiState.Success -> currentState.copy(isLoading = true)
@@ -193,44 +231,6 @@ class BooksViewModel @Inject constructor(
                     )
                 },
             ).addTo(disposables)
-    }
-    //endregion
-
-    //region Private methods
-    private fun sortBooks() {
-        val sortedBooks = getSortedBooks()
-        _state.value = when {
-            sortedBooks.isEmpty() -> BooksUiState.Empty(
-                query = _state.value.query,
-                isLoading = false,
-            )
-            else -> BooksUiState.Success(
-                books = sortedBooks,
-                query = _state.value.query,
-                isLoading = false,
-            )
-        }
-    }
-
-    private fun getSortedBooks(): List<Book> {
-        val filteredBooks = originalBooks.value?.filter { book ->
-            (book.title?.contains(_state.value.query, true) ?: false) ||
-                book.authorsToString().contains(_state.value.query, true)
-        } ?: listOf()
-        val sortedBooks = when (_sortingPickerState.value.sortParam) {
-            "title" -> filteredBooks.sortedBy { it.title }
-            "publishedDate" -> filteredBooks.sortedBy { it.publishedDate }
-            "readingDate" -> filteredBooks.sortedBy { it.readingDate }
-            "pageCount" -> filteredBooks.sortedBy { it.pageCount }
-            "rating" -> filteredBooks.sortedBy { it.rating }
-            "authors" -> filteredBooks.sortedBy { it.authorsToString() }
-            else -> filteredBooks.sortedBy { it.id }
-        }
-        return if (_sortingPickerState.value.isSortDescending) {
-            sortedBooks.reversed()
-        } else {
-            sortedBooks
-        }
     }
     //endregion
 }

@@ -12,3 +12,11 @@ fun Window.setStatusBarStyle(color: Int, lightStatusBar: Boolean) {
     statusBarColor = color
     WindowInsetsControllerCompat(this, decorView).isAppearanceLightStatusBars = lightStatusBar
 }
+
+fun Window.setNavigationBarColorStyle(color: Int, lightNavigationBar: Boolean) {
+    navigationBarColor = color
+    WindowInsetsControllerCompat(
+        this,
+        decorView,
+    ).isAppearanceLightNavigationBars = lightNavigationBar
+}

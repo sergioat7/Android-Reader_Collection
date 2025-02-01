@@ -7,8 +7,8 @@ package aragones.sergio.readercollection.presentation.ui.search
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
@@ -20,7 +20,7 @@ fun SearchView(
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state
-    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(initial = -1)
+    val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
 
     SearchScreen(
         state = state,

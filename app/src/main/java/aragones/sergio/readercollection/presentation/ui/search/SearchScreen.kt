@@ -102,7 +102,7 @@ fun SearchScreen(
             query = query ?: "",
             onSearch = onSearch,
             modifier = Modifier.background(MaterialTheme.colors.background),
-            elevation = if (showTopButton) 4.dp else 0.dp,
+            elevation = if (showTopButton && !isLoading) 4.dp else 0.dp,
             onBack = onBack,
         )
 
@@ -125,8 +125,8 @@ fun SearchScreen(
                         SearchContent(
                             books = state.books,
                             listState = listState,
-                            showTopButton = showTopButton,
-                            showBottomButton = showBottomButton,
+                            showTopButton = showTopButton && !isLoading,
+                            showBottomButton = showBottomButton && !isLoading,
                             onTopButtonClick = {
                                 coroutineScope.launch {
                                     listState.animateScrollToItem(index = 0)

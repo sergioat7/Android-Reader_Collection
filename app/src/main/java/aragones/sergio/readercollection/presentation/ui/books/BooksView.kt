@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.presentation.ui.books
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.ui.components.InformationAlertDialog
@@ -23,7 +23,7 @@ fun BooksView(
 ) {
     val state by viewModel.state
     val sortingPickerState by viewModel.sortingPickerState
-    val error by viewModel.booksError.observeAsState()
+    val error by viewModel.booksError.collectAsState()
 
     BooksScreen(
         state = state,

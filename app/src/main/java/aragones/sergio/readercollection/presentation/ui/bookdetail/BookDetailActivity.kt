@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.ui.bookdetail
 
 import android.graphics.Typeface
+import android.os.Build
 import android.os.Bundle
 import android.view.Gravity
 import android.view.Menu
@@ -21,9 +22,9 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.core.content.ContextCompat
 import androidx.core.view.MenuProvider
+import androidx.core.view.setPadding
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.R
@@ -40,7 +41,9 @@ import aragones.sergio.readercollection.presentation.extensions.isBlank
 import aragones.sergio.readercollection.presentation.extensions.isDarkMode
 import aragones.sergio.readercollection.presentation.extensions.setEndIconOnClickListener
 import aragones.sergio.readercollection.presentation.extensions.setHintStyle
+import aragones.sergio.readercollection.presentation.extensions.setNavigationBarColorStyle
 import aragones.sergio.readercollection.presentation.extensions.setOnClickListener
+import aragones.sergio.readercollection.presentation.extensions.setStatusBarStyle
 import aragones.sergio.readercollection.presentation.extensions.setValue
 import aragones.sergio.readercollection.presentation.extensions.showDatePicker
 import aragones.sergio.readercollection.presentation.extensions.style
@@ -96,6 +99,15 @@ class BookDetailActivity :
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        window.setStatusBarStyle(
+            ContextCompat.getColor(this, R.color.colorPrimary),
+            isDarkMode(),
+        )
+        window.setNavigationBarColorStyle(
+            ContextCompat.getColor(this, R.color.colorSecondary),
+            !isDarkMode(),
+        )
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_book_detail)
         binding.also {
             it.root.setBackgroundColor(
@@ -107,6 +119,10 @@ class BookDetailActivity :
         }
         setContentView(binding.root)
         initializeUi()
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            binding.container.setPadding(0)
+        }
 
         binding.composeView.setContent {
             ReaderCollectionTheme {
@@ -450,7 +466,7 @@ class BookDetailActivity :
         val language = viewModel.language
         val dateFormatToShow = Constants.getDateFormatToShow(language)
         with(binding) {
-            val authors = textInputLayoutAuthor.getValue().toList<String>().map {
+            val authors = textInputLayoutAuthor.getValue().toList().map {
                 it.trimStart().trimEnd()
             }
             val publishedDate = textInputLayoutPublishedDate.getValue().toDate(

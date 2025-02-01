@@ -10,20 +10,19 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
-import aragones.sergio.readercollection.presentation.ui.landing.LandingActivity
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Locale
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
@@ -42,19 +41,21 @@ class SettingsViewModel @Inject constructor(
             themeMode = userRepository.themeMode,
         ),
     )
-    private val _profileError = MutableLiveData<ErrorResponse?>()
-    private val _activityName = MutableLiveData<String?>()
-    private val _confirmationDialogMessageId = MutableLiveData(-1)
-    private val _infoDialogMessageId = MutableLiveData(-1)
+    private val _profileError = MutableStateFlow<ErrorResponse?>(null)
+    private val _logOut = MutableStateFlow(false)
+    private val _relaunch = MutableStateFlow(false)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val state: State<SettingsUiState> = _state
-    val profileError: LiveData<ErrorResponse?> = _profileError
-    val activityName: LiveData<String?> = _activityName
+    val profileError: StateFlow<ErrorResponse?> = _profileError
+    val logOut: StateFlow<Boolean> = _logOut
+    val relaunch: StateFlow<Boolean> = _relaunch
     var tutorialShown = userRepository.hasSettingsTutorialBeenShown
-    val confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -85,7 +86,7 @@ class SettingsViewModel @Inject constructor(
     //region Public methods
     fun logout() {
         userRepository.logout()
-        _activityName.value = LandingActivity::class.simpleName
+        _logOut.value = true
     }
 
     fun save() {
@@ -108,8 +109,8 @@ class SettingsViewModel @Inject constructor(
                 .subscribeBy(
                     onComplete = {
                         _state.value = _state.value.copy(isLoading = false)
-                        if (changeSortParam || changeIsSortDescending) {
-                            _activityName.value = LandingActivity::class.simpleName
+                        if (changeSortParam || changeIsSortDescending || changeThemeMode) {
+                            _relaunch.value = true
                         }
                     },
                     onError = {
@@ -141,8 +142,8 @@ class SettingsViewModel @Inject constructor(
             }
         }
 
-        if (!changePassword && (changeSortParam || changeIsSortDescending)) {
-            _activityName.value = LandingActivity::class.simpleName
+        if (!changePassword && (changeSortParam || changeIsSortDescending || changeThemeMode)) {
+            _relaunch.value = true
         }
     }
 
@@ -207,11 +208,11 @@ class SettingsViewModel @Inject constructor(
             .subscribeBy(
                 onComplete = {
                     _state.value = _state.value.copy(isLoading = false)
-                    _activityName.value = LandingActivity::class.simpleName
+                    _logOut.value = true
                 },
                 onError = {
                     _state.value = _state.value.copy(isLoading = false)
-                    _activityName.value = LandingActivity::class.simpleName
+                    _logOut.value = true
                 },
             ).addTo(disposables)
     }

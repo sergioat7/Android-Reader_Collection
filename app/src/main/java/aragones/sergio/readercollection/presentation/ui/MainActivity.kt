@@ -17,10 +17,12 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import androidx.lifecycle.lifecycleScope
+import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -40,9 +42,11 @@ class MainActivity : ComponentActivity() {
         }
 
         inAppUpdateService = InAppUpdateService(this)
-        inAppUpdateService.installStatus.observe(this) {
-            if (it == InstallStatus.DOWNLOADED) {
-                inAppUpdateService.onResume()
+        lifecycleScope.launch {
+            inAppUpdateService.installStatus.collect {
+                if (it == InstallStatus.DOWNLOADED) {
+                    inAppUpdateService.onResume()
+                }
             }
         }
 
@@ -67,7 +71,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 private fun ReaderCollectionScreen(content: @Composable () -> Unit) {
-    ReaderCollectionTheme(navigationBarSameAsBackground = false) {
+    ReaderCollectionApp(navigationBarSameAsBackground = false) {
         Surface(
             modifier = Modifier
                 .fillMaxSize()
