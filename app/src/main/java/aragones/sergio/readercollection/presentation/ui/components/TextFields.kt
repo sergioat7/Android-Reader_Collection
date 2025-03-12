@@ -11,7 +11,10 @@ import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Icon
@@ -21,14 +24,18 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -190,6 +197,65 @@ fun CustomOutlinedTextField(
     }
 }
 
+@Composable
+fun MultilineCustomOutlinedTextField(
+    text: String,
+    onTextChanged: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    errorTextId: Int? = null,
+    labelText: String? = null,
+    placeholderText: String? = null,
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textColor: Color = MaterialTheme.colors.primary,
+    @DrawableRes endIcon: Int? = null,
+    isLastTextField: Boolean? = null,
+    maxLength: Int = Integer.MAX_VALUE,
+    maxLines: Int = Integer.MAX_VALUE,
+    enabled: Boolean = true,
+    onEndIconClicked: (() -> Unit)? = null,
+) {
+    var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
+    var showReadMore by remember { mutableStateOf(false) }
+
+    Column(modifier = modifier) {
+        CustomOutlinedTextField(
+            text = text,
+            onTextChanged = onTextChanged,
+            errorTextId = errorTextId,
+            labelText = labelText,
+            placeholderText = placeholderText,
+            inputHintTextColor = inputHintTextColor,
+            textStyle = textStyle,
+            textColor = textColor,
+            endIcon = endIcon,
+            inputType = CustomInputType.MULTI_LINE_TEXT,
+            isLastTextField = isLastTextField,
+            maxLength = maxLength,
+            maxLines = Integer.MAX_VALUE.takeIf { !showReadMore } ?: maxLines,
+            enabled = enabled,
+            onEndIconClicked = onEndIconClicked,
+        )
+        if (showReadMore) {
+            MainTextButton(
+                text = stringResource(R.string.read_more),
+                onClick = { showReadMore = !showReadMore },
+                modifier = Modifier.offset(0.dp, (-12).dp),
+            )
+        }
+    }
+    BasicText(
+        text = text,
+        modifier = modifier.height(0.dp),
+        onTextLayout = { textLayoutResult = it },
+        style = textStyle,
+    )
+
+    LaunchedEffect(textLayoutResult) {
+        showReadMore = (textLayoutResult?.lineCount ?: 0) >= maxLines
+    }
+}
+
 @PreviewLightDarkWithBackground
 @Composable
 private fun TextOutlinedTextFieldPreview() {
@@ -244,6 +310,28 @@ private fun ErrorOutlinedTextFieldPreview() {
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             errorTextId = R.string.invalid_username,
+            labelText = "Label",
+            maxLength = 100,
+        )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun LargeCustomOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        MultilineCustomOutlinedTextField(
+            text =
+            """
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
+            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
+            irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+            pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
+            deserunt mollit anim id est laborum.
+            """.trimIndent(),
+            onTextChanged = {},
+            modifier = Modifier.padding(12.dp),
             labelText = "Label",
             maxLength = 100,
         )
