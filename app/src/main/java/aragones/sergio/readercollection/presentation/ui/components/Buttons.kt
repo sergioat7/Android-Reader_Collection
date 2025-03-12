@@ -13,6 +13,7 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -59,6 +60,18 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
     }
 }
 
+@Composable
+fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    TextButton(onClick = onClick, modifier = modifier) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.button,
+            color = MaterialTheme.colors.primary,
+            maxLines = 1,
+        )
+    }
+}
+
 @PreviewLightDark
 @Composable
 private fun MainActionButtonPreview() {
@@ -78,6 +91,17 @@ private fun ListButtonPreview() {
     ReaderCollectionTheme {
         ListButton(
             image = R.drawable.ic_double_arrow_up,
+            onClick = {},
+        )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun MainTextButtonPreview() {
+    ReaderCollectionTheme {
+        MainTextButton(
+            text = "Log-in",
             onClick = {},
         )
     }
