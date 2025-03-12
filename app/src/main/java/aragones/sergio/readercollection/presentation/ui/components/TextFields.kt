@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
@@ -47,8 +48,11 @@ import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.description
+import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
+import com.aragones.sergio.util.extensions.toDate
+import java.util.TimeZone
 
 @Composable
 fun CustomOutlinedTextField(
@@ -256,6 +260,53 @@ fun MultilineCustomOutlinedTextField(
     }
 }
 
+@Composable
+fun DateCustomOutlinedTextField(
+    text: String,
+    onTextChanged: (Long) -> Unit,
+    modifier: Modifier = Modifier,
+    labelText: String? = null,
+    placeholderText: String? = null,
+    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    @DrawableRes endIcon: Int? = null,
+    enabled: Boolean = true,
+    onEndIconClicked: (() -> Unit)? = null,
+    language: String? = null,
+) {
+    var showDatePicker by remember { mutableStateOf(false) }
+    CustomOutlinedTextField(
+        text = text,
+        onTextChanged = {},
+        modifier = modifier
+            .let {
+                it
+                    .clickable { showDatePicker = true }
+                    .takeIf { enabled } ?: it
+            },
+        labelText = labelText,
+        placeholderText = placeholderText,
+        inputHintTextColor = inputHintTextColor,
+        textColor = MaterialTheme.colors.description,
+        endIcon = endIcon,
+        inputType = CustomInputType.DATE,
+        enabled = enabled,
+        onEndIconClicked = onEndIconClicked,
+    )
+    if (showDatePicker) {
+        val currentDateInMillis = text
+            .toDate(
+                format = language?.let { Constants.getDateFormatToShow(it) },
+                language = language,
+                timeZone = TimeZone.getTimeZone("UTC"),
+            )?.time
+        CustomDatePickerDialog(
+            currentValue = currentDateInMillis,
+            onDateSelected = onTextChanged,
+            onDismiss = { showDatePicker = false },
+        )
+    }
+}
+
 @PreviewLightDarkWithBackground
 @Composable
 private fun TextOutlinedTextFieldPreview() {
@@ -334,6 +385,20 @@ private fun LargeCustomOutlinedTextFieldPreview() {
             modifier = Modifier.padding(12.dp),
             labelText = "Label",
             maxLength = 100,
+        )
+    }
+}
+
+@PreviewLightDarkWithBackground
+@Composable
+private fun DateCustomOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        DateCustomOutlinedTextField(
+            text = "01/01/2000",
+            onTextChanged = {},
+            modifier = Modifier.padding(12.dp),
+            labelText = "Label",
+            enabled = true,
         )
     }
 }
