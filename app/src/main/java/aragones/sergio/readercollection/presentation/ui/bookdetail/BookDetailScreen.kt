@@ -44,6 +44,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.presentation.ui.LocalLanguage
 import aragones.sergio.readercollection.presentation.ui.components.CollapsingToolbar
 import aragones.sergio.readercollection.presentation.ui.components.CollapsingToolbarNestedScrollConnection
 import aragones.sergio.readercollection.presentation.ui.components.CustomChip
@@ -63,6 +64,7 @@ import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
 import com.aragones.sergio.util.extensions.toDate
+import com.aragones.sergio.util.extensions.toString
 import java.util.Calendar
 import java.util.Date
 
@@ -214,6 +216,7 @@ private fun BookDetailContent(
     onChangeData: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val language = LocalLanguage.current
     Column(modifier = modifier) {
         Divider(
             modifier = Modifier
@@ -351,16 +354,20 @@ private fun BookDetailContent(
         )
         Spacer(Modifier.height(8.dp))
         DateCustomOutlinedTextField(
-            text = book.readingDate?.toString()
-                ?: Constants.NO_VALUE.takeIf { !isEditable }
-                ?: Constants.EMPTY_VALUE,
+            text = book.readingDate.getValueToShow(language, isEditable),
             onTextChanged = {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
-                val dateString = calendar.time.toString()
+                val dateString = calendar.time.toString(
+                    format = Constants.getDateFormatToShow(language),
+                    language = language,
+                )
                 onChangeData(
                     book.copy(
-                        readingDate = dateString.toDate(),
+                        readingDate = dateString.toDate(
+                            format = Constants.getDateFormatToShow(language),
+                            language = language,
+                        ),
                         state = BookState.READ,
                     ),
                 )
@@ -374,6 +381,7 @@ private fun BookDetailContent(
             onEndIconClicked = {
                 onChangeData(book.copy(readingDate = null))
             }.takeIf { isEditable },
+            language = language,
         )
         Spacer(Modifier.height(8.dp))
         val formatValues = FORMATS.map { it.name }
@@ -458,16 +466,20 @@ private fun BookDetailContent(
         )
         Spacer(Modifier.height(8.dp))
         DateCustomOutlinedTextField(
-            text = book.publishedDate?.toString()
-                ?: Constants.NO_VALUE.takeIf { !isEditable }
-                ?: Constants.EMPTY_VALUE,
+            text = book.publishedDate.getValueToShow(language, isEditable),
             onTextChanged = {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
-                val dateString = calendar.time.toString()
+                val dateString = calendar.time.toString(
+                    format = Constants.getDateFormatToShow(language),
+                    language = language,
+                )
                 onChangeData(
                     book.copy(
-                        publishedDate = dateString.toDate(),
+                        publishedDate = dateString.toDate(
+                            format = Constants.getDateFormatToShow(language),
+                            language = language,
+                        ),
                     ),
                 )
             },
@@ -480,12 +492,20 @@ private fun BookDetailContent(
             onEndIconClicked = {
                 onChangeData(book.copy(publishedDate = null))
             }.takeIf { isEditable },
+            language = language,
         )
     }
 }
 
 private fun String?.orElse(isEditable: Boolean): String =
     this ?: Constants.NO_VALUE.takeIf { !isEditable } ?: Constants.EMPTY_VALUE
+
+private fun Date?.getValueToShow(language: String, isEditable: Boolean): String = this?.toString(
+    format = Constants.getDateFormatToShow(language),
+    language = language,
+)
+    ?: Constants.NO_VALUE.takeIf { !isEditable }
+    ?: Constants.EMPTY_VALUE
 
 @PreviewLightDark
 @Composable

@@ -9,6 +9,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,6 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionApp
@@ -28,6 +32,7 @@ import kotlinx.coroutines.launch
 class MainActivity : ComponentActivity() {
 
     //region Private properties
+    private val viewModel: MainViewModel by viewModels()
     private lateinit var inAppUpdateService: InAppUpdateService
     //endregion
 
@@ -37,7 +42,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ReaderCollectionScreen {
-                MainScreen()
+                CompositionLocalProvider(LocalLanguage provides viewModel.language) {
+                    MainScreen()
+                }
             }
         }
 
@@ -79,4 +86,8 @@ private fun ReaderCollectionScreen(content: @Composable () -> Unit) {
             content = content,
         )
     }
+}
+
+val LocalLanguage: ProvidableCompositionLocal<String> = staticCompositionLocalOf {
+    error("CompositionLocal LocalLanguage not present")
 }
