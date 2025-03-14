@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.presentation.ui.components
 
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,6 +22,8 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,7 +38,9 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.ui.theme.description
 import com.aragones.sergio.util.CustomInputType
+import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
 fun CustomOutlinedTextField(
@@ -57,13 +63,20 @@ fun CustomOutlinedTextField(
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
     val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val isFocused by interactionSource.collectIsFocusedAsState()
+
+    val showLabel = !enabled || text.isNotBlank() || placeholderText == null || isFocused
 
     val label: @Composable (() -> Unit)? = labelText?.let {
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.body2,
-                color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
+                style = MaterialTheme.typography.h3.takeIf { placeholderText != null }
+                    ?: MaterialTheme.typography.body2,
+                color = MaterialTheme.colors.error.takeIf { errorTextId != null }
+                    ?: MaterialTheme.colors.description.takeIf { placeholderText != null }
+                    ?: inputHintTextColor,
             )
         }
     }
@@ -72,7 +85,8 @@ fun CustomOutlinedTextField(
             Text(
                 text = it,
                 style = MaterialTheme.typography.body2,
-                color = if (errorTextId != null) MaterialTheme.colors.error else inputHintTextColor,
+                color = MaterialTheme.colors.error.takeIf { errorTextId != null }
+                    ?: inputHintTextColor,
             )
         }
     }
@@ -115,14 +129,15 @@ fun CustomOutlinedTextField(
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = MaterialTheme.colors.primary,
                 unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
-                disabledBorderColor = Color.Transparent,
+                disabledBorderColor = MaterialTheme.colors.primaryVariant.takeIf { enabled }
+                    ?: Color.Transparent,
                 errorBorderColor = MaterialTheme.colors.error,
                 errorLabelColor = MaterialTheme.colors.error,
             ),
             textStyle = textStyle.copy(
-                color = if (errorTextId != null) MaterialTheme.colors.error else textColor,
+                color = MaterialTheme.colors.error.takeIf { errorTextId != null } ?: textColor,
             ),
-            label = label,
+            label = label?.takeIf { showLabel },
             placeholder = placeholder,
             trailingIcon = trailingIcon,
             keyboardOptions = keyboardOptions,
@@ -139,7 +154,7 @@ fun CustomOutlinedTextField(
             },
             singleLine = inputType != CustomInputType.MULTI_LINE_TEXT,
             maxLines = maxLines,
-            enabled = enabled,
+            enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
             readOnly = inputType == CustomInputType.DATE,
             isError = errorTextId != null,
             onValueChange = { newText ->
@@ -147,6 +162,7 @@ fun CustomOutlinedTextField(
                     onTextChanged(newText)
                 }
             },
+            interactionSource = interactionSource,
         )
         if (errorTextId != null) {
             Spacer(Modifier.height(5.dp))
