@@ -57,6 +57,7 @@ import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupPositionProvider
 import androidx.compose.ui.window.PopupProperties
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.ui.theme.description
 import kotlin.math.max
 import kotlin.math.min
 
@@ -70,6 +71,7 @@ fun CustomDropdownMenu(
     textColor: Color = MaterialTheme.colors.primary,
     values: List<String>,
     onOptionSelected: (String) -> Unit,
+    enabled: Boolean = true,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
@@ -77,8 +79,8 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.body2,
-                color = inputHintTextColor,
+                style = MaterialTheme.typography.h3,
+                color = MaterialTheme.colors.description,
             )
         }
     }
@@ -111,16 +113,22 @@ fun CustomDropdownMenu(
             value = currentValue,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { expanded = true },
+                .let {
+                    if (enabled) {
+                        it.clickable { expanded = true }
+                    } else {
+                        it
+                    }
+                },
             shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colors.primary,
-                unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+                disabledBorderColor = MaterialTheme.colors.primaryVariant.takeIf { enabled }
+                    ?: Color.Transparent,
             ),
             textStyle = MaterialTheme.typography.body1.copy(color = textColor),
             label = label,
             placeholder = placeholder,
-            trailingIcon = trailingIcon,
+            trailingIcon = trailingIcon.takeIf { enabled },
             singleLine = true,
             enabled = false,
             readOnly = true,
