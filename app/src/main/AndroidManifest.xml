@@ -21,7 +21,6 @@
         <activity
             android:name=".presentation.ui.MainActivity"
             android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".presentation.ui.bookdetail.BookDetailActivity" />
         <activity
             android:name=".presentation.ui.landing.LandingActivity"
             android:windowSoftInputMode="adjustResize"

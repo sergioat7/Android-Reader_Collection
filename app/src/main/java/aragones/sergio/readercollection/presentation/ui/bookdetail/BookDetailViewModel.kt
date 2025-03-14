@@ -5,6 +5,9 @@
 
 package aragones.sergio.readercollection.presentation.ui.bookdetail
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
@@ -12,7 +15,6 @@ import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.ui.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.ui.navigation.Route
@@ -26,44 +28,33 @@ import javax.inject.Inject
 class BookDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
     //region Private properties
     private val params = state.toRoute<Route.BookDetail>()
-    private val _book = MutableLiveData<Book>()
-    private val _bookImage = MutableLiveData<String?>()
-    private val _isFavourite = MutableLiveData<Boolean>()
-    private val _bookDetailLoading = MutableLiveData<Boolean>()
-    private val _bookDetailFormatsLoading = MutableLiveData<Boolean>()
-    private val _bookDetailStatesLoading = MutableLiveData<Boolean>()
-    private val _bookDetailFavouriteLoading = MutableLiveData<Boolean>()
-    private val _bookDetailError = MutableLiveData<ErrorResponse?>()
+    private lateinit var currentBook: Book
     private lateinit var savedBooks: List<Book>
-    private val pendingBooks: List<Book>
-        get() = savedBooks.filter { it.isPending() }
+    private var _state: MutableState<BookDetailUiState> = mutableStateOf(
+        BookDetailUiState(
+            book = null,
+            isAlreadySaved = !params.isGoogleBook,
+            isEditable = false,
+        ),
+    )
+    private val _bookDetailError = MutableLiveData<ErrorResponse?>()
     private val _confirmationDialogMessageId = MutableLiveData(-1)
     private val _infoDialogMessageId = MutableLiveData(-1)
     private val _imageDialogMessageId = MutableLiveData(-1)
+    private val pendingBooks: List<Book>
+        get() = savedBooks.filter { it.isPending() }
     //endregion
 
     //region Public properties
-    var isGoogleBook: Boolean = params.isGoogleBook
-    val book: LiveData<Book> = _book
-    val bookImage: LiveData<String?> = _bookImage
-    val isFavourite: LiveData<Boolean> = _isFavourite
-    val bookDetailLoading: LiveData<Boolean> = _bookDetailLoading
-    val bookDetailFormatsLoading: LiveData<Boolean> = _bookDetailFormatsLoading
-    val bookDetailStatesLoading: LiveData<Boolean> = _bookDetailStatesLoading
-    val bookDetailFavouriteLoading: LiveData<Boolean> = _bookDetailFavouriteLoading
+    val state: State<BookDetailUiState> = _state
     val bookDetailError: LiveData<ErrorResponse?> = _bookDetailError
-    var newBookTutorialShown = userRepository.hasNewBookTutorialBeenShown
-    var bookDetailsTutorialShown = userRepository.hasBookDetailsTutorialBeenShown
     var confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
     var imageDialogMessageId: LiveData<Int> = _imageDialogMessageId
-    val language: String
-        get() = userRepository.language
     //endregion
 
     //region Lifecycle methods
@@ -88,98 +79,92 @@ class BookDetailViewModel @Inject constructor(
         super.onCleared()
 
         booksRepository.onDestroy()
-        userRepository.onDestroy()
     }
     //endregion
 
     //region Public methods
+    fun enableEdition() {
+        _state.value = _state.value.copy(
+            isEditable = true,
+        )
+    }
+
+    fun disableEdition() {
+        _state.value = _state.value.copy(
+            book = currentBook,
+            isEditable = false,
+        )
+    }
+
+    fun changeData(book: Book) {
+        _state.value = _state.value.copy(
+            book = book,
+        )
+    }
+
     fun createBook(newBook: Book) {
         if (savedBooks.firstOrNull { it.id == newBook.id } != null) {
             _infoDialogMessageId.value = R.string.error_resource_found
             return
         }
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        _bookDetailLoading.value = true
         booksRepository
             .createBook(newBook)
             .subscribeBy(
                 onComplete = {
-                    _bookDetailLoading.value = false
                     _infoDialogMessageId.value = R.string.book_saved
                 },
                 onError = {
-                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database))
+                    _bookDetailError.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database,
+                    )
                 },
             ).addTo(disposables)
     }
 
     fun setBook(book: Book) {
-        _bookDetailLoading.value = true
         booksRepository
             .setBook(book)
             .subscribeBy(
                 onSuccess = {
-                    _book.value = it
-                    _bookDetailLoading.value = false
+                    currentBook = it
+                    _state.value = _state.value.copy(
+                        book = it,
+                        isEditable = false,
+                    )
                 },
                 onError = {
-                    manageError(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
+                    _bookDetailError.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database,
                     )
                 },
             ).addTo(disposables)
     }
 
     fun deleteBook() {
-        _bookDetailLoading.value = true
         booksRepository
             .deleteBook(params.bookId)
             .subscribeBy(
                 onComplete = {
-                    _bookDetailLoading.value = false
                     _infoDialogMessageId.value = R.string.book_removed
                 },
                 onError = {
-                    manageError(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_database,
-                        ),
+                    _bookDetailError.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_database,
                     )
                 },
             ).addTo(disposables)
     }
 
     fun setBookImage(imageUri: String?) {
-        _bookImage.value = imageUri
-    }
-
-    fun setFavourite(isFavourite: Boolean) {
-        _bookDetailFavouriteLoading.value = true
-        booksRepository
-            .setFavouriteBook(params.bookId, isFavourite)
-            .subscribeBy(
-                onSuccess = {
-                    _isFavourite.value = it.isFavourite
-                    _bookDetailFavouriteLoading.value = false
-                },
-                onError = {
-                    _bookDetailFavouriteLoading.value = false
-                },
-            ).addTo(disposables)
-    }
-
-    fun setNewBookTutorialAsShown() {
-        userRepository.setHasNewBookTutorialBeenShown(true)
-        newBookTutorialShown = true
-    }
-
-    fun setBookDetailsTutorialAsShown() {
-        userRepository.setHasBookDetailsTutorialBeenShown(true)
-        bookDetailsTutorialShown = true
+        _state.value = _state.value.copy(
+            book = _state.value.book?.copy(
+                thumbnail = imageUri,
+            ),
+        )
     }
 
     fun showConfirmationDialog(textId: Int) {
@@ -199,17 +184,19 @@ class BookDetailViewModel @Inject constructor(
 
     //region Private methods
     private fun fetchBook() {
-        _bookDetailLoading.value = true
-        if (params.isGoogleBook) {
+        if (!_state.value.isAlreadySaved) {
             booksRepository
                 .getRemoteBook(params.bookId)
                 .subscribeBy(
                     onSuccess = {
-                        _book.value = it
-                        _bookDetailLoading.value = false
+                        currentBook = it
+                        _state.value = _state.value.copy(
+                            book = it,
+                            isEditable = true,
+                        )
                     },
                     onError = {
-                        manageError(ErrorResponse("", R.string.error_server))
+                        _bookDetailError.value = ErrorResponse("", R.string.error_server)
                     },
                 ).addTo(disposables)
         } else {
@@ -217,21 +204,17 @@ class BookDetailViewModel @Inject constructor(
                 .getBook(params.bookId)
                 .subscribeBy(
                     onSuccess = {
-                        _book.value = it
-                        _isFavourite.value = it.isFavourite
-                        _bookDetailLoading.value = false
+                        currentBook = it
+                        _state.value = _state.value.copy(
+                            book = it,
+                            isEditable = false,
+                        )
                     },
                     onError = {
-                        manageError(ErrorResponse("", R.string.error_no_book))
+                        _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
                     },
                 ).addTo(disposables)
         }
-    }
-
-    private fun manageError(error: ErrorResponse) {
-        _bookDetailLoading.value = false
-        _bookDetailError.value = error
-        _bookDetailError.value = null
     }
     //endregion
 }
