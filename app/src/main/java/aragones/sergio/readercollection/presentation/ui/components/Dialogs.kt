@@ -2,6 +2,7 @@
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 19/3/2024
  */
+@file:Suppress("UsingMaterialAndMaterial3Libraries")
 
 package aragones.sergio.readercollection.presentation.ui.components
 
@@ -24,6 +25,11 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -43,6 +49,8 @@ import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.ui.theme.description
+import aragones.sergio.readercollection.presentation.ui.theme.roseBud
+import java.util.Date
 
 @Composable
 fun ConfirmationAlertDialog(
@@ -280,6 +288,80 @@ data class UiSortingPickerState(
     val isSortDescending: Boolean,
 )
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CustomDatePickerDialog(
+    currentValue: Long?,
+    onDateSelected: (Long) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = currentValue,
+    )
+    DatePickerDialog(
+        onDismissRequest = onDismiss,
+        confirmButton = {
+            TextButtonAlertDialog(
+                text = stringResource(R.string.accept),
+                onClick = {
+                    onDateSelected(datePickerState.selectedDateMillis ?: Date().time)
+                    onDismiss()
+                },
+            )
+        },
+        modifier = modifier,
+        dismissButton = {
+            TextButtonAlertDialog(
+                text = stringResource(R.string.cancel),
+                onClick = onDismiss,
+            )
+        },
+        colors = DatePickerDefaults.colors(
+            containerColor = MaterialTheme.colors.background,
+        ),
+    ) {
+        DatePicker(
+            state = datePickerState,
+            title = {
+                Text(
+                    text = stringResource(R.string.select_a_date),
+                    modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
+                    style = MaterialTheme.typography.h2,
+                    color = MaterialTheme.colors.primary,
+                )
+            },
+            showModeToggle = false,
+            colors = DatePickerDefaults.colors(
+                containerColor = MaterialTheme.colors.background,
+                titleContentColor = MaterialTheme.colors.primary,
+                headlineContentColor = MaterialTheme.colors.primary,
+                weekdayContentColor = MaterialTheme.colors.primary,
+                subheadContentColor = MaterialTheme.colors.primary,
+                navigationContentColor = MaterialTheme.colors.primary,
+                yearContentColor = MaterialTheme.colors.primary,
+                disabledYearContentColor = MaterialTheme.colors.primary,
+                currentYearContentColor = MaterialTheme.colors.primary,
+                selectedYearContentColor = MaterialTheme.colors.primary,
+                disabledSelectedYearContentColor = MaterialTheme.colors.primary,
+                selectedYearContainerColor = MaterialTheme.colors.roseBud,
+                disabledSelectedYearContainerColor = MaterialTheme.colors.primary,
+                dayContentColor = MaterialTheme.colors.primary,
+                disabledDayContentColor = MaterialTheme.colors.primary,
+                selectedDayContentColor = MaterialTheme.colors.primary,
+                disabledSelectedDayContentColor = MaterialTheme.colors.primary,
+                selectedDayContainerColor = MaterialTheme.colors.roseBud,
+                disabledSelectedDayContainerColor = MaterialTheme.colors.primary,
+                todayContentColor = MaterialTheme.colors.primary,
+                todayDateBorderColor = MaterialTheme.colors.primary,
+                dayInSelectionRangeContentColor = MaterialTheme.colors.primary,
+                dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
+                dividerColor = MaterialTheme.colors.primary,
+            ),
+        )
+    }
+}
+
 @Composable
 private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
@@ -369,6 +451,18 @@ private fun SortingPickerAlertDialogPreview() {
             ),
             onCancel = {},
             onAccept = { _, _ -> },
+        )
+    }
+}
+
+@PreviewLightDark
+@Composable
+private fun CustomDatePickerDialogPreview() {
+    ReaderCollectionTheme {
+        CustomDatePickerDialog(
+            currentValue = Date().time,
+            onDateSelected = {},
+            onDismiss = {},
         )
     }
 }

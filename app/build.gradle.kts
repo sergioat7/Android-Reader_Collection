@@ -103,6 +103,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.fragment.ktx)
     implementation(libs.material)
+    implementation(libs.material3)
     implementation(libs.legacy.support.v4)
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
