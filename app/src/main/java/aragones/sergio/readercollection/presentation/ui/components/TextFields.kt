@@ -9,9 +9,8 @@ import androidx.annotation.DrawableRes
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -31,10 +30,12 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.ui.theme.ReaderCollectionTheme
@@ -164,14 +165,27 @@ fun CustomOutlinedTextField(
             },
             interactionSource = interactionSource,
         )
-        if (errorTextId != null) {
-            Spacer(Modifier.height(5.dp))
-            Text(
-                text = stringResource(id = errorTextId),
-                modifier = Modifier.padding(horizontal = 5.dp),
-                style = MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.error,
-            )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 0.dp),
+        ) {
+            if (errorTextId != null) {
+                Text(
+                    text = stringResource(id = errorTextId),
+                    style = MaterialTheme.typography.body2,
+                    color = MaterialTheme.colors.error,
+                )
+            }
+            if (enabled && maxLength != Integer.MAX_VALUE) {
+                Text(
+                    text = "${text.length} / $maxLength",
+                    modifier = Modifier.fillMaxWidth(),
+                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colors.error.takeIf { errorTextId != null } ?: textColor,
+                    textAlign = TextAlign.End,
+                )
+            }
         }
     }
 }
@@ -185,6 +199,7 @@ private fun TextOutlinedTextFieldPreview() {
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             labelText = "Label",
+            maxLength = 100,
         )
     }
 }
@@ -199,6 +214,7 @@ private fun PasswordOutlinedTextFieldPreview() {
             modifier = Modifier.padding(12.dp),
             labelText = "Label",
             endIcon = R.drawable.ic_show_password,
+            maxLength = 100,
             onEndIconClicked = {},
         )
     }
@@ -213,6 +229,7 @@ private fun DisabledOutlinedTextFieldPreview() {
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             labelText = "Label",
+            maxLength = 100,
             enabled = false,
         )
     }
@@ -228,6 +245,7 @@ private fun ErrorOutlinedTextFieldPreview() {
             modifier = Modifier.padding(12.dp),
             errorTextId = R.string.invalid_username,
             labelText = "Label",
+            maxLength = 100,
         )
     }
 }
