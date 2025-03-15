@@ -28,7 +28,6 @@ object Preferences {
 
 object Constants {
     const val DATE_FORMAT = "yyyy-MM-dd"
-    const val MAX_LINES = Int.MAX_VALUE
     const val EMPTY_VALUE = ""
     const val NO_VALUE = "-"
     const val BOOKS_TO_SHOW = 7
@@ -55,12 +54,4 @@ enum class CustomInputType {
     NUMBER,
     PASSWORD,
     DATE,
-}
-
-enum class CustomDropdownType {
-    FORMAT,
-    STATE,
-    SORT_PARAM,
-    SORT_ORDER,
-    APP_THEME,
 }
