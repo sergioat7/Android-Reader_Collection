@@ -8,8 +8,6 @@ package aragones.sergio.readercollection.presentation.bookdetail
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
@@ -23,6 +21,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
@@ -41,20 +41,20 @@ class BookDetailViewModel @Inject constructor(
             isEditable = false,
         ),
     )
-    private val _bookDetailError = MutableLiveData<ErrorResponse?>()
-    private val _confirmationDialogMessageId = MutableLiveData(-1)
-    private val _infoDialogMessageId = MutableLiveData(-1)
-    private val _imageDialogMessageId = MutableLiveData(-1)
+    private val _bookDetailError = MutableStateFlow<ErrorResponse?>(null)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _imageDialogMessageId = MutableStateFlow(-1)
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
     //endregion
 
     //region Public properties
     val state: State<BookDetailUiState> = _state
-    val bookDetailError: LiveData<ErrorResponse?> = _bookDetailError
-    var confirmationDialogMessageId: LiveData<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: LiveData<Int> = _infoDialogMessageId
-    var imageDialogMessageId: LiveData<Int> = _imageDialogMessageId
+    val bookDetailError: StateFlow<ErrorResponse?> = _bookDetailError
+    var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    var imageDialogMessageId: StateFlow<Int> = _imageDialogMessageId
     //endregion
 
     //region Lifecycle methods

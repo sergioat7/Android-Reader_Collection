@@ -101,7 +101,6 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.material)
     implementation(libs.material3)
-    implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
 
     implementation(libs.moshi)

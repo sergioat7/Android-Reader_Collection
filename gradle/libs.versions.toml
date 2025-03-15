@@ -19,7 +19,6 @@ hilt = "2.49"
 app-update = "2.1.0"
 leak-canary = "2.9.1"
 compose-bom = "2025.01.01"
-compose-livedata = "1.7.7"
 compose-activity = "1.10.0"
 coil = "2.7.0"
 junit = "4.13.2"
@@ -43,7 +42,6 @@ lottie = "6.6.2"
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 material3 = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3" }
-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycle" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycle" }
 
 #Navigation
@@ -99,7 +97,6 @@ compose-ui = { module = "androidx.compose.ui:ui" }
 compose-material = { module = "androidx.compose.material:material" }
 compose-material-icons = { module = "androidx.compose.material:material-icons-core" }
 compose-runtime = { module = "androidx.compose.runtime:runtime" }
-compose-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "compose-livedata" }
 compose-activity = { group = "androidx.activity", name = "activity-compose", version.ref = "compose-activity" }
 compose-graphics = { module = "androidx.compose.ui:ui-graphics" }
 compose-tooling = { module = "androidx.compose.ui:ui-tooling" }
@@ -141,4 +138,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 retrofit = ["retrofit", "retrofit-adapter-rxjava", "okhttp3-logging-interceptor", "retrofit-converter-moshi"]
 rx = ["rxjava", "rxkotlin", "rxandroid"]
 firebase = ["firebase-analytics", "firebase-crashlytics", "firebase-config"]
-compose = ["compose-ui", "compose-material", "compose-material-icons", "compose-runtime", "compose-livedata", "compose-activity", "compose-graphics", "compose-tooling", "compose-preview"]
+compose = ["compose-ui", "compose-material", "compose-material-icons", "compose-runtime", "compose-activity", "compose-graphics", "compose-tooling", "compose-preview"]

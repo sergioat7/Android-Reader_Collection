@@ -6,8 +6,8 @@
 package aragones.sergio.readercollection.presentation.bookdetail
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,16 +21,10 @@ import com.aragones.sergio.util.extensions.isNotBlank
 @Composable
 fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = hiltViewModel()) {
     val state by viewModel.state
-    val confirmationMessageId by viewModel.confirmationDialogMessageId.observeAsState(
-        initial = -1,
-    )
-    val infoDialogMessageId by viewModel.infoDialogMessageId.observeAsState(
-        initial = -1,
-    )
-    val imageDialogMessageId by viewModel.imageDialogMessageId.observeAsState(
-        initial = -1,
-    )
-    val error by viewModel.bookDetailError.observeAsState()
+    val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
+    val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+    val imageDialogMessageId by viewModel.imageDialogMessageId.collectAsState()
+    val error by viewModel.bookDetailError.collectAsState()
 
     BookDetailScreen(
         state = state,
