@@ -63,7 +63,7 @@ fun TopAppBarIcon(
         modifier = modifier,
     ) {
         Icon(
-            painter = painterResource(id = icon),
+            painter = painterResource(icon),
             contentDescription = null,
             tint = tint,
         )
@@ -282,7 +282,7 @@ private fun CustomToolbarPreview() {
 private fun CustomSearchBarPreview() {
     ReaderCollectionTheme {
         CustomSearchBar(
-            title = stringResource(id = R.string.title_search),
+            title = stringResource(R.string.title_search),
             query = "",
             onSearch = {},
         )

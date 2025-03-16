@@ -19,8 +19,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -40,30 +38,24 @@ class LoginActivity : ComponentActivity() {
 
         setContent {
             ReaderCollectionApp {
-                Surface(
+                Box(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(MaterialTheme.colors.background)
                         .padding(WindowInsets.safeDrawing.asPaddingValues()),
                 ) {
                     val navController = rememberNavController()
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                    ) { padding ->
-                        Box(modifier = Modifier.padding(padding)) {
-                            val navGraph = remember(navController) {
-                                navController.createGraph(startDestination = Route.Auth) {
-                                    authGraph(navController)
-                                }
-                            }
-                            NavHost(
-                                navController = navController,
-                                graph = navGraph,
-                                enterTransition = { EnterTransition.None },
-                                exitTransition = { ExitTransition.None },
-                            )
+                    val navGraph = remember(navController) {
+                        navController.createGraph(startDestination = Route.Auth) {
+                            authGraph(navController)
                         }
                     }
+                    NavHost(
+                        navController = navController,
+                        graph = navGraph,
+                        enterTransition = { EnterTransition.None },
+                        exitTransition = { ExitTransition.None },
+                    )
                 }
             }
         }

@@ -60,7 +60,7 @@ fun LoginScreen(
             .padding(24.dp),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.login_register_image),
+            painter = painterResource(R.drawable.login_register_image),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -76,7 +76,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
-            labelText = stringResource(id = R.string.username),
+            labelText = stringResource(R.string.username),
             isLastTextField = false,
         )
         Spacer(Modifier.height(8.dp))
@@ -89,7 +89,7 @@ fun LoginScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
-            labelText = stringResource(id = R.string.password),
+            labelText = stringResource(R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
             } else {
@@ -101,7 +101,7 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.weight(1f))
         MainActionButton(
-            text = stringResource(id = R.string.sign_in),
+            text = stringResource(R.string.sign_in),
             modifier = Modifier
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
@@ -117,14 +117,14 @@ fun LoginScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(id = R.string.not_account),
+                text = stringResource(R.string.not_account),
                 style = MaterialTheme.typography.body1,
                 color = MaterialTheme.colors.description,
             )
             Spacer(Modifier.width(5.dp))
             TextButton(onClick = onGoToRegister) {
                 Text(
-                    text = stringResource(id = R.string.create_account),
+                    text = stringResource(R.string.create_account),
                     style = MaterialTheme.typography.body1.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.sp,

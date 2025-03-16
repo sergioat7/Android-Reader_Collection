@@ -23,7 +23,12 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
-fun MainActionButton(text: String, modifier: Modifier, enabled: Boolean, onClick: () -> Unit) {
+fun MainActionButton(
+    text: String,
+    enabled: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Button(
         onClick = onClick,
         modifier = modifier,
@@ -53,7 +58,7 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
         backgroundColor = MaterialTheme.colors.primary,
     ) {
         Icon(
-            painter = painterResource(id = image),
+            painter = painterResource(image),
             contentDescription = null,
             tint = MaterialTheme.colors.secondary,
         )
@@ -78,7 +83,6 @@ private fun MainActionButtonPreview() {
     ReaderCollectionTheme {
         MainActionButton(
             text = "Log-in",
-            modifier = Modifier,
             enabled = true,
             onClick = {},
         )

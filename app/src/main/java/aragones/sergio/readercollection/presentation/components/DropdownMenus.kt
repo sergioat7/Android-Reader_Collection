@@ -64,13 +64,13 @@ import kotlin.math.min
 @Composable
 fun CustomDropdownMenu(
     currentValue: String,
-    modifier: Modifier,
+    values: List<String>,
+    onOptionSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
     textColor: Color = MaterialTheme.colors.primary,
-    values: List<String>,
-    onOptionSelected: (String) -> Unit,
     enabled: Boolean = true,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -114,11 +114,7 @@ fun CustomDropdownMenu(
             modifier = Modifier
                 .fillMaxWidth()
                 .let {
-                    if (enabled) {
-                        it.clickable { expanded = true }
-                    } else {
-                        it
-                    }
+                    it.clickable { expanded = true }.takeIf { enabled } ?: it
                 },
             shape = MaterialTheme.shapes.medium,
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -409,11 +405,11 @@ private fun CustomDropdownMenuPreview() {
     ReaderCollectionTheme {
         CustomDropdownMenu(
             currentValue = "Value",
-            labelText = "Header",
-            placeholderText = "Please choose",
-            modifier = Modifier.padding(12.dp),
             values = listOf("Option 1", "Option 2", "Option 3"),
             onOptionSelected = {},
+            modifier = Modifier.padding(12.dp),
+            labelText = "Header",
+            placeholderText = "Please choose",
         )
     }
 }

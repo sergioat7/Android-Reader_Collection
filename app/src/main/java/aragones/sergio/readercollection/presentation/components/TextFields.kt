@@ -106,7 +106,7 @@ fun CustomOutlinedTextField(
         {
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
                 Icon(
-                    painter = painterResource(id = it),
+                    painter = painterResource(it),
                     contentDescription = null,
                     tint = MaterialTheme.colors.primary,
                 )
@@ -183,7 +183,7 @@ fun CustomOutlinedTextField(
         ) {
             if (errorTextId != null) {
                 Text(
-                    text = stringResource(id = errorTextId),
+                    text = stringResource(errorTextId),
                     style = MaterialTheme.typography.body2,
                     color = MaterialTheme.colors.error,
                 )

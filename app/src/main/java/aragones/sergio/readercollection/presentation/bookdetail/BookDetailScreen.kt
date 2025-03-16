@@ -83,7 +83,10 @@ fun BookDetailScreen(
     onSetImage: () -> Unit,
 ) {
     val nestedScrollConnection = remember {
-        CollapsingToolbarNestedScrollConnection(400.dp, 56.dp)
+        CollapsingToolbarNestedScrollConnection(
+            maxContentSize = 400.dp,
+            minContentSize = 56.dp,
+        )
     }
     Box(
         modifier = Modifier
@@ -177,7 +180,7 @@ fun BookDetailScreen(
                                 backgroundColor = MaterialTheme.colors.primary,
                             ) {
                                 Icon(
-                                    painter = painterResource(id = R.drawable.ic_add_a_photo),
+                                    painter = painterResource(R.drawable.ic_add_a_photo),
                                     contentDescription = null,
                                     tint = MaterialTheme.colors.secondary,
                                 )
@@ -249,7 +252,7 @@ private fun BookDetailContent(
                 onChangeData(book.copy(title = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(id = R.string.add_title),
+            placeholderText = stringResource(R.string.add_title),
             textStyle = MaterialTheme.typography.h1,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.MULTI_LINE_TEXT,
@@ -265,7 +268,7 @@ private fun BookDetailContent(
                 onChangeData(book.copy(authors = it.split(",")))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(id = R.string.add_author),
+            placeholderText = stringResource(R.string.add_author),
             textColor = MaterialTheme.colors.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.MULTI_LINE_TEXT,
@@ -336,13 +339,7 @@ private fun BookDetailContent(
             }
         CustomDropdownMenu(
             currentValue = bookState,
-            modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.state),
-            placeholderText = stringResource(R.string.select_state),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
             values = stateValues,
-            enabled = isEditable,
             onOptionSelected = { newStateValue ->
                 val newStateId = STATES.firstOrNull { it.name == newStateValue }?.id
                 val newReadingDate = Date().takeIf {
@@ -355,6 +352,12 @@ private fun BookDetailContent(
                     ),
                 )
             },
+            modifier = Modifier.fillMaxWidth(),
+            labelText = stringResource(R.string.state),
+            placeholderText = stringResource(R.string.select_state),
+            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colors.description,
+            enabled = isEditable,
         )
         Spacer(Modifier.height(8.dp))
         DateCustomOutlinedTextField(
@@ -378,7 +381,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.reading_date),
-            placeholderText = stringResource(id = R.string.select_a_date),
+            placeholderText = stringResource(R.string.select_a_date),
             inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             enabled = isEditable,
@@ -397,17 +400,17 @@ private fun BookDetailContent(
             }
         CustomDropdownMenu(
             currentValue = bookFormat,
+            values = formatValues,
+            onOptionSelected = { newFormatValue ->
+                val newFormatId = FORMATS.firstOrNull { it.name == newFormatValue }?.id
+                onChangeData(book.copy(format = newFormatId))
+            },
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.format),
             placeholderText = stringResource(R.string.select_format),
             inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colors.description,
-            values = formatValues,
             enabled = isEditable,
-            onOptionSelected = { newFormatValue ->
-                val newFormatId = FORMATS.firstOrNull { it.name == newFormatValue }?.id
-                onChangeData(book.copy(format = newFormatId))
-            },
         )
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
@@ -421,7 +424,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.pages),
-            placeholderText = stringResource(id = R.string.add_pages),
+            placeholderText = stringResource(R.string.add_pages),
             inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colors.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
@@ -440,7 +443,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.isbn),
-            placeholderText = stringResource(id = R.string.add_isbn),
+            placeholderText = stringResource(R.string.add_isbn),
             inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colors.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
@@ -458,7 +461,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.publisher),
-            placeholderText = stringResource(id = R.string.add_publisher),
+            placeholderText = stringResource(R.string.add_publisher),
             inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colors.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
@@ -489,7 +492,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.published_date),
-            placeholderText = stringResource(id = R.string.select_a_date),
+            placeholderText = stringResource(R.string.select_a_date),
             inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             enabled = isEditable,
