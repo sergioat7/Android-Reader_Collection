@@ -528,7 +528,6 @@ private class StatisticsScreenPreviewParameterProvider :
         image = null,
         format = null,
         state = BookState.READ,
-        isFavourite = false,
         priority = 0,
     )
 

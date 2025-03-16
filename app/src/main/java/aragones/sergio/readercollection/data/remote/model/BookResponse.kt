@@ -49,7 +49,5 @@ data class BookResponse(
     val format: String?,
     @Json(name = "state")
     var state: String?,
-    @Json(name = "isFavourite")
-    var isFavourite: Boolean,
     var priority: Int,
 ) : BaseModel<String>

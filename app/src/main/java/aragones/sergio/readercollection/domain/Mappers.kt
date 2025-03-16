@@ -31,7 +31,6 @@ fun Book.toLocalData(): BookLocal = BookLocal(
     image = image,
     format = format,
     state = state,
-    isFavourite = isFavourite,
     priority = priority,
 )
 
@@ -55,7 +54,6 @@ fun BookLocal.toDomain(): Book = Book(
     image = image,
     format = format,
     state = state,
-    isFavourite = isFavourite,
     priority = priority,
 )
 
@@ -83,6 +81,5 @@ fun GoogleBookResponse.toDomain(): Book = Book(
     image = getGoogleBookImage(),
     format = FORMATS.firstOrNull()?.id,
     state = STATES.firstOrNull()?.id,
-    isFavourite = false,
     priority = -1,
 )

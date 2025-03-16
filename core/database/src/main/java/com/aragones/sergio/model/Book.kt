@@ -31,6 +31,5 @@ data class Book(
     val image: String?,
     val format: String?,
     var state: String?,
-    var isFavourite: Boolean,
     var priority: Int,
 ) : BaseEntity<String>

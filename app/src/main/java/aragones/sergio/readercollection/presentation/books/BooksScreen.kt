@@ -540,7 +540,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -563,7 +562,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -586,7 +584,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.PENDING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -609,7 +606,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.PENDING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -632,7 +628,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READ,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -655,7 +650,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READ,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),
@@ -684,7 +678,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.PENDING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -707,7 +700,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READ,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),
@@ -736,7 +728,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -759,7 +750,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READ,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),
@@ -788,7 +778,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.READING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -811,7 +800,6 @@ private class BooksScreenPreviewParameterProvider : PreviewParameterProvider<Boo
                         image = null,
                         format = null,
                         state = BookState.PENDING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),

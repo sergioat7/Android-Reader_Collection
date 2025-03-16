@@ -37,6 +37,19 @@ object DatabaseModule {
         }
     }
 
+    private val MIGRATION_3_4 = object : Migration(3, 4) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                "CREATE TABLE IF NOT EXISTS `New_Book` (`id` TEXT NOT NULL, `title` TEXT, `subtitle` TEXT, `authors` TEXT, `publisher` TEXT, `publishedDate` INTEGER, `readingDate` INTEGER, `description` TEXT, `summary` TEXT, `isbn` TEXT, `pageCount` INTEGER NOT NULL, `categories` TEXT, `averageRating` REAL NOT NULL, `ratingsCount` INTEGER NOT NULL, `rating` REAL NOT NULL, `thumbnail` TEXT, `image` TEXT, `format` TEXT, `state` TEXT, `priority` INTEGER NOT NULL, PRIMARY KEY(`id`))",
+            )
+            db.execSQL(
+                "INSERT INTO New_Book SELECT `id`, `title`, `subtitle`, `authors`, `publisher`, `publishedDate`, `readingDate`, `description`, `summary`, `isbn`, `pageCount`, `categories`, `averageRating`, `ratingsCount`, `rating`, `thumbnail`, `image`, `format`, `state`, `priority` FROM Book",
+            )
+            db.execSQL("DROP TABLE Book")
+            db.execSQL("ALTER TABLE New_Book RENAME TO Book")
+        }
+    }
+
     @Singleton
     @Provides
     fun provideAppDatabase(@ApplicationContext context: Context): ReaderCollectionDatabase = Room
@@ -46,6 +59,7 @@ object DatabaseModule {
             DATABASE_NAME,
         ).addMigrations(MIGRATION_1_2)
         .addMigrations(MIGRATION_2_3)
+        .addMigrations(MIGRATION_3_4)
         .build()
 
     @Provides

@@ -341,7 +341,6 @@ private class SearchScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = null,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -364,7 +363,6 @@ private class SearchScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = null,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -387,7 +385,6 @@ private class SearchScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = null,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -410,7 +407,6 @@ private class SearchScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = null,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),

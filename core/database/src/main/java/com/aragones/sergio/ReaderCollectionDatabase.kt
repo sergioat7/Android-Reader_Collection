@@ -15,7 +15,7 @@ import com.aragones.sergio.model.Book
 
 @Database(
     entities = [Book::class],
-    version = 3,
+    version = 4,
 )
 @TypeConverters(
     ListConverter::class,

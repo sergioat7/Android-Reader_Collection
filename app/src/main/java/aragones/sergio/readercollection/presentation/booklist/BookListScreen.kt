@@ -336,7 +336,6 @@ private class BookListScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = BookState.PENDING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -359,7 +358,6 @@ private class BookListScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = BookState.PENDING,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),
@@ -389,7 +387,6 @@ private class BookListScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = BookState.READ,
-                        isFavourite = false,
                         priority = 0,
                     ),
                     Book(
@@ -412,7 +409,6 @@ private class BookListScreenPreviewParameterProvider :
                         image = null,
                         format = null,
                         state = BookState.READ,
-                        isFavourite = false,
                         priority = 0,
                     ),
                 ),
