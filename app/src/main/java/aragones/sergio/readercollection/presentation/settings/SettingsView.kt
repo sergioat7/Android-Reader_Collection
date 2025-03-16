@@ -14,6 +14,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
 fun SettingsView(
@@ -38,20 +39,22 @@ fun SettingsView(
         return
     }
 
-    SettingsScreen(
-        state = state,
-        onShowInfo = {
-            viewModel.showInfoDialog(R.string.username_info)
-        },
-        onProfileDataChange = viewModel::profileDataChanged,
-        onDeleteProfile = {
-            viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
-        },
-        onLogout = {
-            viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
-        },
-        onSave = viewModel::save,
-    )
+    ReaderCollectionApp(navigationBarSameAsBackground = false) {
+        SettingsScreen(
+            state = state,
+            onShowInfo = {
+                viewModel.showInfoDialog(R.string.username_info)
+            },
+            onProfileDataChange = viewModel::profileDataChanged,
+            onDeleteProfile = {
+                viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+            },
+            onLogout = {
+                viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
+            },
+            onSave = viewModel::save,
+        )
+    }
 
     ConfirmationAlertDialog(
         show = confirmationMessageId != -1,

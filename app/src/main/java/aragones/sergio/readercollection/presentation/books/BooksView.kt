@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.components.LaunchedEffectOnce
 import aragones.sergio.readercollection.presentation.components.SortingPickerAlertDialog
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
 fun BooksView(
@@ -25,32 +26,34 @@ fun BooksView(
     val sortingPickerState by viewModel.sortingPickerState
     val error by viewModel.booksError.collectAsState()
 
-    BooksScreen(
-        state = state,
-        onSortClick = {
-            viewModel.showSortingPickerState()
-        },
-        onSearch = {
-            viewModel.searchBooks(it)
-        },
-        onBookClick = onBookClick,
-        onShowAll = { bookState ->
-            onShowAll(
-                bookState,
-                sortingPickerState.sortParam,
-                sortingPickerState.isSortDescending,
-                state.query,
-            )
-        },
-        onSwitchToLeft = { fromIndex ->
-            viewModel.switchBooksPriority(fromIndex, fromIndex - 1)
-        },
-        onSwitchToRight = { fromIndex ->
-            viewModel.switchBooksPriority(fromIndex, fromIndex + 1)
-        },
-        onBookStateChange = viewModel::setBook,
-        onAddBook = onAddBook,
-    )
+    ReaderCollectionApp(navigationBarSameAsBackground = false) {
+        BooksScreen(
+            state = state,
+            onSortClick = {
+                viewModel.showSortingPickerState()
+            },
+            onSearch = {
+                viewModel.searchBooks(it)
+            },
+            onBookClick = onBookClick,
+            onShowAll = { bookState ->
+                onShowAll(
+                    bookState,
+                    sortingPickerState.sortParam,
+                    sortingPickerState.isSortDescending,
+                    state.query,
+                )
+            },
+            onSwitchToLeft = { fromIndex ->
+                viewModel.switchBooksPriority(fromIndex, fromIndex - 1)
+            },
+            onSwitchToRight = { fromIndex ->
+                viewModel.switchBooksPriority(fromIndex, fromIndex + 1)
+            },
+            onBookStateChange = viewModel::setBook,
+            onAddBook = onAddBook,
+        )
+    }
 
     SortingPickerAlertDialog(
         state = sortingPickerState,
