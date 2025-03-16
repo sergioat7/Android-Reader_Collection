@@ -318,7 +318,7 @@ private fun CollapsingToolbarPreview() {
                 ImageWithLoading(
                     imageUrl = null,
                     placeholder = if (MaterialTheme.colors.isLight) {
-                        R.drawable.ic_default_book_cover_blue
+                        R.drawable.ic_default_book_cover_white
                     } else {
                         R.drawable.ic_default_book_cover_blue
                     },

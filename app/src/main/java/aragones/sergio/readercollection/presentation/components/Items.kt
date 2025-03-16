@@ -93,7 +93,11 @@ fun BookItem(
             }
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = R.drawable.ic_default_book_cover_blue,
+                placeholder = if (MaterialTheme.colors.isLight) {
+                    R.drawable.ic_default_book_cover_blue
+                } else {
+                    R.drawable.ic_default_book_cover_white
+                },
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .widthIn(max = 115.dp)
@@ -204,7 +208,11 @@ fun ReadingBookItem(
         Spacer(Modifier.height(8.dp))
         ImageWithLoading(
             imageUrl = book.thumbnail,
-            placeholder = R.drawable.ic_default_book_cover_blue,
+            placeholder = if (MaterialTheme.colors.isLight) {
+                R.drawable.ic_default_book_cover_blue
+            } else {
+                R.drawable.ic_default_book_cover_white
+            },
             contentScale = ContentScale.FillWidth,
             shape = MaterialTheme.shapes.small,
         )
@@ -278,7 +286,11 @@ fun VerticalBookItem(
         ) {
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = R.drawable.ic_default_book_cover_blue,
+                placeholder = if (MaterialTheme.colors.isLight) {
+                    R.drawable.ic_default_book_cover_blue
+                } else {
+                    R.drawable.ic_default_book_cover_white
+                },
                 modifier = Modifier
                     .height(200.dp)
                     .fillMaxWidth(),
