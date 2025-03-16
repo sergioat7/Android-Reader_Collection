@@ -344,10 +344,12 @@ private fun BooksSection(
 ) {
     if (books.isNotEmpty()) {
         Column(modifier) {
-            if (showAll) {
-                BooksSectionHeader(title = title, onShowAll = onShowAll)
-                Spacer(Modifier.height(8.dp))
-            }
+            BooksSectionHeader(
+                title = title,
+                showAll = showAll,
+                onShowAll = onShowAll,
+            )
+            Spacer(Modifier.height(8.dp))
             LazyRow {
                 itemsIndexed(books) { index, book ->
 
@@ -390,7 +392,7 @@ private fun BooksSection(
 }
 
 @Composable
-private fun BooksSectionHeader(title: String, onShowAll: () -> Unit) {
+private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () -> Unit) {
     Row(
         modifier = Modifier
             .padding(horizontal = 24.dp)
@@ -405,14 +407,16 @@ private fun BooksSectionHeader(title: String, onShowAll: () -> Unit) {
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
-        TextButton(onClick = onShowAll) {
-            Text(
-                text = stringResource(id = R.string.show_all),
-                style = MaterialTheme.typography.h3,
-                color = MaterialTheme.colors.primary,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-            )
+        if (showAll) {
+            TextButton(onClick = onShowAll) {
+                Text(
+                    text = stringResource(R.string.show_all),
+                    style = MaterialTheme.typography.h3,
+                    color = MaterialTheme.colors.primary,
+                    overflow = TextOverflow.Ellipsis,
+                    maxLines = 1,
+                )
+            }
         }
     }
 }
