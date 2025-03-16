@@ -88,6 +88,10 @@ fun BookListScreen(
     } else {
         ""
     }
+    val subtitle = when (state) {
+        is BookListUiState.Success -> state.subtitle
+        BookListUiState.Empty -> ""
+    }
     val actions: @Composable RowScope.() -> Unit = when (state) {
         is BookListUiState.Success -> {
             {
@@ -122,6 +126,7 @@ fun BookListScreen(
         CustomToolbar(
             title = title,
             modifier = Modifier.background(MaterialTheme.colors.background),
+            subtitle = subtitle,
             elevation = if (showTopButton) 4.dp else 0.dp,
             onBack = onBack,
             actions = actions,
@@ -358,6 +363,7 @@ private class BookListScreenPreviewParameterProvider :
                         priority = 0,
                     ),
                 ),
+                subtitle = "",
                 isDraggingEnabled = false,
             ),
             BookListUiState.Success(
@@ -410,6 +416,7 @@ private class BookListScreenPreviewParameterProvider :
                         priority = 0,
                     ),
                 ),
+                subtitle = "2025",
                 isDraggingEnabled = true,
             ),
         )
