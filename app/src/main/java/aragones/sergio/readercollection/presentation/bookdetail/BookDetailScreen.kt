@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -45,6 +46,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
@@ -82,9 +84,10 @@ fun BookDetailScreen(
     onChangeData: (Book) -> Unit,
     onSetImage: () -> Unit,
 ) {
+    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val nestedScrollConnection = remember {
         CollapsingToolbarNestedScrollConnection(
-            maxContentSize = 400.dp,
+            maxContentSize = min(400.dp, screenHeight / 2),
             minContentSize = 56.dp,
         )
     }
