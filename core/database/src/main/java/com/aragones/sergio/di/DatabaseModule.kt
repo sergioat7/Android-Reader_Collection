@@ -46,7 +46,7 @@ object DatabaseModule {
                 "INSERT INTO New_Book SELECT `id`, `title`, `subtitle`, `authors`, `publisher`, `publishedDate`, `readingDate`, `description`, `summary`, `isbn`, `pageCount`, `categories`, `averageRating`, `ratingsCount`, `rating`, `thumbnail`, `image`, `format`, `state`, `priority` FROM Book",
             )
             db.execSQL("DROP TABLE Book")
-            db.execSQL("ALTER TABLE New_Book RENAME TO Book")
+            db.execSQL("ALTER TABLE New_Book RENAME TO book")
         }
     }
 
