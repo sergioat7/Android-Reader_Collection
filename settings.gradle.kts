@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
         google()
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 dependencyResolutionManagement {
@@ -16,5 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Reader Collection"
 include(":app")
-include(":core:util")
 include(":core:database")
+include(":core:util")
