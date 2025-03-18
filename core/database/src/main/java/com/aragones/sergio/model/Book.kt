@@ -9,7 +9,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.util.Date
 
-@Entity(tableName = "Book")
+@Entity(tableName = "book")
 data class Book(
     @PrimaryKey
     override val id: String,
@@ -31,6 +31,5 @@ data class Book(
     val image: String?,
     val format: String?,
     var state: String?,
-    var isFavourite: Boolean,
     var priority: Int,
 ) : BaseEntity<String>

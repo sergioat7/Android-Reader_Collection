@@ -149,36 +149,6 @@ class BooksRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
-    fun setFavouriteBook(bookId: String, isFavourite: Boolean): Single<Book> = Single
-        .create { emitter ->
-            booksLocalDataSource
-                .getBook(bookId)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = {
-                        val book = it.toDomain()
-                        book.isFavourite = isFavourite
-                        booksLocalDataSource
-                            .updateBooks(listOf(book.toLocalData()))
-                            .subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(
-                                onComplete = {
-                                    emitter.onSuccess(book)
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                },
-                            ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
     fun deleteBook(bookId: String): Completable = Completable
         .create { emitter ->
             booksLocalDataSource

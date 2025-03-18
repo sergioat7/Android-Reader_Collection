@@ -80,7 +80,7 @@ import aragones.sergio.readercollection.presentation.theme.roseBud
 
 @Composable
 fun NoResultsComponent(
-    text: String = stringResource(id = R.string.no_results_text),
+    text: String = stringResource(R.string.no_results_text),
     @DrawableRes image: Int = R.drawable.image_no_results,
 ) {
     Column(
@@ -90,7 +90,7 @@ fun NoResultsComponent(
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(id = image),
+            painter = painterResource(image),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -134,7 +134,7 @@ fun StarRatingBar(
                 else -> Pair(R.drawable.ic_round_star_border_24, MaterialTheme.colors.lightRoseBud)
             }
             Icon(
-                painter = painterResource(id = icon),
+                painter = painterResource(icon),
                 contentDescription = null,
                 tint = tint,
                 modifier = Modifier
@@ -192,7 +192,7 @@ fun SearchBar(
     val leadingIcon: @Composable (() -> Unit)? = if (showLeadingIcon) {
         {
             Icon(
-                painter = painterResource(id = R.drawable.ic_search),
+                painter = painterResource(R.drawable.ic_search),
                 contentDescription = null,
                 tint = MaterialTheme.colors.primary,
             )
@@ -308,7 +308,7 @@ fun CustomFilterChip(
         selectedIcon = selectedIcon?.let {
             {
                 Icon(
-                    painter = painterResource(id = it),
+                    painter = painterResource(it),
                     contentDescription = null,
                 )
             }

@@ -10,10 +10,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -60,7 +63,8 @@ fun SettingsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .padding(WindowInsets.statusBars.asPaddingValues()),
     ) {
         SettingsToolbar(
             scrollState = scrollState,
@@ -139,7 +143,7 @@ fun SettingsScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             MainActionButton(
-                text = stringResource(id = R.string.save),
+                text = stringResource(R.string.save),
                 modifier = Modifier
                     .width(200.dp)
                     .align(Alignment.CenterHorizontally)
@@ -161,7 +165,7 @@ private fun SettingsToolbar(
     onLogout: () -> Unit,
 ) {
     CustomToolbar(
-        title = stringResource(id = R.string.title_settings),
+        title = stringResource(R.string.title_settings),
         modifier = Modifier.background(MaterialTheme.colors.background),
         elevation = when (scrollState.value) {
             0 -> 0.dp
@@ -195,7 +199,7 @@ private fun ProfileInfo(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
-        labelText = stringResource(id = R.string.username),
+        labelText = stringResource(R.string.username),
         endIcon = R.drawable.ic_show_info,
         enabled = false,
         onEndIconClicked = onShowInfo,
@@ -208,7 +212,7 @@ private fun ProfileInfo(
             .fillMaxWidth()
             .padding(horizontal = 24.dp),
         errorTextId = passwordError,
-        labelText = stringResource(id = R.string.password),
+        labelText = stringResource(R.string.password),
         endIcon = if (passwordVisibility) {
             R.drawable.ic_hide_password
         } else {
@@ -223,7 +227,7 @@ private fun ProfileInfo(
 @Composable
 private fun LanguageInfo(language: String, onLanguageChange: (String) -> Unit) {
     HeaderText(
-        text = stringResource(id = R.string.app_language),
+        text = stringResource(R.string.app_language),
         modifier = Modifier.padding(horizontal = 24.dp),
     )
     Spacer(Modifier.height(5.dp))
@@ -233,7 +237,7 @@ private fun LanguageInfo(language: String, onLanguageChange: (String) -> Unit) {
             .padding(horizontal = 12.dp),
     ) {
         CustomRadioButton(
-            text = stringResource(id = R.string.english),
+            text = stringResource(R.string.english),
             selected = language == Preferences.ENGLISH_LANGUAGE_KEY,
             onClick = {
                 onLanguageChange(Preferences.ENGLISH_LANGUAGE_KEY)
@@ -241,7 +245,7 @@ private fun LanguageInfo(language: String, onLanguageChange: (String) -> Unit) {
             modifier = Modifier.weight(1f),
         )
         CustomRadioButton(
-            text = stringResource(id = R.string.spanish),
+            text = stringResource(R.string.spanish),
             selected = language == Preferences.SPANISH_LANGUAGE_KEY,
             onClick = {
                 onLanguageChange(Preferences.SPANISH_LANGUAGE_KEY)
@@ -258,63 +262,62 @@ private fun SortingInfo(
     onSortParamValueChange: (String?) -> Unit,
     onSortOrderValueChange: (Boolean) -> Unit,
 ) {
-    val sortingParamValues = stringArrayResource(id = R.array.sorting_param_values).toList()
-    val sortingParamKeys = stringArrayResource(id = R.array.sorting_param_keys).toList()
+    val sortingParamValues = stringArrayResource(R.array.sorting_param_values).toList()
+    val sortingParamKeys = stringArrayResource(R.array.sorting_param_keys).toList()
     val sortParamValue =
         if (sortParam == null) {
             sortingParamValues.first()
         } else {
             sortingParamValues[sortingParamKeys.indexOf(sortParam)]
         }
-    val sortingOrderValues = stringArrayResource(id = R.array.sorting_order_values).toList()
+    val sortingOrderValues = stringArrayResource(R.array.sorting_order_values).toList()
 
     HeaderText(
-        text = stringResource(id = R.string.sort_books_param),
+        text = stringResource(R.string.sort_books_param),
         modifier = Modifier.padding(horizontal = 24.dp),
     )
     Spacer(Modifier.height(5.dp))
     CustomDropdownMenu(
         currentValue = sortParamValue,
-        modifier = Modifier.padding(horizontal = 24.dp),
         values = sortingParamValues,
         onOptionSelected = {
             val index = sortingParamValues.indexOf(it)
             val newSortParam = sortingParamKeys[index].takeIf { index != 0 }
             onSortParamValueChange(newSortParam)
         },
+        modifier = Modifier.padding(horizontal = 24.dp),
     )
     Spacer(Modifier.height(8.dp))
     CustomDropdownMenu(
         currentValue = if (isSortDescending) {
             sortingOrderValues.last()
         } else {
-            sortingOrderValues
-                .first()
+            sortingOrderValues.first()
         },
-        modifier = Modifier.padding(horizontal = 24.dp),
         values = sortingOrderValues,
         onOptionSelected = {
             val index = sortingOrderValues.indexOf(it)
             onSortOrderValueChange(index == 1)
         },
+        modifier = Modifier.padding(horizontal = 24.dp),
     )
 }
 
 @Composable
 private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) {
-    val appThemes = stringArrayResource(id = R.array.app_theme_values).toList()
+    val appThemes = stringArrayResource(R.array.app_theme_values).toList()
     HeaderText(
-        text = stringResource(id = R.string.app_theme),
+        text = stringResource(R.string.app_theme),
         modifier = Modifier.padding(horizontal = 24.dp),
     )
     Spacer(Modifier.height(5.dp))
     CustomDropdownMenu(
         currentValue = appThemes[selectedThemeIndex],
-        modifier = Modifier.padding(horizontal = 24.dp),
         values = appThemes,
         onOptionSelected = {
             onThemeChange(appThemes.indexOf(it))
         },
+        modifier = Modifier.padding(horizontal = 24.dp),
     )
 }
 

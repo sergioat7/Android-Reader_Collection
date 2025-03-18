@@ -51,8 +51,6 @@ data class Book(
     val format: String?,
     @Json(name = "state")
     var state: String?,
-    @Json(name = "isFavourite")
-    var isFavourite: Boolean,
     var priority: Int,
 ) {
 
@@ -77,7 +75,6 @@ data class Book(
         null,
         null,
         null,
-        false,
         -1,
     )
 

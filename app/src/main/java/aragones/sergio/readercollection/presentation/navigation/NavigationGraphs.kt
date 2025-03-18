@@ -108,7 +108,8 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
         }
         composable<Route.Search>(
             enterTransition = { slideIntoContainer() },
-            exitTransition = { slideOutOfContainer() },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutOfContainer() },
         ) {
             SearchView(
                 onBookClick = { bookId ->
@@ -123,7 +124,8 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
         }
         composable<Route.BookList>(
             enterTransition = { slideIntoContainer() },
-            exitTransition = { slideOutOfContainer() },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutOfContainer() },
         ) {
             BookListView(
                 onBookClick = { bookId ->
@@ -179,7 +181,8 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
         }
         composable<Route.BookList>(
             enterTransition = { slideIntoContainer() },
-            exitTransition = { slideOutOfContainer() },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutOfContainer() },
         ) {
             BookListView(
                 onBookClick = { bookId ->

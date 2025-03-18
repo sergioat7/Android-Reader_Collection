@@ -14,12 +14,14 @@ sealed class BookListUiState {
     data class Success(
         val isLoading: Boolean,
         val books: List<Book>,
+        val subtitle: String,
         val isDraggingEnabled: Boolean,
     ) : BookListUiState() {
         companion object {
             fun initial(): Success = Success(
                 isLoading = true,
                 books = listOf(),
+                subtitle = "",
                 isDraggingEnabled = false,
             )
         }

@@ -19,6 +19,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.components.LaunchedEffectOnce
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -73,26 +74,28 @@ fun StatisticsView(
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
 
-    StatisticsScreen(
-        state = state,
-        onImportClick = {
-            viewModel.showConfirmationDialog(R.string.import_confirmation)
-        },
-        onExportClick = {
-            viewModel.showConfirmationDialog(R.string.export_confirmation)
-        },
-        onGroupClick = { year, month, author, format ->
-            onShowAll(
-                viewModel.sortParam,
-                viewModel.isSortDescending,
-                year ?: -1,
-                month ?: -1,
-                author,
-                format,
-            )
-        },
-        onBookClick = onBookClick,
-    )
+    ReaderCollectionApp(navigationBarSameAsBackground = false) {
+        StatisticsScreen(
+            state = state,
+            onImportClick = {
+                viewModel.showConfirmationDialog(R.string.import_confirmation)
+            },
+            onExportClick = {
+                viewModel.showConfirmationDialog(R.string.export_confirmation)
+            },
+            onGroupClick = { year, month, author, format ->
+                onShowAll(
+                    viewModel.sortParam,
+                    viewModel.isSortDescending,
+                    year ?: -1,
+                    month ?: -1,
+                    author,
+                    format,
+                )
+            },
+            onBookClick = onBookClick,
+        )
+    }
 
     ConfirmationAlertDialog(
         show = confirmationMessageId != -1,

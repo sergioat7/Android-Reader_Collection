@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.presentation.components.ConfirmationAler
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.components.LaunchedEffectOnce
 import aragones.sergio.readercollection.presentation.components.TextFieldAlertDialog
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
@@ -26,30 +27,32 @@ fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = hiltView
     val imageDialogMessageId by viewModel.imageDialogMessageId.collectAsState()
     val error by viewModel.bookDetailError.collectAsState()
 
-    BookDetailScreen(
-        state = state,
-        onBack = onBack,
-        onEdit = {
-            viewModel.enableEdition()
-        },
-        onRemove = {
-            viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
-        },
-        onCancel = {
-            viewModel.disableEdition()
-        },
-        onSave = {
-            if (state.isAlreadySaved) {
-                viewModel.setBook(it)
-            } else {
-                viewModel.createBook(it)
-            }
-        },
-        onChangeData = viewModel::changeData,
-        onSetImage = {
-            viewModel.showImageDialog(R.string.enter_valid_url)
-        },
-    )
+    ReaderCollectionApp(statusBarSameAsBackground = false) {
+        BookDetailScreen(
+            state = state,
+            onBack = onBack,
+            onEdit = {
+                viewModel.enableEdition()
+            },
+            onRemove = {
+                viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
+            },
+            onCancel = {
+                viewModel.disableEdition()
+            },
+            onSave = {
+                if (state.isAlreadySaved) {
+                    viewModel.setBook(it)
+                } else {
+                    viewModel.createBook(it)
+                }
+            },
+            onChangeData = viewModel::changeData,
+            onSetImage = {
+                viewModel.showImageDialog(R.string.enter_valid_url)
+            },
+        )
+    }
 
     ConfirmationAlertDialog(
         show = confirmationMessageId != -1,

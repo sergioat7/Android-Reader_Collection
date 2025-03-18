@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.data.remote.services
 
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.FavouriteBook
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
@@ -48,14 +47,4 @@ interface BookApiService {
     )
     @DELETE("book/{googleId}")
     suspend fun deleteBook(@Path(value = "googleId") googleId: String): Response<Unit>
-
-    @Headers(
-        "Content-Type:application/json",
-        "${ApiManager.AUTHORIZATION_HEADER}:_",
-    )
-    @PATCH("book/{googleId}/favourite")
-    suspend fun setFavouriteBook(
-        @Path(value = "googleId") googleId: String,
-        @Body body: FavouriteBook,
-    ): Response<BookResponse>
 }

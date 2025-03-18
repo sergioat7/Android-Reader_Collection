@@ -14,10 +14,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -76,7 +79,8 @@ fun StatisticsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background),
+            .background(MaterialTheme.colors.background)
+            .padding(WindowInsets.statusBars.asPaddingValues()),
     ) {
         StatisticsToolbar(
             state = state,
@@ -505,27 +509,26 @@ private class StatisticsScreenPreviewParameterProvider :
     PreviewParameterProvider<StatisticsUiState> {
 
     private val book = Book(
-        "1",
-        "Shortest read book",
-        null,
-        listOf("Author"),
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        0,
-        null,
-        0.0,
-        0,
-        5.0,
-        null,
-        null,
-        null,
-        BookState.READ,
-        false,
-        0,
+        id = "1",
+        title = "Shortest read book",
+        subtitle = null,
+        authors = listOf("Author"),
+        publisher = null,
+        publishedDate = null,
+        readingDate = null,
+        description = null,
+        summary = null,
+        isbn = null,
+        pageCount = 0,
+        categories = null,
+        averageRating = 0.0,
+        ratingsCount = 0,
+        rating = 5.0,
+        thumbnail = null,
+        image = null,
+        format = null,
+        state = BookState.READ,
+        priority = 0,
     )
 
     override val values: Sequence<StatisticsUiState>
@@ -575,6 +578,7 @@ private class StringValueFormatter(private val map: Map<String, List<Any>>) : Va
         if (value < 0 || value > map.size - 1) "" else map.keys.elementAt(value.toInt())
 }
 
-private fun Context.getCustomColor(colorId: Int): Int = ResourcesCompat.getColor(resources, colorId, null)
+private fun Context.getCustomColor(colorId: Int): Int =
+    ResourcesCompat.getColor(resources, colorId, null)
 
 private fun Context.getCustomFont(fontId: Int): Typeface? = ResourcesCompat.getFont(this, fontId)

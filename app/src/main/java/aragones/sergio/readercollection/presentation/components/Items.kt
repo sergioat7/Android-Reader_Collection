@@ -85,7 +85,7 @@ fun BookItem(
             if (isDraggingEnabled) {
                 Spacer(Modifier.width(24.dp))
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_enable_drag),
+                    painter = painterResource(R.drawable.ic_enable_drag),
                     contentDescription = null,
                     tint = MaterialTheme.colors.primary,
                     modifier = Modifier.align(Alignment.CenterVertically),
@@ -93,7 +93,11 @@ fun BookItem(
             }
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = R.drawable.ic_default_book_cover_blue,
+                placeholder = if (MaterialTheme.colors.isLight) {
+                    R.drawable.ic_default_book_cover_blue
+                } else {
+                    R.drawable.ic_default_book_cover_white
+                },
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .widthIn(max = 115.dp)
@@ -148,7 +152,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
             )
         } else {
             Text(
-                text = stringResource(id = R.string.new_book),
+                text = stringResource(R.string.new_book),
                 style = MaterialTheme.typography.h1,
                 color = MaterialTheme.colors.roseBud,
                 overflow = TextOverflow.Ellipsis,
@@ -204,7 +208,11 @@ fun ReadingBookItem(
         Spacer(Modifier.height(8.dp))
         ImageWithLoading(
             imageUrl = book.thumbnail,
-            placeholder = R.drawable.ic_default_book_cover_blue,
+            placeholder = if (MaterialTheme.colors.isLight) {
+                R.drawable.ic_default_book_cover_blue
+            } else {
+                R.drawable.ic_default_book_cover_white
+            },
             contentScale = ContentScale.FillWidth,
             shape = MaterialTheme.shapes.small,
         )
@@ -278,7 +286,11 @@ fun VerticalBookItem(
         ) {
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = R.drawable.ic_default_book_cover_blue,
+                placeholder = if (MaterialTheme.colors.isLight) {
+                    R.drawable.ic_default_book_cover_blue
+                } else {
+                    R.drawable.ic_default_book_cover_white
+                },
                 modifier = Modifier
                     .height(200.dp)
                     .fillMaxWidth(),
@@ -344,7 +356,7 @@ fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = n
         ) {
             if (icon != null) {
                 Icon(
-                    painterResource(id = icon),
+                    painterResource(icon),
                     contentDescription = null,
                     modifier = Modifier
                         .size(200.dp)
@@ -361,27 +373,26 @@ private fun BookItemPreview() {
     ReaderCollectionTheme {
         BookItem(
             book = Book(
-                "1",
-                "Book title with a very very very very very very very very long text",
-                null,
-                listOf("Author with a very long name"),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                7.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0,
+                id = "1",
+                title = "Book title with a very very very very very very very very long text",
+                subtitle = null,
+                authors = listOf("Author with a very long name"),
+                publisher = null,
+                publishedDate = null,
+                readingDate = null,
+                description = null,
+                summary = null,
+                isbn = null,
+                pageCount = 0,
+                categories = null,
+                averageRating = 0.0,
+                ratingsCount = 0,
+                rating = 7.0,
+                thumbnail = null,
+                image = null,
+                format = null,
+                state = null,
+                priority = 0,
             ),
             onBookClick = {},
             isDraggingEnabled = false,
@@ -395,27 +406,26 @@ private fun BookItemWithDraggingPreview() {
     ReaderCollectionTheme {
         BookItem(
             book = Book(
-                "1",
-                "Book title with a very very very very very very very very long text",
-                null,
-                listOf("Author with a very long name"),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                0.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0,
+                id = "1",
+                title = "Book title with a very very very very very very very very long text",
+                subtitle = null,
+                authors = listOf("Author with a very long name"),
+                publisher = null,
+                publishedDate = null,
+                readingDate = null,
+                description = null,
+                summary = null,
+                isbn = null,
+                pageCount = 0,
+                categories = null,
+                averageRating = 0.0,
+                ratingsCount = 0,
+                rating = 0.0,
+                thumbnail = null,
+                image = null,
+                format = null,
+                state = null,
+                priority = 0,
             ),
             onBookClick = {},
             isDraggingEnabled = true,
@@ -430,27 +440,26 @@ private fun ReadingBookItemPreview() {
     ReaderCollectionTheme {
         ReadingBookItem(
             book = Book(
-                "1",
-                "Book title with a very very very very very very very very long text",
-                null,
-                listOf("Author with a very long name"),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                0.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0,
+                id = "1",
+                title = "Book title with a very very very very very very very very long text",
+                subtitle = null,
+                authors = listOf("Author with a very long name"),
+                publisher = null,
+                publishedDate = null,
+                readingDate = null,
+                description = null,
+                summary = null,
+                isbn = null,
+                pageCount = 0,
+                categories = null,
+                averageRating = 0.0,
+                ratingsCount = 0,
+                rating = 0.0,
+                thumbnail = null,
+                image = null,
+                format = null,
+                state = null,
+                priority = 0,
             ),
             onBookClick = {},
             onLongClick = {},
@@ -465,27 +474,26 @@ private fun VerticalBookItemPreview() {
     ReaderCollectionTheme {
         VerticalBookItem(
             book = Book(
-                "1",
-                "Book title with a very very very very very very very very long text",
-                null,
-                listOf("Author with a very long name"),
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
-                0,
-                null,
-                0.0,
-                0,
-                0.0,
-                null,
-                null,
-                null,
-                null,
-                false,
-                0,
+                id = "1",
+                title = "Book title with a very very very very very very very very long text",
+                subtitle = null,
+                authors = listOf("Author with a very long name"),
+                publisher = null,
+                publishedDate = null,
+                readingDate = null,
+                description = null,
+                summary = null,
+                isbn = null,
+                pageCount = 0,
+                categories = null,
+                averageRating = 0.0,
+                ratingsCount = 0,
+                rating = 0.0,
+                thumbnail = null,
+                image = null,
+                format = null,
+                state = null,
+                priority = 0,
             ),
             isSwitchLeftIconEnabled = true,
             isSwitchRightIconEnabled = true,

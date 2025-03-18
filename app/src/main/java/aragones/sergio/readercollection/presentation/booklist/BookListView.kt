@@ -13,6 +13,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.components.LaunchedEffectOnce
 import aragones.sergio.readercollection.presentation.components.SortingPickerAlertDialog
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
 fun BookListView(
@@ -36,23 +37,25 @@ fun BookListView(
         }
     }
 
-    BookListScreen(
-        state = uiState,
-        onBookClick = onBookClick,
-        onBack = onBack,
-        onDragClick = {
-            viewModel.switchDraggingState()
-        },
-        onSortClick = {
-            viewModel.showSortingPickerState()
-        },
-        onDrag = {
-            viewModel.updateBookOrdering(it)
-        },
-        onDragEnd = {
-            viewModel.setPriorityFor(it)
-        },
-    )
+    ReaderCollectionApp {
+        BookListScreen(
+            state = uiState,
+            onBookClick = onBookClick,
+            onBack = onBack,
+            onDragClick = {
+                viewModel.switchDraggingState()
+            },
+            onSortClick = {
+                viewModel.showSortingPickerState()
+            },
+            onDrag = {
+                viewModel.updateBookOrdering(it)
+            },
+            onDragEnd = {
+                viewModel.setPriorityFor(it)
+            },
+        )
+    }
 
     SortingPickerAlertDialog(
         state = sortingPickerState,

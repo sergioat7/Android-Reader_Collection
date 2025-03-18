@@ -63,7 +63,7 @@ fun TopAppBarIcon(
         modifier = modifier,
     ) {
         Icon(
-            painter = painterResource(id = icon),
+            painter = painterResource(icon),
             contentDescription = null,
             tint = tint,
         )
@@ -282,7 +282,7 @@ private fun CustomToolbarPreview() {
 private fun CustomSearchBarPreview() {
     ReaderCollectionTheme {
         CustomSearchBar(
-            title = stringResource(id = R.string.title_search),
+            title = stringResource(R.string.title_search),
             query = "",
             onSearch = {},
         )
@@ -318,7 +318,7 @@ private fun CollapsingToolbarPreview() {
                 ImageWithLoading(
                     imageUrl = null,
                     placeholder = if (MaterialTheme.colors.isLight) {
-                        R.drawable.ic_default_book_cover_blue
+                        R.drawable.ic_default_book_cover_white
                     } else {
                         R.drawable.ic_default_book_cover_blue
                     },

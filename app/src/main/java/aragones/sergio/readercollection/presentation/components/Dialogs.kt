@@ -79,7 +79,7 @@ fun ConfirmationAlertDialog(
                 ) {
                     Spacer(Modifier.height(24.dp))
                     TextMessageAlertDialog(
-                        text = stringResource(id = textId),
+                        text = stringResource(textId),
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     Row(modifier = Modifier.align(Alignment.End)) {
@@ -164,7 +164,7 @@ fun TextFieldAlertDialog(
                 ) {
                     Spacer(Modifier.height(24.dp))
                     TextTitleAlertDialog(
-                        text = stringResource(id = titleTextId),
+                        text = stringResource(titleTextId),
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     Spacer(Modifier.height(8.dp))
@@ -174,7 +174,7 @@ fun TextFieldAlertDialog(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .border(
-                                BorderStroke(1.dp, MaterialTheme.colors.primary),
+                                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
                                 shape = MaterialTheme.shapes.medium,
                             ).testTag("textField"),
                         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -240,7 +240,7 @@ fun SortingPickerAlertDialog(
                 Column {
                     Spacer(Modifier.height(24.dp))
                     TextTitleAlertDialog(
-                        text = stringResource(id = R.string.order_by),
+                        text = stringResource(R.string.order_by),
                         modifier = Modifier.padding(horizontal = 24.dp),
                     )
                     Row(horizontalArrangement = Arrangement.Center) {
@@ -419,7 +419,7 @@ private fun InformationAlertDialogPreview() {
     ReaderCollectionTheme {
         InformationAlertDialog(
             show = true,
-            text = stringResource(id = R.string.book_saved),
+            text = stringResource(R.string.book_saved),
             onDismiss = {},
         )
     }

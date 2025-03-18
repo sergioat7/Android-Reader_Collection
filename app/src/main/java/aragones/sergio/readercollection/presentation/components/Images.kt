@@ -44,8 +44,8 @@ fun ImageWithLoading(
                 .run {
                     if (shape != null) clip(shape) else this
                 },
-            placeholder = painterResource(id = placeholder),
-            error = painterResource(id = placeholder),
+            placeholder = painterResource(placeholder),
+            error = painterResource(placeholder),
             onLoading = { isLoading = true },
             onSuccess = { isLoading = false },
             onError = { isLoading = false },

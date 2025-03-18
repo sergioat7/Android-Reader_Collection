@@ -54,7 +54,7 @@ fun RegisterScreen(
             .padding(24.dp),
     ) {
         Image(
-            painter = painterResource(id = R.drawable.login_register_image),
+            painter = painterResource(R.drawable.login_register_image),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -74,7 +74,7 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
-            labelText = stringResource(id = R.string.username),
+            labelText = stringResource(R.string.username),
             endIcon = R.drawable.ic_show_info,
             isLastTextField = false,
             onEndIconClicked = onShowInfo,
@@ -93,7 +93,7 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
-            labelText = stringResource(id = R.string.password),
+            labelText = stringResource(R.string.password),
             endIcon = if (passwordVisibility) {
                 R.drawable.ic_hide_password
             } else {
@@ -117,7 +117,7 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
-            labelText = stringResource(id = R.string.confirm_password),
+            labelText = stringResource(R.string.confirm_password),
             endIcon = if (confirmPasswordVisibility) {
                 R.drawable.ic_hide_password
             } else {
@@ -129,7 +129,7 @@ fun RegisterScreen(
         )
         Spacer(modifier = Modifier.weight(1f))
         MainActionButton(
-            text = stringResource(id = R.string.sign_up),
+            text = stringResource(R.string.sign_up),
             modifier = Modifier
                 .width(200.dp)
                 .align(Alignment.CenterHorizontally)
