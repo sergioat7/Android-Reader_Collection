@@ -31,12 +31,13 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +63,6 @@ import aragones.sergio.readercollection.presentation.components.CustomFilterChip
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
-import aragones.sergio.readercollection.presentation.components.ModalBottomSheet
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.components.ReadingBookItem
 import aragones.sergio.readercollection.presentation.components.SearchBar
@@ -74,6 +74,7 @@ import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksScreen(
     state: BooksUiState,
@@ -87,13 +88,44 @@ fun BooksScreen(
     onAddBook: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     var selectedBook by remember { mutableStateOf<Book?>(null) }
 
-    ModalBottomSheet(
-        sheetState = sheetState,
-        sheetContent = {
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.background)
+            .padding(WindowInsets.statusBars.asPaddingValues()),
+    ) {
+        BooksScreenContent(
+            state = state,
+            onSortClick = onSortClick,
+            onSearch = onSearch,
+            onBookClick = onBookClick,
+            onLongClickBook = { book ->
+                selectedBook = book
+                coroutineScope.launch {
+                    sheetState.show()
+                }
+            },
+            onShowAll = onShowAll,
+            onSwitchToLeft = onSwitchToLeft,
+            onSwitchToRight = onSwitchToRight,
+        )
+        ListButton(
+            image = R.drawable.ic_save_book,
+            onClick = onAddBook,
+            modifier = Modifier.align(Alignment.BottomEnd),
+        )
+    }
+    if (sheetState.isVisible) {
+        ModalBottomSheet(
+            onDismissRequest = {},
+            modifier = modifier,
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colors.background,
+        ) {
             selectedBook?.let { book ->
                 BottomSheetContent(
                     book = book,
@@ -112,37 +144,8 @@ fun BooksScreen(
                     },
                 )
             }
-        },
-        background = {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .padding(WindowInsets.statusBars.asPaddingValues()),
-            ) {
-                BooksScreenContent(
-                    state = state,
-                    onSortClick = onSortClick,
-                    onSearch = onSearch,
-                    onBookClick = onBookClick,
-                    onLongClickBook = { book ->
-                        selectedBook = book
-                        coroutineScope.launch {
-                            sheetState.show()
-                        }
-                    },
-                    onShowAll = onShowAll,
-                    onSwitchToLeft = onSwitchToLeft,
-                    onSwitchToRight = onSwitchToRight,
-                )
-                ListButton(
-                    image = R.drawable.ic_save_book,
-                    onClick = onAddBook,
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                )
-            }
-        },
-    )
+        }
+    }
     if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
@@ -454,44 +457,53 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDone: () -> Unit) {
-    Text(
-        text = book.title ?: "",
-        style = MaterialTheme.typography.h1,
-        color = MaterialTheme.colors.primary,
-        textAlign = TextAlign.Center,
-        overflow = TextOverflow.Ellipsis,
-    )
-    Spacer(Modifier.height(8.dp))
-    Divider(
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colors.primaryVariant,
-    )
-    Row(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        for (state in MyConstants.STATES) {
-            CustomFilterChip(
-                title = state.name,
-                selected = state.id == book.state,
-                onClick = { onStateClick(state.id) },
-                modifier = Modifier.widthIn(min = 100.dp),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colors.primaryVariant,
-                ).takeIf { state.id == book.state },
-                selectedImage = Icons.Default.Done,
-            )
+        Text(
+            text = book.title ?: "",
+            style = MaterialTheme.typography.h1,
+            color = MaterialTheme.colors.primary,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Spacer(Modifier.height(8.dp))
+        Divider(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colors.primaryVariant,
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            for (state in MyConstants.STATES) {
+                CustomFilterChip(
+                    title = state.name,
+                    selected = state.id == book.state,
+                    onClick = { onStateClick(state.id) },
+                    modifier = Modifier.widthIn(min = 100.dp),
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colors.primaryVariant,
+                    ).takeIf { state.id == book.state },
+                    selectedImage = Icons.Default.Done,
+                )
+            }
         }
+        MainActionButton(
+            text = stringResource(R.string.accept),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = true,
+            onClick = onDone,
+        )
+        Spacer(Modifier.height(24.dp))
     }
-    MainActionButton(
-        text = stringResource(R.string.accept),
-        modifier = Modifier.fillMaxWidth(),
-        enabled = true,
-        onClick = onDone,
-    )
 }
 
 @PreviewLightDark
