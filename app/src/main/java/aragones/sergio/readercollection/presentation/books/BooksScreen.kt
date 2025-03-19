@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -487,12 +486,11 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
                     title = state.name,
                     selected = state.id == book.state,
                     onClick = { onStateClick(state.id) },
-                    modifier = Modifier.widthIn(min = 100.dp),
                     border = BorderStroke(
                         width = 1.dp,
                         color = MaterialTheme.colors.primaryVariant,
-                    ).takeIf { state.id == book.state },
-                    selectedImage = Icons.Default.Done,
+                    ),
+                    selectedImage = Icons.Default.Done.takeIf { state.id == book.state },
                 )
             }
         }
