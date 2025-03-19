@@ -24,17 +24,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
 import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
-import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -303,42 +300,40 @@ fun VerticalBookItem(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeItem(
-    direction: DismissDirection,
-    dismissValue: DismissValue,
+    direction: SwipeDirection,
+    dismissValue: SwipeToDismissBoxValue,
     threshold: Float,
     onSwipe: () -> Unit,
     background: @Composable RowScope.() -> Unit,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val swipeState = rememberDismissState(
-        confirmStateChange = {
+    val swipeState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
             if (it == dismissValue) onSwipe()
             false
         },
+        positionalThreshold = { it * threshold },
     )
-    SwipeToDismiss(
+    SwipeToDismissBox(
         state = swipeState,
-        directions = setOf(direction),
-        dismissThresholds = {
-            FractionalThreshold(threshold)
-        },
-        background = background,
-        dismissContent = content,
+        enableDismissFromStartToEnd = direction == SwipeDirection.RIGHT,
+        enableDismissFromEndToStart = direction == SwipeDirection.LEFT,
+        backgroundContent = background,
+        content = content,
     )
 }
 
 @Composable
-fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = null) {
+fun SwipeItemBackground(dismissValue: SwipeToDismissBoxValue, color: Color, icon: Int? = null) {
     Row(modifier = Modifier.fillMaxSize()) {
         val alignment = when (dismissValue) {
-            DismissValue.Default -> Alignment.Center
-            DismissValue.DismissedToEnd -> Alignment.CenterStart
-            DismissValue.DismissedToStart -> Alignment.CenterEnd
+            SwipeToDismissBoxValue.Settled -> Alignment.Center
+            SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+            SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
         }
-        if (dismissValue == DismissValue.DismissedToStart) {
+        if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
             Spacer(modifier = Modifier.fillMaxWidth(.1f))
         }
         Box(
@@ -346,7 +341,7 @@ fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = n
                 .background(color)
                 .fillMaxHeight()
                 .run {
-                    if (dismissValue == DismissValue.DismissedToEnd) {
+                    if (dismissValue == SwipeToDismissBoxValue.StartToEnd) {
                         fillMaxWidth(0.9f)
                     } else {
                         fillMaxWidth()
@@ -365,6 +360,12 @@ fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = n
             }
         }
     }
+}
+
+enum class SwipeDirection {
+    LEFT,
+    RIGHT,
+    NONE,
 }
 
 @PreviewLightDarkWithBackground
@@ -510,13 +511,13 @@ private fun VerticalBookItemPreview() {
 private fun SwipeItemToLeftPreview() {
     ReaderCollectionTheme {
         SwipeItem(
-            direction = DismissDirection.EndToStart,
-            dismissValue = DismissValue.DismissedToStart,
+            direction = SwipeDirection.LEFT,
+            dismissValue = SwipeToDismissBoxValue.EndToStart,
             threshold = 0.6f,
             onSwipe = {},
             background = {
                 SwipeItemBackground(
-                    dismissValue = DismissValue.DismissedToStart,
+                    dismissValue = SwipeToDismissBoxValue.EndToStart,
                     color = MaterialTheme.colors.roseBud,
                     icon = R.drawable.ic_save_book,
                 )
@@ -533,13 +534,13 @@ private fun SwipeItemToLeftPreview() {
 private fun SwipeItemToRightPreview() {
     ReaderCollectionTheme {
         SwipeItem(
-            direction = DismissDirection.StartToEnd,
-            dismissValue = DismissValue.DismissedToEnd,
+            direction = SwipeDirection.RIGHT,
+            dismissValue = SwipeToDismissBoxValue.StartToEnd,
             threshold = 0.6f,
             onSwipe = {},
             background = {
                 SwipeItemBackground(
-                    dismissValue = DismissValue.DismissedToEnd,
+                    dismissValue = SwipeToDismissBoxValue.StartToEnd,
                     color = MaterialTheme.colors.roseBud,
                     icon = R.drawable.ic_remove_book,
                 )

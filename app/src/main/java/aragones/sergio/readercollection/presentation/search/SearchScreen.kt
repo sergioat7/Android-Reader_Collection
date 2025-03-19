@@ -23,8 +23,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -34,6 +32,7 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -55,6 +54,7 @@ import aragones.sergio.readercollection.presentation.components.BookItem
 import aragones.sergio.readercollection.presentation.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
+import aragones.sergio.readercollection.presentation.components.SwipeDirection
 import aragones.sergio.readercollection.presentation.components.SwipeItem
 import aragones.sergio.readercollection.presentation.components.SwipeItemBackground
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
@@ -210,13 +210,13 @@ private fun SearchContent(
             itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
                     SwipeItem(
-                        direction = DismissDirection.EndToStart,
-                        dismissValue = DismissValue.DismissedToStart,
+                        direction = SwipeDirection.LEFT,
+                        dismissValue = SwipeToDismissBoxValue.EndToStart,
                         threshold = 0.6f,
                         onSwipe = { onSwipe(book.id) },
                         background = {
                             SwipeItemBackground(
-                                dismissValue = DismissValue.DismissedToStart,
+                                dismissValue = SwipeToDismissBoxValue.EndToStart,
                                 color = MaterialTheme.colors.roseBud,
                                 icon = R.drawable.ic_save_book,
                             )
