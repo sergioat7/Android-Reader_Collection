@@ -12,26 +12,26 @@ import androidx.activity.compose.LocalActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 
-private val LightColorScheme = lightColors(
+private val LightColorScheme = lightColorScheme(
     primary = EbonyClay,
-    primaryVariant = LightEbonyClay,
     secondary = White,
+    tertiary = LightEbonyClay,
     background = White,
     surface = White,
     error = Color.Red,
 )
 
-private val DarkColorScheme = darkColors(
+private val DarkColorScheme = darkColorScheme(
     primary = White,
-    primaryVariant = LightWhite,
     secondary = EbonyClay,
+    tertiary = LightWhite,
     background = EbonyClay,
     surface = EbonyClay,
     error = Color.Red,
@@ -89,7 +89,7 @@ fun ReaderCollectionTheme(
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colors = if (darkTheme) DarkColorScheme else LightColorScheme,
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content,
