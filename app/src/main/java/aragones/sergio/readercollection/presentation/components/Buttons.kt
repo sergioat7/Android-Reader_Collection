@@ -7,11 +7,11 @@ package aragones.sergio.readercollection.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,15 +34,15 @@ fun MainActionButton(
         modifier = modifier,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colors.primary,
-            disabledContentColor = MaterialTheme.colors.primaryVariant,
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
         ),
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(8.dp),
             style = MaterialTheme.typography.button,
-            color = MaterialTheme.colors.secondary,
+            color = MaterialTheme.colorScheme.secondary,
             maxLines = 1,
         )
     }
@@ -53,13 +53,13 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
-        contentColor = MaterialTheme.colors.secondary,
-        containerColor = MaterialTheme.colors.primary,
+        contentColor = MaterialTheme.colorScheme.secondary,
+        containerColor = MaterialTheme.colorScheme.primary,
     ) {
         Icon(
             painter = painterResource(image),
             contentDescription = null,
-            tint = MaterialTheme.colors.secondary,
+            tint = MaterialTheme.colorScheme.secondary,
         )
     }
 }
@@ -70,7 +70,7 @@ fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modif
         Text(
             text = text,
             style = MaterialTheme.typography.button,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             maxLines = 1,
         )
     }

@@ -26,12 +26,12 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -87,7 +87,7 @@ fun NoResultsComponent(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.5f),
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
         )
         Text(
             text = text,
@@ -95,7 +95,7 @@ fun NoResultsComponent(
                 .align(Alignment.CenterHorizontally)
                 .padding(24.dp),
             style = MaterialTheme.typography.h1,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
         )
     }
@@ -118,12 +118,15 @@ fun StarRatingBar(
     ) {
         for (i in 1..maxStars) {
             val (icon, tint) = when {
-                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colors.roseBud)
+                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colorScheme.roseBud)
                 i.toFloat() == rating + 0.5f -> Pair(
                     R.drawable.ic_round_star_half_24,
-                    MaterialTheme.colors.roseBud,
+                    MaterialTheme.colorScheme.roseBud,
                 )
-                else -> Pair(R.drawable.ic_round_star_border_24, MaterialTheme.colors.lightRoseBud)
+                else -> Pair(
+                    R.drawable.ic_round_star_border_24,
+                    MaterialTheme.colorScheme.lightRoseBud,
+                )
             }
             Icon(
                 painter = painterResource(icon),
@@ -150,8 +153,8 @@ fun SearchBar(
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
     showLeadingIcon: Boolean = false,
-    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
-    textColor: Color = MaterialTheme.colors.primary,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.body1,
     requestFocusByDefault: Boolean = true,
 ) {
@@ -186,7 +189,7 @@ fun SearchBar(
             Icon(
                 painter = painterResource(R.drawable.ic_search),
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
     } else {
@@ -215,8 +218,8 @@ fun SearchBar(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colors.primary,
-            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
         ),
         textStyle = textStyle.copy(color = textColor),
         placeholder = placeholder,
@@ -281,12 +284,12 @@ fun CustomFilterChip(
             }
         },
         colors = FilterChipDefaults.filterChipColors(
-            labelColor = MaterialTheme.colors.primary,
-            iconColor = MaterialTheme.colors.primary,
-            selectedContainerColor = MaterialTheme.colors.primary,
-            selectedLabelColor = MaterialTheme.colors.secondary,
-            selectedLeadingIconColor = MaterialTheme.colors.secondary,
-            selectedTrailingIconColor = MaterialTheme.colors.secondary,
+            labelColor = MaterialTheme.colorScheme.primary,
+            iconColor = MaterialTheme.colorScheme.primary,
+            selectedContainerColor = MaterialTheme.colorScheme.primary,
+            selectedLabelColor = MaterialTheme.colorScheme.secondary,
+            selectedLeadingIconColor = MaterialTheme.colorScheme.secondary,
+            selectedTrailingIconColor = MaterialTheme.colorScheme.secondary,
         ),
         border = border?.takeIf { !selected },
     )
@@ -297,12 +300,12 @@ fun CustomChip(text: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(8.dp),
     ) {
         Text(
             text = text,
-            color = MaterialTheme.colors.secondary,
+            color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.body1,
             textAlign = TextAlign.Center,
             maxLines = 1,
@@ -349,7 +352,7 @@ private fun FilterChipPreview() {
                 title = "Value 1",
                 selected = true,
                 onClick = {},
-                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 selectedImage = Icons.Default.Done,
             )
             CustomFilterChip(

@@ -18,9 +18,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -62,9 +62,9 @@ fun CustomOutlinedTextField(
     errorTextId: Int? = null,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.body1,
-    textColor: Color = MaterialTheme.colors.primary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
     @DrawableRes endIcon: Int? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
     isLastTextField: Boolean? = null,
@@ -86,8 +86,8 @@ fun CustomOutlinedTextField(
                 text = it,
                 style = MaterialTheme.typography.h3.takeIf { placeholderText != null }
                     ?: MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.error.takeIf { errorTextId != null }
-                    ?: MaterialTheme.colors.description.takeIf { placeholderText != null }
+                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                    ?: MaterialTheme.colorScheme.description.takeIf { placeholderText != null }
                     ?: inputHintTextColor,
             )
         }
@@ -97,7 +97,7 @@ fun CustomOutlinedTextField(
             Text(
                 text = it,
                 style = MaterialTheme.typography.body2,
-                color = MaterialTheme.colors.error.takeIf { errorTextId != null }
+                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
                     ?: inputHintTextColor,
             )
         }
@@ -108,7 +108,7 @@ fun CustomOutlinedTextField(
                 Icon(
                     painter = painterResource(it),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
         }
@@ -139,15 +139,15 @@ fun CustomOutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             shape = MaterialTheme.shapes.medium,
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colors.primary,
-                unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
-                disabledBorderColor = MaterialTheme.colors.primaryVariant.takeIf { enabled }
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
+                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
                     ?: Color.Transparent,
-                errorBorderColor = MaterialTheme.colors.error,
-                errorLabelColor = MaterialTheme.colors.error,
+                errorBorderColor = MaterialTheme.colorScheme.error,
+                errorLabelColor = MaterialTheme.colorScheme.error,
             ),
             textStyle = textStyle.copy(
-                color = MaterialTheme.colors.error.takeIf { errorTextId != null } ?: textColor,
+                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
             ),
             label = label?.takeIf { showLabel },
             placeholder = placeholder,
@@ -185,7 +185,7 @@ fun CustomOutlinedTextField(
                 Text(
                     text = stringResource(errorTextId),
                     style = MaterialTheme.typography.body2,
-                    color = MaterialTheme.colors.error,
+                    color = MaterialTheme.colorScheme.error,
                 )
             }
             if (enabled && maxLength != Integer.MAX_VALUE) {
@@ -193,7 +193,8 @@ fun CustomOutlinedTextField(
                     text = "${text.length} / $maxLength",
                     modifier = Modifier.fillMaxWidth(),
                     style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colors.error.takeIf { errorTextId != null } ?: textColor,
+                    color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                        ?: textColor,
                     textAlign = TextAlign.End,
                 )
             }
@@ -209,9 +210,9 @@ fun MultilineCustomOutlinedTextField(
     errorTextId: Int? = null,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.body1,
-    textColor: Color = MaterialTheme.colors.primary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
     @DrawableRes endIcon: Int? = null,
     isLastTextField: Boolean? = null,
     maxLength: Int = Integer.MAX_VALUE,
@@ -267,7 +268,7 @@ fun DateCustomOutlinedTextField(
     modifier: Modifier = Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     @DrawableRes endIcon: Int? = null,
     enabled: Boolean = true,
     onEndIconClicked: (() -> Unit)? = null,
@@ -286,7 +287,7 @@ fun DateCustomOutlinedTextField(
         labelText = labelText,
         placeholderText = placeholderText,
         inputHintTextColor = inputHintTextColor,
-        textColor = MaterialTheme.colors.description,
+        textColor = MaterialTheme.colorScheme.description,
         endIcon = endIcon,
         inputType = CustomInputType.DATE,
         enabled = enabled,

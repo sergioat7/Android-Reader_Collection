@@ -20,7 +20,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -64,7 +64,7 @@ fun SettingsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.statusBars.asPaddingValues()),
     ) {
         SettingsToolbar(
@@ -172,7 +172,7 @@ private fun SettingsToolbar(
     CustomToolbar(
         title = stringResource(R.string.title_settings),
         modifier = Modifier.shadow(elevation = elevation),
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = MaterialTheme.colorScheme.background,
         actions = {
             TopAppBarIcon(
                 icon = R.drawable.ic_delete_profile,
@@ -329,7 +329,7 @@ private fun HeaderText(text: String, modifier: Modifier = Modifier) {
         text = text,
         modifier = modifier,
         style = MaterialTheme.typography.body1,
-        color = MaterialTheme.colors.description,
+        color = MaterialTheme.colorScheme.description,
     )
 }
 

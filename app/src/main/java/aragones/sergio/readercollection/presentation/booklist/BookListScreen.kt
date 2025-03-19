@@ -22,7 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -121,14 +121,14 @@ fun BookListScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.systemBars.asPaddingValues()),
     ) {
         CustomToolbar(
             title = title,
             modifier = Modifier.shadow(if (showTopButton) 4.dp else 0.dp),
             subtitle = subtitle,
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colorScheme.background,
             onBack = onBack,
             actions = actions,
         )

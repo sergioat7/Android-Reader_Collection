@@ -24,11 +24,11 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -101,7 +101,7 @@ fun SearchScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.systemBars.asPaddingValues()),
     ) {
         CustomSearchBar(
@@ -109,7 +109,7 @@ fun SearchScreen(
             query = query ?: "",
             onSearch = onSearch,
             modifier = Modifier.shadow(elevation),
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colorScheme.background,
             onBack = onBack,
         )
 
@@ -176,8 +176,8 @@ fun SearchScreen(
                         state = pullRefreshState,
                         isRefreshing = isLoading,
                         modifier = Modifier.align(Alignment.TopCenter),
-                        containerColor = MaterialTheme.colors.primary,
-                        color = MaterialTheme.colors.secondary,
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
                     )
                 },
                 content = {},
@@ -238,7 +238,7 @@ private fun SearchContent(
                         background = {
                             SwipeItemBackground(
                                 dismissValue = SwipeToDismissBoxValue.EndToStart,
-                                color = MaterialTheme.colors.roseBud,
+                                color = MaterialTheme.colorScheme.roseBud,
                                 icon = R.drawable.ic_save_book,
                             )
                         },
@@ -289,8 +289,8 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onClick,
         modifier = modifier.padding(12.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colors.primary,
-            disabledContainerColor = MaterialTheme.colors.primaryVariant,
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiary,
         ),
         shape = MaterialTheme.shapes.large,
     ) {
@@ -298,13 +298,13 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(R.drawable.ic_add_circle_outline),
                 contentDescription = null,
-                tint = MaterialTheme.colors.secondary,
+                tint = MaterialTheme.colorScheme.secondary,
             )
             Text(
                 text = stringResource(R.string.load_more),
                 modifier = Modifier.padding(12.dp),
                 style = MaterialTheme.typography.button,
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
                 maxLines = 1,
             )
         }

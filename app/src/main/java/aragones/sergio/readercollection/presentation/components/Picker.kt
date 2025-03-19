@@ -17,7 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,7 +70,7 @@ fun Picker(
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = currentIndexSelected)
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
 
-    Box(modifier = modifier.background(MaterialTheme.colors.secondary)) {
+    Box(modifier = modifier.background(MaterialTheme.colorScheme.secondary)) {
         LazyColumn(
             state = listState,
             flingBehavior = flingBehavior,
@@ -86,7 +86,7 @@ fun Picker(
                     text = item,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.h3,
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier
@@ -102,7 +102,7 @@ fun Picker(
                 .padding(top = itemHeightDp * visibleItemsMiddle)
                 .height(itemHeightDp)
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.selector)
+                .background(MaterialTheme.colorScheme.selector)
                 .zIndex(-1f),
         )
     }

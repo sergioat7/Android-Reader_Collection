@@ -16,7 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -56,7 +56,7 @@ fun LoginScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
     ) {
         Image(
@@ -119,7 +119,7 @@ fun LoginScreen(
             Text(
                 text = stringResource(R.string.not_account),
                 style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.description,
+                color = MaterialTheme.colorScheme.description,
             )
             Spacer(Modifier.width(5.dp))
             TextButton(onClick = onGoToRegister) {
@@ -129,7 +129,7 @@ fun LoginScreen(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.sp,
                     ),
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         }

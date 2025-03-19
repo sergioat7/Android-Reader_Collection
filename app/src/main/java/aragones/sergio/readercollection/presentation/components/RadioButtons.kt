@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.presentation.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
@@ -25,8 +25,8 @@ fun CustomRadioButton(
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colors.primary,
-    textColor: Color = MaterialTheme.colors.description,
+    color: Color = MaterialTheme.colorScheme.primary,
+    textColor: Color = MaterialTheme.colorScheme.description,
 ) {
     Row(
         modifier = modifier,

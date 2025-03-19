@@ -7,7 +7,7 @@ package aragones.sergio.readercollection.presentation.landing
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -37,7 +37,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
     val dynamicProperties = rememberLottieDynamicProperties(
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR,
-            value = MaterialTheme.colors.secondary.toArgb(),
+            value = MaterialTheme.colorScheme.secondary.toArgb(),
             keyPath = arrayOf(
                 "01",
                 "**",
@@ -45,7 +45,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR,
-            value = MaterialTheme.colors.secondary.toArgb(),
+            value = MaterialTheme.colorScheme.secondary.toArgb(),
             keyPath = arrayOf(
                 "02",
                 "**",
@@ -53,7 +53,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR,
-            value = MaterialTheme.colors.secondary.toArgb(),
+            value = MaterialTheme.colorScheme.secondary.toArgb(),
             keyPath = arrayOf(
                 "03",
                 "**",
@@ -61,7 +61,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR,
-            value = MaterialTheme.colors.secondary.toArgb(),
+            value = MaterialTheme.colorScheme.secondary.toArgb(),
             keyPath = arrayOf(
                 "04",
                 "**",
@@ -69,7 +69,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR,
-            value = MaterialTheme.colors.roseBud.toArgb(),
+            value = MaterialTheme.colorScheme.roseBud.toArgb(),
             keyPath = arrayOf(
                 "obj_02",
                 "**",
@@ -77,7 +77,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.COLOR,
-            value = MaterialTheme.colors.primary.toArgb(),
+            value = MaterialTheme.colorScheme.primary.toArgb(),
             keyPath = arrayOf(
                 "ombra",
                 "**",
@@ -85,7 +85,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
         ),
         rememberLottieDynamicProperty(
             property = LottieProperty.STROKE_COLOR,
-            value = MaterialTheme.colors.primary.toArgb(),
+            value = MaterialTheme.colorScheme.primary.toArgb(),
             keyPath = arrayOf(
                 "**",
             ),

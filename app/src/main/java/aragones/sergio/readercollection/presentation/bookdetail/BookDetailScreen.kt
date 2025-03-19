@@ -26,11 +26,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -62,6 +62,7 @@ import aragones.sergio.readercollection.presentation.components.StarRatingBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
+import aragones.sergio.readercollection.presentation.theme.isLight
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.util.BookState
@@ -94,13 +95,13 @@ fun BookDetailScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(WindowInsets.systemBars.asPaddingValues())
             .nestedScroll(nestedScrollConnection),
     ) {
         if (state.book == null) {
             CircularProgressIndicator(
-                color = MaterialTheme.colors.secondary,
+                color = MaterialTheme.colorScheme.secondary,
                 modifier = Modifier.align(Alignment.Center),
             )
         } else {
@@ -110,12 +111,12 @@ fun BookDetailScreen(
                         TopAppBarIcon(
                             icon = R.drawable.ic_edit_book,
                             onClick = onEdit,
-                            tint = MaterialTheme.colors.secondary,
+                            tint = MaterialTheme.colorScheme.secondary,
                         )
                         TopAppBarIcon(
                             icon = R.drawable.ic_remove_book,
                             onClick = onRemove,
-                            tint = MaterialTheme.colors.secondary,
+                            tint = MaterialTheme.colorScheme.secondary,
                         )
                     }
                 }
@@ -124,14 +125,14 @@ fun BookDetailScreen(
                         TopAppBarIcon(
                             icon = R.drawable.ic_cancel_changes,
                             onClick = onCancel,
-                            tint = MaterialTheme.colors.secondary,
+                            tint = MaterialTheme.colorScheme.secondary,
                         )
                         TopAppBarIcon(
                             icon = R.drawable.ic_save_changes,
                             onClick = {
                                 onSave(state.book)
                             },
-                            tint = MaterialTheme.colors.secondary,
+                            tint = MaterialTheme.colorScheme.secondary,
                         )
                     }
                 }
@@ -142,7 +143,7 @@ fun BookDetailScreen(
                             onClick = {
                                 onSave(state.book)
                             },
-                            tint = MaterialTheme.colors.secondary,
+                            tint = MaterialTheme.colorScheme.secondary,
                         )
                     }
                 }
@@ -153,19 +154,19 @@ fun BookDetailScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(nestedScrollConnection.currentContentSize),
-                backgroundColor = MaterialTheme.colors.primary,
+                backgroundColor = MaterialTheme.colorScheme.primary,
                 startContent = {
                     TopAppBarIcon(
                         icon = R.drawable.ic_arrow_back,
                         onClick = onBack,
-                        tint = MaterialTheme.colors.secondary,
+                        tint = MaterialTheme.colorScheme.secondary,
                     )
                 },
                 middleContent = {
                     Box(modifier = it) {
                         ImageWithLoading(
                             imageUrl = state.book.thumbnail ?: state.book.image,
-                            placeholder = if (MaterialTheme.colors.isLight) {
+                            placeholder = if (MaterialTheme.colorScheme.isLight()) {
                                 R.drawable.ic_default_book_cover_white
                             } else {
                                 R.drawable.ic_default_book_cover_blue
@@ -179,13 +180,13 @@ fun BookDetailScreen(
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
                                     .offset(0.dp, 24.dp),
-                                contentColor = MaterialTheme.colors.secondary,
-                                containerColor = MaterialTheme.colors.primary,
+                                contentColor = MaterialTheme.colorScheme.secondary,
+                                containerColor = MaterialTheme.colorScheme.primary,
                             ) {
                                 Icon(
                                     painter = painterResource(R.drawable.ic_add_a_photo),
                                     contentDescription = null,
-                                    tint = MaterialTheme.colors.secondary,
+                                    tint = MaterialTheme.colorScheme.secondary,
                                 )
                             }
                         }
@@ -207,7 +208,7 @@ fun BookDetailScreen(
                         } else {
                             it
                         }
-                    }.background(MaterialTheme.colors.background)
+                    }.background(MaterialTheme.colorScheme.background)
                     .padding(
                         start = 12.dp,
                         top = 24.dp,
@@ -234,7 +235,7 @@ private fun BookDetailContent(
                 .clip(CircleShape)
                 .align(Alignment.CenterHorizontally),
             thickness = 5.dp,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
         )
         Spacer(Modifier.height(24.dp))
         StarRatingBar(
@@ -272,7 +273,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_author),
-            textColor = MaterialTheme.colors.description,
+            textColor = MaterialTheme.colorScheme.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
@@ -303,8 +304,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.description),
             placeholderText = stringResource(R.string.add_description),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             maxLength = 10240,
             maxLines = 8,
@@ -322,8 +323,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.summary),
             placeholderText = stringResource(R.string.add_summary),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             maxLength = 10240,
             maxLines = 8,
@@ -358,8 +359,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.state),
             placeholderText = stringResource(R.string.select_state),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             enabled = isEditable,
         )
         Spacer(Modifier.height(8.dp))
@@ -385,7 +386,7 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.reading_date),
             placeholderText = stringResource(R.string.select_a_date),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             enabled = isEditable,
             onEndIconClicked = {
@@ -411,8 +412,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.format),
             placeholderText = stringResource(R.string.select_format),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             enabled = isEditable,
         )
         Spacer(Modifier.height(8.dp))
@@ -428,8 +429,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.pages),
             placeholderText = stringResource(R.string.add_pages),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.NUMBER,
             maxLength = 5,
@@ -447,8 +448,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.isbn),
             placeholderText = stringResource(R.string.add_isbn),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.NUMBER,
             enabled = isEditable,
@@ -465,8 +466,8 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.publisher),
             placeholderText = stringResource(R.string.add_publisher),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colors.description,
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
+            textColor = MaterialTheme.colorScheme.description,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
@@ -496,7 +497,7 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             labelText = stringResource(R.string.published_date),
             placeholderText = stringResource(R.string.select_a_date),
-            inputHintTextColor = MaterialTheme.colors.description.copy(alpha = 0.75f),
+            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             enabled = isEditable,
             onEndIconClicked = {

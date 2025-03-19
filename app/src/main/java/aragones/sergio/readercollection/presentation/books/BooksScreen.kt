@@ -26,13 +26,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -68,10 +68,10 @@ import aragones.sergio.readercollection.presentation.components.SearchBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.utils.Constants as MyConstants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
-import aragones.sergio.readercollection.utils.Constants as MyConstants
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,7 +94,7 @@ fun BooksScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.statusBars.asPaddingValues()),
     ) {
         BooksScreenContent(
@@ -123,7 +123,7 @@ fun BooksScreen(
             onDismissRequest = {},
             modifier = modifier,
             sheetState = sheetState,
-            containerColor = MaterialTheme.colors.background,
+            containerColor = MaterialTheme.colorScheme.background,
         ) {
             selectedBook?.let { book ->
                 BottomSheetContent(
@@ -179,7 +179,7 @@ private fun BooksScreenContent(
         CustomToolbar(
             title = stringResource(R.string.title_books),
             subtitle = subtitle,
-            backgroundColor = MaterialTheme.colors.background,
+            backgroundColor = MaterialTheme.colorScheme.background,
             actions = {
                 TopAppBarIcon(
                     icon = R.drawable.ic_sort_books,
@@ -308,7 +308,7 @@ private fun ReadingBooksSection(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
-            color = MaterialTheme.colors.primaryVariant,
+            color = MaterialTheme.colorScheme.tertiary,
         )
         Spacer(Modifier.height(16.dp))
     }
@@ -389,7 +389,7 @@ private fun BooksSection(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    color = MaterialTheme.colors.primaryVariant,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
             }
             Spacer(Modifier.height(16.dp))
@@ -409,7 +409,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
             text = title,
             modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -418,7 +418,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
                 Text(
                     text = stringResource(R.string.show_all),
                     style = MaterialTheme.typography.h3,
-                    color = MaterialTheme.colors.primary,
+                    color = MaterialTheme.colorScheme.primary,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )
@@ -441,13 +441,13 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(R.drawable.ic_arrow_circle_right),
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
         Text(
             text = stringResource(R.string.show_all),
             style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -466,14 +466,14 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
         Text(
             text = book.title ?: "",
             style = MaterialTheme.typography.h1,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,
         )
         Spacer(Modifier.height(8.dp))
         HorizontalDivider(
             modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colors.primaryVariant,
+            color = MaterialTheme.colorScheme.tertiary,
         )
         Row(
             modifier = Modifier
@@ -488,7 +488,7 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
                     onClick = { onStateClick(state.id) },
                     border = BorderStroke(
                         width = 1.dp,
-                        color = MaterialTheme.colors.primaryVariant,
+                        color = MaterialTheme.colorScheme.tertiary,
                     ),
                     selectedImage = Icons.Default.Done.takeIf { state.id == book.state },
                 )

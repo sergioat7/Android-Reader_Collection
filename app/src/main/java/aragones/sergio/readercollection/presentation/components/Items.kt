@@ -24,10 +24,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
@@ -46,6 +46,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
+import aragones.sergio.readercollection.presentation.theme.isLight
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import aragones.sergio.readercollection.presentation.theme.selector
 import com.aragones.sergio.util.extensions.isNotBlank
@@ -63,9 +64,9 @@ fun BookItem(
         modifier = modifier
             .background(
                 if (isDragging) {
-                    MaterialTheme.colors.selector
+                    MaterialTheme.colorScheme.selector
                 } else {
-                    MaterialTheme.colors.background
+                    MaterialTheme.colorScheme.background
                 },
             ).fillMaxWidth()
             .height(220.dp)
@@ -84,13 +85,13 @@ fun BookItem(
                 Icon(
                     painter = painterResource(R.drawable.ic_enable_drag),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
             }
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = if (MaterialTheme.colors.isLight) {
+                placeholder = if (MaterialTheme.colorScheme.isLight()) {
                     R.drawable.ic_default_book_cover_blue
                 } else {
                     R.drawable.ic_default_book_cover_white
@@ -115,7 +116,7 @@ fun BookItem(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
-                color = MaterialTheme.colors.primaryVariant,
+                color = MaterialTheme.colorScheme.tertiary,
             )
         }
     }
@@ -127,7 +128,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
         Text(
             text = book.title ?: "",
             style = MaterialTheme.typography.h1,
-            color = MaterialTheme.colors.primary,
+            color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 4,
         )
@@ -136,7 +137,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
             Text(
                 text = book.authorsToString(),
                 style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.description,
+                color = MaterialTheme.colorScheme.description,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -151,7 +152,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.new_book),
                 style = MaterialTheme.typography.h1,
-                color = MaterialTheme.colors.roseBud,
+                color = MaterialTheme.colorScheme.roseBud,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -173,7 +174,7 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
         Text(
             text = rating.toInt().toString(),
             style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.roseBud,
+            color = MaterialTheme.colorScheme.roseBud,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -189,7 +190,7 @@ fun ReadingBookItem(
 ) {
     Column(
         modifier = modifier
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
             .fillMaxWidth()
             .combinedClickable(
@@ -205,7 +206,7 @@ fun ReadingBookItem(
         Spacer(Modifier.height(8.dp))
         ImageWithLoading(
             imageUrl = book.thumbnail,
-            placeholder = if (MaterialTheme.colors.isLight) {
+            placeholder = if (MaterialTheme.colorScheme.isLight()) {
                 R.drawable.ic_default_book_cover_blue
             } else {
                 R.drawable.ic_default_book_cover_white
@@ -221,7 +222,7 @@ private fun BookBasicInfo(title: String, subtitle: String) {
     Text(
         text = title,
         style = MaterialTheme.typography.h3,
-        color = MaterialTheme.colors.primary,
+        color = MaterialTheme.colorScheme.primary,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
     )
@@ -230,7 +231,7 @@ private fun BookBasicInfo(title: String, subtitle: String) {
         Text(
             text = subtitle,
             style = MaterialTheme.typography.body2,
-            color = MaterialTheme.colors.description,
+            color = MaterialTheme.colorScheme.description,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -258,7 +259,7 @@ fun VerticalBookItem(
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_left),
                         contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -268,7 +269,7 @@ fun VerticalBookItem(
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_right),
                         contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -283,7 +284,7 @@ fun VerticalBookItem(
         ) {
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = if (MaterialTheme.colors.isLight) {
+                placeholder = if (MaterialTheme.colorScheme.isLight()) {
                     R.drawable.ic_default_book_cover_blue
                 } else {
                     R.drawable.ic_default_book_cover_white
@@ -518,7 +519,7 @@ private fun SwipeItemToLeftPreview() {
             background = {
                 SwipeItemBackground(
                     dismissValue = SwipeToDismissBoxValue.EndToStart,
-                    color = MaterialTheme.colors.roseBud,
+                    color = MaterialTheme.colorScheme.roseBud,
                     icon = R.drawable.ic_save_book,
                 )
             },
@@ -541,7 +542,7 @@ private fun SwipeItemToRightPreview() {
             background = {
                 SwipeItemBackground(
                     dismissValue = SwipeToDismissBoxValue.StartToEnd,
-                    color = MaterialTheme.colors.roseBud,
+                    color = MaterialTheme.colorScheme.roseBud,
                     icon = R.drawable.ic_remove_book,
                 )
             },

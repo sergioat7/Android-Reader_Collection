@@ -23,7 +23,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -80,7 +80,7 @@ fun StatisticsScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(WindowInsets.statusBars.asPaddingValues()),
     ) {
         StatisticsToolbar(
@@ -123,7 +123,7 @@ private fun StatisticsToolbar(
         title = stringResource(R.string.title_stats),
         modifier = modifier.shadow(elevation),
         subtitle = pluralStringResource(R.plurals.title_books_count, booksRead, booksRead),
-        backgroundColor = MaterialTheme.colors.background,
+        backgroundColor = MaterialTheme.colorScheme.background,
         actions = {
             TopAppBarIcon(
                 icon = R.drawable.ic_file_import,
@@ -399,7 +399,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
                 Text(
                     text = stringResource(R.string.shorter_book),
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.description,
+                    color = MaterialTheme.colorScheme.description,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(
@@ -418,7 +418,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
                 Text(
                     text = stringResource(R.string.longer_book),
                     style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.description,
+                    color = MaterialTheme.colorScheme.description,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(

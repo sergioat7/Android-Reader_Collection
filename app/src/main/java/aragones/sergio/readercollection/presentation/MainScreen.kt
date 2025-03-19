@@ -12,8 +12,8 @@ import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.NavigationBarItemDefaults
@@ -72,8 +72,8 @@ private fun BottomNavigationBar(
     navBackStackEntry: NavBackStackEntry?,
 ) {
     NavigationBar(
-        containerColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.secondary,
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.secondary,
     ) {
         val currentDestination = navBackStackEntry?.destination
         for (item in NavItem.entries) {
@@ -103,14 +103,14 @@ private fun BottomNavigationBar(
                         } else {
                             MaterialTheme.typography.body2
                         },
-                        color = MaterialTheme.colors.secondary,
+                        color = MaterialTheme.colorScheme.secondary,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                     )
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colors.roseBud,
-                    unselectedIconColor = MaterialTheme.colors.secondary,
+                    selectedIconColor = MaterialTheme.colorScheme.roseBud,
+                    unselectedIconColor = MaterialTheme.colorScheme.secondary,
                 ),
             )
         }
