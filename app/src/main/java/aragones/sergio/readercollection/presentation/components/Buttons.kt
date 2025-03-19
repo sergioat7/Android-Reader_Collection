@@ -7,13 +7,13 @@ package aragones.sergio.readercollection.presentation.components
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.FloatingActionButton
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -34,10 +34,9 @@ fun MainActionButton(
         modifier = modifier,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
+            containerColor = MaterialTheme.colors.primary,
+            disabledContentColor = MaterialTheme.colors.primaryVariant,
         ),
-        shape = MaterialTheme.shapes.large,
     ) {
         Text(
             text = text,
@@ -55,7 +54,7 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
         onClick = onClick,
         modifier = modifier.padding(12.dp),
         contentColor = MaterialTheme.colors.secondary,
-        backgroundColor = MaterialTheme.colors.primary,
+        containerColor = MaterialTheme.colors.primary,
     ) {
         Icon(
             painter = painterResource(image),
