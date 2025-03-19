@@ -35,6 +35,7 @@ import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
@@ -125,9 +126,9 @@ fun BookListScreen(
     ) {
         CustomToolbar(
             title = title,
-            modifier = Modifier.background(MaterialTheme.colors.background),
+            modifier = Modifier.shadow(if (showTopButton) 4.dp else 0.dp),
             subtitle = subtitle,
-            elevation = if (showTopButton) 4.dp else 0.dp,
+            backgroundColor = MaterialTheme.colors.background,
             onBack = onBack,
             actions = actions,
         )

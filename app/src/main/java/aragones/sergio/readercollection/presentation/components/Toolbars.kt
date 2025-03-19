@@ -18,14 +18,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.contentColorFor
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Surface
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -70,12 +71,13 @@ fun TopAppBarIcon(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomToolbar(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String = "",
-    elevation: Dp = 0.dp,
+    backgroundColor: Color = MaterialTheme.colors.background,
     onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
@@ -98,8 +100,6 @@ fun CustomToolbar(
             }
         },
         modifier = modifier,
-        backgroundColor = MaterialTheme.colors.background,
-        elevation = elevation,
         navigationIcon = onBack?.let {
             {
                 TopAppBarIcon(
@@ -107,11 +107,15 @@ fun CustomToolbar(
                     onClick = it,
                 )
             }
-        },
+        } ?: {},
         actions = actions,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+        ),
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomSearchBar(
     title: String,
@@ -119,7 +123,6 @@ fun CustomSearchBar(
     onSearch: ((String) -> Unit),
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.background,
-    elevation: Dp = 0.dp,
     onBack: (() -> Unit)? = null,
 ) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
@@ -168,9 +171,7 @@ fun CustomSearchBar(
             }
         },
         modifier = modifier,
-        backgroundColor = backgroundColor,
-        elevation = elevation,
-        navigationIcon = backIcon,
+        navigationIcon = backIcon ?: {},
         actions = {
             if (!isSearching) {
                 TopAppBarIcon(
@@ -179,6 +180,9 @@ fun CustomSearchBar(
                 )
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+        ),
     )
 }
 
@@ -196,13 +200,9 @@ fun CollapsingToolbar(
         modifier = modifier,
         color = backgroundColor,
         contentColor = contentColorFor(backgroundColor),
-        elevation = elevation,
+        tonalElevation = elevation,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(AppBarDefaults.ContentPadding),
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 startContent()
                 Spacer(Modifier.weight(1f))

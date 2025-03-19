@@ -178,8 +178,8 @@ private fun BooksScreenContent(
     Column(modifier = modifier) {
         CustomToolbar(
             title = stringResource(R.string.title_books),
-            modifier = Modifier.background(MaterialTheme.colors.background),
             subtitle = subtitle,
+            backgroundColor = MaterialTheme.colors.background,
             actions = {
                 TopAppBarIcon(
                     icon = R.drawable.ic_sort_books,

@@ -40,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -95,6 +96,8 @@ fun SearchScreen(
         onRefresh = onRefresh,
     )
 
+    val elevation = if (showTopButton && !isLoading) 4.dp else 0.dp
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -105,8 +108,8 @@ fun SearchScreen(
             title = stringResource(R.string.title_search),
             query = query ?: "",
             onSearch = onSearch,
-            modifier = Modifier.background(MaterialTheme.colors.background),
-            elevation = if (showTopButton && !isLoading) 4.dp else 0.dp,
+            modifier = Modifier.shadow(elevation),
+            backgroundColor = MaterialTheme.colors.background,
             onBack = onBack,
         )
 

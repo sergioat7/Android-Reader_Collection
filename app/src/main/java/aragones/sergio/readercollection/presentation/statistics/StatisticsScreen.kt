@@ -27,6 +27,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -114,14 +115,15 @@ private fun StatisticsToolbar(
         is StatisticsUiState.Success -> state.totalBooksRead
     }
 
+    val elevation = when (scrollState.value) {
+        0 -> 0.dp
+        else -> 4.dp
+    }
     CustomToolbar(
         title = stringResource(R.string.title_stats),
-        modifier = modifier.background(MaterialTheme.colors.background),
-        elevation = when (scrollState.value) {
-            0 -> 0.dp
-            else -> 4.dp
-        },
+        modifier = modifier.shadow(elevation),
         subtitle = pluralStringResource(R.plurals.title_books_count, booksRead, booksRead),
+        backgroundColor = MaterialTheme.colors.background,
         actions = {
             TopAppBarIcon(
                 icon = R.drawable.ic_file_import,

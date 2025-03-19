@@ -29,6 +29,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -164,13 +165,14 @@ private fun SettingsToolbar(
     onDeleteProfile: () -> Unit,
     onLogout: () -> Unit,
 ) {
+    val elevation = when (scrollState.value) {
+        0 -> 0.dp
+        else -> 4.dp
+    }
     CustomToolbar(
         title = stringResource(R.string.title_settings),
-        modifier = Modifier.background(MaterialTheme.colors.background),
-        elevation = when (scrollState.value) {
-            0 -> 0.dp
-            else -> 4.dp
-        },
+        modifier = Modifier.shadow(elevation = elevation),
+        backgroundColor = MaterialTheme.colors.background,
         actions = {
             TopAppBarIcon(
                 icon = R.drawable.ic_delete_profile,
