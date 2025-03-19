@@ -22,8 +22,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Card
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -31,6 +29,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -139,17 +138,18 @@ fun CustomDropdownMenu(
         ) {
             for (value in values) {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = value,
+                            style = MaterialTheme.typography.body1,
+                            color = textColor,
+                        )
+                    },
                     onClick = {
                         expanded = false
                         onOptionSelected(value)
                     },
-                ) {
-                    Text(
-                        text = value,
-                        style = MaterialTheme.typography.body1,
-                        color = textColor,
-                    )
-                }
+                )
             }
         }
     }
@@ -283,7 +283,7 @@ private fun MyDropdownMenuContent(
 // Menu positioning.
 
 /**
- * Calculates the position of a Material [DropdownMenu].
+ * Calculates the position of a Material DropdownMenu.
  */
 @Immutable
 private data class DropdownMenuPositionProvider(
