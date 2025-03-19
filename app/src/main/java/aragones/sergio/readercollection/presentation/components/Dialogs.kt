@@ -2,7 +2,6 @@
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 19/3/2024
  */
-@file:Suppress("UsingMaterialAndMaterial3Libraries")
 
 package aragones.sergio.readercollection.presentation.components
 
@@ -20,15 +19,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -177,10 +176,11 @@ fun TextFieldAlertDialog(
                                 border = BorderStroke(1.dp, MaterialTheme.colors.primary),
                                 shape = MaterialTheme.shapes.medium,
                             ).testTag("textField"),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                        colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colors.primary,
                             unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
-                            textColor = MaterialTheme.colors.description,
+                            focusedTextColor = MaterialTheme.colors.description,
+                            unfocusedTextColor = MaterialTheme.colors.description,
                         ),
                         shape = MaterialTheme.shapes.medium,
                         singleLine = true,
