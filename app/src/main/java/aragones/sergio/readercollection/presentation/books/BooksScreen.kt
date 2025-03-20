@@ -408,7 +408,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
         Text(
             text = title,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
@@ -417,7 +417,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
             TextButton(onClick = onShowAll) {
                 Text(
                     text = stringResource(R.string.show_all),
-                    style = MaterialTheme.typography.h3,
+                    style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.primary,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
@@ -446,7 +446,7 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
         }
         Text(
             text = stringResource(R.string.show_all),
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
@@ -465,7 +465,7 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
     ) {
         Text(
             text = book.title ?: "",
-            style = MaterialTheme.typography.h1,
+            style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
             overflow = TextOverflow.Ellipsis,

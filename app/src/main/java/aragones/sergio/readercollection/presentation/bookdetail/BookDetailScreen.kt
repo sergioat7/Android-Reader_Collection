@@ -257,7 +257,7 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_title),
-            textStyle = MaterialTheme.typography.h1,
+            textStyle = MaterialTheme.typography.displayLarge,
             endIcon = (R.drawable.ic_clear_text).takeIf { isEditable },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,

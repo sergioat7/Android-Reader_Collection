@@ -328,7 +328,7 @@ private fun HeaderText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.description,
     )
 }

@@ -79,7 +79,7 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.h3,
+                style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.description,
             )
         }
@@ -88,7 +88,7 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 color = inputHintTextColor,
             )
         }
@@ -121,7 +121,7 @@ fun CustomDropdownMenu(
                 disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
                     ?: Color.Transparent,
             ),
-            textStyle = MaterialTheme.typography.body1.copy(color = textColor),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = textColor),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon.takeIf { enabled },
@@ -142,7 +142,7 @@ fun CustomDropdownMenu(
                     text = {
                         Text(
                             text = value,
-                            style = MaterialTheme.typography.body1,
+                            style = MaterialTheme.typography.bodyLarge,
                             color = textColor,
                         )
                     },

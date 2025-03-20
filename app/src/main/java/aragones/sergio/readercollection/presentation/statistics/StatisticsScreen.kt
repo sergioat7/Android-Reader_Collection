@@ -398,7 +398,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
             Column {
                 Text(
                     text = stringResource(R.string.shorter_book),
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.description,
                 )
                 Spacer(Modifier.height(8.dp))
@@ -417,7 +417,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
             Column {
                 Text(
                     text = stringResource(R.string.longer_book),
-                    style = MaterialTheme.typography.body1,
+                    style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.description,
                 )
                 Spacer(Modifier.height(8.dp))

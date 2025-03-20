@@ -127,7 +127,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = book.title ?: "",
-            style = MaterialTheme.typography.h1,
+            style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 4,
@@ -136,7 +136,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(8.dp))
             Text(
                 text = book.authorsToString(),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.description,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -151,7 +151,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
         } else {
             Text(
                 text = stringResource(R.string.new_book),
-                style = MaterialTheme.typography.h1,
+                style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.roseBud,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
@@ -173,7 +173,7 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
         Spacer(Modifier.width(12.dp))
         Text(
             text = rating.toInt().toString(),
-            style = MaterialTheme.typography.h2,
+            style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.roseBud,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
@@ -221,7 +221,7 @@ fun ReadingBookItem(
 private fun BookBasicInfo(title: String, subtitle: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.h3,
+        style = MaterialTheme.typography.displaySmall,
         color = MaterialTheme.colorScheme.primary,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
@@ -230,7 +230,7 @@ private fun BookBasicInfo(title: String, subtitle: String) {
         Spacer(Modifier.height(4.dp))
         Text(
             text = subtitle,
-            style = MaterialTheme.typography.body2,
+            style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.description,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,

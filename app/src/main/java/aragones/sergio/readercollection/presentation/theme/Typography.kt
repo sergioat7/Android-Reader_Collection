@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.theme
 
-import androidx.compose.material.Typography
+import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -20,13 +20,13 @@ private val fonts = FontFamily(
 )
 
 val Typography = Typography(
-    defaultFontFamily = fonts,
-    h1 = TextStyle.H1,
-    h2 = TextStyle.H2,
-    h3 = TextStyle.H3,
-    body1 = TextStyle.Body,
-    body2 = TextStyle.BodySmall,
-    button = TextStyle.Button,
+//    defaultFontFamily = fonts,
+    displayLarge = TextStyle.H1,
+    displayMedium = TextStyle.H2,
+    displaySmall = TextStyle.H3,
+    bodyLarge = TextStyle.Body,
+    bodyMedium = TextStyle.BodySmall,
+    labelLarge = TextStyle.Button,
 )
 
 private val TextStyle.Companion.H1: TextStyle

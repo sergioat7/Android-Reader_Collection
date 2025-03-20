@@ -63,7 +63,7 @@ fun CustomOutlinedTextField(
     labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
-    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.primary,
     @DrawableRes endIcon: Int? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
@@ -84,8 +84,8 @@ fun CustomOutlinedTextField(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.h3.takeIf { placeholderText != null }
-                    ?: MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.displaySmall.takeIf { placeholderText != null }
+                    ?: MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
                     ?: MaterialTheme.colorScheme.description.takeIf { placeholderText != null }
                     ?: inputHintTextColor,
@@ -96,7 +96,7 @@ fun CustomOutlinedTextField(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
                     ?: inputHintTextColor,
             )
@@ -184,7 +184,7 @@ fun CustomOutlinedTextField(
             if (errorTextId != null) {
                 Text(
                     text = stringResource(errorTextId),
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.error,
                 )
             }
@@ -192,7 +192,7 @@ fun CustomOutlinedTextField(
                 Text(
                     text = "${text.length} / $maxLength",
                     modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.body2.copy(fontWeight = FontWeight.Bold),
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
                     color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
                         ?: textColor,
                     textAlign = TextAlign.End,
@@ -211,7 +211,7 @@ fun MultilineCustomOutlinedTextField(
     labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
-    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.primary,
     @DrawableRes endIcon: Int? = null,
     isLastTextField: Boolean? = null,

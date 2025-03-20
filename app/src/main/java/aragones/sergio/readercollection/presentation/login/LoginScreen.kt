@@ -118,14 +118,14 @@ fun LoginScreen(
         ) {
             Text(
                 text = stringResource(R.string.not_account),
-                style = MaterialTheme.typography.body1,
+                style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.description,
             )
             Spacer(Modifier.width(5.dp))
             TextButton(onClick = onGoToRegister) {
                 Text(
                     text = stringResource(R.string.create_account),
-                    style = MaterialTheme.typography.body1.copy(
+                    style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.sp,
                     ),

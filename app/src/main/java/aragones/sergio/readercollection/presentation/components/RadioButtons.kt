@@ -42,7 +42,7 @@ fun CustomRadioButton(
         )
         Text(
             text = text,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             color = textColor,
         )
     }

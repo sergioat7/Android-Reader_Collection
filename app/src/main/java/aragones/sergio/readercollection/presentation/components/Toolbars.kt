@@ -87,14 +87,14 @@ fun CustomToolbar(
             Column {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.h1,
+                    style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 if (subtitle.isNotBlank()) {
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = subtitle,
-                        style = MaterialTheme.typography.body1,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.description,
                     )
                 }
@@ -166,7 +166,7 @@ fun CustomSearchBar(
             } else {
                 Text(
                     text = query.ifBlank { title },
-                    style = MaterialTheme.typography.h1,
+                    style = MaterialTheme.typography.displayLarge,
                     color = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -201,7 +201,7 @@ fun CollapsingToolbar(
         modifier = modifier,
         color = backgroundColor,
         contentColor = contentColorFor(backgroundColor),
-        tonalElevation = elevation,
+        shadowElevation = elevation,
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Row(verticalAlignment = Alignment.CenterVertically) {

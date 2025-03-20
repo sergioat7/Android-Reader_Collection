@@ -303,7 +303,7 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             Text(
                 text = stringResource(R.string.load_more),
                 modifier = Modifier.padding(12.dp),
-                style = MaterialTheme.typography.button,
+                style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.secondary,
                 maxLines = 1,
             )

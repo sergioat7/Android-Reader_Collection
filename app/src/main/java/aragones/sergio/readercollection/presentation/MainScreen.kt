@@ -99,9 +99,9 @@ private fun BottomNavigationBar(
                     Text(
                         text = title,
                         style = if (selected) {
-                            MaterialTheme.typography.h3
+                            MaterialTheme.typography.displaySmall
                         } else {
-                            MaterialTheme.typography.body2
+                            MaterialTheme.typography.bodyMedium
                         },
                         color = MaterialTheme.colorScheme.secondary,
                         overflow = TextOverflow.Ellipsis,

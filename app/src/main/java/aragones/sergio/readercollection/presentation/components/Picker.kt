@@ -85,7 +85,7 @@ fun Picker(
                 Text(
                     text = item,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.h3,
+                    style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.primary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,

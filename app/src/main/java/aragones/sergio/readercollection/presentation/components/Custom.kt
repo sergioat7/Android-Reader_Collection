@@ -94,7 +94,7 @@ fun NoResultsComponent(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(24.dp),
-            style = MaterialTheme.typography.h1,
+            style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
         )
@@ -155,7 +155,7 @@ fun SearchBar(
     showLeadingIcon: Boolean = false,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    textStyle: TextStyle = MaterialTheme.typography.body1,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     requestFocusByDefault: Boolean = true,
 ) {
     var textFieldValueState by remember {
@@ -181,7 +181,7 @@ fun SearchBar(
         Text(
             text = stringResource(R.string.search),
             color = inputHintTextColor,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
     val leadingIcon: @Composable (() -> Unit)? = if (showLeadingIcon) {
@@ -259,7 +259,7 @@ fun CustomFilterChip(
         label = {
             Text(
                 text = title,
-                style = MaterialTheme.typography.h3.copy(
+                style = MaterialTheme.typography.displaySmall.copy(
                     fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
                 ),
                 textAlign = TextAlign.Center,
@@ -306,7 +306,7 @@ fun CustomChip(text: String, modifier: Modifier = Modifier) {
         Text(
             text = text,
             color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             maxLines = 1,
         )

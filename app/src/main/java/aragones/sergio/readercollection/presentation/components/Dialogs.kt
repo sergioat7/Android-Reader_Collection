@@ -327,7 +327,7 @@ fun CustomDatePickerDialog(
                 Text(
                     text = stringResource(R.string.select_a_date),
                     modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
-                    style = MaterialTheme.typography.h2,
+                    style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.primary,
                 )
             },
@@ -367,7 +367,7 @@ private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.h2,
+        style = MaterialTheme.typography.displayMedium,
         color = MaterialTheme.colorScheme.primary,
     )
 }
@@ -377,7 +377,7 @@ private fun TextMessageAlertDialog(text: String, modifier: Modifier = Modifier) 
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.body1,
+        style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.primary,
     )
 }
@@ -394,7 +394,7 @@ private fun TextButtonAlertDialog(
     ) {
         Text(
             text = text.uppercase(),
-            style = MaterialTheme.typography.h3,
+            style = MaterialTheme.typography.displaySmall,
             color = MaterialTheme.colorScheme.primary,
         )
     }

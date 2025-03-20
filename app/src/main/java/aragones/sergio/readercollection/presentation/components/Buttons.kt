@@ -41,7 +41,7 @@ fun MainActionButton(
         Text(
             text = text,
             modifier = Modifier.padding(8.dp),
-            style = MaterialTheme.typography.button,
+            style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.secondary,
             maxLines = 1,
         )
@@ -69,7 +69,7 @@ fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modif
     TextButton(onClick = onClick, modifier = modifier) {
         Text(
             text = text,
-            style = MaterialTheme.typography.button,
+            style = MaterialTheme.typography.labelLarge,
             color = MaterialTheme.colorScheme.primary,
             maxLines = 1,
         )
