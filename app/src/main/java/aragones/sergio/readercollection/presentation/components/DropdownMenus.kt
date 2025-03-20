@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -29,6 +28,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -268,8 +269,12 @@ private fun MyDropdownMenuContent(
                 this.alpha = alpha
                 transformOrigin = transformOriginState.value
             },
-        elevation = MenuElevation,
-        backgroundColor = MaterialTheme.colors.background,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colors.background,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = MenuElevation,
+        ),
     ) {
         Column(
             modifier = modifier
