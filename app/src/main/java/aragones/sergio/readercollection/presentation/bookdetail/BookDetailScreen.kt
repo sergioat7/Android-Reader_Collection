@@ -27,10 +27,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -228,12 +228,12 @@ private fun BookDetailContent(
 ) {
     val language = LocalLanguage.current
     Column(modifier = modifier) {
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .width(100.dp)
-                .height(5.dp)
                 .clip(CircleShape)
                 .align(Alignment.CenterHorizontally),
+            thickness = 5.dp,
             color = MaterialTheme.colors.primary,
         )
         Spacer(Modifier.height(24.dp))
