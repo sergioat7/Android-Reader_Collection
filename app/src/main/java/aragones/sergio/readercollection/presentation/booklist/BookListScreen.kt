@@ -6,18 +6,13 @@
 package aragones.sergio.readercollection.presentation.booklist
 
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -118,12 +113,7 @@ fun BookListScreen(
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(WindowInsets.systemBars.asPaddingValues()),
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         CustomToolbar(
             title = title,
             modifier = Modifier.shadow(if (showTopButton) 4.dp else 0.dp),

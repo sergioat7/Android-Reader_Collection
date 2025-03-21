@@ -7,20 +7,16 @@ package aragones.sergio.readercollection.presentation.books
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -91,12 +87,7 @@ fun BooksScreen(
     val coroutineScope = rememberCoroutineScope()
     var selectedBook by remember { mutableStateOf<Book?>(null) }
 
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(WindowInsets.statusBars.asPaddingValues()),
-    ) {
+    Box(modifier = modifier.fillMaxSize()) {
         BooksScreenContent(
             state = state,
             onSortClick = onSortClick,

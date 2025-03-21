@@ -9,18 +9,14 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
@@ -77,12 +73,7 @@ fun StatisticsScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(WindowInsets.statusBars.asPaddingValues()),
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         StatisticsToolbar(
             state = state,
             scrollState = scrollState,
@@ -94,7 +85,7 @@ fun StatisticsScreen(
             scrollState = scrollState,
             onGroupClick = onGroupClick,
             onBookClick = onBookClick,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(horizontal = 12.dp),
         )
     }
     if (state is StatisticsUiState.Success && state.isLoading) {
