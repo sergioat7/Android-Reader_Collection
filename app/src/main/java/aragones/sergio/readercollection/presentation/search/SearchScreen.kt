@@ -27,12 +27,14 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -62,6 +64,7 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     state: SearchUiState,
@@ -91,10 +94,7 @@ fun SearchScreen(
         is SearchUiState.Error -> state.isLoading to state.query
     }
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isLoading,
-        onRefresh = onRefresh,
-    )
+    val pullRefreshState = rememberPullToRefreshState()
 
     val elevation = if (showTopButton && !isLoading) 4.dp else 0.dp
 
@@ -113,7 +113,15 @@ fun SearchScreen(
             onBack = onBack,
         )
 
-        val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
+        val modifier = if (query != null) {
+            Modifier.pullToRefresh(
+                isRefreshing = isLoading,
+                state = pullRefreshState,
+                onRefresh = onRefresh,
+            )
+        } else {
+            Modifier
+        }
 
         Box(
             modifier = modifier.fillMaxSize(),
@@ -157,12 +165,22 @@ fun SearchScreen(
                     ErrorContent()
                 }
             }
-            PullRefreshIndicator(
-                refreshing = isLoading,
-                state = pullRefreshState,
+            PullToRefreshBox(
+                isRefreshing = isLoading,
+                onRefresh = onRefresh,
                 modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = MaterialTheme.colors.secondary,
-                contentColor = MaterialTheme.colors.primary,
+                state = pullRefreshState,
+                contentAlignment = Alignment.TopCenter,
+                indicator = {
+                    Indicator(
+                        state = pullRefreshState,
+                        isRefreshing = isLoading,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        containerColor = MaterialTheme.colors.primary,
+                        color = MaterialTheme.colors.secondary,
+                    )
+                },
+                content = {},
             )
         }
     }
