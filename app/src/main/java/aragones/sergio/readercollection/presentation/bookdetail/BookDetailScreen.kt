@@ -175,6 +175,7 @@ fun BookDetailScreen(
                                 onClick = onSetImage,
                                 modifier = Modifier
                                     .align(Alignment.BottomCenter)
+                                    .padding(vertical = 8.dp)
                                     .offset(0.dp, 24.dp),
                                 contentColor = MaterialTheme.colorScheme.secondary,
                                 containerColor = MaterialTheme.colorScheme.primary,
