@@ -21,18 +21,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Card
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
@@ -69,8 +69,8 @@ fun CustomDropdownMenu(
     modifier: Modifier = Modifier,
     labelText: String? = null,
     placeholderText: String? = null,
-    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
-    textColor: Color = MaterialTheme.colors.primary,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
     enabled: Boolean = true,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -79,8 +79,8 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.h3,
-                color = MaterialTheme.colors.description,
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.description,
             )
         }
     }
@@ -88,7 +88,7 @@ fun CustomDropdownMenu(
         {
             Text(
                 text = it,
-                style = MaterialTheme.typography.body2,
+                style = MaterialTheme.typography.bodyMedium,
                 color = inputHintTextColor,
             )
         }
@@ -117,11 +117,11 @@ fun CustomDropdownMenu(
                     it.clickable { expanded = true }.takeIf { enabled } ?: it
                 },
             shape = MaterialTheme.shapes.medium,
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                disabledBorderColor = MaterialTheme.colors.primaryVariant.takeIf { enabled }
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
                     ?: Color.Transparent,
             ),
-            textStyle = MaterialTheme.typography.body1.copy(color = textColor),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = textColor),
             label = label,
             placeholder = placeholder,
             trailingIcon = trailingIcon.takeIf { enabled },
@@ -135,21 +135,22 @@ fun CustomDropdownMenu(
             onDismissRequest = { expanded = false },
             modifier = modifier
                 .fillMaxWidth()
-                .background(MaterialTheme.colors.background),
+                .background(MaterialTheme.colorScheme.background),
         ) {
             for (value in values) {
                 DropdownMenuItem(
+                    text = {
+                        Text(
+                            text = value,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = textColor,
+                        )
+                    },
                     onClick = {
                         expanded = false
                         onOptionSelected(value)
                     },
-                ) {
-                    Text(
-                        text = value,
-                        style = MaterialTheme.typography.body1,
-                        color = textColor,
-                    )
-                }
+                )
             }
         }
     }
@@ -268,8 +269,12 @@ private fun MyDropdownMenuContent(
                 this.alpha = alpha
                 transformOrigin = transformOriginState.value
             },
-        elevation = MenuElevation,
-        backgroundColor = MaterialTheme.colors.background,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = MenuElevation,
+        ),
     ) {
         Column(
             modifier = modifier
@@ -283,7 +288,7 @@ private fun MyDropdownMenuContent(
 // Menu positioning.
 
 /**
- * Calculates the position of a Material [DropdownMenu].
+ * Calculates the position of a Material DropdownMenu.
  */
 @Immutable
 private data class DropdownMenuPositionProvider(

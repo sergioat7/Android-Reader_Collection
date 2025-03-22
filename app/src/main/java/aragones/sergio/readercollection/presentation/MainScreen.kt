@@ -9,19 +9,16 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomNavigation
-import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -74,12 +71,9 @@ private fun BottomNavigationBar(
     navController: NavHostController,
     navBackStackEntry: NavBackStackEntry?,
 ) {
-    BottomNavigation(
-        modifier = Modifier
-            .background(MaterialTheme.colors.primary)
-            .padding(WindowInsets.navigationBars.asPaddingValues()),
-        backgroundColor = MaterialTheme.colors.primary,
-        contentColor = MaterialTheme.colors.secondary,
+    NavigationBar(
+        containerColor = MaterialTheme.colorScheme.primary,
+        contentColor = MaterialTheme.colorScheme.secondary,
     ) {
         val currentDestination = navBackStackEntry?.destination
         for (item in NavItem.entries) {
@@ -87,7 +81,7 @@ private fun BottomNavigationBar(
                 it.hasRoute(item.route::class)
             } == true
             val title = stringResource(item.title)
-            BottomNavigationItem(
+            NavigationBarItem(
                 selected = selected,
                 onClick = {
                     navController.navigate(item.route) {
@@ -105,17 +99,19 @@ private fun BottomNavigationBar(
                     Text(
                         text = title,
                         style = if (selected) {
-                            MaterialTheme.typography.h3
+                            MaterialTheme.typography.displaySmall
                         } else {
-                            MaterialTheme.typography.body2
+                            MaterialTheme.typography.bodyMedium
                         },
-                        color = MaterialTheme.colors.secondary,
+                        color = MaterialTheme.colorScheme.secondary,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1,
                     )
                 },
-                selectedContentColor = MaterialTheme.colors.roseBud,
-                unselectedContentColor = MaterialTheme.colors.secondary,
+                colors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = MaterialTheme.colorScheme.roseBud,
+                    unselectedIconColor = MaterialTheme.colorScheme.secondary,
+                ),
             )
         }
     }

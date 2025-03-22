@@ -18,14 +18,15 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.AppBarDefaults
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.contentColorFor
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -49,6 +50,7 @@ import androidx.compose.ui.zIndex
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
+import aragones.sergio.readercollection.presentation.theme.isLight
 import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
@@ -56,7 +58,7 @@ fun TopAppBarIcon(
     @DrawableRes icon: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    tint: Color = MaterialTheme.colors.primary,
+    tint: Color = MaterialTheme.colorScheme.primary,
 ) {
     IconButton(
         onClick = onClick,
@@ -70,12 +72,13 @@ fun TopAppBarIcon(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomToolbar(
     title: String,
     modifier: Modifier = Modifier,
     subtitle: String = "",
-    elevation: Dp = 0.dp,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
     onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
@@ -84,22 +87,20 @@ fun CustomToolbar(
             Column {
                 Text(
                     text = title,
-                    style = MaterialTheme.typography.h1,
-                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.primary,
                 )
                 if (subtitle.isNotBlank()) {
                     Spacer(Modifier.height(8.dp))
                     Text(
                         text = subtitle,
-                        style = MaterialTheme.typography.body1,
-                        color = MaterialTheme.colors.description,
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.description,
                     )
                 }
             }
         },
         modifier = modifier,
-        backgroundColor = MaterialTheme.colors.background,
-        elevation = elevation,
         navigationIcon = onBack?.let {
             {
                 TopAppBarIcon(
@@ -107,19 +108,22 @@ fun CustomToolbar(
                     onClick = it,
                 )
             }
-        },
+        } ?: {},
         actions = actions,
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+        ),
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CustomSearchBar(
     title: String,
     query: String,
     onSearch: ((String) -> Unit),
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.background,
-    elevation: Dp = 0.dp,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
     onBack: (() -> Unit)? = null,
 ) {
     var isSearching by rememberSaveable { mutableStateOf(false) }
@@ -162,15 +166,13 @@ fun CustomSearchBar(
             } else {
                 Text(
                     text = query.ifBlank { title },
-                    style = MaterialTheme.typography.h1,
-                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.displayLarge,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             }
         },
         modifier = modifier,
-        backgroundColor = backgroundColor,
-        elevation = elevation,
-        navigationIcon = backIcon,
+        navigationIcon = backIcon ?: {},
         actions = {
             if (!isSearching) {
                 TopAppBarIcon(
@@ -179,6 +181,9 @@ fun CustomSearchBar(
                 )
             }
         },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = backgroundColor,
+        ),
     )
 }
 
@@ -186,7 +191,7 @@ fun CustomSearchBar(
 fun CollapsingToolbar(
     nestedScrollConnection: CollapsingToolbarNestedScrollConnection,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colors.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.primary,
     elevation: Dp = 0.dp,
     startContent: @Composable RowScope.() -> Unit = {},
     middleContent: @Composable BoxScope.(Modifier) -> Unit = {},
@@ -196,13 +201,9 @@ fun CollapsingToolbar(
         modifier = modifier,
         color = backgroundColor,
         contentColor = contentColorFor(backgroundColor),
-        elevation = elevation,
+        shadowElevation = elevation,
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(AppBarDefaults.ContentPadding),
-        ) {
+        Box(modifier = Modifier.fillMaxSize()) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 startContent()
                 Spacer(Modifier.weight(1f))
@@ -311,13 +312,13 @@ private fun CollapsingToolbarPreview() {
                 TopAppBarIcon(
                     icon = R.drawable.ic_arrow_back,
                     onClick = {},
-                    tint = MaterialTheme.colors.secondary,
+                    tint = MaterialTheme.colorScheme.secondary,
                 )
             },
             middleContent = {
                 ImageWithLoading(
                     imageUrl = null,
-                    placeholder = if (MaterialTheme.colors.isLight) {
+                    placeholder = if (MaterialTheme.colorScheme.isLight()) {
                         R.drawable.ic_default_book_cover_white
                     } else {
                         R.drawable.ic_default_book_cover_blue
@@ -331,12 +332,12 @@ private fun CollapsingToolbarPreview() {
                 TopAppBarIcon(
                     icon = R.drawable.ic_edit_book,
                     onClick = {},
-                    tint = MaterialTheme.colors.secondary,
+                    tint = MaterialTheme.colorScheme.secondary,
                 )
                 TopAppBarIcon(
                     icon = R.drawable.ic_remove_book,
                     onClick = {},
-                    tint = MaterialTheme.colors.secondary,
+                    tint = MaterialTheme.colorScheme.secondary,
                 )
             },
         )

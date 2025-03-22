@@ -5,33 +5,33 @@
 
 package aragones.sergio.readercollection.presentation.theme
 
-import android.graphics.Color as AndroidColor
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.LocalActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.darkColors
-import androidx.compose.material.lightColors
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 
-private val LightColorScheme = lightColors(
+private val LightColorScheme = lightColorScheme(
     primary = EbonyClay,
-    primaryVariant = LightEbonyClay,
     secondary = White,
+    tertiary = LightEbonyClay,
     background = White,
     surface = White,
     error = Color.Red,
 )
 
-private val DarkColorScheme = darkColors(
+private val DarkColorScheme = darkColorScheme(
     primary = White,
-    primaryVariant = LightWhite,
     secondary = EbonyClay,
+    tertiary = LightWhite,
     background = EbonyClay,
     surface = EbonyClay,
     error = Color.Red,
@@ -48,16 +48,27 @@ fun ReaderCollectionApp(
         AppCompatDelegate.MODE_NIGHT_NO -> false
         else -> isSystemInDarkTheme()
     }
+    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
+
     val systemBarAsBackground = if (darkTheme) {
-        SystemBarStyle.dark(AndroidColor.TRANSPARENT)
+        SystemBarStyle.dark(
+            colors.secondary.toArgb(),
+        )
     } else {
-        SystemBarStyle.light(AndroidColor.TRANSPARENT, AndroidColor.TRANSPARENT)
+        SystemBarStyle.light(
+            colors.secondary.toArgb(),
+            colors.secondary.toArgb(),
+        )
     }
     val systemBarOppositeToBackground = if (darkTheme) {
-        SystemBarStyle.light(AndroidColor.TRANSPARENT, AndroidColor.TRANSPARENT)
+        SystemBarStyle.light(
+            colors.primary.toArgb(),
+            colors.primary.toArgb(),
+        )
     } else {
-        SystemBarStyle.dark(AndroidColor.TRANSPARENT)
+        SystemBarStyle.dark(colors.primary.toArgb())
     }
+
     val statusBarStyle = if (statusBarSameAsBackground) {
         systemBarAsBackground
     } else {
@@ -89,7 +100,7 @@ fun ReaderCollectionTheme(
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colors = if (darkTheme) DarkColorScheme else LightColorScheme,
+        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content,

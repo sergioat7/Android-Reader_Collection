@@ -7,36 +7,32 @@ package aragones.sergio.readercollection.presentation.books
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
-import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -62,7 +58,6 @@ import aragones.sergio.readercollection.presentation.components.CustomFilterChip
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
-import aragones.sergio.readercollection.presentation.components.ModalBottomSheet
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.components.ReadingBookItem
 import aragones.sergio.readercollection.presentation.components.SearchBar
@@ -74,6 +69,7 @@ import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksScreen(
     state: BooksUiState,
@@ -87,13 +83,39 @@ fun BooksScreen(
     onAddBook: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val sheetState = rememberModalBottomSheetState(initialValue = ModalBottomSheetValue.Hidden)
+    val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     var selectedBook by remember { mutableStateOf<Book?>(null) }
 
-    ModalBottomSheet(
-        sheetState = sheetState,
-        sheetContent = {
+    Box(modifier = modifier.fillMaxSize()) {
+        BooksScreenContent(
+            state = state,
+            onSortClick = onSortClick,
+            onSearch = onSearch,
+            onBookClick = onBookClick,
+            onLongClickBook = { book ->
+                selectedBook = book
+                coroutineScope.launch {
+                    sheetState.show()
+                }
+            },
+            onShowAll = onShowAll,
+            onSwitchToLeft = onSwitchToLeft,
+            onSwitchToRight = onSwitchToRight,
+        )
+        ListButton(
+            image = R.drawable.ic_save_book,
+            onClick = onAddBook,
+            modifier = Modifier.align(Alignment.BottomEnd),
+        )
+    }
+    if (sheetState.isVisible) {
+        ModalBottomSheet(
+            onDismissRequest = {},
+            modifier = modifier,
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.background,
+        ) {
             selectedBook?.let { book ->
                 BottomSheetContent(
                     book = book,
@@ -112,37 +134,8 @@ fun BooksScreen(
                     },
                 )
             }
-        },
-        background = {
-            Box(
-                modifier = modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background)
-                    .padding(WindowInsets.statusBars.asPaddingValues()),
-            ) {
-                BooksScreenContent(
-                    state = state,
-                    onSortClick = onSortClick,
-                    onSearch = onSearch,
-                    onBookClick = onBookClick,
-                    onLongClickBook = { book ->
-                        selectedBook = book
-                        coroutineScope.launch {
-                            sheetState.show()
-                        }
-                    },
-                    onShowAll = onShowAll,
-                    onSwitchToLeft = onSwitchToLeft,
-                    onSwitchToRight = onSwitchToRight,
-                )
-                ListButton(
-                    image = R.drawable.ic_save_book,
-                    onClick = onAddBook,
-                    modifier = Modifier.align(Alignment.BottomEnd),
-                )
-            }
-        },
-    )
+        }
+    }
     if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
@@ -176,8 +169,8 @@ private fun BooksScreenContent(
     Column(modifier = modifier) {
         CustomToolbar(
             title = stringResource(R.string.title_books),
-            modifier = Modifier.background(MaterialTheme.colors.background),
             subtitle = subtitle,
+            backgroundColor = MaterialTheme.colorScheme.background,
             actions = {
                 TopAppBarIcon(
                     icon = R.drawable.ic_sort_books,
@@ -302,11 +295,11 @@ private fun ReadingBooksSection(
             )
         }
         Spacer(Modifier.height(16.dp))
-        Divider(
+        HorizontalDivider(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
-            color = MaterialTheme.colors.primaryVariant,
+            color = MaterialTheme.colorScheme.tertiary,
         )
         Spacer(Modifier.height(16.dp))
     }
@@ -383,11 +376,11 @@ private fun BooksSection(
             }
             if (showDivider) {
                 Spacer(Modifier.height(16.dp))
-                Divider(
+                HorizontalDivider(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp),
-                    color = MaterialTheme.colors.primaryVariant,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
             }
             Spacer(Modifier.height(16.dp))
@@ -406,8 +399,8 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
         Text(
             text = title,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.displayMedium,
+            color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -415,8 +408,8 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
             TextButton(onClick = onShowAll) {
                 Text(
                     text = stringResource(R.string.show_all),
-                    style = MaterialTheme.typography.h3,
-                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.displaySmall,
+                    color = MaterialTheme.colorScheme.primary,
                     overflow = TextOverflow.Ellipsis,
                     maxLines = 1,
                 )
@@ -439,13 +432,13 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(R.drawable.ic_arrow_circle_right),
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
         Text(
             text = stringResource(R.string.show_all),
-            style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.displayMedium,
+            color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -454,44 +447,52 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
 
 @Composable
 private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDone: () -> Unit) {
-    Text(
-        text = book.title ?: "",
-        style = MaterialTheme.typography.h1,
-        color = MaterialTheme.colors.primary,
-        textAlign = TextAlign.Center,
-        overflow = TextOverflow.Ellipsis,
-    )
-    Spacer(Modifier.height(8.dp))
-    Divider(
-        modifier = Modifier.fillMaxWidth(),
-        color = MaterialTheme.colors.primaryVariant,
-    )
-    Row(
+    Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 24.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        for (state in MyConstants.STATES) {
-            CustomFilterChip(
-                title = state.name,
-                selected = state.id == book.state,
-                onClick = { onStateClick(state.id) },
-                modifier = Modifier.widthIn(min = 100.dp),
-                border = BorderStroke(
-                    width = 1.dp,
-                    color = MaterialTheme.colors.primaryVariant,
-                ).takeIf { state.id == book.state },
-                selectedImage = Icons.Default.Done,
-            )
+        Text(
+            text = book.title ?: "",
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Spacer(Modifier.height(8.dp))
+        HorizontalDivider(
+            modifier = Modifier.fillMaxWidth(),
+            color = MaterialTheme.colorScheme.tertiary,
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            for (state in MyConstants.STATES) {
+                CustomFilterChip(
+                    title = state.name,
+                    selected = state.id == book.state,
+                    onClick = { onStateClick(state.id) },
+                    border = BorderStroke(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.tertiary,
+                    ),
+                    selectedImage = Icons.Default.Done.takeIf { state.id == book.state },
+                )
+            }
         }
+        MainActionButton(
+            text = stringResource(R.string.accept),
+            modifier = Modifier.fillMaxWidth(),
+            enabled = true,
+            onClick = onDone,
+        )
+        Spacer(Modifier.height(24.dp))
     }
-    MainActionButton(
-        text = stringResource(R.string.accept),
-        modifier = Modifier.fillMaxWidth(),
-        enabled = true,
-        onClick = onDone,
-    )
 }
 
 @PreviewLightDark

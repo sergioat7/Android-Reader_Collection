@@ -9,24 +9,21 @@ import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import androidx.compose.foundation.ScrollState
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -76,12 +73,7 @@ fun StatisticsScreen(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(WindowInsets.statusBars.asPaddingValues()),
-    ) {
+    Column(modifier = modifier.fillMaxSize()) {
         StatisticsToolbar(
             state = state,
             scrollState = scrollState,
@@ -93,7 +85,7 @@ fun StatisticsScreen(
             scrollState = scrollState,
             onGroupClick = onGroupClick,
             onBookClick = onBookClick,
-            modifier = Modifier.padding(12.dp),
+            modifier = Modifier.padding(horizontal = 12.dp),
         )
     }
     if (state is StatisticsUiState.Success && state.isLoading) {
@@ -114,14 +106,15 @@ private fun StatisticsToolbar(
         is StatisticsUiState.Success -> state.totalBooksRead
     }
 
+    val elevation = when (scrollState.value) {
+        0 -> 0.dp
+        else -> 4.dp
+    }
     CustomToolbar(
         title = stringResource(R.string.title_stats),
-        modifier = modifier.background(MaterialTheme.colors.background),
-        elevation = when (scrollState.value) {
-            0 -> 0.dp
-            else -> 4.dp
-        },
+        modifier = modifier.shadow(elevation),
         subtitle = pluralStringResource(R.plurals.title_books_count, booksRead, booksRead),
+        backgroundColor = MaterialTheme.colorScheme.background,
         actions = {
             TopAppBarIcon(
                 icon = R.drawable.ic_file_import,
@@ -396,8 +389,8 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
             Column {
                 Text(
                     text = stringResource(R.string.shorter_book),
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.description,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(
@@ -415,8 +408,8 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
             Column {
                 Text(
                     text = stringResource(R.string.longer_book),
-                    style = MaterialTheme.typography.body1,
-                    color = MaterialTheme.colors.description,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.description,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(

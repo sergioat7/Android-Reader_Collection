@@ -24,17 +24,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FractionalThreshold
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.SwipeToDismiss
-import androidx.compose.material.Text
-import androidx.compose.material.rememberDismissState
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -49,6 +46,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
+import aragones.sergio.readercollection.presentation.theme.isLight
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import aragones.sergio.readercollection.presentation.theme.selector
 import com.aragones.sergio.util.extensions.isNotBlank
@@ -66,9 +64,9 @@ fun BookItem(
         modifier = modifier
             .background(
                 if (isDragging) {
-                    MaterialTheme.colors.selector
+                    MaterialTheme.colorScheme.selector
                 } else {
-                    MaterialTheme.colors.background
+                    MaterialTheme.colorScheme.background
                 },
             ).fillMaxWidth()
             .height(220.dp)
@@ -87,13 +85,13 @@ fun BookItem(
                 Icon(
                     painter = painterResource(R.drawable.ic_enable_drag),
                     contentDescription = null,
-                    tint = MaterialTheme.colors.primary,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
             }
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = if (MaterialTheme.colors.isLight) {
+                placeholder = if (MaterialTheme.colorScheme.isLight()) {
                     R.drawable.ic_default_book_cover_blue
                 } else {
                     R.drawable.ic_default_book_cover_white
@@ -114,11 +112,11 @@ fun BookItem(
             Spacer(Modifier.width(24.dp))
         }
         if (showDivider) {
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 24.dp),
-                color = MaterialTheme.colors.primaryVariant,
+                color = MaterialTheme.colorScheme.tertiary,
             )
         }
     }
@@ -129,8 +127,8 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
     Column(modifier) {
         Text(
             text = book.title ?: "",
-            style = MaterialTheme.typography.h1,
-            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 4,
         )
@@ -138,8 +136,8 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
             Spacer(Modifier.height(8.dp))
             Text(
                 text = book.authorsToString(),
-                style = MaterialTheme.typography.body1,
-                color = MaterialTheme.colors.description,
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.description,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -153,8 +151,8 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
         } else {
             Text(
                 text = stringResource(R.string.new_book),
-                style = MaterialTheme.typography.h1,
-                color = MaterialTheme.colors.roseBud,
+                style = MaterialTheme.typography.displayLarge,
+                color = MaterialTheme.colorScheme.roseBud,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -175,8 +173,8 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
         Spacer(Modifier.width(12.dp))
         Text(
             text = rating.toInt().toString(),
-            style = MaterialTheme.typography.h2,
-            color = MaterialTheme.colors.roseBud,
+            style = MaterialTheme.typography.displayMedium,
+            color = MaterialTheme.colorScheme.roseBud,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -192,7 +190,7 @@ fun ReadingBookItem(
 ) {
     Column(
         modifier = modifier
-            .background(MaterialTheme.colors.background)
+            .background(MaterialTheme.colorScheme.background)
             .padding(horizontal = 24.dp)
             .fillMaxWidth()
             .combinedClickable(
@@ -208,7 +206,7 @@ fun ReadingBookItem(
         Spacer(Modifier.height(8.dp))
         ImageWithLoading(
             imageUrl = book.thumbnail,
-            placeholder = if (MaterialTheme.colors.isLight) {
+            placeholder = if (MaterialTheme.colorScheme.isLight()) {
                 R.drawable.ic_default_book_cover_blue
             } else {
                 R.drawable.ic_default_book_cover_white
@@ -223,8 +221,8 @@ fun ReadingBookItem(
 private fun BookBasicInfo(title: String, subtitle: String) {
     Text(
         text = title,
-        style = MaterialTheme.typography.h3,
-        color = MaterialTheme.colors.primary,
+        style = MaterialTheme.typography.displaySmall,
+        color = MaterialTheme.colorScheme.primary,
         overflow = TextOverflow.Ellipsis,
         maxLines = 2,
     )
@@ -232,8 +230,8 @@ private fun BookBasicInfo(title: String, subtitle: String) {
         Spacer(Modifier.height(4.dp))
         Text(
             text = subtitle,
-            style = MaterialTheme.typography.body2,
-            color = MaterialTheme.colors.description,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.description,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )
@@ -261,7 +259,7 @@ fun VerticalBookItem(
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_left),
                         contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -271,7 +269,7 @@ fun VerticalBookItem(
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_right),
                         contentDescription = null,
-                        tint = MaterialTheme.colors.primary,
+                        tint = MaterialTheme.colorScheme.primary,
                     )
                 }
             }
@@ -286,7 +284,7 @@ fun VerticalBookItem(
         ) {
             ImageWithLoading(
                 imageUrl = book.thumbnail,
-                placeholder = if (MaterialTheme.colors.isLight) {
+                placeholder = if (MaterialTheme.colorScheme.isLight()) {
                     R.drawable.ic_default_book_cover_blue
                 } else {
                     R.drawable.ic_default_book_cover_white
@@ -303,42 +301,40 @@ fun VerticalBookItem(
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeItem(
-    direction: DismissDirection,
-    dismissValue: DismissValue,
+    direction: SwipeDirection,
+    dismissValue: SwipeToDismissBoxValue,
     threshold: Float,
     onSwipe: () -> Unit,
     background: @Composable RowScope.() -> Unit,
     content: @Composable RowScope.() -> Unit,
 ) {
-    val swipeState = rememberDismissState(
-        confirmStateChange = {
+    val swipeState = rememberSwipeToDismissBoxState(
+        confirmValueChange = {
             if (it == dismissValue) onSwipe()
             false
         },
+        positionalThreshold = { it * threshold },
     )
-    SwipeToDismiss(
+    SwipeToDismissBox(
         state = swipeState,
-        directions = setOf(direction),
-        dismissThresholds = {
-            FractionalThreshold(threshold)
-        },
-        background = background,
-        dismissContent = content,
+        enableDismissFromStartToEnd = direction == SwipeDirection.RIGHT,
+        enableDismissFromEndToStart = direction == SwipeDirection.LEFT,
+        backgroundContent = background,
+        content = content,
     )
 }
 
 @Composable
-fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = null) {
+fun SwipeItemBackground(dismissValue: SwipeToDismissBoxValue, color: Color, icon: Int? = null) {
     Row(modifier = Modifier.fillMaxSize()) {
         val alignment = when (dismissValue) {
-            DismissValue.Default -> Alignment.Center
-            DismissValue.DismissedToEnd -> Alignment.CenterStart
-            DismissValue.DismissedToStart -> Alignment.CenterEnd
+            SwipeToDismissBoxValue.Settled -> Alignment.Center
+            SwipeToDismissBoxValue.StartToEnd -> Alignment.CenterStart
+            SwipeToDismissBoxValue.EndToStart -> Alignment.CenterEnd
         }
-        if (dismissValue == DismissValue.DismissedToStart) {
+        if (dismissValue == SwipeToDismissBoxValue.EndToStart) {
             Spacer(modifier = Modifier.fillMaxWidth(.1f))
         }
         Box(
@@ -346,7 +342,7 @@ fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = n
                 .background(color)
                 .fillMaxHeight()
                 .run {
-                    if (dismissValue == DismissValue.DismissedToEnd) {
+                    if (dismissValue == SwipeToDismissBoxValue.StartToEnd) {
                         fillMaxWidth(0.9f)
                     } else {
                         fillMaxWidth()
@@ -365,6 +361,12 @@ fun SwipeItemBackground(dismissValue: DismissValue, color: Color, icon: Int? = n
             }
         }
     }
+}
+
+enum class SwipeDirection {
+    LEFT,
+    RIGHT,
+    NONE,
 }
 
 @PreviewLightDarkWithBackground
@@ -510,14 +512,14 @@ private fun VerticalBookItemPreview() {
 private fun SwipeItemToLeftPreview() {
     ReaderCollectionTheme {
         SwipeItem(
-            direction = DismissDirection.EndToStart,
-            dismissValue = DismissValue.DismissedToStart,
+            direction = SwipeDirection.LEFT,
+            dismissValue = SwipeToDismissBoxValue.EndToStart,
             threshold = 0.6f,
             onSwipe = {},
             background = {
                 SwipeItemBackground(
-                    dismissValue = DismissValue.DismissedToStart,
-                    color = MaterialTheme.colors.roseBud,
+                    dismissValue = SwipeToDismissBoxValue.EndToStart,
+                    color = MaterialTheme.colorScheme.roseBud,
                     icon = R.drawable.ic_save_book,
                 )
             },
@@ -533,14 +535,14 @@ private fun SwipeItemToLeftPreview() {
 private fun SwipeItemToRightPreview() {
     ReaderCollectionTheme {
         SwipeItem(
-            direction = DismissDirection.StartToEnd,
-            dismissValue = DismissValue.DismissedToEnd,
+            direction = SwipeDirection.RIGHT,
+            dismissValue = SwipeToDismissBoxValue.StartToEnd,
             threshold = 0.6f,
             onSwipe = {},
             background = {
                 SwipeItemBackground(
-                    dismissValue = DismissValue.DismissedToEnd,
-                    color = MaterialTheme.colors.roseBud,
+                    dismissValue = SwipeToDismissBoxValue.StartToEnd,
+                    color = MaterialTheme.colorScheme.roseBud,
                     icon = R.drawable.ic_remove_book,
                 )
             },

@@ -2,7 +2,6 @@
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 19/3/2024
  */
-@file:Suppress("UsingMaterialAndMaterial3Libraries")
 
 package aragones.sergio.readercollection.presentation.components
 
@@ -19,16 +18,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.material.TextButton
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -68,7 +67,7 @@ fun ConfirmationAlertDialog(
             ),
         ) {
             Surface(
-                color = MaterialTheme.colors.background,
+                color = MaterialTheme.colorScheme.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("confirmationAlertDialog"),
             ) {
@@ -109,7 +108,7 @@ fun InformationAlertDialog(show: Boolean, text: String, onDismiss: () -> Unit) {
             ),
         ) {
             Surface(
-                color = MaterialTheme.colors.background,
+                color = MaterialTheme.colorScheme.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("informationAlertDialog"),
             ) {
@@ -153,7 +152,7 @@ fun TextFieldAlertDialog(
             ),
         ) {
             Surface(
-                color = MaterialTheme.colors.background,
+                color = MaterialTheme.colorScheme.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.testTag("textFieldAlertDialog"),
             ) {
@@ -174,13 +173,14 @@ fun TextFieldAlertDialog(
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
                             .border(
-                                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                                 shape = MaterialTheme.shapes.medium,
                             ).testTag("textField"),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = MaterialTheme.colors.primary,
-                            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
-                            textColor = MaterialTheme.colors.description,
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = MaterialTheme.colorScheme.primary,
+                            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+                            focusedTextColor = MaterialTheme.colorScheme.description,
+                            unfocusedTextColor = MaterialTheme.colorScheme.description,
                         ),
                         shape = MaterialTheme.shapes.medium,
                         singleLine = true,
@@ -231,7 +231,7 @@ fun SortingPickerAlertDialog(
             ),
         ) {
             Surface(
-                color = MaterialTheme.colors.background,
+                color = MaterialTheme.colorScheme.background,
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier
                     .fillMaxWidth(if (isPortrait) 0.9f else 0.5f)
@@ -318,7 +318,7 @@ fun CustomDatePickerDialog(
             )
         },
         colors = DatePickerDefaults.colors(
-            containerColor = MaterialTheme.colors.background,
+            containerColor = MaterialTheme.colorScheme.background,
         ),
     ) {
         DatePicker(
@@ -327,36 +327,36 @@ fun CustomDatePickerDialog(
                 Text(
                     text = stringResource(R.string.select_a_date),
                     modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
-                    style = MaterialTheme.typography.h2,
-                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = MaterialTheme.colorScheme.primary,
                 )
             },
             showModeToggle = false,
             colors = DatePickerDefaults.colors(
-                containerColor = MaterialTheme.colors.background,
-                titleContentColor = MaterialTheme.colors.primary,
-                headlineContentColor = MaterialTheme.colors.primary,
-                weekdayContentColor = MaterialTheme.colors.primary,
-                subheadContentColor = MaterialTheme.colors.primary,
-                navigationContentColor = MaterialTheme.colors.primary,
-                yearContentColor = MaterialTheme.colors.primary,
-                disabledYearContentColor = MaterialTheme.colors.primary,
-                currentYearContentColor = MaterialTheme.colors.primary,
-                selectedYearContentColor = MaterialTheme.colors.primary,
-                disabledSelectedYearContentColor = MaterialTheme.colors.primary,
-                selectedYearContainerColor = MaterialTheme.colors.roseBud,
-                disabledSelectedYearContainerColor = MaterialTheme.colors.primary,
-                dayContentColor = MaterialTheme.colors.primary,
-                disabledDayContentColor = MaterialTheme.colors.primary,
-                selectedDayContentColor = MaterialTheme.colors.primary,
-                disabledSelectedDayContentColor = MaterialTheme.colors.primary,
-                selectedDayContainerColor = MaterialTheme.colors.roseBud,
-                disabledSelectedDayContainerColor = MaterialTheme.colors.primary,
-                todayContentColor = MaterialTheme.colors.primary,
-                todayDateBorderColor = MaterialTheme.colors.primary,
-                dayInSelectionRangeContentColor = MaterialTheme.colors.primary,
-                dayInSelectionRangeContainerColor = MaterialTheme.colors.primary,
-                dividerColor = MaterialTheme.colors.primary,
+                containerColor = MaterialTheme.colorScheme.background,
+                titleContentColor = MaterialTheme.colorScheme.primary,
+                headlineContentColor = MaterialTheme.colorScheme.primary,
+                weekdayContentColor = MaterialTheme.colorScheme.primary,
+                subheadContentColor = MaterialTheme.colorScheme.primary,
+                navigationContentColor = MaterialTheme.colorScheme.primary,
+                yearContentColor = MaterialTheme.colorScheme.primary,
+                disabledYearContentColor = MaterialTheme.colorScheme.primary,
+                currentYearContentColor = MaterialTheme.colorScheme.primary,
+                selectedYearContentColor = MaterialTheme.colorScheme.primary,
+                disabledSelectedYearContentColor = MaterialTheme.colorScheme.primary,
+                selectedYearContainerColor = MaterialTheme.colorScheme.roseBud,
+                disabledSelectedYearContainerColor = MaterialTheme.colorScheme.primary,
+                dayContentColor = MaterialTheme.colorScheme.primary,
+                disabledDayContentColor = MaterialTheme.colorScheme.primary,
+                selectedDayContentColor = MaterialTheme.colorScheme.primary,
+                disabledSelectedDayContentColor = MaterialTheme.colorScheme.primary,
+                selectedDayContainerColor = MaterialTheme.colorScheme.roseBud,
+                disabledSelectedDayContainerColor = MaterialTheme.colorScheme.primary,
+                todayContentColor = MaterialTheme.colorScheme.primary,
+                todayDateBorderColor = MaterialTheme.colorScheme.primary,
+                dayInSelectionRangeContentColor = MaterialTheme.colorScheme.primary,
+                dayInSelectionRangeContainerColor = MaterialTheme.colorScheme.primary,
+                dividerColor = MaterialTheme.colorScheme.primary,
             ),
         )
     }
@@ -367,8 +367,8 @@ private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.h2,
-        color = MaterialTheme.colors.primary,
+        style = MaterialTheme.typography.displayMedium,
+        color = MaterialTheme.colorScheme.primary,
     )
 }
 
@@ -377,8 +377,8 @@ private fun TextMessageAlertDialog(text: String, modifier: Modifier = Modifier) 
     Text(
         text = text,
         modifier = modifier,
-        style = MaterialTheme.typography.body1,
-        color = MaterialTheme.colors.primary,
+        style = MaterialTheme.typography.bodyLarge,
+        color = MaterialTheme.colorScheme.primary,
     )
 }
 
@@ -394,8 +394,8 @@ private fun TextButtonAlertDialog(
     ) {
         Text(
             text = text.uppercase(),
-            style = MaterialTheme.typography.h3,
-            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.displaySmall,
+            color = MaterialTheme.colorScheme.primary,
         )
     }
 }

@@ -13,27 +13,25 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Button
-import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.DismissDirection
-import androidx.compose.material.DismissValue
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismissBoxValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.pullToRefresh
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -41,6 +39,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -55,12 +54,14 @@ import aragones.sergio.readercollection.presentation.components.BookItem
 import aragones.sergio.readercollection.presentation.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
+import aragones.sergio.readercollection.presentation.components.SwipeDirection
 import aragones.sergio.readercollection.presentation.components.SwipeItem
 import aragones.sergio.readercollection.presentation.components.SwipeItemBackground
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(
     state: SearchUiState,
@@ -90,27 +91,33 @@ fun SearchScreen(
         is SearchUiState.Error -> state.isLoading to state.query
     }
 
-    val pullRefreshState = rememberPullRefreshState(
-        refreshing = isLoading,
-        onRefresh = onRefresh,
-    )
+    val pullRefreshState = rememberPullToRefreshState()
+
+    val elevation = if (showTopButton && !isLoading) 4.dp else 0.dp
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colors.background)
-            .padding(WindowInsets.systemBars.asPaddingValues()),
+            .background(MaterialTheme.colorScheme.background),
     ) {
         CustomSearchBar(
             title = stringResource(R.string.title_search),
             query = query ?: "",
             onSearch = onSearch,
-            modifier = Modifier.background(MaterialTheme.colors.background),
-            elevation = if (showTopButton && !isLoading) 4.dp else 0.dp,
+            modifier = Modifier.shadow(elevation),
+            backgroundColor = MaterialTheme.colorScheme.background,
             onBack = onBack,
         )
 
-        val modifier = if (query != null) Modifier.pullRefresh(pullRefreshState) else Modifier
+        val modifier = if (query != null) {
+            Modifier.pullToRefresh(
+                isRefreshing = isLoading,
+                state = pullRefreshState,
+                onRefresh = onRefresh,
+            )
+        } else {
+            Modifier
+        }
 
         Box(
             modifier = modifier.fillMaxSize(),
@@ -154,12 +161,22 @@ fun SearchScreen(
                     ErrorContent()
                 }
             }
-            PullRefreshIndicator(
-                refreshing = isLoading,
-                state = pullRefreshState,
+            PullToRefreshBox(
+                isRefreshing = isLoading,
+                onRefresh = onRefresh,
                 modifier = Modifier.align(Alignment.TopCenter),
-                backgroundColor = MaterialTheme.colors.secondary,
-                contentColor = MaterialTheme.colors.primary,
+                state = pullRefreshState,
+                contentAlignment = Alignment.TopCenter,
+                indicator = {
+                    Indicator(
+                        state = pullRefreshState,
+                        isRefreshing = isLoading,
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.secondary,
+                    )
+                },
+                content = {},
             )
         }
     }
@@ -210,14 +227,14 @@ private fun SearchContent(
             itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
                     SwipeItem(
-                        direction = DismissDirection.EndToStart,
-                        dismissValue = DismissValue.DismissedToStart,
+                        direction = SwipeDirection.LEFT,
+                        dismissValue = SwipeToDismissBoxValue.EndToStart,
                         threshold = 0.6f,
                         onSwipe = { onSwipe(book.id) },
                         background = {
                             SwipeItemBackground(
-                                dismissValue = DismissValue.DismissedToStart,
-                                color = MaterialTheme.colors.roseBud,
+                                dismissValue = SwipeToDismissBoxValue.EndToStart,
+                                color = MaterialTheme.colorScheme.roseBud,
                                 icon = R.drawable.ic_save_book,
                             )
                         },
@@ -268,8 +285,8 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         onClick = onClick,
         modifier = modifier.padding(12.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = MaterialTheme.colors.primary,
-            disabledBackgroundColor = MaterialTheme.colors.primaryVariant,
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContainerColor = MaterialTheme.colorScheme.tertiary,
         ),
         shape = MaterialTheme.shapes.large,
     ) {
@@ -277,13 +294,13 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
             Icon(
                 painter = painterResource(R.drawable.ic_add_circle_outline),
                 contentDescription = null,
-                tint = MaterialTheme.colors.secondary,
+                tint = MaterialTheme.colorScheme.secondary,
             )
             Text(
                 text = stringResource(R.string.load_more),
                 modifier = Modifier.padding(12.dp),
-                style = MaterialTheme.typography.button,
-                color = MaterialTheme.colors.secondary,
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.secondary,
                 maxLines = 1,
             )
         }

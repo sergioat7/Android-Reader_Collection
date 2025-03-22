@@ -14,35 +14,27 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.Button
-import androidx.compose.material.Divider
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FilterChip
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.ModalBottomSheetLayout
-import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue.Expanded
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FilterChipDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -95,15 +87,15 @@ fun NoResultsComponent(
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth(0.5f),
-            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
         )
         Text(
             text = text,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(24.dp),
-            style = MaterialTheme.typography.h1,
-            color = MaterialTheme.colors.primary,
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
         )
     }
@@ -126,12 +118,15 @@ fun StarRatingBar(
     ) {
         for (i in 1..maxStars) {
             val (icon, tint) = when {
-                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colors.roseBud)
+                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colorScheme.roseBud)
                 i.toFloat() == rating + 0.5f -> Pair(
                     R.drawable.ic_round_star_half_24,
-                    MaterialTheme.colors.roseBud,
+                    MaterialTheme.colorScheme.roseBud,
                 )
-                else -> Pair(R.drawable.ic_round_star_border_24, MaterialTheme.colors.lightRoseBud)
+                else -> Pair(
+                    R.drawable.ic_round_star_border_24,
+                    MaterialTheme.colorScheme.lightRoseBud,
+                )
             }
             Icon(
                 painter = painterResource(icon),
@@ -158,9 +153,9 @@ fun SearchBar(
     onSearch: (String) -> Unit,
     modifier: Modifier = Modifier,
     showLeadingIcon: Boolean = false,
-    inputHintTextColor: Color = MaterialTheme.colors.primaryVariant,
-    textColor: Color = MaterialTheme.colors.primary,
-    textStyle: TextStyle = MaterialTheme.typography.body1,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     requestFocusByDefault: Boolean = true,
 ) {
     var textFieldValueState by remember {
@@ -186,7 +181,7 @@ fun SearchBar(
         Text(
             text = stringResource(R.string.search),
             color = inputHintTextColor,
-            style = MaterialTheme.typography.body1,
+            style = MaterialTheme.typography.bodyLarge,
         )
     }
     val leadingIcon: @Composable (() -> Unit)? = if (showLeadingIcon) {
@@ -194,7 +189,7 @@ fun SearchBar(
             Icon(
                 painter = painterResource(R.drawable.ic_search),
                 contentDescription = null,
-                tint = MaterialTheme.colors.primary,
+                tint = MaterialTheme.colorScheme.primary,
             )
         }
     } else {
@@ -222,9 +217,9 @@ fun SearchBar(
         value = textFieldValueState,
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = MaterialTheme.colors.primary,
-            unfocusedBorderColor = MaterialTheme.colors.primaryVariant,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
         ),
         textStyle = textStyle.copy(color = textColor),
         placeholder = placeholder,
@@ -249,48 +244,6 @@ fun SearchBar(
 }
 
 @Composable
-fun ModalBottomSheet(
-    sheetState: ModalBottomSheetState,
-    sheetContent: @Composable ColumnScope.() -> Unit,
-    background: @Composable () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    ModalBottomSheetLayout(
-        sheetContent = {
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 24.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Spacer(Modifier.height(8.dp))
-                Box(
-                    modifier = Modifier
-                        .height(5.dp)
-                        .width(32.dp)
-                        .background(
-                            color = MaterialTheme.colors.primary,
-                            shape = MaterialTheme.shapes.medium,
-                        ),
-                )
-                Spacer(Modifier.height(24.dp))
-                sheetContent()
-                Spacer(Modifier.height(8.dp))
-            }
-        },
-        modifier = modifier,
-        sheetState = sheetState,
-        sheetShape = MaterialTheme.shapes.large.copy(
-            bottomStart = CornerSize(0.dp),
-            bottomEnd = CornerSize(0.dp),
-        ),
-        content = background,
-    )
-}
-
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
 fun CustomFilterChip(
     title: String,
     selected: Boolean,
@@ -303,9 +256,19 @@ fun CustomFilterChip(
     FilterChip(
         selected = selected,
         onClick = onClick,
+        label = {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.displaySmall.copy(
+                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
+                ),
+                textAlign = TextAlign.Center,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1,
+            )
+        },
         modifier = modifier,
-        border = border,
-        selectedIcon = selectedIcon?.let {
+        leadingIcon = selectedIcon?.let {
             {
                 Icon(
                     painter = painterResource(it),
@@ -320,18 +283,15 @@ fun CustomFilterChip(
                 )
             }
         },
-        content = {
-            Text(
-                text = title,
-                modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.h3.copy(
-                    fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Normal,
-                ),
-                textAlign = TextAlign.Center,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 1,
-            )
-        },
+        colors = FilterChipDefaults.filterChipColors(
+            labelColor = MaterialTheme.colorScheme.primary,
+            iconColor = MaterialTheme.colorScheme.primary,
+            selectedContainerColor = MaterialTheme.colorScheme.primary,
+            selectedLabelColor = MaterialTheme.colorScheme.secondary,
+            selectedLeadingIconColor = MaterialTheme.colorScheme.secondary,
+            selectedTrailingIconColor = MaterialTheme.colorScheme.secondary,
+        ),
+        border = border?.takeIf { !selected },
     )
 }
 
@@ -340,13 +300,13 @@ fun CustomChip(text: String, modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colors.primary)
+            .background(MaterialTheme.colorScheme.primary)
             .padding(8.dp),
     ) {
         Text(
             text = text,
-            color = MaterialTheme.colors.secondary,
-            style = MaterialTheme.typography.body1,
+            color = MaterialTheme.colorScheme.secondary,
+            style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
             maxLines = 1,
         )
@@ -382,34 +342,6 @@ private fun SearchBarPreview() {
 
 @PreviewLightDarkWithBackground
 @Composable
-private fun ModalBottomSheetPreview() {
-    ReaderCollectionTheme {
-        ModalBottomSheet(
-            sheetState = ModalBottomSheetState(Expanded, LocalDensity.current),
-            sheetContent = {
-                Text("Title")
-                Divider(Modifier.padding(vertical = 24.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    Button({}) {
-                        Text("Button 1")
-                    }
-                    Button({}) {
-                        Text("Button 2")
-                    }
-                }
-            },
-            background = {
-                Box(Modifier.fillMaxSize())
-            },
-        )
-    }
-}
-
-@PreviewLightDarkWithBackground
-@Composable
 private fun FilterChipPreview() {
     ReaderCollectionTheme {
         Row(
@@ -420,7 +352,7 @@ private fun FilterChipPreview() {
                 title = "Value 1",
                 selected = true,
                 onClick = {},
-                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
                 selectedImage = Icons.Default.Done,
             )
             CustomFilterChip(
