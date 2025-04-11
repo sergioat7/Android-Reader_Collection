@@ -45,6 +45,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
@@ -148,6 +149,7 @@ fun CustomOutlinedTextField(
             ),
             textStyle = textStyle.copy(
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
+                lineHeight = 24.sp,
             ),
             label = label?.takeIf { showLabel },
             placeholder = placeholder,
