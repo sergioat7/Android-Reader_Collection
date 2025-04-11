@@ -81,7 +81,7 @@ fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = hiltView
     }
     InformationAlertDialog(show = text.isNotEmpty(), text = text) {
         viewModel.closeDialogs()
-        onBack()
+        if (error != null) onBack()
     }
 
     TextFieldAlertDialog(

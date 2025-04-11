@@ -114,7 +114,7 @@ fun NavGraphBuilder.booksGraph(navController: NavHostController) {
             SearchView(
                 onBookClick = { bookId ->
                     navController.navigate(
-                        Route.BookDetail(bookId = bookId, isGoogleBook = true),
+                        Route.BookDetail(bookId),
                     )
                 },
                 onBack = {

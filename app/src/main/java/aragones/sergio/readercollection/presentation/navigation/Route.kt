@@ -44,7 +44,7 @@ sealed class Route {
     data object Search : Route()
 
     @Serializable
-    data class BookDetail(val bookId: String, val isGoogleBook: Boolean = false) : Route()
+    data class BookDetail(val bookId: String) : Route()
 
     @Serializable
     data class BookList(

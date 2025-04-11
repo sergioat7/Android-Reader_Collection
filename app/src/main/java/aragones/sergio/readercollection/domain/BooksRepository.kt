@@ -92,11 +92,32 @@ class BooksRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
-    fun getBook(googleId: String): Single<Book> = booksLocalDataSource
-        .getBook(googleId)
-        .subscribeOn(ioScheduler)
+    fun getBook(id: String): Single<Pair<Book, Boolean>> = Single
+        .create { emitter ->
+            booksLocalDataSource
+                .getBook(id)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = {
+                        emitter.onSuccess(it.toDomain() to true)
+                    },
+                    onError = {
+                        booksRemoteDataSource
+                            .getBook(id)
+                            .subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribeBy(
+                                onSuccess = {
+                                    emitter.onSuccess(it.toDomain() to false)
+                                }, onError = {
+                                    emitter.onError(it)
+                                }
+                            ).addTo(disposables)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .map { it.toDomain() }
 
     fun createBook(newBook: Book): Completable = Completable
         .create { emitter ->
@@ -213,12 +234,6 @@ class BooksRepository @Inject constructor(
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
-
-    fun getRemoteBook(volumeId: String): Single<Book> = booksRemoteDataSource
-        .getBook(volumeId)
-        .subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-        .map { it.toDomain() }
 
     fun fetchRemoteConfigValues(language: String) =
         booksRemoteDataSource.fetchRemoteConfigValues(language)
