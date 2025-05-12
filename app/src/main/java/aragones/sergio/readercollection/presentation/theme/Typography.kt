@@ -13,14 +13,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 
-private val fonts = FontFamily(
+private val CustomFont = FontFamily(
     Font(R.font.roboto_serif_regular, FontWeight.Normal),
     Font(R.font.roboto_serif_thin, FontWeight.Thin),
     Font(R.font.roboto_serif_bold, FontWeight.Bold),
 )
 
 val Typography = Typography(
-//    defaultFontFamily = fonts,
     displayLarge = TextStyle.H1,
     displayMedium = TextStyle.H2,
     displaySmall = TextStyle.H3,
@@ -33,30 +32,35 @@ private val TextStyle.Companion.H1: TextStyle
     get() = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
+        fontFamily = CustomFont,
     )
 
 private val TextStyle.Companion.H2: TextStyle
     get() = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
+        fontFamily = CustomFont,
     )
 
 private val TextStyle.Companion.H3: TextStyle
     get() = TextStyle(
         fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
+        fontFamily = CustomFont,
     )
 
 private val TextStyle.Companion.Body: TextStyle
     get() = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
+        fontFamily = CustomFont,
     )
 
 private val TextStyle.Companion.BodySmall: TextStyle
     get() = TextStyle(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
+        fontFamily = CustomFont,
     )
 
 private val TextStyle.Companion.Button: TextStyle
@@ -64,4 +68,5 @@ private val TextStyle.Companion.Button: TextStyle
         fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         letterSpacing = 0.5.sp,
+        fontFamily = CustomFont,
     )

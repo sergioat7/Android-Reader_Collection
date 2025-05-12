@@ -94,8 +94,8 @@ android {
 
 dependencies {
 
-    implementation(project(":core:database"))
-    implementation(project(":core:util"))
+    implementation(projects.core.database)
+    implementation(projects.core.util)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
     implementation(libs.android.chart)

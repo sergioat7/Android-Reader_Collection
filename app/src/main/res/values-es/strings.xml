@@ -9,7 +9,7 @@
     <string name="search">Buscar</string>
     <string name="restart">Reiniciar</string>
 
-    <string name="new_version_changes">Debido a problemas con los servidores, a partir de ahora la aplicación sólo funcionará en local. Todos los juegos que guardes quedarán almacenados sola y exclusivamente en la aplicación, por tanto, si la desinstalas, perderás toda la información almacenada. Los juegos que ya tuvieras guardados seguirán estando disponibles mientras no desinstales la aplicación.</string>
+    <string name="new_version_changes">Esta aplicación solo funciona en local. Todos los libros que guardes quedarán almacenados sola y exclusivamente en la aplicación, por tanto, si la desinstalas, perderás toda la información almacenada. Si quieres hacer una copia de seguridad, por si cambias de dispositivo, puedes hacerlo desde la pantalla de Estadísticas.</string>
 
     <string name="message_app_update_downloaded">Se ha descargado una actualización.</string>
 
@@ -24,7 +24,7 @@
     <string name="create_account">Crear cuenta</string>
     <string name="sign_up">Regístrate</string>
     <string name="confirm_password">Confirmar contraseña</string>
-    <string name="username_info">El usuario sólo es necesario para identificarte y poder diferenciar tus libros de los de otro usuario.\n\nSin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla.\n\nSi esto pasa, contacta con el desarrollador de la aplicación, puedes encontrar su correo electrónico en la ficha de la aplicación en Google Play Store.</string>
+    <string name="username_info">El usuario sólo es necesario para identificarte. Sin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla, por lo que es aconsejable tener una copia de seguridad de los libros guardados. La puedes crear desde la pantalla de Estadísticas.</string>
     <string name="wrong_credentials">El usuario o la contraseña son incorrectos</string>
 
     //BOOKS

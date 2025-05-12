@@ -7,6 +7,7 @@ package aragones.sergio.readercollection
 
 import android.app.Application
 import android.content.Context
+import android.os.StrictMode
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -25,6 +26,22 @@ class ReaderCollectionApplication : Application() {
         super.onCreate()
 
         app = this
+
+        if (BuildConfig.DEBUG) {
+            StrictMode.setThreadPolicy(
+                StrictMode.ThreadPolicy.Builder()
+                    .detectAll()
+                    .penaltyFlashScreen()
+                    .penaltyLog()
+                    .build()
+            )
+            StrictMode.setVmPolicy(
+                StrictMode.VmPolicy.Builder()
+                    .detectAll()
+                    .penaltyLog()
+                    .build()
+            )
+        }
     }
     //endregion
 }

@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.components.BookItem
@@ -233,15 +234,16 @@ private fun BookListContent(
                 BookItem(
                     book = book,
                     onBookClick = onBookClick,
-                    modifier = Modifier.composed {
-                        val offset =
-                            dragAndDropListState.elementDisplacement.takeIf {
-                                index == dragAndDropListState.currentIndexOfDraggedItem
-                            } ?: 0f
-                        Modifier.graphicsLayer {
-                            translationY = offset
-                        }
-                    },
+                    modifier = Modifier
+                        .composed {
+                            val offset =
+                                dragAndDropListState.elementDisplacement.takeIf {
+                                    index == dragAndDropListState.currentIndexOfDraggedItem
+                                } ?: 0f
+                            Modifier.graphicsLayer {
+                                translationY = offset
+                            }
+                        }.zIndex(1f.takeIf { draggingIndex == index } ?: 0f),
                     showDivider = index < books.size - 1,
                     isDraggingEnabled = state.isDraggingEnabled,
                     isDragging = index == draggingIndex,

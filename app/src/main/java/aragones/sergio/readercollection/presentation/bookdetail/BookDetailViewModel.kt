@@ -37,7 +37,7 @@ class BookDetailViewModel @Inject constructor(
     private var _state: MutableState<BookDetailUiState> = mutableStateOf(
         BookDetailUiState(
             book = null,
-            isAlreadySaved = !params.isGoogleBook,
+            isAlreadySaved = true,
             isEditable = false,
         ),
     )
@@ -103,16 +103,16 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun createBook(newBook: Book) {
-        if (savedBooks.firstOrNull { it.id == newBook.id } != null) {
-            _infoDialogMessageId.value = R.string.error_resource_found
-            return
-        }
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
         booksRepository
             .createBook(newBook)
             .subscribeBy(
                 onComplete = {
                     _infoDialogMessageId.value = R.string.book_saved
+                    _state.value = _state.value.copy(
+                        isAlreadySaved = true,
+                        isEditable = false,
+                    )
                 },
                 onError = {
                     _bookDetailError.value = ErrorResponse(
@@ -149,6 +149,10 @@ class BookDetailViewModel @Inject constructor(
             .subscribeBy(
                 onComplete = {
                     _infoDialogMessageId.value = R.string.book_removed
+                    _state.value = _state.value.copy(
+                        isAlreadySaved = false,
+                        isEditable = true,
+                    )
                 },
                 onError = {
                     _bookDetailError.value = ErrorResponse(
@@ -184,37 +188,21 @@ class BookDetailViewModel @Inject constructor(
 
     //region Private methods
     private fun fetchBook() {
-        if (!_state.value.isAlreadySaved) {
-            booksRepository
-                .getRemoteBook(params.bookId)
-                .subscribeBy(
-                    onSuccess = {
-                        currentBook = it
-                        _state.value = _state.value.copy(
-                            book = it,
-                            isEditable = true,
-                        )
-                    },
-                    onError = {
-                        _bookDetailError.value = ErrorResponse("", R.string.error_server)
-                    },
-                ).addTo(disposables)
-        } else {
-            booksRepository
-                .getBook(params.bookId)
-                .subscribeBy(
-                    onSuccess = {
-                        currentBook = it
-                        _state.value = _state.value.copy(
-                            book = it,
-                            isEditable = false,
-                        )
-                    },
-                    onError = {
-                        _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                    },
-                ).addTo(disposables)
-        }
+        booksRepository
+            .getBook(params.bookId)
+            .subscribeBy(
+                onSuccess = {
+                    currentBook = it.first
+                    _state.value = _state.value.copy(
+                        book = it.first,
+                        isEditable = !it.second,
+                        isAlreadySaved = it.second,
+                    )
+                },
+                onError = {
+                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                },
+            ).addTo(disposables)
     }
     //endregion
 }
