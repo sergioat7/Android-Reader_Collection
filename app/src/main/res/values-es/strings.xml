@@ -15,7 +15,7 @@
 
     //LOGIN &amp; REGISTRATION
     <string name="invalid_username">Usuario no válido</string>
-    <string name="invalid_password">La contraseña debe tener más de 3 carácteres</string>
+    <string name="invalid_password">La contraseña debe tener al menos 6 carácteres</string>
     <string name="invalid_repeat_password">Las contraseñas no coinciden</string>
     <string name="username">Usuario</string>
     <string name="password">Contraseña</string>

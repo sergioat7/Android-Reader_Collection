@@ -55,7 +55,7 @@ class LandingActivity : ComponentActivity() {
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()
     private val inAppUpdateService by lazy { InAppUpdateService(this) }
-    private var appUpdated = false
+    private var appUpdated = mutableStateOf(false)
     //endregion
 
     //region Lifecycle methods
@@ -117,8 +117,8 @@ class LandingActivity : ComponentActivity() {
                     }
                 }
 
-                LaunchedEffect(appUpdated, animationFinished.value) {
-                    if (appUpdated && animationFinished.value) {
+                LaunchedEffect(appUpdated.value, animationFinished.value) {
+                    if (appUpdated.value && animationFinished.value) {
                         if (!viewModel.newChangesPopupShown) {
                             showDialog.value = true
                         } else {
@@ -156,7 +156,7 @@ class LandingActivity : ComponentActivity() {
                     InstallStatus.INSTALLED,
                     InstallStatus.CANCELED,
                     -> {
-                        appUpdated = true
+                        appUpdated.value = true
                         inAppUpdateService.onDestroy()
                     }
                     InstallStatus.FAILED -> {

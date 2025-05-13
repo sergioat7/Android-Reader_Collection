@@ -26,6 +26,10 @@ class LandingViewModel @Inject constructor(
 
     //region Private properties
     private val _landingClassToStart = MutableStateFlow<Class<*>?>(null)
+    private val user: String
+        get() = userRepository.username
+    private val password: String
+        get() = userRepository.userData.password
     //endregion
 
     //region Public properties
@@ -47,10 +51,28 @@ class LandingViewModel @Inject constructor(
     //region Public methods
     fun checkIsLoggedIn() {
         userRepository.newChangesPopupShown = true
-        _landingClassToStart.value = if (userRepository.isLoggedIn) {
-            MainActivity::class.java
+        if (userRepository.isLoggedIn) {
+            userRepository
+                .login(user, password)
+                .subscribeBy(
+                    onComplete = {
+                        _landingClassToStart.value = MainActivity::class.java
+                    },
+                    onError = {
+                        userRepository
+                            .register(user, password)
+                            .subscribeBy(
+                                onComplete = {
+                                    _landingClassToStart.value = MainActivity::class.java
+                                },
+                                onError = {
+                                    _landingClassToStart.value = MainActivity::class.java
+                                },
+                            ).addTo(disposables)
+                    },
+                ).addTo(disposables)
         } else {
-            LoginActivity::class.java
+            _landingClassToStart.value = LoginActivity::class.java
         }
     }
 
