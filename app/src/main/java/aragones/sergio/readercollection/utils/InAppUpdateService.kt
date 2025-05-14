@@ -76,7 +76,12 @@ class InAppUpdateService @Inject constructor(
                 _installStatus.value = InstallStatus.DOWNLOADED
             } else if (isUpdateAvailable(info)) {
                 CoroutineScope(ioDispatcher).launch {
-                    startUpdate(info, AppUpdateType.FLEXIBLE)
+                    val isThereMandatoryUpdate = userRepository.isThereMandatoryUpdate()
+                    if (isThereMandatoryUpdate) {
+                        startUpdate(info, AppUpdateType.IMMEDIATE)
+                    } else {
+                        startUpdate(info, AppUpdateType.FLEXIBLE)
+                    }
                 }
             } else {
                 _installStatus.value = InstallStatus.INSTALLED
