@@ -18,14 +18,19 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
+    //region Public properties
+    @Inject
+    lateinit var inAppUpdateService: InAppUpdateService
+    //endregion
+
     //region Private properties
     private val viewModel: MainViewModel by viewModels()
-    private lateinit var inAppUpdateService: InAppUpdateService
     //endregion
 
     //region Lifecycle methods
@@ -40,7 +45,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        inAppUpdateService = InAppUpdateService(this)
         lifecycleScope.launch {
             inAppUpdateService.installStatus.collect {
                 if (it == InstallStatus.DOWNLOADED) {

@@ -47,14 +47,19 @@ import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class LandingActivity : ComponentActivity() {
 
+    //region Public properties
+    @Inject
+    lateinit var inAppUpdateService: InAppUpdateService
+    //endregion
+
     //region Private properties
     private val viewModel: LandingViewModel by viewModels()
-    private val inAppUpdateService by lazy { InAppUpdateService(this) }
     private var appUpdated = mutableStateOf(false)
     //endregion
 
