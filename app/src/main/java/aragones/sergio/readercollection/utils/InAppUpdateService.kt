@@ -11,6 +11,8 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.di.IoDispatcher
+import aragones.sergio.readercollection.domain.UserRepository
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
@@ -20,14 +22,17 @@ import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.InstallStatus
 import com.google.android.play.core.install.model.UpdateAvailability
 import com.google.android.play.core.ktx.installStatus
+import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class InAppUpdateService(
+class InAppUpdateService @Inject constructor(
     private val activity: ComponentActivity,
+    private val userRepository: UserRepository,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     //region Private properties
@@ -54,9 +59,7 @@ class InAppUpdateService(
             activity.registerForActivityResult(
                 ActivityResultContracts.StartIntentSenderForResult(),
             ) {
-                if (it.resultCode == AppCompatActivity.RESULT_OK &&
-                    appUpdateType == AppUpdateType.IMMEDIATE
-                ) {
+                if (it.resultCode == AppCompatActivity.RESULT_OK && isImmediateUpdate()) {
                     _installStatus.value = InstallStatus.INSTALLED
                 } else if (it.resultCode != AppCompatActivity.RESULT_OK) {
                     _installStatus.value = InstallStatus.CANCELED
@@ -69,12 +72,16 @@ class InAppUpdateService(
     fun checkVersion() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
 
-            @Suppress("ktlint:standard:max-line-length")
-            if (info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+            if (isUpdateDownloading(info)) {
                 _installStatus.value = InstallStatus.DOWNLOADED
-            } else if (info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE) {
-                CoroutineScope(Dispatchers.IO).launch {
-                    startUpdate(info, AppUpdateType.FLEXIBLE)
+            } else if (isUpdateAvailable(info)) {
+                CoroutineScope(ioDispatcher).launch {
+                    val isThereMandatoryUpdate = userRepository.isThereMandatoryUpdate()
+                    if (isThereMandatoryUpdate) {
+                        startUpdate(info, AppUpdateType.IMMEDIATE)
+                    } else {
+                        startUpdate(info, AppUpdateType.FLEXIBLE)
+                    }
                 }
             } else {
                 _installStatus.value = InstallStatus.INSTALLED
@@ -88,12 +95,9 @@ class InAppUpdateService(
     fun onResume() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
 
-            @Suppress("ktlint:standard:max-line-length")
-            if (appUpdateType == AppUpdateType.FLEXIBLE && info.installStatus == InstallStatus.DOWNLOADED) {
+            if (isFlexibleUpdate() && isUpdateAlreadyInstalled(info)) {
                 flexibleUpdateDownloadCompleted()
-            } else if (appUpdateType == AppUpdateType.IMMEDIATE &&
-                info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
-            ) {
+            } else if (isImmediateUpdate() && isUpdateDownloading(info)) {
                 startUpdate(info, AppUpdateType.IMMEDIATE)
             }
         }
@@ -105,6 +109,19 @@ class InAppUpdateService(
     //endregion
 
     //region Private methods
+    private fun isImmediateUpdate() = appUpdateType == AppUpdateType.IMMEDIATE
+
+    private fun isFlexibleUpdate() = appUpdateType == AppUpdateType.FLEXIBLE
+
+    private fun isUpdateAlreadyInstalled(info: AppUpdateInfo) =
+        info.installStatus == InstallStatus.DOWNLOADED
+
+    private fun isUpdateAvailable(info: AppUpdateInfo) =
+        info.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+
+    private fun isUpdateDownloading(info: AppUpdateInfo) =
+        info.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS
+
     private fun startUpdate(info: AppUpdateInfo, type: Int) {
         appUpdateManager.startUpdateFlowForResult(
             info,

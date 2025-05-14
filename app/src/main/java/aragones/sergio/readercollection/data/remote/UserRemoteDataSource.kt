@@ -6,12 +6,15 @@
 package aragones.sergio.readercollection.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
+import kotlinx.coroutines.tasks.await
 
 class UserRemoteDataSource @Inject constructor(
     private val auth: FirebaseAuth,
+    private val remoteConfig: FirebaseRemoteConfig,
 ) {
 
     private val mailEnd = "@readercollection.app"
@@ -57,6 +60,18 @@ class UserRemoteDataSource @Inject constructor(
     fun deleteUser() = Completable.create { completable ->
         auth.currentUser?.delete()
         completable.onComplete()
+    }
+
+    suspend fun getMinVersion(): Int {
+        remoteConfig.fetch(0)
+        remoteConfig.activate().await()
+
+        val minVersion = remoteConfig.getString("min_version").split(".")
+        if (minVersion.size != 3) return 0
+
+        return minVersion[0].toInt() * 100000 +
+            minVersion[1].toInt() * 1000 +
+            minVersion[2].toInt() * 10
     }
     //endregion
 }

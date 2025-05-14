@@ -233,5 +233,11 @@ class UserRepository @Inject constructor(
     fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
         userLocalDataSource.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
     }
+
+    suspend fun isThereMandatoryUpdate(): Boolean {
+        val currentVersion = userLocalDataSource.getCurrentVersion()
+        val minVersion = userRemoteDataSource.getMinVersion()
+        return currentVersion < minVersion
+    }
     //endregion
 }
