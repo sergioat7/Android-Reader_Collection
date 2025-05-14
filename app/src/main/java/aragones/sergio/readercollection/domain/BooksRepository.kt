@@ -110,9 +110,10 @@ class BooksRepository @Inject constructor(
                             .subscribeBy(
                                 onSuccess = {
                                     emitter.onSuccess(it.toDomain() to false)
-                                }, onError = {
+                                },
+                                onError = {
                                     emitter.onError(it)
-                                }
+                                },
                             ).addTo(disposables)
                     },
                 ).addTo(disposables)
