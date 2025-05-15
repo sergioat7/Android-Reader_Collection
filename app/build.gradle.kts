@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
-    id("kotlin-kapt")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
 }
@@ -73,8 +72,6 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
-        viewBinding = true
         buildConfig = true
         compose = true
     }

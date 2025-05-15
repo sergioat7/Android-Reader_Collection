@@ -33,12 +33,3 @@
 -keep public class * extends java.lang.Exception    # Optional: Keep custom exceptions
 
 -keep class aragones.sergio.readercollection.models.** { <fields>; }
-
-##---------------------Begin: proguard configuration for BindingFragment -------------
-
--keep class ** extends androidx.databinding.ViewDataBinding {
-    public static ** inflate(android.view.LayoutInflater, android.view.ViewGroup, boolean);
-    public static ** bind(android.view.View);
-}
-
-##---------------------End: proguard configuration for BindingFragment ---------------
