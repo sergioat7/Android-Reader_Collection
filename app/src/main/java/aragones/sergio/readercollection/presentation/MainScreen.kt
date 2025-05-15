@@ -60,7 +60,7 @@ fun MainScreen() {
             }
         },
     ) { padding ->
-        Box(modifier = Modifier.padding(padding)) {
+        Box(modifier = Modifier.padding(bottom = padding.calculateBottomPadding())) {
             NavigationStack(navController)
         }
     }
