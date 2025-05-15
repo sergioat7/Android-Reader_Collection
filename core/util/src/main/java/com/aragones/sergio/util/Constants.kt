@@ -28,14 +28,13 @@ object Preferences {
 
 object Constants {
     const val DATE_FORMAT = "yyyy-MM-dd"
-    const val MAX_LINES = Int.MAX_VALUE
     const val EMPTY_VALUE = ""
     const val NO_VALUE = "-"
     const val BOOKS_TO_SHOW = 7
 
     fun isUserNameValid(username: String): Boolean = username.isNotBlank()
 
-    fun isPasswordValid(password: String): Boolean = password.length > 3
+    fun isPasswordValid(password: String): Boolean = password.length > 5
 
     fun getDateFormatToShow(language: String): String = when (language) {
         "es" -> "d MMMM yyyy"
@@ -49,23 +48,10 @@ object BookState {
     const val READ = "READ"
 }
 
-enum class StatusBarStyle {
-    PRIMARY,
-    SECONDARY,
-}
-
 enum class CustomInputType {
     TEXT,
     MULTI_LINE_TEXT,
     NUMBER,
     PASSWORD,
     DATE,
-}
-
-enum class CustomDropdownType {
-    FORMAT,
-    STATE,
-    SORT_PARAM,
-    SORT_ORDER,
-    APP_THEME,
 }

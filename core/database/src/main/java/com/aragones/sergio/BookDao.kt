@@ -28,12 +28,12 @@ interface BookDao {
     @Delete
     fun deleteBooks(books: List<Book>): Completable
 
-    @Query("SELECT * FROM Book")
+    @Query("SELECT * FROM book")
     fun getAllBooks(): Flowable<List<Book>>
 
-    @Query("SELECT * FROM Book WHERE state == 'READ'")
+    @Query("SELECT * FROM book WHERE state == 'READ'")
     fun getReadBooks(): Flowable<List<Book>>
 
-    @Query("SELECT * FROM Book WHERE id == :id")
+    @Query("SELECT * FROM book WHERE id == :id")
     fun getBook(id: String): Single<Book>
 }

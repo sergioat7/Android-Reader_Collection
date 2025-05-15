@@ -3,12 +3,15 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    id("kotlin-kapt")
+    alias(libs.plugins.compose.compiler)
     alias(libs.plugins.google.services)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
+    id("kotlin-kapt")
     id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
-    alias(libs.plugins.hilt)
 }
 
 val keystorePropertiesFile: File = rootProject.file("keystore.properties")
@@ -19,7 +22,7 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 6
-val versionPatch = 1
+val versionPatch = 2
 val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
@@ -84,13 +87,6 @@ android {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
-    kapt {
-        correctErrorTypes = true
-    }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
-    }
     kotlin {
         jvmToolchain(17)
     }
@@ -98,48 +94,41 @@ android {
 
 dependencies {
 
-    implementation(project(":core:database"))
-    implementation(project(":core:util"))
+    implementation(projects.core.database)
+    implementation(projects.core.util)
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.constraintlayout)
-    implementation(libs.fragment.ktx)
-    implementation(libs.material)
-    implementation(libs.legacy.support.v4)
-    implementation(libs.lifecycle.livedata.ktx)
-    implementation(libs.lifecycle.viewmodel.ktx)
-
-    implementation(libs.bundles.navigation)
-    implementation(libs.moshi)
-    kapt(libs.moshi.kotlin.codegen)
+    implementation(libs.android.chart)
+    implementation(libs.app.update.ktx)
+    implementation(libs.bundles.compose)
     implementation(libs.bundles.retrofit)
     implementation(libs.bundles.rx)
-    implementation(libs.picasso)
-    implementation(libs.materialratingbar)
+    implementation(libs.bundles.firebase)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.coil)
+    implementation(libs.core.ktx)
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.lifecycle.viewmodel.ktx)
+    implementation(libs.lottie)
+    implementation(libs.material)
+    implementation(libs.material3)
+    implementation(libs.moshi)
+    ksp(libs.moshi.kotlin.codegen)
+    implementation(libs.navigation.compose)
     implementation(libs.room.runtime)
     implementation(libs.room.rxjava)
     implementation(libs.room.rxjava3.bridge)
-    implementation(platform(libs.firebase.bom))
-    implementation(libs.bundles.firebase)
     implementation(libs.security.crypto)
-    implementation(libs.android.chart)
-    implementation(libs.tap.target.view)
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-    implementation(libs.app.update.ktx)
-
-    debugImplementation(libs.leak.canary)
-
-    implementation(platform(libs.compose.bom))
-    implementation(libs.bundles.compose)
-
-    implementation(libs.coil)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.compose.test.junit)
+
+    debugImplementation(libs.leak.canary)
     debugImplementation(libs.compose.test.manifest)
 }

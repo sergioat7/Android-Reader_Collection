@@ -11,12 +11,12 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-fun <T> String?.toList(): List<T> = if (this != null && this.isNotBlank()) {
+fun String?.toList(): List<String> = if (this != null && this.isNotBlank()) {
     this
         .trimStart()
         .trimEnd()
         .split(",")
-        .toList() as List<T>
+        .toList()
 } else {
     ArrayList()
 }

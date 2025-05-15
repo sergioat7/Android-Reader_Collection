@@ -7,6 +7,8 @@ package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.utils.Constants.FORMATS
+import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.model.Book as BookLocal
 
 fun Book.toLocalData(): BookLocal = BookLocal(
@@ -21,7 +23,11 @@ fun Book.toLocalData(): BookLocal = BookLocal(
     summary = summary,
     isbn = isbn,
     pageCount = pageCount,
-    categories = categories,
+    categories = categories
+        ?.joinToString(" / ")
+        ?.split("/")
+        ?.map { it.trim() }
+        ?.distinct(),
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     rating = rating,
@@ -29,7 +35,6 @@ fun Book.toLocalData(): BookLocal = BookLocal(
     image = image,
     format = format,
     state = state,
-    isFavourite = isFavourite,
     priority = priority,
 )
 
@@ -53,7 +58,6 @@ fun BookLocal.toDomain(): Book = Book(
     image = image,
     format = format,
     state = state,
-    isFavourite = isFavourite,
     priority = priority,
 )
 
@@ -73,14 +77,17 @@ fun GoogleBookResponse.toDomain(): Book = Book(
     summary = null,
     isbn = getGoogleBookIsbn(),
     pageCount = volumeInfo.pageCount ?: 0,
-    categories = volumeInfo.categories,
+    categories = volumeInfo.categories
+        ?.joinToString(" / ")
+        ?.split("/")
+        ?.map { it.trim() }
+        ?.distinct(),
     averageRating = volumeInfo.averageRating ?: 0.0,
     ratingsCount = volumeInfo.ratingsCount ?: 0,
     rating = 0.0,
     thumbnail = getGoogleBookThumbnail(),
     image = getGoogleBookImage(),
-    format = null,
-    state = null,
-    isFavourite = false,
+    format = FORMATS.firstOrNull()?.id,
+    state = STATES.firstOrNull()?.id,
     priority = -1,
 )

@@ -25,11 +25,6 @@ class UserRepository @Inject constructor(
     @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseRepository() {
 
-    //region Private properties
-    private val GOOGLE_USER_TEST = "googleTest"
-    private val GOOGLE_PASSWORD_TEST = "d9MqzK3k1&07"
-    //endregion
-
     //region Public properties
     val username: String
         get() = userLocalDataSource.username
@@ -92,20 +87,10 @@ class UserRepository @Inject constructor(
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { token ->
-                        if (username == GOOGLE_USER_TEST && password == GOOGLE_PASSWORD_TEST) {
-                            val userData =
-                                UserData(GOOGLE_USER_TEST, GOOGLE_PASSWORD_TEST, true)
-                            val authData = AuthData("-")
-                            userLocalDataSource.storeLoginData(userData, authData)
-                            emitter.onComplete()
-                        } else if (userData.username == username && userData.password == password) {
-                            val userData = UserData(username, password, true)
-                            val authData = AuthData(token)
-                            userLocalDataSource.storeLoginData(userData, authData)
-                            emitter.onComplete()
-                        } else {
-                            emitter.onError(IllegalStateException())
-                        }
+                        val userData = UserData(username, password, true)
+                        val authData = AuthData(token)
+                        userLocalDataSource.storeLoginData(userData, authData)
+                        emitter.onComplete()
                     },
                     onError = {
                         emitter.onError(it)
@@ -247,6 +232,12 @@ class UserRepository @Inject constructor(
 
     fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
         userLocalDataSource.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
+    }
+
+    suspend fun isThereMandatoryUpdate(): Boolean {
+        val currentVersion = userLocalDataSource.getCurrentVersion()
+        val minVersion = userRemoteDataSource.getMinVersion()
+        return currentVersion < minVersion
     }
     //endregion
 }

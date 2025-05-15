@@ -16,7 +16,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.text.input.KeyboardType
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.ui.components.TextFieldAlertDialog
+import aragones.sergio.readercollection.presentation.components.TextFieldAlertDialog
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test

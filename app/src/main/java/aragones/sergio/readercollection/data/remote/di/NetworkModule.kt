@@ -9,6 +9,8 @@ import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.data.remote.services.UserApiService
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
@@ -49,4 +51,8 @@ object NetworkModule {
         )
         return remoteConfig
     }
+
+    @Singleton
+    @Provides
+    fun providesFirebaseAuth(): FirebaseAuth = Firebase.auth
 }

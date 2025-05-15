@@ -15,8 +15,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.ui.components.SortingPickerAlertDialog
-import aragones.sergio.readercollection.presentation.ui.components.UiSortingPickerState
+import aragones.sergio.readercollection.presentation.components.SortingPickerAlertDialog
+import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test

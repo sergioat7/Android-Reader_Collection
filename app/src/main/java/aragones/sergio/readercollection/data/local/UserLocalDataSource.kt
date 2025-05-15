@@ -159,5 +159,22 @@ class UserLocalDataSource @Inject constructor(
     fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
         preferences.hasBookDetailsTutorialBeenShown = hasBookDetailsTutorialBeenShown
     }
+
+    fun getCurrentVersion(): Int {
+        return try {
+            val currentVersion = context
+                .packageManager
+                .getPackageInfo(context.packageName, 0)
+                .versionName
+                ?.split(".") ?: listOf()
+            if (currentVersion.size != 3) return 0
+
+            currentVersion[0].toInt() * 100000 +
+                currentVersion[1].toInt() * 1000 +
+                currentVersion[2].toInt() * 10
+        } catch (e: Exception) {
+            0
+        }
+    }
     //endregion
 }

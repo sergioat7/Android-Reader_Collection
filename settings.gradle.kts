@@ -1,8 +1,8 @@
 pluginManagement {
     repositories {
         google()
-        mavenCentral()
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 dependencyResolutionManagement {
@@ -14,7 +14,8 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Reader Collection"
+rootProject.name = "Reader_Collection"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(":app")
-include(":core:util")
 include(":core:database")
+include(":core:util")
