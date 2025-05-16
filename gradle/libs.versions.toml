@@ -1,4 +1,9 @@
 [versions]
+jdk = "17"
+sdk-compile = "35"
+sdk-min = "23"
+sdk-target = "35"
+
 agp = "8.10.0"
 android-chart = "3.1.0"
 androidx-hilt = "1.2.0"
