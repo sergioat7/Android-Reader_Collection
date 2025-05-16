@@ -633,5 +633,10 @@ private class BookDetailScreenPreviewParameterProvider :
                 isAlreadySaved = false,
                 isEditable = false,
             ),
+            BookDetailUiState(
+                book = null,
+                isAlreadySaved = false,
+                isEditable = false,
+            ),
         )
 }
