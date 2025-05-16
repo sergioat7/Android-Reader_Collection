@@ -13,14 +13,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -32,29 +29,24 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.min
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
-import aragones.sergio.readercollection.presentation.components.CollapsingToolbar
-import aragones.sergio.readercollection.presentation.components.CollapsingToolbarNestedScrollConnection
 import aragones.sergio.readercollection.presentation.components.CustomChip
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
+import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.DateCustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
@@ -85,24 +77,15 @@ fun BookDetailScreen(
     onChangeData: (Book) -> Unit,
     onSetImage: () -> Unit,
 ) {
-    val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    val nestedScrollConnection = remember {
-        CollapsingToolbarNestedScrollConnection(
-            maxContentSize = min(400.dp, screenHeight / 2),
-            minContentSize = 56.dp,
-        )
-    }
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
-            .background(MaterialTheme.colorScheme.primary)
-            .nestedScroll(nestedScrollConnection),
+            .background(MaterialTheme.colorScheme.primary),
     ) {
         if (state.book == null) {
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.secondary,
-                modifier = Modifier.align(Alignment.Center),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             )
         } else {
             val actions: @Composable RowScope.() -> Unit = when {
@@ -149,74 +132,68 @@ fun BookDetailScreen(
                 }
             }
             val scrollState = rememberScrollState()
-            CollapsingToolbar(
-                nestedScrollConnection = nestedScrollConnection,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(nestedScrollConnection.currentContentSize),
+            CustomToolbar(
+                title = "",
+                modifier = Modifier,
                 backgroundColor = MaterialTheme.colorScheme.primary,
-                startContent = {
-                    TopAppBarIcon(
-                        icon = R.drawable.ic_arrow_back,
-                        onClick = onBack,
-                        tint = MaterialTheme.colorScheme.secondary,
+                backTintColor = MaterialTheme.colorScheme.secondary,
+                onBack = onBack,
+                actions = actions,
+            )
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(scrollState),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .height(400.dp)
+                        .padding(bottom = 24.dp),
+                ) {
+                    ImageWithLoading(
+                        imageUrl = state.book.thumbnail ?: state.book.image,
+                        placeholder = if (MaterialTheme.colorScheme.isLight()) {
+                            R.drawable.ic_default_book_cover_white
+                        } else {
+                            R.drawable.ic_default_book_cover_blue
+                        },
+                        shape = MaterialTheme.shapes.medium,
+                        contentScale = ContentScale.Fit,
                     )
-                },
-                middleContent = {
-                    Box(modifier = it) {
-                        ImageWithLoading(
-                            imageUrl = state.book.thumbnail ?: state.book.image,
-                            placeholder = if (MaterialTheme.colorScheme.isLight()) {
-                                R.drawable.ic_default_book_cover_white
-                            } else {
-                                R.drawable.ic_default_book_cover_blue
-                            },
-                            shape = MaterialTheme.shapes.medium,
-                            contentScale = ContentScale.Fit,
-                        )
-                        if (state.isEditable) {
-                            FloatingActionButton(
-                                onClick = onSetImage,
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(vertical = 8.dp)
-                                    .offset(0.dp, 24.dp),
-                                contentColor = MaterialTheme.colorScheme.secondary,
-                                containerColor = MaterialTheme.colorScheme.primary,
-                            ) {
-                                Icon(
-                                    painter = painterResource(R.drawable.ic_add_a_photo),
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                )
-                            }
+                    if (state.isEditable) {
+                        FloatingActionButton(
+                            onClick = onSetImage,
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(vertical = 8.dp)
+                                .offset(0.dp, 24.dp),
+                            contentColor = MaterialTheme.colorScheme.secondary,
+                            containerColor = MaterialTheme.colorScheme.primary,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_add_a_photo),
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.secondary,
+                            )
                         }
                     }
-                },
-                endContent = actions,
-            )
-            BookDetailContent(
-                book = state.book,
-                isEditable = state.isEditable,
-                onChangeData = onChangeData,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .offset {
-                        IntOffset(0, nestedScrollConnection.currentContentSize.roundToPx())
-                    }.let {
-                        if (nestedScrollConnection.isExpanded) {
-                            it.clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
-                        } else {
-                            it
-                        }
-                    }.background(MaterialTheme.colorScheme.background)
-                    .padding(
-                        start = 12.dp,
-                        top = 24.dp,
-                        end = 12.dp,
-                        bottom = nestedScrollConnection.currentContentSize,
-                    ).verticalScroll(scrollState),
-            )
+                }
+                BookDetailContent(
+                    book = state.book,
+                    isEditable = state.isEditable,
+                    onChangeData = onChangeData,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
+                        .background(MaterialTheme.colorScheme.background)
+                        .padding(
+                            start = 12.dp,
+                            top = 24.dp,
+                            end = 12.dp,
+                            bottom = 0.dp,
+                        ),
+                )
+            }
         }
     }
 }
@@ -543,16 +520,18 @@ fun BookDetailScreenPreview(
     @PreviewParameter(BookDetailScreenPreviewParameterProvider::class) state: BookDetailUiState,
 ) {
     ReaderCollectionTheme {
-        BookDetailScreen(
-            state = state,
-            onBack = {},
-            onEdit = {},
-            onRemove = {},
-            onCancel = {},
-            onSave = {},
-            onChangeData = {},
-            onSetImage = {},
-        )
+        CompositionLocalProvider(LocalLanguage provides "en") {
+            BookDetailScreen(
+                state = state,
+                onBack = {},
+                onEdit = {},
+                onRemove = {},
+                onCancel = {},
+                onSave = {},
+                onChangeData = {},
+                onSetImage = {},
+            )
+        }
     }
 }
 
@@ -651,6 +630,11 @@ private class BookDetailScreenPreviewParameterProvider :
                     state = BookState.READING,
                     priority = 0,
                 ),
+                isAlreadySaved = false,
+                isEditable = false,
+            ),
+            BookDetailUiState(
+                book = null,
                 isAlreadySaved = false,
                 isEditable = false,
             ),

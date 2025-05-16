@@ -78,6 +78,7 @@ fun CustomToolbar(
     modifier: Modifier = Modifier,
     subtitle: String = "",
     backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backTintColor: Color = MaterialTheme.colorScheme.primary,
     onBack: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
@@ -105,6 +106,7 @@ fun CustomToolbar(
                 TopAppBarIcon(
                     icon = R.drawable.ic_arrow_back,
                     onClick = it,
+                    tint = backTintColor,
                 )
             }
         } ?: {},
