@@ -379,8 +379,10 @@ private fun CustomChipPreview() {
 
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FUNCTION)
-@Preview(name = "Light")
-@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL)
+@Preview(name = "Light", locale = "en")
+@Preview(name = "Light", locale = "es")
+@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "en")
+@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "es")
 annotation class CustomPreviewLightDark
 
 @Retention(AnnotationRetention.BINARY)
@@ -388,10 +390,18 @@ annotation class CustomPreviewLightDark
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.FUNCTION,
 )
-@Preview(name = "Light", showBackground = true)
+@Preview(name = "Light", locale = "en", showBackground = true)
+@Preview(name = "Light", locale = "es", showBackground = true)
 @Preview(
     name = "Dark",
     uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+    locale = "en",
+    showBackground = true,
+)
+@Preview(
+    name = "Dark",
+    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+    locale = "es",
     showBackground = true,
 )
 annotation class CustomPreviewLightDarkWithBackground
