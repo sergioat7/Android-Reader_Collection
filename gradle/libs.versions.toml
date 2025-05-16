@@ -1,6 +1,6 @@
 [versions]
 jdk = "17"
-sdk-compile = "35"
+sdk-compile = "36"
 sdk-min = "23"
 sdk-target = "35"
 
