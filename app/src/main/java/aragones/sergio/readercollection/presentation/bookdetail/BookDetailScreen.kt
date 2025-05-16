@@ -520,16 +520,18 @@ fun BookDetailScreenPreview(
     @PreviewParameter(BookDetailScreenPreviewParameterProvider::class) state: BookDetailUiState,
 ) {
     ReaderCollectionTheme {
-        BookDetailScreen(
-            state = state,
-            onBack = {},
-            onEdit = {},
-            onRemove = {},
-            onCancel = {},
-            onSave = {},
-            onChangeData = {},
-            onSetImage = {},
-        )
+        CompositionLocalProvider(LocalLanguage provides "en") {
+            BookDetailScreen(
+                state = state,
+                onBack = {},
+                onEdit = {},
+                onRemove = {},
+                onCancel = {},
+                onSave = {},
+                onChangeData = {},
+                onSetImage = {},
+            )
+        }
     }
 }
 
