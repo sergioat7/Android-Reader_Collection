@@ -28,7 +28,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -36,6 +35,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.MainActionButton
@@ -324,7 +324,7 @@ private fun HeaderText(text: String, modifier: Modifier = Modifier) {
     )
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun SettingsScreenPreview(
     @PreviewParameter(SettingsScreenPreviewParameterProvider::class) state: SettingsUiState,

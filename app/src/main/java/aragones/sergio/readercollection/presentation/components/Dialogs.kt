@@ -41,7 +41,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
@@ -400,7 +399,7 @@ private fun TextButtonAlertDialog(
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun ConfirmationAlertDialogPreview() {
     ReaderCollectionTheme {
@@ -413,7 +412,7 @@ private fun ConfirmationAlertDialogPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun InformationAlertDialogPreview() {
     ReaderCollectionTheme {
@@ -425,7 +424,7 @@ private fun InformationAlertDialogPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun TextFieldAlertDialogPreview() {
     ReaderCollectionTheme {
@@ -439,7 +438,7 @@ private fun TextFieldAlertDialogPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun SortingPickerAlertDialogPreview() {
     ReaderCollectionTheme {
@@ -455,7 +454,7 @@ private fun SortingPickerAlertDialogPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun CustomDatePickerDialogPreview() {
     ReaderCollectionTheme {

@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -37,6 +36,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.booksGraph
 import aragones.sergio.readercollection.presentation.navigation.settingsGraph
@@ -134,7 +134,7 @@ private fun NavigationStack(navController: NavHostController) {
     )
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun MainScreenPreview() {
     ReaderCollectionTheme {

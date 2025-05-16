@@ -41,7 +41,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -55,6 +54,7 @@ import aragones.sergio.readercollection.presentation.components.CollapsingToolba
 import aragones.sergio.readercollection.presentation.components.CustomChip
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.DateCustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
@@ -537,7 +537,7 @@ private fun Date?.getValueToShow(language: String, isEditable: Boolean): String 
     ?: Constants.NO_VALUE.takeIf { !isEditable }
     ?: Constants.EMPTY_VALUE
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 fun BookDetailScreenPreview(
     @PreviewParameter(BookDetailScreenPreviewParameterProvider::class) state: BookDetailUiState,

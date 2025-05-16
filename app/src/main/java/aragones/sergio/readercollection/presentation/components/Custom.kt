@@ -63,7 +63,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
@@ -313,7 +312,7 @@ fun CustomChip(text: String, modifier: Modifier = Modifier) {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun NoResultsComponentPreview() {
     ReaderCollectionTheme {
@@ -321,7 +320,7 @@ private fun NoResultsComponentPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun StartRatingBarPreview() {
     ReaderCollectionTheme {
@@ -332,7 +331,7 @@ private fun StartRatingBarPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun SearchBarPreview() {
     ReaderCollectionTheme {
@@ -340,7 +339,7 @@ private fun SearchBarPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun FilterChipPreview() {
     ReaderCollectionTheme {
@@ -370,7 +369,7 @@ private fun FilterChipPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun CustomChipPreview() {
     ReaderCollectionTheme {
@@ -379,13 +378,23 @@ private fun CustomChipPreview() {
 }
 
 @Retention(AnnotationRetention.BINARY)
+@Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FUNCTION)
+@Preview(name = "Light")
+@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL)
+annotation class CustomPreviewLightDark
+
+@Retention(AnnotationRetention.BINARY)
 @Target(
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.FUNCTION,
 )
 @Preview(name = "Light", showBackground = true)
-@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, showBackground = true)
-annotation class PreviewLightDarkWithBackground
+@Preview(
+    name = "Dark",
+    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+    showBackground = true,
+)
+annotation class CustomPreviewLightDarkWithBackground
 
 @Composable
 internal fun LaunchedEffectOnce(block: () -> Unit) {

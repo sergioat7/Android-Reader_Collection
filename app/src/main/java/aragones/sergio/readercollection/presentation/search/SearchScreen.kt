@@ -39,7 +39,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -48,6 +47,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.components.BookItem
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
@@ -310,7 +310,7 @@ internal fun LazyListState.reachedBottom(buffer: Int = 1): Boolean {
         lastVisibleItem?.index == this.layoutInfo.totalItemsCount - buffer
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun SearchScreenPreview(
     @PreviewParameter(SearchScreenPreviewParameterProvider::class) state: SearchUiState,

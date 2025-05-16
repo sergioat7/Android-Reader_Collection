@@ -37,7 +37,7 @@ fun CustomCircularProgressIndicator() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun CustomCircularProgressIndicatorPreview() {
     ReaderCollectionTheme {
