@@ -3,8 +3,6 @@
  * Created by Sergio Aragonés on 10/4/2024
  */
 
-@file:OptIn(ExperimentalMaterialApi::class)
-
 package aragones.sergio.readercollection.presentation.search
 
 import androidx.compose.animation.core.animateFloatAsState
@@ -20,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api

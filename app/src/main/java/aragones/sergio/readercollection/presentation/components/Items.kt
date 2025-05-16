@@ -3,11 +3,8 @@
  * Created by Sergio Aragonés on 17/5/2024
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable

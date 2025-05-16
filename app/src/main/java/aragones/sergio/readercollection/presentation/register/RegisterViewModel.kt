@@ -14,7 +14,6 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
-import aragones.sergio.readercollection.presentation.register.RegisterUiState
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
