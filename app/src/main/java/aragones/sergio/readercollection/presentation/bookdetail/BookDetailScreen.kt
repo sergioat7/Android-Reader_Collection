@@ -13,11 +13,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -38,7 +41,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -52,6 +54,7 @@ import aragones.sergio.readercollection.presentation.components.CollapsingToolba
 import aragones.sergio.readercollection.presentation.components.CustomChip
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.DateCustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
@@ -92,6 +95,7 @@ fun BookDetailScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
+            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
             .background(MaterialTheme.colorScheme.primary)
             .nestedScroll(nestedScrollConnection),
     ) {
@@ -533,7 +537,7 @@ private fun Date?.getValueToShow(language: String, isEditable: Boolean): String 
     ?: Constants.NO_VALUE.takeIf { !isEditable }
     ?: Constants.EMPTY_VALUE
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 fun BookDetailScreenPreview(
     @PreviewParameter(BookDetailScreenPreviewParameterProvider::class) state: BookDetailUiState,

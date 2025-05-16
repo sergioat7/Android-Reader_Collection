@@ -4,7 +4,7 @@ import com.diffplug.spotless.LineEnding
 buildscript {
     dependencies {
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${libs.versions.navigation.get()}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${libs.versions.crashlytics.get()}")//
+        classpath("com.google.firebase:firebase-crashlytics-gradle:${libs.versions.crashlytics.get()}")
     }
 }
 

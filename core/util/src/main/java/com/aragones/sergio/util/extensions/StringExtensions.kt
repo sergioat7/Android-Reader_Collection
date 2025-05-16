@@ -11,16 +11,6 @@ import java.util.Date
 import java.util.Locale
 import java.util.TimeZone
 
-fun String?.toList(): List<String> = if (this != null && this.isNotBlank()) {
-    this
-        .trimStart()
-        .trimEnd()
-        .split(",")
-        .toList()
-} else {
-    ArrayList()
-}
-
 fun String?.toDate(
     format: String? = null,
     language: String? = null,

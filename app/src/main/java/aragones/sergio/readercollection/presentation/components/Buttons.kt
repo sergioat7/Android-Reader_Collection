@@ -17,7 +17,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
@@ -76,7 +75,7 @@ fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modif
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun MainActionButtonPreview() {
     ReaderCollectionTheme {
@@ -88,7 +87,7 @@ private fun MainActionButtonPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun ListButtonPreview() {
     ReaderCollectionTheme {
@@ -99,7 +98,7 @@ private fun ListButtonPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun MainTextButtonPreview() {
     ReaderCollectionTheme {

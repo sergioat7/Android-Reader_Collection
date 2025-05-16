@@ -310,7 +310,7 @@ fun DateCustomOutlinedTextField(
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun TextOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -324,7 +324,7 @@ private fun TextOutlinedTextFieldPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun PasswordOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -340,7 +340,7 @@ private fun PasswordOutlinedTextFieldPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun DisabledOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -355,7 +355,7 @@ private fun DisabledOutlinedTextFieldPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun ErrorOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -370,7 +370,7 @@ private fun ErrorOutlinedTextFieldPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun LargeCustomOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
@@ -392,7 +392,7 @@ private fun LargeCustomOutlinedTextFieldPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun DateCustomOutlinedTextFieldPreview() {
     ReaderCollectionTheme {

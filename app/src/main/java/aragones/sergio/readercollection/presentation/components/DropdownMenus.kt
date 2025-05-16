@@ -135,7 +135,7 @@ fun CustomDropdownMenu(
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun CustomDropdownMenuPreview() {
     ReaderCollectionTheme {

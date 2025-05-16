@@ -47,7 +47,6 @@ import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -55,6 +54,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomFilterChip
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
@@ -495,7 +495,7 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 fun BooksScreenPreview(
     @PreviewParameter(BooksScreenPreviewParameterProvider::class) state: BooksUiState,

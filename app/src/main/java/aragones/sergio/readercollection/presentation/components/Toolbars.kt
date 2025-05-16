@@ -43,7 +43,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -263,7 +262,7 @@ class CollapsingToolbarNestedScrollConnection(
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun CustomToolbarPreview() {
     ReaderCollectionTheme {
@@ -278,7 +277,7 @@ private fun CustomToolbarPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun CustomSearchBarPreview() {
     ReaderCollectionTheme {
@@ -290,7 +289,7 @@ private fun CustomSearchBarPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun TopAppBarIconPreview() {
     ReaderCollectionTheme {
@@ -301,7 +300,7 @@ private fun TopAppBarIconPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun CollapsingToolbarPreview() {
     ReaderCollectionTheme {
