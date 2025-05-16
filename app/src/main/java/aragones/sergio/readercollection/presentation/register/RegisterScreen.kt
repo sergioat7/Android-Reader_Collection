@@ -13,7 +13,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -131,7 +131,7 @@ fun RegisterScreen(
         MainActionButton(
             text = stringResource(R.string.sign_up),
             modifier = Modifier
-                .width(200.dp)
+                .widthIn(min = 200.dp)
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 12.dp, vertical = 24.dp),
             enabled = state.formState.isDataValid,
