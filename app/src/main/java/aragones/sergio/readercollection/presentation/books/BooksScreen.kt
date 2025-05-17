@@ -228,7 +228,7 @@ private fun BooksComponent(
                 onBookClick = onBookClick,
                 onLongClick = onLongClickBook,
                 modifier = Modifier
-                    .height(275.dp)
+                    .height(300.dp)
                     .fillMaxWidth(),
             )
         }
