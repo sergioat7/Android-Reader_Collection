@@ -3,11 +3,8 @@
  * Created by Sergio Aragonés on 17/5/2024
  */
 
-@file:OptIn(ExperimentalFoundationApi::class)
-
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
@@ -40,7 +37,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
@@ -369,7 +365,7 @@ enum class SwipeDirection {
     NONE,
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun BookItemPreview() {
     ReaderCollectionTheme {
@@ -402,7 +398,7 @@ private fun BookItemPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun BookItemWithDraggingPreview() {
     ReaderCollectionTheme {
@@ -436,7 +432,7 @@ private fun BookItemWithDraggingPreview() {
     }
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun ReadingBookItemPreview() {
     ReaderCollectionTheme {
@@ -470,7 +466,7 @@ private fun ReadingBookItemPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun VerticalBookItemPreview() {
     ReaderCollectionTheme {
@@ -507,7 +503,7 @@ private fun VerticalBookItemPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun SwipeItemToLeftPreview() {
     ReaderCollectionTheme {
@@ -530,7 +526,7 @@ private fun SwipeItemToLeftPreview() {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun SwipeItemToRightPreview() {
     ReaderCollectionTheme {

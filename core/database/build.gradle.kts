@@ -11,10 +11,10 @@ plugins {
 
 android {
     namespace = "com.aragones.sergio.database"
-    compileSdk = 34
+    compileSdk = libs.versions.sdk.compile.get().toInt()
 
     defaultConfig {
-        minSdk = 23
+        minSdk = libs.versions.sdk.min.get().toInt()
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
@@ -31,11 +31,11 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
+        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
     }
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
+        jvmTarget = libs.versions.jdk.get()
     }
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
@@ -53,5 +53,4 @@ dependencies {
     implementation(libs.room.rxjava3.bridge)
     implementation(libs.rxjava)
     implementation(libs.rxandroid)
-
 }

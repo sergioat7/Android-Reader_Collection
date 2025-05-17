@@ -60,7 +60,7 @@ fun ImageWithLoading(
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun ImageWithLoadingPreview() {
     ReaderCollectionTheme {

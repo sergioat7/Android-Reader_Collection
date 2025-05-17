@@ -34,7 +34,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -44,6 +43,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.components.BookItem
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
@@ -283,7 +283,7 @@ private fun <T> MutableList<T>.move(from: Int, to: Int) {
     this.add(to, element)
 }
 
-@PreviewLightDark
+@CustomPreviewLightDark
 @Composable
 private fun BookListScreenPreview(
     @PreviewParameter(BookListScreenPreviewParameterProvider::class) state: BookListUiState,

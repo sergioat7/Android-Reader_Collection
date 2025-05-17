@@ -14,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.components.PreviewLightDarkWithBackground
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDarkWithBackground
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import com.airbnb.lottie.LottieProperty
@@ -105,7 +105,7 @@ fun LandingScreen(onAnimationFinished: () -> Unit) {
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun LandingScreenPreview() {
     ReaderCollectionTheme {

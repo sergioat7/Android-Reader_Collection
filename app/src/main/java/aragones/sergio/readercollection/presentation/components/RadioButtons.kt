@@ -48,7 +48,7 @@ fun CustomRadioButton(
     }
 }
 
-@PreviewLightDarkWithBackground
+@CustomPreviewLightDarkWithBackground
 @Composable
 private fun CustomRadioButtonPreview() {
     ReaderCollectionTheme {
