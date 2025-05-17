@@ -20,7 +20,7 @@ fun SearchView(
     onBack: () -> Unit,
     viewModel: SearchViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state
+    val state by viewModel.state.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
 
     ReaderCollectionApp {
