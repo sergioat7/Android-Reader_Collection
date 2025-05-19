@@ -1,4 +1,4 @@
-name: Deploy to Alpha
+name: Upload to Play Store Alpha
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
       - hotfix/*
 
 jobs:
-  deploy:
+  upload-to-play-store-alpha:
 
     runs-on: ubuntu-latest
 
