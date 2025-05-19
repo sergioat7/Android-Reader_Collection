@@ -5,8 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.search
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
