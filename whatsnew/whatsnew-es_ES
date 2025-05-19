@@ -1,6 +1,5 @@
-- La pantalla de búsqueda para añadir un nuevo libro ahora es accesible desde un botón en la pantalla principal
-- Se ha añadido una opción para ordenar los libros por autor (alfabéticamente)
-- Al mantener pulsado sobre un libro, se abre una hoja inferior para cambiar su estado más cómodamente
-- Se han solucionado algunos bugs menores
-- Se han hecho mejoras visuales
-- Se ha añadido compatibilidad con Android 15
+- Tu usuario ahora se guardará en un servidor, para que puedas iniciar sesión desde cualquier dispositivo. Proximamente también se guardarán tus libros, para que los tengas disponibles cuando y donde quieras.
+- Se ha añadido una animación al iniciar la aplicación.
+- Se ha pasado a Material 3, el nuevo sistema de diseño de Google, por lo que verás mejoras visuales significativas.
+- Se ha eliminado el botón del corazón para añadir un libro como favorito.
+- Se han solucionado algunos bugs menores.
