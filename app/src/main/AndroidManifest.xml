@@ -19,11 +19,9 @@
         android:localeConfig="@xml/locales_config"
         tools:ignore="AllowBackup,UnusedAttribute">
         <activity
-            android:name=".presentation.MainActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:name=".presentation.MainActivity" />
         <activity
             android:name=".presentation.landing.LandingActivity"
-            android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
