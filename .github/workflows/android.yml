@@ -47,17 +47,17 @@ jobs:
           echo "keystore.keyPassword=$KEY_PASSWORD" >> keystore.properties
           echo "api.key=$API_KEY" >> keystore.properties
 
-      - name: Build with Gradle
-        run: ./gradlew build
-
-      - name: Run unit tests
-        run: ./gradlew testDebugUnitTest
-
       - name: Run spotless validation
         run: ./gradlew spotlessApply
 
       - name: Run detekt validation
         run: ./gradlew detekt
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest
+
+      - name: Build with Gradle
+        run: ./gradlew build
 
       - name: Assemble release bundle
         run: ./gradlew bundleRelease
