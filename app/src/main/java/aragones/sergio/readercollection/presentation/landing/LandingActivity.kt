@@ -161,8 +161,12 @@ class LandingActivity : ComponentActivity() {
                     InstallStatus.INSTALLED,
                     InstallStatus.CANCELED,
                     -> {
-                        appUpdated.value = true
-                        inAppUpdateService.onDestroy()
+                        if (it == InstallStatus.CANCELED && inAppUpdateService.isImmediateUpdate()) {
+                            finish()
+                        } else {
+                            appUpdated.value = true
+                            inAppUpdateService.onDestroy()
+                        }
                     }
                     InstallStatus.FAILED -> {
                         inAppUpdateService.checkVersion()

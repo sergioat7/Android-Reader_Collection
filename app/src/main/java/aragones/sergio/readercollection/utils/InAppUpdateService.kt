@@ -92,6 +92,8 @@ class InAppUpdateService @Inject constructor(
         }
     }
 
+    fun isImmediateUpdate() = appUpdateType == AppUpdateType.IMMEDIATE
+
     fun onResume() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
 
@@ -109,8 +111,6 @@ class InAppUpdateService @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun isImmediateUpdate() = appUpdateType == AppUpdateType.IMMEDIATE
-
     private fun isFlexibleUpdate() = appUpdateType == AppUpdateType.FLEXIBLE
 
     private fun isUpdateAlreadyInstalled(info: AppUpdateInfo) =
