@@ -5,7 +5,7 @@
     <string name="search">Search</string>
     <string name="restart">Restart</string>
 
-    <string name="new_version_changes">This app works just in local mode. Every book you add will be saved just in the app, so if you uninstall it, you will lose all the saved information. If you want a backup copy, in case you change your device, you can do it from the Statistics screen.</string>
+    <string name="new_version_changes">For now, this app works just in local mode. Every book you add will be saved just in the app, so if you uninstall it, you will lose all the saved information. If you want a backup copy, in case you change your device, you can do it from the Statistics screen.</string>
 
     <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 
@@ -20,7 +20,7 @@
     <string name="create_account">Create account</string>
     <string name="sign_up">Sign up</string>
     <string name="confirm_password">Confirm password</string>
-    <string name="username_info">This username is only needed for identification purposes. However, due to any personal information is stored, if you forget your password you won\'t be able to retrieve it, so it\'s advisable to have a backup copy. You can create it from the Statistics screen.</string>
+    <string name="username_info">This username is only needed for identification purposes and to be able to separate your books from another user\'s ones. However, due to any personal information is stored, if you forget your password you won\'t be able to retrieve it, so it\'s advisable to have a backup copy. You can create it from the Statistics screen.</string>
     <string name="wrong_credentials">Username or password are not correct</string>
 
     //BOOKS
