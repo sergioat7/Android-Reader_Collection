@@ -224,6 +224,7 @@ fun MultilineCustomOutlinedTextField(
 ) {
     var textLayoutResult by remember { mutableStateOf<TextLayoutResult?>(null) }
     var showReadMore by remember { mutableStateOf(false) }
+    var readMoreHiddenByUser by remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         CustomOutlinedTextField(
@@ -246,7 +247,10 @@ fun MultilineCustomOutlinedTextField(
         if (showReadMore) {
             MainTextButton(
                 text = stringResource(R.string.read_more),
-                onClick = { showReadMore = !showReadMore },
+                onClick = {
+                    showReadMore = !showReadMore
+                    readMoreHiddenByUser = true
+                },
                 modifier = Modifier.offset(0.dp, (-12).dp),
             )
         }
@@ -259,7 +263,9 @@ fun MultilineCustomOutlinedTextField(
     )
 
     LaunchedEffect(textLayoutResult) {
-        showReadMore = (textLayoutResult?.lineCount ?: 0) >= maxLines
+        if (!readMoreHiddenByUser) {
+            showReadMore = (textLayoutResult?.lineCount ?: 0) >= maxLines
+        }
     }
 }
 

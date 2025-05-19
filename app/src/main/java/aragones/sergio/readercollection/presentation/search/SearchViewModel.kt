@@ -5,8 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.search
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -34,12 +32,12 @@ class SearchViewModel @Inject constructor(
     private lateinit var savedBooks: MutableList<Book>
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
+    private val _state: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState.Empty)
     private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
-    var state: MutableState<SearchUiState> = mutableStateOf(SearchUiState.Empty)
-        private set
+    var state: StateFlow<SearchUiState> = _state
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
@@ -71,7 +69,7 @@ class SearchViewModel @Inject constructor(
             this.query = query
         }
 
-        state.value = when (val currentState = state.value) {
+        _state.value = when (val currentState = _state.value) {
             is SearchUiState.Empty -> SearchUiState.Success(
                 isLoading = true,
                 query = this.query,
@@ -86,7 +84,6 @@ class SearchViewModel @Inject constructor(
             .subscribeBy(
                 onSuccess = { newBooks ->
 
-                    page++
                     if (books.isEmpty()) {
                         books.add(Book(id = ""))
                     }
@@ -94,15 +91,17 @@ class SearchViewModel @Inject constructor(
                     if (newBooks.isEmpty()) {
                         books.removeAt(books.lastIndex)
                     }
+                    val updatedBooks = mutableListOf<Book>().apply { addAll(books) }
 
-                    state.value = SearchUiState.Success(
+                    page++
+                    _state.value = SearchUiState.Success(
                         isLoading = false,
                         query = this.query,
-                        books = books,
+                        books = updatedBooks,
                     )
                 },
                 onError = {
-                    state.value = SearchUiState.Error(
+                    _state.value = SearchUiState.Error(
                         isLoading = false,
                         query = this.query,
                         value = ErrorResponse("", R.string.error_search),

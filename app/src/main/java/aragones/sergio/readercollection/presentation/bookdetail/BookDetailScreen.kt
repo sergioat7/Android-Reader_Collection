@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
@@ -184,7 +183,7 @@ fun BookDetailScreen(
                     onChangeData = onChangeData,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clip(RoundedCornerShape(20.dp, 20.dp, 0.dp, 0.dp))
+//                        .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp))// Due to an unknown error, if I set this, multiline text fields stop working correctly
                         .background(MaterialTheme.colorScheme.background)
                         .padding(
                             start = 12.dp,
