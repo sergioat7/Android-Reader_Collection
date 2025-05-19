@@ -161,7 +161,9 @@ class LandingActivity : ComponentActivity() {
                     InstallStatus.INSTALLED,
                     InstallStatus.CANCELED,
                     -> {
-                        if (it == InstallStatus.CANCELED && inAppUpdateService.isImmediateUpdate()) {
+                        if (it == InstallStatus.CANCELED &&
+                            inAppUpdateService.isImmediateUpdate()
+                        ) {
                             finish()
                         } else {
                             appUpdated.value = true
