@@ -87,7 +87,7 @@ class UserRepository @Inject constructor(
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { uuid ->
-                        val userData = UserData(username, password, true)
+                        val userData = UserData(username, password)
                         val authData = AuthData(uuid)
                         userLocalDataSource.storeLoginData(userData, authData)
                         emitter.onComplete()
@@ -120,7 +120,7 @@ class UserRepository @Inject constructor(
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
-                        val userData = UserData(username, password, false)
+                        val userData = UserData(username, password)
                         val authData = AuthData("")
                         userLocalDataSource.storeLoginData(userData, authData)
                         emitter.onComplete()
