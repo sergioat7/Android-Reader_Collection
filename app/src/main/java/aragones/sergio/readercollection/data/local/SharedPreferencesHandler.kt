@@ -64,7 +64,7 @@ class SharedPreferencesHandler {
                 ?.let {
                     moshi.adapter(UserData::class.java).fromJson(it)
                 } ?: run {
-                UserData("", "", false)
+                UserData("", "")
             }
         }
         set(value) = encryptedEditor.setString(
@@ -72,7 +72,7 @@ class SharedPreferencesHandler {
             moshi.adapter(UserData::class.java).toJson(value),
         )
     val isLoggedIn: Boolean
-        get() = userData.isLoggedIn && credentials.token.isNotEmpty()
+        get() = credentials.uuid.isNotEmpty()
     var sortParam: String?
         get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
         set(value) = editor.setString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
@@ -114,13 +114,11 @@ class SharedPreferencesHandler {
     }
 
     fun storePassword(password: String) {
-        userData = UserData(userData.username, password, userData.isLoggedIn)
+        userData = UserData(userData.username, password)
     }
 
-    fun removePassword() {}
-
-    fun logout() {
-        userData = UserData(userData.username, userData.password, false)
+    fun removePassword() {
+        userData = UserData(userData.username, "")
     }
 
     fun removeUserData() {

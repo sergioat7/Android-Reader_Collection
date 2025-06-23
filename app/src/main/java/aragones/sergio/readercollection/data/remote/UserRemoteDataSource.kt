@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -23,7 +25,7 @@ class UserRemoteDataSource @Inject constructor(
     fun login(username: String, password: String) = Single.create { single ->
         auth.signInWithEmailAndPassword("${username}$mailEnd", password).addOnCompleteListener {
             if (it.isSuccessful) {
-                single.onSuccess("-")
+                single.onSuccess(Firebase.auth.currentUser?.uid ?: "")
             } else {
                 single.onError(it.exception ?: IllegalStateException())
             }

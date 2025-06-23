@@ -86,9 +86,9 @@ class UserRepository @Inject constructor(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { token ->
-                        val userData = UserData(username, password, true)
-                        val authData = AuthData(token)
+                    onSuccess = { uuid ->
+                        val userData = UserData(username, password)
+                        val authData = AuthData(uuid)
                         userLocalDataSource.storeLoginData(userData, authData)
                         emitter.onComplete()
                     },
@@ -100,8 +100,16 @@ class UserRepository @Inject constructor(
         .observeOn(mainScheduler)
 
     fun logout() {
-        userLocalDataSource.logout()
-        userRemoteDataSource.logout()
+        userRemoteDataSource
+            .logout()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    userLocalDataSource.logout()
+                },
+                onError = {},
+            ).addTo(disposables)
     }
 
     fun register(username: String, password: String): Completable = Completable
@@ -112,8 +120,8 @@ class UserRepository @Inject constructor(
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
-                        val userData = UserData(username, password, false)
-                        val authData = AuthData("-")
+                        val userData = UserData(username, password)
+                        val authData = AuthData("")
                         userLocalDataSource.storeLoginData(userData, authData)
                         emitter.onComplete()
                     },
@@ -138,9 +146,8 @@ class UserRepository @Inject constructor(
                             .subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
-                                onSuccess = { token ->
-
-                                    userLocalDataSource.storeCredentials(AuthData(token))
+                                onSuccess = { uuid ->
+                                    userLocalDataSource.storeCredentials(AuthData(uuid))
                                     emitter.onComplete()
                                 },
                                 onError = {
@@ -173,22 +180,6 @@ class UserRepository @Inject constructor(
                 ).addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-
-    fun storeLoginData(userData: UserData, authData: AuthData) {
-        userLocalDataSource.storeLoginData(userData, authData)
-    }
-
-    fun storeCredentials(authData: AuthData) {
-        userLocalDataSource.storeCredentials(authData)
-    }
-
-    fun storePassword(newPassword: String) {
-        userLocalDataSource.storePassword(newPassword)
-    }
-
-    fun removeUserData() {
-        userLocalDataSource.removeUserData()
-    }
 
     fun storeLanguage(language: String) {
         userLocalDataSource.storeLanguage(language)

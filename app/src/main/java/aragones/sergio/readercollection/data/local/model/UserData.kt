@@ -11,5 +11,4 @@ import com.squareup.moshi.JsonClass
 data class UserData(
     var username: String,
     var password: String,
-    var isLoggedIn: Boolean,
 )
