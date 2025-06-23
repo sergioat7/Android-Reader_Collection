@@ -181,22 +181,6 @@ class UserRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
-    fun storeLoginData(userData: UserData, authData: AuthData) {
-        userLocalDataSource.storeLoginData(userData, authData)
-    }
-
-    fun storeCredentials(authData: AuthData) {
-        userLocalDataSource.storeCredentials(authData)
-    }
-
-    fun storePassword(newPassword: String) {
-        userLocalDataSource.storePassword(newPassword)
-    }
-
-    fun removeUserData() {
-        userLocalDataSource.removeUserData()
-    }
-
     fun storeLanguage(language: String) {
         userLocalDataSource.storeLanguage(language)
     }

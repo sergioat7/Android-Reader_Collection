@@ -117,10 +117,8 @@ class SharedPreferencesHandler {
         userData = UserData(userData.username, password)
     }
 
-    fun removePassword() {}
-
-    fun logout() {
-        userData = UserData(userData.username, userData.password)
+    fun removePassword() {
+        userData = UserData(userData.username, "")
     }
 
     fun removeUserData() {

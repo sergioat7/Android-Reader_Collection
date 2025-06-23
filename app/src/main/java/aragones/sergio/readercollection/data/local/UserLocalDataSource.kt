@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.LocaleList
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
-import aragones.sergio.readercollection.data.remote.ApiManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
@@ -87,7 +86,6 @@ class UserLocalDataSource @Inject constructor(
     fun logout() {
         preferences.removePassword()
         removeCredentials()
-        preferences.logout()
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
