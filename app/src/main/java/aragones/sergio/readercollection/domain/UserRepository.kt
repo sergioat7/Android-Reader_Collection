@@ -100,8 +100,16 @@ class UserRepository @Inject constructor(
         .observeOn(mainScheduler)
 
     fun logout() {
-        userLocalDataSource.logout()
-        userRemoteDataSource.logout()
+        userRemoteDataSource
+            .logout()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    userLocalDataSource.logout()
+                },
+                onError = {},
+            ).addTo(disposables)
     }
 
     fun register(username: String, password: String): Completable = Completable
