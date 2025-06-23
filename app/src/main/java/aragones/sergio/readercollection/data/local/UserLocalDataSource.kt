@@ -97,12 +97,10 @@ class UserLocalDataSource @Inject constructor(
 
     fun storeCredentials(authData: AuthData) {
         preferences.credentials = authData
-        ApiManager.accessToken = authData.token
     }
 
     fun removeCredentials() {
         preferences.removeCredentials()
-        ApiManager.accessToken = ""
     }
 
     fun storePassword(newPassword: String) {

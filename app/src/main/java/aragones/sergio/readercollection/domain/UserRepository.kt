@@ -86,9 +86,9 @@ class UserRepository @Inject constructor(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { token ->
+                    onSuccess = { uuid ->
                         val userData = UserData(username, password, true)
-                        val authData = AuthData(token)
+                        val authData = AuthData(uuid)
                         userLocalDataSource.storeLoginData(userData, authData)
                         emitter.onComplete()
                     },
@@ -121,7 +121,7 @@ class UserRepository @Inject constructor(
                 .subscribeBy(
                     onComplete = {
                         val userData = UserData(username, password, false)
-                        val authData = AuthData("-")
+                        val authData = AuthData("")
                         userLocalDataSource.storeLoginData(userData, authData)
                         emitter.onComplete()
                     },
@@ -146,9 +146,8 @@ class UserRepository @Inject constructor(
                             .subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
-                                onSuccess = { token ->
-
-                                    userLocalDataSource.storeCredentials(AuthData(token))
+                                onSuccess = { uuid ->
+                                    userLocalDataSource.storeCredentials(AuthData(uuid))
                                     emitter.onComplete()
                                 },
                                 onError = {
