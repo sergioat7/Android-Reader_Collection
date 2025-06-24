@@ -35,6 +35,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
+import androidx.work.Constraints
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.NetworkType
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.presentation.MainActivity
@@ -44,9 +49,11 @@ import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.authGraph
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
+import aragones.sergio.readercollection.utils.SyncDataWorker
 import com.google.android.play.core.install.model.InstallStatus
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlinx.coroutines.launch
 
@@ -149,6 +156,7 @@ class LandingActivity : ComponentActivity() {
     //region Private methods
     private fun setUp() {
         configLanguage()
+        setupWorker()
         viewModel.fetchRemoteConfigValues()
         viewModel.checkTheme()
 
@@ -192,6 +200,24 @@ class LandingActivity : ComponentActivity() {
             val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
             viewModel.setLanguage(locale.language)
         }
+    }
+
+    private fun setupWorker() {
+        val workRequest = PeriodicWorkRequestBuilder<SyncDataWorker>(7, TimeUnit.DAYS)
+            .setConstraints(
+                Constraints
+                    .Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build(),
+            ).build()
+
+        WorkManager
+            .getInstance(this)
+            .enqueueUniquePeriodicWork(
+                uniqueWorkName = SyncDataWorker.WORK_NAME,
+                existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP,
+                request = workRequest,
+            )
     }
 
     private fun launchMainActivity() {
