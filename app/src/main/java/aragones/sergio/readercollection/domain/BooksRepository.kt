@@ -71,6 +71,37 @@ class BooksRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
+    fun syncBooks(uuid: String): Completable = Completable
+        .create { emitter ->
+            booksLocalDataSource
+                .getAllBooks()
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onComplete = {
+                        emitter.onComplete()
+                    },
+                    onNext = { localBooks ->
+                        booksRemoteDataSource
+                            .saveBooks(
+                                uuid = uuid,
+                                books = localBooks.map { it.toDomain().toRemoteData() },
+                            ).subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribeBy(onComplete = {
+                                emitter.onComplete()
+                            }, onError = {
+                                emitter.onError(it)
+                            })
+                            .addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
+
     fun getBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getAllBooks()
         .distinctUntilChanged()

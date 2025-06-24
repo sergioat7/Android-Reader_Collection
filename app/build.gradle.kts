@@ -107,7 +107,9 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
+    implementation(libs.hilt.work)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lottie)
@@ -120,6 +122,7 @@ dependencies {
     implementation(libs.room.rxjava)
     implementation(libs.room.rxjava3.bridge)
     implementation(libs.security.crypto)
+    implementation(libs.work.manager)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)

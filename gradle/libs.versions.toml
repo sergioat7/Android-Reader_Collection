@@ -41,6 +41,7 @@ rxjava = "3.1.8"
 rxkotlin = "3.0.1"
 security = "1.0.0"
 spotless-version = "7.0.2"
+work-manager = "2.10.2"
 
 [libraries]
 
@@ -81,7 +82,9 @@ firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
 #Hilt
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidx-hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidx-hilt" }
 
 #Kotlin
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -118,6 +121,9 @@ rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = 
 
 #Security
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
+
+#Work manager
+work-manager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-manager" }
 
 #Tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }

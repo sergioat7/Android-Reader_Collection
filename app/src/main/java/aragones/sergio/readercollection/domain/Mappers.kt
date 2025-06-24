@@ -39,6 +39,33 @@ fun Book.toLocalData(): BookLocal = BookLocal(
     priority = priority,
 )
 
+fun Book.toRemoteData(): BookResponse = BookResponse(
+    id = id,
+    title = title,
+    subtitle = subtitle,
+    authors = authors,
+    publisher = publisher,
+    publishedDate = publishedDate,
+    readingDate = readingDate,
+    description = description,
+    summary = summary,
+    isbn = isbn,
+    pageCount = pageCount,
+    categories = categories
+        ?.joinToString(" / ")
+        ?.split("/")
+        ?.map { it.trim() }
+        ?.distinct(),
+    averageRating = averageRating,
+    ratingsCount = ratingsCount,
+    rating = rating,
+    thumbnail = thumbnail,
+    image = image,
+    format = format,
+    state = state,
+    priority = priority,
+)
+
 fun BookLocal.toDomain(): Book = Book(
     id = id,
     title = title,
