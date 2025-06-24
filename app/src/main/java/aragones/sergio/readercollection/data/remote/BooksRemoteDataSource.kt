@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.utils.Constants
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
+import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 import org.json.JSONObject
@@ -81,6 +82,27 @@ class BooksRemoteDataSource @Inject constructor(
                 val books = result.toObjects(BookResponse::class.java)
                 emitter.onSuccess(books)
             }.addOnFailureListener { emitter.onError(it) }
+    }
+
+    fun saveBooks(uuid: String, books: List<BookResponse>) = Completable.create { emitter ->
+        val batch = firestore.batch()
+        val booksRef = firestore
+            .collection("users")
+            .document(uuid)
+            .collection("books")
+
+        books.forEach { book ->
+            val docRef = booksRef.document(book.id)
+            batch.set(docRef, book)
+        }
+
+        batch
+            .commit()
+            .addOnSuccessListener {
+                emitter.onComplete()
+            }.addOnFailureListener {
+                emitter.onError(it)
+            }
     }
     //endregion
 
