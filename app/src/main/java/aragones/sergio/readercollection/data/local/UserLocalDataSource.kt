@@ -38,6 +38,9 @@ class UserLocalDataSource @Inject constructor(
     val userData: UserData
         get() = preferences.userData
 
+    val userId: String
+        get() = preferences.credentials.uuid
+
     var language: String
         get() = preferences.language
         set(value) {

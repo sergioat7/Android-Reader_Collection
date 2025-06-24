@@ -32,6 +32,9 @@ class UserRepository @Inject constructor(
     val userData: UserData
         get() = userLocalDataSource.userData
 
+    val userId: String
+        get() = userLocalDataSource.userId
+
     var language: String
         get() = userLocalDataSource.language
         set(value) {

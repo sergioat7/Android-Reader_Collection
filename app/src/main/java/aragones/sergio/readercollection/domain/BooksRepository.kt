@@ -43,9 +43,31 @@ class BooksRepository @Inject constructor(
     //endregion
 
     //region Public methods
-    fun loadBooks(): Completable = Completable
+    fun loadBooks(uuid: String): Completable = Completable
         .create { emitter ->
-            emitter.onComplete()
+            booksRemoteDataSource
+                .getBooks(uuid)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = { remoteBooks ->
+                        booksLocalDataSource
+                            .insertBooks(remoteBooks.map { it.toDomain().toLocalData() })
+                            .subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
+                            .subscribeBy(
+                                onComplete = {
+                                    emitter.onComplete()
+                                },
+                                onError = {
+                                    emitter.onError(it)
+                                },
+                            ).addTo(disposables)
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
