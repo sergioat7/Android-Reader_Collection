@@ -85,8 +85,20 @@ class SettingsViewModel @Inject constructor(
 
     //region Public methods
     fun logout() {
+        _state.value = _state.value.copy(isLoading = true)
         userRepository.logout()
-        _logOut.value = true
+        booksRepository
+            .resetTable()
+            .subscribeBy(
+                onComplete = {
+                    _state.value = _state.value.copy(isLoading = false)
+                    _logOut.value = true
+                },
+                onError = {
+                    _state.value = _state.value.copy(isLoading = false)
+                    _logOut.value = true
+                },
+            ).addTo(disposables)
     }
 
     fun save() {
