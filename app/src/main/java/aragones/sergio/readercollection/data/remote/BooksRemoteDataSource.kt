@@ -7,12 +7,14 @@ package aragones.sergio.readercollection.data.remote
 
 import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.utils.Constants
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
 import io.reactivex.rxjava3.core.Single
@@ -22,6 +24,7 @@ import org.json.JSONObject
 class BooksRemoteDataSource @Inject constructor(
     private val googleApiService: GoogleApiService,
     private val remoteConfig: FirebaseRemoteConfig,
+    private val firestore: FirebaseFirestore,
 ) {
 
     //region Static properties
@@ -66,6 +69,18 @@ class BooksRemoteDataSource @Inject constructor(
             setupFormats(remoteConfig.getString("formats"), language)
             setupStates(remoteConfig.getString("states"), language)
         }
+    }
+
+    fun getBooks(uuid: String): Single<List<BookResponse>> = Single.create { emitter ->
+        firestore
+            .collection("users")
+            .document(uuid)
+            .collection("books")
+            .get()
+            .addOnSuccessListener { result ->
+                val books = result.toObjects(BookResponse::class.java)
+                emitter.onSuccess(books)
+            }.addOnFailureListener { emitter.onError(it) }
     }
     //endregion
 
