@@ -79,12 +79,6 @@ class UserLocalDataSource @Inject constructor(
 
     val hasBookDetailsTutorialBeenShown: Boolean
         get() = preferences.hasBookDetailsTutorialBeenShown
-
-    var newChangesPopupShown: Boolean
-        get() = preferences.newChangesPopupShown
-        set(value) {
-            preferences.newChangesPopupShown = value
-        }
     //endregion
 
     //region Public methods

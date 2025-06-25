@@ -31,8 +31,6 @@ class LandingViewModel @Inject constructor(
     //region Public properties
     val language: String
         get() = userRepository.language
-    val newChangesPopupShown: Boolean
-        get() = userRepository.newChangesPopupShown
     val landingClassToStart: StateFlow<Class<*>?> = _landingClassToStart
     //endregion
 
@@ -46,7 +44,6 @@ class LandingViewModel @Inject constructor(
 
     //region Public methods
     fun checkIsLoggedIn() {
-        userRepository.newChangesPopupShown = true
         _landingClassToStart.value = if (userRepository.isLoggedIn) {
             MainActivity::class.java
         } else {

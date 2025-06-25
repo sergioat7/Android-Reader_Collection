@@ -30,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
@@ -43,7 +42,6 @@ import androidx.work.WorkManager
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.presentation.MainActivity
-import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.login.LoginActivity
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.authGraph
@@ -79,7 +77,6 @@ class LandingActivity : ComponentActivity() {
         setUp()
 
         setContent {
-            val showDialog = rememberSaveable { mutableStateOf(false) }
             val animationFinished = rememberSaveable { mutableStateOf(false) }
             ReaderCollectionApp {
                 Box(
@@ -119,23 +116,9 @@ class LandingActivity : ComponentActivity() {
                     }
                 }
 
-                if (showDialog.value) {
-                    InformationAlertDialog(
-                        show = true,
-                        text = stringResource(R.string.new_version_changes),
-                    ) {
-                        viewModel.checkIsLoggedIn()
-                        showDialog.value = false
-                    }
-                }
-
                 LaunchedEffect(appUpdated.value, animationFinished.value) {
                     if (appUpdated.value && animationFinished.value) {
-                        if (!viewModel.newChangesPopupShown) {
-                            showDialog.value = true
-                        } else {
-                            viewModel.checkIsLoggedIn()
-                        }
+                        viewModel.checkIsLoggedIn()
                     }
                 }
             }
