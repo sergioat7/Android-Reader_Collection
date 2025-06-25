@@ -9,8 +9,6 @@
     <string name="search">Buscar</string>
     <string name="restart">Reiniciar</string>
 
-    <string name="new_version_changes">De momento esta aplicación solo funciona en local. Todos los libros que guardes quedarán almacenados sola y exclusivamente en la aplicación, por tanto, si la desinstalas, perderás toda la información almacenada. Si quieres hacer una copia de seguridad, por si cambias de dispositivo, puedes hacerlo desde la pantalla de Estadísticas.</string>
-
     <string name="message_app_update_downloaded">Se ha descargado una actualización.</string>
 
     //LOGIN &amp; REGISTRATION

@@ -38,6 +38,9 @@ class UserLocalDataSource @Inject constructor(
     val userData: UserData
         get() = preferences.userData
 
+    val userId: String
+        get() = preferences.credentials.uuid
+
     var language: String
         get() = preferences.language
         set(value) {
@@ -76,12 +79,6 @@ class UserLocalDataSource @Inject constructor(
 
     val hasBookDetailsTutorialBeenShown: Boolean
         get() = preferences.hasBookDetailsTutorialBeenShown
-
-    var newChangesPopupShown: Boolean
-        get() = preferences.newChangesPopupShown
-        set(value) {
-            preferences.newChangesPopupShown = value
-        }
     //endregion
 
     //region Public methods

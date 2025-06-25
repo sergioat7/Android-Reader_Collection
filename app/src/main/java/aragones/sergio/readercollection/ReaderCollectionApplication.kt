@@ -8,10 +8,13 @@ package aragones.sergio.readercollection
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
+import androidx.hilt.work.HiltWorkerFactory
+import androidx.work.Configuration
 import dagger.hilt.android.HiltAndroidApp
+import javax.inject.Inject
 
 @HiltAndroidApp
-class ReaderCollectionApplication : Application() {
+class ReaderCollectionApplication : Application(), Configuration.Provider {
 
     //region Static properties
     companion object {
@@ -19,6 +22,11 @@ class ReaderCollectionApplication : Application() {
             get() = app.applicationContext
         private lateinit var app: ReaderCollectionApplication
     }
+    //endregion
+
+    //region Public properties
+    @Inject
+    lateinit var workerFactory: HiltWorkerFactory
     //endregion
 
     //region Lifecycle methods
@@ -45,5 +53,13 @@ class ReaderCollectionApplication : Application() {
             )
         }
     }
+    //endregion
+
+    //region Interface methods
+    override val workManagerConfiguration: Configuration
+        get() = Configuration
+            .Builder()
+            .setWorkerFactory(workerFactory)
+            .build()
     //endregion
 }

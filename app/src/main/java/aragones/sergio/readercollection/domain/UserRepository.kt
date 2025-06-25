@@ -32,6 +32,9 @@ class UserRepository @Inject constructor(
     val userData: UserData
         get() = userLocalDataSource.userData
 
+    val userId: String
+        get() = userLocalDataSource.userId
+
     var language: String
         get() = userLocalDataSource.language
         set(value) {
@@ -70,12 +73,6 @@ class UserRepository @Inject constructor(
 
     val hasBookDetailsTutorialBeenShown: Boolean
         get() = userLocalDataSource.hasBookDetailsTutorialBeenShown
-
-    var newChangesPopupShown: Boolean
-        get() = userLocalDataSource.newChangesPopupShown
-        set(value) {
-            userLocalDataSource.newChangesPopupShown = value
-        }
     //endregion
 
     //region Public methods
