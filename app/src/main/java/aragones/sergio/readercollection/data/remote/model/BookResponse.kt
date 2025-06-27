@@ -5,49 +5,27 @@
 
 package aragones.sergio.readercollection.data.remote.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import java.util.Date
 
-@JsonClass(generateAdapter = true)
 data class BookResponse(
-    @Json(name = "googleId")
-    override val id: String,
-    @Json(name = "title")
-    val title: String?,
-    @Json(name = "subtitle")
-    val subtitle: String?,
-    @Json(name = "authors")
-    val authors: List<String>?,
-    @Json(name = "publisher")
-    val publisher: String?,
-    @Json(name = "publishedDate")
-    val publishedDate: Date?,
-    @Json(name = "readingDate")
-    val readingDate: Date?,
-    @Json(name = "description")
-    val description: String?,
-    @Json(name = "summary")
-    val summary: String?,
-    @Json(name = "isbn")
-    val isbn: String?,
-    @Json(name = "pageCount")
-    val pageCount: Int,
-    @Json(name = "categories")
-    val categories: List<String>?,
-    @Json(name = "averageRating")
-    val averageRating: Double,
-    @Json(name = "ratingsCount")
-    val ratingsCount: Int,
-    @Json(name = "rating")
-    val rating: Double,
-    @Json(name = "thumbnail")
-    val thumbnail: String?,
-    @Json(name = "image")
-    val image: String?,
-    @Json(name = "format")
-    val format: String?,
-    @Json(name = "state")
-    var state: String?,
-    var priority: Int,
+    override val id: String = "",
+    val title: String? = null,
+    val subtitle: String? = null,
+    val authors: List<String>? = null,
+    val publisher: String? = null,
+    val publishedDate: Date? = null,
+    val readingDate: Date? = null,
+    val description: String? = null,
+    val summary: String? = null,
+    val isbn: String? = null,
+    val pageCount: Int = 0,
+    val categories: List<String>? = null,
+    val averageRating: Double = 0.0,
+    val ratingsCount: Int = 0,
+    val rating: Double = 0.0,
+    val thumbnail: String? = null,
+    val image: String? = null,
+    val format: String? = null,
+    var state: String? = null,
+    var priority: Int = -1,
 ) : BaseModel<String>

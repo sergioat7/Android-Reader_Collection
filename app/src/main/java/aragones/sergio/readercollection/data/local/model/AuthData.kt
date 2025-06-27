@@ -5,9 +5,11 @@
 
 package aragones.sergio.readercollection.data.local.model
 
+import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class AuthData(
-    var token: String,
+    @Json(name = "token")
+    var uuid: String,
 )

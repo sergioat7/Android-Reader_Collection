@@ -11,12 +11,13 @@ import android.os.Build
 import android.os.LocaleList
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
-import aragones.sergio.readercollection.data.remote.ApiManager
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
 import javax.inject.Inject
 
 class UserLocalDataSource @Inject constructor(
+    private val auth: FirebaseAuth,
     @ApplicationContext private val context: Context,
     private val preferences: SharedPreferencesHandler,
 ) {
@@ -37,6 +38,9 @@ class UserLocalDataSource @Inject constructor(
     val userData: UserData
         get() = preferences.userData
 
+    val userId: String
+        get() = preferences.credentials.uuid
+
     var language: String
         get() = preferences.language
         set(value) {
@@ -44,7 +48,7 @@ class UserLocalDataSource @Inject constructor(
         }
 
     val isLoggedIn: Boolean
-        get() = preferences.isLoggedIn
+        get() = preferences.isLoggedIn && auth.currentUser != null
 
     val sortParam: String?
         get() = preferences.sortParam
@@ -75,19 +79,12 @@ class UserLocalDataSource @Inject constructor(
 
     val hasBookDetailsTutorialBeenShown: Boolean
         get() = preferences.hasBookDetailsTutorialBeenShown
-
-    var newChangesPopupShown: Boolean
-        get() = preferences.newChangesPopupShown
-        set(value) {
-            preferences.newChangesPopupShown = value
-        }
     //endregion
 
     //region Public methods
     fun logout() {
         preferences.removePassword()
         removeCredentials()
-        preferences.logout()
     }
 
     fun storeLoginData(userData: UserData, authData: AuthData) {
@@ -97,12 +94,10 @@ class UserLocalDataSource @Inject constructor(
 
     fun storeCredentials(authData: AuthData) {
         preferences.credentials = authData
-        ApiManager.accessToken = authData.token
     }
 
     fun removeCredentials() {
         preferences.removeCredentials()
-        ApiManager.accessToken = ""
     }
 
     fun storePassword(newPassword: String) {

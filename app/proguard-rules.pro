@@ -33,3 +33,8 @@
 -keep public class * extends java.lang.Exception    # Optional: Keep custom exceptions
 
 -keep class aragones.sergio.readercollection.models.** { <fields>; }
+-keep class aragones.sergio.readercollection.data.remote.model.** { *; }
+-keepclassmembers class aragones.sergio.readercollection.data.remote.model.** {
+    <fields>;
+    <init>();
+}

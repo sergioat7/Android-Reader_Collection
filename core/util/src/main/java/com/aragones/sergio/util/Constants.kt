@@ -23,7 +23,6 @@ object Preferences {
     const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"
     const val NEW_BOOK_TUTORIAL_PREFERENCE_NAME = "newBookTutorial"
     const val BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME = "bookDetailsTutorial"
-    const val NEW_CHANGES_POPUP_PREFERENCES_NAME = "newChanges"
 }
 
 object Constants {

@@ -5,8 +5,6 @@
     <string name="search">Search</string>
     <string name="restart">Restart</string>
 
-    <string name="new_version_changes">For now, this app works just in local mode. Every book you add will be saved just in the app, so if you uninstall it, you will lose all the saved information. If you want a backup copy, in case you change your device, you can do it from the Statistics screen.</string>
-
     <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 
     //LOGIN &amp; REGISTRATION
