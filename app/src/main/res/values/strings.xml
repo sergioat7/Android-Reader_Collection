@@ -93,7 +93,14 @@
     <string name="logout_title">Logout</string>
     <string name="logout_description">Close this session</string>
 
+    //ACCOUNT
+    <string name="account_details_title">Account details</string>
+    <string name="account_management_title">Account management</string>
     <string name="save">Save</string>
+    <string name="delete_account_title">Delete account</string>
+    <string name="delete_account_description">Permanently delete your account and books data</string>
+    <string name="delete_account_action">Delete account</string>
+
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
@@ -104,8 +111,6 @@
         <item>Light</item>
         <item>Dark</item>
     </string-array>
-    <string name="delete">Delete</string>
-    <string name="logout">Logout</string>
 
     //POPUPS
     <string name="accept">Accept</string>

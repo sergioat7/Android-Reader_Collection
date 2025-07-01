@@ -96,7 +96,14 @@
     <string name="logout_title">Salir</string>
     <string name="logout_description">Cierra la sesión</string>
 
+    //ACCOUNT
+    <string name="account_details_title">Detalles de la cuenta</string>
+    <string name="account_management_title">Gestión de la cuenta</string>
     <string name="save">Guardar</string>
+    <string name="delete_account_title">Borrar cuenta</string>
+    <string name="delete_account_description">Borrar para siempre tu usuario y todos los libros guardados</string>
+    <string name="delete_account_action">Borrar cuenta</string>
+
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
@@ -107,8 +114,6 @@
         <item>Claro</item>
         <item>Oscuro</item>
     </string-array>
-    <string name="delete">Borrar</string>
-    <string name="logout">Salir</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>

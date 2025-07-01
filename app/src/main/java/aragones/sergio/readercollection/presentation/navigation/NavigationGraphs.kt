@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.MainActivity
+import aragones.sergio.readercollection.presentation.account.AccountView
 import aragones.sergio.readercollection.presentation.bookdetail.BookDetailView
 import aragones.sergio.readercollection.presentation.booklist.BookListView
 import aragones.sergio.readercollection.presentation.books.BooksView
@@ -227,6 +228,20 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                         )
                         is SettingsOption.Logout -> logout(context)
                     }
+                },
+            )
+        }
+        composable<Route.Account>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            val context = LocalContext.current
+            AccountView(
+                onBack = {
+                    navController.navigateUp()
+                },
+                onLogout = {
+                    logout(context)
                 },
             )
         }
