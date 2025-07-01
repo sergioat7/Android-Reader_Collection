@@ -22,6 +22,7 @@ import aragones.sergio.readercollection.presentation.bookdetail.BookDetailView
 import aragones.sergio.readercollection.presentation.booklist.BookListView
 import aragones.sergio.readercollection.presentation.books.BooksView
 import aragones.sergio.readercollection.presentation.datasync.DataSyncView
+import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsView
 import aragones.sergio.readercollection.presentation.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.login.LoginView
 import aragones.sergio.readercollection.presentation.register.RegisterView
@@ -253,6 +254,23 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
             DataSyncView(
                 onBack = {
                     navController.navigateUp()
+                },
+            )
+        }
+        composable<Route.DisplaySettings>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            val context = LocalContext.current
+            DisplaySettingsView(
+                onBack = {
+                    navController.navigateUp()
+                },
+                onRelaunch = {
+                    val intent = Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    context.startActivity(intent)
                 },
             )
         }

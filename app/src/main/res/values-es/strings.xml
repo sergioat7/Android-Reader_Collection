@@ -113,10 +113,11 @@
     <string name="sync_now_action">Sincronizar</string>
     <string name="data_sync_successfully">Tus datos se han sincronizado correctamente</string>
 
+    //DISPLAY SETTINGS
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
-    <string name="sort_books_param">Parámetro de ordenación de libros</string>
+    <string name="sort_books_param">Modo de ordenar libros leídos</string>
     <string name="app_theme">Tema</string>
     <string-array name="app_theme_values">
         <item>Predeterminado por el sistema</item>

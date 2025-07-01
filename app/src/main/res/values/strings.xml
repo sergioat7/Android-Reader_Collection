@@ -110,10 +110,11 @@
     <string name="sync_now_action">Sync now</string>
     <string name="data_sync_successfully">Your data has been successfully synced</string>
 
+    //DISPLAY SETTINGS
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
-    <string name="sort_books_param">Sort books param</string>
+    <string name="sort_books_param">Read books order mode</string>
     <string name="app_theme">App theme</string>
     <string-array name="app_theme_values">
         <item>System default</item>
