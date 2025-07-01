@@ -101,6 +101,15 @@
     <string name="delete_account_description">Permanently delete your account and books data</string>
     <string name="delete_account_action">Delete account</string>
 
+    //DATA SYNCHRONIZATION
+    <string name="syncing_options_title">Syncing options</string>
+    <string name="automatic_sync_title">Automatic sync</string>
+    <string name="automatic_sync_description">Your data will sync automatically once a week</string>
+    <string name="manual_sync_title">Manual sync</string>
+    <string name="manual_sync_description">Sync your data manually</string>
+    <string name="sync_now_action">Sync now</string>
+    <string name="data_sync_successfully">Your data has been successfully synced</string>
+
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
