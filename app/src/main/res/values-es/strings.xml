@@ -86,6 +86,16 @@
 
     //SETTINGS
     <string name="title_settings">Configuración</string>
+    <string name="account_title">Cuenta</string>
+    <string name="account_description">Gestiona tu cuenta</string>
+    <string name="preferences">Preferencias</string>
+    <string name="data_sync_title">Sincronización de datos</string>
+    <string name="data_sync_description">Gestiona la sincronización de tus datos</string>
+    <string name="display_settings_title">Ajustes de visualización</string>
+    <string name="display_settings_description">Personaliza la apariencia de la app</string>
+    <string name="logout_title">Salir</string>
+    <string name="logout_description">Cierra la sesión</string>
+
     <string name="save">Guardar</string>
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>

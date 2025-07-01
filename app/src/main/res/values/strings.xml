@@ -83,6 +83,16 @@
 
     //SETTINGS
     <string name="title_settings">Settings</string>
+    <string name="account_title">Account</string>
+    <string name="account_description">Manage your account</string>
+    <string name="preferences">Preferences</string>
+    <string name="data_sync_title">Data Synchronization</string>
+    <string name="data_sync_description">Manage your data synchronization</string>
+    <string name="display_settings_title">Display Settings</string>
+    <string name="display_settings_description">Personalize display settings</string>
+    <string name="logout_title">Logout</string>
+    <string name="logout_description">Close this session</string>
+
     <string name="save">Save</string>
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
