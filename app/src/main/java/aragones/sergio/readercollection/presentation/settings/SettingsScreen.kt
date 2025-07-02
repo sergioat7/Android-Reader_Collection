@@ -44,7 +44,11 @@ import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
-fun SettingsScreen(isLoading: Boolean, onLogout: () -> Unit, modifier: Modifier = Modifier) {
+fun SettingsScreen(
+    isLoading: Boolean,
+    onClickOption: (SettingsOption) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val scrollState = rememberScrollState()
 
     Column(modifier = modifier.fillMaxSize()) {
@@ -61,7 +65,9 @@ fun SettingsScreen(isLoading: Boolean, onLogout: () -> Unit, modifier: Modifier 
                 icon = Icons.Default.AccountCircle,
                 title = stringResource(R.string.account_title),
                 subtitle = stringResource(R.string.account_description),
-                onClick = {},
+                onClick = {
+                    onClickOption(SettingsOption.Account)
+                },
             )
             Spacer(modifier = Modifier.height(16.dp))
             HeaderText(text = stringResource(R.string.preferences))
@@ -69,19 +75,25 @@ fun SettingsScreen(isLoading: Boolean, onLogout: () -> Unit, modifier: Modifier 
                 icon = Icons.Default.Backup,
                 title = stringResource(R.string.data_sync_title),
                 subtitle = stringResource(R.string.data_sync_description),
-                onClick = {},
+                onClick = {
+                    onClickOption(SettingsOption.DataSync)
+                },
             )
             SettingItem(
                 icon = Icons.Default.DisplaySettings,
                 title = stringResource(R.string.display_settings_title),
                 subtitle = stringResource(R.string.display_settings_description),
-                onClick = {},
+                onClick = {
+                    onClickOption(SettingsOption.DisplaySettings)
+                },
             )
             SettingItem(
                 icon = Icons.AutoMirrored.Default.Logout,
                 title = stringResource(R.string.logout_title),
                 subtitle = stringResource(R.string.logout_description),
-                onClick = onLogout,
+                onClick = {
+                    onClickOption(SettingsOption.Logout)
+                },
             )
         }
     }
@@ -161,7 +173,7 @@ private fun SettingsScreenPreview(
     ReaderCollectionTheme {
         SettingsScreen(
             isLoading = isLoading,
-            onLogout = {},
+            onClickOption = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
         )
     }

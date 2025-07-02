@@ -14,21 +14,32 @@ import aragones.sergio.readercollection.presentation.components.ConfirmationAler
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
-fun SettingsView(onLogout: () -> Unit, viewModel: SettingsViewModel = hiltViewModel()) {
+fun SettingsView(
+    onClickOption: (SettingsOption) -> Unit,
+    viewModel: SettingsViewModel = hiltViewModel(),
+) {
     val isLoading by viewModel.isLoading
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
 
     val logOut by viewModel.logOut.collectAsState()
     if (logOut) {
-        onLogout()
+        onClickOption(SettingsOption.Logout)
         return
     }
 
     ReaderCollectionApp(navigationBarSameAsBackground = false) {
         SettingsScreen(
             isLoading = isLoading,
-            onLogout = {
-                viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
+            onClickOption = {
+                when (it) {
+                    is SettingsOption.Account,
+                    is SettingsOption.DataSync,
+                    is SettingsOption.DisplaySettings,
+                    -> onClickOption(it)
+                    is SettingsOption.Logout -> viewModel.showConfirmationDialog(
+                        R.string.profile_logout_confirmation,
+                    )
+                }
             },
         )
     }

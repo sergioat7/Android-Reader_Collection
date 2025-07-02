@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.navigation
 
 import android.app.ActivityOptions
+import android.content.Context
 import android.content.Intent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -23,6 +24,7 @@ import aragones.sergio.readercollection.presentation.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.login.LoginView
 import aragones.sergio.readercollection.presentation.register.RegisterView
 import aragones.sergio.readercollection.presentation.search.SearchView
+import aragones.sergio.readercollection.presentation.settings.SettingsOption
 import aragones.sergio.readercollection.presentation.settings.SettingsView
 import aragones.sergio.readercollection.presentation.statistics.StatisticsView
 import com.aragones.sergio.util.BookState
@@ -208,7 +210,7 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.settingsGraph() {
+fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
     navigation<Route.Settings>(startDestination = Route.SettingsHome) {
         composable<Route.SettingsHome>(
             enterTransition = { EnterTransition.None },
@@ -216,20 +218,31 @@ fun NavGraphBuilder.settingsGraph() {
         ) {
             val context = LocalContext.current
             SettingsView(
-                onLogout = {
-                    val intent = Intent(context, LandingActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        putExtra("SKIP_ANIMATION", true)
+                onClickOption = {
+                    when (it) {
+                        is SettingsOption.Account -> navController.navigate(Route.Account)
+                        is SettingsOption.DataSync -> navController.navigate(Route.DataSync)
+                        is SettingsOption.DisplaySettings -> navController.navigate(
+                            Route.DisplaySettings,
+                        )
+                        is SettingsOption.Logout -> logout(context)
                     }
-                    val options = ActivityOptions
-                        .makeCustomAnimation(
-                            context,
-                            R.anim.slide_in_left,
-                            R.anim.slide_out_right,
-                        ).toBundle()
-                    context.startActivity(intent, options)
                 },
             )
         }
     }
+}
+
+private fun logout(context: Context) {
+    val intent = Intent(context, LandingActivity::class.java).apply {
+        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        putExtra("SKIP_ANIMATION", true)
+    }
+    val options = ActivityOptions
+        .makeCustomAnimation(
+            context,
+            R.anim.slide_in_left,
+            R.anim.slide_out_right,
+        ).toBundle()
+    context.startActivity(intent, options)
 }
