@@ -123,7 +123,7 @@ private fun NavigationStack(navController: NavHostController) {
         navController.createGraph(startDestination = Route.Books) {
             booksGraph(navController)
             statisticsGraph(navController)
-            settingsGraph()
+            settingsGraph(navController)
         }
     }
     NavHost(

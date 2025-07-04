@@ -35,6 +35,9 @@ class UserRepository @Inject constructor(
     val userId: String
         get() = userLocalDataSource.userId
 
+    val isAutomaticSyncEnabled: Boolean
+        get() = userLocalDataSource.isAutomaticSyncEnabled
+
     var language: String
         get() = userLocalDataSource.language
         set(value) {
@@ -177,6 +180,10 @@ class UserRepository @Inject constructor(
                 ).addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
+
+    fun storeAutomaticSync(value: Boolean) {
+        userLocalDataSource.storeAutomaticSync(value)
+    }
 
     fun storeLanguage(language: String) {
         userLocalDataSource.storeLanguage(language)

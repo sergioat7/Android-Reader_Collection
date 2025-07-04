@@ -83,19 +83,44 @@
 
     //SETTINGS
     <string name="title_settings">Settings</string>
+    <string name="account_title">Account</string>
+    <string name="account_description">Manage your account</string>
+    <string name="preferences">Preferences</string>
+    <string name="data_sync_title">Data Synchronization</string>
+    <string name="data_sync_description">Manage your data synchronization</string>
+    <string name="display_settings_title">Display Settings</string>
+    <string name="display_settings_description">Personalize display settings</string>
+    <string name="logout_title">Logout</string>
+    <string name="logout_description">Close this session</string>
+
+    //ACCOUNT
+    <string name="account_details_title">Account details</string>
+    <string name="account_management_title">Account management</string>
     <string name="save">Save</string>
+    <string name="delete_account_title">Delete account</string>
+    <string name="delete_account_description">Permanently delete your account and books data</string>
+    <string name="delete_account_action">Delete account</string>
+
+    //DATA SYNCHRONIZATION
+    <string name="syncing_options_title">Syncing options</string>
+    <string name="automatic_sync_title">Automatic sync</string>
+    <string name="automatic_sync_description">Your data will sync automatically once a week</string>
+    <string name="manual_sync_title">Manual sync</string>
+    <string name="manual_sync_description">Sync your data manually</string>
+    <string name="sync_now_action">Sync now</string>
+    <string name="data_sync_successfully">Your data has been successfully synced</string>
+
+    //DISPLAY SETTINGS
     <string name="english">English</string>
     <string name="spanish">Spanish</string>
     <string name="app_language">App language</string>
-    <string name="sort_books_param">Sort books param</string>
+    <string name="sort_books_param">Read books order mode</string>
     <string name="app_theme">App theme</string>
     <string-array name="app_theme_values">
         <item>System default</item>
         <item>Light</item>
         <item>Dark</item>
     </string-array>
-    <string name="delete">Delete</string>
-    <string name="logout">Logout</string>
 
     //POPUPS
     <string name="accept">Accept</string>
