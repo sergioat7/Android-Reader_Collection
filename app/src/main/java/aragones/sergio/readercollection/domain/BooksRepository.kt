@@ -20,6 +20,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
@@ -47,6 +48,7 @@ class BooksRepository @Inject constructor(
         .create { emitter ->
             booksRemoteDataSource
                 .getBooks(uuid)
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -86,7 +88,8 @@ class BooksRepository @Inject constructor(
                             .saveBooks(
                                 uuid = uuid,
                                 books = localBooks.map { it.toDomain().toRemoteData() },
-                            ).subscribeOn(ioScheduler)
+                            ).timeout(10, TimeUnit.SECONDS)
+                            .subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(onComplete = {
                                 emitter.onComplete()
