@@ -73,6 +73,9 @@ class SharedPreferencesHandler {
         )
     val isLoggedIn: Boolean
         get() = credentials.uuid.isNotEmpty()
+    var isAutomaticSyncEnabled: Boolean
+        get() = appPreferences.getBoolean(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME, true)
+        set(value) = editor.setBoolean(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME, value)
     var sortParam: String?
         get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
         set(value) = editor.setString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)

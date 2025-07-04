@@ -32,7 +32,7 @@ class DataSyncViewModel @Inject constructor(
         get() = userRepository.userId
     private var _state: MutableState<DataSyncUiState> = mutableStateOf(
         DataSyncUiState.empty().copy(
-            isAutomaticSyncEnabled = true,
+            isAutomaticSyncEnabled = userRepository.isAutomaticSyncEnabled,
         ),
     )
     private val _error = MutableStateFlow<ErrorResponse?>(null)
@@ -56,6 +56,7 @@ class DataSyncViewModel @Inject constructor(
 
     //region Public methods
     fun changeAutomaticSync(value: Boolean) {
+        userRepository.storeAutomaticSync(value)
         _state.value = _state.value.copy(isAutomaticSyncEnabled = value)
     }
     fun syncData() {

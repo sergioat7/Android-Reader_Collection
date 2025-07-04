@@ -41,6 +41,9 @@ class UserLocalDataSource @Inject constructor(
     val userId: String
         get() = preferences.credentials.uuid
 
+    val isAutomaticSyncEnabled: Boolean
+        get() = preferences.isAutomaticSyncEnabled
+
     var language: String
         get() = preferences.language
         set(value) {
@@ -106,6 +109,10 @@ class UserLocalDataSource @Inject constructor(
 
     fun removeUserData() {
         preferences.removeUserData()
+    }
+
+    fun storeAutomaticSync(value: Boolean) {
+        preferences.isAutomaticSyncEnabled = value
     }
 
     fun storeLanguage(language: String) {
