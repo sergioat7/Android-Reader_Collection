@@ -8,10 +8,13 @@ package aragones.sergio.readercollection.presentation.datasync
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.work.WorkManager
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
+import aragones.sergio.readercollection.utils.SyncDataWorker
 
 @Composable
 fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = hiltViewModel()) {
@@ -26,6 +29,12 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = hiltViewMode
             onChange = viewModel::changeAutomaticSync,
             onSync = viewModel::syncData,
         )
+    }
+
+    if (!state.isAutomaticSyncEnabled) {
+        WorkManager
+            .getInstance(LocalContext.current)
+            .cancelUniqueWork(SyncDataWorker.WORK_NAME)
     }
 
     val text = if (error != null) {
