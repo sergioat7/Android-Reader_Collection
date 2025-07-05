@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.data.remote
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
@@ -16,6 +17,7 @@ import kotlinx.coroutines.tasks.await
 
 class UserRemoteDataSource @Inject constructor(
     private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore,
     private val remoteConfig: FirebaseRemoteConfig,
 ) {
 
@@ -58,6 +60,16 @@ class UserRemoteDataSource @Inject constructor(
             }
         } ?: completable.onError(RuntimeException("User is null"))
     }
+
+    fun registerPublicProfile(username: String, userId: String): Completable =
+        Completable.create { emitter ->
+            firestore
+                .collection("public_profiles")
+                .document(userId)
+                .set(mapOf("uuid" to userId, "email" to "${username}$mailEnd"))
+                .addOnSuccessListener { emitter.onComplete() }
+                .addOnFailureListener { emitter.onError(it) }
+        }
 
     fun deleteUser() = Completable.create { completable ->
         auth.currentUser?.delete()
