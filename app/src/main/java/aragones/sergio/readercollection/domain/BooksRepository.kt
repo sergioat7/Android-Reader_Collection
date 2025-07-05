@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.IoScheduler
 import aragones.sergio.readercollection.domain.di.MainScheduler
@@ -75,33 +76,44 @@ class BooksRepository @Inject constructor(
 
     fun syncBooks(uuid: String): Completable = Completable
         .create { emitter ->
-            booksLocalDataSource
-                .getAllBooks()
+            booksRemoteDataSource
+                .getBooks(uuid)
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onNext = { localBooks ->
-                        booksRemoteDataSource
-                            .saveBooks(
-                                uuid = uuid,
-                                books = localBooks.map { it.toDomain().toRemoteData() },
-                            ).timeout(10, TimeUnit.SECONDS)
-                            .subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(onComplete = {
-                                emitter.onComplete()
-                            }, onError = {
-                                emitter.onError(it)
-                            })
-                            .addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
+                .onErrorReturnItem(emptyList())
+                .subscribe { remoteBooks ->
+                    booksLocalDataSource
+                        .getAllBooks()
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
+                        .onErrorReturnItem(emptyList())
+                        .subscribeBy(
+                            onNext = { localBooks ->
+                                val disabledContent = arrayListOf<BookResponse>()
+                                for (remoteBook in remoteBooks) {
+                                    if (localBooks.firstOrNull { it.id == remoteBook.id } == null) {
+                                        disabledContent.add(remoteBook)
+                                    }
+                                }
+                                val currentBooks = localBooks.map { it.toDomain().toRemoteData() }
+                                booksRemoteDataSource
+                                    .syncBooks(
+                                        uuid = uuid,
+                                        booksToSave = currentBooks,
+                                        booksToRemove = disabledContent,
+                                    ).timeout(10, TimeUnit.SECONDS)
+                                    .subscribeOn(ioScheduler)
+                                    .observeOn(mainScheduler)
+                                    .subscribeBy(onComplete = {
+                                        emitter.onComplete()
+                                    }, onError = {
+                                        emitter.onError(it)
+                                    })
+                                    .addTo(disposables)
+                            },
+                        ).addTo(disposables)
+                }.addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 

@@ -84,16 +84,25 @@ class BooksRemoteDataSource @Inject constructor(
             }.addOnFailureListener { emitter.onError(it) }
     }
 
-    fun saveBooks(uuid: String, books: List<BookResponse>) = Completable.create { emitter ->
+    fun syncBooks(
+        uuid: String,
+        booksToSave: List<BookResponse>,
+        booksToRemove: List<BookResponse>,
+    ) = Completable.create { emitter ->
         val batch = firestore.batch()
         val booksRef = firestore
             .collection("users")
             .document(uuid)
             .collection("books")
 
-        books.forEach { book ->
+        booksToSave.forEach { book ->
             val docRef = booksRef.document(book.id)
             batch.set(docRef, book)
+        }
+
+        booksToRemove.forEach { book ->
+            val docRef = booksRef.document(book.id)
+            batch.delete(docRef)
         }
 
         batch
