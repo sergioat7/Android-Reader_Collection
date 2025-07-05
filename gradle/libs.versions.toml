@@ -2,7 +2,7 @@
 jdk = "17"
 sdk-compile = "36"
 sdk-min = "23"
-sdk-target = "35"
+sdk-target = "36"
 
 agp = "8.11.0"
 android-chart = "3.1.0"
