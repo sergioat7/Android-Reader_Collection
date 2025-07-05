@@ -85,11 +85,12 @@ class BooksRepository @Inject constructor(
                 .subscribe { remoteBooks ->
                     booksLocalDataSource
                         .getAllBooks()
+                        .firstOrError()
                         .subscribeOn(ioScheduler)
                         .observeOn(mainScheduler)
                         .onErrorReturnItem(emptyList())
                         .subscribeBy(
-                            onNext = { localBooks ->
+                            onSuccess = { localBooks ->
                                 val disabledContent = arrayListOf<BookResponse>()
                                 for (remoteBook in remoteBooks) {
                                     if (localBooks.firstOrNull { it.id == remoteBook.id } == null) {
@@ -143,13 +144,11 @@ class BooksRepository @Inject constructor(
         .create<String> { emitter ->
             booksLocalDataSource
                 .getAllBooks()
+                .firstOrError()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onComplete = {
-                        emitter.onSuccess("")
-                    },
-                    onNext = {
+                    onSuccess = {
                         val books = it.map { book -> book.toDomain() }
                         emitter.onSuccess(moshiAdapter.toJson(books))
                     },
@@ -270,13 +269,11 @@ class BooksRepository @Inject constructor(
         .create { emitter ->
             booksLocalDataSource
                 .getAllBooks()
+                .firstOrError()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onNext = { books ->
+                    onSuccess = { books ->
                         booksLocalDataSource
                             .deleteBooks(books)
                             .subscribeOn(ioScheduler)
