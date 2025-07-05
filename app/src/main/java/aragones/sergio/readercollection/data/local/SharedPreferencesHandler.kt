@@ -88,27 +88,6 @@ class SharedPreferencesHandler {
     var isSortDescending: Boolean
         get() = appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
         set(value) = editor.setBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
-    var hasBooksTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.BOOKS_TUTORIAL_PREFERENCE_NAME, value)
-    var hasDragTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.DRAG_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.DRAG_TUTORIAL_PREFERENCE_NAME, value)
-    var hasSearchTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.SEARCH_TUTORIAL_PREFERENCE_NAME, value)
-    var hasStatisticsTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.STATISTICS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.STATISTICS_TUTORIAL_PREFERENCE_NAME, value)
-    var hasSettingsTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.SETTINGS_TUTORIAL_PREFERENCE_NAME, value)
-    var hasNewBookTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.NEW_BOOK_TUTORIAL_PREFERENCE_NAME, value)
-    var hasBookDetailsTutorialBeenShown: Boolean
-        get() = appPreferences.getBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME, value)
     //endregion
 
     //region Public methods
@@ -126,6 +105,18 @@ class SharedPreferencesHandler {
 
     fun removeUserData() {
         encryptedEditor.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
+    }
+
+    fun removeUserPreferences() {
+        editor
+            .apply {
+                remove(Preferences.LANGUAGE_PREFERENCE_NAME)
+                remove(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME)
+                remove(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME)
+                remove(Preferences.SORT_PARAM_PREFERENCE_NAME)
+                remove(Preferences.THEME_MODE_PREFERENCE_NAME)
+                remove(Preferences.SORT_ORDER_PREFERENCE_NAME)
+            }.apply()
     }
     //endregion
 }

@@ -45,7 +45,6 @@ class StatisticsViewModel @Inject constructor(
     val booksError: StateFlow<ErrorResponse?> = _booksError
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
-    var tutorialShown = userRepository.hasStatisticsTutorialBeenShown
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
@@ -98,11 +97,6 @@ class StatisticsViewModel @Inject constructor(
                     _booksError.value = ErrorResponse("", R.string.error_database)
                 },
             ).addTo(disposables)
-    }
-
-    fun setTutorialAsShown() {
-        userRepository.setHasStatisticsTutorialBeenShown(true)
-        tutorialShown = true
     }
 
     fun showConfirmationDialog(textId: Int) {

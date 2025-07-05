@@ -59,27 +59,6 @@ class UserRepository @Inject constructor(
 
     val themeMode: Int
         get() = userLocalDataSource.themeMode
-
-    val hasBooksTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasBooksTutorialBeenShown
-
-    val hasDragTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasDragTutorialBeenShown
-
-    val hasSearchTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasSearchTutorialBeenShown
-
-    val hasStatisticsTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasStatisticsTutorialBeenShown
-
-    val hasSettingsTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasSettingsTutorialBeenShown
-
-    val hasNewBookTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasNewBookTutorialBeenShown
-
-    val hasBookDetailsTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasBookDetailsTutorialBeenShown
     //endregion
 
     //region Public methods
@@ -239,34 +218,6 @@ class UserRepository @Inject constructor(
 
     fun storeThemeMode(themeMode: Int) {
         userLocalDataSource.storeThemeMode(themeMode)
-    }
-
-    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown)
-    }
-
-    fun setHasDragTutorialBeenShown(hasDragTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasDragTutorialBeenShown(hasDragTutorialBeenShown)
-    }
-
-    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown)
-    }
-
-    fun setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown)
-    }
-
-    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown)
-    }
-
-    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown)
-    }
-
-    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
     }
 
     suspend fun isThereMandatoryUpdate(): Boolean {

@@ -17,6 +17,8 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.SyncDataWorker
@@ -27,13 +29,16 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = hiltViewMode
     val state by viewModel.state
     val error by viewModel.error.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+    val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
 
     ReaderCollectionApp {
         DataSyncScreen(
             state = state,
             onBack = onBack,
             onChange = viewModel::changeAutomaticSync,
-            onSync = viewModel::syncData,
+            onSync = {
+                viewModel.showConfirmationDialog(R.string.sync_confirmation)
+            },
         )
     }
 
@@ -63,6 +68,25 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = hiltViewMode
     InformationAlertDialog(show = text.isNotEmpty(), text = text) {
         viewModel.closeDialogs()
     }
+
+    ConfirmationAlertDialog(
+        show = confirmationMessageId != -1,
+        textId = confirmationMessageId,
+        onCancel = {
+            viewModel.closeDialogs()
+        },
+        onAccept = {
+            when (confirmationMessageId) {
+                R.string.sync_confirmation -> {
+                    viewModel.syncData()
+                }
+                else -> {
+                    Unit
+                }
+            }
+            viewModel.closeDialogs()
+        },
+    )
 }
 
 private fun setupWorker(context: Context) {

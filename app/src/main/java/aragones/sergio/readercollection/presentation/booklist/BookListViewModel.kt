@@ -91,7 +91,6 @@ class BookListViewModel @Inject constructor(
     val state: State<BookListUiState> = _state
     val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
     val booksError: StateFlow<ErrorResponse?> = _booksError
-    var tutorialShown = userRepository.hasDragTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -195,11 +194,6 @@ class BookListViewModel @Inject constructor(
             isSortDescending = newIsSortDescending,
         )
         fetchBooks()
-    }
-
-    fun setTutorialAsShown() {
-        userRepository.setHasDragTutorialBeenShown(true)
-        tutorialShown = true
     }
     //endregion
 

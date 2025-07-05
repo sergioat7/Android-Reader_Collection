@@ -6,9 +6,7 @@
 package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.data.remote.ApiManager
-import aragones.sergio.readercollection.data.remote.services.BookApiService
 import aragones.sergio.readercollection.data.remote.services.GoogleApiService
-import aragones.sergio.readercollection.data.remote.services.UserApiService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -27,20 +25,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_ENDPOINT = "https://books-collection-services.herokuapp.com/"
     private const val BASE_GOOGLE_ENDPOINT = "https://www.googleapis.com/books/v1/"
 
     @Singleton
     @Provides
-    fun providesBookApiService(): BookApiService = ApiManager.getService(BASE_ENDPOINT)
-
-    @Singleton
-    @Provides
     fun providesGoogleApiService(): GoogleApiService = ApiManager.getService(BASE_GOOGLE_ENDPOINT)
-
-    @Singleton
-    @Provides
-    fun providesUserApiService(): UserApiService = ApiManager.getService(BASE_ENDPOINT)
 
     @Singleton
     @Provides
