@@ -106,5 +106,17 @@ class SharedPreferencesHandler {
     fun removeUserData() {
         encryptedEditor.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
     }
+
+    fun removeUserPreferences() {
+        editor
+            .apply {
+                remove(Preferences.LANGUAGE_PREFERENCE_NAME)
+                remove(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME)
+                remove(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME)
+                remove(Preferences.SORT_PARAM_PREFERENCE_NAME)
+                remove(Preferences.THEME_MODE_PREFERENCE_NAME)
+                remove(Preferences.SORT_ORDER_PREFERENCE_NAME)
+            }.apply()
+    }
     //endregion
 }

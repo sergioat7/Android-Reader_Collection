@@ -68,6 +68,7 @@ class UserLocalDataSource @Inject constructor(
 
     //region Public methods
     fun logout() {
+        preferences.removeUserPreferences()
         preferences.removePassword()
         removeCredentials()
     }
