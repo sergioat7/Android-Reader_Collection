@@ -37,12 +37,14 @@ class DataSyncViewModel @Inject constructor(
     )
     private val _error = MutableStateFlow<ErrorResponse?>(null)
     private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val state: State<DataSyncUiState> = _state
     val error: StateFlow<ErrorResponse?> = _error
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -78,8 +80,13 @@ class DataSyncViewModel @Inject constructor(
             ).addTo(disposables)
     }
 
+    fun showConfirmationDialog(textId: Int) {
+        _confirmationDialogMessageId.value = textId
+    }
+
     fun closeDialogs() {
         _infoDialogMessageId.value = -1
+        _confirmationDialogMessageId.value = -1
         _error.value = null
     }
     //endregion
