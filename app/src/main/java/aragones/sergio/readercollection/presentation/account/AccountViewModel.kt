@@ -85,10 +85,20 @@ class AccountViewModel @Inject constructor(
     }
 
     fun setPublicProfile(value: Boolean) {
-        userRepository.storePublicProfile(value)
-        _state.value = _state.value.copy(
-            isProfilePublic = value,
-        )
+        _state.value = _state.value.copy(isLoading = true)
+        userRepository
+            .setPublicProfile(value)
+            .subscribeBy(
+                onComplete = {
+                    _state.value = _state.value.copy(
+                        isProfilePublic = value,
+                        isLoading = false,
+                    )
+                },
+                onError = {
+                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                },
+            ).addTo(disposables)
     }
 
     fun deleteUser() {
