@@ -18,9 +18,15 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.PublicOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -51,6 +57,7 @@ fun AccountScreen(
     onProfileDataChange: (String) -> Unit,
     onBack: () -> Unit,
     onSave: () -> Unit,
+    onChangePublicProfile: (Boolean) -> Unit,
     onDeleteAccount: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -90,6 +97,11 @@ fun AccountScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
             HeaderText(text = stringResource(R.string.account_management_title))
+            PublicProfileItem(
+                isEnabled = state.isProfilePublic,
+                onChange = onChangePublicProfile,
+            )
+            Spacer(Modifier.height(12.dp))
             DeleteAccountItem(onClick = onDeleteAccount)
         }
     }
@@ -162,6 +174,60 @@ private fun ProfileInfo(
 }
 
 @Composable
+private fun PublicProfileItem(
+    isEnabled: Boolean,
+    onChange: (Boolean) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = stringResource(R.string.public_profile_title),
+                style = MaterialTheme.typography.bodyLarge,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.public_profile_description),
+                style = MaterialTheme.typography.bodyMedium,
+                fontSize = 14.sp,
+                color = MaterialTheme.colorScheme.tertiary,
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Switch(
+            checked = isEnabled,
+            onCheckedChange = onChange,
+            thumbContent = {
+                Icon(
+                    imageVector = if (isEnabled) {
+                        Icons.Default.Public
+                    } else {
+                        Icons.Default.PublicOff
+                    },
+                    contentDescription = null,
+                    modifier = Modifier.padding(4.dp),
+                )
+            },
+            colors = SwitchDefaults.colors(
+                checkedThumbColor = MaterialTheme.colorScheme.secondary,
+                checkedIconColor = MaterialTheme.colorScheme.primary,
+                uncheckedThumbColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.75f),
+                uncheckedIconColor = MaterialTheme.colorScheme.secondary,
+                uncheckedTrackColor = MaterialTheme.colorScheme.secondary,
+                uncheckedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.75f),
+            ),
+        )
+    }
+}
+
+@Composable
 fun DeleteAccountItem(onClick: () -> Unit) {
     Row(
         modifier = Modifier
@@ -214,6 +280,7 @@ private fun AccountScreenPreview(
             onProfileDataChange = { _ -> },
             onBack = {},
             onSave = {},
+            onChangePublicProfile = {},
             onDeleteAccount = {},
         )
     }
@@ -228,18 +295,21 @@ private class AccountScreenPreviewParameterProvider :
                 username = "User",
                 password = "Password",
                 passwordError = null,
+                isProfilePublic = true,
                 isLoading = false,
             ),
             AccountUiState(
                 username = "Username very very very very very very very long",
                 password = "",
                 passwordError = R.string.invalid_password,
+                isProfilePublic = false,
                 isLoading = false,
             ),
             AccountUiState(
                 username = "User",
                 password = "Password",
                 passwordError = null,
+                isProfilePublic = true,
                 isLoading = true,
             ),
         )

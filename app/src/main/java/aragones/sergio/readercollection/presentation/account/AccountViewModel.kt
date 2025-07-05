@@ -83,6 +83,12 @@ class AccountViewModel @Inject constructor(
         }
     }
 
+    fun setPublicProfile(value: Boolean) {
+        _state.value = _state.value.copy(
+            isProfilePublic = value,
+        )
+    }
+
     fun deleteUser() {
         _state.value = _state.value.copy(isLoading = true)
         userRepository
