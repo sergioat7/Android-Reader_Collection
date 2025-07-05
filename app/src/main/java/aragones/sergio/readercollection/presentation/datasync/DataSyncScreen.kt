@@ -37,9 +37,9 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.components.SyncAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
@@ -75,7 +75,7 @@ fun DataSyncScreen(
         }
     }
     if (state.isLoading) {
-        CustomCircularProgressIndicator()
+        SyncAlertDialog()
     }
 }
 

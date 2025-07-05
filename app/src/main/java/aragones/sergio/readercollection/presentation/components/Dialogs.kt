@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
@@ -362,6 +363,39 @@ fun CustomDatePickerDialog(
 }
 
 @Composable
+fun SyncAlertDialog() {
+    Dialog(
+        onDismissRequest = {},
+        properties = DialogProperties(
+            dismissOnBackPress = false,
+            dismissOnClickOutside = false,
+        ),
+    ) {
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+            shape = MaterialTheme.shapes.medium,
+            modifier = Modifier.testTag("syncAlertDialog"),
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary,
+                )
+                Spacer(Modifier.height(24.dp))
+                TextMessageAlertDialog(
+                    text = stringResource(R.string.sync_title),
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun TextTitleAlertDialog(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
@@ -463,5 +497,13 @@ private fun CustomDatePickerDialogPreview() {
             onDateSelected = {},
             onDismiss = {},
         )
+    }
+}
+
+@CustomPreviewLightDark
+@Composable
+private fun SyncAlertDialogPreview() {
+    ReaderCollectionTheme {
+        SyncAlertDialog()
     }
 }
