@@ -26,7 +26,6 @@ object ApiManager {
     var retrofits: MutableMap<KClass<*>, Any> = mutableMapOf()
     var apis: MutableMap<KClass<*>, Any> = mutableMapOf()
     var language: String = ""
-    var accessToken: String = ""
     //endregion
 
     //region Public methods

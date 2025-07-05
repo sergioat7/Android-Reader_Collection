@@ -12,8 +12,6 @@ import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.LoginActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -67,21 +65,6 @@ class LandingViewModel @Inject constructor(
 
     fun setLanguage(value: String) {
         userRepository.language = value
-    }
-    //endregion
-
-    //region Private methods
-    private fun resetDatabase() {
-        booksRepository
-            .resetTable()
-            .subscribeBy(
-                onComplete = {
-                    _landingClassToStart.value = LoginActivity::class.java
-                },
-                onError = {
-                    _landingClassToStart.value = LoginActivity::class.java
-                },
-            ).addTo(disposables)
     }
     //endregion
 }
