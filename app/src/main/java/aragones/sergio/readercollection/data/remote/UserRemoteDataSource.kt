@@ -71,6 +71,15 @@ class UserRemoteDataSource @Inject constructor(
                 .addOnFailureListener { emitter.onError(it) }
         }
 
+    fun deletePublicProfile(userId: String): Completable = Completable.create { emitter ->
+        firestore
+            .collection("public_profiles")
+            .document(userId)
+            .delete()
+            .addOnSuccessListener { emitter.onComplete() }
+            .addOnFailureListener { emitter.onError(it) }
+    }
+
     fun deleteUser() = Completable.create { completable ->
         auth.currentUser?.delete()
         completable.onComplete()
