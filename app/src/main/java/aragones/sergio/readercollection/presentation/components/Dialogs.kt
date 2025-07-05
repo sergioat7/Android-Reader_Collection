@@ -43,6 +43,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
@@ -412,6 +413,7 @@ private fun TextMessageAlertDialog(text: String, modifier: Modifier = Modifier) 
         modifier = modifier,
         style = MaterialTheme.typography.bodyLarge,
         color = MaterialTheme.colorScheme.primary,
+        lineHeight = 24.sp,
     )
 }
 
