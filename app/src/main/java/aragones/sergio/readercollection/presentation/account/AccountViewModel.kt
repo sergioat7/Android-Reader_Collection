@@ -53,6 +53,7 @@ class AccountViewModel @Inject constructor(
         _state.value = _state.value.copy(
             password = userRepository.userData.password,
             passwordError = null,
+            isProfilePublic = userRepository.isProfilePublic,
         )
     }
 
@@ -81,6 +82,23 @@ class AccountViewModel @Inject constructor(
                     },
                 ).addTo(disposables)
         }
+    }
+
+    fun setPublicProfile(value: Boolean) {
+        _state.value = _state.value.copy(isLoading = true)
+        userRepository
+            .setPublicProfile(value)
+            .subscribeBy(
+                onComplete = {
+                    _state.value = _state.value.copy(
+                        isProfilePublic = value,
+                        isLoading = false,
+                    )
+                },
+                onError = {
+                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                },
+            ).addTo(disposables)
     }
 
     fun deleteUser() {
@@ -119,6 +137,7 @@ class AccountViewModel @Inject constructor(
     fun closeDialogs() {
         _confirmationDialogMessageId.value = -1
         _infoDialogMessageId.value = -1
+        _profileError.value = null
     }
     //endregion
 
@@ -141,7 +160,6 @@ class AccountViewModel @Inject constructor(
     private fun manageError(error: ErrorResponse) {
         _state.value = _state.value.copy(isLoading = false)
         _profileError.value = error
-        _profileError.value = null
     }
     //endregion
 }

@@ -97,6 +97,8 @@
     <string name="account_details_title">Account details</string>
     <string name="account_management_title">Account management</string>
     <string name="save">Save</string>
+    <string name="public_profile_title">Public profile</string>
+    <string name="public_profile_description">Other users will be able to search for you and see your books</string>
     <string name="delete_account_title">Delete account</string>
     <string name="delete_account_description">Permanently delete your account and books data</string>
     <string name="delete_account_action">Delete account</string>

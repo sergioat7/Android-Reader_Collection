@@ -16,6 +16,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -34,6 +35,9 @@ class UserRepository @Inject constructor(
 
     val userId: String
         get() = userLocalDataSource.userId
+
+    val isProfilePublic: Boolean
+        get() = userLocalDataSource.isProfilePublic
 
     val isAutomaticSyncEnabled: Boolean
         get() = userLocalDataSource.isAutomaticSyncEnabled
@@ -159,6 +163,42 @@ class UserRepository @Inject constructor(
                         emitter.onError(it)
                     },
                 ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
+
+    fun setPublicProfile(value: Boolean): Completable = Completable
+        .create { emitter ->
+            if (value) {
+                userRemoteDataSource
+                    .registerPublicProfile(username, userId)
+                    .timeout(10, TimeUnit.SECONDS)
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                            userLocalDataSource.storePublicProfile(value)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        },
+                    ).addTo(disposables)
+            } else {
+                userRemoteDataSource
+                    .deletePublicProfile(userId)
+                    .timeout(10, TimeUnit.SECONDS)
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = {
+                            userLocalDataSource.storePublicProfile(value)
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        },
+                    ).addTo(disposables)
+            }
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 

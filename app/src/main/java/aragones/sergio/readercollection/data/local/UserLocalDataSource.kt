@@ -41,6 +41,9 @@ class UserLocalDataSource @Inject constructor(
     val userId: String
         get() = preferences.credentials.uuid
 
+    val isProfilePublic: Boolean
+        get() = preferences.isProfilePublic
+
     val isAutomaticSyncEnabled: Boolean
         get() = preferences.isAutomaticSyncEnabled
 
@@ -109,6 +112,10 @@ class UserLocalDataSource @Inject constructor(
 
     fun removeUserData() {
         preferences.removeUserData()
+    }
+
+    fun storePublicProfile(value: Boolean) {
+        preferences.isProfilePublic = value
     }
 
     fun storeAutomaticSync(value: Boolean) {

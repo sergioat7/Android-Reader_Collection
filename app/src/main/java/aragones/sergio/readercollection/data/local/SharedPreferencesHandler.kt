@@ -73,6 +73,9 @@ class SharedPreferencesHandler {
         )
     val isLoggedIn: Boolean
         get() = credentials.uuid.isNotEmpty()
+    var isProfilePublic: Boolean
+        get() = appPreferences.getBoolean(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME, false)
+        set(value) = editor.setBoolean(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME, value)
     var isAutomaticSyncEnabled: Boolean
         get() = appPreferences.getBoolean(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME, true)
         set(value) = editor.setBoolean(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME, value)

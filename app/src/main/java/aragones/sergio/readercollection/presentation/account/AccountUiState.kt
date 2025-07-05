@@ -9,6 +9,7 @@ data class AccountUiState(
     val username: String,
     val password: String,
     val passwordError: Int?,
+    val isProfilePublic: Boolean,
     val isLoading: Boolean,
 ) {
     companion object {
@@ -16,6 +17,7 @@ data class AccountUiState(
             username = "",
             password = "",
             passwordError = null,
+            isProfilePublic = false,
             isLoading = false,
         )
     }

@@ -100,6 +100,8 @@
     <string name="account_details_title">Detalles de la cuenta</string>
     <string name="account_management_title">Gestión de la cuenta</string>
     <string name="save">Guardar</string>
+    <string name="public_profile_title">Perfil público</string>
+    <string name="public_profile_description">Otros usuarios podrán buscarte y ver tus libros</string>
     <string name="delete_account_title">Borrar cuenta</string>
     <string name="delete_account_description">Borrar para siempre tu usuario y todos los libros guardados</string>
     <string name="delete_account_action">Borrar cuenta</string>
