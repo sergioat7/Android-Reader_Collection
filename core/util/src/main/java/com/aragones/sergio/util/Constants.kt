@@ -13,6 +13,7 @@ object Preferences {
     const val USER_DATA_PREFERENCES_NAME = "userData"
     const val ENGLISH_LANGUAGE_KEY = "en"
     const val SPANISH_LANGUAGE_KEY = "es"
+    const val PUBLIC_PROFILE_PREFERENCE_NAME = "publicProfile"
     const val AUTOMATIC_SYNC_PREFERENCE_NAME = "automaticSync"
     const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"

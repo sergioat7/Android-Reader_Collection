@@ -53,6 +53,7 @@ class AccountViewModel @Inject constructor(
         _state.value = _state.value.copy(
             password = userRepository.userData.password,
             passwordError = null,
+            isProfilePublic = userRepository.isProfilePublic,
         )
     }
 
@@ -84,6 +85,7 @@ class AccountViewModel @Inject constructor(
     }
 
     fun setPublicProfile(value: Boolean) {
+        userRepository.storePublicProfile(value)
         _state.value = _state.value.copy(
             isProfilePublic = value,
         )

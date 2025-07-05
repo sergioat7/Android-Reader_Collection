@@ -35,6 +35,9 @@ class UserRepository @Inject constructor(
     val userId: String
         get() = userLocalDataSource.userId
 
+    val isProfilePublic: Boolean
+        get() = userLocalDataSource.isProfilePublic
+
     val isAutomaticSyncEnabled: Boolean
         get() = userLocalDataSource.isAutomaticSyncEnabled
 
@@ -180,6 +183,10 @@ class UserRepository @Inject constructor(
                 ).addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
+
+    fun storePublicProfile(value: Boolean) {
+        userLocalDataSource.storePublicProfile(value)
+    }
 
     fun storeAutomaticSync(value: Boolean) {
         userLocalDataSource.storeAutomaticSync(value)
