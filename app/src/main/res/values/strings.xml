@@ -30,11 +30,7 @@
     <string name="new_book">New</string>
     <string name="format">Format</string>
     <string name="state">State</string>
-    <string name="query_title" translatable="false">\"%s\"</string>
     <string name="load_more">Load more</string>
-    <string name="synchronize">Synchronize</string>
-    <string name="sort">Sort</string>
-    <string name="drag">Drag</string>
     <string name="pending">Pending</string>
     <string name="read">Read</string>
     <string name="show_all">Show all</string>
@@ -50,8 +46,6 @@
     <string name="longer_book">Longer book</string>
     <string name="months">Months</string>
     <string name="formats">Formats</string>
-    <string name="import_file">Import books</string>
-    <string name="export_file">Export books</string>
     <string name="import_confirmation">Are you sure you want to IMPORT the data? This process could take a while.</string>
     <string name="export_confirmation">Are you sure you want to EXPORT the data? This process could take a while.</string>
     <string name="file_created">File created</string>
@@ -78,8 +72,6 @@
     <string name="reading_date">Reading date</string>
     <string name="book_saved">Book saved!</string>
     <string name="book_removed">Book removed!</string>
-    <string name="edit">Edit</string>
-    <string name="remove">Remove</string>
 
     //SETTINGS
     <string name="title_settings">Settings</string>
@@ -148,11 +140,6 @@
         <item>Page count</item>
         <item>Rating</item>
         <item>Author(s)</item>
-    </string-array>
-    <string-array name="sorting_order_keys" translatable="false">
-        <item />
-        <item>ascending</item>
-        <item>descending</item>
     </string-array>
     <string-array name="sorting_order_values">
         <item>Ascending</item>
