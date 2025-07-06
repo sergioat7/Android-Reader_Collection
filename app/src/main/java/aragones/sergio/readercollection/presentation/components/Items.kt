@@ -362,7 +362,6 @@ fun SwipeItemBackground(dismissValue: SwipeToDismissBoxValue, color: Color, icon
 enum class SwipeDirection {
     LEFT,
     RIGHT,
-    NONE,
 }
 
 @CustomPreviewLightDarkWithBackground

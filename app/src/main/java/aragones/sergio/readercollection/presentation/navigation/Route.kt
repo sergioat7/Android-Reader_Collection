@@ -57,4 +57,13 @@ sealed class Route {
         val author: String? = null,
         val format: String? = null,
     ) : Route()
+
+    @Serializable
+    data object Account : Route()
+
+    @Serializable
+    data object DataSync : Route()
+
+    @Serializable
+    data object DisplaySettings : Route()
 }

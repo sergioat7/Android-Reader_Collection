@@ -233,8 +233,6 @@ class CollapsingToolbarNestedScrollConnection(
         private set
     var contentScale by mutableFloatStateOf(1f)
         private set
-    val isExpanded: Boolean
-        get() = currentContentSize > minContentSize
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
         val delta = available.y

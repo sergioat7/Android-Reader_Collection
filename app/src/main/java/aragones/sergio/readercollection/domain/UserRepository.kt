@@ -16,6 +16,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class UserRepository @Inject constructor(
@@ -35,6 +36,12 @@ class UserRepository @Inject constructor(
     val userId: String
         get() = userLocalDataSource.userId
 
+    val isProfilePublic: Boolean
+        get() = userLocalDataSource.isProfilePublic
+
+    val isAutomaticSyncEnabled: Boolean
+        get() = userLocalDataSource.isAutomaticSyncEnabled
+
     var language: String
         get() = userLocalDataSource.language
         set(value) {
@@ -52,27 +59,6 @@ class UserRepository @Inject constructor(
 
     val themeMode: Int
         get() = userLocalDataSource.themeMode
-
-    val hasBooksTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasBooksTutorialBeenShown
-
-    val hasDragTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasDragTutorialBeenShown
-
-    val hasSearchTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasSearchTutorialBeenShown
-
-    val hasStatisticsTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasStatisticsTutorialBeenShown
-
-    val hasSettingsTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasSettingsTutorialBeenShown
-
-    val hasNewBookTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasNewBookTutorialBeenShown
-
-    val hasBookDetailsTutorialBeenShown: Boolean
-        get() = userLocalDataSource.hasBookDetailsTutorialBeenShown
     //endregion
 
     //region Public methods
@@ -159,6 +145,42 @@ class UserRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
+    fun setPublicProfile(value: Boolean): Completable = Completable
+        .create { emitter ->
+            if (value) {
+                userRemoteDataSource
+                    .registerPublicProfile(username, userId)
+                    .timeout(10, TimeUnit.SECONDS)
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = {
+                            emitter.onComplete()
+                            userLocalDataSource.storePublicProfile(value)
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        },
+                    ).addTo(disposables)
+            } else {
+                userRemoteDataSource
+                    .deletePublicProfile(userId)
+                    .timeout(10, TimeUnit.SECONDS)
+                    .subscribeOn(ioScheduler)
+                    .observeOn(mainScheduler)
+                    .subscribeBy(
+                        onComplete = {
+                            userLocalDataSource.storePublicProfile(value)
+                            emitter.onComplete()
+                        },
+                        onError = {
+                            emitter.onError(it)
+                        },
+                    ).addTo(disposables)
+            }
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
+
     fun deleteUser(): Completable = Completable
         .create { emitter ->
             userRemoteDataSource
@@ -178,6 +200,10 @@ class UserRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
+    fun storeAutomaticSync(value: Boolean) {
+        userLocalDataSource.storeAutomaticSync(value)
+    }
+
     fun storeLanguage(language: String) {
         userLocalDataSource.storeLanguage(language)
     }
@@ -192,34 +218,6 @@ class UserRepository @Inject constructor(
 
     fun storeThemeMode(themeMode: Int) {
         userLocalDataSource.storeThemeMode(themeMode)
-    }
-
-    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown)
-    }
-
-    fun setHasDragTutorialBeenShown(hasDragTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasDragTutorialBeenShown(hasDragTutorialBeenShown)
-    }
-
-    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown)
-    }
-
-    fun setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown)
-    }
-
-    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown)
-    }
-
-    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown)
-    }
-
-    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
-        userLocalDataSource.setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown)
     }
 
     suspend fun isThereMandatoryUpdate(): Boolean {

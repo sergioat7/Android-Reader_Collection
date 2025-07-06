@@ -13,16 +13,11 @@ object Preferences {
     const val USER_DATA_PREFERENCES_NAME = "userData"
     const val ENGLISH_LANGUAGE_KEY = "en"
     const val SPANISH_LANGUAGE_KEY = "es"
+    const val PUBLIC_PROFILE_PREFERENCE_NAME = "publicProfile"
+    const val AUTOMATIC_SYNC_PREFERENCE_NAME = "automaticSync"
     const val SORT_PARAM_PREFERENCE_NAME = "sortParam"
     const val THEME_MODE_PREFERENCE_NAME = "themeMode"
     const val SORT_ORDER_PREFERENCE_NAME = "sortOrder"
-    const val BOOKS_TUTORIAL_PREFERENCE_NAME = "booksTutorial"
-    const val DRAG_TUTORIAL_PREFERENCE_NAME = "dragTutorial"
-    const val SEARCH_TUTORIAL_PREFERENCE_NAME = "searchTutorial"
-    const val STATISTICS_TUTORIAL_PREFERENCE_NAME = "statisticsTutorial"
-    const val SETTINGS_TUTORIAL_PREFERENCE_NAME = "settingsTutorial"
-    const val NEW_BOOK_TUTORIAL_PREFERENCE_NAME = "newBookTutorial"
-    const val BOOK_DETAILS_TUTORIAL_PREFERENCE_NAME = "bookDetailsTutorial"
 }
 
 object Constants {

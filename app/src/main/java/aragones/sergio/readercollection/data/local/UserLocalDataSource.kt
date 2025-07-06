@@ -41,6 +41,12 @@ class UserLocalDataSource @Inject constructor(
     val userId: String
         get() = preferences.credentials.uuid
 
+    val isProfilePublic: Boolean
+        get() = preferences.isProfilePublic
+
+    val isAutomaticSyncEnabled: Boolean
+        get() = preferences.isAutomaticSyncEnabled
+
     var language: String
         get() = preferences.language
         set(value) {
@@ -58,31 +64,11 @@ class UserLocalDataSource @Inject constructor(
 
     val themeMode: Int
         get() = preferences.themeMode
-
-    val hasBooksTutorialBeenShown: Boolean
-        get() = preferences.hasBooksTutorialBeenShown
-
-    val hasDragTutorialBeenShown: Boolean
-        get() = preferences.hasDragTutorialBeenShown
-
-    val hasSearchTutorialBeenShown: Boolean
-        get() = preferences.hasSearchTutorialBeenShown
-
-    val hasStatisticsTutorialBeenShown: Boolean
-        get() = preferences.hasStatisticsTutorialBeenShown
-
-    val hasSettingsTutorialBeenShown: Boolean
-        get() = preferences.hasSettingsTutorialBeenShown
-
-    val hasNewBookTutorialBeenShown: Boolean
-        get() = preferences.hasNewBookTutorialBeenShown
-
-    val hasBookDetailsTutorialBeenShown: Boolean
-        get() = preferences.hasBookDetailsTutorialBeenShown
     //endregion
 
     //region Public methods
     fun logout() {
+        preferences.removeUserPreferences()
         preferences.removePassword()
         removeCredentials()
     }
@@ -108,6 +94,14 @@ class UserLocalDataSource @Inject constructor(
         preferences.removeUserData()
     }
 
+    fun storePublicProfile(value: Boolean) {
+        preferences.isProfilePublic = value
+    }
+
+    fun storeAutomaticSync(value: Boolean) {
+        preferences.isAutomaticSyncEnabled = value
+    }
+
     fun storeLanguage(language: String) {
         preferences.language = language
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -125,34 +119,6 @@ class UserLocalDataSource @Inject constructor(
 
     fun storeThemeMode(themeMode: Int) {
         preferences.themeMode = themeMode
-    }
-
-    fun setHasBooksTutorialBeenShown(hasBooksTutorialBeenShown: Boolean) {
-        preferences.hasBooksTutorialBeenShown = hasBooksTutorialBeenShown
-    }
-
-    fun setHasDragTutorialBeenShown(hasDragTutorialBeenShown: Boolean) {
-        preferences.hasDragTutorialBeenShown = hasDragTutorialBeenShown
-    }
-
-    fun setHasSearchTutorialBeenShown(hasSearchTutorialBeenShown: Boolean) {
-        preferences.hasSearchTutorialBeenShown = hasSearchTutorialBeenShown
-    }
-
-    fun setHasStatisticsTutorialBeenShown(hasStatisticsTutorialBeenShown: Boolean) {
-        preferences.hasStatisticsTutorialBeenShown = hasStatisticsTutorialBeenShown
-    }
-
-    fun setHasSettingsTutorialBeenShown(hasSettingsTutorialBeenShown: Boolean) {
-        preferences.hasSettingsTutorialBeenShown = hasSettingsTutorialBeenShown
-    }
-
-    fun setHasNewBookTutorialBeenShown(hasNewBookTutorialBeenShown: Boolean) {
-        preferences.hasNewBookTutorialBeenShown = hasNewBookTutorialBeenShown
-    }
-
-    fun setHasBookDetailsTutorialBeenShown(hasBookDetailsTutorialBeenShown: Boolean) {
-        preferences.hasBookDetailsTutorialBeenShown = hasBookDetailsTutorialBeenShown
     }
 
     fun getCurrentVersion(): Int {

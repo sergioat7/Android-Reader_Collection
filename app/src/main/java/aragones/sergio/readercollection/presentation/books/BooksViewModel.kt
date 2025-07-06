@@ -51,7 +51,6 @@ class BooksViewModel @Inject constructor(
     val state: State<BooksUiState> = _state
     val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
     val booksError: StateFlow<ErrorResponse?> = _booksError
-    var tutorialShown = userRepository.hasBooksTutorialBeenShown
     //endregion
 
     //region Lifecycle methods
@@ -163,11 +162,6 @@ class BooksViewModel @Inject constructor(
                     _booksError.value = ApiManager.handleError(it)
                 },
             ).addTo(disposables)
-    }
-
-    fun setTutorialAsShown() {
-        userRepository.setHasBooksTutorialBeenShown(true)
-        tutorialShown = true
     }
     //endregion
 

@@ -36,9 +36,6 @@
     <string name="format">Formato</string>
     <string name="state">Estado</string>
     <string name="load_more">Cargar más</string>
-    <string name="synchronize">Sincronizar</string>
-    <string name="sort">Ordenar</string>
-    <string name="drag">Arrastrar</string>
     <string name="pending">Pendientes</string>
     <string name="read">Leídos</string>
     <string name="show_all">Ver todo</string>
@@ -54,8 +51,6 @@
     <string name="longer_book">Libro más largo</string>
     <string name="months">Meses</string>
     <string name="formats">Formatos</string>
-    <string name="import_file">Importar libros</string>
-    <string name="export_file">Exportar libros</string>
     <string name="import_confirmation">¿Estás seguro de que quieres IMPORTAR los datos? Este proceso puede llevar un tiempo.</string>
     <string name="export_confirmation">¿Estás seguro de que quieres EXPORTAR los datos? Este proceso puede llevar un tiempo.</string>
     <string name="file_created">Archivo creado</string>
@@ -81,24 +76,49 @@
     <string name="reading_date">Fecha de lectura</string>
     <string name="book_saved">¡Libro guardado!</string>
     <string name="book_removed">¡Libro eliminado!</string>
-    <string name="edit">Editar</string>
-    <string name="remove">Eliminar</string>
 
     //SETTINGS
     <string name="title_settings">Configuración</string>
+    <string name="account_title">Cuenta</string>
+    <string name="account_description">Gestiona tu cuenta</string>
+    <string name="preferences">Preferencias</string>
+    <string name="data_sync_title">Sincronización de datos</string>
+    <string name="data_sync_description">Gestiona la sincronización de tus datos</string>
+    <string name="display_settings_title">Ajustes de visualización</string>
+    <string name="display_settings_description">Personaliza la apariencia de la app</string>
+    <string name="logout_title">Salir</string>
+    <string name="logout_description">Cierra la sesión</string>
+
+    //ACCOUNT
+    <string name="account_details_title">Detalles de la cuenta</string>
+    <string name="account_management_title">Gestión de la cuenta</string>
     <string name="save">Guardar</string>
+    <string name="public_profile_title">Perfil público</string>
+    <string name="public_profile_description">Otros usuarios podrán buscarte y ver tus libros</string>
+    <string name="delete_account_title">Borrar cuenta</string>
+    <string name="delete_account_description">Borrar para siempre tu usuario y todos los libros guardados</string>
+    <string name="delete_account_action">Borrar cuenta</string>
+
+    //DATA SYNCHRONIZATION
+    <string name="syncing_options_title">Opciones de sincronización</string>
+    <string name="automatic_sync_title">Sincronización automática</string>
+    <string name="automatic_sync_description">Tus datos se sincronizarán automáticamente una vez a la semana</string>
+    <string name="manual_sync_title">Sincronización manual</string>
+    <string name="manual_sync_description">Sincroniza tus datos manualmente</string>
+    <string name="sync_now_action">Sincronizar</string>
+    <string name="data_sync_successfully">Tus datos se han sincronizado correctamente</string>
+
+    //DISPLAY SETTINGS
     <string name="english">Inglés</string>
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
-    <string name="sort_books_param">Parámetro de ordenación de libros</string>
+    <string name="sort_books_param">Modo de ordenar libros leídos</string>
     <string name="app_theme">Tema</string>
     <string-array name="app_theme_values">
         <item>Predeterminado por el sistema</item>
         <item>Claro</item>
         <item>Oscuro</item>
     </string-array>
-    <string name="delete">Borrar</string>
-    <string name="logout">Salir</string>
 
     //POPUPS
     <string name="accept">Aceptar</string>
@@ -131,45 +151,5 @@
     <string name="error_resource_found">Este libro ya está en tu colección.</string>
     <string name="error_database">Hubo un error con la base de datos. Por favor, inténtalo otra vez.</string>
     <string name="error_file_data">Hay un error con el formato de los datos. Por favor, asegúrate de que los datos están en el formato correcto.</string>
-
-    //TUTORIALS
-    <string name="books_view_tutorial_title">Esta es la pantalla principal</string>
-    <string name="books_view_tutorial_description">Aquí encontrarás todos los libros de tu colección, separados en 3 secciones: Leyendo, Pendientes y Leídos</string>
-    <string name="search_view_tutorial_title">Esta es la pantalla de búsqueda</string>
-    <string name="search_view_tutorial_description">Aquí podrás buscar nuevos libros para añadirlos a tu colección</string>
-    <string name="stats_view_tutorial_title">Esta es la pantalla de estadísticas</string>
-    <string name="stats_view_tutorial_description">Aquí podrás ver diferentes estadísticas sobre los libros que ya has leído</string>
-    <string name="settings_view_tutorial_title">Esta es la pantalla de configuración</string>
-    <string name="settings_view_tutorial_description">Aquí podrás modificar tus datos y la configuración de la aplicación</string>
-    <string name="search_bar_books_tutorial_title">Esta es la barra de búsqueda</string>
-    <string name="search_bar_books_tutorial_description">Aquí podrás buscar por el título entre los libros de tu colección</string>
-    <string name="sync_icon_tutorial_title">Este es el botón de sincronización</string>
-    <string name="sync_icon_tutorial_description">Aquí podrás sincronizar tus libros con el servidor, por si has realizado alguna modificación en otro dispositivo</string>
-    <string name="sort_icon_tutorial_title">Este es el botón de ordenación</string>
-    <string name="sort_icon_tutorial_description">Aquí podrás ordenar tus libros por diferentes valores</string>
-    <string name="search_bar_tutorial_title">Este es el botón de búsqueda</string>
-    <string name="search_bar_tutorial_description">Aquí podrás buscar los libros que quieras añadir a tu colección</string>
-    <string name="drag_bar_tutorial_title">Este es el botón de arrastrar y soltar</string>
-    <string name="drag_bar_tutorial_description">Aquí podrás habilitar la función de arrastrar y soltar los libros para ordenarlos</string>
-    <string name="import_file_icon_tutorial_title">Este es el botón de importar archivo</string>
-    <string name="import_file_icon_tutorial_description">Aquí podrás importar desde un archivo los datos de los libros que quieras almacenar</string>
-    <string name="export_file_icon_tutorial_title">Este es el botón de exportar archivo</string>
-    <string name="export_file_icon_tutorial_description">Aquí podrás guardar los datos de tus libros en un archivo</string>
-    <string name="save_settings_button_tutorial_title">Este es el botón de guardar</string>
-    <string name="save_settings_button_tutorial_description">Aquí podrás guardar los datos y la configuración actual después de modificarlos a tu gusto</string>
-    <string name="delete_profile_icon_tutorial_title">Este es el botón de borrar perfil</string>
-    <string name="delete_profile_icon_tutorial_description">Aquí podrás eliminar tu perfil y todos los datos que hayas creado (usuario, contraseña y libros)</string>
-    <string name="logout_icon_tutorial_title">Este es el botón de cerrar sesión</string>
-    <string name="logout_icon_tutorial_description">Aquí podrás cerrar sesión, por si quieres entrar con un usuario diferente</string>
-    <string name="add_book_icon_tutorial_title">Este es el botón de añadir libro</string>
-    <string name="add_book_icon_tutorial_description">Aquí podrás añadir a tu colección este libro</string>
-    <string name="add_image_button_tutorial_title">Este es el botón de añadir imagen</string>
-    <string name="add_image_button_tutorial_description">Aquí podrás añadir o cambiar la imagen del libro. Para ello, debes introducir el enlace de la imagen (http://…) que deberás buscar previamente</string>
-    <string name="rate_view_tutorial_title">Este es el elemento para puntuar el libro</string>
-    <string name="rate_view_tutorial_description">Aquí podrás puntuar el libro del 1 al 10 (cada estrella equivale a 2 puntos)</string>
-    <string name="edit_book_icon_tutorial_title">Este es el botón de editar libro</string>
-    <string name="edit_book_icon_tutorial_description">Aquí podrás editar los datos de este libro</string>
-    <string name="delete_book_icon_tutorial_title">Este es el botón de borrar libro</string>
-    <string name="delete_book_icon_tutorial_description">Aquí podrás borrar de tu colección este libro</string>
 
 </resources>

@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
+import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.IoScheduler
 import aragones.sergio.readercollection.domain.di.MainScheduler
@@ -20,6 +21,7 @@ import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BooksRepository @Inject constructor(
@@ -47,6 +49,7 @@ class BooksRepository @Inject constructor(
         .create { emitter ->
             booksRemoteDataSource
                 .getBooks(uuid)
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -73,32 +76,45 @@ class BooksRepository @Inject constructor(
 
     fun syncBooks(uuid: String): Completable = Completable
         .create { emitter ->
-            booksLocalDataSource
-                .getAllBooks()
+            booksRemoteDataSource
+                .getBooks(uuid)
+                .timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onNext = { localBooks ->
-                        booksRemoteDataSource
-                            .saveBooks(
-                                uuid = uuid,
-                                books = localBooks.map { it.toDomain().toRemoteData() },
-                            ).subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(onComplete = {
-                                emitter.onComplete()
-                            }, onError = {
-                                emitter.onError(it)
-                            })
-                            .addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
+                .onErrorReturnItem(emptyList())
+                .subscribe { remoteBooks ->
+                    booksLocalDataSource
+                        .getAllBooks()
+                        .firstOrError()
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
+                        .onErrorReturnItem(emptyList())
+                        .subscribeBy(
+                            onSuccess = { localBooks ->
+                                val disabledContent = arrayListOf<BookResponse>()
+                                for (remoteBook in remoteBooks) {
+                                    if (localBooks.firstOrNull { it.id == remoteBook.id } == null) {
+                                        disabledContent.add(remoteBook)
+                                    }
+                                }
+                                val currentBooks = localBooks.map { it.toDomain().toRemoteData() }
+                                booksRemoteDataSource
+                                    .syncBooks(
+                                        uuid = uuid,
+                                        booksToSave = currentBooks,
+                                        booksToRemove = disabledContent,
+                                    ).timeout(10, TimeUnit.SECONDS)
+                                    .subscribeOn(ioScheduler)
+                                    .observeOn(mainScheduler)
+                                    .subscribeBy(onComplete = {
+                                        emitter.onComplete()
+                                    }, onError = {
+                                        emitter.onError(it)
+                                    })
+                                    .addTo(disposables)
+                            },
+                        ).addTo(disposables)
+                }.addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
@@ -128,13 +144,11 @@ class BooksRepository @Inject constructor(
         .create<String> { emitter ->
             booksLocalDataSource
                 .getAllBooks()
+                .firstOrError()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onComplete = {
-                        emitter.onSuccess("")
-                    },
-                    onNext = {
+                    onSuccess = {
                         val books = it.map { book -> book.toDomain() }
                         emitter.onSuccess(moshiAdapter.toJson(books))
                     },
@@ -255,13 +269,11 @@ class BooksRepository @Inject constructor(
         .create { emitter ->
             booksLocalDataSource
                 .getAllBooks()
+                .firstOrError()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onNext = { books ->
+                    onSuccess = { books ->
                         booksLocalDataSource
                             .deleteBooks(books)
                             .subscribeOn(ioScheduler)
