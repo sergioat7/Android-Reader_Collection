@@ -20,8 +20,8 @@ keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
-val versionMinor = 6
-val versionPatch = 6
+val versionMinor = 7
+val versionPatch = 0
 val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
