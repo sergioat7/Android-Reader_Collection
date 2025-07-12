@@ -81,6 +81,8 @@
     <string name="title_settings">Configuración</string>
     <string name="account_title">Cuenta</string>
     <string name="account_description">Gestiona tu cuenta</string>
+    <string name="friends_title">Amigos</string>
+    <string name="friends_description">Gestiona tu lista de amigos</string>
     <string name="preferences">Preferencias</string>
     <string name="data_sync_title">Sincronización de datos</string>
     <string name="data_sync_description">Gestiona la sincronización de tus datos</string>
@@ -98,6 +100,12 @@
     <string name="delete_account_title">Borrar cuenta</string>
     <string name="delete_account_description">Borrar para siempre tu usuario y todos los libros guardados</string>
     <string name="delete_account_action">Borrar cuenta</string>
+
+    //FRIENDS
+    <string name="your_friends_title">Tus amigos</string>
+    <string name="no_friends_yet">Aún no has añadido ningún amigo</string>
+    <string name="pending_status">Pendiente</string>
+    <string name="rejected_status">Rechazada</string>
 
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Opciones de sincronización</string>

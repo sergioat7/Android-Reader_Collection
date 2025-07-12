@@ -1,0 +1,213 @@
+/*
+ * Copyright (c) 2025 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 12/7/2025
+ */
+
+package aragones.sergio.readercollection.presentation.friends
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.PreviewParameter
+import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.RequestStatus
+import aragones.sergio.readercollection.domain.model.User
+import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
+import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
+import aragones.sergio.readercollection.presentation.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+
+@Composable
+fun FriendsScreen(state: FriendsUiState, onBack: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background),
+    ) {
+        FriendsScreenToolbar(onBack = onBack)
+        when (state) {
+            FriendsUiState.Loading -> {
+                CustomCircularProgressIndicator()
+            }
+            is FriendsUiState.Success -> {
+                if (state.friends.isEmpty()) {
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(24.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Text(
+                            text = stringResource(R.string.no_friends_yet),
+                            style = MaterialTheme.typography.displayMedium,
+                            color = MaterialTheme.colorScheme.onBackground,
+                        )
+                    }
+                } else {
+                    FriendsScreenContent(
+                        state = state,
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun FriendsScreenToolbar(onBack: (() -> Unit)) {
+    CustomToolbar(
+        title = stringResource(R.string.friends_title),
+        backgroundColor = MaterialTheme.colorScheme.background,
+        onBack = onBack,
+    )
+}
+
+@Composable
+private fun FriendsScreenContent(state: FriendsUiState.Success, modifier: Modifier = Modifier) {
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(horizontal = 24.dp),
+    ) {
+        items(state.friends, key = { it.id }) { friend ->
+            FriendItem(friend = friend)
+        }
+    }
+}
+
+@Composable
+private fun FriendItem(friend: User, modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.surfaceVariant,
+        ) {
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = null,
+                modifier = Modifier.padding(12.dp),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column {
+            Text(
+                text = friend.username,
+                style = MaterialTheme.typography.bodyLarge,
+                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.primary,
+                lineHeight = 24.sp,
+            )
+            friend.status.title()?.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = it,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontSize = 14.sp,
+                    color = friend.status.color(),
+                    lineHeight = 24.sp,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun RequestStatus.title(): String? = when (this) {
+    RequestStatus.PENDING_MINE, RequestStatus.PENDING_FRIEND -> stringResource(
+        R.string.pending_status,
+    )
+    RequestStatus.APPROVED -> null
+    RequestStatus.REJECTED -> stringResource(R.string.rejected_status)
+}
+
+@Composable
+private fun RequestStatus.color(): Color = when (this) {
+    RequestStatus.PENDING_MINE, RequestStatus.PENDING_FRIEND -> MaterialTheme.colorScheme.tertiary
+    RequestStatus.APPROVED -> Color.Unspecified
+    RequestStatus.REJECTED -> MaterialTheme.colorScheme.error
+}
+
+@CustomPreviewLightDark
+@Composable
+private fun FriendsScreenPreview(
+    @PreviewParameter(FriendsScreenPreviewParameterProvider::class) state: FriendsUiState,
+) {
+    ReaderCollectionTheme {
+        FriendsScreen(
+            state = state,
+            onBack = {},
+        )
+    }
+}
+
+private class FriendsScreenPreviewParameterProvider : PreviewParameterProvider<FriendsUiState> {
+
+    override val values: Sequence<FriendsUiState>
+        get() = sequenceOf(
+            FriendsUiState.Success(
+                friends = listOf(
+                    User(
+                        id = "1",
+                        username = "User 1",
+                        status = RequestStatus.APPROVED,
+                    ),
+                    User(
+                        id = "2",
+                        username = "user with a long name",
+                        status = RequestStatus.APPROVED,
+                    ),
+                    User(
+                        id = "3",
+                        username =
+                        """
+                        User with a very long name
+                        that will have to be fitted in two lines
+                        """.trimIndent(),
+                        status = RequestStatus.PENDING_MINE,
+                    ),
+                    User(
+                        id = "4",
+                        username = "User",
+                        status = RequestStatus.PENDING_FRIEND,
+                    ),
+                    User(
+                        id = "5",
+                        username = "User",
+                        status = RequestStatus.REJECTED,
+                    ),
+                ),
+            ),
+            FriendsUiState.Success(
+                friends = emptyList(),
+            ),
+            FriendsUiState.Loading,
+        )
+}
