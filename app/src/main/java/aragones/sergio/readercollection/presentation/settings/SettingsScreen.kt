@@ -23,6 +23,7 @@ import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Backup
 import androidx.compose.material.icons.filled.DisplaySettings
+import androidx.compose.material.icons.filled.SupervisorAccount
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -67,6 +68,14 @@ fun SettingsScreen(
                 subtitle = stringResource(R.string.account_description),
                 onClick = {
                     onClickOption(SettingsOption.Account)
+                },
+            )
+            SettingItem(
+                icon = Icons.Default.SupervisorAccount,
+                title = stringResource(R.string.friends_title),
+                subtitle = stringResource(R.string.friends_description),
+                onClick = {
+                    onClickOption(SettingsOption.Friends)
                 },
             )
             Spacer(modifier = Modifier.height(16.dp))

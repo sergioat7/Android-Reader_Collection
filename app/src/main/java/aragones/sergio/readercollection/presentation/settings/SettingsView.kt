@@ -33,6 +33,7 @@ fun SettingsView(
             onClickOption = {
                 when (it) {
                     is SettingsOption.Account,
+                    is SettingsOption.Friends,
                     is SettingsOption.DataSync,
                     is SettingsOption.DisplaySettings,
                     -> onClickOption(it)
