@@ -7,7 +7,9 @@ package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.UserResponse
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.model.Book as BookLocal
@@ -141,4 +143,10 @@ fun GoogleBookResponse.toDomain(): Book = Book(
     format = FORMATS.firstOrNull()?.id,
     state = STATES.firstOrNull()?.id,
     priority = -1,
+)
+
+fun UserResponse.toDomain(): User = User(
+    id = id,
+    username = username,
+    status = status,
 )
