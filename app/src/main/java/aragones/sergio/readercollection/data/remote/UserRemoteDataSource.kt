@@ -125,6 +125,35 @@ class UserRemoteDataSource @Inject constructor(
                 }
         }
 
+    fun rejectFriendRequest(userId: String, friendId: String): Completable =
+        Completable.create { emitter ->
+
+            val userRef = firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friendId)
+                .collection("friends")
+                .document(userId)
+
+            val batch = firestore.batch()
+
+            batch.delete(userRef)
+            batch.update(friendRef, "status", RequestStatus.REJECTED)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
     fun deleteUser() = Completable.create { completable ->
         auth.currentUser?.delete()
         completable.onComplete()
