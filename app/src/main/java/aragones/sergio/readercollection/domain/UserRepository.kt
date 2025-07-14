@@ -197,6 +197,38 @@ class UserRepository @Inject constructor(
             ).addTo(disposables)
     }
 
+    fun acceptFriendRequest(friendId: String): Completable = Completable.create { emitter ->
+        userRemoteDataSource
+            .acceptFriendRequest(userId, friendId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                },
+            ).addTo(disposables)
+    }
+
+    fun rejectFriendRequest(friendId: String): Completable = Completable.create { emitter ->
+        userRemoteDataSource
+            .rejectFriendRequest(userId, friendId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                },
+            ).addTo(disposables)
+    }
+
     fun deleteUser(): Completable = Completable
         .create { emitter ->
             userRemoteDataSource

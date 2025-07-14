@@ -108,6 +108,8 @@
     <string name="rejected_status">Rechazada</string>
     <string name="add_friend_action">Añadir</string>
     <string name="reject_friend_action">Rechazar</string>
+    <string name="friend_action_successfully_done">Tu petición se ha realizado correctamente</string>
+    <string name="friend_action_failure">Tu petición no se pudo realizar. Por favor, inténtalo otra vez.</string>
 
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Opciones de sincronización</string>
