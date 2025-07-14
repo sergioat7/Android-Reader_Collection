@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.friends
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,6 +21,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -42,7 +45,13 @@ import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
-fun FriendsScreen(state: FriendsUiState, onBack: () -> Unit, modifier: Modifier = Modifier) {
+fun FriendsScreen(
+    state: FriendsUiState,
+    onBack: () -> Unit,
+    onAcceptFriend: (String) -> Unit,
+    onRejectFriend: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -68,6 +77,8 @@ fun FriendsScreen(state: FriendsUiState, onBack: () -> Unit, modifier: Modifier 
                 } else {
                     FriendsScreenContent(
                         state = state,
+                        onAcceptFriend = onAcceptFriend,
+                        onRejectFriend = onRejectFriend,
                     )
                 }
             }
@@ -85,55 +96,106 @@ private fun FriendsScreenToolbar(onBack: (() -> Unit)) {
 }
 
 @Composable
-private fun FriendsScreenContent(state: FriendsUiState.Success, modifier: Modifier = Modifier) {
+private fun FriendsScreenContent(
+    state: FriendsUiState.Success,
+    onAcceptFriend: (String) -> Unit,
+    onRejectFriend: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(horizontal = 24.dp),
     ) {
         items(state.friends, key = { it.id }) { friend ->
-            FriendItem(friend = friend)
+            FriendItem(
+                friend = friend,
+                onAcceptFriend = { onAcceptFriend(friend.id) },
+                onRejectFriend = { onRejectFriend(friend.id) },
+            )
         }
     }
 }
 
 @Composable
-private fun FriendItem(friend: User, modifier: Modifier = Modifier) {
-    Row(
+private fun FriendItem(
+    friend: User,
+    onAcceptFriend: () -> Unit,
+    onRejectFriend: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 12.dp),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
-        Surface(
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.surfaceVariant,
-        ) {
-            Icon(
-                imageVector = Icons.Default.Person,
-                contentDescription = null,
-                modifier = Modifier.padding(12.dp),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-        }
-        Spacer(modifier = Modifier.width(16.dp))
-        Column {
-            Text(
-                text = friend.username,
-                style = MaterialTheme.typography.bodyLarge,
-                fontSize = 16.sp,
-                color = MaterialTheme.colorScheme.primary,
-                lineHeight = 24.sp,
-            )
-            friend.status.title()?.let {
-                Spacer(modifier = Modifier.height(8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.surfaceVariant,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Person,
+                    contentDescription = null,
+                    modifier = Modifier.padding(12.dp),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column {
                 Text(
-                    text = it,
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontSize = 14.sp,
-                    color = friend.status.color(),
+                    text = friend.username,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontSize = 16.sp,
+                    color = MaterialTheme.colorScheme.primary,
                     lineHeight = 24.sp,
                 )
+                friend.status.title()?.let {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = it,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontSize = 14.sp,
+                        color = friend.status.color(),
+                        lineHeight = 24.sp,
+                    )
+                }
+            }
+        }
+        if (friend.status == RequestStatus.PENDING_MINE) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+            ) {
+                Button(
+                    onClick = onAcceptFriend,
+                    shape = MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                    ),
+                ) {
+                    Text(
+                        text = stringResource(R.string.add_friend_action),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        maxLines = 1,
+                    )
+                }
+                Button(
+                    onClick = onRejectFriend,
+                    shape = MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.error,
+                    ),
+                ) {
+                    Text(
+                        text = stringResource(R.string.reject_friend_action),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onError,
+                        maxLines = 1,
+                    )
+                }
             }
         }
     }
@@ -164,6 +226,8 @@ private fun FriendsScreenPreview(
         FriendsScreen(
             state = state,
             onBack = {},
+            onAcceptFriend = {},
+            onRejectFriend = {},
         )
     }
 }

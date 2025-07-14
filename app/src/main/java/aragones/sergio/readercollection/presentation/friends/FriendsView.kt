@@ -20,6 +20,8 @@ fun FriendsView(onBack: () -> Unit, viewModel: FriendsViewModel = hiltViewModel(
         FriendsScreen(
             state = state,
             onBack = onBack,
+            onAcceptFriend = {},
+            onRejectFriend = {},
         )
     }
 

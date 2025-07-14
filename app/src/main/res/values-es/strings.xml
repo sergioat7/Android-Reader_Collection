@@ -106,6 +106,8 @@
     <string name="no_friends_yet">Aún no has añadido ningún amigo</string>
     <string name="pending_status">Pendiente</string>
     <string name="rejected_status">Rechazada</string>
+    <string name="add_friend_action">Añadir</string>
+    <string name="reject_friend_action">Rechazar</string>
 
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Opciones de sincronización</string>
