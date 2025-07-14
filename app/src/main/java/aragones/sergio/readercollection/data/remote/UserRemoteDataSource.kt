@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -94,6 +95,35 @@ class UserRemoteDataSource @Inject constructor(
                 emitter.onError(it)
             }
     }
+
+    fun acceptFriendRequest(userId: String, friendId: String): Completable =
+        Completable.create { emitter ->
+
+            val userRef = firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friendId)
+                .collection("friends")
+                .document(userId)
+
+            val batch = firestore.batch()
+
+            batch.update(userRef, "status", RequestStatus.APPROVED)
+            batch.update(friendRef, "status", RequestStatus.APPROVED)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
 
     fun deleteUser() = Completable.create { completable ->
         auth.currentUser?.delete()
