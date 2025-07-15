@@ -8,6 +8,7 @@
     //GENERAL
     <string name="search">Buscar</string>
     <string name="restart">Reiniciar</string>
+    <string name="delete">Borrar</string>
 
     <string name="message_app_update_downloaded">Se ha descargado una actualización.</string>
 

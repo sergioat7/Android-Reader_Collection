@@ -4,6 +4,7 @@
     <string name="app_name" translatable="false">Reader Collection</string>
     <string name="search">Search</string>
     <string name="restart">Restart</string>
+    <string name="delete">Delete</string>
 
     <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 

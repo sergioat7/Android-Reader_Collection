@@ -50,6 +50,7 @@ fun FriendsScreen(
     onBack: () -> Unit,
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
+    onDeleteFriend: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -79,6 +80,7 @@ fun FriendsScreen(
                         state = state,
                         onAcceptFriend = onAcceptFriend,
                         onRejectFriend = onRejectFriend,
+                        onDeleteFriend = onDeleteFriend,
                     )
                 }
             }
@@ -100,6 +102,7 @@ private fun FriendsScreenContent(
     state: FriendsUiState.Success,
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
+    onDeleteFriend: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(
@@ -112,6 +115,7 @@ private fun FriendsScreenContent(
                 friend = friend,
                 onAcceptFriend = { onAcceptFriend(friend.id) },
                 onRejectFriend = { onRejectFriend(friend.id) },
+                onDeleteFriend = { onDeleteFriend(friend.id) },
             )
         }
     }
@@ -122,6 +126,7 @@ private fun FriendItem(
     friend: User,
     onAcceptFriend: () -> Unit,
     onRejectFriend: () -> Unit,
+    onDeleteFriend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -142,7 +147,7 @@ private fun FriendItem(
                 )
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Column {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = friend.username,
                     style = MaterialTheme.typography.bodyLarge,
@@ -158,6 +163,23 @@ private fun FriendItem(
                         fontSize = 14.sp,
                         color = friend.status.color(),
                         lineHeight = 24.sp,
+                    )
+                }
+            }
+            if (friend.status == RequestStatus.REJECTED) {
+                Spacer(modifier = Modifier.width(16.dp))
+                Button(
+                    onClick = onDeleteFriend,
+                    shape = MaterialTheme.shapes.small,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer,
+                    ),
+                ) {
+                    Text(
+                        text = stringResource(R.string.delete),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onErrorContainer,
+                        maxLines = 2,
                     )
                 }
             }
@@ -228,6 +250,7 @@ private fun FriendsScreenPreview(
             onBack = {},
             onAcceptFriend = {},
             onRejectFriend = {},
+            onDeleteFriend = {},
         )
     }
 }
