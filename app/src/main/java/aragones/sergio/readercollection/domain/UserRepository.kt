@@ -229,6 +229,22 @@ class UserRepository @Inject constructor(
             ).addTo(disposables)
     }
 
+    fun deleteFriend(friendId: String): Completable = Completable.create { emitter ->
+        userRemoteDataSource
+            .deleteFriend(userId, friendId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
+                },
+            ).addTo(disposables)
+    }
+
     fun deleteUser(): Completable = Completable
         .create { emitter ->
             userRemoteDataSource

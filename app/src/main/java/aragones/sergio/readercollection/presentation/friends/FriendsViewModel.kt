@@ -109,6 +109,22 @@ class FriendsViewModel @Inject constructor(
             ).addTo(disposables)
     }
 
+    fun deleteFriend(friendId: String) {
+        userRepository
+            .deleteFriend(friendId)
+            .subscribeBy(
+                onComplete = {
+                    _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                },
+                onError = {
+                    _error.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.friend_action_failure,
+                    )
+                },
+            ).addTo(disposables)
+    }
+
     fun closeDialogs() {
         _infoDialogMessageId.value = -1
         _error.value = null

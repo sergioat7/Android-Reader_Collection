@@ -26,7 +26,7 @@ fun FriendsView(onBack: () -> Unit, viewModel: FriendsViewModel = hiltViewModel(
             onBack = onBack,
             onAcceptFriend = viewModel::acceptFriendRequest,
             onRejectFriend = viewModel::rejectFriendRequest,
-            onDeleteFriend = {},
+            onDeleteFriend = viewModel::deleteFriend,
         )
     }
 
