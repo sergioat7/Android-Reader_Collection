@@ -15,6 +15,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
+import kotlin.NoSuchElementException
 import kotlinx.coroutines.tasks.await
 
 class UserRemoteDataSource @Inject constructor(
@@ -80,6 +81,34 @@ class UserRemoteDataSource @Inject constructor(
             .delete()
             .addOnSuccessListener { emitter.onComplete() }
             .addOnFailureListener { emitter.onError(it) }
+    }
+
+    fun getUser(username: String, userId: String): Single<UserResponse> = Single.create { emitter ->
+        firestore
+            .collection("public_profiles")
+            .whereEqualTo("email", "${username}$mailEnd")
+            .get()
+            .addOnSuccessListener { result ->
+
+                val user = result.documents.firstOrNull()?.let {
+                    val uuid = it.getString("uuid")
+                    val email = it.getString("email")
+                    if (uuid != null && email != null && uuid != userId) {
+                        UserResponse(
+                            id = uuid,
+                            username = email.split("@").first(),
+                            status = RequestStatus.PENDING_FRIEND,
+                        )
+                    } else {
+                        null
+                    }
+                }
+                if (user != null) {
+                    emitter.onSuccess(user)
+                } else {
+                    emitter.onError(NoSuchElementException("User not found"))
+                }
+            }.addOnFailureListener { emitter.onError(it) }
     }
 
     fun getFriends(userId: String): Single<List<UserResponse>> = Single.create { emitter ->
