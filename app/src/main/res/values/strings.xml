@@ -4,6 +4,7 @@
     <string name="app_name" translatable="false">Reader Collection</string>
     <string name="search">Search</string>
     <string name="restart">Restart</string>
+    <string name="delete">Delete</string>
 
     <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 
@@ -102,6 +103,10 @@
     <string name="no_friends_yet">You haven\'t added any friend yet</string>
     <string name="pending_status">Pending</string>
     <string name="rejected_status">Rejected</string>
+    <string name="add_friend_action">Add</string>
+    <string name="reject_friend_action">Reject</string>
+    <string name="friend_action_successfully_done">Your request has been successfully done</string>
+    <string name="friend_action_failure">Your request could not be done. Please, try again</string>
 
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Syncing options</string>
