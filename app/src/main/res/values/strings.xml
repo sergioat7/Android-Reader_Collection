@@ -108,6 +108,11 @@
     <string name="friend_action_successfully_done">Your request has been successfully done</string>
     <string name="friend_action_failure">Your request could not be done. Please, try again</string>
 
+    //ADD FRIENDS
+    <string name="add_friends_title">Add friends</string>
+    <string name="search_friends_instructions">Introduce your friend\'s username to search it</string>
+    <string name="no_friends_found">There is no user with that username, or it has not activated the public profile yet</string>
+
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Syncing options</string>
     <string name="automatic_sync_title">Automatic sync</string>
