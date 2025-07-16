@@ -150,3 +150,9 @@ fun UserResponse.toDomain(): User = User(
     username = username,
     status = status,
 )
+
+fun User.toRemoteData(): UserResponse = UserResponse(
+    id = id,
+    username = username,
+    status = status,
+)

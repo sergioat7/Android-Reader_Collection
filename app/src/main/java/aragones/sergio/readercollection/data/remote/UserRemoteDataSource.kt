@@ -15,6 +15,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
+import kotlin.NoSuchElementException
 import kotlinx.coroutines.tasks.await
 
 class UserRemoteDataSource @Inject constructor(
@@ -82,6 +83,34 @@ class UserRemoteDataSource @Inject constructor(
             .addOnFailureListener { emitter.onError(it) }
     }
 
+    fun getUser(username: String, userId: String): Single<UserResponse> = Single.create { emitter ->
+        firestore
+            .collection("public_profiles")
+            .whereEqualTo("email", "${username}$mailEnd")
+            .get()
+            .addOnSuccessListener { result ->
+
+                val user = result.documents.firstOrNull()?.let {
+                    val uuid = it.getString("uuid")
+                    val email = it.getString("email")
+                    if (uuid != null && email != null && uuid != userId) {
+                        UserResponse(
+                            id = uuid,
+                            username = email.split("@").first(),
+                            status = RequestStatus.PENDING_FRIEND,
+                        )
+                    } else {
+                        null
+                    }
+                }
+                if (user != null) {
+                    emitter.onSuccess(user)
+                } else {
+                    emitter.onError(NoSuchElementException("User not found"))
+                }
+            }.addOnFailureListener { emitter.onError(it) }
+    }
+
     fun getFriends(userId: String): Single<List<UserResponse>> = Single.create { emitter ->
         firestore
             .collection("users")
@@ -95,6 +124,43 @@ class UserRemoteDataSource @Inject constructor(
                 emitter.onError(it)
             }
     }
+
+    fun requestFriendship(user: UserResponse, friend: UserResponse): Completable =
+        Completable.create { emitter ->
+            val batch = firestore.batch()
+
+            val userRef = firestore
+                .collection("users")
+                .document(user.id)
+                .collection("friends")
+                .document(friend.id)
+            val userData = mapOf(
+                "id" to friend.id,
+                "username" to friend.username,
+                "status" to friend.status,
+            )
+            batch.set(userRef, userData)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friend.id)
+                .collection("friends")
+                .document(user.id)
+            val friendData = mapOf(
+                "id" to user.id,
+                "username" to user.username,
+                "status" to user.status,
+            )
+            batch.set(friendRef, friendData)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
 
     fun acceptFriendRequest(userId: String, friendId: String): Completable =
         Completable.create { emitter ->

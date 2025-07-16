@@ -115,6 +115,14 @@ class FriendsViewModel @Inject constructor(
             .subscribeBy(
                 onComplete = {
                     _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                    when (val currentState = _state.value) {
+                        is FriendsUiState.Loading -> {}
+                        is FriendsUiState.Success -> {
+                            _state.value = currentState.copy(
+                                friends = currentState.friends.filter { it.id != friendId },
+                            )
+                        }
+                    }
                 },
                 onError = {
                     _error.value = ErrorResponse(

@@ -1,12 +1,11 @@
 /*
  * Copyright (c) 2025 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 12/7/2025
+ * Created by Sergio Aragonés on 15/7/2025
  */
 
-package aragones.sergio.readercollection.presentation.friends
+package aragones.sergio.readercollection.presentation.addfriend
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
@@ -15,23 +14,16 @@ import aragones.sergio.readercollection.presentation.components.InformationAlert
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
-fun FriendsView(
-    onBack: () -> Unit,
-    onAddFriend: () -> Unit,
-    viewModel: FriendsViewModel = hiltViewModel(),
-) {
+fun AddFriendsView(onBack: () -> Unit, viewModel: AddFriendsViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
     val error by viewModel.error.collectAsState()
-    val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
 
     ReaderCollectionApp {
-        FriendsScreen(
+        AddFriendsScreen(
             state = state,
             onBack = onBack,
-            onAcceptFriend = viewModel::acceptFriendRequest,
-            onRejectFriend = viewModel::rejectFriendRequest,
-            onDeleteFriend = viewModel::deleteFriend,
-            onAddFriend = onAddFriend,
+            onSearch = viewModel::searchUserWith,
+            onRequestFriend = viewModel::requestFriendship,
         )
     }
 
@@ -43,16 +35,10 @@ fun FriendsView(
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
     } else {
         ""
     }
     InformationAlertDialog(show = text.isNotEmpty(), text = text) {
         viewModel.closeDialogs()
-    }
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchFriends()
     }
 }

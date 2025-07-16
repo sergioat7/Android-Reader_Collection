@@ -112,6 +112,11 @@
     <string name="friend_action_successfully_done">Tu petición se ha realizado correctamente</string>
     <string name="friend_action_failure">Tu petición no se pudo realizar. Por favor, inténtalo otra vez.</string>
 
+    //ADD FRIENDS
+    <string name="add_friends_title">Añadir amigos</string>
+    <string name="search_friends_instructions">Introduce el nombre de usuario de tu amigo para añadirlo</string>
+    <string name="no_friends_found">No existe un usuario con ese nombre, o no tiene el perfil público activado</string>
+
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Opciones de sincronización</string>
     <string name="automatic_sync_title">Sincronización automática</string>

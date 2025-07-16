@@ -9,6 +9,8 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.RequestStatus
+import aragones.sergio.readercollection.data.remote.model.UserResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.IoScheduler
 import aragones.sergio.readercollection.domain.di.MainScheduler
@@ -183,6 +185,34 @@ class UserRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
+    fun getUserWith(username: String): Single<User> = Single.create { emitter ->
+        userRemoteDataSource
+            .getUser(username, userId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { user ->
+                    userRemoteDataSource
+                        .getFriends(userId)
+                        .timeout(10, TimeUnit.SECONDS)
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
+                        .onErrorReturnItem(emptyList())
+                        .subscribeBy(
+                            onSuccess = { friends ->
+                                friends.firstOrNull { it.id == user.id }?.let { friend ->
+                                    emitter.onSuccess(friend.toDomain())
+                                } ?: emitter.onSuccess(user.toDomain())
+                            },
+                        ).addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                },
+            ).addTo(disposables)
+    }
+
     fun getFriends(): Single<List<User>> = Single.create { emitter ->
         userRemoteDataSource
             .getFriends(userId)
@@ -193,6 +223,28 @@ class UserRepository @Inject constructor(
             .subscribeBy(
                 onSuccess = { friends ->
                     emitter.onSuccess(friends.map { it.toDomain() })
+                },
+            ).addTo(disposables)
+    }
+
+    fun requestFriendship(friend: User): Completable = Completable.create { emitter ->
+        val user = UserResponse(
+            id = userId,
+            username = username,
+            status = RequestStatus.PENDING_MINE,
+        )
+        val friend = friend.toRemoteData()
+        userRemoteDataSource
+            .requestFriendship(user, friend)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
                 },
             ).addTo(disposables)
     }
