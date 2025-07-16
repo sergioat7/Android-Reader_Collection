@@ -183,6 +183,34 @@ class UserRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
+    fun getUserWith(username: String): Single<User> = Single.create { emitter ->
+        userRemoteDataSource
+            .getUser(username, userId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { user ->
+                    userRemoteDataSource
+                        .getFriends(userId)
+                        .timeout(10, TimeUnit.SECONDS)
+                        .subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
+                        .onErrorReturnItem(emptyList())
+                        .subscribeBy(
+                            onSuccess = { friends ->
+                                friends.firstOrNull { it.id == user.id }?.let { friend ->
+                                    emitter.onSuccess(friend.toDomain())
+                                } ?: emitter.onSuccess(user.toDomain())
+                            },
+                        ).addTo(disposables)
+                },
+                onError = {
+                    emitter.onError(it)
+                },
+            ).addTo(disposables)
+    }
+
     fun getFriends(): Single<List<User>> = Single.create { emitter ->
         userRemoteDataSource
             .getFriends(userId)
