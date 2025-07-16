@@ -18,6 +18,7 @@ import androidx.navigation.compose.navigation
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.account.AccountView
+import aragones.sergio.readercollection.presentation.addfriend.AddFriendsView
 import aragones.sergio.readercollection.presentation.bookdetail.BookDetailView
 import aragones.sergio.readercollection.presentation.booklist.BookListView
 import aragones.sergio.readercollection.presentation.books.BooksView
@@ -251,13 +252,26 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
         }
         composable<Route.Friends>(
             enterTransition = { slideIntoContainer() },
-            exitTransition = { slideOutOfContainer() },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutOfContainer() },
         ) {
             FriendsView(
                 onBack = {
                     navController.navigateUp()
                 },
-                onAddFriend = {},
+                onAddFriend = {
+                    navController.navigate(Route.AddFriends)
+                },
+            )
+        }
+        composable<Route.AddFriends>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            AddFriendsView(
+                onBack = {
+                    navController.navigateUp()
+                },
             )
         }
         composable<Route.DataSync>(
