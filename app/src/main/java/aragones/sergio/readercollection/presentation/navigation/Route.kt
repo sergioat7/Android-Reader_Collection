@@ -62,6 +62,9 @@ sealed class Route {
     data object Account : Route()
 
     @Serializable
+    data object Friends : Route()
+
+    @Serializable
     data object DataSync : Route()
 
     @Serializable

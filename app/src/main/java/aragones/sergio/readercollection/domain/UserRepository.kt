@@ -12,8 +12,10 @@ import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.IoScheduler
 import aragones.sergio.readercollection.domain.di.MainScheduler
+import aragones.sergio.readercollection.domain.model.User
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Scheduler
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
@@ -180,6 +182,20 @@ class UserRepository @Inject constructor(
             }
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
+
+    fun getFriends(): Single<List<User>> = Single.create { emitter ->
+        userRemoteDataSource
+            .getFriends(userId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .onErrorReturnItem(emptyList())
+            .subscribeBy(
+                onSuccess = { friends ->
+                    emitter.onSuccess(friends.map { it.toDomain() })
+                },
+            ).addTo(disposables)
+    }
 
     fun deleteUser(): Completable = Completable
         .create { emitter ->

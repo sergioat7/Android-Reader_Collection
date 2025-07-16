@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -78,6 +79,20 @@ class UserRemoteDataSource @Inject constructor(
             .delete()
             .addOnSuccessListener { emitter.onComplete() }
             .addOnFailureListener { emitter.onError(it) }
+    }
+
+    fun getFriends(userId: String): Single<List<UserResponse>> = Single.create { emitter ->
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("friends")
+            .get()
+            .addOnSuccessListener { result ->
+                val users = result.toObjects(UserResponse::class.java)
+                emitter.onSuccess(users)
+            }.addOnFailureListener {
+                emitter.onError(it)
+            }
     }
 
     fun deleteUser() = Completable.create { completable ->

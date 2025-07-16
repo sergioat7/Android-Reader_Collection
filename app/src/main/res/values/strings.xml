@@ -77,6 +77,8 @@
     <string name="title_settings">Settings</string>
     <string name="account_title">Account</string>
     <string name="account_description">Manage your account</string>
+    <string name="friends_title">Friends</string>
+    <string name="friends_description">Manage your friends list</string>
     <string name="preferences">Preferences</string>
     <string name="data_sync_title">Data Synchronization</string>
     <string name="data_sync_description">Manage your data synchronization</string>
@@ -94,6 +96,12 @@
     <string name="delete_account_title">Delete account</string>
     <string name="delete_account_description">Permanently delete your account and books data</string>
     <string name="delete_account_action">Delete account</string>
+
+    //FRIENDS
+    <string name="your_friends_title">Your friends</string>
+    <string name="no_friends_yet">You haven\'t added any friend yet</string>
+    <string name="pending_status">Pending</string>
+    <string name="rejected_status">Rejected</string>
 
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Syncing options</string>
