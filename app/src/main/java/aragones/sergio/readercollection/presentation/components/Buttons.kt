@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -57,6 +58,22 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
     ) {
         Icon(
             painter = painterResource(image),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.secondary,
+        )
+    }
+}
+
+@Composable
+fun ListButton(image: ImageVector, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier.padding(12.dp),
+        contentColor = MaterialTheme.colorScheme.secondary,
+        containerColor = MaterialTheme.colorScheme.primary,
+    ) {
+        Icon(
+            imageVector = image,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary,
         )

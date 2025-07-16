@@ -15,7 +15,11 @@ import aragones.sergio.readercollection.presentation.components.InformationAlert
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
-fun FriendsView(onBack: () -> Unit, viewModel: FriendsViewModel = hiltViewModel()) {
+fun FriendsView(
+    onBack: () -> Unit,
+    onAddFriend: () -> Unit,
+    viewModel: FriendsViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsState()
     val error by viewModel.error.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
@@ -27,6 +31,7 @@ fun FriendsView(onBack: () -> Unit, viewModel: FriendsViewModel = hiltViewModel(
             onAcceptFriend = viewModel::acceptFriendRequest,
             onRejectFriend = viewModel::rejectFriendRequest,
             onDeleteFriend = viewModel::deleteFriend,
+            onAddFriend = onAddFriend,
         )
     }
 

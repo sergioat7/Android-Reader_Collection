@@ -257,6 +257,7 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onBack = {
                     navController.navigateUp()
                 },
+                onAddFriend = {},
             )
         }
         composable<Route.DataSync>(

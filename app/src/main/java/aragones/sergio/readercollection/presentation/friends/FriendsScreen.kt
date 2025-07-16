@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.PersonAddAlt1
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -42,6 +43,7 @@ import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
@@ -51,6 +53,7 @@ fun FriendsScreen(
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
     onDeleteFriend: (String) -> Unit,
+    onAddFriend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -64,23 +67,30 @@ fun FriendsScreen(
                 CustomCircularProgressIndicator()
             }
             is FriendsUiState.Success -> {
-                if (state.friends.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize().padding(24.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = stringResource(R.string.no_friends_yet),
-                            style = MaterialTheme.typography.displayMedium,
-                            color = MaterialTheme.colorScheme.onBackground,
+                Box(modifier = modifier.fillMaxSize()) {
+                    if (state.friends.isEmpty()) {
+                        Box(
+                            modifier = Modifier.fillMaxSize().padding(24.dp),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                text = stringResource(R.string.no_friends_yet),
+                                style = MaterialTheme.typography.displayMedium,
+                                color = MaterialTheme.colorScheme.onBackground,
+                            )
+                        }
+                    } else {
+                        FriendsScreenContent(
+                            state = state,
+                            onAcceptFriend = onAcceptFriend,
+                            onRejectFriend = onRejectFriend,
+                            onDeleteFriend = onDeleteFriend,
                         )
                     }
-                } else {
-                    FriendsScreenContent(
-                        state = state,
-                        onAcceptFriend = onAcceptFriend,
-                        onRejectFriend = onRejectFriend,
-                        onDeleteFriend = onDeleteFriend,
+                    ListButton(
+                        image = Icons.Default.PersonAddAlt1,
+                        onClick = onAddFriend,
+                        modifier = Modifier.align(Alignment.BottomEnd),
                     )
                 }
             }
@@ -251,6 +261,7 @@ private fun FriendsScreenPreview(
             onAcceptFriend = {},
             onRejectFriend = {},
             onDeleteFriend = {},
+            onAddFriend = {},
         )
     }
 }
