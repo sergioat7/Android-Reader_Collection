@@ -125,6 +125,43 @@ class UserRemoteDataSource @Inject constructor(
             }
     }
 
+    fun requestFriendship(user: UserResponse, friend: UserResponse): Completable =
+        Completable.create { emitter ->
+            val batch = firestore.batch()
+
+            val userRef = firestore
+                .collection("users")
+                .document(user.id)
+                .collection("friends")
+                .document(friend.id)
+            val userData = mapOf(
+                "id" to friend.id,
+                "username" to friend.username,
+                "status" to friend.status,
+            )
+            batch.set(userRef, userData)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friend.id)
+                .collection("friends")
+                .document(user.id)
+            val friendData = mapOf(
+                "id" to user.id,
+                "username" to user.username,
+                "status" to user.status,
+            )
+            batch.set(friendRef, friendData)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
     fun acceptFriendRequest(userId: String, friendId: String): Completable =
         Completable.create { emitter ->
 
