@@ -9,6 +9,8 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.RequestStatus
+import aragones.sergio.readercollection.data.remote.model.UserResponse
 import aragones.sergio.readercollection.domain.base.BaseRepository
 import aragones.sergio.readercollection.domain.di.IoScheduler
 import aragones.sergio.readercollection.domain.di.MainScheduler
@@ -221,6 +223,28 @@ class UserRepository @Inject constructor(
             .subscribeBy(
                 onSuccess = { friends ->
                     emitter.onSuccess(friends.map { it.toDomain() })
+                },
+            ).addTo(disposables)
+    }
+
+    fun requestFriendship(friend: User): Completable = Completable.create { emitter ->
+        val user = UserResponse(
+            id = userId,
+            username = username,
+            status = RequestStatus.PENDING_MINE,
+        )
+        val friend = friend.toRemoteData()
+        userRemoteDataSource
+            .requestFriendship(user, friend)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onComplete = {
+                    emitter.onComplete()
+                },
+                onError = {
+                    emitter.onError(it)
                 },
             ).addTo(disposables)
     }

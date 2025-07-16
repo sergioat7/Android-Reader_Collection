@@ -23,7 +23,7 @@ fun AddFriendsView(onBack: () -> Unit, viewModel: AddFriendsViewModel = hiltView
             state = state,
             onBack = onBack,
             onSearch = viewModel::searchUserWith,
-            onRequestFriend = {},
+            onRequestFriend = viewModel::requestFriendship,
         )
     }
 

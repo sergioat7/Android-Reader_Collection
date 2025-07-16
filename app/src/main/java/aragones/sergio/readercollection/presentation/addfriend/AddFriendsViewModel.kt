@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.addfriend
 
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
@@ -88,6 +89,56 @@ class AddFriendsViewModel @Inject constructor(
         }
     }
 
+    fun requestFriendship(friend: UserUi) {
+        when (val currentState = _state.value) {
+            is AddFriendsUiState.Loading -> {}
+            is AddFriendsUiState.Success -> {
+                _state.value = currentState.copy(
+                    users = currentState.users.map {
+                        if (it.id == friend.id) {
+                            friend.copy(isLoading = true)
+                        } else {
+                            it
+                        }
+                    },
+                )
+            }
+        }
+        userRepository
+            .requestFriendship(friend.toDomain())
+            .subscribeBy(
+                onComplete = {
+                    when (val currentState = _state.value) {
+                        is AddFriendsUiState.Loading -> {}
+                        is AddFriendsUiState.Success -> {
+                            _state.value = currentState.copy(
+                                users = currentState.users.map {
+                                    if (it.id == friend.id) {
+                                        friend.copy(
+                                            status = RequestStatus.APPROVED,
+                                            isLoading = false,
+                                        )
+                                    } else {
+                                        it
+                                    }
+                                },
+                            )
+                        }
+                    }
+                },
+                onError = {
+                    _error.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_search,
+                    )
+                    _state.value = AddFriendsUiState.Success(
+                        users = emptyList(),
+                        query = "",
+                    )
+                },
+            ).addTo(disposables)
+    }
+
     fun closeDialogs() {
         _error.value = null
     }
@@ -99,4 +150,10 @@ fun User.toUi(): UserUi = UserUi(
     username = username,
     status = status,
     isLoading = false,
+)
+
+fun UserUi.toDomain(): User = User(
+    id = id,
+    username = username,
+    status = status,
 )
