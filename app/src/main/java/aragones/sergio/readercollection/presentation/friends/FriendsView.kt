@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 @Composable
 fun FriendsView(
     onBack: () -> Unit,
+    onSelectFriend: (String) -> Unit,
     onAddFriend: () -> Unit,
     viewModel: FriendsViewModel = hiltViewModel(),
 ) {
@@ -28,6 +29,7 @@ fun FriendsView(
         FriendsScreen(
             state = state,
             onBack = onBack,
+            onSelectFriend = onSelectFriend,
             onAcceptFriend = viewModel::acceptFriendRequest,
             onRejectFriend = viewModel::rejectFriendRequest,
             onDeleteFriend = viewModel::deleteFriend,

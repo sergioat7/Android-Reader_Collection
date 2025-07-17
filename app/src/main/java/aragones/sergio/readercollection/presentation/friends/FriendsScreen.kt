@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.friends
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -50,6 +51,7 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 fun FriendsScreen(
     state: FriendsUiState,
     onBack: () -> Unit,
+    onSelectFriend: (String) -> Unit,
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
     onDeleteFriend: (String) -> Unit,
@@ -82,6 +84,7 @@ fun FriendsScreen(
                     } else {
                         FriendsScreenContent(
                             state = state,
+                            onSelectFriend = onSelectFriend,
                             onAcceptFriend = onAcceptFriend,
                             onRejectFriend = onRejectFriend,
                             onDeleteFriend = onDeleteFriend,
@@ -110,6 +113,7 @@ private fun FriendsScreenToolbar(onBack: (() -> Unit)) {
 @Composable
 private fun FriendsScreenContent(
     state: FriendsUiState.Success,
+    onSelectFriend: (String) -> Unit,
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
     onDeleteFriend: (String) -> Unit,
@@ -123,6 +127,7 @@ private fun FriendsScreenContent(
         items(state.friends, key = { it.id }) { friend ->
             FriendItem(
                 friend = friend,
+                onSelectFriend = { onSelectFriend(friend.id) },
                 onAcceptFriend = { onAcceptFriend(friend.id) },
                 onRejectFriend = { onRejectFriend(friend.id) },
                 onDeleteFriend = { onDeleteFriend(friend.id) },
@@ -134,6 +139,7 @@ private fun FriendsScreenContent(
 @Composable
 private fun FriendItem(
     friend: User,
+    onSelectFriend: () -> Unit,
     onAcceptFriend: () -> Unit,
     onRejectFriend: () -> Unit,
     onDeleteFriend: () -> Unit,
@@ -144,7 +150,14 @@ private fun FriendItem(
             .fillMaxWidth()
             .padding(vertical = 12.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            modifier = Modifier.clickable {
+                if (friend.status == RequestStatus.APPROVED) {
+                    onSelectFriend()
+                }
+            },
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Surface(
                 shape = CircleShape,
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -258,6 +271,7 @@ private fun FriendsScreenPreview(
         FriendsScreen(
             state = state,
             onBack = {},
+            onSelectFriend = {},
             onAcceptFriend = {},
             onRejectFriend = {},
             onDeleteFriend = {},

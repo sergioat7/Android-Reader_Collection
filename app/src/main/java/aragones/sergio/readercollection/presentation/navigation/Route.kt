@@ -65,6 +65,9 @@ sealed class Route {
     data object Friends : Route()
 
     @Serializable
+    data class FriendDetail(val userId: String) : Route()
+
+    @Serializable
     data object AddFriends : Route()
 
     @Serializable
