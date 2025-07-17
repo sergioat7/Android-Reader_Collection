@@ -30,11 +30,15 @@ class FriendDetailViewModel @Inject constructor(
     private val params = state.toRoute<Route.FriendDetail>()
     private var _state: MutableStateFlow<FriendDetailUiState> =
         MutableStateFlow(FriendDetailUiState.Loading)
+    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow(-1)
     private val _error = MutableStateFlow<ErrorResponse?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<FriendDetailUiState> = _state
+    var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     val error: StateFlow<ErrorResponse?> = _error
     //endregion
 
@@ -73,7 +77,32 @@ class FriendDetailViewModel @Inject constructor(
             ).addTo(disposables)
     }
 
+    fun deleteFriend() {
+        val currentState = _state.value
+        _state.value = FriendDetailUiState.Loading
+        userRepository
+            .deleteFriend(params.userId)
+            .subscribeBy(
+                onComplete = {
+                    _infoDialogMessageId.value = R.string.friend_removed
+                },
+                onError = {
+                    _error.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_search,
+                    )
+                    _state.value = currentState
+                },
+            ).addTo(disposables)
+    }
+
+    fun showConfirmationDialog(textId: Int) {
+        _confirmationDialogMessageId.value = textId
+    }
+
     fun closeDialogs() {
+        _confirmationDialogMessageId.value = -1
+        _infoDialogMessageId.value = -1
         _error.value = null
     }
     //endregion

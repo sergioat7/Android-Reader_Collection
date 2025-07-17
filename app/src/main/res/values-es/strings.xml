@@ -111,6 +111,7 @@
     <string name="reject_friend_action">Rechazar</string>
     <string name="friend_action_successfully_done">Tu petición se ha realizado correctamente</string>
     <string name="friend_action_failure">Tu petición no se pudo realizar. Por favor, inténtalo otra vez.</string>
+    <string name="friend_removed">¡Amigo eliminado!</string>
 
     //ADD FRIENDS
     <string name="add_friends_title">Añadir amigos</string>
@@ -161,6 +162,7 @@
     <string name="sync_title">Sincronizando…</string>
     <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo.</string>
     <string name="enter_valid_url">Introduce un enlace válido</string>
+    <string name="user_remove_confirmation">¿Estás seguro de que quieres borrar este amigo?</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>
