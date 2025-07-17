@@ -18,11 +18,14 @@ import androidx.navigation.compose.navigation
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.account.AccountView
+import aragones.sergio.readercollection.presentation.addfriend.AddFriendsView
 import aragones.sergio.readercollection.presentation.bookdetail.BookDetailView
 import aragones.sergio.readercollection.presentation.booklist.BookListView
 import aragones.sergio.readercollection.presentation.books.BooksView
 import aragones.sergio.readercollection.presentation.datasync.DataSyncView
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsView
+import aragones.sergio.readercollection.presentation.frienddetail.FriendDetailView
+import aragones.sergio.readercollection.presentation.friends.FriendsView
 import aragones.sergio.readercollection.presentation.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.login.LoginView
 import aragones.sergio.readercollection.presentation.register.RegisterView
@@ -224,6 +227,7 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onClickOption = {
                     when (it) {
                         is SettingsOption.Account -> navController.navigate(Route.Account)
+                        is SettingsOption.Friends -> navController.navigate(Route.Friends)
                         is SettingsOption.DataSync -> navController.navigate(Route.DataSync)
                         is SettingsOption.DisplaySettings -> navController.navigate(
                             Route.DisplaySettings,
@@ -244,6 +248,43 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 },
                 onLogout = {
                     logout(context)
+                },
+            )
+        }
+        composable<Route.Friends>(
+            enterTransition = { slideIntoContainer() },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutOfContainer() },
+        ) {
+            FriendsView(
+                onBack = {
+                    navController.navigateUp()
+                },
+                onSelectFriend = { userId ->
+                    navController.navigate(Route.FriendDetail(userId))
+                },
+                onAddFriend = {
+                    navController.navigate(Route.AddFriends)
+                },
+            )
+        }
+        composable<Route.FriendDetail>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            FriendDetailView(
+                onBack = {
+                    navController.navigateUp()
+                },
+            )
+        }
+        composable<Route.AddFriends>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            AddFriendsView(
+                onBack = {
+                    navController.navigateUp()
                 },
             )
         }

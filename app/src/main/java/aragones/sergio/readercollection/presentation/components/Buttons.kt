@@ -16,7 +16,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
@@ -27,21 +29,32 @@ fun MainActionButton(
     enabled: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    type: ButtonType = ButtonType.MAIN,
 ) {
+    val buttonColors = when (type) {
+        ButtonType.MAIN -> ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+        )
+        ButtonType.DESTRUCTIVE -> ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.error,
+        )
+    }
+    val textColor = when (type) {
+        ButtonType.MAIN -> MaterialTheme.colorScheme.secondary
+        ButtonType.DESTRUCTIVE -> MaterialTheme.colorScheme.onError
+    }
     Button(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            disabledContentColor = MaterialTheme.colorScheme.tertiary,
-        ),
+        colors = buttonColors,
     ) {
         Text(
             text = text,
             modifier = Modifier.padding(8.dp),
             style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.secondary,
+            color = textColor,
             maxLines = 1,
         )
     }
@@ -57,6 +70,22 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
     ) {
         Icon(
             painter = painterResource(image),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.secondary,
+        )
+    }
+}
+
+@Composable
+fun ListButton(image: ImageVector, onClick: () -> Unit, modifier: Modifier = Modifier) {
+    FloatingActionButton(
+        onClick = onClick,
+        modifier = modifier.padding(12.dp),
+        contentColor = MaterialTheme.colorScheme.secondary,
+        containerColor = MaterialTheme.colorScheme.primary,
+    ) {
+        Icon(
+            imageVector = image,
             contentDescription = null,
             tint = MaterialTheme.colorScheme.secondary,
         )
@@ -80,9 +109,22 @@ fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modif
 private fun MainActionButtonPreview() {
     ReaderCollectionTheme {
         MainActionButton(
-            text = "Log-in",
+            text = stringResource(R.string.sign_in),
             enabled = true,
             onClick = {},
+        )
+    }
+}
+
+@CustomPreviewLightDark
+@Composable
+private fun MainDestructiveActionButtonPreview() {
+    ReaderCollectionTheme {
+        MainActionButton(
+            text = stringResource(R.string.delete),
+            enabled = true,
+            onClick = {},
+            type = ButtonType.DESTRUCTIVE,
         )
     }
 }
@@ -107,4 +149,9 @@ private fun MainTextButtonPreview() {
             onClick = {},
         )
     }
+}
+
+enum class ButtonType {
+    MAIN,
+    DESTRUCTIVE,
 }

@@ -8,6 +8,7 @@
     //GENERAL
     <string name="search">Buscar</string>
     <string name="restart">Reiniciar</string>
+    <string name="delete">Borrar</string>
 
     <string name="message_app_update_downloaded">Se ha descargado una actualización.</string>
 
@@ -81,6 +82,8 @@
     <string name="title_settings">Configuración</string>
     <string name="account_title">Cuenta</string>
     <string name="account_description">Gestiona tu cuenta</string>
+    <string name="friends_title">Amigos</string>
+    <string name="friends_description">Gestiona tu lista de amigos</string>
     <string name="preferences">Preferencias</string>
     <string name="data_sync_title">Sincronización de datos</string>
     <string name="data_sync_description">Gestiona la sincronización de tus datos</string>
@@ -98,6 +101,22 @@
     <string name="delete_account_title">Borrar cuenta</string>
     <string name="delete_account_description">Borrar para siempre tu usuario y todos los libros guardados</string>
     <string name="delete_account_action">Borrar cuenta</string>
+
+    //FRIENDS
+    <string name="your_friends_title">Tus amigos</string>
+    <string name="no_friends_yet">Aún no has añadido ningún amigo</string>
+    <string name="pending_status">Pendiente</string>
+    <string name="rejected_status">Rechazada</string>
+    <string name="add_friend_action">Añadir</string>
+    <string name="reject_friend_action">Rechazar</string>
+    <string name="friend_action_successfully_done">Tu petición se ha realizado correctamente</string>
+    <string name="friend_action_failure">Tu petición no se pudo realizar. Por favor, inténtalo otra vez.</string>
+    <string name="friend_removed">¡Amigo eliminado!</string>
+
+    //ADD FRIENDS
+    <string name="add_friends_title">Añadir amigos</string>
+    <string name="search_friends_instructions">Introduce el nombre de usuario de tu amigo para añadirlo</string>
+    <string name="no_friends_found">No existe un usuario con ese nombre, o no tiene el perfil público activado</string>
 
     //DATA SYNCHRONIZATION
     <string name="syncing_options_title">Opciones de sincronización</string>
@@ -143,6 +162,7 @@
     <string name="sync_title">Sincronizando…</string>
     <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo.</string>
     <string name="enter_valid_url">Introduce un enlace válido</string>
+    <string name="user_remove_confirmation">¿Estás seguro de que quieres borrar este amigo?</string>
 
     //ERRORS
     <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>

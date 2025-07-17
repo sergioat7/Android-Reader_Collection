@@ -5,6 +5,8 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.RequestStatus
+import aragones.sergio.readercollection.data.remote.model.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,6 +15,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
+import kotlin.NoSuchElementException
 import kotlinx.coroutines.tasks.await
 
 class UserRemoteDataSource @Inject constructor(
@@ -79,6 +82,191 @@ class UserRemoteDataSource @Inject constructor(
             .addOnSuccessListener { emitter.onComplete() }
             .addOnFailureListener { emitter.onError(it) }
     }
+
+    fun getUser(username: String, userId: String): Single<UserResponse> = Single.create { emitter ->
+        firestore
+            .collection("public_profiles")
+            .whereEqualTo("email", "${username}$mailEnd")
+            .get()
+            .addOnSuccessListener { result ->
+
+                val user = result.documents.firstOrNull()?.let {
+                    val uuid = it.getString("uuid")
+                    val email = it.getString("email")
+                    if (uuid != null && email != null && uuid != userId) {
+                        UserResponse(
+                            id = uuid,
+                            username = email.split("@").first(),
+                            status = RequestStatus.PENDING_FRIEND,
+                        )
+                    } else {
+                        null
+                    }
+                }
+                if (user != null) {
+                    emitter.onSuccess(user)
+                } else {
+                    emitter.onError(NoSuchElementException("User not found"))
+                }
+            }.addOnFailureListener { emitter.onError(it) }
+    }
+
+    fun getFriends(userId: String): Single<List<UserResponse>> = Single.create { emitter ->
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("friends")
+            .get()
+            .addOnSuccessListener { result ->
+                val users = result.toObjects(UserResponse::class.java)
+                emitter.onSuccess(users)
+            }.addOnFailureListener {
+                emitter.onError(it)
+            }
+    }
+
+    fun getFriend(userId: String, friendId: String): Single<UserResponse> =
+        Single.create { emitter ->
+            firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+                .get()
+                .addOnSuccessListener { result ->
+                    val user = result.toObject(UserResponse::class.java)
+                    if (user != null) {
+                        emitter.onSuccess(user)
+                    } else {
+                        emitter.onError(NoSuchElementException("User not found"))
+                    }
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
+    fun requestFriendship(user: UserResponse, friend: UserResponse): Completable =
+        Completable.create { emitter ->
+            val batch = firestore.batch()
+
+            val userRef = firestore
+                .collection("users")
+                .document(user.id)
+                .collection("friends")
+                .document(friend.id)
+            val userData = mapOf(
+                "id" to friend.id,
+                "username" to friend.username,
+                "status" to friend.status,
+            )
+            batch.set(userRef, userData)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friend.id)
+                .collection("friends")
+                .document(user.id)
+            val friendData = mapOf(
+                "id" to user.id,
+                "username" to user.username,
+                "status" to user.status,
+            )
+            batch.set(friendRef, friendData)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
+    fun acceptFriendRequest(userId: String, friendId: String): Completable =
+        Completable.create { emitter ->
+
+            val userRef = firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friendId)
+                .collection("friends")
+                .document(userId)
+
+            val batch = firestore.batch()
+
+            batch.update(userRef, "status", RequestStatus.APPROVED)
+            batch.update(friendRef, "status", RequestStatus.APPROVED)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
+    fun rejectFriendRequest(userId: String, friendId: String): Completable =
+        Completable.create { emitter ->
+
+            val userRef = firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friendId)
+                .collection("friends")
+                .document(userId)
+
+            val batch = firestore.batch()
+
+            batch.delete(userRef)
+            batch.update(friendRef, "status", RequestStatus.REJECTED)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
+    fun deleteFriend(userId: String, friendId: String): Completable =
+        Completable.create { emitter ->
+            val userRef = firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+
+            val friendRef = firestore
+                .collection("users")
+                .document(friendId)
+                .collection("friends")
+                .document(userId)
+
+            val batch = firestore.batch()
+
+            batch.delete(userRef)
+            batch.delete(friendRef)
+
+            batch
+                .commit()
+                .addOnSuccessListener {
+                    emitter.onComplete()
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
 
     fun deleteUser() = Completable.create { completable ->
         auth.currentUser?.delete()
