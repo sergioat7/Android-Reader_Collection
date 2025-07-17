@@ -24,6 +24,7 @@ import aragones.sergio.readercollection.presentation.booklist.BookListView
 import aragones.sergio.readercollection.presentation.books.BooksView
 import aragones.sergio.readercollection.presentation.datasync.DataSyncView
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsView
+import aragones.sergio.readercollection.presentation.frienddetail.FriendDetailView
 import aragones.sergio.readercollection.presentation.friends.FriendsView
 import aragones.sergio.readercollection.presentation.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.login.LoginView
@@ -259,8 +260,21 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onBack = {
                     navController.navigateUp()
                 },
+                onSelectFriend = { userId ->
+                    navController.navigate(Route.FriendDetail(userId))
+                },
                 onAddFriend = {
                     navController.navigate(Route.AddFriends)
+                },
+            )
+        }
+        composable<Route.FriendDetail>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            FriendDetailView(
+                onBack = {
+                    navController.navigateUp()
                 },
             )
         }

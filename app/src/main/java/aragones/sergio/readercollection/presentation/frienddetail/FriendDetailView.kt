@@ -1,9 +1,9 @@
 /*
  * Copyright (c) 2025 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 12/7/2025
+ * Created by Sergio Aragonés on 16/7/2025
  */
 
-package aragones.sergio.readercollection.presentation.friends
+package aragones.sergio.readercollection.presentation.frienddetail
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -11,31 +11,39 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
-fun FriendsView(
-    onBack: () -> Unit,
-    onSelectFriend: (String) -> Unit,
-    onAddFriend: () -> Unit,
-    viewModel: FriendsViewModel = hiltViewModel(),
-) {
+fun FriendDetailView(onBack: () -> Unit, viewModel: FriendDetailViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
-    val error by viewModel.error.collectAsState()
+    val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
+    val error by viewModel.error.collectAsState()
 
     ReaderCollectionApp {
-        FriendsScreen(
+        FriendDetailScreen(
             state = state,
             onBack = onBack,
-            onSelectFriend = onSelectFriend,
-            onAcceptFriend = viewModel::acceptFriendRequest,
-            onRejectFriend = viewModel::rejectFriendRequest,
-            onDeleteFriend = viewModel::deleteFriend,
-            onAddFriend = onAddFriend,
+            onDeleteFriend = {
+                viewModel.showConfirmationDialog(R.string.user_remove_confirmation)
+            },
         )
     }
+
+    ConfirmationAlertDialog(
+        show = confirmationMessageId != -1,
+        textId = confirmationMessageId,
+        onCancel = {
+            viewModel.closeDialogs()
+        },
+        onAccept = {
+            viewModel.closeDialogs()
+            viewModel.deleteFriend()
+        },
+    )
 
     val text = if (error != null) {
         val errorText = StringBuilder()
@@ -52,9 +60,10 @@ fun FriendsView(
     }
     InformationAlertDialog(show = text.isNotEmpty(), text = text) {
         viewModel.closeDialogs()
+        onBack()
     }
 
     LaunchedEffect(Unit) {
-        viewModel.fetchFriends()
+        viewModel.fetchFriend()
     }
 }

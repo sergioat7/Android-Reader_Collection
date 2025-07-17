@@ -107,6 +107,7 @@
     <string name="reject_friend_action">Reject</string>
     <string name="friend_action_successfully_done">Your request has been successfully done</string>
     <string name="friend_action_failure">Your request could not be done. Please, try again</string>
+    <string name="friend_removed">Friend removed!</string>
 
     //ADD FRIENDS
     <string name="add_friends_title">Add friends</string>
@@ -166,6 +167,7 @@
     <string name="sync_title">Synchronizing…</string>
     <string name="sync_confirmation">Are you sure you want to sync the app? This process could take a while.</string>
     <string name="enter_valid_url">Enter a valid URL</string>
+    <string name="user_remove_confirmation">Are you sure you want to delete this friend?</string>
 
     //ERRORS
     <string name="error_server">There was an error on getting data. Please, try again.</string>

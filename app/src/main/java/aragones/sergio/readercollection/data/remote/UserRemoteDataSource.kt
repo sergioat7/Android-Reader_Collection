@@ -125,6 +125,26 @@ class UserRemoteDataSource @Inject constructor(
             }
     }
 
+    fun getFriend(userId: String, friendId: String): Single<UserResponse> =
+        Single.create { emitter ->
+            firestore
+                .collection("users")
+                .document(userId)
+                .collection("friends")
+                .document(friendId)
+                .get()
+                .addOnSuccessListener { result ->
+                    val user = result.toObject(UserResponse::class.java)
+                    if (user != null) {
+                        emitter.onSuccess(user)
+                    } else {
+                        emitter.onError(NoSuchElementException("User not found"))
+                    }
+                }.addOnFailureListener {
+                    emitter.onError(it)
+                }
+        }
+
     fun requestFriendship(user: UserResponse, friend: UserResponse): Completable =
         Completable.create { emitter ->
             val batch = firestore.batch()

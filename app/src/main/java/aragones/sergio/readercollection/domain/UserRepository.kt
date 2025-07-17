@@ -227,6 +227,22 @@ class UserRepository @Inject constructor(
             ).addTo(disposables)
     }
 
+    fun getFriend(friendId: String): Single<User> = Single.create { emitter ->
+        userRemoteDataSource
+            .getFriend(userId, friendId)
+            .timeout(10, TimeUnit.SECONDS)
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
+            .subscribeBy(
+                onSuccess = { user ->
+                    emitter.onSuccess(user.toDomain())
+                },
+                onError = {
+                    emitter.onError(it)
+                },
+            ).addTo(disposables)
+    }
+
     fun requestFriendship(friend: User): Completable = Completable.create { emitter ->
         val user = UserResponse(
             id = userId,
