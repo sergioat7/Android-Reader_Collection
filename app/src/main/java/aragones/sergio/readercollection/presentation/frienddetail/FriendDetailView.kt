@@ -17,7 +17,11 @@ import aragones.sergio.readercollection.presentation.components.InformationAlert
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 
 @Composable
-fun FriendDetailView(onBack: () -> Unit, viewModel: FriendDetailViewModel = hiltViewModel()) {
+fun FriendDetailView(
+    onBack: () -> Unit,
+    onBookClick: (String) -> Unit,
+    viewModel: FriendDetailViewModel = hiltViewModel(),
+) {
     val state by viewModel.state.collectAsState()
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
@@ -27,6 +31,7 @@ fun FriendDetailView(onBack: () -> Unit, viewModel: FriendDetailViewModel = hilt
         FriendDetailScreen(
             state = state,
             onBack = onBack,
+            onBookClick = onBookClick,
             onDeleteFriend = {
                 viewModel.showConfirmationDialog(R.string.user_remove_confirmation)
             },

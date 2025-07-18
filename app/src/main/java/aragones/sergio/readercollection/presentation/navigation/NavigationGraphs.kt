@@ -276,6 +276,7 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                 onBack = {
                     navController.navigateUp()
                 },
+                onBookClick = {},
             )
         }
         composable<Route.AddFriends>(

@@ -9,6 +9,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
+import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.navigation.Route
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.StateFlow
 @HiltViewModel
 class FriendDetailViewModel @Inject constructor(
     state: SavedStateHandle,
+    private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
 ) : BaseViewModel() {
 
@@ -55,8 +57,15 @@ class FriendDetailViewModel @Inject constructor(
         userRepository
             .getFriend(params.userId)
             .subscribeBy(
-                onSuccess = {
-                    _state.value = FriendDetailUiState.Success(it)
+                onSuccess = { friend ->
+                    booksRepository
+                        .getBooksFrom(params.userId)
+                        .onErrorReturnItem(emptyList())
+                        .subscribeBy(
+                            onSuccess = { books ->
+                                _state.value = FriendDetailUiState.Success(friend, books)
+                            },
+                        ).addTo(disposables)
                 },
                 onError = {
                     when (it) {
