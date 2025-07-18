@@ -270,13 +270,28 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
         }
         composable<Route.FriendDetail>(
             enterTransition = { slideIntoContainer() },
-            exitTransition = { slideOutOfContainer() },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { slideOutOfContainer() },
         ) {
             FriendDetailView(
                 onBack = {
                     navController.navigateUp()
                 },
-                onBookClick = {},
+                onBookClick = { bookId, friendId ->
+                    navController.navigate(
+                        Route.BookDetail(bookId, friendId),
+                    )
+                },
+            )
+        }
+        composable<Route.BookDetail>(
+            enterTransition = { slideIntoContainer() },
+            exitTransition = { slideOutOfContainer() },
+        ) {
+            BookDetailView(
+                onBack = {
+                    navController.navigateUp()
+                },
             )
         }
         composable<Route.AddFriends>(

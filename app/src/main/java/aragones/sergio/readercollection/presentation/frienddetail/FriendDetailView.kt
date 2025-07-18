@@ -19,7 +19,7 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 @Composable
 fun FriendDetailView(
     onBack: () -> Unit,
-    onBookClick: (String) -> Unit,
+    onBookClick: (String, String) -> Unit,
     viewModel: FriendDetailViewModel = hiltViewModel(),
 ) {
     val state by viewModel.state.collectAsState()

@@ -321,5 +321,23 @@ class BooksRepository @Inject constructor(
                 ).addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
+
+    fun getFriendBook(friendId: String, bookId: String): Single<Book> = Single
+        .create { emitter ->
+            booksRemoteDataSource
+                .getFriendBook(friendId, bookId)
+                .timeout(10, TimeUnit.SECONDS)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = {
+                        emitter.onSuccess(it.toDomain())
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
     //endregion
 }

@@ -55,7 +55,7 @@ import com.aragones.sergio.util.BookState
 fun FriendDetailScreen(
     state: FriendDetailUiState,
     onBack: () -> Unit,
-    onBookClick: (String) -> Unit,
+    onBookClick: (String, String) -> Unit,
     onDeleteFriend: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -73,7 +73,7 @@ fun FriendDetailScreen(
                 FriendDetailContent(
                     friend = state.friend,
                     books = state.books,
-                    onBookClick = onBookClick,
+                    onBookClick = { onBookClick(it, state.friend.id) },
                     onDeleteFriend = { onDeleteFriend(state.friend.id) },
                 )
             }
@@ -236,7 +236,7 @@ private fun FriendDetailScreenPreview(
         FriendDetailScreen(
             state = state,
             onBack = {},
-            onBookClick = {},
+            onBookClick = { _, _ -> },
             onDeleteFriend = {},
         )
     }
