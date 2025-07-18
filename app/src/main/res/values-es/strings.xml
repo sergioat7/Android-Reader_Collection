@@ -105,7 +105,9 @@
 
     //FRIENDS
     <string name="your_friends_title">Tus amigos</string>
-    <string name="no_friends_yet">Aún no has añadido ningún amigo</string>
+    <string name="no_friends_yet_title">Aún no tienes amigos</string>
+    <string name="no_friends_yet_subtitle">¡Empieza a conectar con gente!</string>
+    <string name="find_friends_action">Buscar amigos</string>
     <string name="pending_status">Pendiente</string>
     <string name="rejected_status">Rechazada</string>
     <string name="add_friend_action">Añadir</string>

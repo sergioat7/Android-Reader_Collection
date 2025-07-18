@@ -81,7 +81,7 @@ fun AddFriendsScreen(
                         }
                     Text(
                         text = stringResource(textKey),
-                        style = MaterialTheme.typography.displayMedium,
+                        style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier.padding(horizontal = 24.dp),
                     )
