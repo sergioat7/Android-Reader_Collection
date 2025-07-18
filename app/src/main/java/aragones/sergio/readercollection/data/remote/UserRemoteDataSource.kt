@@ -268,9 +268,31 @@ class UserRemoteDataSource @Inject constructor(
                 }
         }
 
-    fun deleteUser() = Completable.create { completable ->
-        auth.currentUser?.delete()
-        completable.onComplete()
+    fun deleteUser(userId: String) = Completable.create { completable ->
+
+        val batch = firestore.batch()
+
+        val publicProfileRef = firestore
+            .collection("public_profiles")
+            .document(userId)
+        batch.delete(publicProfileRef)
+
+        val userRef = firestore
+            .collection("users")
+            .document(userId)
+        batch.delete(userRef)
+
+        batch
+            .commit()
+            .addOnSuccessListener {
+                auth.currentUser?.delete()?.addOnCompleteListener {
+                    completable.onComplete()
+                }
+            }.addOnFailureListener {
+                auth.currentUser?.delete()?.addOnCompleteListener {
+                    completable.onComplete()
+                }
+            }
     }
 
     suspend fun getMinVersion(): Int {

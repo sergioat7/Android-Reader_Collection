@@ -316,13 +316,13 @@ class UserRepository @Inject constructor(
     fun deleteUser(): Completable = Completable
         .create { emitter ->
             userRemoteDataSource
-                .deleteUser()
+                .deleteUser(userId)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
+                        userLocalDataSource.logout()
                         userLocalDataSource.removeUserData()
-                        userLocalDataSource.removeCredentials()
                         emitter.onComplete()
                     },
                     onError = {
