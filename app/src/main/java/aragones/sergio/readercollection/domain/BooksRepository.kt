@@ -303,5 +303,23 @@ class BooksRepository @Inject constructor(
 
     fun fetchRemoteConfigValues(language: String) =
         booksRemoteDataSource.fetchRemoteConfigValues(language)
+
+    fun getBooksFrom(uuid: String): Single<List<Book>> = Single
+        .create { emitter ->
+            booksRemoteDataSource
+                .getBooks(uuid)
+                .timeout(10, TimeUnit.SECONDS)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .subscribeBy(
+                    onSuccess = { remoteBooks ->
+                        emitter.onSuccess(remoteBooks.map { it.toDomain() })
+                    },
+                    onError = {
+                        emitter.onError(it)
+                    },
+                ).addTo(disposables)
+        }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
     //endregion
 }
