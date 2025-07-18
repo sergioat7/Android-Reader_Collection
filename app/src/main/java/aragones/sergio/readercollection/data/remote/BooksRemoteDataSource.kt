@@ -84,6 +84,24 @@ class BooksRemoteDataSource @Inject constructor(
             }.addOnFailureListener { emitter.onError(it) }
     }
 
+    fun getFriendBook(friendId: String, bookId: String): Single<BookResponse> =
+        Single.create { emitter ->
+            firestore
+                .collection("users")
+                .document(friendId)
+                .collection("books")
+                .document(bookId)
+                .get()
+                .addOnSuccessListener { result ->
+                    val book = result.toObject(BookResponse::class.java)
+                    if (book != null) {
+                        emitter.onSuccess(book)
+                    } else {
+                        emitter.onError(NoSuchElementException("Book not found"))
+                    }
+                }.addOnFailureListener { emitter.onError(it) }
+        }
+
     fun syncBooks(
         uuid: String,
         booksToSave: List<BookResponse>,
