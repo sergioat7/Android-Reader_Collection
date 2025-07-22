@@ -37,6 +37,7 @@
     <string name="format">Formato</string>
     <string name="state">Estado</string>
     <string name="load_more">Cargar más</string>
+    <string name="reading">Leyendo</string>
     <string name="pending">Pendientes</string>
     <string name="read">Leídos</string>
     <string name="show_all">Ver todo</string>
@@ -104,7 +105,9 @@
 
     //FRIENDS
     <string name="your_friends_title">Tus amigos</string>
-    <string name="no_friends_yet">Aún no has añadido ningún amigo</string>
+    <string name="no_friends_yet_title">Aún no tienes amigos</string>
+    <string name="no_friends_yet_subtitle">¡Empieza a conectar con gente!</string>
+    <string name="find_friends_action">Buscar amigos</string>
     <string name="pending_status">Pendiente</string>
     <string name="rejected_status">Rechazada</string>
     <string name="add_friend_action">Añadir</string>
@@ -144,6 +147,7 @@
     <string name="cancel">Cancelar</string>
     <string name="book_remove_confirmation">¿Estás seguro de que quieres borrar este libro?</string>
     <string name="profile_delete_confirmation">¿Estás seguro de que quieres borrar tu usuario? Perderás toda la información almacenada sobre los libros.</string>
+    <string name="public_profile_disable_confirmation">¿Estás seguro de que quieres desactivar tu perfil público? Perderás a todos los amigos que tengas añadidos.</string>
     <string name="profile_logout_confirmation">¿Estás seguro de que quieres salir?</string>
     <string name="order_by">Ordenar por</string>
     <string-array name="sorting_param_values">

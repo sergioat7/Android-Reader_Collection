@@ -42,7 +42,13 @@ fun AccountView(
             onProfileDataChange = viewModel::profileDataChanged,
             onBack = onBack,
             onSave = viewModel::save,
-            onChangePublicProfile = viewModel::setPublicProfile,
+            onChangePublicProfile = { enable ->
+                if (enable) {
+                    viewModel.setPublicProfile(true)
+                } else {
+                    viewModel.showConfirmationDialog(R.string.public_profile_disable_confirmation)
+                }
+            },
             onDeleteAccount = {
                 viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
             },
@@ -59,6 +65,9 @@ fun AccountView(
             when (confirmationMessageId) {
                 R.string.profile_delete_confirmation -> {
                     viewModel.deleteUser()
+                }
+                R.string.public_profile_disable_confirmation -> {
+                    viewModel.setPublicProfile(false)
                 }
                 else -> {
                     Unit

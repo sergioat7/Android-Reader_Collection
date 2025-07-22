@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.friends
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -45,6 +49,7 @@ import aragones.sergio.readercollection.presentation.components.CustomCircularPr
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
+import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
@@ -69,31 +74,16 @@ fun FriendsScreen(
                 CustomCircularProgressIndicator()
             }
             is FriendsUiState.Success -> {
-                Box(modifier = modifier.fillMaxSize()) {
-                    if (state.friends.isEmpty()) {
-                        Box(
-                            modifier = Modifier.fillMaxSize().padding(24.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = stringResource(R.string.no_friends_yet),
-                                style = MaterialTheme.typography.displayMedium,
-                                color = MaterialTheme.colorScheme.onBackground,
-                            )
-                        }
-                    } else {
-                        FriendsScreenContent(
-                            state = state,
-                            onSelectFriend = onSelectFriend,
-                            onAcceptFriend = onAcceptFriend,
-                            onRejectFriend = onRejectFriend,
-                            onDeleteFriend = onDeleteFriend,
-                        )
-                    }
-                    ListButton(
-                        image = Icons.Default.PersonAddAlt1,
-                        onClick = onAddFriend,
-                        modifier = Modifier.align(Alignment.BottomEnd),
+                if (state.friends.isEmpty()) {
+                    NoFriendsContent(onAddFriend)
+                } else {
+                    FriendsScreenContent(
+                        state = state,
+                        onSelectFriend = onSelectFriend,
+                        onAcceptFriend = onAcceptFriend,
+                        onRejectFriend = onRejectFriend,
+                        onDeleteFriend = onDeleteFriend,
+                        onAddFriend = onAddFriend,
                     )
                 }
             }
@@ -111,28 +101,85 @@ private fun FriendsScreenToolbar(onBack: (() -> Unit)) {
 }
 
 @Composable
+private fun NoFriendsContent(onAddFriend: () -> Unit, modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Image(
+            painter = painterResource(R.drawable.image_no_friends),
+            contentDescription = null,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth,
+        )
+        Spacer(Modifier.height(24.dp))
+        Text(
+            text = stringResource(R.string.no_friends_yet_title),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 24.dp),
+            style = MaterialTheme.typography.displayLarge,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+        )
+        Spacer(Modifier.height(12.dp))
+        Text(
+            text = stringResource(R.string.no_friends_yet_subtitle),
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(horizontal = 24.dp),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.primary,
+            textAlign = TextAlign.Center,
+        )
+        MainActionButton(
+            text = stringResource(R.string.find_friends_action),
+            enabled = true,
+            onClick = onAddFriend,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(24.dp),
+        )
+    }
+}
+
+@Composable
 private fun FriendsScreenContent(
     state: FriendsUiState.Success,
     onSelectFriend: (String) -> Unit,
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
     onDeleteFriend: (String) -> Unit,
+    onAddFriend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(horizontal = 24.dp),
-    ) {
-        items(state.friends, key = { it.id }) { friend ->
-            FriendItem(
-                friend = friend,
-                onSelectFriend = { onSelectFriend(friend.id) },
-                onAcceptFriend = { onAcceptFriend(friend.id) },
-                onRejectFriend = { onRejectFriend(friend.id) },
-                onDeleteFriend = { onDeleteFriend(friend.id) },
-            )
+    Box(modifier = modifier.fillMaxSize()) {
+        LazyColumn(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
+        ) {
+            items(state.friends, key = { it.id }) { friend ->
+                FriendItem(
+                    friend = friend,
+                    onSelectFriend = { onSelectFriend(friend.id) },
+                    onAcceptFriend = { onAcceptFriend(friend.id) },
+                    onRejectFriend = { onRejectFriend(friend.id) },
+                    onDeleteFriend = { onDeleteFriend(friend.id) },
+                )
+            }
         }
+        ListButton(
+            image = Icons.Default.PersonAddAlt1,
+            onClick = onAddFriend,
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(24.dp),
+        )
     }
 }
 

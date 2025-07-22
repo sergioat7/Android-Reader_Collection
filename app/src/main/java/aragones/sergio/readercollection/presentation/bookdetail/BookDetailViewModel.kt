@@ -188,21 +188,39 @@ class BookDetailViewModel @Inject constructor(
 
     //region Private methods
     private fun fetchBook() {
-        booksRepository
-            .getBook(params.bookId)
-            .subscribeBy(
-                onSuccess = {
-                    currentBook = it.first
-                    _state.value = _state.value.copy(
-                        book = it.first,
-                        isEditable = !it.second,
-                        isAlreadySaved = it.second,
-                    )
-                },
-                onError = {
-                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                },
-            ).addTo(disposables)
+        if (params.friendId.isNotEmpty()) {
+            booksRepository
+                .getFriendBook(params.friendId, params.bookId)
+                .subscribeBy(
+                    onSuccess = {
+                        currentBook = it
+                        _state.value = _state.value.copy(
+                            book = it,
+                            isEditable = true,
+                            isAlreadySaved = false,
+                        )
+                    },
+                    onError = {
+                        _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                    },
+                ).addTo(disposables)
+        } else {
+            booksRepository
+                .getBook(params.bookId)
+                .subscribeBy(
+                    onSuccess = {
+                        currentBook = it.first
+                        _state.value = _state.value.copy(
+                            book = it.first,
+                            isEditable = !it.second,
+                            isAlreadySaved = it.second,
+                        )
+                    },
+                    onError = {
+                        _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                    },
+                ).addTo(disposables)
+        }
     }
     //endregion
 }
