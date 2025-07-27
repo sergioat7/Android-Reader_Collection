@@ -13,7 +13,7 @@
     <string name="message_app_update_downloaded">Se ha descargado una actualización.</string>
 
     //LOGIN &amp; REGISTRATION
-    <string name="invalid_username">Usuario no válido</string>
+    <string name="invalid_username">El usuario debe estar compuesto solo por letras y números</string>
     <string name="invalid_password">La contraseña debe tener al menos 6 carácteres</string>
     <string name="invalid_repeat_password">Las contraseñas no coinciden</string>
     <string name="username">Usuario</string>

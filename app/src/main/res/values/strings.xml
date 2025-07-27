@@ -9,7 +9,7 @@
     <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 
     //LOGIN &amp; REGISTRATION
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_username">Username must be composed only by letters and numbers</string>
     <string name="invalid_password">Password must have at least 6 characters</string>
     <string name="invalid_repeat_password">Passwords does not match</string>
     <string name="username">Username</string>
