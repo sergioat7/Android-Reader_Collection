@@ -26,7 +26,7 @@ object Constants {
     const val NO_VALUE = "-"
     const val BOOKS_TO_SHOW = 7
 
-    fun isUserNameValid(username: String): Boolean = username.isNotBlank()
+    fun isUserNameValid(username: String): Boolean = username.matches(Regex("^[a-zA-Z0-9]+$"))
 
     fun isPasswordValid(password: String): Boolean = password.length > 5
 

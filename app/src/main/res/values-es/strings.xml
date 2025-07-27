@@ -13,7 +13,7 @@
     <string name="message_app_update_downloaded">Se ha descargado una actualización.</string>
 
     //LOGIN &amp; REGISTRATION
-    <string name="invalid_username">Usuario no válido</string>
+    <string name="invalid_username">El usuario debe estar compuesto solo por letras y números</string>
     <string name="invalid_password">La contraseña debe tener al menos 6 carácteres</string>
     <string name="invalid_repeat_password">Las contraseñas no coinciden</string>
     <string name="username">Usuario</string>
@@ -25,6 +25,7 @@
     <string name="confirm_password">Confirmar contraseña</string>
     <string name="username_info">El usuario sólo es necesario para identificarte y poder diferenciar tus libros de los de otro usuario. Sin embargo, al no guardar ningún tipo de información personal, si se te olvida la contraseña no podrás recuperarla, por lo que es aconsejable tener una copia de seguridad de los libros guardados. La puedes crear desde la pantalla de Estadísticas.</string>
     <string name="wrong_credentials">El usuario o la contraseña son incorrectos</string>
+    <string name="error_user_found">Ya hay un usuario con ese nombre. Por favor, elige otro.</string>
 
     //BOOKS
     <string name="title_books">Librería</string>
@@ -169,7 +170,7 @@
     <string name="user_remove_confirmation">¿Estás seguro de que quieres borrar este amigo?</string>
 
     //ERRORS
-    <string name="error_server">Hubo un error al recuperar los datos. Por favor, inténtalo otra vez.</string>
+    <string name="error_server">Hubo un error con tu petición. Por favor, inténtalo otra vez.</string>
     <string name="error_search">Debes introducir un texto para buscar.</string>
     <string name="error_no_book">No existe un libro con ese id.</string>
     <string name="error_resource_found">Este libro ya está en tu colección.</string>
