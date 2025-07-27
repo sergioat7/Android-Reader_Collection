@@ -174,7 +174,7 @@
     <string name="user_remove_confirmation">Are you sure you want to delete this friend?</string>
 
     //ERRORS
-    <string name="error_server">There was an error on getting data. Please, try again.</string>
+    <string name="error_server">There was an error with your request. Please, try again.</string>
     <string name="error_search">You must provide a text to search.</string>
     <string name="error_no_book">There is no book with that id.</string>
     <string name="error_resource_found">This book is already in your collection.</string>
