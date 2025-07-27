@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -75,10 +76,17 @@ class RegisterViewModel @Inject constructor(
                 },
                 onError = {
                     manageError(
-                        ErrorResponse(
-                            Constants.EMPTY_VALUE,
-                            R.string.error_server,
-                        ),
+                        if (it is FirebaseAuthUserCollisionException) {
+                            ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_user_found,
+                            )
+                        } else {
+                            ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_server,
+                            )
+                        }
                     )
                 },
             ).addTo(disposables)
