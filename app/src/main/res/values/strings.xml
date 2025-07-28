@@ -9,7 +9,7 @@
     <string name="message_app_update_downloaded">An update has just been downloaded.</string>
 
     //LOGIN &amp; REGISTRATION
-    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_username">Username must be composed only by letters and numbers</string>
     <string name="invalid_password">Password must have at least 6 characters</string>
     <string name="invalid_repeat_password">Passwords does not match</string>
     <string name="username">Username</string>
@@ -21,6 +21,7 @@
     <string name="confirm_password">Confirm password</string>
     <string name="username_info">This username is only needed for identification purposes and to be able to separate your books from another user\'s ones. However, due to any personal information is stored, if you forget your password you won\'t be able to retrieve it, so it\'s advisable to have a backup copy. You can create it from the Statistics screen.</string>
     <string name="wrong_credentials">Username or password are not correct</string>
+    <string name="error_user_found">There is already a user with that name. Please, choose another one.</string>
 
     //BOOKS
     <string name="title_books">Bookshelf</string>
@@ -174,7 +175,7 @@
     <string name="user_remove_confirmation">Are you sure you want to delete this friend?</string>
 
     //ERRORS
-    <string name="error_server">There was an error on getting data. Please, try again.</string>
+    <string name="error_server">There was an error with your request. Please, try again.</string>
     <string name="error_search">You must provide a text to search.</string>
     <string name="error_no_book">There is no book with that id.</string>
     <string name="error_resource_found">This book is already in your collection.</string>
