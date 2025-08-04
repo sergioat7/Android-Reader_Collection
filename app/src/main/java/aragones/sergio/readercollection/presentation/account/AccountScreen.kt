@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -47,6 +48,7 @@ import aragones.sergio.readercollection.presentation.components.CustomOutlinedTe
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.MainActionButton
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
 
@@ -149,7 +151,8 @@ private fun ProfileInfo(
         onTextChanged = {},
         modifier = Modifier.fillMaxWidth(),
         labelText = stringResource(R.string.username),
-        endIcon = R.drawable.ic_show_info,
+        endIcon = painterResource(R.drawable.ic_show_info)
+            .withDescription(stringResource(R.string.show_info)),
         enabled = false,
         onEndIconClicked = onShowInfo,
     )
@@ -163,9 +166,11 @@ private fun ProfileInfo(
         errorTextId = passwordError,
         labelText = stringResource(R.string.password),
         endIcon = if (passwordVisibility) {
-            R.drawable.ic_hide_password
+            painterResource(R.drawable.ic_hide_password)
+                .withDescription(stringResource(R.string.hide_password))
         } else {
-            R.drawable.ic_show_password
+            painterResource(R.drawable.ic_show_password)
+                .withDescription(stringResource(R.string.show_password))
         },
         inputType = CustomInputType.PASSWORD,
         isLastTextField = true,

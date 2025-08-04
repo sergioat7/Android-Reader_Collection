@@ -182,4 +182,44 @@
     <string name="error_database">There was an error with the database. Please, try again.</string>
     <string name="error_file_data">There is an error with the data format. Please, be sure data is in the correct format.</string>
 
+    //BUTTONS
+    <string name="go_to_start">Go to start of the list</string>
+    <string name="go_to_end">Go to end of the list</string>
+    <string name="go_to_add_new_book">Go to add book</string>
+    <string name="go_to_add_new_friend">Go to add friend</string>
+    <string name="add_photo">Add photo</string>
+
+    //IMAGES
+    <string name="not_reading_anything_yet">Not reading anything yet?</string>
+    <string name="book_cover_description">Book cover for book %1$s</string>
+
+    //ICONS
+    <string name="go_back">Go back</string>
+    <string name="sort_books">Sort books</string>
+    <string name="enable_dragging">Enable dragging to sort</string>
+    <string name="disable_dragging">Disable dragging to sort</string>
+    <string name="export_data">Export data</string>
+    <string name="import_data">Import data</string>
+    <string name="edit_book">Edit book</string>
+    <string name="remove_book">Remove book</string>
+    <string name="cancel_changes">Cancel changes</string>
+    <string name="save_changes">Save changes</string>
+    <string name="add_book">Add book</string>
+    <string name="clear_text">Clear text</string>
+    <string name="show_info">Show info</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name="book_rating_description">Book rating %d</string>
+    <string name="star_filled">full</string>
+    <string name="star_half_filled">half</string>
+    <string name="star_empty">empty</string>
+    <string name="star_status_description">Star %1$s, %2$d of %3$d</string>
+    <plurals name="star_rate_description">
+        <item quantity="one">%1$s. Select to rate with %2$d star</item>
+        <item quantity="other">%1$s. Select to rate with %2$d stars</item>
+    </plurals>
+    <string name="dragging_enabled_description">Dragging to sort enabled</string>
+    <string name="increase_priority_description">Increase priority for book %1$s</string>
+    <string name="decrease_priority_description">Decrease priority for book %1$s</string>
+
 </resources>

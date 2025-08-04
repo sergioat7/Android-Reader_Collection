@@ -32,6 +32,7 @@ import aragones.sergio.readercollection.presentation.components.CustomCircularPr
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.MainActionButton
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
@@ -75,7 +76,8 @@ fun RegisterScreen(
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
             labelText = stringResource(R.string.username),
-            endIcon = R.drawable.ic_show_info,
+            endIcon = painterResource(R.drawable.ic_show_info)
+                .withDescription(stringResource(R.string.show_info)),
             isLastTextField = false,
             onEndIconClicked = onShowInfo,
         )
@@ -95,9 +97,11 @@ fun RegisterScreen(
             errorTextId = state.formState.passwordError,
             labelText = stringResource(R.string.password),
             endIcon = if (passwordVisibility) {
-                R.drawable.ic_hide_password
+                painterResource(R.drawable.ic_hide_password)
+                    .withDescription(stringResource(R.string.hide_password))
             } else {
-                R.drawable.ic_show_password
+                painterResource(R.drawable.ic_show_password)
+                    .withDescription(stringResource(R.string.show_password))
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = false,
@@ -119,9 +123,11 @@ fun RegisterScreen(
             errorTextId = state.formState.passwordError,
             labelText = stringResource(R.string.confirm_password),
             endIcon = if (confirmPasswordVisibility) {
-                R.drawable.ic_hide_password
+                painterResource(R.drawable.ic_hide_password)
+                    .withDescription(stringResource(R.string.hide_password))
             } else {
-                R.drawable.ic_show_password
+                painterResource(R.drawable.ic_show_password)
+                    .withDescription(stringResource(R.string.show_password))
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = true,

@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
@@ -54,7 +53,7 @@ import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
 fun TopAppBarIcon(
-    @DrawableRes icon: Int,
+    accessibilityPainter: AccessibilityPainter,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     tint: Color = MaterialTheme.colorScheme.primary,
@@ -64,8 +63,8 @@ fun TopAppBarIcon(
         modifier = modifier,
     ) {
         Icon(
-            painter = painterResource(icon),
-            contentDescription = null,
+            painter = accessibilityPainter.painter,
+            contentDescription = accessibilityPainter.contentDescription,
             tint = tint,
         )
     }
@@ -104,7 +103,8 @@ fun CustomToolbar(
         navigationIcon = onBack?.let {
             {
                 TopAppBarIcon(
-                    icon = R.drawable.ic_arrow_back,
+                    accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
+                        .withDescription(stringResource(R.string.go_back)),
                     onClick = it,
                     tint = backTintColor,
                 )
@@ -132,7 +132,8 @@ fun CustomSearchBar(
     val backIcon: @Composable (() -> Unit)? = if (isSearching || onBack != null) {
         {
             TopAppBarIcon(
-                icon = R.drawable.ic_arrow_back,
+                accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
+                    .withDescription(stringResource(R.string.go_back)),
                 onClick = {
                     if (isSearching) {
                         isSearching = false
@@ -177,7 +178,8 @@ fun CustomSearchBar(
         actions = {
             if (!isSearching) {
                 TopAppBarIcon(
-                    icon = R.drawable.ic_search,
+                    accessibilityPainter = painterResource(R.drawable.ic_search)
+                        .withDescription(stringResource(R.string.search)),
                     onClick = { isSearching = true },
                 )
             }
@@ -294,7 +296,8 @@ private fun CustomSearchBarPreview() {
 private fun TopAppBarIconPreview() {
     ReaderCollectionTheme {
         TopAppBarIcon(
-            icon = R.drawable.ic_sort_books,
+            accessibilityPainter = painterResource(R.drawable.ic_sort_books)
+                .withDescription(null),
             onClick = {},
         )
     }
@@ -309,7 +312,8 @@ private fun CollapsingToolbarPreview() {
             modifier = Modifier.size(300.dp),
             startContent = {
                 TopAppBarIcon(
-                    icon = R.drawable.ic_arrow_back,
+                    accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
+                        .withDescription(null),
                     onClick = {},
                     tint = MaterialTheme.colorScheme.secondary,
                 )
@@ -329,12 +333,14 @@ private fun CollapsingToolbarPreview() {
             },
             endContent = {
                 TopAppBarIcon(
-                    icon = R.drawable.ic_edit_book,
+                    accessibilityPainter = painterResource(R.drawable.ic_edit_book)
+                        .withDescription(null),
                     onClick = {},
                     tint = MaterialTheme.colorScheme.secondary,
                 )
                 TopAppBarIcon(
-                    icon = R.drawable.ic_remove_book,
+                    accessibilityPainter = painterResource(R.drawable.ic_remove_book)
+                        .withDescription(null),
                     onClick = {},
                     tint = MaterialTheme.colorScheme.secondary,
                 )

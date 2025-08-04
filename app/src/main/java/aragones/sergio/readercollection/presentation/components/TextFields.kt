@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -66,7 +65,7 @@ fun CustomOutlinedTextField(
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    @DrawableRes endIcon: Int? = null,
+    endIcon: AccessibilityPainter? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
     isLastTextField: Boolean? = null,
     maxLength: Int = Integer.MAX_VALUE,
@@ -107,8 +106,8 @@ fun CustomOutlinedTextField(
         {
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
                 Icon(
-                    painter = painterResource(it),
-                    contentDescription = null,
+                    painter = endIcon.painter,
+                    contentDescription = endIcon.contentDescription,
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }
@@ -161,7 +160,10 @@ fun CustomOutlinedTextField(
                     focusManager.clearFocus()
                 },
             ),
-            visualTransformation = if (endIcon == R.drawable.ic_show_password) {
+            visualTransformation = if (endIcon?.contentDescription == stringResource(
+                    R.string.show_password,
+                )
+            ) {
                 PasswordVisualTransformation()
             } else {
                 VisualTransformation.None
@@ -215,7 +217,7 @@ fun MultilineCustomOutlinedTextField(
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    @DrawableRes endIcon: Int? = null,
+    endIcon: AccessibilityPainter? = null,
     isLastTextField: Boolean? = null,
     maxLength: Int = Integer.MAX_VALUE,
     maxLines: Int = Integer.MAX_VALUE,
@@ -277,7 +279,7 @@ fun DateCustomOutlinedTextField(
     labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
-    @DrawableRes endIcon: Int? = null,
+    endIcon: AccessibilityPainter? = null,
     enabled: Boolean = true,
     onEndIconClicked: (() -> Unit)? = null,
     language: String? = null,
@@ -339,7 +341,8 @@ private fun PasswordOutlinedTextFieldPreview() {
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             labelText = "Label",
-            endIcon = R.drawable.ic_show_password,
+            endIcon = painterResource(R.drawable.ic_show_password)
+                .withDescription(null),
             maxLength = 100,
             onEndIconClicked = {},
         )

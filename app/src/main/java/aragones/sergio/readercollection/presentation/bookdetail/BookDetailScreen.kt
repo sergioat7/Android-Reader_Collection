@@ -51,6 +51,7 @@ import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.StarRatingBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.presentation.theme.isLight
@@ -91,12 +92,14 @@ fun BookDetailScreen(
                 state.isAlreadySaved && !state.isEditable -> {
                     {
                         TopAppBarIcon(
-                            icon = R.drawable.ic_edit_book,
+                            accessibilityPainter = painterResource(R.drawable.ic_edit_book)
+                                .withDescription(stringResource(R.string.edit_book)),
                             onClick = onEdit,
                             tint = MaterialTheme.colorScheme.secondary,
                         )
                         TopAppBarIcon(
-                            icon = R.drawable.ic_remove_book,
+                            accessibilityPainter = painterResource(R.drawable.ic_remove_book)
+                                .withDescription(stringResource(R.string.remove_book)),
                             onClick = onRemove,
                             tint = MaterialTheme.colorScheme.secondary,
                         )
@@ -105,12 +108,14 @@ fun BookDetailScreen(
                 state.isAlreadySaved && state.isEditable -> {
                     {
                         TopAppBarIcon(
-                            icon = R.drawable.ic_cancel_changes,
+                            accessibilityPainter = painterResource(R.drawable.ic_cancel_changes)
+                                .withDescription(stringResource(R.string.cancel_changes)),
                             onClick = onCancel,
                             tint = MaterialTheme.colorScheme.secondary,
                         )
                         TopAppBarIcon(
-                            icon = R.drawable.ic_save_changes,
+                            accessibilityPainter = painterResource(R.drawable.ic_save_changes)
+                                .withDescription(stringResource(R.string.save_changes)),
                             onClick = {
                                 onSave(state.book)
                             },
@@ -121,7 +126,8 @@ fun BookDetailScreen(
                 else -> {
                     {
                         TopAppBarIcon(
-                            icon = R.drawable.ic_save_book,
+                            accessibilityPainter = painterResource(R.drawable.ic_save_book)
+                                .withDescription(stringResource(R.string.add_book)),
                             onClick = {
                                 onSave(state.book)
                             },
@@ -156,6 +162,7 @@ fun BookDetailScreen(
                         } else {
                             R.drawable.ic_default_book_cover_blue
                         },
+                        contentDescription = state.book.title,
                         shape = MaterialTheme.shapes.medium,
                         contentScale = ContentScale.Fit,
                     )
@@ -171,7 +178,7 @@ fun BookDetailScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_add_a_photo),
-                                contentDescription = null,
+                                contentDescription = stringResource(R.string.add_photo),
                                 tint = MaterialTheme.colorScheme.secondary,
                             )
                         }
@@ -235,9 +242,9 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_title),
             textStyle = MaterialTheme.typography.displayLarge,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.title?.isNotBlank() == true
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.title?.isNotBlank() == true },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
             onEndIconClicked = {
@@ -253,9 +260,9 @@ private fun BookDetailContent(
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_author),
             textColor = MaterialTheme.colorScheme.description,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.authorsToString().isNotBlank()
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.authorsToString().isNotBlank() },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
             onEndIconClicked = {
@@ -287,9 +294,9 @@ private fun BookDetailContent(
             placeholderText = stringResource(R.string.add_description),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.description?.isNotBlank() == true
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.description?.isNotBlank() == true },
             maxLength = 10240,
             maxLines = 8,
             enabled = isEditable,
@@ -308,9 +315,9 @@ private fun BookDetailContent(
             placeholderText = stringResource(R.string.add_summary),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.summary?.isNotBlank() == true
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.summary?.isNotBlank() == true },
             maxLength = 10240,
             maxLines = 8,
             enabled = isEditable,
@@ -372,9 +379,9 @@ private fun BookDetailContent(
             labelText = stringResource(R.string.reading_date),
             placeholderText = stringResource(R.string.select_a_date),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.readingDate != null
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.readingDate != null },
             enabled = isEditable,
             onEndIconClicked = {
                 onChangeData(book.copy(readingDate = null))
@@ -418,9 +425,9 @@ private fun BookDetailContent(
             placeholderText = stringResource(R.string.add_pages),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.pageCount > 0
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.pageCount > 0 },
             inputType = CustomInputType.NUMBER,
             maxLength = 5,
             enabled = isEditable,
@@ -439,9 +446,9 @@ private fun BookDetailContent(
             placeholderText = stringResource(R.string.add_isbn),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.isbn?.isNotBlank() == true
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.isbn?.isNotBlank() == true },
             inputType = CustomInputType.NUMBER,
             enabled = isEditable,
             onEndIconClicked = {
@@ -459,9 +466,9 @@ private fun BookDetailContent(
             placeholderText = stringResource(R.string.add_publisher),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.publisher?.isNotBlank() == true
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.publisher?.isNotBlank() == true },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
             onEndIconClicked = {
@@ -491,9 +498,9 @@ private fun BookDetailContent(
             labelText = stringResource(R.string.published_date),
             placeholderText = stringResource(R.string.select_a_date),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            endIcon = (R.drawable.ic_clear_text).takeIf {
-                isEditable && book.publishedDate != null
-            },
+            endIcon = painterResource(R.drawable.ic_clear_text)
+                .withDescription(stringResource(R.string.clear_text))
+                .takeIf { isEditable && book.publishedDate != null },
             enabled = isEditable,
             onEndIconClicked = {
                 onChangeData(book.copy(publishedDate = null))

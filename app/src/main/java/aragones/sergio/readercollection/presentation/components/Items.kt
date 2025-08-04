@@ -36,6 +36,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
@@ -80,7 +83,7 @@ fun BookItem(
                 Spacer(Modifier.width(24.dp))
                 Icon(
                     painter = painterResource(R.drawable.ic_enable_drag),
-                    contentDescription = null,
+                    contentDescription = stringResource(R.string.dragging_enabled_description),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
@@ -96,6 +99,7 @@ fun BookItem(
                     .padding(horizontal = 24.dp)
                     .widthIn(max = 115.dp)
                     .fillMaxHeight(),
+                contentDescription = book.title,
                 shape = MaterialTheme.shapes.medium,
                 contentScale = ContentScale.FillWidth,
             )
@@ -173,6 +177,7 @@ private fun RatingStars(rating: Double, modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.roseBud,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
+            modifier = Modifier.semantics { hideFromAccessibility() },
         )
     }
 }
@@ -207,6 +212,7 @@ fun ReadingBookItem(
             } else {
                 R.drawable.ic_default_book_cover_white
             },
+            contentDescription = book.title,
             contentScale = ContentScale.FillWidth,
             shape = MaterialTheme.shapes.small,
         )
@@ -254,7 +260,10 @@ fun VerticalBookItem(
                 IconButton(onClick = onSwitchToLeft) {
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_left),
-                        contentDescription = null,
+                        contentDescription = stringResource(
+                            R.string.increase_priority_description,
+                            book.title ?: "",
+                        ),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }
@@ -264,7 +273,10 @@ fun VerticalBookItem(
                 IconButton(onClick = onSwitchToRight) {
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_right),
-                        contentDescription = null,
+                        contentDescription = stringResource(
+                            R.string.decrease_priority_description,
+                            book.title ?: "",
+                        ),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }
@@ -288,6 +300,7 @@ fun VerticalBookItem(
                 modifier = Modifier
                     .height(200.dp)
                     .fillMaxWidth(),
+                contentDescription = book.title,
                 shape = MaterialTheme.shapes.medium,
                 contentScale = ContentScale.Crop,
             )
@@ -323,7 +336,11 @@ fun SwipeItem(
 }
 
 @Composable
-fun SwipeItemBackground(dismissValue: SwipeToDismissBoxValue, color: Color, icon: Int? = null) {
+fun SwipeItemBackground(
+    dismissValue: SwipeToDismissBoxValue,
+    color: Color,
+    accessibilityPainter: AccessibilityPainter? = null,
+) {
     Row(modifier = Modifier.fillMaxSize()) {
         val alignment = when (dismissValue) {
             SwipeToDismissBoxValue.Settled -> Alignment.Center
@@ -346,10 +363,10 @@ fun SwipeItemBackground(dismissValue: SwipeToDismissBoxValue, color: Color, icon
                 },
             contentAlignment = alignment,
         ) {
-            if (icon != null) {
+            if (accessibilityPainter != null) {
                 Icon(
-                    painterResource(icon),
-                    contentDescription = null,
+                    accessibilityPainter.painter,
+                    contentDescription = accessibilityPainter.contentDescription,
                     modifier = Modifier
                         .size(200.dp)
                         .padding(48.dp),
@@ -515,7 +532,8 @@ private fun SwipeItemToLeftPreview() {
                 SwipeItemBackground(
                     dismissValue = SwipeToDismissBoxValue.EndToStart,
                     color = MaterialTheme.colorScheme.roseBud,
-                    icon = R.drawable.ic_save_book,
+                    accessibilityPainter = painterResource(R.drawable.ic_save_book)
+                        .withDescription(null),
                 )
             },
             content = {
@@ -538,7 +556,8 @@ private fun SwipeItemToRightPreview() {
                 SwipeItemBackground(
                     dismissValue = SwipeToDismissBoxValue.StartToEnd,
                     color = MaterialTheme.colorScheme.roseBud,
-                    icon = R.drawable.ic_remove_book,
+                    accessibilityPainter = painterResource(R.drawable.ic_remove_book)
+                        .withDescription(null),
                 )
             },
             content = {

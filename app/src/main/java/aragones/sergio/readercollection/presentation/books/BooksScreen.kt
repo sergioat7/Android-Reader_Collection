@@ -41,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -63,6 +64,7 @@ import aragones.sergio.readercollection.presentation.components.ReadingBookItem
 import aragones.sergio.readercollection.presentation.components.SearchBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.Constants as MyConstants
 import com.aragones.sergio.util.BookState
@@ -104,7 +106,8 @@ fun BooksScreen(
             onSwitchToRight = onSwitchToRight,
         )
         ListButton(
-            image = R.drawable.ic_save_book,
+            painter = painterResource(R.drawable.ic_save_book)
+                .withDescription(stringResource(R.string.go_to_add_new_book)),
             onClick = onAddBook,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
@@ -173,7 +176,8 @@ private fun BooksScreenContent(
             backgroundColor = MaterialTheme.colorScheme.background,
             actions = {
                 TopAppBarIcon(
-                    icon = R.drawable.ic_sort_books,
+                    accessibilityPainter = painterResource(R.drawable.ic_sort_books)
+                        .withDescription(stringResource(R.string.sort_books)),
                     onClick = onSortClick,
                 )
             },
@@ -286,7 +290,7 @@ private fun ReadingBooksSection(
         } else {
             Image(
                 painter = painterResource(R.drawable.image_user_reading),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.not_reading_anything_yet),
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
@@ -481,7 +485,9 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.tertiary,
                     ),
-                    selectedImage = Icons.Default.Done.takeIf { state.id == book.state },
+                    selectedIcon = rememberVectorPainter(Icons.Default.Done)
+                        .withDescription(null)
+                        .takeIf { state.id == book.state },
                 )
             }
         }

@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -16,7 +15,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -61,7 +59,7 @@ fun MainActionButton(
 }
 
 @Composable
-fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun ListButton(painter: AccessibilityPainter, onClick: () -> Unit, modifier: Modifier = Modifier) {
     FloatingActionButton(
         onClick = onClick,
         modifier = modifier.padding(12.dp),
@@ -69,24 +67,8 @@ fun ListButton(@DrawableRes image: Int, onClick: () -> Unit, modifier: Modifier 
         containerColor = MaterialTheme.colorScheme.primary,
     ) {
         Icon(
-            painter = painterResource(image),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.secondary,
-        )
-    }
-}
-
-@Composable
-fun ListButton(image: ImageVector, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    FloatingActionButton(
-        onClick = onClick,
-        modifier = modifier.padding(12.dp),
-        contentColor = MaterialTheme.colorScheme.secondary,
-        containerColor = MaterialTheme.colorScheme.primary,
-    ) {
-        Icon(
-            imageVector = image,
-            contentDescription = null,
+            painter = painter.painter,
+            contentDescription = painter.contentDescription,
             tint = MaterialTheme.colorScheme.secondary,
         )
     }
@@ -134,7 +116,8 @@ private fun MainDestructiveActionButtonPreview() {
 private fun ListButtonPreview() {
     ReaderCollectionTheme {
         ListButton(
-            image = R.drawable.ic_double_arrow_up,
+            painter = painterResource(R.drawable.ic_double_arrow_up)
+                .withDescription(null),
             onClick = {},
         )
     }

@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import coil.compose.AsyncImage
@@ -30,6 +31,7 @@ fun ImageWithLoading(
     imageUrl: String?,
     @DrawableRes placeholder: Int,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
     shape: CornerBasedShape? = null,
 ) {
@@ -38,7 +40,10 @@ fun ImageWithLoading(
     Box(modifier) {
         AsyncImage(
             model = imageUrl?.replace("http:", "https:"),
-            contentDescription = null,
+            contentDescription = stringResource(
+                R.string.book_cover_description,
+                contentDescription ?: "",
+            ),
             modifier = Modifier
                 .fillMaxSize()
                 .run {

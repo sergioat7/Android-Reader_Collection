@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
@@ -31,6 +30,7 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -48,12 +48,16 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -111,8 +115,14 @@ fun StarRatingBar(
     val starSize = with(LocalDensity.current) { (12f * density).dp }
     val starSpacing = with(LocalDensity.current) { (0.5f * density).dp }
 
+    val contentDescription =
+        stringResource(R.string.book_rating_description, (rating * 10 / maxStars).toInt())
     Row(
-        modifier = modifier.selectableGroup(),
+        modifier = modifier
+            .selectableGroup()
+            .semantics {
+                this.contentDescription = contentDescription
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         for (i in 1..maxStars) {
@@ -127,18 +137,36 @@ fun StarRatingBar(
                     MaterialTheme.colorScheme.lightRoseBud,
                 )
             }
-            Icon(
-                painter = painterResource(icon),
-                contentDescription = null,
-                tint = tint,
+            val stateText = stringResource(
+                when {
+                    i <= rating -> R.string.star_filled
+                    i.toFloat() == rating + 0.5f -> R.string.star_half_filled
+                    else -> R.string.star_empty
+                },
+            )
+            val statusDescription =
+                stringResource(R.string.star_status_description, stateText, i, maxStars)
+            val starContentDescription =
+                pluralStringResource(R.plurals.star_rate_description, i, statusDescription, i)
+            IconButton(
+                onClick = { onRatingChanged(i.toFloat()) },
                 modifier = Modifier
-                    .selectable(
-                        selected = isSelectable,
-                        onClick = {
-                            onRatingChanged(i.toFloat())
+                    .then(
+                        if (!isSelectable) {
+                            Modifier.semantics { hideFromAccessibility() }
+                        } else {
+                            Modifier
                         },
                     ).size(starSize),
-            )
+                enabled = isSelectable,
+            ) {
+                Icon(
+                    painter = painterResource(icon),
+                    contentDescription = starContentDescription.takeIf { isSelectable },
+                    tint = tint,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
             if (i < maxStars) {
                 Spacer(modifier = Modifier.width(starSpacing))
             }
@@ -187,7 +215,7 @@ fun SearchBar(
         {
             Icon(
                 painter = painterResource(R.drawable.ic_search),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.search),
                 tint = MaterialTheme.colorScheme.primary,
             )
         }
@@ -197,7 +225,8 @@ fun SearchBar(
     val trailingIcon: @Composable (() -> Unit)? = if (textFieldValueState.text.isNotBlank()) {
         {
             TopAppBarIcon(
-                icon = R.drawable.ic_clear_text,
+                accessibilityPainter = painterResource(R.drawable.ic_clear_text)
+                    .withDescription(stringResource(R.string.clear_text)),
                 onClick = {
                     textFieldValueState = textFieldValueState.copy("")
                     if (!requestFocusByDefault) {
@@ -249,8 +278,7 @@ fun CustomFilterChip(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     border: BorderStroke? = null,
-    @DrawableRes selectedIcon: Int? = null,
-    selectedImage: ImageVector? = null,
+    selectedIcon: AccessibilityPainter? = null,
 ) {
     FilterChip(
         selected = selected,
@@ -270,15 +298,8 @@ fun CustomFilterChip(
         leadingIcon = selectedIcon?.let {
             {
                 Icon(
-                    painter = painterResource(it),
-                    contentDescription = null,
-                )
-            }
-        } ?: selectedImage?.let {
-            {
-                Icon(
-                    imageVector = it,
-                    contentDescription = null,
+                    painter = it.painter,
+                    contentDescription = it.contentDescription,
                 )
             }
         },
@@ -352,18 +373,13 @@ private fun FilterChipPreview() {
                 selected = true,
                 onClick = {},
                 border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                selectedImage = Icons.Default.Done,
+                selectedIcon = rememberVectorPainter(Icons.Default.Done)
+                    .withDescription(null),
             )
             CustomFilterChip(
                 title = "Value 2",
                 selected = false,
                 onClick = {},
-            )
-            CustomFilterChip(
-                title = "Value 3",
-                selected = true,
-                onClick = {},
-                selectedIcon = R.drawable.ic_arrow_back,
             )
         }
     }

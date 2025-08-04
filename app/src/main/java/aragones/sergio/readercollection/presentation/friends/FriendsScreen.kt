@@ -34,6 +34,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +51,7 @@ import aragones.sergio.readercollection.presentation.components.CustomPreviewLig
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
@@ -174,7 +176,8 @@ private fun FriendsScreenContent(
             }
         }
         ListButton(
-            image = Icons.Default.PersonAddAlt1,
+            painter = rememberVectorPainter(Icons.Default.PersonAddAlt1)
+                .withDescription(stringResource(R.string.go_to_add_new_friend)),
             onClick = onAddFriend,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

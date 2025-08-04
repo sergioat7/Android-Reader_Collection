@@ -177,4 +177,45 @@
     <string name="error_database">Hubo un error con la base de datos. Por favor, inténtalo otra vez.</string>
     <string name="error_file_data">Hay un error con el formato de los datos. Por favor, asegúrate de que los datos están en el formato correcto.</string>
 
+    //BUTTONS
+    <string name="go_to_start">Ir al inicio de la lista</string>
+    <string name="go_to_end">Ir al final de la lista</string>
+    <string name="go_to_add_new_book">Ir a añadir libro</string>
+    <string name="go_to_add_new_friend">Ir a añadir amigo</string>
+    <string name="add_photo">Añadir foto</string>
+
+    //IMAGES
+    <string name="not_reading_anything_yet">¿No estás leyendo nada aún?</string>
+    <string name="book_cover_description">Portada del libro %1$s</string>
+
+    //ICONS
+    <string name="go_back">Volver atrás</string>
+    <string name="sort_books">Ordenar libros</string>
+    <string name="enable_dragging">Habilitar arrastrar para ordenar</string>
+    <string name="disable_dragging">Deshabilitar arrastrar para ordenar</string>
+    <string name="export_data">Exportar datos</string>
+    <string name="import_data">Importar datos</string>
+    <string name="edit_book">Editar libro</string>
+    <string name="remove_book">Eliminar libro</string>
+    <string name="cancel_changes">Cancelar cambios</string>
+    <string name="save_changes">Guardar cambios</string>
+    <string name="add_book">Añadir libro</string>
+    <string name="clear_text">Borrar texto</string>
+    <string name="show_info">Mostrar información</string>
+    <string name="hide_password">Ocultar contraseña</string>
+    <string name="show_password">Mostrar contraseña</string>
+    <string name="book_rating_description">Puntuación del libro %d</string>
+    <string name="star_filled">llena</string>
+    <string name="star_half_filled">medio llena</string>
+    <string name="star_empty">vacía</string>
+    <string name="star_status_description">Estrella %1$s, %2$d de %3$d</string>
+    <plurals name="star_rate_description">
+        <item quantity="one">%1$s. Selecciona para valorar con una estrella</item>
+        <item quantity="many">>%1$s. Selecciona para valorar con %2$d estrellas</item>
+        <item quantity="other">%1$s. Selecciona para valorar con %2$d estrellas</item>
+    </plurals>
+    <string name="dragging_enabled_description">Arrastrar para ordenar habilitado</string>
+    <string name="increase_priority_description">Aumentar prioridad del libro %1$s</string>
+    <string name="decrease_priority_description">Reducir prioridad del libro %1$s</string>
+
 </resources>

@@ -54,6 +54,7 @@ import aragones.sergio.readercollection.presentation.components.NoResultsCompone
 import aragones.sergio.readercollection.presentation.components.SwipeDirection
 import aragones.sergio.readercollection.presentation.components.SwipeItem
 import aragones.sergio.readercollection.presentation.components.SwipeItemBackground
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import kotlinx.coroutines.launch
@@ -232,7 +233,8 @@ private fun SearchContent(
                             SwipeItemBackground(
                                 dismissValue = SwipeToDismissBoxValue.EndToStart,
                                 color = MaterialTheme.colorScheme.roseBud,
-                                icon = R.drawable.ic_save_book,
+                                accessibilityPainter = painterResource(R.drawable.ic_save_book)
+                                    .withDescription(stringResource(R.string.save)),
                             )
                         },
                         content = {
@@ -259,7 +261,8 @@ private fun SearchContent(
         )
 
         ListButton(
-            image = R.drawable.ic_double_arrow_up,
+            painter = painterResource(R.drawable.ic_double_arrow_up)
+                .withDescription(stringResource(R.string.go_to_start)),
             onClick = onTopButtonClick,
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -267,7 +270,8 @@ private fun SearchContent(
         )
 
         ListButton(
-            image = R.drawable.ic_double_arrow_down,
+            painter = painterResource(R.drawable.ic_double_arrow_down)
+                .withDescription(stringResource(R.string.go_to_end)),
             onClick = onBottomButtonClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)

@@ -86,7 +86,7 @@ class RegisterViewModel @Inject constructor(
                                 Constants.EMPTY_VALUE,
                                 R.string.error_server,
                             )
-                        }
+                        },
                     )
                 },
             ).addTo(disposables)
