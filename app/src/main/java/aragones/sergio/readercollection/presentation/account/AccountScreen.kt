@@ -148,9 +148,9 @@ private fun ProfileInfo(
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     CustomOutlinedTextField(
         text = username,
+        labelText = stringResource(R.string.username),
         onTextChanged = {},
         modifier = Modifier.fillMaxWidth(),
-        labelText = stringResource(R.string.username),
         endIcon = painterResource(R.drawable.ic_show_info)
             .withDescription(stringResource(R.string.show_info)),
         enabled = false,
@@ -159,12 +159,12 @@ private fun ProfileInfo(
     Spacer(Modifier.height(8.dp))
     CustomOutlinedTextField(
         text = password,
+        labelText = stringResource(R.string.password),
         onTextChanged = onPasswordChange,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
         errorTextId = passwordError,
-        labelText = stringResource(R.string.password),
         endIcon = if (passwordVisibility) {
             painterResource(R.drawable.ic_hide_password)
                 .withDescription(stringResource(R.string.hide_password))

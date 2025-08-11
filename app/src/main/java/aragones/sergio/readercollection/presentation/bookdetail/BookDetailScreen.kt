@@ -236,6 +236,7 @@ private fun BookDetailContent(
         Spacer(Modifier.height(12.dp))
         CustomOutlinedTextField(
             text = book.title?.takeIf { it.isNotBlank() }.orElse(isEditable),
+            labelText = stringResource(R.string.title),
             onTextChanged = {
                 onChangeData(book.copy(title = it))
             },
@@ -254,6 +255,7 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = book.authorsToString().takeIf { it.isNotBlank() }.orElse(isEditable),
+            labelText = stringResource(R.string.authors),
             onTextChanged = {
                 onChangeData(book.copy(authors = it.split(",")))
             },
@@ -286,11 +288,11 @@ private fun BookDetailContent(
         Spacer(Modifier.height(24.dp))
         MultilineCustomOutlinedTextField(
             text = book.description.takeIf { it.isNotBlank() }.orElse(isEditable),
+            labelText = stringResource(R.string.description),
             onTextChanged = {
                 onChangeData(book.copy(description = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.description),
             placeholderText = stringResource(R.string.add_description),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
@@ -307,11 +309,11 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         MultilineCustomOutlinedTextField(
             text = book.summary.takeIf { it.isNotBlank() }.orElse(isEditable),
+            labelText = stringResource(R.string.summary),
             onTextChanged = {
                 onChangeData(book.copy(summary = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.summary),
             placeholderText = stringResource(R.string.add_summary),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
@@ -358,6 +360,7 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         DateCustomOutlinedTextField(
             text = book.readingDate.getValueToShow(language, isEditable),
+            labelText = stringResource(R.string.reading_date),
             onTextChanged = {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
@@ -376,7 +379,6 @@ private fun BookDetailContent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.reading_date),
             placeholderText = stringResource(R.string.select_a_date),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             endIcon = painterResource(R.drawable.ic_clear_text)
@@ -416,12 +418,12 @@ private fun BookDetailContent(
                 .takeIf { it > 0 }
                 ?.toString()
                 .orElse(isEditable),
+            labelText = stringResource(R.string.pages),
             onTextChanged = { newPages ->
                 val pages = newPages.takeIf { it.isNotBlank() }?.toInt() ?: 0
                 onChangeData(book.copy(pageCount = pages))
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.pages),
             placeholderText = stringResource(R.string.add_pages),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
@@ -438,11 +440,11 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = book.isbn.takeIf { it.isNotBlank() }.orElse(isEditable),
+            labelText = stringResource(R.string.isbn),
             onTextChanged = {
                 onChangeData(book.copy(isbn = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.isbn),
             placeholderText = stringResource(R.string.add_isbn),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
@@ -458,11 +460,11 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = book.publisher.takeIf { it.isNotBlank() }.orElse(isEditable),
+            labelText = stringResource(R.string.publisher),
             onTextChanged = {
                 onChangeData(book.copy(publisher = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.publisher),
             placeholderText = stringResource(R.string.add_publisher),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
@@ -478,6 +480,7 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         DateCustomOutlinedTextField(
             text = book.publishedDate.getValueToShow(language, isEditable),
+            labelText = stringResource(R.string.published_date),
             onTextChanged = {
                 val calendar = Calendar.getInstance()
                 calendar.timeInMillis = it
@@ -495,7 +498,6 @@ private fun BookDetailContent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.published_date),
             placeholderText = stringResource(R.string.select_a_date),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             endIcon = painterResource(R.drawable.ic_clear_text)

@@ -57,10 +57,10 @@ import java.util.TimeZone
 @Composable
 fun CustomOutlinedTextField(
     text: String,
+    labelText: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorTextId: Int? = null,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
@@ -80,10 +80,10 @@ fun CustomOutlinedTextField(
 
     val showLabel = !enabled || text.isNotBlank() || placeholderText == null || isFocused
 
-    val label: @Composable (() -> Unit)? = labelText?.let {
+    val label: @Composable (() -> Unit)? =
         {
             Text(
-                text = it,
+                text = labelText,
                 style = MaterialTheme.typography.displaySmall.takeIf { placeholderText != null }
                     ?: MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
@@ -91,7 +91,6 @@ fun CustomOutlinedTextField(
                     ?: inputHintTextColor,
             )
         }
-    }
     val placeholder: @Composable (() -> Unit)? = placeholderText?.let {
         {
             Text(
@@ -150,8 +149,8 @@ fun CustomOutlinedTextField(
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
                 lineHeight = 24.sp,
             ),
-            label = label?.takeIf { showLabel },
-            placeholder = placeholder,
+            label = label.takeIf { showLabel } ?: placeholder,
+            placeholder = placeholder.takeIf { showLabel },
             trailingIcon = trailingIcon,
             keyboardOptions = keyboardOptions,
             keyboardActions = KeyboardActions(
@@ -209,10 +208,10 @@ fun CustomOutlinedTextField(
 @Composable
 fun MultilineCustomOutlinedTextField(
     text: String,
+    labelText: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorTextId: Int? = null,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
@@ -231,9 +230,9 @@ fun MultilineCustomOutlinedTextField(
     Column(modifier = modifier) {
         CustomOutlinedTextField(
             text = text,
+            labelText = labelText,
             onTextChanged = onTextChanged,
             errorTextId = errorTextId,
-            labelText = labelText,
             placeholderText = placeholderText,
             inputHintTextColor = inputHintTextColor,
             textStyle = textStyle,
@@ -274,9 +273,9 @@ fun MultilineCustomOutlinedTextField(
 @Composable
 fun DateCustomOutlinedTextField(
     text: String,
+    labelText: String,
     onTextChanged: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     endIcon: AccessibilityPainter? = null,
@@ -287,6 +286,7 @@ fun DateCustomOutlinedTextField(
     var showDatePicker by remember { mutableStateOf(false) }
     CustomOutlinedTextField(
         text = text,
+        labelText = labelText,
         onTextChanged = {},
         modifier = modifier
             .let {
@@ -294,7 +294,6 @@ fun DateCustomOutlinedTextField(
                     .clickable { showDatePicker = true }
                     .takeIf { enabled } ?: it
             },
-        labelText = labelText,
         placeholderText = placeholderText,
         inputHintTextColor = inputHintTextColor,
         textColor = MaterialTheme.colorScheme.description,
@@ -324,9 +323,9 @@ private fun TextOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Username",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             maxLength = 100,
         )
     }
@@ -338,9 +337,9 @@ private fun PasswordOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Password",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             endIcon = painterResource(R.drawable.ic_show_password)
                 .withDescription(null),
             maxLength = 100,
@@ -355,9 +354,9 @@ private fun DisabledOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Text",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             maxLength = 100,
             enabled = false,
         )
@@ -370,10 +369,10 @@ private fun ErrorOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Incorrect text",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             errorTextId = R.string.invalid_username,
-            labelText = "Label",
             maxLength = 100,
         )
     }
@@ -393,9 +392,9 @@ private fun LargeCustomOutlinedTextFieldPreview() {
             pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
             deserunt mollit anim id est laborum.
             """.trimIndent(),
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             maxLength = 100,
         )
     }
@@ -407,9 +406,9 @@ private fun DateCustomOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         DateCustomOutlinedTextField(
             text = "01/01/2000",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             enabled = true,
         )
     }

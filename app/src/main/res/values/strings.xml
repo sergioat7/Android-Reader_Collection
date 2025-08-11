@@ -55,6 +55,8 @@
     <string name="data_imported">Data imported correctly</string>
 
     //BOOK DETAILS
+    <string name="title">Title</string>
+    <string name="authors">Author</string>
     <string name="add_title">Add a title</string>
     <string name="add_author">Add the author(s)</string>
     <string name="description">Description</string>

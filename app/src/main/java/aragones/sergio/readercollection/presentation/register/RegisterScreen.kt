@@ -64,6 +64,7 @@ fun RegisterScreen(
         Spacer(Modifier.height(24.dp))
         CustomOutlinedTextField(
             text = state.username,
+            labelText = stringResource(R.string.username),
             onTextChanged = { newUsername ->
                 onRegisterDataChange(
                     newUsername,
@@ -75,7 +76,6 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
-            labelText = stringResource(R.string.username),
             endIcon = painterResource(R.drawable.ic_show_info)
                 .withDescription(stringResource(R.string.show_info)),
             isLastTextField = false,
@@ -84,6 +84,7 @@ fun RegisterScreen(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = state.password,
+            labelText = stringResource(R.string.password),
             onTextChanged = { newPassword ->
                 onRegisterDataChange(
                     state.username,
@@ -95,7 +96,6 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
-            labelText = stringResource(R.string.password),
             endIcon = if (passwordVisibility) {
                 painterResource(R.drawable.ic_hide_password)
                     .withDescription(stringResource(R.string.hide_password))
@@ -110,6 +110,7 @@ fun RegisterScreen(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = state.confirmPassword,
+            labelText = stringResource(R.string.confirm_password),
             onTextChanged = { newPassword ->
                 onRegisterDataChange(
                     state.username,
@@ -121,7 +122,6 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
-            labelText = stringResource(R.string.confirm_password),
             endIcon = if (confirmPasswordVisibility) {
                 painterResource(R.drawable.ic_hide_password)
                     .withDescription(stringResource(R.string.hide_password))
