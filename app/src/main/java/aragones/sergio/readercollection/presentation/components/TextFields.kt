@@ -112,6 +112,34 @@ fun CustomOutlinedTextField(
             }
         }
     }
+    val supportingText: @Composable (() -> Unit)? =
+        {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 0.dp),
+            ) {
+                if (errorTextId != null) {
+                    Text(
+                        text = stringResource(errorTextId),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                    )
+                }
+                if (enabled && maxLength != Integer.MAX_VALUE) {
+                    Text(
+                        text = "${text.length} / $maxLength",
+                        modifier = Modifier.fillMaxWidth(),
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                            ?: textColor,
+                        textAlign = TextAlign.End,
+                    )
+                }
+            }
+        }
     val keyboardAction = when (isLastTextField) {
         true -> ImeAction.Done
         false -> ImeAction.Next
@@ -132,77 +160,53 @@ fun CustomOutlinedTextField(
         )
     }
 
-    Column(modifier) {
-        OutlinedTextField(
-            value = text,
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
-                disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
-                    ?: Color.Transparent,
-                errorBorderColor = MaterialTheme.colorScheme.error,
-                errorLabelColor = MaterialTheme.colorScheme.error,
-            ),
-            textStyle = textStyle.copy(
-                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
-                lineHeight = 24.sp,
-            ),
-            label = label.takeIf { showLabel } ?: placeholder,
-            placeholder = placeholder.takeIf { showLabel },
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboard?.hide()
-                    focusManager.clearFocus()
-                },
-            ),
-            visualTransformation = if (endIcon?.contentDescription == stringResource(
-                    R.string.show_password,
-                )
-            ) {
-                PasswordVisualTransformation()
-            } else {
-                VisualTransformation.None
+    OutlinedTextField(
+        value = text,
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+            disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
+                ?: Color.Transparent,
+            errorBorderColor = MaterialTheme.colorScheme.error,
+            errorLabelColor = MaterialTheme.colorScheme.error,
+        ),
+        textStyle = textStyle.copy(
+            color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
+            lineHeight = 24.sp,
+        ),
+        label = label.takeIf { showLabel } ?: placeholder,
+        placeholder = placeholder.takeIf { showLabel },
+        trailingIcon = trailingIcon,
+        supportingText = supportingText,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboard?.hide()
+                focusManager.clearFocus()
             },
-            singleLine = inputType != CustomInputType.MULTI_LINE_TEXT,
-            maxLines = maxLines,
-            enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
-            readOnly = inputType == CustomInputType.DATE,
-            isError = errorTextId != null,
-            onValueChange = { newText ->
-                if (newText.length <= maxLength) {
-                    onTextChanged(newText)
-                }
-            },
-            interactionSource = interactionSource,
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 0.dp),
+        ),
+        visualTransformation = if (endIcon?.contentDescription == stringResource(
+                R.string.show_password,
+            )
         ) {
-            if (errorTextId != null) {
-                Text(
-                    text = stringResource(errorTextId),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        },
+        singleLine = inputType != CustomInputType.MULTI_LINE_TEXT,
+        maxLines = maxLines,
+        enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
+        readOnly = inputType == CustomInputType.DATE,
+        isError = errorTextId != null,
+        onValueChange = { newText ->
+            if (newText.length <= maxLength) {
+                onTextChanged(newText)
             }
-            if (enabled && maxLength != Integer.MAX_VALUE) {
-                Text(
-                    text = "${text.length} / $maxLength",
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
-                        ?: textColor,
-                    textAlign = TextAlign.End,
-                )
-            }
-        }
-    }
+        },
+        interactionSource = interactionSource,
+    )
 }
 
 @Composable
@@ -232,6 +236,7 @@ fun MultilineCustomOutlinedTextField(
             text = text,
             labelText = labelText,
             onTextChanged = onTextChanged,
+            modifier = Modifier.fillMaxWidth(),
             errorTextId = errorTextId,
             placeholderText = placeholderText,
             inputHintTextColor = inputHintTextColor,
@@ -289,6 +294,7 @@ fun DateCustomOutlinedTextField(
         labelText = labelText,
         onTextChanged = {},
         modifier = modifier
+            .fillMaxWidth()
             .let {
                 it
                     .clickable { showDatePicker = true }
