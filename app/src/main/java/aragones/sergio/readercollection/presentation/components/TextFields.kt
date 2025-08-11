@@ -19,6 +19,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -109,7 +111,18 @@ fun CustomOutlinedTextField(
                 Icon(
                     painter = endIcon.painter,
                     contentDescription = endIcon.contentDescription,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.primary.takeIf { errorTextId == null }
+                        ?: MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+    } ?: errorTextId?.let {
+        {
+            IconButton(onClick = { onEndIconClicked?.invoke() }) {
+                Icon(
+                    imageVector = Icons.Default.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
