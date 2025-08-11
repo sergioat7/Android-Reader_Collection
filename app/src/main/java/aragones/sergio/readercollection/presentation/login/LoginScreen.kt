@@ -80,6 +80,7 @@ fun LoginScreen(
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
             isLastTextField = false,
+            isRequired = true,
         )
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
@@ -101,6 +102,7 @@ fun LoginScreen(
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = true,
+            isRequired = true,
             onEndIconClicked = { passwordVisibility = !passwordVisibility },
         )
         Spacer(modifier = Modifier.weight(1f))

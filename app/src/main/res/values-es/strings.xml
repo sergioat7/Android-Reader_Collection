@@ -220,4 +220,7 @@
     <string name="increase_priority_description">Aumentar prioridad del libro %1$s</string>
     <string name="decrease_priority_description">Reducir prioridad del libro %1$s</string>
 
+    //TEXT FIELDS
+    <string name="field_required">Campo obligatorio</string>
+
 </resources>

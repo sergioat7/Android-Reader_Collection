@@ -174,6 +174,7 @@ private fun ProfileInfo(
         },
         inputType = CustomInputType.PASSWORD,
         isLastTextField = true,
+        isRequired = true,
         onEndIconClicked = { passwordVisibility = !passwordVisibility },
     )
 }

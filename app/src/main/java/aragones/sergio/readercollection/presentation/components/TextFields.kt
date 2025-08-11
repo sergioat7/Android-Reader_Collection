@@ -10,10 +10,12 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -42,7 +44,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
@@ -71,6 +72,7 @@ fun CustomOutlinedTextField(
     maxLength: Int = Integer.MAX_VALUE,
     maxLines: Int = Integer.MAX_VALUE,
     enabled: Boolean = true,
+    isRequired: Boolean = false,
     onEndIconClicked: (() -> Unit)? = null,
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
@@ -117,25 +119,34 @@ fun CustomOutlinedTextField(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 0.dp),
+                    .padding(start = 0.dp, top = 5.dp, end = 0.dp, bottom = 0.dp),
             ) {
                 if (errorTextId != null) {
                     Text(
                         text = stringResource(errorTextId),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.weight(1f),
                     )
+                } else if (isRequired) {
+                    Text(
+                        text = stringResource(R.string.field_required),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = textColor,
+                        modifier = Modifier.weight(1f),
+                    )
+                } else {
+                    Spacer(Modifier.weight(1f))
                 }
+                Spacer(Modifier.width(4.dp))
                 if (enabled && maxLength != Integer.MAX_VALUE) {
                     Text(
                         text = "${text.length} / $maxLength",
-                        modifier = Modifier.fillMaxWidth(),
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold,
                         ),
                         color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
                             ?: textColor,
-                        textAlign = TextAlign.End,
                     )
                 }
             }
@@ -348,7 +359,7 @@ private fun PasswordOutlinedTextFieldPreview() {
             modifier = Modifier.padding(12.dp),
             endIcon = painterResource(R.drawable.ic_show_password)
                 .withDescription(null),
-            maxLength = 100,
+            isRequired = true,
             onEndIconClicked = {},
         )
     }
@@ -401,7 +412,7 @@ private fun LargeCustomOutlinedTextFieldPreview() {
             labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            maxLength = 100,
+            maxLength = 500,
         )
     }
 }

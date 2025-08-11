@@ -79,6 +79,7 @@ fun RegisterScreen(
             endIcon = painterResource(R.drawable.ic_show_info)
                 .withDescription(stringResource(R.string.show_info)),
             isLastTextField = false,
+            isRequired = true,
             onEndIconClicked = onShowInfo,
         )
         Spacer(Modifier.height(8.dp))
@@ -105,6 +106,7 @@ fun RegisterScreen(
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = false,
+            isRequired = true,
             onEndIconClicked = { passwordVisibility = !passwordVisibility },
         )
         Spacer(Modifier.height(8.dp))
@@ -131,6 +133,7 @@ fun RegisterScreen(
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = true,
+            isRequired = true,
             onEndIconClicked = { confirmPasswordVisibility = !confirmPasswordVisibility },
         )
         Spacer(modifier = Modifier.weight(1f))
