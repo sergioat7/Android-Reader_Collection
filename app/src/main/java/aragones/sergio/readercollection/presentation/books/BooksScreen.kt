@@ -47,6 +47,8 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -405,7 +407,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
     ) {
         Text(
             text = title,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).semantics { heading() },
             style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
