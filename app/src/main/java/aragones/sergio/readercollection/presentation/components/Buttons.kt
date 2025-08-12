@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.components
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.FloatingActionButton
@@ -44,7 +45,7 @@ fun MainActionButton(
     }
     Button(
         onClick = onClick,
-        modifier = modifier,
+        modifier = modifier.widthIn(max = 320.dp),
         enabled = enabled,
         colors = buttonColors,
     ) {
@@ -76,7 +77,7 @@ fun ListButton(painter: AccessibilityPainter, onClick: () -> Unit, modifier: Mod
 
 @Composable
 fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modifier) {
-    TextButton(onClick = onClick, modifier = modifier) {
+    TextButton(onClick = onClick, modifier = modifier.widthIn(max = 320.dp)) {
         Text(
             text = text,
             style = MaterialTheme.typography.labelLarge,

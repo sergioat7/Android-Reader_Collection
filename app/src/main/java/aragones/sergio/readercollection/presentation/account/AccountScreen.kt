@@ -259,6 +259,7 @@ fun DeleteAccountItem(onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(16.dp))
         Button(
             onClick = onClick,
+            modifier = Modifier.widthIn(max = 320.dp),
             shape = MaterialTheme.shapes.small,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,
