@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -187,6 +188,8 @@ private fun BooksScreenContent(
             text = state.query,
             onSearch = onSearch,
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
             showLeadingIcon = true,

@@ -73,6 +73,8 @@ fun AccountScreen(
         AccountToolbar(scrollState = scrollState, onBack = onBack)
         Column(
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxSize()
                 .padding(12.dp)
                 .verticalScroll(scrollState),

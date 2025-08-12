@@ -73,6 +73,8 @@ fun RegisterScreen(
                 )
             },
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
@@ -94,6 +96,8 @@ fun RegisterScreen(
                 )
             },
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
@@ -121,6 +125,8 @@ fun RegisterScreen(
                 )
             },
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
