@@ -148,12 +148,16 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
                 modifier = Modifier.height(30.dp),
             )
         } else {
+            val contentDescription = stringResource(R.string.no_rated_description)
             Text(
                 text = stringResource(R.string.new_book),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.roseBud,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
+                modifier = Modifier.semantics {
+                    this.contentDescription = contentDescription
+                },
             )
         }
     }

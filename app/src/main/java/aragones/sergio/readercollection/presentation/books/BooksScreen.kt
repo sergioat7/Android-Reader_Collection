@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.books
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -48,6 +48,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
@@ -437,23 +438,26 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
 
 @Composable
 private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val text = stringResource(R.string.show_all)
     Column(
         modifier = modifier
             .padding(horizontal = 12.dp)
             .width(150.dp)
-            .height(200.dp),
+            .height(200.dp)
+            .clickable(onClick = onClick)
+            .semantics {
+                contentDescription = text
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        IconButton(onClick = onClick) {
-            Icon(
-                painter = painterResource(R.drawable.ic_arrow_circle_right),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.ic_arrow_circle_right),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
         Text(
-            text = stringResource(R.string.show_all),
+            text = text,
             style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
