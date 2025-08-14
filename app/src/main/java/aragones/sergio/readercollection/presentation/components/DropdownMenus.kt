@@ -39,9 +39,9 @@ import aragones.sergio.readercollection.presentation.theme.description
 fun CustomDropdownMenu(
     currentValue: String,
     values: List<String>,
+    labelText: String,
     onOptionSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textColor: Color = MaterialTheme.colorScheme.primary,
@@ -49,15 +49,14 @@ fun CustomDropdownMenu(
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
 
-    val label: @Composable (() -> Unit)? = labelText?.let {
+    val label: @Composable () -> Unit =
         {
             Text(
-                text = it,
+                text = labelText,
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.description,
             )
         }
-    }
     val placeholder: @Composable (() -> Unit)? = placeholderText?.let {
         {
             Text(

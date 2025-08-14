@@ -138,6 +138,8 @@
     <string name="spanish">Español</string>
     <string name="app_language">Idioma de la app</string>
     <string name="sort_books_param">Modo de ordenar libros leídos</string>
+    <string name="sort_param">Parámetro de ordenación</string>
+    <string name="sort_order">Orden</string>
     <string name="app_theme">Tema</string>
     <string-array name="app_theme_values">
         <item>Predeterminado por el sistema</item>

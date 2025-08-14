@@ -198,6 +198,7 @@ private fun SortingInfo(
     CustomDropdownMenu(
         currentValue = sortParamValue,
         values = sortingParamValues,
+        labelText = stringResource(R.string.sort_param),
         onOptionSelected = {
             val index = sortingParamValues.indexOf(it)
             val newSortParam = sortingParamKeys[index].takeIf { index != 0 }
@@ -213,6 +214,7 @@ private fun SortingInfo(
             sortingOrderValues.first()
         },
         values = sortingOrderValues,
+        labelText = stringResource(R.string.sort_order),
         onOptionSelected = {
             val index = sortingOrderValues.indexOf(it)
             onSortOrderValueChange(index == 1)
@@ -227,6 +229,7 @@ private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) 
     CustomDropdownMenu(
         currentValue = appThemes[selectedThemeIndex],
         values = appThemes,
+        labelText = stringResource(R.string.app_theme),
         onOptionSelected = {
             onThemeChange(appThemes.indexOf(it))
         },

@@ -345,6 +345,7 @@ private fun BookDetailContent(
         CustomDropdownMenu(
             currentValue = bookState,
             values = stateValues,
+            labelText = stringResource(R.string.state),
             onOptionSelected = { newStateValue ->
                 val newStateId = STATES.firstOrNull { it.name == newStateValue }?.id
                 val newReadingDate = Date().takeIf {
@@ -358,7 +359,6 @@ private fun BookDetailContent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.state),
             placeholderText = stringResource(R.string.select_state),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
@@ -408,12 +408,12 @@ private fun BookDetailContent(
         CustomDropdownMenu(
             currentValue = bookFormat,
             values = formatValues,
+            labelText = stringResource(R.string.format),
             onOptionSelected = { newFormatValue ->
                 val newFormatId = FORMATS.firstOrNull { it.name == newFormatValue }?.id
                 onChangeData(book.copy(format = newFormatId))
             },
             modifier = Modifier.fillMaxWidth(),
-            labelText = stringResource(R.string.format),
             placeholderText = stringResource(R.string.select_format),
             inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             textColor = MaterialTheme.colorScheme.description,
