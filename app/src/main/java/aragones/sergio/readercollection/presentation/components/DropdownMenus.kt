@@ -30,7 +30,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.description
 
@@ -48,6 +55,11 @@ fun CustomDropdownMenu(
     enabled: Boolean = true,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
+    val contentDescription = stringResource(
+        R.string.dropdown_text_field_description,
+        labelText,
+        currentValue,
+    )
 
     val label: @Composable () -> Unit =
         {
@@ -91,7 +103,11 @@ fun CustomDropdownMenu(
                 value = currentValue,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled),
+                    .menuAnchor(MenuAnchorType.PrimaryNotEditable, enabled)
+                    .clearAndSetSemantics {
+                        this.contentDescription = contentDescription
+                        role = Role.DropdownList
+                    },
                 shape = MaterialTheme.shapes.medium,
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
@@ -114,6 +130,11 @@ fun CustomDropdownMenu(
                 ),
             ) {
                 for (value in values) {
+                    val itemContentDescription = stringResource(
+                        R.string.dropdown_item_description,
+                        values.indexOf(value) + 1,
+                        values.size,
+                    )
                     DropdownMenuItem(
                         text = {
                             Text(
@@ -125,6 +146,9 @@ fun CustomDropdownMenu(
                         onClick = {
                             expanded = false
                             onOptionSelected(value)
+                        },
+                        modifier = Modifier.semantics {
+                            this.contentDescription = itemContentDescription
                         },
                         contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
                     )
