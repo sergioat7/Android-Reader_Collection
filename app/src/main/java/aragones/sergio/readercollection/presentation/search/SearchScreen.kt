@@ -40,6 +40,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -225,6 +228,7 @@ private fun SearchContent(
         ) {
             itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
+                    val swipeActionLabel = stringResource(R.string.save)
                     SwipeItem(
                         direction = SwipeDirection.LEFT,
                         dismissValue = SwipeToDismissBoxValue.EndToStart,
@@ -235,7 +239,7 @@ private fun SearchContent(
                                 dismissValue = SwipeToDismissBoxValue.EndToStart,
                                 color = MaterialTheme.colorScheme.roseBud,
                                 accessibilityPainter = painterResource(R.drawable.ic_save_book)
-                                    .withDescription(stringResource(R.string.save)),
+                                    .withDescription(swipeActionLabel),
                             )
                         },
                         content = {
@@ -243,6 +247,14 @@ private fun SearchContent(
                                 book = book,
                                 onBookClick = onBookClick,
                                 showDivider = index < books.size - 1,
+                                modifier = Modifier.semantics {
+                                    customActions = listOf(
+                                        CustomAccessibilityAction(swipeActionLabel) {
+                                            onSwipe(book.id)
+                                            true
+                                        },
+                                    )
+                                },
                             )
                         },
                     )
