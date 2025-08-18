@@ -54,7 +54,6 @@ import aragones.sergio.readercollection.presentation.components.StarRatingBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.presentation.theme.isLight
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
@@ -268,7 +267,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_author),
-            textColor = MaterialTheme.colorScheme.description,
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.authorsToString().isNotBlank() },
@@ -301,8 +299,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_description),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.description?.isNotBlank() == true },
@@ -322,8 +318,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_summary),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.summary?.isNotBlank() == true },
@@ -360,11 +354,9 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.select_state),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             enabled = isEditable,
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
         DateCustomOutlinedTextField(
             text = book.readingDate.getValueToShow(language, isEditable),
             labelText = stringResource(R.string.reading_date),
@@ -387,7 +379,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.select_a_date),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.readingDate != null },
@@ -415,11 +406,9 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.select_format),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             enabled = isEditable,
         )
-        Spacer(Modifier.height(8.dp))
+        Spacer(Modifier.height(16.dp))
         CustomOutlinedTextField(
             text = book.pageCount
                 .takeIf { it > 0 }
@@ -432,8 +421,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_pages),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.pageCount > 0 },
@@ -453,8 +440,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_isbn),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.isbn?.isNotBlank() == true },
@@ -473,8 +458,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.add_publisher),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
-            textColor = MaterialTheme.colorScheme.description,
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.publisher?.isNotBlank() == true },
@@ -506,7 +489,6 @@ private fun BookDetailContent(
             },
             modifier = Modifier.fillMaxWidth(),
             placeholderText = stringResource(R.string.select_a_date),
-            inputHintTextColor = MaterialTheme.colorScheme.description.copy(alpha = 0.75f),
             endIcon = painterResource(R.drawable.ic_clear_text)
                 .withDescription(stringResource(R.string.clear_text))
                 .takeIf { isEditable && book.publishedDate != null },

@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 
 @Composable
 fun CustomRadioButton(
@@ -26,7 +25,7 @@ fun CustomRadioButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
-    textColor: Color = MaterialTheme.colorScheme.description,
+    textColor: Color = MaterialTheme.colorScheme.primary,
 ) {
     Row(
         modifier = modifier,

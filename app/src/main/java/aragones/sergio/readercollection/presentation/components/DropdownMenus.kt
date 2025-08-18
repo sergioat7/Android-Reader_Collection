@@ -39,7 +39,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +65,7 @@ fun CustomDropdownMenu(
             Text(
                 text = labelText,
                 style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.description,
+                color = MaterialTheme.colorScheme.tertiary,
             )
         }
     val placeholder: @Composable (() -> Unit)? = placeholderText?.let {

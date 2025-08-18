@@ -16,27 +16,26 @@ import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 
 private val LightColorScheme = lightColorScheme(
     primary = EbonyClay,
     secondary = White,
-    tertiary = LightEbonyClay,
+    tertiary = Dolphin,
     background = White,
     surface = White,
-    error = Color.Red,
-    onError = Color.White,
+    error = Red,
+    onError = White,
 )
 
 private val DarkColorScheme = darkColorScheme(
     primary = White,
     secondary = EbonyClay,
-    tertiary = LightWhite,
+    tertiary = Alto,
     background = EbonyClay,
     surface = EbonyClay,
-    error = Color.Red,
-    onError = Color.White,
+    error = Red,
+    onError = White,
 )
 
 @Composable

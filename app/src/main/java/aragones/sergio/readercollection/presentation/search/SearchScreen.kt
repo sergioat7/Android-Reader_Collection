@@ -288,7 +288,6 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
         modifier = modifier.padding(12.dp).widthIn(max = 320.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.tertiary,
         ),
         shape = MaterialTheme.shapes.large,
     ) {

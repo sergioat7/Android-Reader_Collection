@@ -42,7 +42,6 @@ import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import com.aragones.sergio.util.CustomInputType
 
 @Composable
@@ -129,7 +128,7 @@ fun LoginScreen(
             Text(
                 text = stringResource(R.string.not_account),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.description,
+                color = MaterialTheme.colorScheme.tertiary,
             )
             Spacer(Modifier.width(5.dp))
             TextButton(onClick = onGoToRegister) {

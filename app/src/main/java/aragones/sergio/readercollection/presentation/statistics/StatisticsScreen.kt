@@ -43,7 +43,6 @@ import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.extensions.getMonthNumber
@@ -394,7 +393,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
                 Text(
                     text = stringResource(R.string.shorter_book),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.description,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(
@@ -413,7 +412,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
                 Text(
                     text = stringResource(R.string.longer_book),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.description,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(

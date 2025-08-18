@@ -47,7 +47,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.presentation.theme.isLight
 import com.aragones.sergio.util.extensions.isNotBlank
 
@@ -94,7 +93,7 @@ fun CustomToolbar(
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.description,
+                        color = MaterialTheme.colorScheme.tertiary,
                     )
                 }
             }

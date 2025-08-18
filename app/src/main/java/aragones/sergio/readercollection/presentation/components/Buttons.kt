@@ -33,7 +33,7 @@ fun MainActionButton(
     val buttonColors = when (type) {
         ButtonType.MAIN -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            disabledContentColor = MaterialTheme.colorScheme.tertiary,
+            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f),
         )
         ButtonType.DESTRUCTIVE -> ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.error,

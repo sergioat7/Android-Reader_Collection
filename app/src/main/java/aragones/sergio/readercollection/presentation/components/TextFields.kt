@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
@@ -91,7 +90,6 @@ fun CustomOutlinedTextField(
                 style = MaterialTheme.typography.displaySmall.takeIf { placeholderText != null }
                     ?: MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
-                    ?: MaterialTheme.colorScheme.description.takeIf { placeholderText != null }
                     ?: inputHintTextColor,
             )
         }
@@ -326,7 +324,7 @@ fun DateCustomOutlinedTextField(
             },
         placeholderText = placeholderText,
         inputHintTextColor = inputHintTextColor,
-        textColor = MaterialTheme.colorScheme.description,
+        textColor = MaterialTheme.colorScheme.primary,
         endIcon = endIcon,
         inputType = CustomInputType.DATE,
         enabled = enabled,

@@ -44,7 +44,6 @@ import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.presentation.theme.isLight
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import aragones.sergio.readercollection.presentation.theme.selector
@@ -137,7 +136,7 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
             Text(
                 text = book.authorsToString(),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.description,
+                color = MaterialTheme.colorScheme.tertiary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -233,7 +232,7 @@ private fun BookBasicInfo(title: String, subtitle: String) {
         Text(
             text = subtitle,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.description,
+            color = MaterialTheme.colorScheme.tertiary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
         )

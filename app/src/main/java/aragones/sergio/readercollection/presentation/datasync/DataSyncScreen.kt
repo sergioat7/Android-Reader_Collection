@@ -185,7 +185,6 @@ private fun SyncManuallyItem(onSync: () -> Unit) {
             shape = MaterialTheme.shapes.large,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.primary,
-                disabledContentColor = MaterialTheme.colorScheme.tertiary,
             ),
         ) {
             Text(
