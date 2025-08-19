@@ -47,7 +47,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -199,7 +201,11 @@ private fun BooksScreenContent(
         )
         Spacer(Modifier.height(16.dp))
         when (state) {
-            is BooksUiState.Empty -> NoResultsComponent()
+            is BooksUiState.Empty -> NoResultsComponent(
+                modifier = Modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                },
+            )
             is BooksUiState.Success -> BooksComponent(
                 books = state.books,
                 isSwitchingEnabled = state.query.isBlank(),
@@ -208,7 +214,9 @@ private fun BooksScreenContent(
                 onShowAll = onShowAll,
                 onSwitchToLeft = onSwitchToLeft,
                 onSwitchToRight = onSwitchToRight,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().semantics {
+                    liveRegion = LiveRegionMode.Polite
+                },
             )
         }
         Spacer(Modifier.height(24.dp))

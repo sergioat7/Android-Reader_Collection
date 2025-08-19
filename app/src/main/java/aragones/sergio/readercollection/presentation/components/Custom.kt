@@ -75,11 +75,12 @@ import aragones.sergio.readercollection.presentation.theme.roseBud
 
 @Composable
 fun NoResultsComponent(
+    modifier: Modifier = Modifier,
     text: String = stringResource(R.string.no_results_text),
     @DrawableRes image: Int = R.drawable.image_no_results,
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
