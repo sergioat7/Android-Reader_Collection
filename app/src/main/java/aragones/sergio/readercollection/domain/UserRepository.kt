@@ -185,6 +185,22 @@ class UserRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
+    fun loadConfig(): Completable = Completable
+        .create { emitter ->
+            userRemoteDataSource
+                .isPublicProfileActive(username)
+                .timeout(10, TimeUnit.SECONDS)
+                .subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
+                .onErrorReturnItem(false)
+                .subscribeBy(
+                    onSuccess = { value ->
+                        userLocalDataSource.storePublicProfile(value)
+                        emitter.onComplete()
+                    },
+                ).addTo(disposables)
+        }
+
     fun getUserWith(username: String): Single<User> = Single.create { emitter ->
         userRemoteDataSource
             .getUser(username, userId)

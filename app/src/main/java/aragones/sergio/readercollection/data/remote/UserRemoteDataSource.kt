@@ -74,6 +74,17 @@ class UserRemoteDataSource @Inject constructor(
                 .addOnFailureListener { emitter.onError(it) }
         }
 
+    fun isPublicProfileActive(username: String): Single<Boolean> = Single.create { emitter ->
+        firestore
+            .collection("public_profiles")
+            .whereEqualTo("email", "${username}$mailEnd")
+            .get()
+            .addOnSuccessListener { result ->
+                val isActive = result.documents.firstOrNull()?.getString("email") != null
+                emitter.onSuccess(isActive)
+            }.addOnFailureListener { emitter.onError(it) }
+    }
+
     fun deletePublicProfile(userId: String): Completable = Completable.create { emitter ->
         firestore
             .collection("public_profiles")
