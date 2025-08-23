@@ -7,10 +7,10 @@ package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
