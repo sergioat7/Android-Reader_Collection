@@ -39,9 +39,9 @@ import aragones.sergio.readercollection.presentation.components.CustomCircularPr
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.MainActionButton
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import com.aragones.sergio.util.CustomInputType
 
 @Composable
@@ -70,34 +70,42 @@ fun LoginScreen(
         Spacer(Modifier.height(24.dp))
         CustomOutlinedTextField(
             text = state.username,
+            labelText = stringResource(R.string.username),
             onTextChanged = { newUsername ->
                 onLoginDataChange(newUsername, state.password)
             },
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.usernameError,
-            labelText = stringResource(R.string.username),
             isLastTextField = false,
+            isRequired = true,
         )
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = state.password,
+            labelText = stringResource(R.string.password),
             onTextChanged = { newPassword ->
                 onLoginDataChange(state.username, newPassword)
             },
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
             errorTextId = state.formState.passwordError,
-            labelText = stringResource(R.string.password),
             endIcon = if (passwordVisibility) {
-                R.drawable.ic_hide_password
+                painterResource(R.drawable.ic_hide_password)
+                    .withDescription(stringResource(R.string.hide_password))
             } else {
-                R.drawable.ic_show_password
+                painterResource(R.drawable.ic_show_password)
+                    .withDescription(stringResource(R.string.show_password))
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = true,
+            isRequired = true,
             onEndIconClicked = { passwordVisibility = !passwordVisibility },
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -120,7 +128,7 @@ fun LoginScreen(
             Text(
                 text = stringResource(R.string.not_account),
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.description,
+                color = MaterialTheme.colorScheme.tertiary,
             )
             Spacer(Modifier.width(5.dp))
             TextButton(onClick = onGoToRegister) {

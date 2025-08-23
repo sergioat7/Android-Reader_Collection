@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,6 +34,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -113,15 +116,19 @@ private fun FriendDetailContent(
             UserInfo(user = friend)
         }
         item(span = { GridItemSpan(2) }) {
-            MainActionButton(
-                text = stringResource(R.string.delete),
-                modifier = Modifier
-                    .widthIn(min = 200.dp)
-                    .padding(vertical = 24.dp),
-                enabled = true,
-                onClick = onDeleteFriend,
-                type = ButtonType.DESTRUCTIVE,
-            )
+            Row {
+                Spacer(Modifier.weight(1f))
+                MainActionButton(
+                    text = stringResource(R.string.delete),
+                    modifier = Modifier
+                        .widthIn(min = 200.dp)
+                        .padding(vertical = 24.dp),
+                    enabled = true,
+                    onClick = onDeleteFriend,
+                    type = ButtonType.DESTRUCTIVE,
+                )
+                Spacer(Modifier.weight(1f))
+            }
         }
         BooksSection(
             title = readingTitle,
@@ -195,6 +202,7 @@ private fun LazyGridScope.BooksSection(
                 Spacer(Modifier.height(24.dp))
                 Text(
                     text = title,
+                    modifier = Modifier.semantics { heading() },
                     textAlign = TextAlign.Start,
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.primary,
