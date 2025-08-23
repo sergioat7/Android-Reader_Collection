@@ -48,9 +48,11 @@ android {
         versionCode = versionMajor * 100000 + versionMinor * 1000 + versionPatch * 10 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
 
-        resourceConfigurations += listOf("en", "es")
-
         buildConfigField("String", "API_KEY", keystoreProperties.getProperty("api.key"))
+    }
+    
+    androidResources {
+        localeFilters += listOf("en", "es")
     }
 
     buildTypes {
