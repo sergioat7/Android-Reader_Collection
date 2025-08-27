@@ -36,7 +36,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -47,6 +50,7 @@ import aragones.sergio.readercollection.presentation.components.CustomOutlinedTe
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.MainActionButton
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
 
@@ -71,6 +75,8 @@ fun AccountScreen(
         AccountToolbar(scrollState = scrollState, onBack = onBack)
         Column(
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxSize()
                 .padding(12.dp)
                 .verticalScroll(scrollState),
@@ -128,7 +134,7 @@ private fun AccountToolbar(scrollState: ScrollState, onBack: (() -> Unit)) {
 private fun HeaderText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
-        modifier = modifier,
+        modifier = modifier.semantics { heading() },
         style = MaterialTheme.typography.displayMedium,
         color = MaterialTheme.colorScheme.primary,
     )
@@ -146,29 +152,33 @@ private fun ProfileInfo(
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     CustomOutlinedTextField(
         text = username,
+        labelText = stringResource(R.string.username),
         onTextChanged = {},
         modifier = Modifier.fillMaxWidth(),
-        labelText = stringResource(R.string.username),
-        endIcon = R.drawable.ic_show_info,
+        endIcon = painterResource(R.drawable.ic_show_info)
+            .withDescription(stringResource(R.string.show_info)),
         enabled = false,
         onEndIconClicked = onShowInfo,
     )
     Spacer(Modifier.height(8.dp))
     CustomOutlinedTextField(
         text = password,
+        labelText = stringResource(R.string.password),
         onTextChanged = onPasswordChange,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
         errorTextId = passwordError,
-        labelText = stringResource(R.string.password),
         endIcon = if (passwordVisibility) {
-            R.drawable.ic_hide_password
+            painterResource(R.drawable.ic_hide_password)
+                .withDescription(stringResource(R.string.hide_password))
         } else {
-            R.drawable.ic_show_password
+            painterResource(R.drawable.ic_show_password)
+                .withDescription(stringResource(R.string.show_password))
         },
         inputType = CustomInputType.PASSWORD,
         isLastTextField = true,
+        isRequired = true,
         onEndIconClicked = { passwordVisibility = !passwordVisibility },
     )
 }
@@ -253,6 +263,7 @@ fun DeleteAccountItem(onClick: () -> Unit) {
         Spacer(modifier = Modifier.width(16.dp))
         Button(
             onClick = onClick,
+            modifier = Modifier.widthIn(max = 320.dp),
             shape = MaterialTheme.shapes.small,
             colors = ButtonDefaults.buttonColors(
                 containerColor = MaterialTheme.colorScheme.error,

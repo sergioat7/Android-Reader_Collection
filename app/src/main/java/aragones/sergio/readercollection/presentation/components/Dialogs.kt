@@ -48,7 +48,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import java.util.Date
 
@@ -180,8 +179,6 @@ fun TextFieldAlertDialog(
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = MaterialTheme.colorScheme.primary,
                             unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
-                            focusedTextColor = MaterialTheme.colorScheme.description,
-                            unfocusedTextColor = MaterialTheme.colorScheme.description,
                         ),
                         shape = MaterialTheme.shapes.medium,
                         singleLine = true,

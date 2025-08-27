@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -39,6 +40,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.CustomAccessibilityAction
+import androidx.compose.ui.semantics.customActions
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -54,6 +58,7 @@ import aragones.sergio.readercollection.presentation.components.NoResultsCompone
 import aragones.sergio.readercollection.presentation.components.SwipeDirection
 import aragones.sergio.readercollection.presentation.components.SwipeItem
 import aragones.sergio.readercollection.presentation.components.SwipeItemBackground
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import kotlinx.coroutines.launch
@@ -223,6 +228,7 @@ private fun SearchContent(
         ) {
             itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
+                    val swipeActionLabel = stringResource(R.string.save)
                     SwipeItem(
                         direction = SwipeDirection.LEFT,
                         dismissValue = SwipeToDismissBoxValue.EndToStart,
@@ -232,7 +238,8 @@ private fun SearchContent(
                             SwipeItemBackground(
                                 dismissValue = SwipeToDismissBoxValue.EndToStart,
                                 color = MaterialTheme.colorScheme.roseBud,
-                                icon = R.drawable.ic_save_book,
+                                accessibilityPainter = painterResource(R.drawable.ic_save_book)
+                                    .withDescription(swipeActionLabel),
                             )
                         },
                         content = {
@@ -240,6 +247,14 @@ private fun SearchContent(
                                 book = book,
                                 onBookClick = onBookClick,
                                 showDivider = index < books.size - 1,
+                                modifier = Modifier.semantics {
+                                    customActions = listOf(
+                                        CustomAccessibilityAction(swipeActionLabel) {
+                                            onSwipe(book.id)
+                                            true
+                                        },
+                                    )
+                                },
                             )
                         },
                     )
@@ -259,7 +274,8 @@ private fun SearchContent(
         )
 
         ListButton(
-            image = R.drawable.ic_double_arrow_up,
+            painter = painterResource(R.drawable.ic_double_arrow_up)
+                .withDescription(stringResource(R.string.go_to_start)),
             onClick = onTopButtonClick,
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -267,7 +283,8 @@ private fun SearchContent(
         )
 
         ListButton(
-            image = R.drawable.ic_double_arrow_down,
+            painter = painterResource(R.drawable.ic_double_arrow_down)
+                .withDescription(stringResource(R.string.go_to_end)),
             onClick = onBottomButtonClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -280,10 +297,9 @@ private fun SearchContent(
 private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     Button(
         onClick = onClick,
-        modifier = modifier.padding(12.dp),
+        modifier = modifier.padding(12.dp).widthIn(max = 320.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.tertiary,
         ),
         shape = MaterialTheme.shapes.large,
     ) {

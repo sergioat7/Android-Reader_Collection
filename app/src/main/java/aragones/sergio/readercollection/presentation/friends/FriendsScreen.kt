@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -34,6 +35,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -50,6 +52,7 @@ import aragones.sergio.readercollection.presentation.components.CustomPreviewLig
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 
 @Composable
@@ -174,7 +177,8 @@ private fun FriendsScreenContent(
             }
         }
         ListButton(
-            image = Icons.Default.PersonAddAlt1,
+            painter = rememberVectorPainter(Icons.Default.PersonAddAlt1)
+                .withDescription(stringResource(R.string.go_to_add_new_friend)),
             onClick = onAddFriend,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -240,6 +244,7 @@ private fun FriendItem(
                 Spacer(modifier = Modifier.width(16.dp))
                 Button(
                     onClick = onDeleteFriend,
+                    modifier = Modifier.widthIn(max = 320.dp),
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.errorContainer,
@@ -262,6 +267,7 @@ private fun FriendItem(
             ) {
                 Button(
                     onClick = onAcceptFriend,
+                    modifier = Modifier.widthIn(max = 320.dp),
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
@@ -276,6 +282,7 @@ private fun FriendItem(
                 }
                 Button(
                     onClick = onRejectFriend,
+                    modifier = Modifier.widthIn(max = 320.dp),
                     shape = MaterialTheme.shapes.small,
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.error,

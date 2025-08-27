@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -143,7 +145,7 @@ private fun DisplaySettingsToolbar(scrollState: ScrollState, onBack: (() -> Unit
 private fun HeaderText(text: String, modifier: Modifier = Modifier) {
     Text(
         text = text,
-        modifier = modifier,
+        modifier = modifier.semantics { heading() },
         style = MaterialTheme.typography.displayMedium,
         color = MaterialTheme.colorScheme.primary,
     )
@@ -196,6 +198,7 @@ private fun SortingInfo(
     CustomDropdownMenu(
         currentValue = sortParamValue,
         values = sortingParamValues,
+        labelText = stringResource(R.string.sort_param),
         onOptionSelected = {
             val index = sortingParamValues.indexOf(it)
             val newSortParam = sortingParamKeys[index].takeIf { index != 0 }
@@ -211,6 +214,7 @@ private fun SortingInfo(
             sortingOrderValues.first()
         },
         values = sortingOrderValues,
+        labelText = stringResource(R.string.sort_order),
         onOptionSelected = {
             val index = sortingOrderValues.indexOf(it)
             onSortOrderValueChange(index == 1)
@@ -225,6 +229,7 @@ private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) 
     CustomDropdownMenu(
         currentValue = appThemes[selectedThemeIndex],
         values = appThemes,
+        labelText = stringResource(R.string.app_theme),
         onOptionSelected = {
             onThemeChange(appThemes.indexOf(it))
         },

@@ -59,20 +59,33 @@ class LoginViewModel @Inject constructor(
             .login(username, password)
             .subscribeBy(
                 onComplete = {
-                    val userId = userRepository.userId
-                    booksRepository
-                        .loadBooks(userId)
+                    userRepository
+                        .loadConfig()
                         .subscribeBy(
                             onComplete = {
-                                _uiState.value = _uiState.value.copy(isLoading = false)
-                                _activityName.value = MainActivity::class.simpleName
+                                val userId = userRepository.userId
+                                booksRepository
+                                    .loadBooks(userId)
+                                    .subscribeBy(
+                                        onComplete = {
+                                            _uiState.value = _uiState.value.copy(isLoading = false)
+                                            _activityName.value = MainActivity::class.simpleName
+                                        },
+                                        onError = {
+                                            userRepository.logout()
+                                            _uiState.value = _uiState.value.copy(isLoading = false)
+                                            _loginError.value = ErrorResponse(
+                                                Constants.EMPTY_VALUE,
+                                                R.string.error_server,
+                                            )
+                                        },
+                                    ).addTo(disposables)
                             },
                             onError = {
-                                userRepository.logout()
                                 _uiState.value = _uiState.value.copy(isLoading = false)
                                 _loginError.value = ErrorResponse(
                                     Constants.EMPTY_VALUE,
-                                    R.string.error_server,
+                                    R.string.wrong_credentials,
                                 )
                             },
                         ).addTo(disposables)

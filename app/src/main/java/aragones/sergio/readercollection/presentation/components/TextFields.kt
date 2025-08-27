@@ -5,19 +5,22 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -43,12 +46,10 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
@@ -58,20 +59,21 @@ import java.util.TimeZone
 @Composable
 fun CustomOutlinedTextField(
     text: String,
+    labelText: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorTextId: Int? = null,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    @DrawableRes endIcon: Int? = null,
+    endIcon: AccessibilityPainter? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
     isLastTextField: Boolean? = null,
     maxLength: Int = Integer.MAX_VALUE,
     maxLines: Int = Integer.MAX_VALUE,
     enabled: Boolean = true,
+    isRequired: Boolean = false,
     onEndIconClicked: (() -> Unit)? = null,
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
@@ -81,18 +83,16 @@ fun CustomOutlinedTextField(
 
     val showLabel = !enabled || text.isNotBlank() || placeholderText == null || isFocused
 
-    val label: @Composable (() -> Unit)? = labelText?.let {
+    val label: @Composable (() -> Unit)? =
         {
             Text(
-                text = it,
+                text = labelText,
                 style = MaterialTheme.typography.displaySmall.takeIf { placeholderText != null }
                     ?: MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
-                    ?: MaterialTheme.colorScheme.description.takeIf { placeholderText != null }
                     ?: inputHintTextColor,
             )
         }
-    }
     val placeholder: @Composable (() -> Unit)? = placeholderText?.let {
         {
             Text(
@@ -107,13 +107,61 @@ fun CustomOutlinedTextField(
         {
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
                 Icon(
-                    painter = painterResource(it),
+                    painter = endIcon.painter,
+                    contentDescription = endIcon.contentDescription,
+                    tint = MaterialTheme.colorScheme.primary.takeIf { errorTextId == null }
+                        ?: MaterialTheme.colorScheme.error,
+                )
+            }
+        }
+    } ?: errorTextId?.let {
+        {
+            IconButton(onClick = { onEndIconClicked?.invoke() }) {
+                Icon(
+                    imageVector = Icons.Default.Info,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = MaterialTheme.colorScheme.error,
                 )
             }
         }
     }
+    val supportingText: @Composable (() -> Unit)? =
+        {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(start = 0.dp, top = 5.dp, end = 0.dp, bottom = 0.dp),
+            ) {
+                if (errorTextId != null) {
+                    Text(
+                        text = stringResource(errorTextId),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.weight(1f),
+                    )
+                } else if (isRequired) {
+                    Text(
+                        text = stringResource(R.string.field_required),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = textColor,
+                        modifier = Modifier.weight(1f),
+                    )
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
+                Spacer(Modifier.width(4.dp))
+                if (enabled && maxLength != Integer.MAX_VALUE) {
+                    Text(
+                        text = "${text.length} / $maxLength",
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontWeight = FontWeight.Bold,
+                        ),
+                        color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                            ?: textColor,
+                    )
+                }
+            }
+        }
     val keyboardAction = when (isLastTextField) {
         true -> ImeAction.Done
         false -> ImeAction.Next
@@ -134,88 +182,67 @@ fun CustomOutlinedTextField(
         )
     }
 
-    Column(modifier) {
-        OutlinedTextField(
-            value = text,
-            modifier = Modifier.fillMaxWidth(),
-            shape = MaterialTheme.shapes.medium,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
-                disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
-                    ?: Color.Transparent,
-                errorBorderColor = MaterialTheme.colorScheme.error,
-                errorLabelColor = MaterialTheme.colorScheme.error,
-            ),
-            textStyle = textStyle.copy(
-                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
-                lineHeight = 24.sp,
-            ),
-            label = label?.takeIf { showLabel },
-            placeholder = placeholder,
-            trailingIcon = trailingIcon,
-            keyboardOptions = keyboardOptions,
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    keyboard?.hide()
-                    focusManager.clearFocus()
-                },
-            ),
-            visualTransformation = if (endIcon == R.drawable.ic_show_password) {
-                PasswordVisualTransformation()
-            } else {
-                VisualTransformation.None
+    OutlinedTextField(
+        value = text,
+        modifier = modifier,
+        shape = MaterialTheme.shapes.medium,
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = MaterialTheme.colorScheme.primary,
+            unfocusedBorderColor = MaterialTheme.colorScheme.tertiary,
+            disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
+                ?: Color.Transparent,
+            errorBorderColor = MaterialTheme.colorScheme.error,
+            errorLabelColor = MaterialTheme.colorScheme.error,
+        ),
+        textStyle = textStyle.copy(
+            color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
+            lineHeight = 24.sp,
+        ),
+        label = label.takeIf { showLabel } ?: placeholder,
+        placeholder = placeholder.takeIf { showLabel },
+        trailingIcon = trailingIcon,
+        supportingText = supportingText,
+        keyboardOptions = keyboardOptions,
+        keyboardActions = KeyboardActions(
+            onDone = {
+                keyboard?.hide()
+                focusManager.clearFocus()
             },
-            singleLine = inputType != CustomInputType.MULTI_LINE_TEXT,
-            maxLines = maxLines,
-            enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
-            readOnly = inputType == CustomInputType.DATE,
-            isError = errorTextId != null,
-            onValueChange = { newText ->
-                if (newText.length <= maxLength) {
-                    onTextChanged(newText)
-                }
-            },
-            interactionSource = interactionSource,
-        )
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 5.dp, top = 5.dp, end = 5.dp, bottom = 0.dp),
+        ),
+        visualTransformation = if (endIcon?.contentDescription == stringResource(
+                R.string.show_password,
+            )
         ) {
-            if (errorTextId != null) {
-                Text(
-                    text = stringResource(errorTextId),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.error,
-                )
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        },
+        singleLine = inputType != CustomInputType.MULTI_LINE_TEXT,
+        maxLines = maxLines,
+        enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
+        readOnly = inputType == CustomInputType.DATE,
+        isError = errorTextId != null,
+        onValueChange = { newText ->
+            if (newText.length <= maxLength) {
+                onTextChanged(newText)
             }
-            if (enabled && maxLength != Integer.MAX_VALUE) {
-                Text(
-                    text = "${text.length} / $maxLength",
-                    modifier = Modifier.fillMaxWidth(),
-                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Bold),
-                    color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
-                        ?: textColor,
-                    textAlign = TextAlign.End,
-                )
-            }
-        }
-    }
+        },
+        interactionSource = interactionSource,
+    )
 }
 
 @Composable
 fun MultilineCustomOutlinedTextField(
     text: String,
+    labelText: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
     errorTextId: Int? = null,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     textColor: Color = MaterialTheme.colorScheme.primary,
-    @DrawableRes endIcon: Int? = null,
+    endIcon: AccessibilityPainter? = null,
     isLastTextField: Boolean? = null,
     maxLength: Int = Integer.MAX_VALUE,
     maxLines: Int = Integer.MAX_VALUE,
@@ -229,9 +256,10 @@ fun MultilineCustomOutlinedTextField(
     Column(modifier = modifier) {
         CustomOutlinedTextField(
             text = text,
-            onTextChanged = onTextChanged,
-            errorTextId = errorTextId,
             labelText = labelText,
+            onTextChanged = onTextChanged,
+            modifier = Modifier.fillMaxWidth(),
+            errorTextId = errorTextId,
             placeholderText = placeholderText,
             inputHintTextColor = inputHintTextColor,
             textStyle = textStyle,
@@ -272,12 +300,12 @@ fun MultilineCustomOutlinedTextField(
 @Composable
 fun DateCustomOutlinedTextField(
     text: String,
+    labelText: String,
     onTextChanged: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    labelText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
-    @DrawableRes endIcon: Int? = null,
+    endIcon: AccessibilityPainter? = null,
     enabled: Boolean = true,
     onEndIconClicked: (() -> Unit)? = null,
     language: String? = null,
@@ -285,17 +313,18 @@ fun DateCustomOutlinedTextField(
     var showDatePicker by remember { mutableStateOf(false) }
     CustomOutlinedTextField(
         text = text,
+        labelText = labelText,
         onTextChanged = {},
         modifier = modifier
+            .fillMaxWidth()
             .let {
                 it
                     .clickable { showDatePicker = true }
                     .takeIf { enabled } ?: it
             },
-        labelText = labelText,
         placeholderText = placeholderText,
         inputHintTextColor = inputHintTextColor,
-        textColor = MaterialTheme.colorScheme.description,
+        textColor = MaterialTheme.colorScheme.primary,
         endIcon = endIcon,
         inputType = CustomInputType.DATE,
         enabled = enabled,
@@ -322,9 +351,9 @@ private fun TextOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Username",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             maxLength = 100,
         )
     }
@@ -336,11 +365,12 @@ private fun PasswordOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Password",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
-            endIcon = R.drawable.ic_show_password,
-            maxLength = 100,
+            endIcon = painterResource(R.drawable.ic_show_password)
+                .withDescription(null),
+            isRequired = true,
             onEndIconClicked = {},
         )
     }
@@ -352,9 +382,9 @@ private fun DisabledOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Text",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             maxLength = 100,
             enabled = false,
         )
@@ -367,10 +397,10 @@ private fun ErrorOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         CustomOutlinedTextField(
             text = "Incorrect text",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             errorTextId = R.string.invalid_username,
-            labelText = "Label",
             maxLength = 100,
         )
     }
@@ -390,10 +420,10 @@ private fun LargeCustomOutlinedTextFieldPreview() {
             pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
             deserunt mollit anim id est laborum.
             """.trimIndent(),
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
-            maxLength = 100,
+            maxLength = 500,
         )
     }
 }
@@ -404,9 +434,9 @@ private fun DateCustomOutlinedTextFieldPreview() {
     ReaderCollectionTheme {
         DateCustomOutlinedTextField(
             text = "01/01/2000",
+            labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            labelText = "Label",
             enabled = true,
         )
     }

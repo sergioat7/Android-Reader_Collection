@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.presentation.books
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -27,7 +29,6 @@ import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -41,10 +42,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.LiveRegionMode
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.liveRegion
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -63,6 +70,7 @@ import aragones.sergio.readercollection.presentation.components.ReadingBookItem
 import aragones.sergio.readercollection.presentation.components.SearchBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.Constants as MyConstants
 import com.aragones.sergio.util.BookState
@@ -104,7 +112,8 @@ fun BooksScreen(
             onSwitchToRight = onSwitchToRight,
         )
         ListButton(
-            image = R.drawable.ic_save_book,
+            painter = painterResource(R.drawable.ic_save_book)
+                .withDescription(stringResource(R.string.go_to_add_new_book)),
             onClick = onAddBook,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
@@ -173,7 +182,8 @@ private fun BooksScreenContent(
             backgroundColor = MaterialTheme.colorScheme.background,
             actions = {
                 TopAppBarIcon(
-                    icon = R.drawable.ic_sort_books,
+                    accessibilityPainter = painterResource(R.drawable.ic_sort_books)
+                        .withDescription(stringResource(R.string.sort_books)),
                     onClick = onSortClick,
                 )
             },
@@ -183,6 +193,8 @@ private fun BooksScreenContent(
             text = state.query,
             onSearch = onSearch,
             modifier = Modifier
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp),
             showLeadingIcon = true,
@@ -190,7 +202,11 @@ private fun BooksScreenContent(
         )
         Spacer(Modifier.height(16.dp))
         when (state) {
-            is BooksUiState.Empty -> NoResultsComponent()
+            is BooksUiState.Empty -> NoResultsComponent(
+                modifier = Modifier.semantics {
+                    liveRegion = LiveRegionMode.Polite
+                },
+            )
             is BooksUiState.Success -> BooksComponent(
                 books = state.books,
                 isSwitchingEnabled = state.query.isBlank(),
@@ -199,7 +215,9 @@ private fun BooksScreenContent(
                 onShowAll = onShowAll,
                 onSwitchToLeft = onSwitchToLeft,
                 onSwitchToRight = onSwitchToRight,
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().semantics {
+                    liveRegion = LiveRegionMode.Polite
+                },
             )
         }
         Spacer(Modifier.height(24.dp))
@@ -286,7 +304,7 @@ private fun ReadingBooksSection(
         } else {
             Image(
                 painter = painterResource(R.drawable.image_user_reading),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.not_reading_anything_yet),
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
@@ -398,7 +416,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
     ) {
         Text(
             text = title,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).semantics { heading() },
             style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
@@ -420,23 +438,26 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
 
 @Composable
 private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
+    val text = stringResource(R.string.show_all)
     Column(
         modifier = modifier
             .padding(horizontal = 12.dp)
             .width(150.dp)
-            .height(200.dp),
+            .height(200.dp)
+            .clickable(onClick = onClick)
+            .semantics {
+                contentDescription = text
+            },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        IconButton(onClick = onClick) {
-            Icon(
-                painter = painterResource(R.drawable.ic_arrow_circle_right),
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.primary,
-            )
-        }
+        Icon(
+            painter = painterResource(R.drawable.ic_arrow_circle_right),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+        )
         Text(
-            text = stringResource(R.string.show_all),
+            text = text,
             style = MaterialTheme.typography.displayMedium,
             color = MaterialTheme.colorScheme.primary,
             overflow = TextOverflow.Ellipsis,
@@ -481,7 +502,9 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
                         width = 1.dp,
                         color = MaterialTheme.colorScheme.tertiary,
                     ),
-                    selectedImage = Icons.Default.Done.takeIf { state.id == book.state },
+                    selectedIcon = rememberVectorPainter(Icons.Default.Done)
+                        .withDescription(null)
+                        .takeIf { state.id == book.state },
                 )
             }
         }

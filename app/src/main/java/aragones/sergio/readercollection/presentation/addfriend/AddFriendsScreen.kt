@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -55,41 +56,50 @@ fun AddFriendsScreen(
             .background(MaterialTheme.colorScheme.background),
     ) {
         AddFriendsToolbar(onBack = onBack)
-        Spacer(Modifier.height(16.dp))
-        SearchBar(
-            text = state.query,
-            onSearch = onSearch,
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            showLeadingIcon = true,
-            requestFocusByDefault = false,
-        )
-        Spacer(Modifier.height(16.dp))
-        when (state) {
-            is AddFriendsUiState.Loading -> {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            }
-            is AddFriendsUiState.Success -> {
-                Spacer(Modifier.height(16.dp))
-                if (state.users.isEmpty()) {
-                    val textKey =
-                        if (state.query.isEmpty()) {
-                            R.string.search_friends_instructions
-                        } else {
-                            R.string.no_friends_found
-                        }
-                    Text(
-                        text = stringResource(textKey),
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onBackground,
-                        modifier = Modifier.padding(horizontal = 24.dp),
+                .widthIn(max = 500.dp)
+                .align(Alignment.CenterHorizontally)
+                .fillMaxSize(),
+        ) {
+            Spacer(Modifier.height(16.dp))
+            SearchBar(
+                text = state.query,
+                onSearch = onSearch,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                showLeadingIcon = true,
+                requestFocusByDefault = false,
+            )
+            Spacer(Modifier.height(16.dp))
+            when (state) {
+                is AddFriendsUiState.Loading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier.align(Alignment.CenterHorizontally),
                     )
-                } else {
-                    AddFriendsContent(
-                        state = state,
-                        onRequestFriend = onRequestFriend,
-                    )
+                }
+                is AddFriendsUiState.Success -> {
+                    Spacer(Modifier.height(16.dp))
+                    if (state.users.isEmpty()) {
+                        val textKey =
+                            if (state.query.isEmpty()) {
+                                R.string.search_friends_instructions
+                            } else {
+                                R.string.no_friends_found
+                            }
+                        Text(
+                            text = stringResource(textKey),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onBackground,
+                            modifier = Modifier.padding(horizontal = 24.dp),
+                        )
+                    } else {
+                        AddFriendsContent(
+                            state = state,
+                            onRequestFriend = onRequestFriend,
+                        )
+                    }
                 }
             }
         }
@@ -162,6 +172,7 @@ private fun FriendItem(friend: UserUi, onRequestFriend: () -> Unit, modifier: Mo
                     } else {
                         Button(
                             onClick = onRequestFriend,
+                            modifier = Modifier.widthIn(max = 320.dp),
                             shape = MaterialTheme.shapes.small,
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = MaterialTheme.colorScheme.primary,

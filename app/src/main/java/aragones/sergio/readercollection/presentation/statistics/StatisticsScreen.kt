@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -40,8 +41,8 @@ import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.NoResultsComponent
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
+import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.presentation.theme.description
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.extensions.getMonthNumber
@@ -117,11 +118,13 @@ private fun StatisticsToolbar(
         backgroundColor = MaterialTheme.colorScheme.background,
         actions = {
             TopAppBarIcon(
-                icon = R.drawable.ic_file_import,
+                accessibilityPainter = painterResource(R.drawable.ic_file_import)
+                    .withDescription(stringResource(R.string.import_data)),
                 onClick = onImportClick,
             )
             TopAppBarIcon(
-                icon = R.drawable.ic_file_export,
+                accessibilityPainter = painterResource(R.drawable.ic_file_export)
+                    .withDescription(stringResource(R.string.export_data)),
                 onClick = onExportClick,
             )
         },
@@ -390,7 +393,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
                 Text(
                     text = stringResource(R.string.shorter_book),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.description,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(
@@ -409,7 +412,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
                 Text(
                     text = stringResource(R.string.longer_book),
                     style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.description,
+                    color = MaterialTheme.colorScheme.tertiary,
                 )
                 Spacer(Modifier.height(8.dp))
                 VerticalBookItem(

@@ -21,7 +21,7 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 8
-val versionPatch = 2
+val versionPatch = 3
 val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
@@ -48,9 +48,11 @@ android {
         versionCode = versionMajor * 100000 + versionMinor * 1000 + versionPatch * 10 + versionBuild
         versionName = "$versionMajor.$versionMinor.$versionPatch"
 
-        resourceConfigurations += listOf("en", "es")
-
         buildConfigField("String", "API_KEY", keystoreProperties.getProperty("api.key"))
+    }
+    
+    androidResources {
+        localeFilters += listOf("en", "es")
     }
 
     buildTypes {

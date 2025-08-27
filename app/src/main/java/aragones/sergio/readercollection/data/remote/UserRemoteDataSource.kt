@@ -7,10 +7,10 @@ package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
+import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -73,6 +73,17 @@ class UserRemoteDataSource @Inject constructor(
                 .addOnSuccessListener { emitter.onComplete() }
                 .addOnFailureListener { emitter.onError(it) }
         }
+
+    fun isPublicProfileActive(username: String): Single<Boolean> = Single.create { emitter ->
+        firestore
+            .collection("public_profiles")
+            .whereEqualTo("email", "${username}$mailEnd")
+            .get()
+            .addOnSuccessListener { result ->
+                val isActive = result.documents.firstOrNull()?.getString("email") != null
+                emitter.onSuccess(isActive)
+            }.addOnFailureListener { emitter.onError(it) }
+    }
 
     fun deletePublicProfile(userId: String): Completable = Completable.create { emitter ->
         firestore
