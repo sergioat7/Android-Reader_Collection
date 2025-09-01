@@ -22,6 +22,8 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 class UserRepository @Inject constructor(
     private val userLocalDataSource: UserLocalDataSource,
@@ -68,9 +70,10 @@ class UserRepository @Inject constructor(
     //region Public methods
     fun login(username: String, password: String): Completable = Completable
         .create { emitter ->
-            userRemoteDataSource
-                .login(username, password)
-                .subscribeOn(ioScheduler)
+            rxSingle {
+                userRemoteDataSource
+                    .login(username, password)
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { uuid ->
@@ -87,9 +90,10 @@ class UserRepository @Inject constructor(
         .observeOn(mainScheduler)
 
     fun logout() {
-        userRemoteDataSource
-            .logout()
-            .subscribeOn(ioScheduler)
+        rxCompletable {
+            userRemoteDataSource
+                .logout()
+        }.subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
@@ -101,9 +105,10 @@ class UserRepository @Inject constructor(
 
     fun register(username: String, password: String): Completable = Completable
         .create { emitter ->
-            userRemoteDataSource
-                .register(username, password)
-                .subscribeOn(ioScheduler)
+            rxCompletable {
+                userRemoteDataSource
+                    .register(username, password)
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
@@ -121,16 +126,18 @@ class UserRepository @Inject constructor(
 
     fun updatePassword(password: String): Completable = Completable
         .create { emitter ->
-            userRemoteDataSource
-                .updatePassword(password)
-                .subscribeOn(ioScheduler)
+            rxCompletable {
+                userRemoteDataSource
+                    .updatePassword(password)
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
                         userLocalDataSource.storePassword(password)
-                        userRemoteDataSource
-                            .login(userLocalDataSource.username, password)
-                            .subscribeOn(ioScheduler)
+                        rxSingle {
+                            userRemoteDataSource
+                                .login(userLocalDataSource.username, password)
+                        }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
                                 onSuccess = { uuid ->
@@ -152,9 +159,10 @@ class UserRepository @Inject constructor(
     fun setPublicProfile(value: Boolean): Completable = Completable
         .create { emitter ->
             if (value) {
-                userRemoteDataSource
-                    .registerPublicProfile(username, userId)
-                    .timeout(10, TimeUnit.SECONDS)
+                rxCompletable {
+                    userRemoteDataSource
+                        .registerPublicProfile(username, userId)
+                }.timeout(10, TimeUnit.SECONDS)
                     .subscribeOn(ioScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
@@ -167,9 +175,10 @@ class UserRepository @Inject constructor(
                         },
                     ).addTo(disposables)
             } else {
-                userRemoteDataSource
-                    .deletePublicProfile(userId)
-                    .timeout(10, TimeUnit.SECONDS)
+                rxCompletable {
+                    userRemoteDataSource
+                        .deletePublicProfile(userId)
+                }.timeout(10, TimeUnit.SECONDS)
                     .subscribeOn(ioScheduler)
                     .observeOn(mainScheduler)
                     .subscribeBy(
@@ -187,9 +196,10 @@ class UserRepository @Inject constructor(
 
     fun loadConfig(): Completable = Completable
         .create { emitter ->
-            userRemoteDataSource
-                .isPublicProfileActive(username)
-                .timeout(10, TimeUnit.SECONDS)
+            rxSingle {
+                userRemoteDataSource
+                    .isPublicProfileActive(username)
+            }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .onErrorReturnItem(false)
@@ -202,16 +212,18 @@ class UserRepository @Inject constructor(
         }
 
     fun getUserWith(username: String): Single<User> = Single.create { emitter ->
-        userRemoteDataSource
-            .getUser(username, userId)
-            .timeout(10, TimeUnit.SECONDS)
+        rxSingle {
+            userRemoteDataSource
+                .getUser(username, userId)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = { user ->
-                    userRemoteDataSource
-                        .getFriends(userId)
-                        .timeout(10, TimeUnit.SECONDS)
+                    rxSingle {
+                        userRemoteDataSource
+                            .getFriends(userId)
+                    }.timeout(10, TimeUnit.SECONDS)
                         .subscribeOn(ioScheduler)
                         .observeOn(mainScheduler)
                         .onErrorReturnItem(emptyList())
@@ -230,9 +242,10 @@ class UserRepository @Inject constructor(
     }
 
     fun getFriends(): Single<List<User>> = Single.create { emitter ->
-        userRemoteDataSource
-            .getFriends(userId)
-            .timeout(10, TimeUnit.SECONDS)
+        rxSingle {
+            userRemoteDataSource
+                .getFriends(userId)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .onErrorReturnItem(emptyList())
@@ -244,9 +257,10 @@ class UserRepository @Inject constructor(
     }
 
     fun getFriend(friendId: String): Single<User> = Single.create { emitter ->
-        userRemoteDataSource
-            .getFriend(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
+        rxSingle {
+            userRemoteDataSource
+                .getFriend(userId, friendId)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -266,9 +280,10 @@ class UserRepository @Inject constructor(
             status = RequestStatus.PENDING_MINE,
         )
         val friend = friend.toRemoteData()
-        userRemoteDataSource
-            .requestFriendship(user, friend)
-            .timeout(10, TimeUnit.SECONDS)
+        rxCompletable {
+            userRemoteDataSource
+                .requestFriendship(user, friend)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -282,9 +297,10 @@ class UserRepository @Inject constructor(
     }
 
     fun acceptFriendRequest(friendId: String): Completable = Completable.create { emitter ->
-        userRemoteDataSource
-            .acceptFriendRequest(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
+        rxCompletable {
+            userRemoteDataSource
+                .acceptFriendRequest(userId, friendId)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -298,9 +314,10 @@ class UserRepository @Inject constructor(
     }
 
     fun rejectFriendRequest(friendId: String): Completable = Completable.create { emitter ->
-        userRemoteDataSource
-            .rejectFriendRequest(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
+        rxCompletable {
+            userRemoteDataSource
+                .rejectFriendRequest(userId, friendId)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -314,9 +331,10 @@ class UserRepository @Inject constructor(
     }
 
     fun deleteFriend(friendId: String): Completable = Completable.create { emitter ->
-        userRemoteDataSource
-            .deleteFriend(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
+        rxCompletable {
+            userRemoteDataSource
+                .deleteFriend(userId, friendId)
+        }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
@@ -331,9 +349,10 @@ class UserRepository @Inject constructor(
 
     fun deleteUser(): Completable = Completable
         .create { emitter ->
-            userRemoteDataSource
-                .deleteUser(userId)
-                .subscribeOn(ioScheduler)
+            rxCompletable {
+                userRemoteDataSource
+                    .deleteUser(userId)
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {

@@ -106,6 +106,7 @@ dependencies {
     implementation(platform(libs.compose.bom))
     implementation(libs.coil)
     implementation(libs.core.ktx)
+    implementation(libs.coroutines.rx)
     implementation(platform(libs.firebase.bom))
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)

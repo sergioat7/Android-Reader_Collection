@@ -23,6 +23,9 @@ import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.coroutines.rx3.asFlowable
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 class BooksRepository @Inject constructor(
     private val booksLocalDataSource: BooksLocalDataSource,
@@ -47,16 +50,18 @@ class BooksRepository @Inject constructor(
     //region Public methods
     fun loadBooks(uuid: String): Completable = Completable
         .create { emitter ->
-            booksRemoteDataSource
-                .getBooks(uuid)
-                .timeout(10, TimeUnit.SECONDS)
+            rxSingle {
+                booksRemoteDataSource
+                    .getBooks(uuid)
+            }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { remoteBooks ->
-                        booksLocalDataSource
-                            .insertBooks(remoteBooks.map { it.toDomain().toLocalData() })
-                            .subscribeOn(ioScheduler)
+                        rxCompletable {
+                            booksLocalDataSource
+                                .insertBooks(remoteBooks.map { it.toDomain().toLocalData() })
+                        }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
                                 onComplete = {
@@ -76,15 +81,17 @@ class BooksRepository @Inject constructor(
 
     fun syncBooks(uuid: String): Completable = Completable
         .create { emitter ->
-            booksRemoteDataSource
-                .getBooks(uuid)
-                .timeout(10, TimeUnit.SECONDS)
+            rxSingle {
+                booksRemoteDataSource
+                    .getBooks(uuid)
+            }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .onErrorReturnItem(emptyList())
                 .subscribe { remoteBooks ->
                     booksLocalDataSource
                         .getAllBooks()
+                        .asFlowable()
                         .firstOrError()
                         .subscribeOn(ioScheduler)
                         .observeOn(mainScheduler)
@@ -98,12 +105,14 @@ class BooksRepository @Inject constructor(
                                     }
                                 }
                                 val currentBooks = localBooks.map { it.toDomain().toRemoteData() }
-                                booksRemoteDataSource
-                                    .syncBooks(
-                                        uuid = uuid,
-                                        booksToSave = currentBooks,
-                                        booksToRemove = disabledContent,
-                                    ).timeout(10, TimeUnit.SECONDS)
+                                rxCompletable {
+                                    booksRemoteDataSource
+                                        .syncBooks(
+                                            uuid = uuid,
+                                            booksToSave = currentBooks,
+                                            booksToRemove = disabledContent,
+                                        )
+                                }.timeout(10, TimeUnit.SECONDS)
                                     .subscribeOn(ioScheduler)
                                     .observeOn(mainScheduler)
                                     .subscribeBy(onComplete = {
@@ -120,6 +129,7 @@ class BooksRepository @Inject constructor(
 
     fun getBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getAllBooks()
+        .asFlowable()
         .distinctUntilChanged()
         .map { it.map { book -> book.toDomain() } }
         .subscribeOn(ioScheduler)
@@ -127,6 +137,7 @@ class BooksRepository @Inject constructor(
 
     fun getReadBooks(): Flowable<List<Book>> = booksLocalDataSource
         .getReadBooks()
+        .asFlowable()
         .distinctUntilChanged()
         .map { it.map { book -> book.toDomain() } }
         .subscribeOn(ioScheduler)
@@ -134,9 +145,10 @@ class BooksRepository @Inject constructor(
 
     fun importDataFrom(jsonData: String): Completable {
         val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
-        return booksLocalDataSource
-            .importDataFrom(books.map { it.toLocalData() })
-            .subscribeOn(ioScheduler)
+        return rxCompletable {
+            booksLocalDataSource
+                .importDataFrom(books.map { it.toLocalData() })
+        }.subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
     }
 
@@ -144,6 +156,7 @@ class BooksRepository @Inject constructor(
         .create<String> { emitter ->
             booksLocalDataSource
                 .getAllBooks()
+                .asFlowable()
                 .firstOrError()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
@@ -161,18 +174,20 @@ class BooksRepository @Inject constructor(
 
     fun getBook(id: String): Single<Pair<Book, Boolean>> = Single
         .create { emitter ->
-            booksLocalDataSource
-                .getBook(id)
-                .subscribeOn(ioScheduler)
+            rxSingle {
+                booksLocalDataSource
+                    .getBook(id)
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = {
                         emitter.onSuccess(it.toDomain() to true)
                     },
                     onError = {
-                        booksRemoteDataSource
-                            .getBook(id)
-                            .subscribeOn(ioScheduler)
+                        rxSingle {
+                            booksRemoteDataSource
+                                .getBook(id)
+                        }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
                                 onSuccess = {
@@ -189,9 +204,10 @@ class BooksRepository @Inject constructor(
 
     fun createBook(newBook: Book): Completable = Completable
         .create { emitter ->
-            booksLocalDataSource
-                .insertBooks(listOf(newBook.toLocalData()))
-                .subscribeOn(ioScheduler)
+            rxCompletable {
+                booksLocalDataSource
+                    .insertBooks(listOf(newBook.toLocalData()))
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
@@ -206,9 +222,10 @@ class BooksRepository @Inject constructor(
 
     fun setBook(book: Book): Single<Book> = Single
         .create { emitter ->
-            booksLocalDataSource
-                .updateBooks(listOf(book.toLocalData()))
-                .subscribeOn(ioScheduler)
+            rxCompletable {
+                booksLocalDataSource
+                    .updateBooks(listOf(book.toLocalData()))
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
@@ -223,9 +240,10 @@ class BooksRepository @Inject constructor(
 
     fun setBooks(books: List<Book>): Completable = Completable
         .create { emitter ->
-            booksLocalDataSource
-                .updateBooks(books.map { it.toLocalData() })
-                .subscribeOn(ioScheduler)
+            rxCompletable {
+                booksLocalDataSource
+                    .updateBooks(books.map { it.toLocalData() })
+            }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
@@ -240,14 +258,16 @@ class BooksRepository @Inject constructor(
 
     fun deleteBook(bookId: String): Completable = Completable
         .create { emitter ->
-            booksLocalDataSource
-                .getBook(bookId)
-                .subscribeOn(ioScheduler)
+            rxSingle {
+                booksLocalDataSource
+                    .getBook(bookId)
+            }.subscribeOn(ioScheduler)
                 .subscribeBy(
                     onSuccess = { book ->
-                        booksLocalDataSource
-                            .deleteBooks(listOf(book))
-                            .subscribeOn(ioScheduler)
+                        rxCompletable {
+                            booksLocalDataSource
+                                .deleteBooks(listOf(book))
+                        }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
                                 onComplete = {
@@ -269,14 +289,16 @@ class BooksRepository @Inject constructor(
         .create { emitter ->
             booksLocalDataSource
                 .getAllBooks()
+                .asFlowable()
                 .firstOrError()
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
                     onSuccess = { books ->
-                        booksLocalDataSource
-                            .deleteBooks(books)
-                            .subscribeOn(ioScheduler)
+                        rxCompletable {
+                            booksLocalDataSource
+                                .deleteBooks(books)
+                        }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
                                 onComplete = {
@@ -294,21 +316,23 @@ class BooksRepository @Inject constructor(
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
 
-    fun searchBooks(query: String, page: Int, order: String?): Single<List<Book>> =
+    fun searchBooks(query: String, page: Int, order: String?): Single<List<Book>> = rxSingle {
         booksRemoteDataSource
             .searchBooks(query, page, order)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
+    }.subscribeOn(ioScheduler)
+        .observeOn(mainScheduler)
+        .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
 
-    fun fetchRemoteConfigValues(language: String) =
+    fun fetchRemoteConfigValues(language: String) = rxCompletable {
         booksRemoteDataSource.fetchRemoteConfigValues(language)
+    }
 
     fun getBooksFrom(uuid: String): Single<List<Book>> = Single
         .create { emitter ->
-            booksRemoteDataSource
-                .getBooks(uuid)
-                .timeout(10, TimeUnit.SECONDS)
+            rxSingle {
+                booksRemoteDataSource
+                    .getBooks(uuid)
+            }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
@@ -324,9 +348,10 @@ class BooksRepository @Inject constructor(
 
     fun getFriendBook(friendId: String, bookId: String): Single<Book> = Single
         .create { emitter ->
-            booksRemoteDataSource
-                .getFriendBook(friendId, bookId)
-                .timeout(10, TimeUnit.SECONDS)
+            rxSingle {
+                booksRemoteDataSource
+                    .getFriendBook(friendId, bookId)
+            }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(

@@ -12,8 +12,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 import kotlin.NoSuchElementException
 import kotlinx.coroutines.tasks.await
@@ -27,260 +25,189 @@ class UserRemoteDataSource @Inject constructor(
     private val mailEnd = "@readercollection.app"
 
     //region Public methods
-    fun login(username: String, password: String) = Single.create { single ->
-        auth.signInWithEmailAndPassword("${username}$mailEnd", password).addOnCompleteListener {
-            if (it.isSuccessful) {
-                single.onSuccess(Firebase.auth.currentUser?.uid ?: "")
-            } else {
-                single.onError(it.exception ?: IllegalStateException())
-            }
-        }
+    suspend fun login(username: String, password: String): String {
+        auth.signInWithEmailAndPassword("${username}$mailEnd", password).await()
+        return Firebase.auth.currentUser?.uid ?: ""
     }
 
-    fun logout() = Completable.create { completable ->
+    fun logout() {
         auth.signOut()
-        completable.onComplete()
     }
 
-    fun register(username: String, password: String) = Completable.create { completable ->
-        auth.createUserWithEmailAndPassword("${username}$mailEnd", password).addOnCompleteListener {
-            if (it.isSuccessful) {
-                completable.onComplete()
-            } else {
-                completable.onError(it.exception ?: IllegalStateException())
-            }
-        }
+    suspend fun register(username: String, password: String) {
+        auth.createUserWithEmailAndPassword("${username}$mailEnd", password).await()
     }
 
-    fun updatePassword(password: String) = Completable.create { completable ->
-        auth.currentUser?.let { currentUser ->
-            currentUser.updatePassword(password).addOnCompleteListener {
-                if (it.isSuccessful) {
-                    completable.onComplete()
-                } else {
-                    completable.onError(it.exception ?: IllegalStateException())
-                }
-            }
-        } ?: completable.onError(RuntimeException("User is null"))
+    suspend fun updatePassword(password: String) {
+        auth.currentUser
+            ?.updatePassword(
+                password,
+            )?.await() ?: throw RuntimeException("User is null")
     }
 
-    fun registerPublicProfile(username: String, userId: String): Completable =
-        Completable.create { emitter ->
-            firestore
-                .collection("public_profiles")
-                .document(userId)
-                .set(mapOf("uuid" to userId, "email" to "${username}$mailEnd"))
-                .addOnSuccessListener { emitter.onComplete() }
-                .addOnFailureListener { emitter.onError(it) }
-        }
-
-    fun isPublicProfileActive(username: String): Single<Boolean> = Single.create { emitter ->
+    suspend fun registerPublicProfile(username: String, userId: String) {
         firestore
+            .collection("public_profiles")
+            .document(userId)
+            .set(mapOf("uuid" to userId, "email" to "${username}$mailEnd"))
+            .await()
+    }
+
+    suspend fun isPublicProfileActive(username: String): Boolean {
+        val result = firestore
             .collection("public_profiles")
             .whereEqualTo("email", "${username}$mailEnd")
             .get()
-            .addOnSuccessListener { result ->
-                val isActive = result.documents.firstOrNull()?.getString("email") != null
-                emitter.onSuccess(isActive)
-            }.addOnFailureListener { emitter.onError(it) }
+            .await()
+        return result.documents.firstOrNull()?.getString("email") != null
     }
 
-    fun deletePublicProfile(userId: String): Completable = Completable.create { emitter ->
+    suspend fun deletePublicProfile(userId: String) {
         firestore
             .collection("public_profiles")
             .document(userId)
             .delete()
-            .addOnSuccessListener { emitter.onComplete() }
-            .addOnFailureListener { emitter.onError(it) }
+            .await()
     }
 
-    fun getUser(username: String, userId: String): Single<UserResponse> = Single.create { emitter ->
-        firestore
+    suspend fun getUser(username: String, userId: String): UserResponse {
+        val result = firestore
             .collection("public_profiles")
             .whereEqualTo("email", "${username}$mailEnd")
             .get()
-            .addOnSuccessListener { result ->
+            .await()
 
-                val user = result.documents.firstOrNull()?.let {
-                    val uuid = it.getString("uuid")
-                    val email = it.getString("email")
-                    if (uuid != null && email != null && uuid != userId) {
-                        UserResponse(
-                            id = uuid,
-                            username = email.split("@").first(),
-                            status = RequestStatus.PENDING_FRIEND,
-                        )
-                    } else {
-                        null
-                    }
-                }
-                if (user != null) {
-                    emitter.onSuccess(user)
-                } else {
-                    emitter.onError(NoSuchElementException("User not found"))
-                }
-            }.addOnFailureListener { emitter.onError(it) }
+        val user = result.documents.firstOrNull()?.let {
+            val uuid = it.getString("uuid")
+            val email = it.getString("email")
+            if (uuid != null && email != null && uuid != userId) {
+                UserResponse(
+                    id = uuid,
+                    username = email.split("@").first(),
+                    status = RequestStatus.PENDING_FRIEND,
+                )
+            } else {
+                null
+            }
+        }
+        return user ?: throw NoSuchElementException("User not found")
     }
 
-    fun getFriends(userId: String): Single<List<UserResponse>> = Single.create { emitter ->
-        firestore
+    suspend fun getFriends(userId: String): List<UserResponse> = firestore
+        .collection("users")
+        .document(userId)
+        .collection("friends")
+        .get()
+        .await()
+        .toObjects(UserResponse::class.java)
+
+    suspend fun getFriend(userId: String, friendId: String): UserResponse {
+        val result = firestore
             .collection("users")
             .document(userId)
             .collection("friends")
+            .document(friendId)
             .get()
-            .addOnSuccessListener { result ->
-                val users = result.toObjects(UserResponse::class.java)
-                emitter.onSuccess(users)
-            }.addOnFailureListener {
-                emitter.onError(it)
-            }
+            .await()
+        return result.toObject(
+            UserResponse::class.java,
+        ) ?: throw NoSuchElementException("User not found")
     }
 
-    fun getFriend(userId: String, friendId: String): Single<UserResponse> =
-        Single.create { emitter ->
-            firestore
-                .collection("users")
-                .document(userId)
-                .collection("friends")
-                .document(friendId)
-                .get()
-                .addOnSuccessListener { result ->
-                    val user = result.toObject(UserResponse::class.java)
-                    if (user != null) {
-                        emitter.onSuccess(user)
-                    } else {
-                        emitter.onError(NoSuchElementException("User not found"))
-                    }
-                }.addOnFailureListener {
-                    emitter.onError(it)
-                }
-        }
+    suspend fun requestFriendship(user: UserResponse, friend: UserResponse) {
+        val batch = firestore.batch()
 
-    fun requestFriendship(user: UserResponse, friend: UserResponse): Completable =
-        Completable.create { emitter ->
-            val batch = firestore.batch()
+        val userRef = firestore
+            .collection("users")
+            .document(user.id)
+            .collection("friends")
+            .document(friend.id)
+        val userData = mapOf(
+            "id" to friend.id,
+            "username" to friend.username,
+            "status" to friend.status,
+        )
+        batch.set(userRef, userData)
 
-            val userRef = firestore
-                .collection("users")
-                .document(user.id)
-                .collection("friends")
-                .document(friend.id)
-            val userData = mapOf(
-                "id" to friend.id,
-                "username" to friend.username,
-                "status" to friend.status,
-            )
-            batch.set(userRef, userData)
+        val friendRef = firestore
+            .collection("users")
+            .document(friend.id)
+            .collection("friends")
+            .document(user.id)
+        val friendData = mapOf(
+            "id" to user.id,
+            "username" to user.username,
+            "status" to user.status,
+        )
+        batch.set(friendRef, friendData)
 
-            val friendRef = firestore
-                .collection("users")
-                .document(friend.id)
-                .collection("friends")
-                .document(user.id)
-            val friendData = mapOf(
-                "id" to user.id,
-                "username" to user.username,
-                "status" to user.status,
-            )
-            batch.set(friendRef, friendData)
+        batch.commit().await()
+    }
 
-            batch
-                .commit()
-                .addOnSuccessListener {
-                    emitter.onComplete()
-                }.addOnFailureListener {
-                    emitter.onError(it)
-                }
-        }
+    suspend fun acceptFriendRequest(userId: String, friendId: String) {
+        val userRef = firestore
+            .collection("users")
+            .document(userId)
+            .collection("friends")
+            .document(friendId)
 
-    fun acceptFriendRequest(userId: String, friendId: String): Completable =
-        Completable.create { emitter ->
+        val friendRef = firestore
+            .collection("users")
+            .document(friendId)
+            .collection("friends")
+            .document(userId)
 
-            val userRef = firestore
-                .collection("users")
-                .document(userId)
-                .collection("friends")
-                .document(friendId)
+        val batch = firestore.batch()
 
-            val friendRef = firestore
-                .collection("users")
-                .document(friendId)
-                .collection("friends")
-                .document(userId)
+        batch.update(userRef, "status", RequestStatus.APPROVED)
+        batch.update(friendRef, "status", RequestStatus.APPROVED)
 
-            val batch = firestore.batch()
+        batch.commit().await()
+    }
 
-            batch.update(userRef, "status", RequestStatus.APPROVED)
-            batch.update(friendRef, "status", RequestStatus.APPROVED)
+    suspend fun rejectFriendRequest(userId: String, friendId: String) {
+        val userRef = firestore
+            .collection("users")
+            .document(userId)
+            .collection("friends")
+            .document(friendId)
 
-            batch
-                .commit()
-                .addOnSuccessListener {
-                    emitter.onComplete()
-                }.addOnFailureListener {
-                    emitter.onError(it)
-                }
-        }
+        val friendRef = firestore
+            .collection("users")
+            .document(friendId)
+            .collection("friends")
+            .document(userId)
 
-    fun rejectFriendRequest(userId: String, friendId: String): Completable =
-        Completable.create { emitter ->
+        val batch = firestore.batch()
 
-            val userRef = firestore
-                .collection("users")
-                .document(userId)
-                .collection("friends")
-                .document(friendId)
+        batch.delete(userRef)
+        batch.update(friendRef, "status", RequestStatus.REJECTED)
 
-            val friendRef = firestore
-                .collection("users")
-                .document(friendId)
-                .collection("friends")
-                .document(userId)
+        batch.commit().await()
+    }
 
-            val batch = firestore.batch()
+    suspend fun deleteFriend(userId: String, friendId: String) {
+        val userRef = firestore
+            .collection("users")
+            .document(userId)
+            .collection("friends")
+            .document(friendId)
 
-            batch.delete(userRef)
-            batch.update(friendRef, "status", RequestStatus.REJECTED)
+        val friendRef = firestore
+            .collection("users")
+            .document(friendId)
+            .collection("friends")
+            .document(userId)
 
-            batch
-                .commit()
-                .addOnSuccessListener {
-                    emitter.onComplete()
-                }.addOnFailureListener {
-                    emitter.onError(it)
-                }
-        }
+        val batch = firestore.batch()
 
-    fun deleteFriend(userId: String, friendId: String): Completable =
-        Completable.create { emitter ->
-            val userRef = firestore
-                .collection("users")
-                .document(userId)
-                .collection("friends")
-                .document(friendId)
+        batch.delete(userRef)
+        batch.delete(friendRef)
 
-            val friendRef = firestore
-                .collection("users")
-                .document(friendId)
-                .collection("friends")
-                .document(userId)
+        batch.commit().await()
+    }
 
-            val batch = firestore.batch()
-
-            batch.delete(userRef)
-            batch.delete(friendRef)
-
-            batch
-                .commit()
-                .addOnSuccessListener {
-                    emitter.onComplete()
-                }.addOnFailureListener {
-                    emitter.onError(it)
-                }
-        }
-
-    fun deleteUser(userId: String) = Completable.create { completable ->
-
+    suspend fun deleteUser(userId: String) {
         val batch = firestore.batch()
 
         val publicProfileRef = firestore
@@ -293,17 +220,8 @@ class UserRemoteDataSource @Inject constructor(
             .document(userId)
         batch.delete(userRef)
 
-        batch
-            .commit()
-            .addOnSuccessListener {
-                auth.currentUser?.delete()?.addOnCompleteListener {
-                    completable.onComplete()
-                }
-            }.addOnFailureListener {
-                auth.currentUser?.delete()?.addOnCompleteListener {
-                    completable.onComplete()
-                }
-            }
+        batch.commit().await()
+        auth.currentUser?.delete()?.await()
     }
 
     suspend fun getMinVersion(): Int {
