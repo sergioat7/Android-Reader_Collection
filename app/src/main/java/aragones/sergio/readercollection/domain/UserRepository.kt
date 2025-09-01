@@ -76,11 +76,18 @@ class UserRepository @Inject constructor(
             }.subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { uuid ->
-                        val userData = UserData(username, password)
-                        val authData = AuthData(uuid)
-                        userLocalDataSource.storeLoginData(userData, authData)
-                        emitter.onComplete()
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = { uuid ->
+                                val userData = UserData(username, password)
+                                val authData = AuthData(uuid)
+                                userLocalDataSource.storeLoginData(userData, authData)
+                                emitter.onComplete()
+                            },
+                            onFailure = {
+                                emitter.onError(result.exceptionOrNull() ?: Exception())
+                            },
+                        )
                     },
                     onError = {
                         emitter.onError(it)
@@ -140,9 +147,16 @@ class UserRepository @Inject constructor(
                         }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
-                                onSuccess = { uuid ->
-                                    userLocalDataSource.storeCredentials(AuthData(uuid))
-                                    emitter.onComplete()
+                                onSuccess = { result ->
+                                    result.fold(
+                                        onSuccess = { uuid ->
+                                            userLocalDataSource.storeCredentials(AuthData(uuid))
+                                            emitter.onComplete()
+                                        },
+                                        onFailure = {
+                                            emitter.onError(result.exceptionOrNull() ?: Exception())
+                                        },
+                                    )
                                 },
                                 onError = {
                                     emitter.onError(it)
@@ -202,11 +216,18 @@ class UserRepository @Inject constructor(
             }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
-                .onErrorReturnItem(false)
+                .onErrorReturnItem(Result.success(false))
                 .subscribeBy(
-                    onSuccess = { value ->
-                        userLocalDataSource.storePublicProfile(value)
-                        emitter.onComplete()
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = { value ->
+                                userLocalDataSource.storePublicProfile(value)
+                                emitter.onComplete()
+                            },
+                            onFailure = {
+                                emitter.onError(result.exceptionOrNull() ?: Exception())
+                            },
+                        )
                     },
                 ).addTo(disposables)
         }
@@ -219,21 +240,39 @@ class UserRepository @Inject constructor(
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { user ->
-                    rxSingle {
-                        userRemoteDataSource
-                            .getFriends(userId)
-                    }.timeout(10, TimeUnit.SECONDS)
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .onErrorReturnItem(emptyList())
-                        .subscribeBy(
-                            onSuccess = { friends ->
-                                friends.firstOrNull { it.id == user.id }?.let { friend ->
-                                    emitter.onSuccess(friend.toDomain())
-                                } ?: emitter.onSuccess(user.toDomain())
-                            },
-                        ).addTo(disposables)
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = { user ->
+                            rxSingle {
+                                userRemoteDataSource
+                                    .getFriends(userId)
+                            }.timeout(10, TimeUnit.SECONDS)
+                                .subscribeOn(ioScheduler)
+                                .observeOn(mainScheduler)
+                                .onErrorReturnItem(Result.success(emptyList()))
+                                .subscribeBy(
+                                    onSuccess = { result ->
+                                        result.fold(
+                                            onSuccess = { friends ->
+                                                friends
+                                                    .firstOrNull { it.id == user.id }
+                                                    ?.let { friend ->
+                                                        emitter.onSuccess(friend.toDomain())
+                                                    } ?: emitter.onSuccess(user.toDomain())
+                                            },
+                                            onFailure = {
+                                                emitter.onError(
+                                                    result.exceptionOrNull() ?: Exception(),
+                                                )
+                                            },
+                                        )
+                                    },
+                                ).addTo(disposables)
+                        },
+                        onFailure = {
+                            emitter.onError(result.exceptionOrNull() ?: Exception())
+                        },
+                    )
                 },
                 onError = {
                     emitter.onError(it)
@@ -248,10 +287,17 @@ class UserRepository @Inject constructor(
         }.timeout(10, TimeUnit.SECONDS)
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
-            .onErrorReturnItem(emptyList())
+            .onErrorReturnItem(Result.success(emptyList()))
             .subscribeBy(
-                onSuccess = { friends ->
-                    emitter.onSuccess(friends.map { it.toDomain() })
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = { friends ->
+                            emitter.onSuccess(friends.map { it.toDomain() })
+                        },
+                        onFailure = {
+                            emitter.onError(result.exceptionOrNull() ?: Exception())
+                        },
+                    )
                 },
             ).addTo(disposables)
     }
@@ -264,8 +310,15 @@ class UserRepository @Inject constructor(
             .subscribeOn(ioScheduler)
             .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = { user ->
-                    emitter.onSuccess(user.toDomain())
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = { user ->
+                            emitter.onSuccess(user.toDomain())
+                        },
+                        onFailure = {
+                            emitter.onError(result.exceptionOrNull() ?: Exception())
+                        },
+                    )
                 },
                 onError = {
                     emitter.onError(it)

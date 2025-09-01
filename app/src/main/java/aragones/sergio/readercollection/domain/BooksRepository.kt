@@ -57,20 +57,29 @@ class BooksRepository @Inject constructor(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { remoteBooks ->
-                        rxCompletable {
-                            booksLocalDataSource
-                                .insertBooks(remoteBooks.map { it.toDomain().toLocalData() })
-                        }.subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(
-                                onComplete = {
-                                    emitter.onComplete()
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                },
-                            ).addTo(disposables)
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = { remoteBooks ->
+                                rxCompletable {
+                                    booksLocalDataSource
+                                        .insertBooks(
+                                            remoteBooks.map { it.toDomain().toLocalData() },
+                                        )
+                                }.subscribeOn(ioScheduler)
+                                    .observeOn(mainScheduler)
+                                    .subscribeBy(
+                                        onComplete = {
+                                            emitter.onComplete()
+                                        },
+                                        onError = {
+                                            emitter.onError(it)
+                                        },
+                                    ).addTo(disposables)
+                            },
+                            onFailure = {
+                                emitter.onError(result.exceptionOrNull() ?: Exception())
+                            },
+                        )
                     },
                     onError = {
                         emitter.onError(it)
@@ -87,42 +96,55 @@ class BooksRepository @Inject constructor(
             }.timeout(10, TimeUnit.SECONDS)
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
-                .onErrorReturnItem(emptyList())
-                .subscribe { remoteBooks ->
-                    booksLocalDataSource
-                        .getAllBooks()
-                        .asFlowable()
-                        .firstOrError()
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .onErrorReturnItem(emptyList())
-                        .subscribeBy(
-                            onSuccess = { localBooks ->
-                                val disabledContent = arrayListOf<BookResponse>()
-                                for (remoteBook in remoteBooks) {
-                                    if (localBooks.firstOrNull { it.id == remoteBook.id } == null) {
-                                        disabledContent.add(remoteBook)
-                                    }
-                                }
-                                val currentBooks = localBooks.map { it.toDomain().toRemoteData() }
-                                rxCompletable {
-                                    booksRemoteDataSource
-                                        .syncBooks(
-                                            uuid = uuid,
-                                            booksToSave = currentBooks,
-                                            booksToRemove = disabledContent,
-                                        )
-                                }.timeout(10, TimeUnit.SECONDS)
-                                    .subscribeOn(ioScheduler)
-                                    .observeOn(mainScheduler)
-                                    .subscribeBy(onComplete = {
-                                        emitter.onComplete()
-                                    }, onError = {
-                                        emitter.onError(it)
-                                    })
-                                    .addTo(disposables)
-                            },
-                        ).addTo(disposables)
+                .onErrorReturnItem(Result.success(emptyList()))
+                .subscribe { result ->
+                    result.fold(
+                        onSuccess = { remoteBooks ->
+                            booksLocalDataSource
+                                .getAllBooks()
+                                .asFlowable()
+                                .firstOrError()
+                                .subscribeOn(ioScheduler)
+                                .observeOn(mainScheduler)
+                                .onErrorReturnItem(emptyList())
+                                .subscribeBy(
+                                    onSuccess = { localBooks ->
+                                        val disabledContent = arrayListOf<BookResponse>()
+                                        for (remoteBook in remoteBooks) {
+                                            if (localBooks
+                                                    .firstOrNull { it.id == remoteBook.id } == null
+                                            ) {
+                                                disabledContent.add(remoteBook)
+                                            }
+                                        }
+                                        val currentBooks = localBooks.map {
+                                            it
+                                                .toDomain()
+                                                .toRemoteData()
+                                        }
+                                        rxCompletable {
+                                            booksRemoteDataSource
+                                                .syncBooks(
+                                                    uuid = uuid,
+                                                    booksToSave = currentBooks,
+                                                    booksToRemove = disabledContent,
+                                                )
+                                        }.timeout(10, TimeUnit.SECONDS)
+                                            .subscribeOn(ioScheduler)
+                                            .observeOn(mainScheduler)
+                                            .subscribeBy(onComplete = {
+                                                emitter.onComplete()
+                                            }, onError = {
+                                                emitter.onError(it)
+                                            })
+                                            .addTo(disposables)
+                                    },
+                                ).addTo(disposables)
+                        },
+                        onFailure = {
+                            emitter.onError(result.exceptionOrNull() ?: Exception())
+                        },
+                    )
                 }.addTo(disposables)
         }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
@@ -190,8 +212,15 @@ class BooksRepository @Inject constructor(
                         }.subscribeOn(ioScheduler)
                             .observeOn(mainScheduler)
                             .subscribeBy(
-                                onSuccess = {
-                                    emitter.onSuccess(it.toDomain() to false)
+                                onSuccess = { result ->
+                                    result.fold(
+                                        onSuccess = {
+                                            emitter.onSuccess(it.toDomain() to false)
+                                        },
+                                        onFailure = {
+                                            emitter.onError(result.exceptionOrNull() ?: Exception())
+                                        },
+                                    )
                                 },
                                 onError = {
                                     emitter.onError(it)
@@ -321,7 +350,16 @@ class BooksRepository @Inject constructor(
             .searchBooks(query, page, order)
     }.subscribeOn(ioScheduler)
         .observeOn(mainScheduler)
-        .map { it.items?.map { book -> book.toDomain() } ?: listOf() }
+        .map { result ->
+            result.fold(
+                onSuccess = {
+                    it.items?.map { book -> book.toDomain() } ?: listOf()
+                },
+                onFailure = {
+                    listOf()
+                },
+            )
+        }
 
     fun fetchRemoteConfigValues(language: String) = rxCompletable {
         booksRemoteDataSource.fetchRemoteConfigValues(language)
@@ -336,8 +374,15 @@ class BooksRepository @Inject constructor(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = { remoteBooks ->
-                        emitter.onSuccess(remoteBooks.map { it.toDomain() })
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = { remoteBooks ->
+                                emitter.onSuccess(remoteBooks.map { it.toDomain() })
+                            },
+                            onFailure = {
+                                emitter.onError(result.exceptionOrNull() ?: Exception())
+                            },
+                        )
                     },
                     onError = {
                         emitter.onError(it)
@@ -355,8 +400,15 @@ class BooksRepository @Inject constructor(
                 .subscribeOn(ioScheduler)
                 .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = {
-                        emitter.onSuccess(it.toDomain())
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = {
+                                emitter.onSuccess(it.toDomain())
+                            },
+                            onFailure = {
+                                emitter.onError(result.exceptionOrNull() ?: Exception())
+                            },
+                        )
                     },
                     onError = {
                         emitter.onError(it)

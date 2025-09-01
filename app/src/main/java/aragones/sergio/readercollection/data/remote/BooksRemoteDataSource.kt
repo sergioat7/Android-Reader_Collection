@@ -43,7 +43,11 @@ class BooksRemoteDataSource @Inject constructor(
     //endregion
 
     //region Public methods
-    suspend fun searchBooks(query: String, page: Int, order: String?): GoogleBookListResponse {
+    suspend fun searchBooks(
+        query: String,
+        page: Int,
+        order: String?,
+    ): Result<GoogleBookListResponse> = runCatching {
         val params = mutableMapOf(
             API_KEY to BuildConfig.API_KEY,
             SEARCH_PARAM to query,
@@ -53,12 +57,12 @@ class BooksRemoteDataSource @Inject constructor(
         if (order != null) {
             params[ORDER_PARAM] = order
         }
-        return googleApiService.searchGoogleBooks(params)
+        googleApiService.searchGoogleBooks(params)
     }
 
-    suspend fun getBook(volumeId: String): GoogleBookResponse {
+    suspend fun getBook(volumeId: String): Result<GoogleBookResponse> = runCatching {
         val params = mapOf(API_KEY to BuildConfig.API_KEY)
-        return googleApiService.getGoogleBook(volumeId, params)
+        googleApiService.getGoogleBook(volumeId, params)
     }
 
     fun fetchRemoteConfigValues(language: String) {
@@ -71,31 +75,34 @@ class BooksRemoteDataSource @Inject constructor(
         }
     }
 
-    suspend fun getBooks(uuid: String): List<BookResponse> = firestore
-        .collection("users")
-        .document(uuid)
-        .collection("books")
-        .get()
-        .await()
-        .toObjects(BookResponse::class.java)
-
-    suspend fun getFriendBook(friendId: String, bookId: String): BookResponse {
-        val book = firestore
+    suspend fun getBooks(uuid: String): Result<List<BookResponse>> = runCatching {
+        firestore
             .collection("users")
-            .document(friendId)
+            .document(uuid)
             .collection("books")
-            .document(bookId)
             .get()
             .await()
-            .toObject(BookResponse::class.java)
-        return book ?: throw NoSuchElementException("Book not found")
+            .toObjects(BookResponse::class.java)
     }
+
+    suspend fun getFriendBook(friendId: String, bookId: String): Result<BookResponse> =
+        runCatching {
+            val book = firestore
+                .collection("users")
+                .document(friendId)
+                .collection("books")
+                .document(bookId)
+                .get()
+                .await()
+                .toObject(BookResponse::class.java)
+            book ?: throw NoSuchElementException("Book not found")
+        }
 
     suspend fun syncBooks(
         uuid: String,
         booksToSave: List<BookResponse>,
         booksToRemove: List<BookResponse>,
-    ) {
+    ): Result<Unit> = runCatching {
         val batch = firestore.batch()
         val booksRef = firestore
             .collection("users")

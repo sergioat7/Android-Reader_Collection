@@ -25,44 +25,45 @@ class UserRemoteDataSource @Inject constructor(
     private val mailEnd = "@readercollection.app"
 
     //region Public methods
-    suspend fun login(username: String, password: String): String {
+    suspend fun login(username: String, password: String): Result<String> = runCatching {
         auth.signInWithEmailAndPassword("${username}$mailEnd", password).await()
-        return Firebase.auth.currentUser?.uid ?: ""
+        Firebase.auth.currentUser?.uid ?: ""
     }
 
     fun logout() {
         auth.signOut()
     }
 
-    suspend fun register(username: String, password: String) {
+    suspend fun register(username: String, password: String): Result<Unit> = runCatching {
         auth.createUserWithEmailAndPassword("${username}$mailEnd", password).await()
     }
 
-    suspend fun updatePassword(password: String) {
+    suspend fun updatePassword(password: String): Result<Unit> = runCatching {
         auth.currentUser
             ?.updatePassword(
                 password,
             )?.await() ?: throw RuntimeException("User is null")
     }
 
-    suspend fun registerPublicProfile(username: String, userId: String) {
-        firestore
-            .collection("public_profiles")
-            .document(userId)
-            .set(mapOf("uuid" to userId, "email" to "${username}$mailEnd"))
-            .await()
-    }
+    suspend fun registerPublicProfile(username: String, userId: String): Result<Unit> =
+        runCatching {
+            firestore
+                .collection("public_profiles")
+                .document(userId)
+                .set(mapOf("uuid" to userId, "email" to "${username}$mailEnd"))
+                .await()
+        }
 
-    suspend fun isPublicProfileActive(username: String): Boolean {
+    suspend fun isPublicProfileActive(username: String): Result<Boolean> = runCatching {
         val result = firestore
             .collection("public_profiles")
             .whereEqualTo("email", "${username}$mailEnd")
             .get()
             .await()
-        return result.documents.firstOrNull()?.getString("email") != null
+        result.documents.firstOrNull()?.getString("email") != null
     }
 
-    suspend fun deletePublicProfile(userId: String) {
+    suspend fun deletePublicProfile(userId: String): Result<Unit> = runCatching {
         firestore
             .collection("public_profiles")
             .document(userId)
@@ -70,7 +71,7 @@ class UserRemoteDataSource @Inject constructor(
             .await()
     }
 
-    suspend fun getUser(username: String, userId: String): UserResponse {
+    suspend fun getUser(username: String, userId: String): Result<UserResponse> = runCatching {
         val result = firestore
             .collection("public_profiles")
             .whereEqualTo("email", "${username}$mailEnd")
@@ -90,18 +91,20 @@ class UserRemoteDataSource @Inject constructor(
                 null
             }
         }
-        return user ?: throw NoSuchElementException("User not found")
+        user ?: throw NoSuchElementException("User not found")
     }
 
-    suspend fun getFriends(userId: String): List<UserResponse> = firestore
-        .collection("users")
-        .document(userId)
-        .collection("friends")
-        .get()
-        .await()
-        .toObjects(UserResponse::class.java)
+    suspend fun getFriends(userId: String): Result<List<UserResponse>> = runCatching {
+        firestore
+            .collection("users")
+            .document(userId)
+            .collection("friends")
+            .get()
+            .await()
+            .toObjects(UserResponse::class.java)
+    }
 
-    suspend fun getFriend(userId: String, friendId: String): UserResponse {
+    suspend fun getFriend(userId: String, friendId: String): Result<UserResponse> = runCatching {
         val result = firestore
             .collection("users")
             .document(userId)
@@ -109,42 +112,41 @@ class UserRemoteDataSource @Inject constructor(
             .document(friendId)
             .get()
             .await()
-        return result.toObject(
-            UserResponse::class.java,
-        ) ?: throw NoSuchElementException("User not found")
+        result.toObject(UserResponse::class.java) ?: throw NoSuchElementException("User not found")
     }
 
-    suspend fun requestFriendship(user: UserResponse, friend: UserResponse) {
-        val batch = firestore.batch()
+    suspend fun requestFriendship(user: UserResponse, friend: UserResponse): Result<Unit> =
+        runCatching {
+            val batch = firestore.batch()
 
-        val userRef = firestore
-            .collection("users")
-            .document(user.id)
-            .collection("friends")
-            .document(friend.id)
-        val userData = mapOf(
-            "id" to friend.id,
-            "username" to friend.username,
-            "status" to friend.status,
-        )
-        batch.set(userRef, userData)
+            val userRef = firestore
+                .collection("users")
+                .document(user.id)
+                .collection("friends")
+                .document(friend.id)
+            val userData = mapOf(
+                "id" to friend.id,
+                "username" to friend.username,
+                "status" to friend.status,
+            )
+            batch.set(userRef, userData)
 
-        val friendRef = firestore
-            .collection("users")
-            .document(friend.id)
-            .collection("friends")
-            .document(user.id)
-        val friendData = mapOf(
-            "id" to user.id,
-            "username" to user.username,
-            "status" to user.status,
-        )
-        batch.set(friendRef, friendData)
+            val friendRef = firestore
+                .collection("users")
+                .document(friend.id)
+                .collection("friends")
+                .document(user.id)
+            val friendData = mapOf(
+                "id" to user.id,
+                "username" to user.username,
+                "status" to user.status,
+            )
+            batch.set(friendRef, friendData)
 
-        batch.commit().await()
-    }
+            batch.commit().await()
+        }
 
-    suspend fun acceptFriendRequest(userId: String, friendId: String) {
+    suspend fun acceptFriendRequest(userId: String, friendId: String): Result<Unit> = runCatching {
         val userRef = firestore
             .collection("users")
             .document(userId)
@@ -165,7 +167,7 @@ class UserRemoteDataSource @Inject constructor(
         batch.commit().await()
     }
 
-    suspend fun rejectFriendRequest(userId: String, friendId: String) {
+    suspend fun rejectFriendRequest(userId: String, friendId: String): Result<Unit> = runCatching {
         val userRef = firestore
             .collection("users")
             .document(userId)
@@ -186,7 +188,7 @@ class UserRemoteDataSource @Inject constructor(
         batch.commit().await()
     }
 
-    suspend fun deleteFriend(userId: String, friendId: String) {
+    suspend fun deleteFriend(userId: String, friendId: String): Result<Unit> = runCatching {
         val userRef = firestore
             .collection("users")
             .document(userId)
@@ -207,7 +209,7 @@ class UserRemoteDataSource @Inject constructor(
         batch.commit().await()
     }
 
-    suspend fun deleteUser(userId: String) {
+    suspend fun deleteUser(userId: String): Result<Unit> = runCatching {
         val batch = firestore.batch()
 
         val publicProfileRef = firestore
