@@ -11,21 +11,27 @@ import androidx.compose.runtime.mutableStateOf
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -42,23 +48,21 @@ class RegisterViewModel @Inject constructor(
     val activityName: StateFlow<String?> = _activityName
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun register(username: String, password: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        userRepository
-            .register(username, password)
+        rxCompletable {
+            userRepository
+                .register(username, password)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
-                    userRepository
-                        .login(username, password)
+                    rxCompletable {
+                        userRepository
+                            .login(username, password)
+                    }.subscribeOn(ioScheduler)
+                        .observeOn(mainScheduler)
                         .subscribeBy(
                             onComplete = {
                                 _uiState.value = _uiState.value.copy(isLoading = false)

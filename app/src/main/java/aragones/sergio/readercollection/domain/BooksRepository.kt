@@ -8,31 +8,25 @@ package aragones.sergio.readercollection.domain
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.domain.base.BaseRepository
-import aragones.sergio.readercollection.domain.di.IoScheduler
-import aragones.sergio.readercollection.domain.di.MainScheduler
+import aragones.sergio.readercollection.domain.di.IoDispatcher
 import aragones.sergio.readercollection.domain.model.Book
 import com.aragones.sergio.BooksLocalDataSource
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Flowable
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import kotlinx.coroutines.rx3.asFlowable
-import kotlinx.coroutines.rx3.rxCompletable
-import kotlinx.coroutines.rx3.rxSingle
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 
 class BooksRepository @Inject constructor(
     private val booksLocalDataSource: BooksLocalDataSource,
     private val booksRemoteDataSource: BooksRemoteDataSource,
-    @IoScheduler private val ioScheduler: Scheduler,
-    @MainScheduler private val mainScheduler: Scheduler,
-) : BaseRepository() {
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) {
 
     //region Private properties
     private val moshiAdapter = Moshi
@@ -48,373 +42,169 @@ class BooksRepository @Inject constructor(
     //endregion
 
     //region Public methods
-    fun loadBooks(uuid: String): Completable = Completable
-        .create { emitter ->
-            rxSingle {
-                booksRemoteDataSource
-                    .getBooks(uuid)
-            }.timeout(10, TimeUnit.SECONDS)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = { result ->
-                        result.fold(
-                            onSuccess = { remoteBooks ->
-                                rxCompletable {
-                                    booksLocalDataSource
-                                        .insertBooks(
-                                            remoteBooks.map { it.toDomain().toLocalData() },
-                                        )
-                                }.subscribeOn(ioScheduler)
-                                    .observeOn(mainScheduler)
-                                    .subscribeBy(
-                                        onComplete = {
-                                            emitter.onComplete()
-                                        },
-                                        onError = {
-                                            emitter.onError(it)
-                                        },
-                                    ).addTo(disposables)
-                            },
-                            onFailure = {
-                                emitter.onError(result.exceptionOrNull() ?: Exception())
-                            },
-                        )
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun syncBooks(uuid: String): Completable = Completable
-        .create { emitter ->
-            rxSingle {
-                booksRemoteDataSource
-                    .getBooks(uuid)
-            }.timeout(10, TimeUnit.SECONDS)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .onErrorReturnItem(Result.success(emptyList()))
-                .subscribe { result ->
-                    result.fold(
-                        onSuccess = { remoteBooks ->
-                            booksLocalDataSource
-                                .getAllBooks()
-                                .asFlowable()
-                                .firstOrError()
-                                .subscribeOn(ioScheduler)
-                                .observeOn(mainScheduler)
-                                .onErrorReturnItem(emptyList())
-                                .subscribeBy(
-                                    onSuccess = { localBooks ->
-                                        val disabledContent = arrayListOf<BookResponse>()
-                                        for (remoteBook in remoteBooks) {
-                                            if (localBooks
-                                                    .firstOrNull { it.id == remoteBook.id } == null
-                                            ) {
-                                                disabledContent.add(remoteBook)
-                                            }
-                                        }
-                                        val currentBooks = localBooks.map {
-                                            it
-                                                .toDomain()
-                                                .toRemoteData()
-                                        }
-                                        rxCompletable {
-                                            booksRemoteDataSource
-                                                .syncBooks(
-                                                    uuid = uuid,
-                                                    booksToSave = currentBooks,
-                                                    booksToRemove = disabledContent,
-                                                )
-                                        }.timeout(10, TimeUnit.SECONDS)
-                                            .subscribeOn(ioScheduler)
-                                            .observeOn(mainScheduler)
-                                            .subscribeBy(onComplete = {
-                                                emitter.onComplete()
-                                            }, onError = {
-                                                emitter.onError(it)
-                                            })
-                                            .addTo(disposables)
-                                    },
-                                ).addTo(disposables)
-                        },
-                        onFailure = {
-                            emitter.onError(result.exceptionOrNull() ?: Exception())
-                        },
-                    )
-                }.addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun getBooks(): Flowable<List<Book>> = booksLocalDataSource
-        .getAllBooks()
-        .asFlowable()
-        .distinctUntilChanged()
-        .map { it.map { book -> book.toDomain() } }
-        .subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun getReadBooks(): Flowable<List<Book>> = booksLocalDataSource
-        .getReadBooks()
-        .asFlowable()
-        .distinctUntilChanged()
-        .map { it.map { book -> book.toDomain() } }
-        .subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun importDataFrom(jsonData: String): Completable {
-        val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
-        return rxCompletable {
-            booksLocalDataSource
-                .importDataFrom(books.map { it.toLocalData() })
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
+    suspend fun loadBooks(uuid: String): Result<Unit> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            booksRemoteDataSource.getBooks(uuid)
+        }.fold(
+            onSuccess = { remoteBooks ->
+                booksLocalDataSource.insertBooks(
+                    remoteBooks.map { it.toDomain().toLocalData() },
+                )
+                Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
     }
 
-    fun exportDataTo(): Single<String> = Single
-        .create<String> { emitter ->
-            booksLocalDataSource
-                .getAllBooks()
-                .asFlowable()
-                .firstOrError()
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = {
-                        val books = it.map { book -> book.toDomain() }
-                        emitter.onSuccess(moshiAdapter.toJson(books))
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    suspend fun syncBooks(uuid: String): Result<Unit> = withContext(ioDispatcher) {
+        val remoteBooks = withTimeout(TIMEOUT) {
+            booksRemoteDataSource.getBooks(uuid)
+        }.fold(
+            onSuccess = { it },
+            onFailure = { emptyList() },
+        )
+        val localBooks = booksLocalDataSource.getAllBooks().firstOrNull() ?: emptyList()
 
-    fun getBook(id: String): Single<Pair<Book, Boolean>> = Single
-        .create { emitter ->
-            rxSingle {
-                booksLocalDataSource
-                    .getBook(id)
-            }.subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = {
-                        emitter.onSuccess(it.toDomain() to true)
-                    },
-                    onError = {
-                        rxSingle {
-                            booksRemoteDataSource
-                                .getBook(id)
-                        }.subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(
-                                onSuccess = { result ->
-                                    result.fold(
-                                        onSuccess = {
-                                            emitter.onSuccess(it.toDomain() to false)
-                                        },
-                                        onFailure = {
-                                            emitter.onError(result.exceptionOrNull() ?: Exception())
-                                        },
-                                    )
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                },
-                            ).addTo(disposables)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+        val disabledContent = arrayListOf<BookResponse>()
+        for (remoteBook in remoteBooks) {
+            if (localBooks.firstOrNull { it.id == remoteBook.id } == null) {
+                disabledContent.add(remoteBook)
+            }
+        }
+        val currentBooks = localBooks.map {
+            it.toDomain().toRemoteData()
+        }
+        withTimeout(TIMEOUT) {
+            booksRemoteDataSource.syncBooks(
+                uuid = uuid,
+                booksToSave = currentBooks,
+                booksToRemove = disabledContent,
+            )
+        }.fold(
+            onSuccess = {
+                Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
+    }
 
-    fun createBook(newBook: Book): Completable = Completable
-        .create { emitter ->
-            rxCompletable {
-                booksLocalDataSource
-                    .insertBooks(listOf(newBook.toLocalData()))
-            }.subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    fun getBooks(): Flow<List<Book>> = booksLocalDataSource
+        .getAllBooks()
+        .distinctUntilChanged()
+        .map { it.map { book -> book.toDomain() } }
 
-    fun setBook(book: Book): Single<Book> = Single
-        .create { emitter ->
-            rxCompletable {
-                booksLocalDataSource
-                    .updateBooks(listOf(book.toLocalData()))
-            }.subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onSuccess(book)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    fun getReadBooks(): Flow<List<Book>> = booksLocalDataSource
+        .getReadBooks()
+        .distinctUntilChanged()
+        .map { it.map { book -> book.toDomain() } }
 
-    fun setBooks(books: List<Book>): Completable = Completable
-        .create { emitter ->
-            rxCompletable {
-                booksLocalDataSource
-                    .updateBooks(books.map { it.toLocalData() })
-            }.subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    suspend fun importDataFrom(jsonData: String): Result<Unit> = runCatching {
+        val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
+        booksLocalDataSource
+            .importDataFrom(books.map { it.toLocalData() })
+    }
 
-    fun deleteBook(bookId: String): Completable = Completable
-        .create { emitter ->
-            rxSingle {
-                booksLocalDataSource
-                    .getBook(bookId)
-            }.subscribeOn(ioScheduler)
-                .subscribeBy(
-                    onSuccess = { book ->
-                        rxCompletable {
-                            booksLocalDataSource
-                                .deleteBooks(listOf(book))
-                        }.subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(
-                                onComplete = {
-                                    emitter.onComplete()
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                },
-                            ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    suspend fun exportDataTo(): Result<String> = runCatching {
+        val books = booksLocalDataSource
+            .getAllBooks()
+            .firstOrNull()
+            ?.map { it.toDomain() }
+            ?: emptyList()
+        val json = moshiAdapter.toJson(books)
+        return Result.success(json)
+    }
 
-    fun resetTable(): Completable = Completable
-        .create { emitter ->
-            booksLocalDataSource
-                .getAllBooks()
-                .asFlowable()
-                .firstOrError()
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = { books ->
-                        rxCompletable {
-                            booksLocalDataSource
-                                .deleteBooks(books)
-                        }.subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(
-                                onComplete = {
-                                    emitter.onComplete()
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                },
-                            ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun searchBooks(query: String, page: Int, order: String?): Single<List<Book>> = rxSingle {
-        booksRemoteDataSource
-            .searchBooks(query, page, order)
-    }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-        .map { result ->
-            result.fold(
+    suspend fun getBook(id: String): Result<Pair<Book, Boolean>> = runCatching {
+        booksLocalDataSource.getBook(id)
+    }.fold(
+        onSuccess = {
+            Result.success(it.toDomain() to true)
+        },
+        onFailure = {
+            withTimeout(TIMEOUT) {
+                booksRemoteDataSource.getBook(id)
+            }.fold(
                 onSuccess = {
-                    it.items?.map { book -> book.toDomain() } ?: listOf()
+                    Result.success(it.toDomain() to false)
                 },
                 onFailure = {
-                    listOf()
+                    Result.failure(it)
                 },
             )
-        }
+        },
+    )
 
-    fun fetchRemoteConfigValues(language: String) = rxCompletable {
-        booksRemoteDataSource.fetchRemoteConfigValues(language)
+    suspend fun createBook(newBook: Book): Result<Unit> = runCatching {
+        booksLocalDataSource
+            .insertBooks(listOf(newBook.toLocalData()))
     }
 
-    fun getBooksFrom(uuid: String): Single<List<Book>> = Single
-        .create { emitter ->
-            rxSingle {
-                booksRemoteDataSource
-                    .getBooks(uuid)
-            }.timeout(10, TimeUnit.SECONDS)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = { result ->
-                        result.fold(
-                            onSuccess = { remoteBooks ->
-                                emitter.onSuccess(remoteBooks.map { it.toDomain() })
-                            },
-                            onFailure = {
-                                emitter.onError(result.exceptionOrNull() ?: Exception())
-                            },
-                        )
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    suspend fun setBook(book: Book): Result<Book> = runCatching {
+        booksLocalDataSource.updateBooks(listOf(book.toLocalData()))
+        return Result.success(book)
+    }
 
-    fun getFriendBook(friendId: String, bookId: String): Single<Book> = Single
-        .create { emitter ->
-            rxSingle {
-                booksRemoteDataSource
-                    .getFriendBook(friendId, bookId)
-            }.timeout(10, TimeUnit.SECONDS)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = { result ->
-                        result.fold(
-                            onSuccess = {
-                                emitter.onSuccess(it.toDomain())
-                            },
-                            onFailure = {
-                                emitter.onError(result.exceptionOrNull() ?: Exception())
-                            },
-                        )
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    suspend fun setBooks(books: List<Book>): Result<Unit> = runCatching {
+        booksLocalDataSource
+            .updateBooks(books.map { it.toLocalData() })
+    }
+
+    suspend fun deleteBook(bookId: String): Result<Unit> = runCatching {
+        val book = booksLocalDataSource.getBook(bookId)
+        booksLocalDataSource.deleteBooks(listOf(book))
+        Result.success(Unit)
+    }
+
+    suspend fun resetTable(): Result<Unit> = runCatching {
+        val books = booksLocalDataSource.getAllBooks().firstOrNull() ?: emptyList()
+        booksLocalDataSource.deleteBooks(books)
+        Result.success(Unit)
+    }
+
+    suspend fun searchBooks(query: String, page: Int, order: String?): Result<List<Book>> =
+        withTimeout(TIMEOUT) {
+            withContext(ioDispatcher) {
+                booksRemoteDataSource.searchBooks(query, page, order)
+            }
+        }.fold(
+            onSuccess = { books ->
+                Result.success(books.items?.map { it.toDomain() } ?: listOf())
+            },
+            onFailure = {
+                Result.success(emptyList())
+            },
+        )
+
+    fun fetchRemoteConfigValues(language: String) =
+        booksRemoteDataSource.fetchRemoteConfigValues(language)
+
+    suspend fun getBooksFrom(uuid: String): Result<List<Book>> = withTimeout(TIMEOUT) {
+        booksRemoteDataSource.getBooks(uuid)
+    }.fold(
+        onSuccess = { remoteBooks ->
+            Result.success(remoteBooks.map { it.toDomain() })
+        },
+        onFailure = {
+            Result.failure(it)
+        },
+    )
+
+    suspend fun getFriendBook(friendId: String, bookId: String): Result<Book> =
+        withTimeout(TIMEOUT) {
+            booksRemoteDataSource.getFriendBook(friendId, bookId)
+        }.fold(
+            onSuccess = {
+                Result.success(it.toDomain())
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
     //endregion
 }
+
+private const val TIMEOUT = 10_000L

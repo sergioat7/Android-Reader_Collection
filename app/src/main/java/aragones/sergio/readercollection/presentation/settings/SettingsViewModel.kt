@@ -10,18 +10,24 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -36,21 +42,15 @@ class SettingsViewModel @Inject constructor(
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun logout() {
         _isLoading.value = true
         userRepository.logout()
-        booksRepository
-            .resetTable()
+        rxCompletable {
+            booksRepository
+                .resetTable()
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _isLoading.value = false

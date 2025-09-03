@@ -13,23 +13,31 @@ import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.asFlowable
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository,
+    userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -53,15 +61,6 @@ class BooksViewModel @Inject constructor(
     val booksError: StateFlow<ErrorResponse?> = _booksError
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun fetchBooks() {
         _state.value = when (val currentState = _state.value) {
@@ -71,6 +70,9 @@ class BooksViewModel @Inject constructor(
 
         booksRepository
             .getBooks()
+            .asFlowable()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     originalBooks = emptyList()
@@ -148,8 +150,11 @@ class BooksViewModel @Inject constructor(
                 priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1,
             )
         }
-        booksRepository
-            .setBook(selectedBook)
+        rxSingle {
+            booksRepository
+                .setBook(selectedBook)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onSuccess = {
                     /* no-op due to database is being observed */
@@ -208,8 +213,11 @@ class BooksViewModel @Inject constructor(
             is BooksUiState.Success -> currentState.copy(isLoading = true)
         }
 
-        booksRepository
-            .setBooks(books)
+        rxCompletable {
+            booksRepository
+                .setBooks(books)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     /* no-op due to database is being observed */

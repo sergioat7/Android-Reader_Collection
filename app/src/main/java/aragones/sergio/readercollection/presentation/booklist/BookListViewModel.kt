@@ -15,6 +15,8 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
@@ -25,6 +27,7 @@ import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.time.Month
@@ -33,12 +36,16 @@ import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.asFlowable
+import kotlinx.coroutines.rx3.rxCompletable
 
 @HiltViewModel
 class BookListViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -93,15 +100,6 @@ class BookListViewModel @Inject constructor(
     val booksError: StateFlow<ErrorResponse?> = _booksError
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun fetchBooks() {
         _state.value = when (val currentState = _state.value) {
@@ -119,6 +117,9 @@ class BookListViewModel @Inject constructor(
 
         booksRepository
             .getBooks()
+            .asFlowable()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     showError()
@@ -171,8 +172,11 @@ class BookListViewModel @Inject constructor(
     }
 
     fun setPriorityFor(books: List<Book>) {
-        booksRepository
-            .setBooks(books)
+        rxCompletable {
+            booksRepository
+                .setBooks(books)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     /* no-op due to database is being observed */

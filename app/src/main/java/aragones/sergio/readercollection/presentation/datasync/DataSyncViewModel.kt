@@ -12,19 +12,25 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
 
 @HiltViewModel
 class DataSyncViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -47,15 +53,6 @@ class DataSyncViewModel @Inject constructor(
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun changeAutomaticSync(value: Boolean) {
         userRepository.storeAutomaticSync(value)
@@ -63,8 +60,11 @@ class DataSyncViewModel @Inject constructor(
     }
     fun syncData() {
         _state.value = _state.value.copy(isLoading = true)
-        booksRepository
-            .syncBooks(userId)
+        rxCompletable {
+            booksRepository
+                .syncBooks(userId)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _infoDialogMessageId.value = R.string.data_sync_successfully

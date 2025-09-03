@@ -17,6 +17,8 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 @HiltViewModel
 class FriendsViewModel @Inject constructor(
@@ -35,102 +37,98 @@ class FriendsViewModel @Inject constructor(
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun fetchFriends() {
         _state.value = FriendsUiState.Loading
-        userRepository
-            .getFriends()
-            .subscribeBy(
-                onSuccess = {
-                    _state.value = FriendsUiState.Success(it)
-                },
-            ).addTo(disposables)
+        rxSingle {
+            userRepository
+                .getFriends()
+        }.subscribeBy(
+            onSuccess = {
+                _state.value = FriendsUiState.Success(it)
+            },
+        ).addTo(disposables)
     }
 
     fun acceptFriendRequest(friendId: String) {
-        userRepository
-            .acceptFriendRequest(friendId)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                    when (val currentState = _state.value) {
-                        is FriendsUiState.Loading -> {}
-                        is FriendsUiState.Success -> {
-                            _state.value = currentState.copy(
-                                friends = currentState.friends.map {
-                                    if (it.id == friendId) {
-                                        it.copy(status = RequestStatus.APPROVED)
-                                    } else {
-                                        it
-                                    }
-                                },
-                            )
-                        }
+        rxCompletable {
+            userRepository
+                .acceptFriendRequest(friendId)
+        }.subscribeBy(
+            onComplete = {
+                _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                when (val currentState = _state.value) {
+                    is FriendsUiState.Loading -> {}
+                    is FriendsUiState.Success -> {
+                        _state.value = currentState.copy(
+                            friends = currentState.friends.map {
+                                if (it.id == friendId) {
+                                    it.copy(status = RequestStatus.APPROVED)
+                                } else {
+                                    it
+                                }
+                            },
+                        )
                     }
-                },
-                onError = {
-                    _error.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.friend_action_failure,
-                    )
-                },
-            ).addTo(disposables)
+                }
+            },
+            onError = {
+                _error.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.friend_action_failure,
+                )
+            },
+        ).addTo(disposables)
     }
 
     fun rejectFriendRequest(friendId: String) {
-        userRepository
-            .rejectFriendRequest(friendId)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                    when (val currentState = _state.value) {
-                        is FriendsUiState.Loading -> {}
-                        is FriendsUiState.Success -> {
-                            _state.value = currentState.copy(
-                                friends = currentState.friends.filter { it.id != friendId },
-                            )
-                        }
+        rxCompletable {
+            userRepository
+                .rejectFriendRequest(friendId)
+        }.subscribeBy(
+            onComplete = {
+                _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                when (val currentState = _state.value) {
+                    is FriendsUiState.Loading -> {}
+                    is FriendsUiState.Success -> {
+                        _state.value = currentState.copy(
+                            friends = currentState.friends.filter { it.id != friendId },
+                        )
                     }
-                },
-                onError = {
-                    _error.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.friend_action_failure,
-                    )
-                },
-            ).addTo(disposables)
+                }
+            },
+            onError = {
+                _error.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.friend_action_failure,
+                )
+            },
+        ).addTo(disposables)
     }
 
     fun deleteFriend(friendId: String) {
-        userRepository
-            .deleteFriend(friendId)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                    when (val currentState = _state.value) {
-                        is FriendsUiState.Loading -> {}
-                        is FriendsUiState.Success -> {
-                            _state.value = currentState.copy(
-                                friends = currentState.friends.filter { it.id != friendId },
-                            )
-                        }
+        rxCompletable {
+            userRepository
+                .deleteFriend(friendId)
+        }.subscribeBy(
+            onComplete = {
+                _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                when (val currentState = _state.value) {
+                    is FriendsUiState.Loading -> {}
+                    is FriendsUiState.Success -> {
+                        _state.value = currentState.copy(
+                            friends = currentState.friends.filter { it.id != friendId },
+                        )
                     }
-                },
-                onError = {
-                    _error.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.friend_action_failure,
-                    )
-                },
-            ).addTo(disposables)
+                }
+            },
+            onError = {
+                _error.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.friend_action_failure,
+                )
+            },
+        ).addTo(disposables)
     }
 
     fun closeDialogs() {

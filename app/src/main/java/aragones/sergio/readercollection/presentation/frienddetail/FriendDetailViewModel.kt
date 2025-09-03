@@ -11,21 +11,28 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 @HiltViewModel
 class FriendDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -44,65 +51,105 @@ class FriendDetailViewModel @Inject constructor(
     val error: StateFlow<ErrorResponse?> = _error
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun fetchFriend() {
-        userRepository
-            .getFriend(params.userId)
-            .subscribeBy(
-                onSuccess = { friend ->
-                    booksRepository
-                        .getBooksFrom(params.userId)
-                        .onErrorReturnItem(emptyList())
-                        .subscribeBy(
-                            onSuccess = { books ->
-                                _state.value = FriendDetailUiState.Success(friend, books)
-                            },
-                        ).addTo(disposables)
-                },
-                onError = {
-                    when (it) {
-                        is NoSuchElementException -> {
-                            _error.value = ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.no_friends_found,
-                            )
+        rxSingle {
+            userRepository
+                .getFriend(params.userId)
+        }.subscribeBy(
+            onSuccess = { result ->
+                result.fold(
+                    onSuccess = { friend ->
+                        rxSingle {
+                            booksRepository
+                                .getBooksFrom(params.userId)
+                        }.subscribeOn(ioScheduler)
+                            .observeOn(mainScheduler)
+                            .onErrorReturnItem(Result.success(emptyList()))
+                            .subscribeBy(
+                                onSuccess = { result ->
+                                    result.fold(
+                                        onSuccess = { books ->
+                                            _state.value = FriendDetailUiState.Success(
+                                                friend,
+                                                books,
+                                            )
+                                        },
+                                        onFailure = {
+                                            when (it) {
+                                                is NoSuchElementException -> {
+                                                    _error.value = ErrorResponse(
+                                                        Constants.EMPTY_VALUE,
+                                                        R.string.no_friends_found,
+                                                    )
+                                                }
+                                                else -> {
+                                                    _error.value = ErrorResponse(
+                                                        Constants.EMPTY_VALUE,
+                                                        R.string.error_server,
+                                                    )
+                                                }
+                                            }
+                                        },
+                                    )
+                                },
+                            ).addTo(disposables)
+                    },
+                    onFailure = {
+                        when (it) {
+                            is NoSuchElementException -> {
+                                _error.value = ErrorResponse(
+                                    Constants.EMPTY_VALUE,
+                                    R.string.no_friends_found,
+                                )
+                            }
+                            else -> {
+                                _error.value = ErrorResponse(
+                                    Constants.EMPTY_VALUE,
+                                    R.string.error_server,
+                                )
+                            }
                         }
-                        else -> {
-                            _error.value = ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.error_server,
-                            )
-                        }
+                    },
+                )
+            },
+            onError = {
+                when (it) {
+                    is NoSuchElementException -> {
+                        _error.value = ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.no_friends_found,
+                        )
                     }
-                },
-            ).addTo(disposables)
+                    else -> {
+                        _error.value = ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_server,
+                        )
+                    }
+                }
+            },
+        ).addTo(disposables)
     }
 
     fun deleteFriend() {
         val currentState = _state.value
         _state.value = FriendDetailUiState.Loading
-        userRepository
-            .deleteFriend(params.userId)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.friend_removed
-                },
-                onError = {
-                    _error.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_search,
-                    )
-                    _state.value = currentState
-                },
-            ).addTo(disposables)
+        rxCompletable {
+            userRepository
+                .deleteFriend(params.userId)
+        }.subscribeBy(
+            onComplete = {
+                _infoDialogMessageId.value = R.string.friend_removed
+            },
+            onError = {
+                _error.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_search,
+                )
+                _state.value = currentState
+            },
+        ).addTo(disposables)
     }
 
     fun showConfirmationDialog(textId: Int) {

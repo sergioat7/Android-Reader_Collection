@@ -54,12 +54,6 @@ class DisplaySettingsViewModel @Inject constructor(
             themeMode = userRepository.themeMode,
         )
     }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
     //endregion
 
     //region Public methods

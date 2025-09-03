@@ -13,21 +13,29 @@ import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.asFlowable
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -61,6 +69,9 @@ class BookDetailViewModel @Inject constructor(
     fun onCreate() {
         booksRepository
             .getBooks()
+            .asFlowable()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     savedBooks = listOf()
@@ -73,12 +84,6 @@ class BookDetailViewModel @Inject constructor(
                 },
             ).addTo(disposables)
         fetchBook()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
     }
     //endregion
 
@@ -104,8 +109,11 @@ class BookDetailViewModel @Inject constructor(
 
     fun createBook(newBook: Book) {
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository
-            .createBook(newBook)
+        rxCompletable {
+            booksRepository
+                .createBook(newBook)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _infoDialogMessageId.value = R.string.book_saved
@@ -124,14 +132,27 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun setBook(book: Book) {
-        booksRepository
-            .setBook(book)
+        rxSingle {
+            booksRepository
+                .setBook(book)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    currentBook = it
-                    _state.value = _state.value.copy(
-                        book = it,
-                        isEditable = false,
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = {
+                            currentBook = it
+                            _state.value = _state.value.copy(
+                                book = it,
+                                isEditable = false,
+                            )
+                        },
+                        onFailure = {
+                            _bookDetailError.value = ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_database,
+                            )
+                        },
                     )
                 },
                 onError = {
@@ -144,8 +165,11 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun deleteBook() {
-        booksRepository
-            .deleteBook(params.bookId)
+        rxCompletable {
+            booksRepository
+                .deleteBook(params.bookId)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _infoDialogMessageId.value = R.string.book_removed
@@ -189,15 +213,25 @@ class BookDetailViewModel @Inject constructor(
     //region Private methods
     private fun fetchBook() {
         if (params.friendId.isNotEmpty()) {
-            booksRepository
-                .getFriendBook(params.friendId, params.bookId)
+            rxSingle {
+                booksRepository
+                    .getFriendBook(params.friendId, params.bookId)
+            }.subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = {
-                        currentBook = it
-                        _state.value = _state.value.copy(
-                            book = it,
-                            isEditable = true,
-                            isAlreadySaved = false,
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = {
+                                currentBook = it
+                                _state.value = _state.value.copy(
+                                    book = it,
+                                    isEditable = true,
+                                    isAlreadySaved = false,
+                                )
+                            },
+                            onFailure = {
+                                _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                            },
                         )
                     },
                     onError = {
@@ -205,15 +239,25 @@ class BookDetailViewModel @Inject constructor(
                     },
                 ).addTo(disposables)
         } else {
-            booksRepository
-                .getBook(params.bookId)
+            rxSingle {
+                booksRepository
+                    .getBook(params.bookId)
+            }.subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribeBy(
-                    onSuccess = {
-                        currentBook = it.first
-                        _state.value = _state.value.copy(
-                            book = it.first,
-                            isEditable = !it.second,
-                            isAlreadySaved = it.second,
+                    onSuccess = { result ->
+                        result.fold(
+                            onSuccess = { (book, isAlreadySaved) ->
+                                currentBook = book
+                                _state.value = _state.value.copy(
+                                    book = book,
+                                    isEditable = !isAlreadySaved,
+                                    isAlreadySaved = isAlreadySaved,
+                                )
+                            },
+                            onFailure = {
+                                _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                            },
                         )
                     },
                     onError = {

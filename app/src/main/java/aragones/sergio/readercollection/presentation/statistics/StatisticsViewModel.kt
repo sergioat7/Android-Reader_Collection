@@ -12,6 +12,8 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.utils.Constants
@@ -20,17 +22,22 @@ import com.aragones.sergio.util.extensions.getOrderedBy
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Calendar
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.asFlowable
+import kotlinx.coroutines.rx3.rxSingle
 
 @HiltViewModel
 class StatisticsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -49,15 +56,6 @@ class StatisticsViewModel @Inject constructor(
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun fetchBooks() {
         _state.value = when (val currentState = _state.value) {
@@ -67,6 +65,9 @@ class StatisticsViewModel @Inject constructor(
 
         booksRepository
             .getReadBooks()
+            .asFlowable()
+            .subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _state.value = StatisticsUiState.Empty
@@ -111,11 +112,21 @@ class StatisticsViewModel @Inject constructor(
     }
 
     fun importData(jsonData: String) {
-        booksRepository
-            .importDataFrom(jsonData)
+        rxSingle {
+            booksRepository
+                .importDataFrom(jsonData)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.data_imported
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = {
+                            _infoDialogMessageId.value = R.string.data_imported
+                        },
+                        onFailure = {
+                            _booksError.value = ErrorResponse("", R.string.error_file_data)
+                        },
+                    )
                 },
                 onError = {
                     _booksError.value = ErrorResponse("", R.string.error_file_data)
@@ -124,12 +135,23 @@ class StatisticsViewModel @Inject constructor(
     }
 
     fun getDataToExport(completion: (String?) -> Unit) {
-        booksRepository
-            .exportDataTo()
+        rxSingle {
+            booksRepository
+                .exportDataTo()
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
-                onSuccess = {
-                    completion(it)
-                    _infoDialogMessageId.value = R.string.file_created
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = {
+                            completion(it)
+                            _infoDialogMessageId.value = R.string.file_created
+                        },
+                        onFailure = {
+                            completion(null)
+                            _booksError.value = ErrorResponse("", R.string.error_database)
+                        },
+                    )
                 },
                 onError = {
                     completion(null)

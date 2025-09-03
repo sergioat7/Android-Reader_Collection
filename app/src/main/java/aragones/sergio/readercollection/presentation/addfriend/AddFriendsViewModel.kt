@@ -18,6 +18,8 @@ import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.rx3.rxSingle
 
 @HiltViewModel
 class AddFriendsViewModel @Inject constructor(
@@ -34,14 +36,6 @@ class AddFriendsViewModel @Inject constructor(
     private val _error = MutableStateFlow<ErrorResponse?>(null)
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public properties
     val state: StateFlow<AddFriendsUiState> = _state
     val error: StateFlow<ErrorResponse?> = _error
@@ -51,36 +45,61 @@ class AddFriendsViewModel @Inject constructor(
     fun searchUserWith(username: String) {
         if (username.isNotEmpty()) {
             _state.value = AddFriendsUiState.Loading(_state.value.query)
-            userRepository
-                .getUserWith(username)
-                .subscribeBy(
-                    onSuccess = { user ->
-                        _state.value = AddFriendsUiState.Success(
-                            users = listOf(user.toUi()),
-                            query = username,
-                        )
-                    },
-                    onError = {
-                        when (it) {
-                            is NoSuchElementException -> {
-                                _state.value = AddFriendsUiState.Success(
-                                    users = emptyList(),
-                                    query = username,
-                                )
+            rxSingle {
+                userRepository
+                    .getUserWith(username)
+            }.subscribeBy(
+                onSuccess = { result ->
+                    result.fold(
+                        onSuccess = { user ->
+                            _state.value = AddFriendsUiState.Success(
+                                users = listOf(user.toUi()),
+                                query = username,
+                            )
+                        },
+                        onFailure = {
+                            when (it) {
+                                is NoSuchElementException -> {
+                                    _state.value = AddFriendsUiState.Success(
+                                        users = emptyList(),
+                                        query = username,
+                                    )
+                                }
+                                else -> {
+                                    _error.value = ErrorResponse(
+                                        Constants.EMPTY_VALUE,
+                                        R.string.error_server,
+                                    )
+                                    _state.value = AddFriendsUiState.Success(
+                                        users = emptyList(),
+                                        query = username,
+                                    )
+                                }
                             }
-                            else -> {
-                                _error.value = ErrorResponse(
-                                    Constants.EMPTY_VALUE,
-                                    R.string.error_server,
-                                )
-                                _state.value = AddFriendsUiState.Success(
-                                    users = emptyList(),
-                                    query = username,
-                                )
-                            }
+                        },
+                    )
+                },
+                onError = {
+                    when (it) {
+                        is NoSuchElementException -> {
+                            _state.value = AddFriendsUiState.Success(
+                                users = emptyList(),
+                                query = username,
+                            )
                         }
-                    },
-                ).addTo(disposables)
+                        else -> {
+                            _error.value = ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.error_server,
+                            )
+                            _state.value = AddFriendsUiState.Success(
+                                users = emptyList(),
+                                query = username,
+                            )
+                        }
+                    }
+                },
+            ).addTo(disposables)
         } else {
             _state.value = AddFriendsUiState.Success(
                 users = emptyList(),
@@ -104,39 +123,40 @@ class AddFriendsViewModel @Inject constructor(
                 )
             }
         }
-        userRepository
-            .requestFriendship(friend.toDomain())
-            .subscribeBy(
-                onComplete = {
-                    when (val currentState = _state.value) {
-                        is AddFriendsUiState.Loading -> {}
-                        is AddFriendsUiState.Success -> {
-                            _state.value = currentState.copy(
-                                users = currentState.users.map {
-                                    if (it.id == friend.id) {
-                                        friend.copy(
-                                            status = RequestStatus.APPROVED,
-                                            isLoading = false,
-                                        )
-                                    } else {
-                                        it
-                                    }
-                                },
-                            )
-                        }
+        rxCompletable {
+            userRepository
+                .requestFriendship(friend.toDomain())
+        }.subscribeBy(
+            onComplete = {
+                when (val currentState = _state.value) {
+                    is AddFriendsUiState.Loading -> {}
+                    is AddFriendsUiState.Success -> {
+                        _state.value = currentState.copy(
+                            users = currentState.users.map {
+                                if (it.id == friend.id) {
+                                    friend.copy(
+                                        status = RequestStatus.APPROVED,
+                                        isLoading = false,
+                                    )
+                                } else {
+                                    it
+                                }
+                            },
+                        )
                     }
-                },
-                onError = {
-                    _error.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_search,
-                    )
-                    _state.value = AddFriendsUiState.Success(
-                        users = emptyList(),
-                        query = "",
-                    )
-                },
-            ).addTo(disposables)
+                }
+            },
+            onError = {
+                _error.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_search,
+                )
+                _state.value = AddFriendsUiState.Success(
+                    users = emptyList(),
+                    query = "",
+                )
+            },
+        ).addTo(disposables)
     }
 
     fun closeDialogs() {

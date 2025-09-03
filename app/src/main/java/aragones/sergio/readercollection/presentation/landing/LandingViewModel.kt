@@ -32,14 +32,6 @@ class LandingViewModel @Inject constructor(
     val landingClassToStart: StateFlow<Class<*>?> = _landingClassToStart
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun checkIsLoggedIn() {
         _landingClassToStart.value = if (userRepository.isLoggedIn) {

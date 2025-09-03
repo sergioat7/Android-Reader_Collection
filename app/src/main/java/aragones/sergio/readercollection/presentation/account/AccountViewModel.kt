@@ -12,19 +12,25 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -56,13 +62,6 @@ class AccountViewModel @Inject constructor(
             isProfilePublic = userRepository.isProfilePublic,
         )
     }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
     //endregion
 
     //region Public methods
@@ -71,8 +70,11 @@ class AccountViewModel @Inject constructor(
 
         if (newPassword != userRepository.userData.password) {
             _state.value = _state.value.copy(isLoading = true)
-            userRepository
-                .updatePassword(newPassword)
+            rxCompletable {
+                userRepository
+                    .updatePassword(newPassword)
+            }.subscribeOn(ioScheduler)
+                .observeOn(mainScheduler)
                 .subscribeBy(
                     onComplete = {
                         _state.value = _state.value.copy(isLoading = false)
@@ -86,8 +88,11 @@ class AccountViewModel @Inject constructor(
 
     fun setPublicProfile(value: Boolean) {
         _state.value = _state.value.copy(isLoading = true)
-        userRepository
-            .setPublicProfile(value)
+        rxCompletable {
+            userRepository
+                .setPublicProfile(value)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _state.value = _state.value.copy(
@@ -103,8 +108,11 @@ class AccountViewModel @Inject constructor(
 
     fun deleteUser() {
         _state.value = _state.value.copy(isLoading = true)
-        userRepository
-            .deleteUser()
+        rxCompletable {
+            userRepository
+                .deleteUser()
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     resetDatabase()
@@ -143,8 +151,11 @@ class AccountViewModel @Inject constructor(
 
     //region Private methods
     private fun resetDatabase() {
-        booksRepository
-            .resetTable()
+        rxCompletable {
+            booksRepository
+                .resetTable()
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
                     _state.value = _state.value.copy(isLoading = false)

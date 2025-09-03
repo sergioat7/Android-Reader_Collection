@@ -12,21 +12,27 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.di.IoScheduler
+import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.kotlin.addTo
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.rx3.rxCompletable
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
+    @IoScheduler private val ioScheduler: Scheduler,
+    @MainScheduler private val mainScheduler: Scheduler,
 ) : BaseViewModel() {
 
     //region Private properties
@@ -43,52 +49,50 @@ class LoginViewModel @Inject constructor(
     val activityName: StateFlow<String?> = _activityName
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
     fun login(username: String, password: String) {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        userRepository
-            .login(username, password)
+        rxCompletable {
+            userRepository
+                .login(username, password)
+        }.subscribeOn(ioScheduler)
+            .observeOn(mainScheduler)
             .subscribeBy(
                 onComplete = {
-                    userRepository
-                        .loadConfig()
-                        .subscribeBy(
-                            onComplete = {
-                                val userId = userRepository.userId
+                    rxCompletable {
+                        userRepository
+                            .loadConfig()
+                    }.subscribeBy(
+                        onComplete = {
+                            val userId = userRepository.userId
+                            rxCompletable {
                                 booksRepository
                                     .loadBooks(userId)
-                                    .subscribeBy(
-                                        onComplete = {
-                                            _uiState.value = _uiState.value.copy(isLoading = false)
-                                            _activityName.value = MainActivity::class.simpleName
-                                        },
-                                        onError = {
-                                            userRepository.logout()
-                                            _uiState.value = _uiState.value.copy(isLoading = false)
-                                            _loginError.value = ErrorResponse(
-                                                Constants.EMPTY_VALUE,
-                                                R.string.error_server,
-                                            )
-                                        },
-                                    ).addTo(disposables)
-                            },
-                            onError = {
-                                _uiState.value = _uiState.value.copy(isLoading = false)
-                                _loginError.value = ErrorResponse(
-                                    Constants.EMPTY_VALUE,
-                                    R.string.wrong_credentials,
-                                )
-                            },
-                        ).addTo(disposables)
+                            }.subscribeOn(ioScheduler)
+                                .observeOn(mainScheduler)
+                                .subscribeBy(
+                                    onComplete = {
+                                        _uiState.value = _uiState.value.copy(isLoading = false)
+                                        _activityName.value = MainActivity::class.simpleName
+                                    },
+                                    onError = {
+                                        userRepository.logout()
+                                        _uiState.value = _uiState.value.copy(isLoading = false)
+                                        _loginError.value = ErrorResponse(
+                                            Constants.EMPTY_VALUE,
+                                            R.string.error_server,
+                                        )
+                                    },
+                                ).addTo(disposables)
+                        },
+                        onError = {
+                            _uiState.value = _uiState.value.copy(isLoading = false)
+                            _loginError.value = ErrorResponse(
+                                Constants.EMPTY_VALUE,
+                                R.string.wrong_credentials,
+                            )
+                        },
+                    ).addTo(disposables)
                 },
                 onError = {
                     _uiState.value = _uiState.value.copy(isLoading = false)
