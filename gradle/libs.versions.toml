@@ -35,10 +35,6 @@ navigation = "2.9.3"
 okhttp3 = "5.1.0"
 retrofit = "3.0.0"
 room = "2.7.2"
-room-rxjava3-bridge = "3.0.2"
-rxandroid = "3.0.2"
-rxjava = "3.1.11"
-rxkotlin = "3.0.1"
 security = "1.1.0"
 spotless-version = "7.2.1"
 work-manager = "2.10.3"
@@ -105,20 +101,12 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 
 #Retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-adapter-rxjava = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "retrofit" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 
 #Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-room-rxjava = { group = "androidx.room", name = "room-rxjava2", version.ref = "room" }
-room-rxjava3-bridge = { group = "com.github.akarnokd", name = "rxjava3-bridge", version.ref = "room-rxjava3-bridge" }
-
-#Rx
-rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
-rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version.ref = "rxkotlin" }
-rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxandroid" }
 
 #Security
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
@@ -170,11 +158,5 @@ firebase = [
 retrofit = [
     "okhttp3-logging-interceptor",
     "retrofit",
-    "retrofit-adapter-rxjava",
     "retrofit-converter-moshi",
-]
-rx = [
-    "rxandroid",
-    "rxjava",
-    "rxkotlin",
 ]
