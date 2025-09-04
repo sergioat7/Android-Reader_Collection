@@ -8,30 +8,24 @@ package aragones.sergio.readercollection.presentation.account
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.domain.di.IoScheduler
-import aragones.sergio.readercollection.domain.di.MainScheduler
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AccountViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-    @IoScheduler private val ioScheduler: Scheduler,
-    @MainScheduler private val mainScheduler: Scheduler,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _state: MutableState<AccountUiState> = mutableStateOf(
@@ -70,57 +64,44 @@ class AccountViewModel @Inject constructor(
 
         if (newPassword != userRepository.userData.password) {
             _state.value = _state.value.copy(isLoading = true)
-            rxCompletable {
-                userRepository
-                    .updatePassword(newPassword)
-            }.subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
+            viewModelScope.launch {
+                userRepository.updatePassword(newPassword).fold(
+                    onSuccess = {
                         _state.value = _state.value.copy(isLoading = false)
                     },
-                    onError = {
+                    onFailure = {
                         manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
                     },
-                ).addTo(disposables)
+                )
+            }
         }
     }
 
-    fun setPublicProfile(value: Boolean) {
+    fun setPublicProfile(value: Boolean) = viewModelScope.launch {
         _state.value = _state.value.copy(isLoading = true)
-        rxCompletable {
-            userRepository
-                .setPublicProfile(value)
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    _state.value = _state.value.copy(
-                        isProfilePublic = value,
-                        isLoading = false,
-                    )
-                },
-                onError = {
-                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                },
-            ).addTo(disposables)
+        userRepository.setPublicProfile(value).fold(
+            onSuccess = {
+                _state.value = _state.value.copy(
+                    isProfilePublic = value,
+                    isLoading = false,
+                )
+            },
+            onFailure = {
+                manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+            },
+        )
     }
 
-    fun deleteUser() {
+    fun deleteUser() = viewModelScope.launch {
         _state.value = _state.value.copy(isLoading = true)
-        rxCompletable {
-            userRepository
-                .deleteUser()
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    resetDatabase()
-                },
-                onError = {
-                    manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
-                },
-            ).addTo(disposables)
+        userRepository.deleteUser().fold(
+            onSuccess = {
+                resetDatabase()
+            },
+            onFailure = {
+                manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+            },
+        )
     }
 
     fun profileDataChanged(newPassword: String) {
@@ -150,22 +131,17 @@ class AccountViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun resetDatabase() {
-        rxCompletable {
-            booksRepository
-                .resetTable()
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    _state.value = _state.value.copy(isLoading = false)
-                    _logOut.value = true
-                },
-                onError = {
-                    _state.value = _state.value.copy(isLoading = false)
-                    _logOut.value = true
-                },
-            ).addTo(disposables)
+    private suspend fun resetDatabase() {
+        booksRepository.resetTable().fold(
+            onSuccess = {
+                _state.value = _state.value.copy(isLoading = false)
+                _logOut.value = true
+            },
+            onFailure = {
+                _state.value = _state.value.copy(isLoading = false)
+                _logOut.value = true
+            },
+        )
     }
 
     private fun manageError(error: ErrorResponse) {

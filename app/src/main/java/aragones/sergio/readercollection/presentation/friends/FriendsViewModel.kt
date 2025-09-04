@@ -5,25 +5,24 @@
 
 package aragones.sergio.readercollection.presentation.friends
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
+import kotlin.fold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.rx3.rxCompletable
-import kotlinx.coroutines.rx3.rxSingle
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class FriendsViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _state: MutableStateFlow<FriendsUiState> = MutableStateFlow(FriendsUiState.Loading)
@@ -38,24 +37,15 @@ class FriendsViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun fetchFriends() {
+    fun fetchFriends() = viewModelScope.launch {
         _state.value = FriendsUiState.Loading
-        rxSingle {
-            userRepository
-                .getFriends()
-        }.subscribeBy(
-            onSuccess = {
-                _state.value = FriendsUiState.Success(it)
-            },
-        ).addTo(disposables)
+        val friends = userRepository.getFriends()
+        _state.value = FriendsUiState.Success(friends)
     }
 
-    fun acceptFriendRequest(friendId: String) {
-        rxCompletable {
-            userRepository
-                .acceptFriendRequest(friendId)
-        }.subscribeBy(
-            onComplete = {
+    fun acceptFriendRequest(friendId: String) = viewModelScope.launch {
+        userRepository.acceptFriendRequest(friendId).fold(
+            onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
                 when (val currentState = _state.value) {
                     is FriendsUiState.Loading -> {}
@@ -72,21 +62,18 @@ class FriendsViewModel @Inject constructor(
                     }
                 }
             },
-            onError = {
+            onFailure = {
                 _error.value = ErrorResponse(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 )
             },
-        ).addTo(disposables)
+        )
     }
 
-    fun rejectFriendRequest(friendId: String) {
-        rxCompletable {
-            userRepository
-                .rejectFriendRequest(friendId)
-        }.subscribeBy(
-            onComplete = {
+    fun rejectFriendRequest(friendId: String) = viewModelScope.launch {
+        userRepository.rejectFriendRequest(friendId).fold(
+            onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
                 when (val currentState = _state.value) {
                     is FriendsUiState.Loading -> {}
@@ -97,21 +84,18 @@ class FriendsViewModel @Inject constructor(
                     }
                 }
             },
-            onError = {
+            onFailure = {
                 _error.value = ErrorResponse(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 )
             },
-        ).addTo(disposables)
+        )
     }
 
-    fun deleteFriend(friendId: String) {
-        rxCompletable {
-            userRepository
-                .deleteFriend(friendId)
-        }.subscribeBy(
-            onComplete = {
+    fun deleteFriend(friendId: String) = viewModelScope.launch {
+        userRepository.deleteFriend(friendId).fold(
+            onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
                 when (val currentState = _state.value) {
                     is FriendsUiState.Loading -> {}
@@ -122,13 +106,13 @@ class FriendsViewModel @Inject constructor(
                     }
                 }
             },
-            onError = {
+            onFailure = {
                 _error.value = ErrorResponse(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 )
             },
-        ).addTo(disposables)
+        )
     }
 
     fun closeDialogs() {

@@ -5,26 +5,24 @@
 
 package aragones.sergio.readercollection.presentation.addfriend
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.User
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.rx3.rxCompletable
-import kotlinx.coroutines.rx3.rxSingle
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class AddFriendsViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _state: MutableStateFlow<AddFriendsUiState> = MutableStateFlow(
@@ -42,44 +40,17 @@ class AddFriendsViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun searchUserWith(username: String) {
+    fun searchUserWith(username: String) = viewModelScope.launch {
         if (username.isNotEmpty()) {
             _state.value = AddFriendsUiState.Loading(_state.value.query)
-            rxSingle {
-                userRepository
-                    .getUserWith(username)
-            }.subscribeBy(
-                onSuccess = { result ->
-                    result.fold(
-                        onSuccess = { user ->
-                            _state.value = AddFriendsUiState.Success(
-                                users = listOf(user.toUi()),
-                                query = username,
-                            )
-                        },
-                        onFailure = {
-                            when (it) {
-                                is NoSuchElementException -> {
-                                    _state.value = AddFriendsUiState.Success(
-                                        users = emptyList(),
-                                        query = username,
-                                    )
-                                }
-                                else -> {
-                                    _error.value = ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_server,
-                                    )
-                                    _state.value = AddFriendsUiState.Success(
-                                        users = emptyList(),
-                                        query = username,
-                                    )
-                                }
-                            }
-                        },
+            userRepository.getUserWith(username).fold(
+                onSuccess = { user ->
+                    _state.value = AddFriendsUiState.Success(
+                        users = listOf(user.toUi()),
+                        query = username,
                     )
                 },
-                onError = {
+                onFailure = {
                     when (it) {
                         is NoSuchElementException -> {
                             _state.value = AddFriendsUiState.Success(
@@ -99,7 +70,7 @@ class AddFriendsViewModel @Inject constructor(
                         }
                     }
                 },
-            ).addTo(disposables)
+            )
         } else {
             _state.value = AddFriendsUiState.Success(
                 users = emptyList(),
@@ -108,7 +79,7 @@ class AddFriendsViewModel @Inject constructor(
         }
     }
 
-    fun requestFriendship(friend: UserUi) {
+    fun requestFriendship(friend: UserUi) = viewModelScope.launch {
         when (val currentState = _state.value) {
             is AddFriendsUiState.Loading -> {}
             is AddFriendsUiState.Success -> {
@@ -123,11 +94,8 @@ class AddFriendsViewModel @Inject constructor(
                 )
             }
         }
-        rxCompletable {
-            userRepository
-                .requestFriendship(friend.toDomain())
-        }.subscribeBy(
-            onComplete = {
+        userRepository.requestFriendship(friend.toDomain()).fold(
+            onSuccess = {
                 when (val currentState = _state.value) {
                     is AddFriendsUiState.Loading -> {}
                     is AddFriendsUiState.Success -> {
@@ -146,7 +114,7 @@ class AddFriendsViewModel @Inject constructor(
                     }
                 }
             },
-            onError = {
+            onFailure = {
                 _error.value = ErrorResponse(
                     Constants.EMPTY_VALUE,
                     R.string.error_search,
@@ -156,7 +124,7 @@ class AddFriendsViewModel @Inject constructor(
                     query = "",
                 )
             },
-        ).addTo(disposables)
+        )
     }
 
     fun closeDialogs() {

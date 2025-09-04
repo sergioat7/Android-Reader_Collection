@@ -9,16 +9,16 @@ import android.os.Build
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.domain.di.IoScheduler
-import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.utils.Constants.FORMATS
@@ -27,26 +27,22 @@ import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.rx3.asFlowable
-import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class BookListViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-    @IoScheduler private val ioScheduler: Scheduler,
-    @MainScheduler private val mainScheduler: Scheduler,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private val params = state.toRoute<Route.BookList>()
@@ -115,39 +111,28 @@ class BookListViewModel @Inject constructor(
             )
         }
 
-        booksRepository
-            .getBooks()
-            .asFlowable()
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    showError()
-                },
-                onNext = { books ->
-
-                    if (books.isEmpty()) {
-                        showError()
-                    } else {
-                        _state.value = when (val currentState = _state.value) {
-                            is BookListUiState.Empty -> BookListUiState.Success(
-                                isLoading = true,
-                                books = getFilteredBooksFor(books),
-                                subtitle = subtitle,
-                                isDraggingEnabled = false,
-                            )
-                            is BookListUiState.Success -> currentState.copy(
-                                isLoading = false,
-                                books = getFilteredBooksFor(books),
-                                subtitle = subtitle,
-                            )
-                        }
-                    }
-                },
-                onError = {
-                    showError()
-                },
-            ).addTo(disposables)
+        combine(
+            booksRepository.getBooks(),
+            snapshotFlow { _sortingPickerState.value },
+        ) { books, sortingPickerState ->
+            if (books.isEmpty()) {
+                showError()
+            } else {
+                _state.value = when (val currentState = _state.value) {
+                    is BookListUiState.Empty -> BookListUiState.Success(
+                        isLoading = true,
+                        books = getFilteredBooksFor(books),
+                        subtitle = subtitle,
+                        isDraggingEnabled = false,
+                    )
+                    is BookListUiState.Success -> currentState.copy(
+                        isLoading = false,
+                        books = getFilteredBooksFor(books),
+                        subtitle = subtitle,
+                    )
+                }
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun switchDraggingState() {
@@ -171,20 +156,15 @@ class BookListViewModel @Inject constructor(
         }
     }
 
-    fun setPriorityFor(books: List<Book>) {
-        rxCompletable {
-            booksRepository
-                .setBooks(books)
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    /* no-op due to database is being observed */
-                },
-                onError = {
-                    showError()
-                },
-            ).addTo(disposables)
+    fun setPriorityFor(books: List<Book>) = viewModelScope.launch {
+        booksRepository.setBooks(books).fold(
+            onSuccess = {
+                /* no-op due to database is being observed */
+            },
+            onFailure = {
+                showError()
+            },
+        )
     }
 
     fun showSortingPickerState() {
@@ -197,7 +177,6 @@ class BookListViewModel @Inject constructor(
             sortParam = newSortParam,
             isSortDescending = newIsSortDescending,
         )
-        fetchBooks()
     }
     //endregion
 

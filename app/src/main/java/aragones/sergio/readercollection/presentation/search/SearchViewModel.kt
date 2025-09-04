@@ -5,31 +5,23 @@
 
 package aragones.sergio.readercollection.presentation.search
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.di.IoScheduler
-import aragones.sergio.readercollection.domain.di.MainScheduler
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.rx3.asFlowable
-import kotlinx.coroutines.rx3.rxCompletable
-import kotlinx.coroutines.rx3.rxSingle
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    @IoScheduler private val ioScheduler: Scheduler,
-    @MainScheduler private val mainScheduler: Scheduler,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var query = ""
@@ -78,48 +70,34 @@ class SearchViewModel @Inject constructor(
             is SearchUiState.Error -> currentState.copy(isLoading = true)
         }
 
-        rxSingle {
-            booksRepository
-                .searchBooks(this@SearchViewModel.query, page, null)
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { result ->
-                    result.fold(
-                        onSuccess = { newBooks ->
-                            if (books.isEmpty()) {
-                                books.add(Book(id = ""))
-                            }
-                            books.addAll(books.size - 1, newBooks)
-                            if (newBooks.isEmpty()) {
-                                books.removeAt(books.lastIndex)
-                            }
-                            val updatedBooks = mutableListOf<Book>().apply { addAll(books) }
+        viewModelScope.launch {
+            booksRepository.searchBooks(this@SearchViewModel.query, page, null).fold(
+                onSuccess = { newBooks ->
+                    if (books.isEmpty()) {
+                        books.add(Book(id = ""))
+                    }
+                    books.addAll(books.size - 1, newBooks)
+                    if (newBooks.isEmpty()) {
+                        books.removeAt(books.lastIndex)
+                    }
+                    val updatedBooks = mutableListOf<Book>().apply { addAll(books) }
 
-                            page++
-                            _state.value = SearchUiState.Success(
-                                isLoading = false,
-                                query = this.query,
-                                books = updatedBooks,
-                            )
-                        },
-                        onFailure = {
-                            _state.value = SearchUiState.Error(
-                                isLoading = false,
-                                query = this.query,
-                                value = ErrorResponse("", R.string.error_search),
-                            )
-                        },
+                    page++
+                    _state.value = SearchUiState.Success(
+                        isLoading = false,
+                        query = this@SearchViewModel.query,
+                        books = updatedBooks,
                     )
                 },
-                onError = {
+                onFailure = {
                     _state.value = SearchUiState.Error(
                         isLoading = false,
-                        query = this.query,
+                        query = this@SearchViewModel.query,
                         value = ErrorResponse("", R.string.error_search),
                     )
                 },
-            ).addTo(disposables)
+            )
+        }
     }
 
     fun addBook(bookId: String) {
@@ -131,20 +109,18 @@ class SearchViewModel @Inject constructor(
         val newBook = books.firstOrNull { it.id == bookId } ?: return
         newBook.state = BookState.PENDING
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        rxCompletable {
-            booksRepository
-                .createBook(newBook)
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
+
+        viewModelScope.launch {
+            booksRepository.createBook(newBook).fold(
+                onSuccess = {
                     savedBooks.add(newBook)
                     _infoDialogMessageId.value = R.string.book_saved
                 },
-                onError = {
+                onFailure = {
                     _infoDialogMessageId.value = R.string.error_database
                 },
-            ).addTo(disposables)
+            )
+        }
     }
 
     fun closeDialogs() {
@@ -153,23 +129,10 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun fetchPendingBooks() {
-        booksRepository
-            .getBooks()
-            .asFlowable()
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    savedBooks = mutableListOf()
-                },
-                onNext = {
-                    savedBooks = it.toMutableList()
-                },
-                onError = {
-                    savedBooks = mutableListOf()
-                },
-            ).addTo(disposables)
+    private fun fetchPendingBooks() = viewModelScope.launch {
+        booksRepository.getBooks().collect {
+            savedBooks = it.toMutableList()
+        }
     }
     //endregion
 }

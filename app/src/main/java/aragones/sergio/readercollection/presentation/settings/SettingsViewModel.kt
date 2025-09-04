@@ -8,27 +8,21 @@ package aragones.sergio.readercollection.presentation.settings
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.domain.di.IoScheduler
-import aragones.sergio.readercollection.domain.di.MainScheduler
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.rx3.rxCompletable
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-    @IoScheduler private val ioScheduler: Scheduler,
-    @MainScheduler private val mainScheduler: Scheduler,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _isLoading: MutableState<Boolean> = mutableStateOf(false)
@@ -43,24 +37,19 @@ class SettingsViewModel @Inject constructor(
     //endregion
 
     //region Public methods
-    fun logout() {
+    fun logout() = viewModelScope.launch {
         _isLoading.value = true
         userRepository.logout()
-        rxCompletable {
-            booksRepository
-                .resetTable()
-        }.subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    _isLoading.value = false
-                    _logOut.value = true
-                },
-                onError = {
-                    _isLoading.value = false
-                    _logOut.value = true
-                },
-            ).addTo(disposables)
+        booksRepository.resetTable().fold(
+            onSuccess = {
+                _isLoading.value = false
+                _logOut.value = true
+            },
+            onFailure = {
+                _isLoading.value = false
+                _logOut.value = true
+            },
+        )
     }
 
     fun showConfirmationDialog(textId: Int) {
