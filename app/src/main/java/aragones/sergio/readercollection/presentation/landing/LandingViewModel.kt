@@ -6,10 +6,10 @@
 package aragones.sergio.readercollection.presentation.landing
 
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.MainActivity
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.LoginActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -20,7 +20,7 @@ import kotlinx.coroutines.flow.StateFlow
 class LandingViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private val _landingClassToStart = MutableStateFlow<Class<*>?>(null)
@@ -30,14 +30,6 @@ class LandingViewModel @Inject constructor(
     val language: String
         get() = userRepository.language
     val landingClassToStart: StateFlow<Class<*>?> = _landingClassToStart
-    //endregion
-
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-    }
     //endregion
 
     //region Public methods

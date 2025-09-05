@@ -8,21 +8,21 @@ package aragones.sergio.readercollection.presentation.settings
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _isLoading: MutableState<Boolean> = mutableStateOf(false)
@@ -36,31 +36,20 @@ class SettingsViewModel @Inject constructor(
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
-    fun logout() {
+    fun logout() = viewModelScope.launch {
         _isLoading.value = true
         userRepository.logout()
-        booksRepository
-            .resetTable()
-            .subscribeBy(
-                onComplete = {
-                    _isLoading.value = false
-                    _logOut.value = true
-                },
-                onError = {
-                    _isLoading.value = false
-                    _logOut.value = true
-                },
-            ).addTo(disposables)
+        booksRepository.resetTable().fold(
+            onSuccess = {
+                _isLoading.value = false
+                _logOut.value = true
+            },
+            onFailure = {
+                _isLoading.value = false
+                _logOut.value = true
+            },
+        )
     }
 
     fun showConfirmationDialog(textId: Int) {

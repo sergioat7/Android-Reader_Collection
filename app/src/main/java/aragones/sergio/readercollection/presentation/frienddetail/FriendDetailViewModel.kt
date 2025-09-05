@@ -6,27 +6,29 @@
 package aragones.sergio.readercollection.presentation.frienddetail
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
+import kotlinx.coroutines.async
 import javax.inject.Inject
+import kotlin.fold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class FriendDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private val params = state.toRoute<Route.FriendDetail>()
@@ -44,65 +46,56 @@ class FriendDetailViewModel @Inject constructor(
     val error: StateFlow<ErrorResponse?> = _error
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
-    fun fetchFriend() {
-        userRepository
-            .getFriend(params.userId)
-            .subscribeBy(
-                onSuccess = { friend ->
-                    booksRepository
-                        .getBooksFrom(params.userId)
-                        .onErrorReturnItem(emptyList())
-                        .subscribeBy(
-                            onSuccess = { books ->
-                                _state.value = FriendDetailUiState.Success(friend, books)
-                            },
-                        ).addTo(disposables)
-                },
-                onError = {
-                    when (it) {
-                        is NoSuchElementException -> {
-                            _error.value = ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.no_friends_found,
-                            )
-                        }
-                        else -> {
-                            _error.value = ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.error_server,
-                            )
-                        }
-                    }
-                },
-            ).addTo(disposables)
-    }
+    fun fetchFriend() = viewModelScope.launch {
+        val friendRequest = async { userRepository.getFriend(params.userId) }
+        val booksRequest = async { booksRepository.getBooksFrom(params.userId) }
 
-    fun deleteFriend() {
-        val currentState = _state.value
-        _state.value = FriendDetailUiState.Loading
-        userRepository
-            .deleteFriend(params.userId)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.friend_removed
-                },
-                onError = {
+        val friendResult = friendRequest.await()
+        val booksResult = booksRequest.await()
+
+        val friend = friendResult.getOrNull()
+        val books = booksResult.getOrNull()
+
+        if (friend != null && books != null) {
+            _state.value = FriendDetailUiState.Success(
+                friend = friend,
+                books = books,
+            )
+        } else {
+            val error = friendResult.exceptionOrNull() ?: booksResult.exceptionOrNull()
+            when (error) {
+                is NoSuchElementException -> {
                     _error.value = ErrorResponse(
                         Constants.EMPTY_VALUE,
-                        R.string.error_search,
+                        R.string.no_friends_found,
                     )
-                    _state.value = currentState
-                },
-            ).addTo(disposables)
+                }
+                else -> {
+                    _error.value = ErrorResponse(
+                        Constants.EMPTY_VALUE,
+                        R.string.error_server,
+                    )
+                }
+            }
+        }
+    }
+
+    fun deleteFriend() = viewModelScope.launch {
+        val currentState = _state.value
+        _state.value = FriendDetailUiState.Loading
+        userRepository.deleteFriend(params.userId).fold(
+            onSuccess = {
+                _infoDialogMessageId.value = R.string.friend_removed
+            },
+            onFailure = {
+                _error.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_search,
+                )
+                _state.value = currentState
+            },
+        )
     }
 
     fun showConfirmationDialog(textId: Int) {

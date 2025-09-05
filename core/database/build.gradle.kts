@@ -49,8 +49,4 @@ dependencies {
     implementation(libs.moshi)
     ksp(libs.room.compiler)
     implementation(libs.room.runtime)
-    implementation(libs.room.rxjava)
-    implementation(libs.room.rxjava3.bridge)
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
 }

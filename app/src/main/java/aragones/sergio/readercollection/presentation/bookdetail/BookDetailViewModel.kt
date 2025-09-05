@@ -9,26 +9,26 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private val params = state.toRoute<Route.BookDetail>()
@@ -59,26 +59,12 @@ class BookDetailViewModel @Inject constructor(
 
     //region Lifecycle methods
     fun onCreate() {
-        booksRepository
-            .getBooks()
-            .subscribeBy(
-                onComplete = {
-                    savedBooks = listOf()
-                },
-                onNext = {
-                    savedBooks = it
-                },
-                onError = {
-                    savedBooks = listOf()
-                },
-            ).addTo(disposables)
+        viewModelScope.launch {
+            booksRepository.getBooks().collect {
+                savedBooks = it
+            }
+        }
         fetchBook()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
     }
     //endregion
 
@@ -102,65 +88,59 @@ class BookDetailViewModel @Inject constructor(
         )
     }
 
-    fun createBook(newBook: Book) {
+    fun createBook(newBook: Book) = viewModelScope.launch {
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository
-            .createBook(newBook)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.book_saved
-                    _state.value = _state.value.copy(
-                        isAlreadySaved = true,
-                        isEditable = false,
-                    )
-                },
-                onError = {
-                    _bookDetailError.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database,
-                    )
-                },
-            ).addTo(disposables)
+        booksRepository.createBook(newBook).fold(
+            onSuccess = {
+                _infoDialogMessageId.value = R.string.book_saved
+                _state.value = _state.value.copy(
+                    isAlreadySaved = true,
+                    isEditable = false,
+                )
+            },
+            onFailure = {
+                _bookDetailError.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_database,
+                )
+            },
+        )
     }
 
-    fun setBook(book: Book) {
-        booksRepository
-            .setBook(book)
-            .subscribeBy(
-                onSuccess = {
-                    currentBook = it
-                    _state.value = _state.value.copy(
-                        book = it,
-                        isEditable = false,
-                    )
-                },
-                onError = {
-                    _bookDetailError.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database,
-                    )
-                },
-            ).addTo(disposables)
+    fun setBook(book: Book) = viewModelScope.launch {
+        booksRepository.setBook(book).fold(
+            onSuccess = {
+                currentBook = it
+                _state.value = _state.value.copy(
+                    book = it,
+                    isEditable = false,
+                )
+            },
+            onFailure = {
+                _bookDetailError.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_database,
+                )
+            },
+        )
     }
 
-    fun deleteBook() {
-        booksRepository
-            .deleteBook(params.bookId)
-            .subscribeBy(
-                onComplete = {
-                    _infoDialogMessageId.value = R.string.book_removed
-                    _state.value = _state.value.copy(
-                        isAlreadySaved = false,
-                        isEditable = true,
-                    )
-                },
-                onError = {
-                    _bookDetailError.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database,
-                    )
-                },
-            ).addTo(disposables)
+    fun deleteBook() = viewModelScope.launch {
+        booksRepository.deleteBook(params.bookId).fold(
+            onSuccess = {
+                _infoDialogMessageId.value = R.string.book_removed
+                _state.value = _state.value.copy(
+                    isAlreadySaved = false,
+                    isEditable = true,
+                )
+            },
+            onFailure = {
+                _bookDetailError.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_database,
+                )
+            },
+        )
     }
 
     fun setBookImage(imageUri: String?) {
@@ -187,39 +167,35 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun fetchBook() {
+    private fun fetchBook() = viewModelScope.launch {
         if (params.friendId.isNotEmpty()) {
-            booksRepository
-                .getFriendBook(params.friendId, params.bookId)
-                .subscribeBy(
-                    onSuccess = {
-                        currentBook = it
-                        _state.value = _state.value.copy(
-                            book = it,
-                            isEditable = true,
-                            isAlreadySaved = false,
-                        )
-                    },
-                    onError = {
-                        _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                    },
-                ).addTo(disposables)
+            booksRepository.getFriendBook(params.friendId, params.bookId).fold(
+                onSuccess = {
+                    currentBook = it
+                    _state.value = _state.value.copy(
+                        book = it,
+                        isEditable = true,
+                        isAlreadySaved = false,
+                    )
+                },
+                onFailure = {
+                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                },
+            )
         } else {
-            booksRepository
-                .getBook(params.bookId)
-                .subscribeBy(
-                    onSuccess = {
-                        currentBook = it.first
-                        _state.value = _state.value.copy(
-                            book = it.first,
-                            isEditable = !it.second,
-                            isAlreadySaved = it.second,
-                        )
-                    },
-                    onError = {
-                        _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
-                    },
-                ).addTo(disposables)
+            booksRepository.getBook(params.bookId).fold(
+                onSuccess = { (book, isAlreadySaved) ->
+                    currentBook = book
+                    _state.value = _state.value.copy(
+                        book = book,
+                        isEditable = !isAlreadySaved,
+                        isAlreadySaved = isAlreadySaved,
+                    )
+                },
+                onFailure = {
+                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                },
+            )
         }
     }
     //endregion

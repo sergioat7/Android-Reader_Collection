@@ -17,9 +17,8 @@ import aragones.sergio.readercollection.utils.Constants
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
+import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 
 class BooksRemoteDataSource @Inject constructor(
@@ -44,7 +43,11 @@ class BooksRemoteDataSource @Inject constructor(
     //endregion
 
     //region Public methods
-    fun searchBooks(query: String, page: Int, order: String?): Single<GoogleBookListResponse> {
+    suspend fun searchBooks(
+        query: String,
+        page: Int,
+        order: String?,
+    ): Result<GoogleBookListResponse> = runCatching {
         val params = mutableMapOf(
             API_KEY to BuildConfig.API_KEY,
             SEARCH_PARAM to query,
@@ -54,12 +57,12 @@ class BooksRemoteDataSource @Inject constructor(
         if (order != null) {
             params[ORDER_PARAM] = order
         }
-        return googleApiService.searchGoogleBooks(params)
+        googleApiService.searchGoogleBooks(params)
     }
 
-    fun getBook(volumeId: String): Single<GoogleBookResponse> {
+    suspend fun getBook(volumeId: String): Result<GoogleBookResponse> = runCatching {
         val params = mapOf(API_KEY to BuildConfig.API_KEY)
-        return googleApiService.getGoogleBook(volumeId, params)
+        googleApiService.getGoogleBook(volumeId, params)
     }
 
     fun fetchRemoteConfigValues(language: String) {
@@ -72,41 +75,34 @@ class BooksRemoteDataSource @Inject constructor(
         }
     }
 
-    fun getBooks(uuid: String): Single<List<BookResponse>> = Single.create { emitter ->
+    suspend fun getBooks(uuid: String): Result<List<BookResponse>> = runCatching {
         firestore
             .collection("users")
             .document(uuid)
             .collection("books")
             .get()
-            .addOnSuccessListener { result ->
-                val books = result.toObjects(BookResponse::class.java)
-                emitter.onSuccess(books)
-            }.addOnFailureListener { emitter.onError(it) }
+            .await()
+            .toObjects(BookResponse::class.java)
     }
 
-    fun getFriendBook(friendId: String, bookId: String): Single<BookResponse> =
-        Single.create { emitter ->
-            firestore
+    suspend fun getFriendBook(friendId: String, bookId: String): Result<BookResponse> =
+        runCatching {
+            val book = firestore
                 .collection("users")
                 .document(friendId)
                 .collection("books")
                 .document(bookId)
                 .get()
-                .addOnSuccessListener { result ->
-                    val book = result.toObject(BookResponse::class.java)
-                    if (book != null) {
-                        emitter.onSuccess(book)
-                    } else {
-                        emitter.onError(NoSuchElementException("Book not found"))
-                    }
-                }.addOnFailureListener { emitter.onError(it) }
+                .await()
+                .toObject(BookResponse::class.java)
+            book ?: throw NoSuchElementException("Book not found")
         }
 
-    fun syncBooks(
+    suspend fun syncBooks(
         uuid: String,
         booksToSave: List<BookResponse>,
         booksToRemove: List<BookResponse>,
-    ) = Completable.create { emitter ->
+    ): Result<Unit> = runCatching {
         val batch = firestore.batch()
         val booksRef = firestore
             .collection("users")
@@ -123,13 +119,7 @@ class BooksRemoteDataSource @Inject constructor(
             batch.delete(docRef)
         }
 
-        batch
-            .commit()
-            .addOnSuccessListener {
-                emitter.onComplete()
-            }.addOnFailureListener {
-                emitter.onError(it)
-            }
+        batch.commit().await()
     }
     //endregion
 

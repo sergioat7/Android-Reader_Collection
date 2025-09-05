@@ -101,7 +101,6 @@ dependencies {
     implementation(libs.app.update.ktx)
     implementation(libs.bundles.compose)
     implementation(libs.bundles.retrofit)
-    implementation(libs.bundles.rx)
     implementation(libs.bundles.firebase)
     implementation(platform(libs.compose.bom))
     implementation(libs.coil)
@@ -121,8 +120,6 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
     implementation(libs.navigation.compose)
     implementation(libs.room.runtime)
-    implementation(libs.room.rxjava)
-    implementation(libs.room.rxjava3.bridge)
     implementation(libs.security.crypto)
     implementation(libs.work.manager)
 

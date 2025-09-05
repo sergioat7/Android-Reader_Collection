@@ -8,29 +8,32 @@ package aragones.sergio.readercollection.presentation.books
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshotFlow
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import java.util.Date
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository,
-) : BaseViewModel() {
+    userRepository: UserRepository,
+) : ViewModel() {
 
     //region Private properties
     private var originalBooks = emptyList<Book>()
@@ -53,41 +56,20 @@ class BooksViewModel @Inject constructor(
     val booksError: StateFlow<ErrorResponse?> = _booksError
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
-    fun fetchBooks() {
+    fun fetchBooks() = viewModelScope.launch {
         _state.value = when (val currentState = _state.value) {
             is BooksUiState.Empty -> currentState.copy(isLoading = true)
             is BooksUiState.Success -> currentState.copy(isLoading = true)
         }
 
-        booksRepository
-            .getBooks()
-            .subscribeBy(
-                onComplete = {
-                    originalBooks = emptyList()
-                    _state.value = BooksUiState.Empty(query = _state.value.query, isLoading = false)
-                },
-                onNext = {
-                    originalBooks = it
-                    sortBooks()
-                },
-                onError = {
-                    _state.value = when (val currentState = _state.value) {
-                        is BooksUiState.Empty -> currentState.copy(isLoading = false)
-                        is BooksUiState.Success -> currentState.copy(isLoading = false)
-                    }
-                    _booksError.value = ApiManager.handleError(it)
-                },
-            ).addTo(disposables)
+        combine(
+            booksRepository.getBooks(),
+            snapshotFlow { _sortingPickerState.value },
+        ) { books, sortingPickerState ->
+            originalBooks = books
+            sortBooks()
+        }.launchIn(viewModelScope)
     }
 
     fun closeDialogs() {
@@ -104,7 +86,6 @@ class BooksViewModel @Inject constructor(
             sortParam = newSortParam,
             isSortDescending = newIsSortDescending,
         )
-        fetchBooks()
     }
 
     fun searchBooks(query: String) {
@@ -130,7 +111,7 @@ class BooksViewModel @Inject constructor(
         setPriorityFor(books)
     }
 
-    fun setBook(book: Book) {
+    fun setBook(book: Book) = viewModelScope.launch {
         _state.value = when (val currentState = _state.value) {
             is BooksUiState.Empty -> currentState.copy(isLoading = true)
             is BooksUiState.Success -> currentState.copy(isLoading = true)
@@ -148,20 +129,18 @@ class BooksViewModel @Inject constructor(
                 priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1,
             )
         }
-        booksRepository
-            .setBook(selectedBook)
-            .subscribeBy(
-                onSuccess = {
-                    /* no-op due to database is being observed */
-                },
-                onError = {
-                    _state.value = when (val currentState = _state.value) {
-                        is BooksUiState.Empty -> currentState.copy(isLoading = false)
-                        is BooksUiState.Success -> currentState.copy(isLoading = false)
-                    }
-                    _booksError.value = ApiManager.handleError(it)
-                },
-            ).addTo(disposables)
+        booksRepository.setBook(selectedBook).fold(
+            onSuccess = {
+                /* no-op due to database is being observed */
+            },
+            onFailure = {
+                _state.value = when (val currentState = _state.value) {
+                    is BooksUiState.Empty -> currentState.copy(isLoading = false)
+                    is BooksUiState.Success -> currentState.copy(isLoading = false)
+                }
+                _booksError.value = ApiManager.handleError(it)
+            },
+        )
     }
     //endregion
 
@@ -202,29 +181,26 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    private fun setPriorityFor(books: List<Book>) {
+    private fun setPriorityFor(books: List<Book>) = viewModelScope.launch {
         _state.value = when (val currentState = _state.value) {
             is BooksUiState.Empty -> currentState.copy(isLoading = true)
             is BooksUiState.Success -> currentState.copy(isLoading = true)
         }
-
-        booksRepository
-            .setBooks(books)
-            .subscribeBy(
-                onComplete = {
-                    /* no-op due to database is being observed */
-                },
-                onError = {
-                    _state.value = when (val currentState = _state.value) {
-                        is BooksUiState.Empty -> currentState.copy(isLoading = false)
-                        is BooksUiState.Success -> currentState.copy(isLoading = false)
-                    }
-                    _booksError.value = ErrorResponse(
-                        Constants.EMPTY_VALUE,
-                        R.string.error_database,
-                    )
-                },
-            ).addTo(disposables)
+        booksRepository.setBooks(books).fold(
+            onSuccess = {
+                /* no-op due to database is being observed */
+            },
+            onFailure = {
+                _state.value = when (val currentState = _state.value) {
+                    is BooksUiState.Empty -> currentState.copy(isLoading = false)
+                    is BooksUiState.Success -> currentState.copy(isLoading = false)
+                }
+                _booksError.value = ErrorResponse(
+                    Constants.EMPTY_VALUE,
+                    R.string.error_database,
+                )
+            },
+        )
     }
     //endregion
 }

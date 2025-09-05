@@ -12,28 +12,26 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.aragones.sergio.model.Book
-import io.reactivex.Completable
-import io.reactivex.Flowable
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertBooks(books: List<Book>): Completable
+    suspend fun insertBooks(books: List<Book>)
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
-    fun updateBooks(books: List<Book>): Completable
+    suspend fun updateBooks(books: List<Book>)
 
     @Delete
-    fun deleteBooks(books: List<Book>): Completable
+    suspend fun deleteBooks(books: List<Book>)
 
     @Query("SELECT * FROM book")
-    fun getAllBooks(): Flowable<List<Book>>
+    fun getAllBooks(): Flow<List<Book>>
 
     @Query("SELECT * FROM book WHERE state == 'READ'")
-    fun getReadBooks(): Flowable<List<Book>>
+    fun getReadBooks(): Flow<List<Book>>
 
     @Query("SELECT * FROM book WHERE id == :id")
-    fun getBook(id: String): Single<Book>
+    suspend fun getBook(id: String): Book
 }

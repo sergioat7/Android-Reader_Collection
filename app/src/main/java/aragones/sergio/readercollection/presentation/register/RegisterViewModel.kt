@@ -8,25 +8,25 @@ package aragones.sergio.readercollection.presentation.register
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.MainActivity
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _uiState: MutableState<RegisterUiState> = mutableStateOf(RegisterUiState.empty())
@@ -42,54 +42,42 @@ class RegisterViewModel @Inject constructor(
     val activityName: StateFlow<String?> = _activityName
     //endregion
 
-    //region Lifecycle methods
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
-    }
-    //endregion
-
     //region Public methods
-    fun register(username: String, password: String) {
+    fun register(username: String, password: String) = viewModelScope.launch {
         _uiState.value = _uiState.value.copy(isLoading = true)
-        userRepository
-            .register(username, password)
-            .subscribeBy(
-                onComplete = {
-                    userRepository
-                        .login(username, password)
-                        .subscribeBy(
-                            onComplete = {
-                                _uiState.value = _uiState.value.copy(isLoading = false)
-                                _activityName.value = MainActivity::class.simpleName
-                            },
-                            onError = {
-                                manageError(
-                                    ErrorResponse(
-                                        Constants.EMPTY_VALUE,
-                                        R.string.error_server,
-                                    ),
-                                )
-                            },
-                        ).addTo(disposables)
-                },
-                onError = {
-                    manageError(
-                        if (it is FirebaseAuthUserCollisionException) {
-                            ErrorResponse(
-                                Constants.EMPTY_VALUE,
-                                R.string.error_user_found,
-                            )
-                        } else {
+        userRepository.register(username, password).fold(
+            onSuccess = {
+                userRepository.login(username, password).fold(
+                    onSuccess = {
+                        _uiState.value = _uiState.value.copy(isLoading = false)
+                        _activityName.value = MainActivity::class.simpleName
+                    },
+                    onFailure = {
+                        manageError(
                             ErrorResponse(
                                 Constants.EMPTY_VALUE,
                                 R.string.error_server,
-                            )
-                        },
-                    )
-                },
-            ).addTo(disposables)
+                            ),
+                        )
+                    },
+                )
+            },
+            onFailure = {
+                manageError(
+                    if (it is FirebaseAuthUserCollisionException) {
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_user_found,
+                        )
+                    } else {
+                        ErrorResponse(
+                            Constants.EMPTY_VALUE,
+                            R.string.error_server,
+                        )
+                    },
+                )
+            },
+        )
     }
 
     fun registerDataChanged(username: String, password: String, confirmPassword: String) {

@@ -3,7 +3,7 @@
  * Created by Sergio Aragonés on 21/8/2023
  */
 
-package aragones.sergio.readercollection.data.remote.di
+package aragones.sergio.readercollection.domain.di
 
 import dagger.Module
 import dagger.Provides
