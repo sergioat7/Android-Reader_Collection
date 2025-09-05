@@ -79,7 +79,7 @@ fun BookListScreen(
         }
     }
 
-    val title = if (state is BookListUiState.Success && state.books.isNotEmpty()) {
+    val title = if (state.books.isNotEmpty()) {
         pluralStringResource(
             R.plurals.title_books_count,
             state.books.size,
@@ -88,35 +88,24 @@ fun BookListScreen(
     } else {
         ""
     }
-    val subtitle = when (state) {
-        is BookListUiState.Success -> state.subtitle
-        BookListUiState.Empty -> ""
-    }
-    val actions: @Composable RowScope.() -> Unit = when (state) {
-        is BookListUiState.Success -> {
-            {
-                if (state.books.any { it.isPending() }) {
-                    TopAppBarIcon(
-                        accessibilityPainter = if (state.isDraggingEnabled) {
-                            painterResource(R.drawable.ic_disable_drag)
-                                .withDescription(stringResource(R.string.disable_dragging))
-                        } else {
-                            painterResource(R.drawable.ic_enable_drag)
-                                .withDescription(stringResource(R.string.enable_dragging))
-                        },
-                        onClick = onDragClick,
-                    )
+    val actions: @Composable RowScope.() -> Unit = {
+        if (state.books.any { it.isPending() }) {
+            TopAppBarIcon(
+                accessibilityPainter = if (state.isDraggingEnabled) {
+                    painterResource(R.drawable.ic_disable_drag)
+                        .withDescription(stringResource(R.string.disable_dragging))
                 } else {
-                    TopAppBarIcon(
-                        accessibilityPainter = painterResource(R.drawable.ic_sort_books)
-                            .withDescription(stringResource(R.string.sort_books)),
-                        onClick = onSortClick,
-                    )
-                }
-            }
-        }
-        else -> {
-            {}
+                    painterResource(R.drawable.ic_enable_drag)
+                        .withDescription(stringResource(R.string.enable_dragging))
+                },
+                onClick = onDragClick,
+            )
+        } else {
+            TopAppBarIcon(
+                accessibilityPainter = painterResource(R.drawable.ic_sort_books)
+                    .withDescription(stringResource(R.string.sort_books)),
+                onClick = onSortClick,
+            )
         }
     }
 
@@ -124,7 +113,7 @@ fun BookListScreen(
         CustomToolbar(
             title = title,
             modifier = Modifier.shadow(if (showTopButton) 4.dp else 0.dp),
-            subtitle = subtitle,
+            subtitle = state.subtitle,
             backgroundColor = MaterialTheme.colorScheme.background,
             onBack = onBack,
             actions = actions,
@@ -132,28 +121,21 @@ fun BookListScreen(
         Box(
             modifier = Modifier.fillMaxSize(),
         ) {
-            when (state) {
-                is BookListUiState.Empty -> {
-                    onBack()
-                }
-                is BookListUiState.Success -> {
-                    if (state.books.isEmpty()) {
-                        NoResultsComponent()
-                    } else {
-                        BookListContent(
-                            state = state,
-                            listState = listState,
-                            showTopButton = showTopButton,
-                            showBottomButton = showBottomButton,
-                            onBookClick = onBookClick,
-                            onDrag = onDrag,
-                            onDragEnd = onDragEnd,
-                        )
-                    }
-                }
+            if (state.books.isEmpty()) {
+                NoResultsComponent()
+            } else {
+                BookListContent(
+                    state = state,
+                    listState = listState,
+                    showTopButton = showTopButton,
+                    showBottomButton = showBottomButton,
+                    onBookClick = onBookClick,
+                    onDrag = onDrag,
+                    onDragEnd = onDragEnd,
+                )
             }
 
-            if (state is BookListUiState.Success && state.isLoading) {
+            if (state.isLoading) {
                 CustomCircularProgressIndicator()
             }
         }
@@ -162,7 +144,7 @@ fun BookListScreen(
 
 @Composable
 private fun BookListContent(
-    state: BookListUiState.Success,
+    state: BookListUiState,
     listState: LazyListState,
     showTopButton: Boolean,
     showBottomButton: Boolean,
@@ -314,7 +296,7 @@ private class BookListScreenPreviewParameterProvider :
 
     override val values: Sequence<BookListUiState>
         get() = sequenceOf(
-            BookListUiState.Success(
+            BookListUiState(
                 isLoading = false,
                 books = listOf(
                     Book(
@@ -365,7 +347,7 @@ private class BookListScreenPreviewParameterProvider :
                 subtitle = "",
                 isDraggingEnabled = false,
             ),
-            BookListUiState.Success(
+            BookListUiState(
                 isLoading = true,
                 books = listOf(
                     Book(

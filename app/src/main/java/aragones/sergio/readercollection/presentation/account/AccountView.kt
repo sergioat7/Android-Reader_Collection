@@ -22,7 +22,7 @@ fun AccountView(
     onLogout: () -> Unit,
     viewModel: AccountViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state
+    val state by viewModel.state.collectAsState()
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val error by viewModel.profileError.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()

@@ -69,7 +69,7 @@ fun StatisticsView(
         },
     )
 
-    val state by viewModel.state
+    val state by viewModel.state.collectAsState()
     val error by viewModel.booksError.collectAsState()
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val infoMessageId by viewModel.infoDialogMessageId.collectAsState()
@@ -139,7 +139,7 @@ fun StatisticsView(
     } else {
         ""
     }
-    InformationAlertDialog(show = infoMessageId != -1, text = text) {
+    InformationAlertDialog(show = text.isNotEmpty(), text = text) {
         viewModel.closeDialogs()
     }
 

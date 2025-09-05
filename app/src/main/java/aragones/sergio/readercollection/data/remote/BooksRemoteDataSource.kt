@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.data.remote
 
-import android.util.Log
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
@@ -135,7 +134,7 @@ class BooksRemoteDataSource @Inject constructor(
                     .fromJson(languagedFormats)
                     ?.asList() ?: listOf()
             } catch (e: Exception) {
-                Log.e("BooksRemoteDataSource", e.message ?: "")
+                println("BooksRemoteDataSource ${(e.message ?: "")}")
             }
             Constants.FORMATS = formats
         }
@@ -152,7 +151,7 @@ class BooksRemoteDataSource @Inject constructor(
                     .fromJson(languagedStates)
                     ?.asList() ?: listOf()
             } catch (e: Exception) {
-                Log.e("BooksRemoteDataSource", e.message ?: "")
+                println("BooksRemoteDataSource ${(e.message ?: "")}")
             }
             Constants.STATES = states
         }

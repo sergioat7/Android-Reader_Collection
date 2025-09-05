@@ -121,20 +121,24 @@ class BooksRepository @Inject constructor(
     suspend fun getBook(id: String): Result<Pair<Book, Boolean>> = runCatching {
         booksLocalDataSource.getBook(id)
     }.fold(
-        onSuccess = {
-            Result.success(it.toDomain() to true)
+        onSuccess = { localBook ->
+            if (localBook != null) {
+                Result.success(localBook.toDomain() to true)
+            } else {
+                withTimeout(TIMEOUT) {
+                    booksRemoteDataSource.getBook(id)
+                }.fold(
+                    onSuccess = {
+                        Result.success(it.toDomain() to false)
+                    },
+                    onFailure = {
+                        Result.failure(it)
+                    },
+                )
+            }
         },
         onFailure = {
-            withTimeout(TIMEOUT) {
-                booksRemoteDataSource.getBook(id)
-            }.fold(
-                onSuccess = {
-                    Result.success(it.toDomain() to false)
-                },
-                onFailure = {
-                    Result.failure(it)
-                },
-            )
+            Result.failure(it)
         },
     )
 
@@ -155,7 +159,9 @@ class BooksRepository @Inject constructor(
 
     suspend fun deleteBook(bookId: String): Result<Unit> = runCatching {
         val book = booksLocalDataSource.getBook(bookId)
-        booksLocalDataSource.deleteBooks(listOf(book))
+        if (book != null) {
+            booksLocalDataSource.deleteBooks(listOf(book))
+        }
         Result.success(Unit)
     }
 

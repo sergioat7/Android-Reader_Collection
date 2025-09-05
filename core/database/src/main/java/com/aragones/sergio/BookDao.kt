@@ -33,5 +33,5 @@ interface BookDao {
     fun getReadBooks(): Flow<List<Book>>
 
     @Query("SELECT * FROM book WHERE id == :id")
-    suspend fun getBook(id: String): Book
+    suspend fun getBook(id: String): Book?
 }

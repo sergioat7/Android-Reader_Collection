@@ -230,11 +230,7 @@ fun SearchBar(
                     .withDescription(stringResource(R.string.clear_text)),
                 onClick = {
                     textFieldValueState = textFieldValueState.copy("")
-                    if (!requestFocusByDefault) {
-                        keyboard?.hide()
-                        focusManager.clearFocus()
-                        onSearch("")
-                    }
+                    onSearch("")
                 },
             )
         }

@@ -21,7 +21,7 @@ import com.aragones.sergio.util.extensions.isNotBlank
 
 @Composable
 fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = hiltViewModel()) {
-    val state by viewModel.state
+    val state by viewModel.state.collectAsState()
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
     val imageDialogMessageId by viewModel.imageDialogMessageId.collectAsState()

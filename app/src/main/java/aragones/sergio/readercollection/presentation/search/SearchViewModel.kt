@@ -27,7 +27,7 @@ class SearchViewModel @Inject constructor(
     private var query = ""
     private var page: Int = 1
     private val books = mutableListOf<Book>()
-    private lateinit var savedBooks: MutableList<Book>
+    private var savedBooks = mutableListOf<Book>()
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
     private val _state: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState.Empty)
@@ -40,12 +40,8 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    init {
-        fetchPendingBooks()
-    }
-
     fun onResume() {
-        fetchPendingBooks()
+        fetchSavedBooks()
     }
     //endregion
 
@@ -113,7 +109,6 @@ class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             booksRepository.createBook(newBook).fold(
                 onSuccess = {
-                    savedBooks.add(newBook)
                     _infoDialogMessageId.value = R.string.book_saved
                 },
                 onFailure = {
@@ -129,7 +124,7 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun fetchPendingBooks() = viewModelScope.launch {
+    private fun fetchSavedBooks() = viewModelScope.launch {
         booksRepository.getBooks().collect {
             savedBooks = it.toMutableList()
         }

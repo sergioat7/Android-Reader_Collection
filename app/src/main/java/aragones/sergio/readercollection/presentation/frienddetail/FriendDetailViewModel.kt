@@ -16,9 +16,9 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import javax.inject.Inject
 import kotlin.fold
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

@@ -5,9 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.statistics
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
@@ -34,14 +31,15 @@ class StatisticsViewModel @Inject constructor(
 ) : ViewModel() {
 
     //region Private properties
-    private var _state: MutableState<StatisticsUiState> = mutableStateOf(StatisticsUiState.Empty)
+    private var _state: MutableStateFlow<StatisticsUiState> =
+        MutableStateFlow(StatisticsUiState.Empty)
     private val _booksError = MutableStateFlow<ErrorResponse?>(null)
     private val _confirmationDialogMessageId = MutableStateFlow(-1)
     private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
-    val state: State<StatisticsUiState> = _state
+    val state: StateFlow<StatisticsUiState> = _state
     val booksError: StateFlow<ErrorResponse?> = _booksError
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
@@ -85,7 +83,6 @@ class StatisticsViewModel @Inject constructor(
         _booksError.value = null
         _confirmationDialogMessageId.value = -1
         _infoDialogMessageId.value = -1
-        _booksError.value = null
     }
 
     fun importData(jsonData: String) = viewModelScope.launch {

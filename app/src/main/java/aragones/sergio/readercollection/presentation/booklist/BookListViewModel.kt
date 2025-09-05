@@ -6,10 +6,6 @@
 package aragones.sergio.readercollection.presentation.booklist
 
 import android.os.Build
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -50,15 +46,13 @@ class BookListViewModel @Inject constructor(
         get() = params.state == BookState.PENDING
     private val subtitle: String
         get() {
-            var subtitle = ","
+            var subtitle = ""
             if (params.year > 0) {
-                subtitle = subtitle.dropLast(1) + "${params.year},"
+                subtitle += "${params.year},"
             }
             params.month.takeIf { it >= 0 }?.let { month ->
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    subtitle = subtitle.dropLast(
-                        1,
-                    ) + Month
+                    subtitle += Month
                         .of(
                             month + 1,
                         ).getDisplayName(
@@ -69,18 +63,16 @@ class BookListViewModel @Inject constructor(
                 }
             }
             if (params.author != null) {
-                subtitle = subtitle.dropLast(1) + "${params.author},"
+                subtitle += "${params.author},"
             }
             params.format?.let { format ->
-                subtitle = subtitle.dropLast(
-                    1,
-                ) + "${FORMATS.firstOrNull { it.id == format }?.name ?: ""},"
+                subtitle += "${FORMATS.firstOrNull { it.id == format }?.name ?: ""},"
             }
             return subtitle.dropLast(1)
         }
-    private var _state: MutableState<BookListUiState> =
-        mutableStateOf(BookListUiState.Success.initial())
-    private var _sortingPickerState: MutableState<UiSortingPickerState> = mutableStateOf(
+    private var _state: MutableStateFlow<BookListUiState> =
+        MutableStateFlow(BookListUiState.initial())
+    private var _sortingPickerState: MutableStateFlow<UiSortingPickerState> = MutableStateFlow(
         UiSortingPickerState(
             show = false,
             sortParam = params.sortParam,
@@ -91,69 +83,43 @@ class BookListViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    val state: State<BookListUiState> = _state
-    val sortingPickerState: State<UiSortingPickerState> = _sortingPickerState
+    val state: StateFlow<BookListUiState> = _state
+    val sortingPickerState: StateFlow<UiSortingPickerState> = _sortingPickerState
     val booksError: StateFlow<ErrorResponse?> = _booksError
     //endregion
 
     //region Public methods
     fun fetchBooks() {
-        _state.value = when (val currentState = _state.value) {
-            is BookListUiState.Empty -> BookListUiState.Success(
-                isLoading = true,
-                books = emptyList(),
-                subtitle = subtitle,
-                isDraggingEnabled = false,
-            )
-            is BookListUiState.Success -> currentState.copy(
-                isLoading = true,
-                subtitle = subtitle,
-            )
-        }
+        _state.value = _state.value.copy(
+            isLoading = true,
+            subtitle = subtitle,
+        )
 
         combine(
             booksRepository.getBooks(),
-            snapshotFlow { _sortingPickerState.value },
+            _sortingPickerState,
         ) { books, sortingPickerState ->
             if (books.isEmpty()) {
                 showError()
             } else {
-                _state.value = when (val currentState = _state.value) {
-                    is BookListUiState.Empty -> BookListUiState.Success(
-                        isLoading = true,
-                        books = getFilteredBooksFor(books),
-                        subtitle = subtitle,
-                        isDraggingEnabled = false,
-                    )
-                    is BookListUiState.Success -> currentState.copy(
-                        isLoading = false,
-                        books = getFilteredBooksFor(books),
-                        subtitle = subtitle,
-                    )
-                }
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    books = getFilteredBooksFor(books),
+                    subtitle = subtitle,
+                )
             }
         }.launchIn(viewModelScope)
     }
 
     fun switchDraggingState() {
-        (_state.value as? BookListUiState.Success)?.let { state ->
-            _state.value = state.copy(isDraggingEnabled = state.isDraggingEnabled.not())
-        }
+        _state.value = _state.value.copy(isDraggingEnabled = _state.value.isDraggingEnabled.not())
     }
 
     fun updateBookOrdering(books: List<Book>) {
         for ((index, book) in books.withIndex()) {
             book.priority = index
         }
-        _state.value = when (val currentState = _state.value) {
-            is BookListUiState.Empty -> BookListUiState.Success(
-                isLoading = false,
-                books = getFilteredBooksFor(books),
-                subtitle = subtitle,
-                isDraggingEnabled = true,
-            )
-            is BookListUiState.Success -> currentState.copy(books = getFilteredBooksFor(books))
-        }
+        _state.value = _state.value.copy(books = getFilteredBooksFor(books))
     }
 
     fun setPriorityFor(books: List<Book>) = viewModelScope.launch {
@@ -240,7 +206,7 @@ class BookListViewModel @Inject constructor(
     private fun showError(
         error: ErrorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database),
     ) {
-        _state.value = BookListUiState.Success(
+        _state.value = BookListUiState(
             isLoading = false,
             books = emptyList(),
             subtitle = subtitle,

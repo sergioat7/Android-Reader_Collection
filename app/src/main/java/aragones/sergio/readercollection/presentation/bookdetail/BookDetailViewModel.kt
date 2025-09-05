@@ -5,9 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.bookdetail
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,10 +16,10 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
@@ -34,7 +31,7 @@ class BookDetailViewModel @Inject constructor(
     private val params = state.toRoute<Route.BookDetail>()
     private lateinit var currentBook: Book
     private lateinit var savedBooks: List<Book>
-    private var _state: MutableState<BookDetailUiState> = mutableStateOf(
+    private var _state: MutableStateFlow<BookDetailUiState> = MutableStateFlow(
         BookDetailUiState(
             book = null,
             isAlreadySaved = true,
@@ -50,7 +47,7 @@ class BookDetailViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    val state: State<BookDetailUiState> = _state
+    val state: StateFlow<BookDetailUiState> = _state
     val bookDetailError: StateFlow<ErrorResponse?> = _bookDetailError
     var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
@@ -89,11 +86,13 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun createBook(newBook: Book) = viewModelScope.launch {
-        newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository.createBook(newBook).fold(
+        val maxPriority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1)
+        val book = newBook.copy(priority = maxPriority + 1)
+        booksRepository.createBook(book).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.book_saved
                 _state.value = _state.value.copy(
+                    book = book,
                     isAlreadySaved = true,
                     isEditable = false,
                 )
