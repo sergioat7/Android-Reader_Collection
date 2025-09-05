@@ -49,4 +49,8 @@ dependencies {
     implementation(libs.moshi)
     ksp(libs.room.compiler)
     implementation(libs.room.runtime)
+
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 }
