@@ -123,7 +123,10 @@ dependencies {
     implementation(libs.security.crypto)
     implementation(libs.work.manager)
 
+    testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.compose.test.junit)
