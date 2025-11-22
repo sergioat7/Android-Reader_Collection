@@ -42,12 +42,13 @@ class AccountViewModelTest {
 
     private val testUserId = "userId"
     private val testUsername = "userId"
+    private val testPassword = ""
     private val booksLocalDataSource: BooksLocalDataSource = mockk()
     private val booksRemoteDataSource: BooksRemoteDataSource = mockk()
     private val userLocalDataSource: UserLocalDataSource = mockk {
         every { userId } returns testUserId
         every { username } returns testUsername
-        every { userData } returns UserData(testUsername, "")
+        every { userData } returns UserData(testUsername, testPassword)
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
     private val ioDispatcher = UnconfinedTestDispatcher()
@@ -96,9 +97,9 @@ class AccountViewModelTest {
     fun `GIVEN new password and success response WHEN save THEN updates password`() = runTest {
         val newPassword = "123456"
         viewModel.profileDataChanged(newPassword)
+        coEvery { userRemoteDataSource.login(any(), any()) } returns Result.success(testUserId)
         coEvery { userRemoteDataSource.updatePassword(any()) } returns Result.success(Unit)
         every { userLocalDataSource.storePassword(any()) } just Runs
-        coEvery { userRemoteDataSource.login(any(), any()) } returns Result.success(testUserId)
         every { userLocalDataSource.storeCredentials(any()) } just Runs
 
         viewModel.state.test {
@@ -119,6 +120,7 @@ class AccountViewModelTest {
                 awaitItem(),
             )
         }
+        coVerify { userRemoteDataSource.login(testUsername, testPassword) }
         coVerify { userRemoteDataSource.updatePassword(newPassword) }
         verify { userLocalDataSource.storePassword(newPassword) }
         coVerify { userRemoteDataSource.login(testUsername, newPassword) }
@@ -129,8 +131,6 @@ class AccountViewModelTest {
     fun `GIVEN new password and login failure WHEN save THEN show error`() = runTest {
         val newPassword = "123456"
         viewModel.profileDataChanged(newPassword)
-        coEvery { userRemoteDataSource.updatePassword(any()) } returns Result.success(Unit)
-        every { userLocalDataSource.storePassword(any()) } just Runs
         coEvery { userRemoteDataSource.login(any(), any()) } returns Result.failure(Exception())
 
         viewModel.profileError.test {
@@ -143,9 +143,10 @@ class AccountViewModelTest {
                 awaitItem(),
             )
         }
-        coVerify { userRemoteDataSource.updatePassword(newPassword) }
-        verify { userLocalDataSource.storePassword(newPassword) }
-        coVerify { userRemoteDataSource.login(testUsername, newPassword) }
+        coVerify { userRemoteDataSource.login(testUsername, testPassword) }
+        coVerify(exactly = 0) { userRemoteDataSource.updatePassword(newPassword) }
+        verify(exactly = 0) { userLocalDataSource.storePassword(newPassword) }
+        coVerify(exactly = 0) { userRemoteDataSource.login(testUsername, newPassword) }
         verify(exactly = 0) { userLocalDataSource.storeCredentials(AuthData(testUserId)) }
     }
 
@@ -153,6 +154,7 @@ class AccountViewModelTest {
     fun `GIVEN new password and failure response WHEN save THEN show error`() = runTest {
         val newPassword = "123456"
         viewModel.profileDataChanged(newPassword)
+        coEvery { userRemoteDataSource.login(any(), any()) } returns Result.success(testUserId)
         coEvery { userRemoteDataSource.updatePassword(any()) } returns Result.failure(Exception())
 
         viewModel.profileError.test {
@@ -165,6 +167,7 @@ class AccountViewModelTest {
                 awaitItem(),
             )
         }
+        coVerify { userRemoteDataSource.login(testUsername, testPassword) }
         coVerify { userRemoteDataSource.updatePassword(newPassword) }
         verify(exactly = 0) { userLocalDataSource.storePassword(newPassword) }
         coVerify(exactly = 0) { userRemoteDataSource.login(testUsername, newPassword) }

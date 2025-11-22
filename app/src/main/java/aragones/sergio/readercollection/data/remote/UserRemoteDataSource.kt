@@ -37,10 +37,9 @@ class UserRemoteDataSource @Inject constructor(
     }
 
     suspend fun updatePassword(password: String): Result<Unit> = runCatching {
-        auth.currentUser
-            ?.updatePassword(
-                password,
-            )?.await() ?: throw RuntimeException("User is null")
+        val user = auth.currentUser
+        if (user == null) throw RuntimeException("User is null")
+        user.updatePassword(password).await()
     }
 
     suspend fun registerPublicProfile(username: String, userId: String): Result<Unit> =

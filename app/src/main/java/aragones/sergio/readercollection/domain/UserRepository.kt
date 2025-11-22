@@ -93,20 +93,28 @@ class UserRepository @Inject constructor(
         }
 
     suspend fun updatePassword(password: String): Result<Unit> = withContext(ioDispatcher) {
-        userRemoteDataSource.updatePassword(password).fold(onSuccess = {
-            userLocalDataSource.storePassword(password)
-            userRemoteDataSource.login(userLocalDataSource.username, password).fold(
-                onSuccess = { uuid ->
-                    userLocalDataSource.storeCredentials(AuthData(uuid))
-                    Result.success(Unit)
-                },
-                onFailure = {
+        val userData = userLocalDataSource.userData
+        userRemoteDataSource.login(userData.username, userData.password).fold(
+            onSuccess = {
+                userRemoteDataSource.updatePassword(password).fold(onSuccess = {
+                    userLocalDataSource.storePassword(password)
+                    userRemoteDataSource.login(userData.username, password).fold(
+                        onSuccess = { uuid ->
+                            userLocalDataSource.storeCredentials(AuthData(uuid))
+                            Result.success(Unit)
+                        },
+                        onFailure = {
+                            Result.failure(it)
+                        },
+                    )
+                }, onFailure = {
                     Result.failure(it)
-                },
-            )
-        }, onFailure = {
-            Result.failure(it)
-        })
+                })
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
     }
 
     suspend fun setPublicProfile(value: Boolean): Result<Unit> = withContext(ioDispatcher) {
