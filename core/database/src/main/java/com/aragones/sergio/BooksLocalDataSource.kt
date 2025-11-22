@@ -20,7 +20,7 @@ class BooksLocalDataSource @Inject constructor(
 
     suspend fun importDataFrom(books: List<Book>) = bookDao.insertBooks(books)
 
-    suspend fun getBook(googleId: String): Book = bookDao.getBook(googleId)
+    suspend fun getBook(googleId: String): Book? = bookDao.getBook(googleId)
 
     suspend fun insertBooks(books: List<Book>) = bookDao.insertBooks(books)
 

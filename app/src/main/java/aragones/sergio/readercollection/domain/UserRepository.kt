@@ -84,9 +84,6 @@ class UserRepository @Inject constructor(
         withContext(ioDispatcher) {
             userRemoteDataSource.register(username, password).fold(
                 onSuccess = {
-                    val userData = UserData(username, password)
-                    val authData = AuthData("")
-                    userLocalDataSource.storeLoginData(userData, authData)
                     Result.success(Unit)
                 },
                 onFailure = {
@@ -134,7 +131,7 @@ class UserRepository @Inject constructor(
         val isActive = withTimeout(TIMEOUT) {
             userRemoteDataSource.isPublicProfileActive(username)
         }.fold(
-            onSuccess = { true },
+            onSuccess = { it },
             onFailure = { false },
         )
         userLocalDataSource.storePublicProfile(isActive)

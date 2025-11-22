@@ -42,7 +42,7 @@ class AddFriendsViewModel @Inject constructor(
     //region Public methods
     fun searchUserWith(username: String) = viewModelScope.launch {
         if (username.isNotEmpty()) {
-            _state.value = AddFriendsUiState.Loading(_state.value.query)
+            _state.value = AddFriendsUiState.Loading(username)
             userRepository.getUserWith(username).fold(
                 onSuccess = { user ->
                     _state.value = AddFriendsUiState.Success(
@@ -133,14 +133,14 @@ class AddFriendsViewModel @Inject constructor(
     //endregion
 }
 
-fun User.toUi(): UserUi = UserUi(
+private fun User.toUi(): UserUi = UserUi(
     id = id,
     username = username,
     status = status,
     isLoading = false,
 )
 
-fun UserUi.toDomain(): User = User(
+private fun UserUi.toDomain(): User = User(
     id = id,
     username = username,
     status = status,

@@ -22,8 +22,8 @@ fun BooksView(
     onAddBook: () -> Unit,
     viewModel: BooksViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.state
-    val sortingPickerState by viewModel.sortingPickerState
+    val state by viewModel.state.collectAsState()
+    val sortingPickerState by viewModel.sortingPickerState.collectAsState()
     val error by viewModel.booksError.collectAsState()
 
     ReaderCollectionApp(navigationBarSameAsBackground = false) {

@@ -5,9 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.account
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
@@ -28,7 +25,7 @@ class AccountViewModel @Inject constructor(
 ) : ViewModel() {
 
     //region Private properties
-    private var _state: MutableState<AccountUiState> = mutableStateOf(
+    private var _state: MutableStateFlow<AccountUiState> = MutableStateFlow(
         AccountUiState.empty().copy(
             username = userRepository.username,
             password = userRepository.userData.password,
@@ -41,7 +38,7 @@ class AccountViewModel @Inject constructor(
     //endregion
 
     //region Public properties
-    val state: State<AccountUiState> = _state
+    val state: StateFlow<AccountUiState> = _state
     val profileError: StateFlow<ErrorResponse?> = _profileError
     val logOut: StateFlow<Boolean> = _logOut
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId

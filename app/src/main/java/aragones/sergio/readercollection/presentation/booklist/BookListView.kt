@@ -21,20 +21,13 @@ fun BookListView(
     onBack: () -> Unit,
     viewModel: BookListViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.state
-    val sortingPickerState by viewModel.sortingPickerState
+    val uiState by viewModel.state.collectAsState()
+    val sortingPickerState by viewModel.sortingPickerState.collectAsState()
     val error by viewModel.booksError.collectAsState()
 
-    when (val currentState = uiState) {
-        is BookListUiState.Success -> {
-            if (currentState.books.isEmpty() && !currentState.isLoading) {
-                onBack()
-                return
-            }
-        }
-        else -> {
-            Unit
-        }
+    if (uiState.books.isEmpty() && !uiState.isLoading) {
+        onBack()
+        return
     }
 
     ReaderCollectionApp {

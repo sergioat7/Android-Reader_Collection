@@ -7,9 +7,7 @@ package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import javax.inject.Inject
@@ -27,7 +25,7 @@ class UserRemoteDataSource @Inject constructor(
     //region Public methods
     suspend fun login(username: String, password: String): Result<String> = runCatching {
         auth.signInWithEmailAndPassword("${username}$mailEnd", password).await()
-        Firebase.auth.currentUser?.uid ?: ""
+        auth.currentUser?.uid ?: throw NoSuchElementException()
     }
 
     fun logout() {
@@ -227,8 +225,11 @@ class UserRemoteDataSource @Inject constructor(
     }
 
     suspend fun getMinVersion(): Int {
-        remoteConfig.fetch(0)
-        remoteConfig.activate().await()
+        try {
+            remoteConfig.fetch(0)
+            remoteConfig.activate().await()
+        } catch (_: Exception) {
+        }
 
         val minVersion = remoteConfig.getString("min_version").split(".")
         if (minVersion.size != 3) return 0
