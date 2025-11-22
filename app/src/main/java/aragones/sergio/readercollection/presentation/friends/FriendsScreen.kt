@@ -353,10 +353,10 @@ private class FriendsScreenPreviewParameterProvider : PreviewParameterProvider<F
                     User(
                         id = "3",
                         username =
-                        """
-                        User with a very long name
-                        that will have to be fitted in two lines
-                        """.trimIndent(),
+                            """
+                            User with a very long name
+                            that will have to be fitted in two lines
+                            """.trimIndent(),
                         status = RequestStatus.PENDING_MINE,
                     ),
                     User(
