@@ -94,6 +94,7 @@ fun BooksScreen(
     val sheetState = rememberModalBottomSheetState()
     val coroutineScope = rememberCoroutineScope()
     var selectedBook by remember { mutableStateOf<Book?>(null) }
+    var selectedState by remember { mutableStateOf<String?>(null) }
 
     Box(modifier = modifier.fillMaxSize()) {
         BooksScreenContent(
@@ -103,6 +104,7 @@ fun BooksScreen(
             onBookClick = onBookClick,
             onLongClickBook = { book ->
                 selectedBook = book
+                selectedState = book.state
                 coroutineScope.launch {
                     sheetState.show()
                 }
@@ -127,17 +129,19 @@ fun BooksScreen(
         ) {
             selectedBook?.let { book ->
                 BottomSheetContent(
-                    book = book,
+                    title = book.title ?: "",
+                    bookState = selectedState,
                     onStateClick = { newState ->
-                        if (newState != book.state) {
-                            val modifiedBook = book.copy(state = newState)
-                            onBookStateChange(modifiedBook)
-                            selectedBook = modifiedBook
-                        }
+                        selectedState = newState
                     },
                     onDone = {
+                        if (selectedState != book.state) {
+                            val modifiedBook = book.copy(state = selectedState)
+                            onBookStateChange(modifiedBook)
+                        }
                         coroutineScope.launch {
                             sheetState.hide()
+                            selectedState = null
                             selectedBook = null
                         }
                     },
@@ -467,7 +471,12 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDone: () -> Unit) {
+private fun BottomSheetContent(
+    title: String,
+    bookState: String?,
+    onStateClick: (String) -> Unit,
+    onDone: () -> Unit,
+) {
     Column(
         modifier = Modifier
             .padding(horizontal = 24.dp)
@@ -476,7 +485,7 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Text(
-            text = book.title ?: "",
+            text = title,
             style = MaterialTheme.typography.displayLarge,
             color = MaterialTheme.colorScheme.primary,
             textAlign = TextAlign.Center,
@@ -496,7 +505,7 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
             for (state in MyConstants.STATES) {
                 CustomFilterChip(
                     title = state.name,
-                    selected = state.id == book.state,
+                    selected = state.id == bookState,
                     onClick = { onStateClick(state.id) },
                     border = BorderStroke(
                         width = 1.dp,
@@ -504,7 +513,7 @@ private fun BottomSheetContent(book: Book, onStateClick: (String?) -> Unit, onDo
                     ),
                     selectedIcon = rememberVectorPainter(Icons.Default.Done)
                         .withDescription(null)
-                        .takeIf { state.id == book.state },
+                        .takeIf { state.id == bookState },
                 )
             }
         }
