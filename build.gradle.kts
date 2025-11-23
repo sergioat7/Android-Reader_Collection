@@ -4,7 +4,6 @@ import com.diffplug.spotless.LineEnding
 buildscript {
     dependencies {
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:${libs.versions.navigation.get()}")
-        classpath("com.google.firebase:firebase-crashlytics-gradle:${libs.versions.crashlytics.get()}")
     }
 }
 
@@ -12,7 +11,9 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.androidLibrary) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.crashlytics) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.google.services) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.kotlin.serialization) apply false
