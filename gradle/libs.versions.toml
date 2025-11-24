@@ -1,47 +1,47 @@
 [versions]
-jdk = "17"
+jdk = "21"
 sdk-compile = "36"
 sdk-min = "23"
 sdk-target = "36"
 
-agp = "8.12.1"
+agp = "8.13.1"
 android-chart = "3.1.0"
-androidx-hilt = "1.2.0"
+androidx-hilt = "1.3.0"
 androidx-test-ext-junit = "1.3.0"
 app-update = "2.1.0"
 coil = "2.7.0"
-compose-activity = "1.10.1"
-compose-bom = "2025.08.00"
-compose-test = "1.9.0"
+compose-activity = "1.12.0"
+compose-bom = "2025.11.01"
+compose-test = "1.9.5"
 core-ktx = "1.17.0"
-crashlytics = "2.9.8"
+coroutines = "1.10.2"
+crashlytics = "3.0.6"
 detekt = "1.23.8"
 espresso-core = "3.7.0"
-firebase-bom = "34.1.0"
-google-services = "4.4.3"
-hilt = "2.57"
+firebase-bom = "34.6.0"
+google-services = "4.4.4"
+hilt = "2.57.2"
 junit = "4.13.2"
-kotlin = "2.2.10"
+kotlin = "2.2.21"
 kotlinx-serialization="1.9.0"
-ksp = "2.2.10-2.0.2"
-ktlint = "1.5.0"
+ksp = "2.3.3"
+ktlint = "1.8.0"
 leak-canary = "2.14"
-lifecycle = "2.9.2"
-lottie = "6.6.7"
-material = "1.12.0"
-material3 = "1.3.2"
+lifecycle = "2.10.0"
+lottie = "6.7.1"
+material = "1.13.0"
+material3 = "1.4.0"
+mockk = "1.14.6"
 moshi = "1.15.2"
-navigation = "2.9.3"
-okhttp3 = "5.1.0"
+navigation = "2.9.6"
+okhttp3 = "5.3.2"
 retrofit = "3.0.0"
-room = "2.7.2"
-room-rxjava3-bridge = "3.0.2"
-rxandroid = "3.0.2"
-rxjava = "3.1.11"
-rxkotlin = "3.0.1"
+robolectric = "4.16"
+room = "2.8.4"
 security = "1.1.0"
-spotless-version = "7.2.1"
-work-manager = "2.10.3"
+spotless-version = "8.1.0"
+turbine = "1.2.1"
+work-manager = "2.11.0"
 
 [libraries]
 
@@ -71,6 +71,9 @@ compose-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 
 #Coil
 coil = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+#Coroutines
+coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
 
 #Firebase
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
@@ -105,20 +108,12 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 
 #Retrofit
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-retrofit-adapter-rxjava = { group = "com.squareup.retrofit2", name = "adapter-rxjava3", version.ref = "retrofit" }
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
 retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 
 #Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-room-rxjava = { group = "androidx.room", name = "room-rxjava2", version.ref = "room" }
-room-rxjava3-bridge = { group = "com.github.akarnokd", name = "rxjava3-bridge", version.ref = "room-rxjava3-bridge" }
-
-#Rx
-rxjava = { group = "io.reactivex.rxjava3", name = "rxjava", version.ref = "rxjava" }
-rxkotlin = { group = "io.reactivex.rxjava3", name = "rxkotlin", version.ref = "rxkotlin" }
-rxandroid = { group = "io.reactivex.rxjava3", name = "rxandroid", version.ref = "rxandroid" }
 
 #Security
 security-crypto = { group = "androidx.security", name = "security-crypto", version.ref = "security" }
@@ -128,6 +123,9 @@ work-manager = { group = "androidx.work", name = "work-runtime-ktx", version.ref
 
 #Tests
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 
 #Android tests
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
@@ -139,6 +137,7 @@ compose-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifes
 android-application = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlytics" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
@@ -170,11 +169,5 @@ firebase = [
 retrofit = [
     "okhttp3-logging-interceptor",
     "retrofit",
-    "retrofit-adapter-rxjava",
     "retrofit-converter-moshi",
-]
-rx = [
-    "rxandroid",
-    "rxjava",
-    "rxkotlin",
 ]

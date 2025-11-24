@@ -11,24 +11,18 @@ import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
-import aragones.sergio.readercollection.domain.base.BaseRepository
-import aragones.sergio.readercollection.domain.di.IoScheduler
-import aragones.sergio.readercollection.domain.di.MainScheduler
+import aragones.sergio.readercollection.domain.di.IoDispatcher
 import aragones.sergio.readercollection.domain.model.User
-import io.reactivex.rxjava3.core.Completable
-import io.reactivex.rxjava3.core.Scheduler
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeout
 
 class UserRepository @Inject constructor(
     private val userLocalDataSource: UserLocalDataSource,
     private val userRemoteDataSource: UserRemoteDataSource,
-    @IoScheduler private val ioScheduler: Scheduler,
-    @MainScheduler private val mainScheduler: Scheduler,
-) : BaseRepository() {
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+) {
 
     //region Public properties
     val username: String
@@ -66,287 +60,184 @@ class UserRepository @Inject constructor(
     //endregion
 
     //region Public methods
-    fun login(username: String, password: String): Completable = Completable
-        .create { emitter ->
-            userRemoteDataSource
-                .login(username, password)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onSuccess = { uuid ->
-                        val userData = UserData(username, password)
-                        val authData = AuthData(uuid)
-                        userLocalDataSource.storeLoginData(userData, authData)
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun logout() {
-        userRemoteDataSource
-            .logout()
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    userLocalDataSource.logout()
+    suspend fun login(username: String, password: String): Result<Unit> =
+        withContext(ioDispatcher) {
+            userRemoteDataSource.login(username, password).fold(
+                onSuccess = { uuid ->
+                    val userData = UserData(username, password)
+                    val authData = AuthData(uuid)
+                    userLocalDataSource.storeLoginData(userData, authData)
+                    Result.success(Unit)
                 },
-                onError = {},
-            ).addTo(disposables)
-    }
-
-    fun register(username: String, password: String): Completable = Completable
-        .create { emitter ->
-            userRemoteDataSource
-                .register(username, password)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        val userData = UserData(username, password)
-                        val authData = AuthData("")
-                        userLocalDataSource.storeLoginData(userData, authData)
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun updatePassword(password: String): Completable = Completable
-        .create { emitter ->
-            userRemoteDataSource
-                .updatePassword(password)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        userLocalDataSource.storePassword(password)
-                        userRemoteDataSource
-                            .login(userLocalDataSource.username, password)
-                            .subscribeOn(ioScheduler)
-                            .observeOn(mainScheduler)
-                            .subscribeBy(
-                                onSuccess = { uuid ->
-                                    userLocalDataSource.storeCredentials(AuthData(uuid))
-                                    emitter.onComplete()
-                                },
-                                onError = {
-                                    emitter.onError(it)
-                                },
-                            ).addTo(disposables)
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun setPublicProfile(value: Boolean): Completable = Completable
-        .create { emitter ->
-            if (value) {
-                userRemoteDataSource
-                    .registerPublicProfile(username, userId)
-                    .timeout(10, TimeUnit.SECONDS)
-                    .subscribeOn(ioScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onComplete = {
-                            emitter.onComplete()
-                            userLocalDataSource.storePublicProfile(value)
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        },
-                    ).addTo(disposables)
-            } else {
-                userRemoteDataSource
-                    .deletePublicProfile(userId)
-                    .timeout(10, TimeUnit.SECONDS)
-                    .subscribeOn(ioScheduler)
-                    .observeOn(mainScheduler)
-                    .subscribeBy(
-                        onComplete = {
-                            userLocalDataSource.storePublicProfile(value)
-                            emitter.onComplete()
-                        },
-                        onError = {
-                            emitter.onError(it)
-                        },
-                    ).addTo(disposables)
-            }
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
-
-    fun loadConfig(): Completable = Completable
-        .create { emitter ->
-            userRemoteDataSource
-                .isPublicProfileActive(username)
-                .timeout(10, TimeUnit.SECONDS)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .onErrorReturnItem(false)
-                .subscribeBy(
-                    onSuccess = { value ->
-                        userLocalDataSource.storePublicProfile(value)
-                        emitter.onComplete()
-                    },
-                ).addTo(disposables)
+                onFailure = {
+                    Result.failure(it)
+                },
+            )
         }
 
-    fun getUserWith(username: String): Single<User> = Single.create { emitter ->
-        userRemoteDataSource
-            .getUser(username, userId)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { user ->
-                    userRemoteDataSource
-                        .getFriends(userId)
-                        .timeout(10, TimeUnit.SECONDS)
-                        .subscribeOn(ioScheduler)
-                        .observeOn(mainScheduler)
-                        .onErrorReturnItem(emptyList())
-                        .subscribeBy(
-                            onSuccess = { friends ->
-                                friends.firstOrNull { it.id == user.id }?.let { friend ->
-                                    emitter.onSuccess(friend.toDomain())
-                                } ?: emitter.onSuccess(user.toDomain())
-                            },
-                        ).addTo(disposables)
-                },
-                onError = {
-                    emitter.onError(it)
-                },
-            ).addTo(disposables)
+    fun logout() {
+        userRemoteDataSource.logout()
+        userLocalDataSource.logout()
     }
 
-    fun getFriends(): Single<List<User>> = Single.create { emitter ->
-        userRemoteDataSource
-            .getFriends(userId)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .onErrorReturnItem(emptyList())
-            .subscribeBy(
-                onSuccess = { friends ->
-                    emitter.onSuccess(friends.map { it.toDomain() })
+    suspend fun register(username: String, password: String): Result<Unit> =
+        withContext(ioDispatcher) {
+            userRemoteDataSource.register(username, password).fold(
+                onSuccess = {
+                    Result.success(Unit)
                 },
-            ).addTo(disposables)
+                onFailure = {
+                    Result.failure(it)
+                },
+            )
+        }
+
+    suspend fun updatePassword(password: String): Result<Unit> = withContext(ioDispatcher) {
+        val userData = userLocalDataSource.userData
+        userRemoteDataSource.login(userData.username, userData.password).fold(
+            onSuccess = {
+                userRemoteDataSource.updatePassword(password).fold(onSuccess = {
+                    userLocalDataSource.storePassword(password)
+                    userRemoteDataSource.login(userData.username, password).fold(
+                        onSuccess = { uuid ->
+                            userLocalDataSource.storeCredentials(AuthData(uuid))
+                            Result.success(Unit)
+                        },
+                        onFailure = {
+                            Result.failure(it)
+                        },
+                    )
+                }, onFailure = {
+                    Result.failure(it)
+                })
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
     }
 
-    fun getFriend(friendId: String): Single<User> = Single.create { emitter ->
-        userRemoteDataSource
-            .getFriend(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onSuccess = { user ->
-                    emitter.onSuccess(user.toDomain())
-                },
-                onError = {
-                    emitter.onError(it)
-                },
-            ).addTo(disposables)
+    suspend fun setPublicProfile(value: Boolean): Result<Unit> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            if (value) {
+                userRemoteDataSource.registerPublicProfile(username, userId)
+            } else {
+                userRemoteDataSource.deletePublicProfile(userId)
+            }
+        }.fold(
+            onSuccess = {
+                userLocalDataSource.storePublicProfile(value)
+                Result.success(Unit)
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
     }
 
-    fun requestFriendship(friend: User): Completable = Completable.create { emitter ->
+    suspend fun loadConfig() = withContext(ioDispatcher) {
+        val isActive = withTimeout(TIMEOUT) {
+            userRemoteDataSource.isPublicProfileActive(username)
+        }.fold(
+            onSuccess = { it },
+            onFailure = { false },
+        )
+        userLocalDataSource.storePublicProfile(isActive)
+    }
+
+    suspend fun getUserWith(username: String): Result<User> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.getUser(username, userId)
+        }.fold(
+            onSuccess = { user ->
+                val friend = withTimeout(TIMEOUT) {
+                    userRemoteDataSource.getFriends(userId)
+                }.fold(
+                    onSuccess = { friends ->
+                        friends.firstOrNull { it.id == user.id }
+                    },
+                    onFailure = {
+                        null
+                    },
+                ) ?: user
+                Result.success(friend.toDomain())
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
+    }
+
+    suspend fun getFriends(): List<User> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.getFriends(userId)
+        }.fold(
+            onSuccess = { friends ->
+                friends.map { it.toDomain() }
+            },
+            onFailure = {
+                emptyList()
+            },
+        )
+    }
+
+    suspend fun getFriend(friendId: String): Result<User> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.getFriend(userId, friendId)
+        }.fold(
+            onSuccess = { friend ->
+                Result.success(friend.toDomain())
+            },
+            onFailure = {
+                Result.failure(it)
+            },
+        )
+    }
+
+    suspend fun requestFriendship(friend: User): Result<Unit> = withContext(ioDispatcher) {
         val user = UserResponse(
             id = userId,
             username = username,
             status = RequestStatus.PENDING_MINE,
         )
-        val friend = friend.toRemoteData()
-        userRemoteDataSource
-            .requestFriendship(user, friend)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                },
-            ).addTo(disposables)
+        val remoteFriend = friend.toRemoteData()
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.requestFriendship(user, remoteFriend)
+        }
     }
 
-    fun acceptFriendRequest(friendId: String): Completable = Completable.create { emitter ->
-        userRemoteDataSource
-            .acceptFriendRequest(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                },
-            ).addTo(disposables)
+    suspend fun acceptFriendRequest(friendId: String): Result<Unit> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.acceptFriendRequest(userId, friendId)
+        }
     }
 
-    fun rejectFriendRequest(friendId: String): Completable = Completable.create { emitter ->
-        userRemoteDataSource
-            .rejectFriendRequest(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                },
-            ).addTo(disposables)
+    suspend fun rejectFriendRequest(friendId: String): Result<Unit> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.rejectFriendRequest(userId, friendId)
+        }
     }
 
-    fun deleteFriend(friendId: String): Completable = Completable.create { emitter ->
-        userRemoteDataSource
-            .deleteFriend(userId, friendId)
-            .timeout(10, TimeUnit.SECONDS)
-            .subscribeOn(ioScheduler)
-            .observeOn(mainScheduler)
-            .subscribeBy(
-                onComplete = {
-                    emitter.onComplete()
-                },
-                onError = {
-                    emitter.onError(it)
-                },
-            ).addTo(disposables)
+    suspend fun deleteFriend(friendId: String): Result<Unit> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.deleteFriend(userId, friendId)
+        }
     }
 
-    fun deleteUser(): Completable = Completable
-        .create { emitter ->
-            userRemoteDataSource
-                .deleteUser(userId)
-                .subscribeOn(ioScheduler)
-                .observeOn(mainScheduler)
-                .subscribeBy(
-                    onComplete = {
-                        userLocalDataSource.logout()
-                        userLocalDataSource.removeUserData()
-                        emitter.onComplete()
-                    },
-                    onError = {
-                        emitter.onError(it)
-                    },
-                ).addTo(disposables)
-        }.subscribeOn(ioScheduler)
-        .observeOn(mainScheduler)
+    suspend fun deleteUser(): Result<Unit> = withContext(ioDispatcher) {
+        withTimeout(TIMEOUT) {
+            userRemoteDataSource.deleteUser(userId).fold(
+                onSuccess = {
+                    userLocalDataSource.logout()
+                    userLocalDataSource.removeUserData()
+                    Result.success(it)
+                },
+                onFailure = {
+                    Result.failure(it)
+                },
+            )
+        }
+    }
 
     fun storeAutomaticSync(value: Boolean) {
         userLocalDataSource.storeAutomaticSync(value)
@@ -375,3 +266,5 @@ class UserRepository @Inject constructor(
     }
     //endregion
 }
+
+private const val TIMEOUT = 10_000L

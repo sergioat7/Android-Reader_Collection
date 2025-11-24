@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
 import javax.inject.Inject
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.StateFlow
 @HiltViewModel
 class DisplaySettingsViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var _state: MutableState<DisplaySettingsUiState> = mutableStateOf(
@@ -53,12 +53,6 @@ class DisplaySettingsViewModel @Inject constructor(
             isSortDescending = userRepository.isSortDescending,
             themeMode = userRepository.themeMode,
         )
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        userRepository.onDestroy()
     }
     //endregion
 

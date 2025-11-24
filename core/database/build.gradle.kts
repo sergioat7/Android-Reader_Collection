@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 /*
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 22/2/2024
@@ -34,11 +36,14 @@ android {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
     }
-    kotlinOptions {
-        jvmTarget = libs.versions.jdk.get()
-    }
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
     }
 }
 
@@ -49,8 +54,8 @@ dependencies {
     implementation(libs.moshi)
     ksp(libs.room.compiler)
     implementation(libs.room.runtime)
-    implementation(libs.room.rxjava)
-    implementation(libs.room.rxjava3.bridge)
-    implementation(libs.rxjava)
-    implementation(libs.rxandroid)
+
+    androidTestImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 }

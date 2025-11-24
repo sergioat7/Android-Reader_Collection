@@ -5,15 +5,15 @@
 
 package aragones.sergio.readercollection.presentation
 
+import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Public properties
     val language: String

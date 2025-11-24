@@ -5,31 +5,29 @@
 
 package aragones.sergio.readercollection.presentation.search
 
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
-import aragones.sergio.readercollection.presentation.base.BaseViewModel
 import com.aragones.sergio.util.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.rxjava3.kotlin.addTo
-import io.reactivex.rxjava3.kotlin.subscribeBy
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository,
-) : BaseViewModel() {
+) : ViewModel() {
 
     //region Private properties
     private var query = ""
     private var page: Int = 1
     private val books = mutableListOf<Book>()
-    private lateinit var savedBooks: MutableList<Book>
+    private var savedBooks = mutableListOf<Book>()
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
     private val _state: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState.Empty)
@@ -42,19 +40,8 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Lifecycle methods
-    init {
-        fetchPendingBooks()
-    }
-
     fun onResume() {
-        fetchPendingBooks()
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-
-        booksRepository.onDestroy()
-        userRepository.onDestroy()
+        fetchSavedBooks()
     }
     //endregion
 
@@ -79,11 +66,9 @@ class SearchViewModel @Inject constructor(
             is SearchUiState.Error -> currentState.copy(isLoading = true)
         }
 
-        booksRepository
-            .searchBooks(this.query, page, null)
-            .subscribeBy(
+        viewModelScope.launch {
+            booksRepository.searchBooks(this@SearchViewModel.query, page, null).fold(
                 onSuccess = { newBooks ->
-
                     if (books.isEmpty()) {
                         books.add(Book(id = ""))
                     }
@@ -96,18 +81,19 @@ class SearchViewModel @Inject constructor(
                     page++
                     _state.value = SearchUiState.Success(
                         isLoading = false,
-                        query = this.query,
+                        query = this@SearchViewModel.query,
                         books = updatedBooks,
                     )
                 },
-                onError = {
+                onFailure = {
                     _state.value = SearchUiState.Error(
                         isLoading = false,
-                        query = this.query,
+                        query = this@SearchViewModel.query,
                         value = ErrorResponse("", R.string.error_search),
                     )
                 },
-            ).addTo(disposables)
+            )
+        }
     }
 
     fun addBook(bookId: String) {
@@ -119,17 +105,17 @@ class SearchViewModel @Inject constructor(
         val newBook = books.firstOrNull { it.id == bookId } ?: return
         newBook.state = BookState.PENDING
         newBook.priority = (pendingBooks.maxByOrNull { it.priority }?.priority ?: -1) + 1
-        booksRepository
-            .createBook(newBook)
-            .subscribeBy(
-                onComplete = {
-                    savedBooks.add(newBook)
+
+        viewModelScope.launch {
+            booksRepository.createBook(newBook).fold(
+                onSuccess = {
                     _infoDialogMessageId.value = R.string.book_saved
                 },
-                onError = {
+                onFailure = {
                     _infoDialogMessageId.value = R.string.error_database
                 },
-            ).addTo(disposables)
+            )
+        }
     }
 
     fun closeDialogs() {
@@ -138,20 +124,10 @@ class SearchViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun fetchPendingBooks() {
-        booksRepository
-            .getBooks()
-            .subscribeBy(
-                onComplete = {
-                    savedBooks = mutableListOf()
-                },
-                onNext = {
-                    savedBooks = it.toMutableList()
-                },
-                onError = {
-                    savedBooks = mutableListOf()
-                },
-            ).addTo(disposables)
+    private fun fetchSavedBooks() = viewModelScope.launch {
+        booksRepository.getBooks().collect {
+            savedBooks = it.toMutableList()
+        }
     }
     //endregion
 }

@@ -1,15 +1,16 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.crashlytics)
     alias(libs.plugins.google.services)
     alias(libs.plugins.hilt)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.ksp)
-    id("com.google.firebase.crashlytics")
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -21,7 +22,7 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 8
-val versionPatch = 3
+val versionPatch = 4
 val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
@@ -82,12 +83,15 @@ android {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
     }
-    kotlinOptions {
-        jvmTarget = libs.versions.jdk.get()
-    }
 
     kotlin {
         jvmToolchain(libs.versions.jdk.get().toInt())
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
     }
 }
 
@@ -101,7 +105,6 @@ dependencies {
     implementation(libs.app.update.ktx)
     implementation(libs.bundles.compose)
     implementation(libs.bundles.retrofit)
-    implementation(libs.bundles.rx)
     implementation(libs.bundles.firebase)
     implementation(platform(libs.compose.bom))
     implementation(libs.coil)
@@ -121,12 +124,15 @@ dependencies {
     ksp(libs.moshi.kotlin.codegen)
     implementation(libs.navigation.compose)
     implementation(libs.room.runtime)
-    implementation(libs.room.rxjava)
-    implementation(libs.room.rxjava3.bridge)
     implementation(libs.security.crypto)
     implementation(libs.work.manager)
 
+    testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
+    testImplementation(libs.mockk)
+    testImplementation(libs.robolectric)
+    testImplementation(libs.turbine)
+
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.compose.test.junit)
