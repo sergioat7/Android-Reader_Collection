@@ -31,6 +31,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -90,36 +91,40 @@ class BookListViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-        _state.value = _state.value.copy(
-            isLoading = true,
-            subtitle = subtitle,
-        )
+        _state.update {
+            it.copy(
+                isLoading = true,
+                subtitle = subtitle,
+            )
+        }
 
         combine(
             booksRepository.getBooks(),
             _sortingPickerState,
-        ) { books, sortingPickerState ->
+        ) { books, _ ->
             if (books.isEmpty()) {
                 showError()
             } else {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    books = getFilteredBooksFor(books),
-                    subtitle = subtitle,
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        books = getFilteredBooksFor(books),
+                        subtitle = subtitle,
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
 
     fun switchDraggingState() {
-        _state.value = _state.value.copy(isDraggingEnabled = _state.value.isDraggingEnabled.not())
+        _state.update { it.copy(isDraggingEnabled = it.isDraggingEnabled.not()) }
     }
 
     fun updateBookOrdering(books: List<Book>) {
         for ((index, book) in books.withIndex()) {
             book.priority = index
         }
-        _state.value = _state.value.copy(books = getFilteredBooksFor(books))
+        _state.update { it.copy(books = getFilteredBooksFor(books)) }
     }
 
     fun setPriorityFor(books: List<Book>) = viewModelScope.launch {
@@ -134,7 +139,7 @@ class BookListViewModel @Inject constructor(
     }
 
     fun showSortingPickerState() {
-        _sortingPickerState.value = _sortingPickerState.value.copy(show = true)
+        _sortingPickerState.update { it.copy(show = true) }
     }
 
     fun updatePickerState(newSortParam: String?, newIsSortDescending: Boolean) {

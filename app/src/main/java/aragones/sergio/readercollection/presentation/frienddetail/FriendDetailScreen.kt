@@ -21,7 +21,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyGridScope
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -211,10 +211,10 @@ private fun LazyGridScope.BooksSection(
                 )
             }
         }
-        itemsIndexed(
+        items(
             items = books,
-            key = { index, book -> book.id },
-        ) { index, book ->
+            key = { book -> book.id },
+        ) { book ->
             VerticalBookItem(
                 book = book,
                 isSwitchLeftIconEnabled = false,

@@ -22,6 +22,7 @@ import java.util.Calendar
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -49,9 +50,11 @@ class StatisticsViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() = viewModelScope.launch {
-        _state.value = when (val currentState = _state.value) {
-            is StatisticsUiState.Empty -> StatisticsUiState.Success.empty().copy(isLoading = true)
-            is StatisticsUiState.Success -> currentState.copy(isLoading = true)
+        _state.update {
+            when (it) {
+                StatisticsUiState.Empty -> StatisticsUiState.Success.empty().copy(isLoading = true)
+                is StatisticsUiState.Success -> it.copy(isLoading = true)
+            }
         }
 
         booksRepository.getReadBooks().collect { books ->

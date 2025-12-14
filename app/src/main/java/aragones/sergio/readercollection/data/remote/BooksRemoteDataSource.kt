@@ -34,6 +34,10 @@ class BooksRemoteDataSource @Inject constructor(
         private const val ORDER_PARAM = "orderBy"
         private const val API_KEY = "key"
         private const val RESULTS = 20
+        private const val FORMATS_KEY = "formats"
+        private const val STATES_KEY = "states"
+        private const val BOOKS_PATH = "books"
+        private const val USERS_PATH = "users"
     }
     //endregion
 
@@ -65,20 +69,20 @@ class BooksRemoteDataSource @Inject constructor(
     }
 
     fun fetchRemoteConfigValues(language: String) {
-        setupFormats(remoteConfig.getString("formats"), language)
-        setupStates(remoteConfig.getString("states"), language)
+        setupFormats(remoteConfig.getString(FORMATS_KEY), language)
+        setupStates(remoteConfig.getString(STATES_KEY), language)
 
         remoteConfig.fetchAndActivate().addOnCompleteListener {
-            setupFormats(remoteConfig.getString("formats"), language)
-            setupStates(remoteConfig.getString("states"), language)
+            setupFormats(remoteConfig.getString(FORMATS_KEY), language)
+            setupStates(remoteConfig.getString(STATES_KEY), language)
         }
     }
 
     suspend fun getBooks(uuid: String): Result<List<BookResponse>> = runCatching {
         firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(uuid)
-            .collection("books")
+            .collection(BOOKS_PATH)
             .get()
             .await()
             .toObjects(BookResponse::class.java)
@@ -87,9 +91,9 @@ class BooksRemoteDataSource @Inject constructor(
     suspend fun getFriendBook(friendId: String, bookId: String): Result<BookResponse> =
         runCatching {
             val book = firestore
-                .collection("users")
+                .collection(USERS_PATH)
                 .document(friendId)
-                .collection("books")
+                .collection(BOOKS_PATH)
                 .document(bookId)
                 .get()
                 .await()
@@ -104,9 +108,9 @@ class BooksRemoteDataSource @Inject constructor(
     ): Result<Unit> = runCatching {
         val batch = firestore.batch()
         val booksRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(uuid)
-            .collection("books")
+            .collection(BOOKS_PATH)
 
         booksToSave.forEach { book ->
             val docRef = booksRef.document(book.id)

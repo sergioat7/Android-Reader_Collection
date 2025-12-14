@@ -83,7 +83,7 @@ fun CustomOutlinedTextField(
 
     val showLabel = !enabled || text.isNotBlank() || placeholderText == null || isFocused
 
-    val label: @Composable (() -> Unit)? =
+    val label: @Composable (() -> Unit) =
         {
             Text(
                 text = labelText,
@@ -125,7 +125,7 @@ fun CustomOutlinedTextField(
             }
         }
     }
-    val supportingText: @Composable (() -> Unit)? =
+    val supportingText: @Composable (() -> Unit) =
         {
             Row(
                 modifier = Modifier

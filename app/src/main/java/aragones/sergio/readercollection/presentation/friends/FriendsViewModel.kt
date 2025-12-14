@@ -17,6 +17,7 @@ import javax.inject.Inject
 import kotlin.fold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -47,15 +48,15 @@ class FriendsViewModel @Inject constructor(
         userRepository.acceptFriendRequest(friendId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                when (val currentState = _state.value) {
-                    is FriendsUiState.Loading -> {}
-                    is FriendsUiState.Success -> {
-                        _state.value = currentState.copy(
-                            friends = currentState.friends.map {
-                                if (it.id == friendId) {
-                                    it.copy(status = RequestStatus.APPROVED)
+                _state.update {
+                    when (it) {
+                        FriendsUiState.Loading -> it
+                        is FriendsUiState.Success -> it.copy(
+                            friends = it.friends.map { friend ->
+                                if (friend.id == friendId) {
+                                    friend.copy(status = RequestStatus.APPROVED)
                                 } else {
-                                    it
+                                    friend
                                 }
                             },
                         )
@@ -75,11 +76,11 @@ class FriendsViewModel @Inject constructor(
         userRepository.rejectFriendRequest(friendId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                when (val currentState = _state.value) {
-                    is FriendsUiState.Loading -> {}
-                    is FriendsUiState.Success -> {
-                        _state.value = currentState.copy(
-                            friends = currentState.friends.filter { it.id != friendId },
+                _state.update {
+                    when (it) {
+                        FriendsUiState.Loading -> it
+                        is FriendsUiState.Success -> it.copy(
+                            friends = it.friends.filter { friend -> friend.id != friendId },
                         )
                     }
                 }
@@ -97,11 +98,11 @@ class FriendsViewModel @Inject constructor(
         userRepository.deleteFriend(friendId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                when (val currentState = _state.value) {
-                    is FriendsUiState.Loading -> {}
-                    is FriendsUiState.Success -> {
-                        _state.value = currentState.copy(
-                            friends = currentState.friends.filter { it.id != friendId },
+                _state.update {
+                    when (it) {
+                        FriendsUiState.Loading -> it
+                        is FriendsUiState.Success -> it.copy(
+                            friends = it.friends.filter { friend -> friend.id != friendId },
                         )
                     }
                 }

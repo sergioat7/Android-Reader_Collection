@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -56,15 +57,17 @@ class BooksViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-        _state.value = when (val currentState = _state.value) {
-            is BooksUiState.Empty -> currentState.copy(isLoading = true)
-            is BooksUiState.Success -> currentState.copy(isLoading = true)
+        _state.update {
+            when (it) {
+                is BooksUiState.Empty -> it.copy(isLoading = true)
+                is BooksUiState.Success -> it.copy(isLoading = true)
+            }
         }
 
         combine(
             booksRepository.getBooks(),
             _sortingPickerState,
-        ) { books, sortingPickerState ->
+        ) { books, _ ->
             originalBooks = books
             sortBooks()
         }.launchIn(viewModelScope)
@@ -75,7 +78,7 @@ class BooksViewModel @Inject constructor(
     }
 
     fun showSortingPickerState() {
-        _sortingPickerState.value = _sortingPickerState.value.copy(show = true)
+        _sortingPickerState.update { it.copy(show = true) }
     }
 
     fun updatePickerState(newSortParam: String?, newIsSortDescending: Boolean) {
