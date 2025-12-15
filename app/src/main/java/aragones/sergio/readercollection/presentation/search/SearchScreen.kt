@@ -229,14 +229,14 @@ private fun SearchContent(
             itemsIndexed(books) { index, book ->
                 if (book.id.isNotBlank()) {
                     val swipeActionLabel = stringResource(R.string.save)
+                    val direction = SwipeDirection.LEFT
                     SwipeItem(
-                        direction = SwipeDirection.LEFT,
-                        dismissValue = SwipeToDismissBoxValue.EndToStart,
+                        direction = direction,
                         threshold = 0.6f,
                         onSwipe = { onSwipe(book.id) },
                         background = {
                             SwipeItemBackground(
-                                dismissValue = SwipeToDismissBoxValue.EndToStart,
+                                direction = direction,
                                 color = MaterialTheme.colorScheme.roseBud,
                                 accessibilityPainter = painterResource(R.drawable.ic_save_book)
                                     .withDescription(swipeActionLabel),
