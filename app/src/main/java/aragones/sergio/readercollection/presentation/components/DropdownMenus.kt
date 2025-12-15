@@ -23,6 +23,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -44,7 +45,7 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 @Composable
 fun CustomDropdownMenu(
     currentValue: String,
-    values: List<String>,
+    values: DropdownValues,
     labelText: String,
     onOptionSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
@@ -128,11 +129,11 @@ fun CustomDropdownMenu(
                     MaterialTheme.colorScheme.secondary.copy(alpha = 0.75f),
                 ),
             ) {
-                for (value in values) {
+                for (value in values.values) {
                     val itemContentDescription = stringResource(
                         R.string.dropdown_item_description,
-                        values.indexOf(value) + 1,
-                        values.size,
+                        values.values.indexOf(value) + 1,
+                        values.values.size,
                     )
                     DropdownMenuItem(
                         text = {
@@ -163,7 +164,7 @@ private fun CustomDropdownMenuPreview() {
     ReaderCollectionTheme {
         CustomDropdownMenu(
             currentValue = "Value",
-            values = listOf("Option 1", "Option 2", "Option 3"),
+            values = DropdownValues(listOf("Option 1", "Option 2", "Option 3")),
             onOptionSelected = {},
             modifier = Modifier.padding(12.dp),
             labelText = "Header",
@@ -171,3 +172,6 @@ private fun CustomDropdownMenuPreview() {
         )
     }
 }
+
+@Immutable
+data class DropdownValues(val values: List<String>)

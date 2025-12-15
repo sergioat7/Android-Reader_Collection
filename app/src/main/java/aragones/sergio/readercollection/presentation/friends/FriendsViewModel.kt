@@ -11,6 +11,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Users
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -41,7 +42,7 @@ class FriendsViewModel @Inject constructor(
     fun fetchFriends() = viewModelScope.launch {
         _state.value = FriendsUiState.Loading
         val friends = userRepository.getFriends()
-        _state.value = FriendsUiState.Success(friends)
+        _state.value = FriendsUiState.Success(Users(friends))
     }
 
     fun acceptFriendRequest(friendId: String) = viewModelScope.launch {
@@ -52,13 +53,15 @@ class FriendsViewModel @Inject constructor(
                     when (it) {
                         FriendsUiState.Loading -> it
                         is FriendsUiState.Success -> it.copy(
-                            friends = it.friends.map { friend ->
-                                if (friend.id == friendId) {
-                                    friend.copy(status = RequestStatus.APPROVED)
-                                } else {
-                                    friend
-                                }
-                            },
+                            friends = Users(
+                                it.friends.users.map { friend ->
+                                    if (friend.id == friendId) {
+                                        friend.copy(status = RequestStatus.APPROVED)
+                                    } else {
+                                        friend
+                                    }
+                                },
+                            ),
                         )
                     }
                 }
@@ -80,7 +83,9 @@ class FriendsViewModel @Inject constructor(
                     when (it) {
                         FriendsUiState.Loading -> it
                         is FriendsUiState.Success -> it.copy(
-                            friends = it.friends.filter { friend -> friend.id != friendId },
+                            friends = Users(
+                                it.friends.users.filter { friend -> friend.id != friendId },
+                            ),
                         )
                     }
                 }
@@ -102,7 +107,9 @@ class FriendsViewModel @Inject constructor(
                     when (it) {
                         FriendsUiState.Loading -> it
                         is FriendsUiState.Success -> it.copy(
-                            friends = it.friends.filter { friend -> friend.id != friendId },
+                            friends = Users(
+                                it.friends.users.filter { friend -> friend.id != friendId },
+                            ),
                         )
                     }
                 }

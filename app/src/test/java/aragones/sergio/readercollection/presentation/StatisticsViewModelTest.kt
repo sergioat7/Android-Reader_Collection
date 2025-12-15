@@ -18,6 +18,9 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.toLocalData
+import aragones.sergio.readercollection.presentation.statistics.BarEntries
+import aragones.sergio.readercollection.presentation.statistics.MapEntries
+import aragones.sergio.readercollection.presentation.statistics.PieEntries
 import aragones.sergio.readercollection.presentation.statistics.StatisticsUiState
 import aragones.sergio.readercollection.presentation.statistics.StatisticsViewModel
 import com.aragones.sergio.BooksLocalDataSource
@@ -94,18 +97,22 @@ class StatisticsViewModelTest {
                 )
                 val expected = StatisticsUiState.Success(
                     totalBooksRead = books.size,
-                    booksByYearEntries = listOf(BarEntry(2025f, 2f)),
-                    booksByMonthEntries = listOf(
-                        PieEntry(1f, "Sep"),
-                        PieEntry(1f, "Oct"),
+                    booksByYearEntries = BarEntries(listOf(BarEntry(2025f, 2f))),
+                    booksByMonthEntries = PieEntries(
+                        listOf(
+                            PieEntry(1f, "Sep"),
+                            PieEntry(1f, "Oct"),
+                        ),
                     ),
-                    booksByAuthorStats = mapOf(
-                        "Author 1" to listOf(book1),
-                        "Author 2" to listOf(book2),
+                    booksByAuthorStats = MapEntries(
+                        mapOf(
+                            "Author 1" to listOf(book1),
+                            "Author 2" to listOf(book2),
+                        ),
                     ),
                     shorterBook = book2,
                     longerBook = book1,
-                    booksByFormatEntries = listOf(PieEntry(1f, "Physical")),
+                    booksByFormatEntries = PieEntries(listOf(PieEntry(1f, "Physical"))),
                     isLoading = false,
                 )
                 val result = awaitItem()
@@ -116,12 +123,12 @@ class StatisticsViewModelTest {
                     result.totalBooksRead,
                 )
                 Assert.assertEquals(
-                    expected.booksByYearEntries.map { it.x to it.y },
-                    result.booksByYearEntries.map { it.x to it.y },
+                    expected.booksByYearEntries.entries.map { it.x to it.y },
+                    result.booksByYearEntries.entries.map { it.x to it.y },
                 )
                 Assert.assertEquals(
-                    expected.booksByMonthEntries.map { it.value to it.label },
-                    result.booksByMonthEntries.map { it.value to it.label },
+                    expected.booksByMonthEntries.entries.map { it.value to it.label },
+                    result.booksByMonthEntries.entries.map { it.value to it.label },
                 )
                 Assert.assertEquals(
                     expected.booksByAuthorStats,
@@ -136,8 +143,8 @@ class StatisticsViewModelTest {
                     result.longerBook,
                 )
                 Assert.assertEquals(
-                    expected.booksByFormatEntries.map { it.value to it.label },
-                    result.booksByFormatEntries.map { it.value to it.label },
+                    expected.booksByFormatEntries.entries.map { it.value to it.label },
+                    result.booksByFormatEntries.entries.map { it.value to it.label },
                 )
                 Assert.assertEquals(
                     expected.isLoading,

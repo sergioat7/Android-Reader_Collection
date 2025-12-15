@@ -5,18 +5,18 @@
 
 package aragones.sergio.readercollection.presentation.booklist
 
-import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 
 data class BookListUiState(
     val isLoading: Boolean,
-    val books: List<Book>,
+    val books: Books,
     val subtitle: String,
     val isDraggingEnabled: Boolean,
 ) {
     companion object {
         fun initial(): BookListUiState = BookListUiState(
             isLoading = true,
-            books = listOf(),
+            books = Books(),
             subtitle = "",
             isDraggingEnabled = false,
         )

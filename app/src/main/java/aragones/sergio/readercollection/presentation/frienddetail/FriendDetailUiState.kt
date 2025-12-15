@@ -5,10 +5,10 @@
 
 package aragones.sergio.readercollection.presentation.frienddetail
 
-import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.User
 
 sealed class FriendDetailUiState {
     data object Loading : FriendDetailUiState()
-    data class Success(val friend: User, val books: List<Book>) : FriendDetailUiState()
+    data class Success(val friend: User, val books: Books) : FriendDetailUiState()
 }

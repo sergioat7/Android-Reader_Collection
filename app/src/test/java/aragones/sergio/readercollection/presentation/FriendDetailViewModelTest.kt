@@ -19,6 +19,7 @@ import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.frienddetail.FriendDetailUiState
@@ -84,7 +85,7 @@ class FriendDetailViewModelTest {
                 viewModel.fetchFriend()
 
                 Assert.assertEquals(
-                    FriendDetailUiState.Success(friend, listOf(book)),
+                    FriendDetailUiState.Success(friend, Books(listOf(book))),
                     awaitItem(),
                 )
             }

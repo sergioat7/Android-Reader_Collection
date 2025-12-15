@@ -48,6 +48,7 @@ import aragones.sergio.readercollection.presentation.components.CustomOutlinedTe
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.DateCustomOutlinedTextField
+import aragones.sergio.readercollection.presentation.components.DropdownValues
 import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.StarRatingBar
@@ -338,7 +339,7 @@ private fun BookDetailContent(
             }
         CustomDropdownMenu(
             currentValue = bookState,
-            values = stateValues,
+            values = DropdownValues(stateValues),
             labelText = stringResource(R.string.state),
             onOptionSelected = { newStateValue ->
                 val newStateId = STATES.firstOrNull { it.name == newStateValue }?.id
@@ -398,7 +399,7 @@ private fun BookDetailContent(
             }
         CustomDropdownMenu(
             currentValue = bookFormat,
-            values = formatValues,
+            values = DropdownValues(formatValues),
             labelText = stringResource(R.string.format),
             onOptionSelected = { newFormatValue ->
                 val newFormatId = FORMATS.firstOrNull { it.name == newFormatValue }?.id

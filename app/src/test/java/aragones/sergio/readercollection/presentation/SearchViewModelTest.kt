@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.search.SearchUiState
@@ -84,7 +85,7 @@ class SearchViewModelTest {
                     SearchUiState.Success(
                         isLoading = true,
                         query = "",
-                        books = listOf(),
+                        books = Books(),
                     ),
                     awaitItem(),
                 )
@@ -92,7 +93,7 @@ class SearchViewModelTest {
                     SearchUiState.Success(
                         isLoading = false,
                         query = "",
-                        books = expectedBooks,
+                        books = Books(expectedBooks),
                     ),
                     awaitItem(),
                 )
@@ -122,7 +123,7 @@ class SearchViewModelTest {
                     SearchUiState.Success(
                         isLoading = true,
                         query = "",
-                        books = listOf(),
+                        books = Books(),
                     ),
                     awaitItem(),
                 )
@@ -130,7 +131,7 @@ class SearchViewModelTest {
                     SearchUiState.Success(
                         isLoading = false,
                         query = "",
-                        books = emptyList(),
+                        books = Books(),
                     ),
                     awaitItem(),
                 )
@@ -155,7 +156,7 @@ class SearchViewModelTest {
                     SearchUiState.Success(
                         isLoading = true,
                         query = "",
-                        books = listOf(),
+                        books = Books(),
                     ),
                     awaitItem(),
                 )
@@ -163,7 +164,7 @@ class SearchViewModelTest {
                     SearchUiState.Success(
                         isLoading = false,
                         query = "",
-                        books = emptyList(),
+                        books = Books(),
                     ),
                     awaitItem(),
                 )
@@ -186,7 +187,7 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = true,
                     query = "",
-                    books = listOf(),
+                    books = Books(),
                 ),
                 awaitItem(),
             )
@@ -194,9 +195,11 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = false,
                     query = "",
-                    books = listOf(
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        Book(""),
+                    books = Books(
+                        listOf(
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            Book(""),
+                        ),
                     ),
                 ),
                 awaitItem(),
@@ -208,9 +211,11 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = true,
                     query = "",
-                    books = listOf(
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        Book(""),
+                    books = Books(
+                        listOf(
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            Book(""),
+                        ),
                     ),
                 ),
                 awaitItem(),
@@ -219,10 +224,12 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = false,
                     query = "",
-                    books = listOf(
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        Book(""),
+                    books = Books(
+                        listOf(
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            Book(""),
+                        ),
                     ),
                 ),
                 awaitItem(),
@@ -234,10 +241,12 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = true,
                     query = "",
-                    books = listOf(
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        Book(""),
+                    books = Books(
+                        listOf(
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            Book(""),
+                        ),
                     ),
                 ),
                 awaitItem(),
@@ -246,9 +255,11 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = false,
                     query = "",
-                    books = listOf(
-                        getDefaultGoogleBook(bookId).toDomain(),
-                        Book(""),
+                    books = Books(
+                        listOf(
+                            getDefaultGoogleBook(bookId).toDomain(),
+                            Book(""),
+                        ),
                     ),
                 ),
                 awaitItem(),
@@ -278,7 +289,7 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = true,
                     query = query,
-                    books = listOf(),
+                    books = Books(),
                 ),
                 awaitItem(),
             )
@@ -286,7 +297,7 @@ class SearchViewModelTest {
                 SearchUiState.Success(
                     isLoading = false,
                     query = query,
-                    books = expectedBooks,
+                    books = Books(expectedBooks),
                 ),
                 awaitItem(),
             )

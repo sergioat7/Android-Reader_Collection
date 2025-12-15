@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.model.User
+import aragones.sergio.readercollection.domain.model.Users
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
@@ -77,11 +78,11 @@ fun FriendsScreen(
                 CustomCircularProgressIndicator()
             }
             is FriendsUiState.Success -> {
-                if (state.friends.isEmpty()) {
+                if (state.friends.users.isEmpty()) {
                     NoFriendsContent(onAddFriend)
                 } else {
                     FriendsScreenContent(
-                        state = state,
+                        friends = state.friends,
                         onSelectFriend = onSelectFriend,
                         onAcceptFriend = onAcceptFriend,
                         onRejectFriend = onRejectFriend,
@@ -152,7 +153,7 @@ private fun NoFriendsContent(onAddFriend: () -> Unit, modifier: Modifier = Modif
 
 @Composable
 private fun FriendsScreenContent(
-    state: FriendsUiState.Success,
+    friends: Users,
     onSelectFriend: (String) -> Unit,
     onAcceptFriend: (String) -> Unit,
     onRejectFriend: (String) -> Unit,
@@ -166,7 +167,7 @@ private fun FriendsScreenContent(
                 .fillMaxSize()
                 .padding(horizontal = 24.dp),
         ) {
-            items(state.friends, key = { it.id }) { friend ->
+            items(friends.users, key = { it.id }) { friend ->
                 FriendItem(
                     friend = friend,
                     onSelectFriend = { onSelectFriend(friend.id) },
@@ -339,40 +340,42 @@ private class FriendsScreenPreviewParameterProvider : PreviewParameterProvider<F
     override val values: Sequence<FriendsUiState>
         get() = sequenceOf(
             FriendsUiState.Success(
-                friends = listOf(
-                    User(
-                        id = "1",
-                        username = "User 1",
-                        status = RequestStatus.APPROVED,
-                    ),
-                    User(
-                        id = "2",
-                        username = "user with a long name",
-                        status = RequestStatus.APPROVED,
-                    ),
-                    User(
-                        id = "3",
-                        username =
-                            """
-                            User with a very long name
-                            that will have to be fitted in two lines
-                            """.trimIndent(),
-                        status = RequestStatus.PENDING_MINE,
-                    ),
-                    User(
-                        id = "4",
-                        username = "User",
-                        status = RequestStatus.PENDING_FRIEND,
-                    ),
-                    User(
-                        id = "5",
-                        username = "User",
-                        status = RequestStatus.REJECTED,
+                friends = Users(
+                    listOf(
+                        User(
+                            id = "1",
+                            username = "User 1",
+                            status = RequestStatus.APPROVED,
+                        ),
+                        User(
+                            id = "2",
+                            username = "user with a long name",
+                            status = RequestStatus.APPROVED,
+                        ),
+                        User(
+                            id = "3",
+                            username =
+                                """
+                                User with a very long name
+                                that will have to be fitted in two lines
+                                """.trimIndent(),
+                            status = RequestStatus.PENDING_MINE,
+                        ),
+                        User(
+                            id = "4",
+                            username = "User",
+                            status = RequestStatus.PENDING_FRIEND,
+                        ),
+                        User(
+                            id = "5",
+                            username = "User",
+                            status = RequestStatus.REJECTED,
+                        ),
                     ),
                 ),
             ),
             FriendsUiState.Success(
-                friends = emptyList(),
+                friends = Users(),
             ),
             FriendsUiState.Loading,
         )

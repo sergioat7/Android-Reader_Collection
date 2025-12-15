@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.User
+import aragones.sergio.readercollection.domain.model.Users
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.friends.FriendsUiState
 import aragones.sergio.readercollection.presentation.friends.FriendsViewModel
@@ -60,7 +61,7 @@ class FriendsViewModelTest {
             viewModel.fetchFriends()
 
             Assert.assertEquals(
-                FriendsUiState.Success(listOf(friend)),
+                FriendsUiState.Success(Users(listOf(friend))),
                 awaitItem(),
             )
         }
@@ -81,7 +82,7 @@ class FriendsViewModelTest {
                 viewModel.fetchFriends()
 
                 Assert.assertEquals(
-                    FriendsUiState.Success(emptyList()),
+                    FriendsUiState.Success(Users()),
                     awaitItem(),
                 )
             }
@@ -102,7 +103,7 @@ class FriendsViewModelTest {
                 viewModel.fetchFriends()
 
                 Assert.assertEquals(
-                    FriendsUiState.Success(emptyList()),
+                    FriendsUiState.Success(Users()),
                     awaitItem(),
                 )
             }
@@ -131,7 +132,7 @@ class FriendsViewModelTest {
                     Assert.assertEquals(FriendsUiState.Loading, awaitItem())
                     viewModel.fetchFriends()
                     Assert.assertEquals(
-                        FriendsUiState.Success(listOf(friend)),
+                        FriendsUiState.Success(Users(listOf(friend))),
                         awaitItem(),
                     )
 
@@ -143,7 +144,7 @@ class FriendsViewModelTest {
                     )
                     Assert.assertEquals(
                         FriendsUiState.Success(
-                            listOf(friend.copy(status = RequestStatus.APPROVED)),
+                            Users(listOf(friend.copy(status = RequestStatus.APPROVED))),
                         ),
                         state.awaitItem(),
                     )
@@ -200,7 +201,7 @@ class FriendsViewModelTest {
                     Assert.assertEquals(FriendsUiState.Loading, awaitItem())
                     viewModel.fetchFriends()
                     Assert.assertEquals(
-                        FriendsUiState.Success(listOf(friend)),
+                        FriendsUiState.Success(Users(listOf(friend))),
                         awaitItem(),
                     )
 
@@ -211,7 +212,7 @@ class FriendsViewModelTest {
                         infoDialogMessage.awaitItem(),
                     )
                     Assert.assertEquals(
-                        FriendsUiState.Success(emptyList()),
+                        FriendsUiState.Success(Users()),
                         state.awaitItem(),
                     )
                 }
@@ -267,7 +268,7 @@ class FriendsViewModelTest {
                     Assert.assertEquals(FriendsUiState.Loading, awaitItem())
                     viewModel.fetchFriends()
                     Assert.assertEquals(
-                        FriendsUiState.Success(listOf(friend)),
+                        FriendsUiState.Success(Users(listOf(friend))),
                         awaitItem(),
                     )
 
@@ -278,7 +279,7 @@ class FriendsViewModelTest {
                         infoDialogMessage.awaitItem(),
                     )
                     Assert.assertEquals(
-                        FriendsUiState.Success(emptyList()),
+                        FriendsUiState.Success(Users()),
                         state.awaitItem(),
                     )
                 }

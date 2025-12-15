@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.booklist.BookListUiState
@@ -96,7 +97,7 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = true,
-                    books = listOf(),
+                    books = Books(),
                     subtitle = "",
                     isDraggingEnabled = false,
                 ),
@@ -108,7 +109,7 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = false,
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     subtitle = "",
                     isDraggingEnabled = false,
                 ),
@@ -127,7 +128,7 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = true,
-                    books = listOf(),
+                    books = Books(),
                     subtitle = "",
                     isDraggingEnabled = false,
                 ),
@@ -141,7 +142,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = emptyList(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -171,7 +172,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -183,7 +184,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -198,7 +199,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(book1Updated, book2Updated, book3Updated),
+                        books = Books(listOf(book1Updated, book2Updated, book3Updated)),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -220,7 +221,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -232,7 +233,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -244,7 +245,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(book2, book1, book3),
+                        books = Books(listOf(book2, book1, book3)),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -313,7 +314,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -325,7 +326,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "2025,writer,Physical",
                         isDraggingEnabled = false,
                     ),
@@ -334,7 +335,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(book2, book3, book1),
+                        books = Books(listOf(book2, book3, book1)),
                         subtitle = "2025,writer,Physical",
                         isDraggingEnabled = false,
                     ),
@@ -351,7 +352,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -363,7 +364,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = true,
                     ),
@@ -381,7 +382,7 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = true,
-                    books = listOf(),
+                    books = Books(),
                     subtitle = "",
                     isDraggingEnabled = false,
                 ),
@@ -393,10 +394,12 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = true,
-                    books = listOf(
-                        book1.copy(priority = 2),
-                        book2.copy(priority = 0),
-                        book3.copy(priority = 1),
+                    books = Books(
+                        listOf(
+                            book1.copy(priority = 2),
+                            book2.copy(priority = 0),
+                            book3.copy(priority = 1),
+                        ),
                     ),
                     subtitle = "",
                     isDraggingEnabled = false,
@@ -421,7 +424,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = true,
-                        books = listOf(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -431,7 +434,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -447,7 +450,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = listOf(updatedBook1, updatedBook2, book3),
+                        books = Books(listOf(updatedBook1, updatedBook2, book3)),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),
@@ -479,7 +482,7 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = true,
-                    books = listOf(),
+                    books = Books(),
                     subtitle = "",
                     isDraggingEnabled = false,
                 ),
@@ -489,7 +492,7 @@ class BookListViewModelTest {
             Assert.assertEquals(
                 BookListUiState(
                     isLoading = false,
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     subtitle = "",
                     isDraggingEnabled = false,
                 ),
@@ -504,7 +507,7 @@ class BookListViewModelTest {
                 Assert.assertEquals(
                     BookListUiState(
                         isLoading = false,
-                        books = emptyList(),
+                        books = Books(),
                         subtitle = "",
                         isDraggingEnabled = false,
                     ),

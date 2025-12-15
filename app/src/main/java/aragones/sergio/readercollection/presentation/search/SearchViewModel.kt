@@ -11,6 +11,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import com.aragones.sergio.util.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -62,7 +63,7 @@ class SearchViewModel @Inject constructor(
                 SearchUiState.Empty -> SearchUiState.Success(
                     isLoading = true,
                     query = this.query,
-                    books = listOf(),
+                    books = Books(),
                 )
                 is SearchUiState.Success -> it.copy(isLoading = true)
                 is SearchUiState.Error -> it.copy(isLoading = true)
@@ -85,7 +86,7 @@ class SearchViewModel @Inject constructor(
                     _state.value = SearchUiState.Success(
                         isLoading = false,
                         query = this@SearchViewModel.query,
-                        books = updatedBooks,
+                        books = Books(updatedBooks),
                     )
                 },
                 onFailure = {

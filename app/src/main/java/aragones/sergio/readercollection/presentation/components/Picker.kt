@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -47,7 +48,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 
 @Composable
 fun Picker(
-    items: List<String>,
+    items: PickerItems,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
     currentIndexSelected: Int = 0,
@@ -80,7 +81,7 @@ fun Picker(
                 .height(itemHeightDp * visibleItemsCount)
                 .fadingEdge(fadingEdgeGradient),
         ) {
-            itemsIndexed(items) { _, item ->
+            itemsIndexed(items.items) { _, item ->
                 Text(
                     text = item,
                     textAlign = TextAlign.Center,
@@ -129,13 +130,17 @@ private fun PickerPreview() {
     ReaderCollectionTheme {
         Row(horizontalArrangement = Arrangement.Center) {
             Picker(
-                items = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
+                items = PickerItems(
+                    listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
+                ),
                 onSelect = {},
                 modifier = Modifier.weight(1f),
                 currentIndexSelected = 0,
             )
             Picker(
-                items = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
+                items = PickerItems(
+                    listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5"),
+                ),
                 onSelect = {},
                 modifier = Modifier.weight(1f),
                 currentIndexSelected = 3,
@@ -143,3 +148,6 @@ private fun PickerPreview() {
         }
     }
 }
+
+@Immutable
+data class PickerItems(val items: List<String>)

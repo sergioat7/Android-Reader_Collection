@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.utils.Constants.FORMATS
@@ -108,7 +109,7 @@ class BookListViewModel @Inject constructor(
                 _state.update {
                     it.copy(
                         isLoading = false,
-                        books = getFilteredBooksFor(books),
+                        books = Books(getFilteredBooksFor(books)),
                         subtitle = subtitle,
                     )
                 }
@@ -124,7 +125,7 @@ class BookListViewModel @Inject constructor(
         for ((index, book) in books.withIndex()) {
             book.priority = index
         }
-        _state.update { it.copy(books = getFilteredBooksFor(books)) }
+        _state.update { it.copy(books = Books(getFilteredBooksFor(books))) }
     }
 
     fun setPriorityFor(books: List<Book>) = viewModelScope.launch {
@@ -213,7 +214,7 @@ class BookListViewModel @Inject constructor(
     ) {
         _state.value = BookListUiState(
             isLoading = false,
-            books = emptyList(),
+            books = Books(),
             subtitle = subtitle,
             isDraggingEnabled = false,
         )

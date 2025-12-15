@@ -243,7 +243,7 @@ fun SortingPickerAlertDialog(
                     )
                     Row(horizontalArrangement = Arrangement.Center) {
                         Picker(
-                            items = sortParamValues,
+                            items = PickerItems(sortParamValues),
                             onSelect = {
                                 newSortParam = sortParamKeys[it]
                             },
@@ -253,7 +253,7 @@ fun SortingPickerAlertDialog(
                             } ?: 0,
                         )
                         Picker(
-                            items = sortOrderValues,
+                            items = PickerItems(sortOrderValues),
                             onSelect = {
                                 newIsSortDescending = it == 1
                             },

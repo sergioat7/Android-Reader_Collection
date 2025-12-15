@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.addfriend
 
+import androidx.compose.runtime.Immutable
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 
 sealed class AddFriendsUiState {
@@ -12,7 +13,7 @@ sealed class AddFriendsUiState {
     abstract val query: String
 
     data class Loading(override val query: String) : AddFriendsUiState()
-    data class Success(val users: List<UserUi>, override val query: String) : AddFriendsUiState()
+    data class Success(val users: UsersUi, override val query: String) : AddFriendsUiState()
 }
 
 data class UserUi(
@@ -21,3 +22,6 @@ data class UserUi(
     val status: RequestStatus,
     val isLoading: Boolean,
 )
+
+@Immutable
+data class UsersUi(val users: List<UserUi> = emptyList())

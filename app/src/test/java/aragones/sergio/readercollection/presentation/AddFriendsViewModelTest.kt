@@ -20,6 +20,7 @@ import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.addfriend.AddFriendsUiState
 import aragones.sergio.readercollection.presentation.addfriend.AddFriendsViewModel
 import aragones.sergio.readercollection.presentation.addfriend.UserUi
+import aragones.sergio.readercollection.presentation.addfriend.UsersUi
 import com.aragones.sergio.util.Constants
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -62,7 +63,7 @@ class AddFriendsViewModelTest {
         viewModel.state.test {
             Assert.assertEquals(
                 AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = "",
                 ),
                 awaitItem(),
@@ -79,18 +80,18 @@ class AddFriendsViewModelTest {
                 true,
                 result is AddFriendsUiState.Success,
             )
-            result as AddFriendsUiState.Success
+            val user = (result as AddFriendsUiState.Success).users.users.first()
             Assert.assertEquals(
                 newFriend.id,
-                result.users.first().id,
+                user.id,
             )
             Assert.assertEquals(
                 newFriend.username,
-                result.users.first().username,
+                user.username,
             )
             Assert.assertEquals(
                 newFriend.status,
-                result.users.first().status,
+                user.status,
             )
             Assert.assertEquals(
                 newFriend.username,
@@ -114,7 +115,7 @@ class AddFriendsViewModelTest {
         viewModel.state.test {
             Assert.assertEquals(
                 AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = "",
                 ),
                 awaitItem(),
@@ -131,18 +132,18 @@ class AddFriendsViewModelTest {
                 true,
                 result is AddFriendsUiState.Success,
             )
-            result as AddFriendsUiState.Success
+            val user = (result as AddFriendsUiState.Success).users.users.first()
             Assert.assertEquals(
                 currentFriend.id,
-                result.users.first().id,
+                user.id,
             )
             Assert.assertEquals(
                 currentFriend.username,
-                result.users.first().username,
+                user.username,
             )
             Assert.assertEquals(
                 currentFriend.status,
-                result.users.first().status,
+                user.status,
             )
             Assert.assertEquals(
                 currentFriend.username,
@@ -167,7 +168,7 @@ class AddFriendsViewModelTest {
             viewModel.state.test {
                 Assert.assertEquals(
                     AddFriendsUiState.Success(
-                        users = emptyList(),
+                        users = UsersUi(),
                         query = "",
                     ),
                     awaitItem(),
@@ -184,18 +185,18 @@ class AddFriendsViewModelTest {
                     true,
                     result is AddFriendsUiState.Success,
                 )
-                result as AddFriendsUiState.Success
+                val user = (result as AddFriendsUiState.Success).users.users.first()
                 Assert.assertEquals(
                     newFriend.id,
-                    result.users.first().id,
+                    user.id,
                 )
                 Assert.assertEquals(
                     newFriend.username,
-                    result.users.first().username,
+                    user.username,
                 )
                 Assert.assertEquals(
                     newFriend.status,
-                    result.users.first().status,
+                    user.status,
                 )
                 Assert.assertEquals(
                     newFriend.username,
@@ -216,7 +217,7 @@ class AddFriendsViewModelTest {
         viewModel.state.test {
             Assert.assertEquals(
                 AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = "",
                 ),
                 awaitItem(),
@@ -230,7 +231,7 @@ class AddFriendsViewModelTest {
             )
             Assert.assertEquals(
                 AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = userToSearch,
                 ),
                 awaitItem(),
@@ -269,7 +270,7 @@ class AddFriendsViewModelTest {
         viewModel.state.test {
             Assert.assertEquals(
                 AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = "",
                 ),
                 awaitItem(),
@@ -306,7 +307,7 @@ class AddFriendsViewModelTest {
         viewModel.state.test {
             Assert.assertEquals(
                 AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = "",
                 ),
                 awaitItem(),

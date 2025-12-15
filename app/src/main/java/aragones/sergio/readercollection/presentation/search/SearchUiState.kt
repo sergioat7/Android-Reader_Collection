@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.presentation.search
 
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
-import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 
 sealed class SearchUiState {
 
@@ -15,7 +15,7 @@ sealed class SearchUiState {
     data class Success(
         val isLoading: Boolean,
         val query: String?,
-        val books: List<Book>,
+        val books: Books,
     ) : SearchUiState()
 
     data class Error(
