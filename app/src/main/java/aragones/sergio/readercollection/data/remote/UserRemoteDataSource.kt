@@ -25,6 +25,7 @@ class UserRemoteDataSource @Inject constructor(
         private const val MAIL_END = "@readercollection.app"
         private const val PUBLIC_PROFILES_PATH = "public_profiles"
         private const val USERS_PATH = "users"
+        private const val BOOKS_PATH = "books"
         private const val FRIENDS_PATH = "friends"
         private const val EMAIL_KEY = "email"
         private const val UUID_KEY = "uuid"
@@ -225,6 +226,14 @@ class UserRemoteDataSource @Inject constructor(
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
+        val books = userRef.collection(BOOKS_PATH).get().await()
+        val friends = userRef.collection(FRIENDS_PATH).get().await()
+        books.documents.forEach {
+            batch.delete(it.reference)
+        }
+        friends.documents.forEach {
+            batch.delete(it.reference)
+        }
         batch.delete(userRef)
 
         batch.commit().await()
