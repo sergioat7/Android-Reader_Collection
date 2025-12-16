@@ -226,11 +226,18 @@ class UserRepository @Inject constructor(
 
     suspend fun deleteUser(): Result<Unit> = withContext(ioDispatcher) {
         withTimeout(TIMEOUT) {
-            userRemoteDataSource.deleteUser(userId).fold(
+            userRemoteDataSource.login(userData.username, userData.password).fold(
                 onSuccess = {
-                    userLocalDataSource.logout()
-                    userLocalDataSource.removeUserData()
-                    Result.success(it)
+                    userRemoteDataSource.deleteUser(userId).fold(
+                        onSuccess = {
+                            userLocalDataSource.logout()
+                            userLocalDataSource.removeUserData()
+                            Result.success(it)
+                        },
+                        onFailure = {
+                            Result.failure(it)
+                        },
+                    )
                 },
                 onFailure = {
                     Result.failure(it)
