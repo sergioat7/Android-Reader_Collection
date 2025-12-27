@@ -5,12 +5,14 @@
 
 package aragones.sergio.readercollection.domain.model
 
+import androidx.compose.runtime.Immutable
 import androidx.room.Ignore
 import com.aragones.sergio.util.BookState
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import java.util.Date
 
+@Immutable
 @JsonClass(generateAdapter = true)
 data class Book(
     @Json(name = "googleId")
@@ -84,3 +86,6 @@ data class Book(
 
     fun isReading(): Boolean = state == BookState.READING
 }
+
+@Immutable
+data class Books(val books: List<Book> = emptyList())

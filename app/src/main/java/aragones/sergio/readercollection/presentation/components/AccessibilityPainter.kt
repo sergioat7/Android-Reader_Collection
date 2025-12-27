@@ -5,8 +5,10 @@
 
 package aragones.sergio.readercollection.presentation.components
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.painter.Painter
 
+@Immutable
 data class AccessibilityPainter(
     val painter: Painter,
     val contentDescription: String?,

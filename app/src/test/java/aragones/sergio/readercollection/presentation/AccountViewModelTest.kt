@@ -261,6 +261,7 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN success response WHEN deleteUser THEN all books are removed and logs out`() =
         runTest {
+            coEvery { userRemoteDataSource.login(any(), any()) } returns Result.success(testUserId)
             coEvery { userRemoteDataSource.deleteUser(any()) } returns Result.success(Unit)
             every { userLocalDataSource.logout() } just Runs
             every { userLocalDataSource.removeUserData() } just Runs
@@ -280,11 +281,13 @@ class AccountViewModelTest {
             coVerify { userLocalDataSource.logout() }
             coVerify { userLocalDataSource.removeUserData() }
             coVerify { userRemoteDataSource.deleteUser(testUserId) }
+            coVerify { userRemoteDataSource.login(testUsername, testPassword) }
         }
 
     @Test
     fun `GIVEN delete books failure response WHEN deleteUser THEN books are not removed and logs out`() =
         runTest {
+            coEvery { userRemoteDataSource.login(any(), any()) } returns Result.success(testUserId)
             coEvery { userRemoteDataSource.deleteUser(any()) } returns Result.success(Unit)
             every { userLocalDataSource.logout() } just Runs
             every { userLocalDataSource.removeUserData() } just Runs
@@ -303,10 +306,12 @@ class AccountViewModelTest {
             coVerify { userLocalDataSource.logout() }
             coVerify { userLocalDataSource.removeUserData() }
             coVerify { userRemoteDataSource.deleteUser(testUserId) }
+            coVerify { userRemoteDataSource.login(testUsername, testPassword) }
         }
 
     @Test
     fun `GIVEN delete user failure response WHEN deleteUser THEN show error`() = runTest {
+        coEvery { userRemoteDataSource.login(any(), any()) } returns Result.success(testUserId)
         coEvery { userRemoteDataSource.deleteUser(any()) } returns Result.failure(Exception())
 
         viewModel.profileError.test {
@@ -320,6 +325,7 @@ class AccountViewModelTest {
             )
         }
         coVerify { userRemoteDataSource.deleteUser(testUserId) }
+        coVerify { userRemoteDataSource.login(testUsername, testPassword) }
     }
 
     @Test
@@ -436,6 +442,12 @@ class AccountViewModelTest {
                 viewModel.profileError.test {
                     val profileError = this
                     Assert.assertEquals(null, awaitItem())
+                    coEvery {
+                        userRemoteDataSource.login(
+                            any(),
+                            any(),
+                        )
+                    } returns Result.success(testUserId)
                     coEvery {
                         userRemoteDataSource.deleteUser(
                             any(),

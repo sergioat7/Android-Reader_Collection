@@ -17,6 +17,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.books.BooksUiState
@@ -93,7 +94,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     query = "",
                     isLoading = false,
                 ),
@@ -159,7 +160,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(Book("")),
+                        books = Books(listOf(Book(""))),
                         query = "",
                         isLoading = false,
                     ),
@@ -191,7 +192,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -202,7 +203,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book2, book1, book3),
+                        books = Books(listOf(book2, book1, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -322,7 +323,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     query = "",
                     isLoading = false,
                 ),
@@ -359,7 +360,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -370,7 +371,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = query,
                         isLoading = false,
                     ),
@@ -378,7 +379,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2),
+                        books = Books(listOf(book1, book2)),
                         query = query,
                         isLoading = false,
                     ),
@@ -410,7 +411,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -421,7 +422,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = query,
                         isLoading = false,
                     ),
@@ -497,7 +498,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -517,7 +518,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = true,
                     ),
@@ -525,7 +526,9 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1.copy(priority = 1), book2.copy(priority = 0), book3),
+                        books = Books(
+                            listOf(book1.copy(priority = 1), book2.copy(priority = 0), book3),
+                        ),
                         query = "",
                         isLoading = false,
                     ),
@@ -565,7 +568,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2),
+                        books = Books(listOf(book1, book2)),
                         query = "",
                         isLoading = false,
                     ),
@@ -607,7 +610,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2),
+                    books = Books(listOf(book1, book2)),
                     query = "",
                     isLoading = false,
                 ),
@@ -650,7 +653,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     query = "",
                     isLoading = false,
                 ),
@@ -665,7 +668,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = true,
                     ),
@@ -673,7 +676,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -722,7 +725,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     query = "",
                     isLoading = false,
                 ),
@@ -734,7 +737,7 @@ class BooksViewModelTest {
 
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     query = "",
                     isLoading = true,
                 ),
@@ -742,7 +745,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, modifiedBook),
+                    books = Books(listOf(book1, book2, modifiedBook)),
                     query = "",
                     isLoading = false,
                 ),
@@ -779,7 +782,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -793,7 +796,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = true,
                     ),
@@ -801,7 +804,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, modifiedReadBook),
+                        books = Books(listOf(book1, book2, modifiedReadBook)),
                         query = "",
                         isLoading = false,
                     ),
@@ -836,7 +839,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -850,7 +853,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = true,
                     ),
@@ -858,7 +861,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, modifiedPendingBook),
+                        books = Books(listOf(book1, book2, modifiedPendingBook)),
                         query = "",
                         isLoading = false,
                     ),
@@ -893,7 +896,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),
@@ -907,7 +910,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = true,
                     ),
@@ -915,7 +918,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, modifiedPendingBook),
+                        books = Books(listOf(book1, book2, modifiedPendingBook)),
                         query = "",
                         isLoading = false,
                     ),
@@ -948,7 +951,7 @@ class BooksViewModelTest {
             )
             Assert.assertEquals(
                 BooksUiState.Success(
-                    books = listOf(book1, book2, book3),
+                    books = Books(listOf(book1, book2, book3)),
                     query = "",
                     isLoading = false,
                 ),
@@ -963,7 +966,7 @@ class BooksViewModelTest {
 
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = true,
                     ),
@@ -971,7 +974,7 @@ class BooksViewModelTest {
                 )
                 Assert.assertEquals(
                     BooksUiState.Success(
-                        books = listOf(book1, book2, book3),
+                        books = Books(listOf(book1, book2, book3)),
                         query = "",
                         isLoading = false,
                     ),

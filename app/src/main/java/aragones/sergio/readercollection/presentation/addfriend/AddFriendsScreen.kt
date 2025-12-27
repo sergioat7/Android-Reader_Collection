@@ -81,7 +81,7 @@ fun AddFriendsScreen(
                 }
                 is AddFriendsUiState.Success -> {
                     Spacer(Modifier.height(16.dp))
-                    if (state.users.isEmpty()) {
+                    if (state.users.users.isEmpty()) {
                         val textKey =
                             if (state.query.isEmpty()) {
                                 R.string.search_friends_instructions
@@ -96,7 +96,7 @@ fun AddFriendsScreen(
                         )
                     } else {
                         AddFriendsContent(
-                            state = state,
+                            users = state.users,
                             onRequestFriend = onRequestFriend,
                         )
                     }
@@ -117,7 +117,7 @@ private fun AddFriendsToolbar(onBack: (() -> Unit)) {
 
 @Composable
 private fun AddFriendsContent(
-    state: AddFriendsUiState.Success,
+    users: UsersUi,
     onRequestFriend: (UserUi) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -126,7 +126,7 @@ private fun AddFriendsContent(
             .fillMaxSize()
             .padding(horizontal = 24.dp),
     ) {
-        items(state.users, key = { it.id }) { friend ->
+        items(users.users, key = { it.id }) { friend ->
             FriendItem(
                 friend = friend,
                 onRequestFriend = { onRequestFriend(friend) },
@@ -226,36 +226,38 @@ private class AddFriendsScreenPreviewParameterProvider :
     override val values: Sequence<AddFriendsUiState>
         get() = sequenceOf(
             AddFriendsUiState.Success(
-                users = listOf(
-                    UserUi(
-                        id = "1",
-                        username = "Username pending",
-                        status = RequestStatus.PENDING_MINE,
-                        isLoading = false,
-                    ),
-                    UserUi(
-                        id = "2",
-                        username = "username pending",
-                        status = RequestStatus.PENDING_FRIEND,
-                        isLoading = true,
-                    ),
-                    UserUi(
-                        id = "3",
-                        username = "username approved",
-                        status = RequestStatus.APPROVED,
-                        isLoading = false,
-                    ),
-                    UserUi(
-                        id = "4",
-                        username = "username rejected",
-                        status = RequestStatus.REJECTED,
-                        isLoading = false,
+                users = UsersUi(
+                    listOf(
+                        UserUi(
+                            id = "1",
+                            username = "Username pending",
+                            status = RequestStatus.PENDING_MINE,
+                            isLoading = false,
+                        ),
+                        UserUi(
+                            id = "2",
+                            username = "username pending",
+                            status = RequestStatus.PENDING_FRIEND,
+                            isLoading = true,
+                        ),
+                        UserUi(
+                            id = "3",
+                            username = "username approved",
+                            status = RequestStatus.APPROVED,
+                            isLoading = false,
+                        ),
+                        UserUi(
+                            id = "4",
+                            username = "username rejected",
+                            status = RequestStatus.REJECTED,
+                            isLoading = false,
+                        ),
                     ),
                 ),
                 query = "Username",
             ),
             AddFriendsUiState.Success(
-                users = emptyList(),
+                users = UsersUi(),
                 query = "",
             ),
             AddFriendsUiState.Loading(""),

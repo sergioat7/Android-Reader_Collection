@@ -36,6 +36,7 @@ import aragones.sergio.readercollection.presentation.components.CustomDropdownMe
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.components.DropdownValues
 import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.Preferences
@@ -197,7 +198,7 @@ private fun SortingInfo(
 
     CustomDropdownMenu(
         currentValue = sortParamValue,
-        values = sortingParamValues,
+        values = DropdownValues(sortingParamValues),
         labelText = stringResource(R.string.sort_param),
         onOptionSelected = {
             val index = sortingParamValues.indexOf(it)
@@ -213,7 +214,7 @@ private fun SortingInfo(
         } else {
             sortingOrderValues.first()
         },
-        values = sortingOrderValues,
+        values = DropdownValues(sortingOrderValues),
         labelText = stringResource(R.string.sort_order),
         onOptionSelected = {
             val index = sortingOrderValues.indexOf(it)
@@ -228,7 +229,7 @@ private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) 
     val appThemes = stringArrayResource(R.array.app_theme_values).toList()
     CustomDropdownMenu(
         currentValue = appThemes[selectedThemeIndex],
-        values = appThemes,
+        values = DropdownValues(appThemes),
         labelText = stringResource(R.string.app_theme),
         onOptionSelected = {
             onThemeChange(appThemes.indexOf(it))

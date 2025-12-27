@@ -16,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -47,11 +48,13 @@ class AccountViewModel @Inject constructor(
 
     //region Lifecycle methods
     fun onResume() {
-        _state.value = _state.value.copy(
-            password = userRepository.userData.password,
-            passwordError = null,
-            isProfilePublic = userRepository.isProfilePublic,
-        )
+        _state.update {
+            it.copy(
+                password = userRepository.userData.password,
+                passwordError = null,
+                isProfilePublic = userRepository.isProfilePublic,
+            )
+        }
     }
     //endregion
 
@@ -60,11 +63,11 @@ class AccountViewModel @Inject constructor(
         val newPassword = requireNotNull(_state.value.password)
 
         if (newPassword != userRepository.userData.password) {
-            _state.value = _state.value.copy(isLoading = true)
+            _state.update { it.copy(isLoading = true) }
             viewModelScope.launch {
                 userRepository.updatePassword(newPassword).fold(
                     onSuccess = {
-                        _state.value = _state.value.copy(isLoading = false)
+                        _state.update { it.copy(isLoading = false) }
                     },
                     onFailure = {
                         manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
@@ -75,13 +78,15 @@ class AccountViewModel @Inject constructor(
     }
 
     fun setPublicProfile(value: Boolean) = viewModelScope.launch {
-        _state.value = _state.value.copy(isLoading = true)
+        _state.update { it.copy(isLoading = true) }
         userRepository.setPublicProfile(value).fold(
             onSuccess = {
-                _state.value = _state.value.copy(
-                    isProfilePublic = value,
-                    isLoading = false,
-                )
+                _state.update {
+                    it.copy(
+                        isProfilePublic = value,
+                        isLoading = false,
+                    )
+                }
             },
             onFailure = {
                 manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
@@ -90,7 +95,7 @@ class AccountViewModel @Inject constructor(
     }
 
     fun deleteUser() = viewModelScope.launch {
-        _state.value = _state.value.copy(isLoading = true)
+        _state.update { it.copy(isLoading = true) }
         userRepository.deleteUser().fold(
             onSuccess = {
                 resetDatabase()
@@ -106,10 +111,12 @@ class AccountViewModel @Inject constructor(
         if (!Constants.isPasswordValid(newPassword)) {
             passwordError = R.string.invalid_password
         }
-        _state.value = _state.value.copy(
-            password = newPassword,
-            passwordError = passwordError,
-        )
+        _state.update {
+            it.copy(
+                password = newPassword,
+                passwordError = passwordError,
+            )
+        }
     }
 
     fun showConfirmationDialog(textId: Int) {
@@ -131,18 +138,18 @@ class AccountViewModel @Inject constructor(
     private suspend fun resetDatabase() {
         booksRepository.resetTable().fold(
             onSuccess = {
-                _state.value = _state.value.copy(isLoading = false)
+                _state.update { it.copy(isLoading = false) }
                 _logOut.value = true
             },
             onFailure = {
-                _state.value = _state.value.copy(isLoading = false)
+                _state.update { it.copy(isLoading = false) }
                 _logOut.value = true
             },
         )
     }
 
     private fun manageError(error: ErrorResponse) {
-        _state.value = _state.value.copy(isLoading = false)
+        _state.update { it.copy(isLoading = false) }
         _profileError.value = error
     }
     //endregion

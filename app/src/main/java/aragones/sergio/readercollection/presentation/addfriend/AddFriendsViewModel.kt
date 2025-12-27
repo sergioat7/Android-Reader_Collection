@@ -27,7 +27,7 @@ class AddFriendsViewModel @Inject constructor(
     //region Private properties
     private var _state: MutableStateFlow<AddFriendsUiState> = MutableStateFlow(
         AddFriendsUiState.Success(
-            users = emptyList(),
+            users = UsersUi(),
             query = "",
         ),
     )
@@ -46,7 +46,7 @@ class AddFriendsViewModel @Inject constructor(
             userRepository.getUserWith(username).fold(
                 onSuccess = { user ->
                     _state.value = AddFriendsUiState.Success(
-                        users = listOf(user.toUi()),
+                        users = UsersUi(listOf(user.toUi())),
                         query = username,
                     )
                 },
@@ -54,7 +54,7 @@ class AddFriendsViewModel @Inject constructor(
                     when (it) {
                         is NoSuchElementException -> {
                             _state.value = AddFriendsUiState.Success(
-                                users = emptyList(),
+                                users = UsersUi(),
                                 query = username,
                             )
                         }
@@ -64,7 +64,7 @@ class AddFriendsViewModel @Inject constructor(
                                 R.string.error_server,
                             )
                             _state.value = AddFriendsUiState.Success(
-                                users = emptyList(),
+                                users = UsersUi(),
                                 query = username,
                             )
                         }
@@ -73,7 +73,7 @@ class AddFriendsViewModel @Inject constructor(
             )
         } else {
             _state.value = AddFriendsUiState.Success(
-                users = emptyList(),
+                users = UsersUi(),
                 query = username,
             )
         }
@@ -84,13 +84,15 @@ class AddFriendsViewModel @Inject constructor(
             is AddFriendsUiState.Loading -> {}
             is AddFriendsUiState.Success -> {
                 _state.value = currentState.copy(
-                    users = currentState.users.map {
-                        if (it.id == friend.id) {
-                            friend.copy(isLoading = true)
-                        } else {
-                            it
-                        }
-                    },
+                    users = UsersUi(
+                        currentState.users.users.map {
+                            if (it.id == friend.id) {
+                                friend.copy(isLoading = true)
+                            } else {
+                                it
+                            }
+                        },
+                    ),
                 )
             }
         }
@@ -100,16 +102,18 @@ class AddFriendsViewModel @Inject constructor(
                     is AddFriendsUiState.Loading -> {}
                     is AddFriendsUiState.Success -> {
                         _state.value = currentState.copy(
-                            users = currentState.users.map {
-                                if (it.id == friend.id) {
-                                    friend.copy(
-                                        status = RequestStatus.APPROVED,
-                                        isLoading = false,
-                                    )
-                                } else {
-                                    it
-                                }
-                            },
+                            users = UsersUi(
+                                currentState.users.users.map {
+                                    if (it.id == friend.id) {
+                                        friend.copy(
+                                            status = RequestStatus.APPROVED,
+                                            isLoading = false,
+                                        )
+                                    } else {
+                                        it
+                                    }
+                                },
+                            ),
                         )
                     }
                 }
@@ -120,7 +124,7 @@ class AddFriendsViewModel @Inject constructor(
                     R.string.error_search,
                 )
                 _state.value = AddFriendsUiState.Success(
-                    users = emptyList(),
+                    users = UsersUi(),
                     query = "",
                 )
             },

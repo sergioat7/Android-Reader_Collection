@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.books
 
-import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 
 sealed class BooksUiState {
     abstract val query: String
@@ -17,7 +17,7 @@ sealed class BooksUiState {
     ) : BooksUiState()
 
     data class Success(
-        val books: List<Book>,
+        val books: Books,
         override val query: String,
         override val isLoading: Boolean,
     ) : BooksUiState()

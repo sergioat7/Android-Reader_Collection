@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -60,7 +61,7 @@ class FriendDetailViewModel @Inject constructor(
         if (friend != null && books != null) {
             _state.value = FriendDetailUiState.Success(
                 friend = friend,
-                books = books,
+                books = Books(books),
             )
         } else {
             val error = friendResult.exceptionOrNull() ?: booksResult.exceptionOrNull()

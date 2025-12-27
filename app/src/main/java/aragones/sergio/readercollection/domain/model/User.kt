@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.domain.model
 
+import androidx.compose.runtime.Immutable
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 
 data class User(
@@ -12,3 +13,6 @@ data class User(
     val username: String,
     val status: RequestStatus,
 )
+
+@Immutable
+data class Users(val users: List<User> = emptyList())

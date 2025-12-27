@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.utils.Constants.FORMATS
@@ -31,6 +32,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -90,36 +92,40 @@ class BookListViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-        _state.value = _state.value.copy(
-            isLoading = true,
-            subtitle = subtitle,
-        )
+        _state.update {
+            it.copy(
+                isLoading = true,
+                subtitle = subtitle,
+            )
+        }
 
         combine(
             booksRepository.getBooks(),
             _sortingPickerState,
-        ) { books, sortingPickerState ->
+        ) { books, _ ->
             if (books.isEmpty()) {
                 showError()
             } else {
-                _state.value = _state.value.copy(
-                    isLoading = false,
-                    books = getFilteredBooksFor(books),
-                    subtitle = subtitle,
-                )
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        books = Books(getFilteredBooksFor(books)),
+                        subtitle = subtitle,
+                    )
+                }
             }
         }.launchIn(viewModelScope)
     }
 
     fun switchDraggingState() {
-        _state.value = _state.value.copy(isDraggingEnabled = _state.value.isDraggingEnabled.not())
+        _state.update { it.copy(isDraggingEnabled = it.isDraggingEnabled.not()) }
     }
 
     fun updateBookOrdering(books: List<Book>) {
         for ((index, book) in books.withIndex()) {
             book.priority = index
         }
-        _state.value = _state.value.copy(books = getFilteredBooksFor(books))
+        _state.update { it.copy(books = Books(getFilteredBooksFor(books))) }
     }
 
     fun setPriorityFor(books: List<Book>) = viewModelScope.launch {
@@ -134,7 +140,7 @@ class BookListViewModel @Inject constructor(
     }
 
     fun showSortingPickerState() {
-        _sortingPickerState.value = _sortingPickerState.value.copy(show = true)
+        _sortingPickerState.update { it.copy(show = true) }
     }
 
     fun updatePickerState(newSortParam: String?, newIsSortDescending: Boolean) {
@@ -208,7 +214,7 @@ class BookListViewModel @Inject constructor(
     ) {
         _state.value = BookListUiState(
             isLoading = false,
-            books = emptyList(),
+            books = Books(),
             subtitle = subtitle,
             isDraggingEnabled = false,
         )

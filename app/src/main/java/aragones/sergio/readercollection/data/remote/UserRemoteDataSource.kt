@@ -20,11 +20,21 @@ class UserRemoteDataSource @Inject constructor(
     private val remoteConfig: FirebaseRemoteConfig,
 ) {
 
-    private val mailEnd = "@readercollection.app"
+    //region Static properties
+    companion object {
+        private const val MAIL_END = "@readercollection.app"
+        private const val PUBLIC_PROFILES_PATH = "public_profiles"
+        private const val USERS_PATH = "users"
+        private const val BOOKS_PATH = "books"
+        private const val FRIENDS_PATH = "friends"
+        private const val EMAIL_KEY = "email"
+        private const val UUID_KEY = "uuid"
+    }
+    //endregion
 
     //region Public methods
     suspend fun login(username: String, password: String): Result<String> = runCatching {
-        auth.signInWithEmailAndPassword("${username}$mailEnd", password).await()
+        auth.signInWithEmailAndPassword("${username}$MAIL_END", password).await()
         auth.currentUser?.uid ?: throw NoSuchElementException()
     }
 
@@ -33,36 +43,35 @@ class UserRemoteDataSource @Inject constructor(
     }
 
     suspend fun register(username: String, password: String): Result<Unit> = runCatching {
-        auth.createUserWithEmailAndPassword("${username}$mailEnd", password).await()
+        auth.createUserWithEmailAndPassword("${username}$MAIL_END", password).await()
     }
 
     suspend fun updatePassword(password: String): Result<Unit> = runCatching {
-        val user = auth.currentUser
-        if (user == null) throw RuntimeException("User is null")
+        val user = auth.currentUser ?: throw RuntimeException("User is null")
         user.updatePassword(password).await()
     }
 
     suspend fun registerPublicProfile(username: String, userId: String): Result<Unit> =
         runCatching {
             firestore
-                .collection("public_profiles")
+                .collection(PUBLIC_PROFILES_PATH)
                 .document(userId)
-                .set(mapOf("uuid" to userId, "email" to "${username}$mailEnd"))
+                .set(mapOf(UUID_KEY to userId, EMAIL_KEY to "${username}$MAIL_END"))
                 .await()
         }
 
     suspend fun isPublicProfileActive(username: String): Result<Boolean> = runCatching {
         val result = firestore
-            .collection("public_profiles")
-            .whereEqualTo("email", "${username}$mailEnd")
+            .collection(PUBLIC_PROFILES_PATH)
+            .whereEqualTo(EMAIL_KEY, "${username}$MAIL_END")
             .get()
             .await()
-        result.documents.firstOrNull()?.getString("email") != null
+        result.documents.firstOrNull()?.getString(EMAIL_KEY) != null
     }
 
     suspend fun deletePublicProfile(userId: String): Result<Unit> = runCatching {
         firestore
-            .collection("public_profiles")
+            .collection(PUBLIC_PROFILES_PATH)
             .document(userId)
             .delete()
             .await()
@@ -70,14 +79,14 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun getUser(username: String, userId: String): Result<UserResponse> = runCatching {
         val result = firestore
-            .collection("public_profiles")
-            .whereEqualTo("email", "${username}$mailEnd")
+            .collection(PUBLIC_PROFILES_PATH)
+            .whereEqualTo(EMAIL_KEY, "${username}$MAIL_END")
             .get()
             .await()
 
         val user = result.documents.firstOrNull()?.let {
-            val uuid = it.getString("uuid")
-            val email = it.getString("email")
+            val uuid = it.getString(UUID_KEY)
+            val email = it.getString(EMAIL_KEY)
             if (uuid != null && email != null && uuid != userId) {
                 UserResponse(
                     id = uuid,
@@ -93,9 +102,9 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun getFriends(userId: String): Result<List<UserResponse>> = runCatching {
         firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(userId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .get()
             .await()
             .toObjects(UserResponse::class.java)
@@ -103,9 +112,9 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun getFriend(userId: String, friendId: String): Result<UserResponse> = runCatching {
         val result = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(userId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(friendId)
             .get()
             .await()
@@ -117,9 +126,9 @@ class UserRemoteDataSource @Inject constructor(
             val batch = firestore.batch()
 
             val userRef = firestore
-                .collection("users")
+                .collection(USERS_PATH)
                 .document(user.id)
-                .collection("friends")
+                .collection(FRIENDS_PATH)
                 .document(friend.id)
             val userData = mapOf(
                 "id" to friend.id,
@@ -129,9 +138,9 @@ class UserRemoteDataSource @Inject constructor(
             batch.set(userRef, userData)
 
             val friendRef = firestore
-                .collection("users")
+                .collection(USERS_PATH)
                 .document(friend.id)
-                .collection("friends")
+                .collection(FRIENDS_PATH)
                 .document(user.id)
             val friendData = mapOf(
                 "id" to user.id,
@@ -145,15 +154,15 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun acceptFriendRequest(userId: String, friendId: String): Result<Unit> = runCatching {
         val userRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(userId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(friendId)
 
         val friendRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(friendId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(userId)
 
         val batch = firestore.batch()
@@ -166,15 +175,15 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun rejectFriendRequest(userId: String, friendId: String): Result<Unit> = runCatching {
         val userRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(userId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(friendId)
 
         val friendRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(friendId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(userId)
 
         val batch = firestore.batch()
@@ -187,15 +196,15 @@ class UserRemoteDataSource @Inject constructor(
 
     suspend fun deleteFriend(userId: String, friendId: String): Result<Unit> = runCatching {
         val userRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(userId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(friendId)
 
         val friendRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(friendId)
-            .collection("friends")
+            .collection(FRIENDS_PATH)
             .document(userId)
 
         val batch = firestore.batch()
@@ -210,13 +219,21 @@ class UserRemoteDataSource @Inject constructor(
         val batch = firestore.batch()
 
         val publicProfileRef = firestore
-            .collection("public_profiles")
+            .collection(PUBLIC_PROFILES_PATH)
             .document(userId)
         batch.delete(publicProfileRef)
 
         val userRef = firestore
-            .collection("users")
+            .collection(USERS_PATH)
             .document(userId)
+        val books = userRef.collection(BOOKS_PATH).get().await()
+        val friends = userRef.collection(FRIENDS_PATH).get().await()
+        books.documents.forEach {
+            batch.delete(it.reference)
+        }
+        friends.documents.forEach {
+            batch.delete(it.reference)
+        }
         batch.delete(userRef)
 
         batch.commit().await()

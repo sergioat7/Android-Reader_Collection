@@ -13,6 +13,7 @@ import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -56,15 +58,17 @@ class BooksViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() {
-        _state.value = when (val currentState = _state.value) {
-            is BooksUiState.Empty -> currentState.copy(isLoading = true)
-            is BooksUiState.Success -> currentState.copy(isLoading = true)
+        _state.update {
+            when (it) {
+                is BooksUiState.Empty -> it.copy(isLoading = true)
+                is BooksUiState.Success -> it.copy(isLoading = true)
+            }
         }
 
         combine(
             booksRepository.getBooks(),
             _sortingPickerState,
-        ) { books, sortingPickerState ->
+        ) { books, _ ->
             originalBooks = books
             sortBooks()
         }.launchIn(viewModelScope)
@@ -75,7 +79,7 @@ class BooksViewModel @Inject constructor(
     }
 
     fun showSortingPickerState() {
-        _sortingPickerState.value = _sortingPickerState.value.copy(show = true)
+        _sortingPickerState.update { it.copy(show = true) }
     }
 
     fun updatePickerState(newSortParam: String?, newIsSortDescending: Boolean) {
@@ -97,7 +101,7 @@ class BooksViewModel @Inject constructor(
     fun switchBooksPriority(fromIndex: Int, toIndex: Int) {
         val books = when (val currentState = state.value) {
             is BooksUiState.Empty -> emptyList()
-            is BooksUiState.Success -> currentState.books
+            is BooksUiState.Success -> currentState.books.books
         }.filter { it.isPending() }
             .sortedBy { it.priority }
             .map { it.copy() }
@@ -124,7 +128,7 @@ class BooksViewModel @Inject constructor(
         if (book.priority == -1 && book.state == BookState.PENDING) {
             val maxPriority = when (val currentState = _state.value) {
                 is BooksUiState.Empty -> emptyList()
-                is BooksUiState.Success -> currentState.books
+                is BooksUiState.Success -> currentState.books.books
             }.filter { it.isPending() }.maxByOrNull { it.priority }?.priority ?: -1
             selectedBook = selectedBook.copy(priority = maxPriority + 1)
         }
@@ -152,7 +156,7 @@ class BooksViewModel @Inject constructor(
                 isLoading = false,
             )
             else -> BooksUiState.Success(
-                books = sortedBooks,
+                books = Books(sortedBooks),
                 query = _state.value.query,
                 isLoading = false,
             )

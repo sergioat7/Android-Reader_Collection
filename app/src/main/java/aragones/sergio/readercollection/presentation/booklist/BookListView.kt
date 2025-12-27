@@ -25,7 +25,7 @@ fun BookListView(
     val sortingPickerState by viewModel.sortingPickerState.collectAsState()
     val error by viewModel.booksError.collectAsState()
 
-    if (uiState.books.isEmpty() && !uiState.isLoading) {
+    if (uiState.books.books.isEmpty() && !uiState.isLoading) {
         onBack()
         return
     }

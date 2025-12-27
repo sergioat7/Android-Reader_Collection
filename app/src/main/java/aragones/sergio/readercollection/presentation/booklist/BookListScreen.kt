@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.components.BookItem
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
@@ -79,17 +80,17 @@ fun BookListScreen(
         }
     }
 
-    val title = if (state.books.isNotEmpty()) {
+    val title = if (state.books.books.isNotEmpty()) {
         pluralStringResource(
             R.plurals.title_books_count,
-            state.books.size,
-            state.books.size,
+            state.books.books.size,
+            state.books.books.size,
         )
     } else {
         ""
     }
     val actions: @Composable RowScope.() -> Unit = {
-        if (state.books.any { it.isPending() }) {
+        if (state.books.books.any { it.isPending() }) {
             TopAppBarIcon(
                 accessibilityPainter = if (state.isDraggingEnabled) {
                     painterResource(R.drawable.ic_disable_drag)
@@ -121,11 +122,12 @@ fun BookListScreen(
         Box(
             modifier = Modifier.fillMaxSize(),
         ) {
-            if (state.books.isEmpty()) {
+            if (state.books.books.isEmpty()) {
                 NoResultsComponent()
             } else {
                 BookListContent(
-                    state = state,
+                    books = state.books,
+                    isDraggingEnabled = state.isDraggingEnabled,
                     listState = listState,
                     showTopButton = showTopButton,
                     showBottomButton = showBottomButton,
@@ -144,7 +146,8 @@ fun BookListScreen(
 
 @Composable
 private fun BookListContent(
-    state: BookListUiState,
+    books: Books,
+    isDraggingEnabled: Boolean,
     listState: LazyListState,
     showTopButton: Boolean,
     showBottomButton: Boolean,
@@ -153,7 +156,7 @@ private fun BookListContent(
     onDragEnd: (List<Book>) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val books = state.books.toMutableStateList()
+    val books = books.books.toMutableStateList()
     val dragAndDropListState =
         rememberDragAndDropListState(listState) { from, to ->
             books.move(from, to)
@@ -165,7 +168,7 @@ private fun BookListContent(
 
     var draggingIndex by remember { mutableIntStateOf(-1) }
 
-    val draggingModifier = if (state.isDraggingEnabled) {
+    val draggingModifier = if (isDraggingEnabled) {
         Modifier.pointerInput(Unit) {
             detectDragGesturesAfterLongPress(
                 onDrag = { change, offset ->
@@ -233,7 +236,7 @@ private fun BookListContent(
                             }
                         }.zIndex(1f.takeIf { draggingIndex == index } ?: 0f),
                     showDivider = index < books.size - 1,
-                    isDraggingEnabled = state.isDraggingEnabled,
+                    isDraggingEnabled = isDraggingEnabled,
                     isDragging = index == draggingIndex,
                 )
             }
@@ -298,50 +301,52 @@ private class BookListScreenPreviewParameterProvider :
         get() = sequenceOf(
             BookListUiState(
                 isLoading = false,
-                books = listOf(
-                    Book(
-                        id = "1",
-                        title = "Title 1",
-                        subtitle = null,
-                        authors = listOf("Author"),
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 5.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = BookState.PENDING,
-                        priority = 0,
-                    ),
-                    Book(
-                        id = "2",
-                        title = "Title 2",
-                        subtitle = null,
-                        authors = null,
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 0.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = BookState.PENDING,
-                        priority = 0,
+                books = Books(
+                    listOf(
+                        Book(
+                            id = "1",
+                            title = "Title 1",
+                            subtitle = null,
+                            authors = listOf("Author"),
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 5.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = BookState.PENDING,
+                            priority = 0,
+                        ),
+                        Book(
+                            id = "2",
+                            title = "Title 2",
+                            subtitle = null,
+                            authors = null,
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 0.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = BookState.PENDING,
+                            priority = 0,
+                        ),
                     ),
                 ),
                 subtitle = "",
@@ -349,50 +354,52 @@ private class BookListScreenPreviewParameterProvider :
             ),
             BookListUiState(
                 isLoading = true,
-                books = listOf(
-                    Book(
-                        id = "1",
-                        title = "Large title for stored book in the list that should not be shown",
-                        subtitle = null,
-                        authors = listOf("Author"),
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 5.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = BookState.READ,
-                        priority = 0,
-                    ),
-                    Book(
-                        id = "2",
-                        title = "Title",
-                        subtitle = null,
-                        authors = null,
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 0.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = BookState.READ,
-                        priority = 0,
+                books = Books(
+                    listOf(
+                        Book(
+                            id = "1",
+                            title = "Large title for stored book in the list not to be shown",
+                            subtitle = null,
+                            authors = listOf("Author"),
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 5.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = BookState.READ,
+                            priority = 0,
+                        ),
+                        Book(
+                            id = "2",
+                            title = "Title",
+                            subtitle = null,
+                            authors = null,
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 0.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = BookState.READ,
+                            priority = 0,
+                        ),
                     ),
                 ),
                 subtitle = "2025",

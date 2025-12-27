@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.components.BookItem
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomSearchBar
@@ -132,7 +133,7 @@ fun SearchScreen(
                     )
                 }
                 is SearchUiState.Success -> {
-                    if (state.books.isEmpty() && !state.isLoading) {
+                    if (state.books.books.isEmpty() && !state.isLoading) {
                         NoResultsContent()
                     } else {
                         SearchContent(
@@ -210,7 +211,7 @@ private fun ErrorContent() {
 
 @Composable
 private fun SearchContent(
-    books: List<Book>,
+    books: Books,
     listState: LazyListState,
     showTopButton: Boolean,
     showBottomButton: Boolean,
@@ -226,17 +227,17 @@ private fun SearchContent(
             state = listState,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            itemsIndexed(books) { index, book ->
+            itemsIndexed(books.books) { index, book ->
                 if (book.id.isNotBlank()) {
                     val swipeActionLabel = stringResource(R.string.save)
+                    val direction = SwipeDirection.LEFT
                     SwipeItem(
-                        direction = SwipeDirection.LEFT,
-                        dismissValue = SwipeToDismissBoxValue.EndToStart,
+                        direction = direction,
                         threshold = 0.6f,
                         onSwipe = { onSwipe(book.id) },
                         background = {
                             SwipeItemBackground(
-                                dismissValue = SwipeToDismissBoxValue.EndToStart,
+                                direction = direction,
                                 color = MaterialTheme.colorScheme.roseBud,
                                 accessibilityPainter = painterResource(R.drawable.ic_save_book)
                                     .withDescription(swipeActionLabel),
@@ -246,7 +247,7 @@ private fun SearchContent(
                             BookItem(
                                 book = book,
                                 onBookClick = onBookClick,
-                                showDivider = index < books.size - 1,
+                                showDivider = index < books.books.size - 1,
                                 modifier = Modifier.semantics {
                                     customActions = listOf(
                                         CustomAccessibilityAction(swipeActionLabel) {
@@ -350,101 +351,103 @@ private class SearchScreenPreviewParameterProvider :
     override val values: Sequence<SearchUiState>
         get() = sequenceOf(
             SearchUiState.Success(
-                books = listOf(
-                    Book(
-                        id = "1",
-                        title = "Book 1",
-                        subtitle = null,
-                        authors = listOf("Author"),
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 6.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = null,
-                        priority = 0,
-                    ),
-                    Book(
-                        id = "2",
-                        title = "Book 2",
-                        subtitle = null,
-                        authors = listOf("Author"),
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 5.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = null,
-                        priority = 0,
-                    ),
-                    Book(
-                        id = "3",
-                        title = "Book 3",
-                        subtitle = null,
-                        authors = null,
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 0.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = null,
-                        priority = 0,
-                    ),
-                    Book(
-                        id = "",
-                        title = "",
-                        subtitle = null,
-                        authors = null,
-                        publisher = null,
-                        publishedDate = null,
-                        readingDate = null,
-                        description = null,
-                        summary = null,
-                        isbn = null,
-                        pageCount = 0,
-                        categories = null,
-                        averageRating = 0.0,
-                        ratingsCount = 0,
-                        rating = 0.0,
-                        thumbnail = null,
-                        image = null,
-                        format = null,
-                        state = null,
-                        priority = 0,
+                books = Books(
+                    listOf(
+                        Book(
+                            id = "1",
+                            title = "Book 1",
+                            subtitle = null,
+                            authors = listOf("Author"),
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 6.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = null,
+                            priority = 0,
+                        ),
+                        Book(
+                            id = "2",
+                            title = "Book 2",
+                            subtitle = null,
+                            authors = listOf("Author"),
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 5.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = null,
+                            priority = 0,
+                        ),
+                        Book(
+                            id = "3",
+                            title = "Book 3",
+                            subtitle = null,
+                            authors = null,
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 0.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = null,
+                            priority = 0,
+                        ),
+                        Book(
+                            id = "",
+                            title = "",
+                            subtitle = null,
+                            authors = null,
+                            publisher = null,
+                            publishedDate = null,
+                            readingDate = null,
+                            description = null,
+                            summary = null,
+                            isbn = null,
+                            pageCount = 0,
+                            categories = null,
+                            averageRating = 0.0,
+                            ratingsCount = 0,
+                            rating = 0.0,
+                            thumbnail = null,
+                            image = null,
+                            format = null,
+                            state = null,
+                            priority = 0,
+                        ),
                     ),
                 ),
                 isLoading = true,
                 query = null,
             ),
             SearchUiState.Success(
-                books = emptyList(),
+                books = Books(),
                 isLoading = false,
                 query = null,
             ),

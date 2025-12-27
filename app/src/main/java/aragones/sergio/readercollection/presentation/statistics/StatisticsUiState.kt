@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.presentation.statistics
 
+import androidx.compose.runtime.Immutable
 import aragones.sergio.readercollection.domain.model.Book
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
@@ -15,25 +16,34 @@ sealed class StatisticsUiState {
 
     data class Success(
         val totalBooksRead: Int,
-        val booksByYearEntries: List<BarEntry>,
-        val booksByMonthEntries: List<PieEntry>,
-        val booksByAuthorStats: Map<String, List<Book>>,
+        val booksByYearEntries: BarEntries,
+        val booksByMonthEntries: PieEntries,
+        val booksByAuthorStats: MapEntries,
         val shorterBook: Book?,
         val longerBook: Book?,
-        val booksByFormatEntries: List<PieEntry>,
+        val booksByFormatEntries: PieEntries,
         val isLoading: Boolean,
     ) : StatisticsUiState() {
         companion object {
             fun empty(): Success = Success(
                 totalBooksRead = 0,
-                booksByYearEntries = listOf(),
-                booksByMonthEntries = listOf(),
-                booksByAuthorStats = mapOf(),
+                booksByYearEntries = BarEntries(),
+                booksByMonthEntries = PieEntries(),
+                booksByAuthorStats = MapEntries(),
                 shorterBook = null,
                 longerBook = null,
-                booksByFormatEntries = listOf(),
+                booksByFormatEntries = PieEntries(),
                 isLoading = false,
             )
         }
     }
 }
+
+@Immutable
+data class BarEntries(val entries: List<BarEntry> = emptyList())
+
+@Immutable
+data class PieEntries(val entries: List<PieEntry> = emptyList())
+
+@Immutable
+data class MapEntries(val entries: Map<String, List<Book>> = mapOf())

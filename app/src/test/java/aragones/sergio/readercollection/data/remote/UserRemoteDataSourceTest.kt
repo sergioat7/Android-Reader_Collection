@@ -1065,16 +1065,44 @@ class UserRemoteDataSourceTest {
     }
 
     private fun givenDeleteUserSuccess(userId: String) {
+        val batch = mockk<WriteBatch>()
+        every { firestore.batch() } returns batch
         val publicProfileCollection = getPublicProfile()
         val publicProfileReference = mockk<DocumentReference>()
-        val usersReference = getUsers(userId)
-        val batch = mockk<WriteBatch>()
-        val user = mockk<FirebaseUser>()
-        every { firestore.batch() } returns batch
         every { publicProfileCollection.document(userId) } returns publicProfileReference
         every { batch.delete(publicProfileReference) } returns mockk()
+        val usersReference = getUsers(userId)
+        val booksReference = mockk<CollectionReference>()
+        val friendsReference = mockk<CollectionReference>()
+        val booksTask = mockk<Task<QuerySnapshot>>()
+        val booksQuerySnapshot = mockk<QuerySnapshot>()
+        val bookDocumentSnapshot = mockk<DocumentSnapshot>()
+        val bookDocumentReference = mockk<DocumentReference>()
+        every { usersReference.collection("books") } returns booksReference
+        every { booksReference.get() } returns booksTask
+        every { booksTask.isComplete } returns true
+        every { booksTask.isCanceled } returns false
+        every { booksTask.exception } returns null
+        every { booksTask.result } returns booksQuerySnapshot
+        every { booksQuerySnapshot.documents } returns listOf(bookDocumentSnapshot)
+        every { bookDocumentSnapshot.reference } returns bookDocumentReference
+        every { batch.delete(bookDocumentSnapshot.reference) } returns mockk()
+        val friendsTask = mockk<Task<QuerySnapshot>>()
+        val friendsQuerySnapshot = mockk<QuerySnapshot>()
+        val friendDocumentSnapshot = mockk<DocumentSnapshot>()
+        val friendDocumentReference = mockk<DocumentReference>()
+        every { usersReference.collection("friends") } returns booksReference
+        every { friendsReference.get() } returns friendsTask
+        every { friendsTask.isComplete } returns true
+        every { friendsTask.isCanceled } returns false
+        every { friendsTask.exception } returns null
+        every { friendsTask.result } returns friendsQuerySnapshot
+        every { friendsQuerySnapshot.documents } returns listOf(friendDocumentSnapshot)
+        every { friendDocumentSnapshot.reference } returns friendDocumentReference
+        every { batch.delete(friendDocumentSnapshot.reference) } returns mockk()
         every { batch.delete(usersReference) } returns mockk()
         every { batch.commit() } returns Tasks.forResult(mockk<Void>())
+        val user = mockk<FirebaseUser>()
         every { auth.currentUser } returns user
         every { user.delete() } returns Tasks.forResult(mockk<Void>())
     }
@@ -1085,30 +1113,56 @@ class UserRemoteDataSourceTest {
         exception1: Exception?,
         exception2: Exception?,
     ) {
+        val batch = mockk<WriteBatch>()
+        every { firestore.batch() } returns batch
         val publicProfileCollection = getPublicProfile()
         val publicProfileReference = mockk<DocumentReference>()
-        val usersReference = getUsers(userId)
-        val batch = mockk<WriteBatch>()
-        val task1 = mockk<Task<Void>>()
-        val task2 = mockk<Task<Void>>()
-        every { firestore.batch() } returns batch
         every { publicProfileCollection.document(userId) } returns publicProfileReference
         every { batch.delete(publicProfileReference) } returns mockk()
+        val usersReference = getUsers(userId)
+        val booksReference = mockk<CollectionReference>()
+        val friendsReference = mockk<CollectionReference>()
+        val booksTask = mockk<Task<QuerySnapshot>>()
+        val booksQuerySnapshot = mockk<QuerySnapshot>()
+        val bookDocumentSnapshot = mockk<DocumentSnapshot>()
+        val bookDocumentReference = mockk<DocumentReference>()
+        every { usersReference.collection("books") } returns booksReference
+        every { booksReference.get() } returns booksTask
+        every { booksTask.isComplete } returns true
+        every { booksTask.isCanceled } returns false
+        every { booksTask.exception } returns null
+        every { booksTask.result } returns booksQuerySnapshot
+        every { booksQuerySnapshot.documents } returns listOf(bookDocumentSnapshot)
+        every { bookDocumentSnapshot.reference } returns bookDocumentReference
+        every { batch.delete(bookDocumentSnapshot.reference) } returns mockk()
+        val friendsTask = mockk<Task<QuerySnapshot>>()
+        val friendsQuerySnapshot = mockk<QuerySnapshot>()
+        val friendDocumentSnapshot = mockk<DocumentSnapshot>()
+        val friendDocumentReference = mockk<DocumentReference>()
+        every { usersReference.collection("friends") } returns booksReference
+        every { friendsReference.get() } returns friendsTask
+        every { friendsTask.isComplete } returns true
+        every { friendsTask.isCanceled } returns false
+        every { friendsTask.exception } returns null
+        every { friendsTask.result } returns friendsQuerySnapshot
+        every { friendsQuerySnapshot.documents } returns listOf(friendDocumentSnapshot)
+        every { friendDocumentSnapshot.reference } returns friendDocumentReference
+        every { batch.delete(friendDocumentSnapshot.reference) } returns mockk()
+        val task1 = mockk<Task<Void>>()
         every { batch.delete(usersReference) } returns mockk()
         every { batch.commit() } returns if (exception1 != null) {
             task1
         } else {
-            Tasks.forResult(
-                mockk<Void>(),
-            )
+            Tasks.forResult(mockk<Void>())
         }
+        every { task1.isComplete } returns true
+        every { task1.isCanceled } returns false
+        every { task1.exception } returns exception1
+        val task2 = mockk<Task<Void>>()
         every { auth.currentUser } returns user
         every { user.delete() } returns task2
-        every { task1.isComplete } returns true
         every { task2.isComplete } returns true
-        every { task1.isCanceled } returns false
         every { task2.isCanceled } returns false
-        every { task1.exception } returns exception1
         every { task2.exception } returns exception2
     }
 

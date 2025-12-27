@@ -19,6 +19,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -67,22 +68,20 @@ class BookDetailViewModel @Inject constructor(
 
     //region Public methods
     fun enableEdition() {
-        _state.value = _state.value.copy(
-            isEditable = true,
-        )
+        _state.update { it.copy(isEditable = true) }
     }
 
     fun disableEdition() {
-        _state.value = _state.value.copy(
-            book = currentBook,
-            isEditable = false,
-        )
+        _state.update {
+            it.copy(
+                book = currentBook,
+                isEditable = false,
+            )
+        }
     }
 
     fun changeData(book: Book) {
-        _state.value = _state.value.copy(
-            book = book,
-        )
+        _state.update { it.copy(book = book) }
     }
 
     fun createBook(newBook: Book) = viewModelScope.launch {
@@ -91,11 +90,13 @@ class BookDetailViewModel @Inject constructor(
         booksRepository.createBook(book).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.book_saved
-                _state.value = _state.value.copy(
-                    book = book,
-                    isAlreadySaved = true,
-                    isEditable = false,
-                )
+                _state.update {
+                    it.copy(
+                        book = book,
+                        isAlreadySaved = true,
+                        isEditable = false,
+                    )
+                }
             },
             onFailure = {
                 _bookDetailError.value = ErrorResponse(
@@ -108,12 +109,14 @@ class BookDetailViewModel @Inject constructor(
 
     fun setBook(book: Book) = viewModelScope.launch {
         booksRepository.setBook(book).fold(
-            onSuccess = {
-                currentBook = it
-                _state.value = _state.value.copy(
-                    book = it,
-                    isEditable = false,
-                )
+            onSuccess = { updatedBook ->
+                currentBook = updatedBook
+                _state.update {
+                    it.copy(
+                        book = updatedBook,
+                        isEditable = false,
+                    )
+                }
             },
             onFailure = {
                 _bookDetailError.value = ErrorResponse(
@@ -128,10 +131,12 @@ class BookDetailViewModel @Inject constructor(
         booksRepository.deleteBook(params.bookId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.book_removed
-                _state.value = _state.value.copy(
-                    isAlreadySaved = false,
-                    isEditable = true,
-                )
+                _state.update {
+                    it.copy(
+                        isAlreadySaved = false,
+                        isEditable = true,
+                    )
+                }
             },
             onFailure = {
                 _bookDetailError.value = ErrorResponse(
@@ -143,11 +148,13 @@ class BookDetailViewModel @Inject constructor(
     }
 
     fun setBookImage(imageUri: String?) {
-        _state.value = _state.value.copy(
-            book = _state.value.book?.copy(
-                thumbnail = imageUri,
-            ),
-        )
+        _state.update {
+            it.copy(
+                book = _state.value.book?.copy(
+                    thumbnail = imageUri,
+                ),
+            )
+        }
     }
 
     fun showConfirmationDialog(textId: Int) {
@@ -169,13 +176,15 @@ class BookDetailViewModel @Inject constructor(
     private fun fetchBook() = viewModelScope.launch {
         if (params.friendId.isNotEmpty()) {
             booksRepository.getFriendBook(params.friendId, params.bookId).fold(
-                onSuccess = {
-                    currentBook = it
-                    _state.value = _state.value.copy(
-                        book = it,
-                        isEditable = true,
-                        isAlreadySaved = false,
-                    )
+                onSuccess = { book ->
+                    currentBook = book
+                    _state.update {
+                        it.copy(
+                            book = book,
+                            isEditable = true,
+                            isAlreadySaved = false,
+                        )
+                    }
                 },
                 onFailure = {
                     _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
@@ -185,11 +194,13 @@ class BookDetailViewModel @Inject constructor(
             booksRepository.getBook(params.bookId).fold(
                 onSuccess = { (book, isAlreadySaved) ->
                     currentBook = book
-                    _state.value = _state.value.copy(
-                        book = book,
-                        isEditable = !isAlreadySaved,
-                        isAlreadySaved = isAlreadySaved,
-                    )
+                    _state.update {
+                        it.copy(
+                            book = book,
+                            isEditable = !isAlreadySaved,
+                            isAlreadySaved = isAlreadySaved,
+                        )
+                    }
                 },
                 onFailure = {
                     _bookDetailError.value = ErrorResponse("", R.string.error_no_book)

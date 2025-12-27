@@ -11,11 +11,13 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.Books
 import com.aragones.sergio.util.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -56,14 +58,16 @@ class SearchViewModel @Inject constructor(
             this.query = query
         }
 
-        _state.value = when (val currentState = _state.value) {
-            is SearchUiState.Empty -> SearchUiState.Success(
-                isLoading = true,
-                query = this.query,
-                books = listOf(),
-            )
-            is SearchUiState.Success -> currentState.copy(isLoading = true)
-            is SearchUiState.Error -> currentState.copy(isLoading = true)
+        _state.update {
+            when (it) {
+                SearchUiState.Empty -> SearchUiState.Success(
+                    isLoading = true,
+                    query = this.query,
+                    books = Books(),
+                )
+                is SearchUiState.Success -> it.copy(isLoading = true)
+                is SearchUiState.Error -> it.copy(isLoading = true)
+            }
         }
 
         viewModelScope.launch {
@@ -82,7 +86,7 @@ class SearchViewModel @Inject constructor(
                     _state.value = SearchUiState.Success(
                         isLoading = false,
                         query = this@SearchViewModel.query,
-                        books = updatedBooks,
+                        books = Books(updatedBooks),
                     )
                 },
                 onFailure = {

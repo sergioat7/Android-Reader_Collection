@@ -229,8 +229,7 @@ fun SearchBar(
                 accessibilityPainter = painterResource(R.drawable.ic_clear_text)
                     .withDescription(stringResource(R.string.clear_text)),
                 onClick = {
-                    textFieldValueState = textFieldValueState.copy("")
-                    onSearch("")
+                    textFieldValueState = TextFieldValue("")
                 },
             )
         }

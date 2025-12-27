@@ -11,12 +11,14 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.Users
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlin.fold
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -40,24 +42,26 @@ class FriendsViewModel @Inject constructor(
     fun fetchFriends() = viewModelScope.launch {
         _state.value = FriendsUiState.Loading
         val friends = userRepository.getFriends()
-        _state.value = FriendsUiState.Success(friends)
+        _state.value = FriendsUiState.Success(Users(friends))
     }
 
     fun acceptFriendRequest(friendId: String) = viewModelScope.launch {
         userRepository.acceptFriendRequest(friendId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                when (val currentState = _state.value) {
-                    is FriendsUiState.Loading -> {}
-                    is FriendsUiState.Success -> {
-                        _state.value = currentState.copy(
-                            friends = currentState.friends.map {
-                                if (it.id == friendId) {
-                                    it.copy(status = RequestStatus.APPROVED)
-                                } else {
-                                    it
-                                }
-                            },
+                _state.update {
+                    when (it) {
+                        FriendsUiState.Loading -> it
+                        is FriendsUiState.Success -> it.copy(
+                            friends = Users(
+                                it.friends.users.map { friend ->
+                                    if (friend.id == friendId) {
+                                        friend.copy(status = RequestStatus.APPROVED)
+                                    } else {
+                                        friend
+                                    }
+                                },
+                            ),
                         )
                     }
                 }
@@ -75,11 +79,13 @@ class FriendsViewModel @Inject constructor(
         userRepository.rejectFriendRequest(friendId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                when (val currentState = _state.value) {
-                    is FriendsUiState.Loading -> {}
-                    is FriendsUiState.Success -> {
-                        _state.value = currentState.copy(
-                            friends = currentState.friends.filter { it.id != friendId },
+                _state.update {
+                    when (it) {
+                        FriendsUiState.Loading -> it
+                        is FriendsUiState.Success -> it.copy(
+                            friends = Users(
+                                it.friends.users.filter { friend -> friend.id != friendId },
+                            ),
                         )
                     }
                 }
@@ -97,11 +103,13 @@ class FriendsViewModel @Inject constructor(
         userRepository.deleteFriend(friendId).fold(
             onSuccess = {
                 _infoDialogMessageId.value = R.string.friend_action_successfully_done
-                when (val currentState = _state.value) {
-                    is FriendsUiState.Loading -> {}
-                    is FriendsUiState.Success -> {
-                        _state.value = currentState.copy(
-                            friends = currentState.friends.filter { it.id != friendId },
+                _state.update {
+                    when (it) {
+                        FriendsUiState.Loading -> it
+                        is FriendsUiState.Success -> it.copy(
+                            friends = Users(
+                                it.friends.users.filter { friend -> friend.id != friendId },
+                            ),
                         )
                     }
                 }

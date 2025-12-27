@@ -22,6 +22,7 @@ import java.util.Calendar
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
@@ -49,9 +50,11 @@ class StatisticsViewModel @Inject constructor(
 
     //region Public methods
     fun fetchBooks() = viewModelScope.launch {
-        _state.value = when (val currentState = _state.value) {
-            is StatisticsUiState.Empty -> StatisticsUiState.Success.empty().copy(isLoading = true)
-            is StatisticsUiState.Success -> currentState.copy(isLoading = true)
+        _state.update {
+            when (it) {
+                StatisticsUiState.Empty -> StatisticsUiState.Success.empty().copy(isLoading = true)
+                is StatisticsUiState.Success -> it.copy(isLoading = true)
+            }
         }
 
         booksRepository.getReadBooks().collect { books ->
@@ -111,7 +114,7 @@ class StatisticsViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun createBooksByYearStats(books: List<Book>): List<BarEntry> {
+    private fun createBooksByYearStats(books: List<Book>): BarEntries {
         val booksByYear = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.YEAR)
@@ -126,10 +129,10 @@ class StatisticsViewModel @Inject constructor(
                 ),
             )
         }
-        return entries
+        return BarEntries(entries)
     }
 
-    private fun createBooksByMonthStats(books: List<Book>): List<PieEntry> {
+    private fun createBooksByMonthStats(books: List<Book>): PieEntries {
         val booksByMonth = books
             .mapNotNull { it.readingDate }
             .getOrderedBy(Calendar.MONTH)
@@ -144,18 +147,20 @@ class StatisticsViewModel @Inject constructor(
                 ),
             )
         }
-        return entries
+        return PieEntries(entries)
     }
 
-    private fun createBooksByAuthorStats(books: List<Book>): Map<String, List<Book>> = books
-        .filter { it.authorsToString().isNotBlank() }
-        .groupBy { it.authorsToString() }
-        .toList()
-        .sortedBy { it.second.size }
-        .takeLast(5)
-        .toMap()
+    private fun createBooksByAuthorStats(books: List<Book>): MapEntries = MapEntries(
+        books
+            .filter { it.authorsToString().isNotBlank() }
+            .groupBy { it.authorsToString() }
+            .toList()
+            .sortedBy { it.second.size }
+            .takeLast(5)
+            .toMap(),
+    )
 
-    private fun createFormatStats(books: List<Book>): List<PieEntry> {
+    private fun createFormatStats(books: List<Book>): PieEntries {
         val booksByFormat = books
             .filter { !it.format.isNullOrEmpty() }
             .groupBy { it.format }
@@ -169,7 +174,7 @@ class StatisticsViewModel @Inject constructor(
                 ),
             )
         }
-        return entries
+        return PieEntries(entries)
     }
     //endregion
 }
