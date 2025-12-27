@@ -106,6 +106,7 @@ dependencies {
     implementation(libs.bundles.compose)
     implementation(libs.bundles.retrofit)
     implementation(libs.bundles.firebase)
+    implementation(libs.bundles.ktor)
     implementation(platform(libs.compose.bom))
     implementation(libs.coil)
     implementation(libs.core.ktx)
