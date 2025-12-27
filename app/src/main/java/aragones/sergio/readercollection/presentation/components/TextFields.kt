@@ -83,6 +83,10 @@ fun CustomOutlinedTextField(
 
     val showLabel = !enabled || text.isNotBlank() || placeholderText == null || isFocused
 
+    val currentTextStyle = textStyle.copy(
+        color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
+        lineHeight = 24.sp,
+    )
     val label: @Composable (() -> Unit) =
         {
             Text(
@@ -181,6 +185,17 @@ fun CustomOutlinedTextField(
             imeAction = keyboardAction,
         )
     }
+    val visualTransformation = if (endIcon?.contentDescription == stringResource(
+            R.string.show_password,
+        )
+    ) {
+        PasswordVisualTransformation()
+    } else {
+        MarkdownTransformation(
+            textStyle = currentTextStyle,
+            backgroundColor = MaterialTheme.colorScheme.background,
+        )
+    }
 
     OutlinedTextField(
         value = text,
@@ -194,10 +209,7 @@ fun CustomOutlinedTextField(
             errorBorderColor = MaterialTheme.colorScheme.error,
             errorLabelColor = MaterialTheme.colorScheme.error,
         ),
-        textStyle = textStyle.copy(
-            color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
-            lineHeight = 24.sp,
-        ),
+        textStyle = currentTextStyle,
         label = label.takeIf { showLabel } ?: placeholder,
         placeholder = placeholder.takeIf { showLabel },
         trailingIcon = trailingIcon,
@@ -209,14 +221,7 @@ fun CustomOutlinedTextField(
                 focusManager.clearFocus()
             },
         ),
-        visualTransformation = if (endIcon?.contentDescription == stringResource(
-                R.string.show_password,
-            )
-        ) {
-            PasswordVisualTransformation()
-        } else {
-            VisualTransformation.None
-        },
+        visualTransformation = visualTransformation,
         singleLine = inputType != CustomInputType.MULTI_LINE_TEXT,
         maxLines = maxLines,
         enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
