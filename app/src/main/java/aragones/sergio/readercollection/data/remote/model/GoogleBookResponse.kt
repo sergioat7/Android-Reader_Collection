@@ -5,23 +5,24 @@
 
 package aragones.sergio.readercollection.data.remote.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import aragones.sergio.readercollection.data.remote.DateSerializer
 import java.util.Date
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GoogleBookListResponse(
-    @Json(name = "totalItems")
+    @SerialName("totalItems")
     val totalItems: Int,
-    @Json(name = "items")
-    var items: List<GoogleBookResponse>?,
+    @SerialName("items")
+    var items: List<GoogleBookResponse>? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GoogleBookResponse(
-    @Json(name = "id")
+    @SerialName("id")
     val id: String,
-    @Json(name = "volumeInfo")
+    @SerialName("volumeInfo")
     val volumeInfo: GoogleVolumeResponse,
 ) {
 
@@ -46,54 +47,55 @@ data class GoogleBookResponse(
             ?: volumeInfo.imageLinks?.medium ?: volumeInfo.imageLinks?.small
 }
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GoogleVolumeResponse(
-    @Json(name = "title")
-    val title: String?,
-    @Json(name = "subtitle")
-    val subtitle: String?,
-    @Json(name = "authors")
-    val authors: List<String>?,
-    @Json(name = "publisher")
-    val publisher: String?,
-    @Json(name = "publishedDate")
-    val publishedDate: Date?,
-    @Json(name = "description")
-    val description: String?,
-    @Json(name = "industryIdentifiers")
-    val industryIdentifiers: List<GoogleIsbnResponse>?,
-    @Json(name = "pageCount")
-    val pageCount: Int?,
-    @Json(name = "categories")
-    val categories: List<String>?,
-    @Json(name = "averageRating")
-    val averageRating: Double?,
-    @Json(name = "ratingsCount")
-    val ratingsCount: Int?,
-    @Json(name = "imageLinks")
-    val imageLinks: GoogleImageLinksResponse?,
+    @SerialName("title")
+    val title: String? = null,
+    @SerialName("subtitle")
+    val subtitle: String? = null,
+    @SerialName("authors")
+    val authors: List<String>? = null,
+    @SerialName("publisher")
+    val publisher: String? = null,
+    @SerialName("publishedDate")
+    @Serializable(with = DateSerializer::class)
+    val publishedDate: Date? = null,
+    @SerialName("description")
+    val description: String? = null,
+    @SerialName("industryIdentifiers")
+    val industryIdentifiers: List<GoogleIsbnResponse>? = null,
+    @SerialName("pageCount")
+    val pageCount: Int? = null,
+    @SerialName("categories")
+    val categories: List<String>? = null,
+    @SerialName("averageRating")
+    val averageRating: Double? = null,
+    @SerialName("ratingsCount")
+    val ratingsCount: Int? = null,
+    @SerialName("imageLinks")
+    val imageLinks: GoogleImageLinksResponse? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GoogleIsbnResponse(
-    @Json(name = "type")
-    val type: String?,
-    @Json(name = "identifier")
-    val identifier: String?,
+    @SerialName("type")
+    val type: String? = null,
+    @SerialName("identifier")
+    val identifier: String? = null,
 )
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class GoogleImageLinksResponse(
-    @Json(name = "smallThumbnail")
-    val smallThumbnail: String?,
-    @Json(name = "thumbnail")
-    val thumbnail: String?,
-    @Json(name = "small")
-    val small: String?,
-    @Json(name = "medium")
-    val medium: String?,
-    @Json(name = "large")
-    val large: String?,
-    @Json(name = "extraLarge")
-    val extraLarge: String?,
+    @SerialName("smallThumbnail")
+    val smallThumbnail: String? = null,
+    @SerialName("thumbnail")
+    val thumbnail: String? = null,
+    @SerialName("small")
+    val small: String? = null,
+    @SerialName("medium")
+    val medium: String? = null,
+    @SerialName("large")
+    val large: String? = null,
+    @SerialName("extraLarge")
+    val extraLarge: String? = null,
 )

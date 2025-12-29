@@ -5,34 +5,36 @@
 
 package aragones.sergio.readercollection.data.remote
 
-import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
-import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.utils.Constants
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.http.HttpStatusCode
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 
 class BooksRemoteDataSource @Inject constructor(
-    private val googleApiService: GoogleApiService,
+    private val client: HttpClient,
     private val remoteConfig: FirebaseRemoteConfig,
     private val firestore: FirebaseFirestore,
 ) {
 
     //region Static properties
     companion object {
+        private const val VOLUMES_PATH = "/volumes"
         private const val SEARCH_PARAM = "q"
         private const val PAGE_PARAM = "startIndex"
         private const val RESULTS_PARAM = "maxResults"
         private const val ORDER_PARAM = "orderBy"
-        private const val API_KEY = "key"
         private const val RESULTS = 20
         private const val FORMATS_KEY = "formats"
         private const val STATES_KEY = "states"
@@ -50,9 +52,8 @@ class BooksRemoteDataSource @Inject constructor(
         query: String,
         page: Int,
         order: String?,
-    ): Result<GoogleBookListResponse> = runCatching {
+    ): Result<GoogleBookListResponse> = try {
         val params = mutableMapOf(
-            API_KEY to BuildConfig.API_KEY,
             SEARCH_PARAM to query,
             PAGE_PARAM to ((page - 1) * RESULTS).toString(),
             RESULTS_PARAM to RESULTS.toString(),
@@ -60,12 +61,38 @@ class BooksRemoteDataSource @Inject constructor(
         if (order != null) {
             params[ORDER_PARAM] = order
         }
-        googleApiService.searchGoogleBooks(params)
+
+        val response = client.get(VOLUMES_PATH) {
+            url {
+                for (param in params) {
+                    parameters.append(param.key, param.value)
+                }
+            }
+        }
+        Result.success(response)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }.mapCatching { response ->
+        when (response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw IllegalStateException(
+                "Unexpected status code response ${response.status}",
+            )
+        }
     }
 
-    suspend fun getBook(volumeId: String): Result<GoogleBookResponse> = runCatching {
-        val params = mapOf(API_KEY to BuildConfig.API_KEY)
-        googleApiService.getGoogleBook(volumeId, params)
+    suspend fun getBook(volumeId: String): Result<GoogleBookResponse> = try {
+        val response = client.get("$VOLUMES_PATH/$volumeId")
+        Result.success(response)
+    } catch (e: Exception) {
+        Result.failure(e)
+    }.mapCatching { response ->
+        when (response.status) {
+            HttpStatusCode.OK -> response.body()
+            else -> throw IllegalStateException(
+                "Unexpected status code response ${response.status}",
+            )
+        }
     }
 
     fun fetchRemoteConfigValues(language: String) {
