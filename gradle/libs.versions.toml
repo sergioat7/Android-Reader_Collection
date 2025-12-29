@@ -36,7 +36,6 @@ mockk = "1.14.6"
 moshi = "1.15.2"
 navigation = "2.9.6"
 okhttp3 = "5.3.2"
-retrofit = "3.0.0"
 robolectric = "4.16"
 room = "2.8.4"
 security = "1.1.0"
@@ -113,10 +112,8 @@ moshi-kotlin-codegen = { group = "com.squareup.moshi", name = "moshi-kotlin-code
 #Navigation
 navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
 
-#Retrofit
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+#Okhttp
 okhttp3-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp3" }
-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 
 #Room
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -175,13 +172,9 @@ firebase = [
     "firebase-firestore",
 ]
 ktor = [
+    "okhttp3-logging-interceptor",
     "ktor-client-contentNegotiation",
     "ktor-client-core",
     "ktor-client-okhttp",
     "ktor-client-serialization-kolinxJson",
-]
-retrofit = [
-    "okhttp3-logging-interceptor",
-    "retrofit",
-    "retrofit-converter-moshi",
 ]

@@ -104,7 +104,6 @@ dependencies {
     implementation(libs.android.chart)
     implementation(libs.app.update.ktx)
     implementation(libs.bundles.compose)
-    implementation(libs.bundles.retrofit)
     implementation(libs.bundles.firebase)
     implementation(libs.bundles.ktor)
     implementation(platform(libs.compose.bom))

@@ -6,8 +6,6 @@
 package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.BuildConfig
-import aragones.sergio.readercollection.data.remote.ApiManager
-import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -40,11 +38,6 @@ object NetworkModule {
 
     private const val BASE_GOOGLE_ENDPOINT = "www.googleapis.com/books/v1"
     private const val API_KEY = "key"
-
-    @Singleton
-    @Provides
-    fun providesGoogleApiService(): GoogleApiService =
-        ApiManager.getService("https://www.googleapis.com/books/v1/")
 
     @Provides
     fun providesHttpClientEngine(): HttpClientEngine = OkHttp.create {

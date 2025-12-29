@@ -8,7 +8,6 @@ package aragones.sergio.readercollection.presentation.books
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
@@ -141,7 +140,7 @@ class BooksViewModel @Inject constructor(
                     is BooksUiState.Empty -> currentState.copy(isLoading = false)
                     is BooksUiState.Success -> currentState.copy(isLoading = false)
                 }
-                _booksError.value = ApiManager.handleError(it)
+                _booksError.value = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database)
             },
         )
     }

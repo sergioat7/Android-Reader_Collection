@@ -35,7 +35,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.ApiManager
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.LoginActivity
 import aragones.sergio.readercollection.presentation.navigation.Route
@@ -165,7 +164,6 @@ class LandingActivity : ComponentActivity() {
     }
 
     private fun configLanguage() {
-        ApiManager.language = viewModel.language
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
             val language = viewModel.language
             val conf = resources.configuration
