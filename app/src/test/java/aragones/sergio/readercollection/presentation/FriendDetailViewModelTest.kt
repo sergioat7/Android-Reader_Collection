@@ -14,12 +14,12 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.frienddetail.FriendDetailUiState
@@ -109,7 +109,7 @@ class FriendDetailViewModelTest {
             viewModel.fetchFriend()
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.no_friends_found,
                 ),
@@ -136,7 +136,7 @@ class FriendDetailViewModelTest {
             viewModel.fetchFriend()
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
                 ),
@@ -178,7 +178,7 @@ class FriendDetailViewModelTest {
             viewModel.deleteFriend()
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_search,
                 ),
@@ -243,7 +243,7 @@ class FriendDetailViewModelTest {
                     } returns Result.failure(Exception())
                     viewModel.deleteFriend()
                     Assert.assertEquals(
-                        ErrorResponse(
+                        ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_search,
                         ),

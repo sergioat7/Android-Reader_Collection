@@ -8,9 +8,9 @@ package aragones.sergio.readercollection.presentation.friends
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.model.Users
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -28,13 +28,13 @@ class FriendsViewModel @Inject constructor(
 
     //region Private properties
     private var _state: MutableStateFlow<FriendsUiState> = MutableStateFlow(FriendsUiState.Loading)
-    private val _error = MutableStateFlow<ErrorResponse?>(null)
+    private val _error = MutableStateFlow<ErrorModel?>(null)
     private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val state: StateFlow<FriendsUiState> = _state
-    val error: StateFlow<ErrorResponse?> = _error
+    val error: StateFlow<ErrorModel?> = _error
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     //endregion
 
@@ -67,7 +67,7 @@ class FriendsViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _error.value = ErrorResponse(
+                _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 )
@@ -91,7 +91,7 @@ class FriendsViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _error.value = ErrorResponse(
+                _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 )
@@ -115,7 +115,7 @@ class FriendsViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _error.value = ErrorResponse(
+                _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 )

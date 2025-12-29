@@ -11,9 +11,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
@@ -33,13 +33,13 @@ class LoginViewModel @Inject constructor(
     private var _uiState: MutableState<LoginUiState> = mutableStateOf(
         LoginUiState.empty().copy(username = userRepository.username),
     )
-    private val _loginError = MutableStateFlow<ErrorResponse?>(null)
+    private val _loginError = MutableStateFlow<ErrorModel?>(null)
     private val _activityName = MutableStateFlow<String?>(null)
     //endregion
 
     //region Public properties
     val uiState: State<LoginUiState> = _uiState
-    val loginError: StateFlow<ErrorResponse?> = _loginError
+    val loginError: StateFlow<ErrorModel?> = _loginError
     val activityName: StateFlow<String?> = _activityName
     //endregion
 
@@ -57,7 +57,7 @@ class LoginViewModel @Inject constructor(
                     onFailure = {
                         userRepository.logout()
                         _uiState.value = _uiState.value.copy(isLoading = false)
-                        _loginError.value = ErrorResponse(
+                        _loginError.value = ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_server,
                         )
@@ -66,7 +66,7 @@ class LoginViewModel @Inject constructor(
             },
             onFailure = {
                 _uiState.value = _uiState.value.copy(isLoading = false)
-                _loginError.value = ErrorResponse(
+                _loginError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.wrong_credentials,
                 )

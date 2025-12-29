@@ -8,10 +8,10 @@ package aragones.sergio.readercollection.presentation.statistics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.extensions.getGroupedBy
 import com.aragones.sergio.util.extensions.getOrderedBy
@@ -34,14 +34,14 @@ class StatisticsViewModel @Inject constructor(
     //region Private properties
     private var _state: MutableStateFlow<StatisticsUiState> =
         MutableStateFlow(StatisticsUiState.Empty)
-    private val _booksError = MutableStateFlow<ErrorResponse?>(null)
+    private val _booksError = MutableStateFlow<ErrorModel?>(null)
     private val _confirmationDialogMessageId = MutableStateFlow(-1)
     private val _infoDialogMessageId = MutableStateFlow(-1)
     //endregion
 
     //region Public properties
     val state: StateFlow<StatisticsUiState> = _state
-    val booksError: StateFlow<ErrorResponse?> = _booksError
+    val booksError: StateFlow<ErrorModel?> = _booksError
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
@@ -94,7 +94,7 @@ class StatisticsViewModel @Inject constructor(
                 _infoDialogMessageId.value = R.string.data_imported
             },
             onFailure = {
-                _booksError.value = ErrorResponse("", R.string.error_file_data)
+                _booksError.value = ErrorModel("", R.string.error_file_data)
             },
         )
     }
@@ -107,7 +107,7 @@ class StatisticsViewModel @Inject constructor(
             },
             onFailure = {
                 completion(null)
-                _booksError.value = ErrorResponse("", R.string.error_database)
+                _booksError.value = ErrorModel("", R.string.error_database)
             },
         )
     }

@@ -12,9 +12,9 @@ import app.cash.turbine.test
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.addfriend.AddFriendsUiState
@@ -254,7 +254,7 @@ class AddFriendsViewModelTest {
             viewModel.searchUserWith(userToSearch)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
                 ),
@@ -353,7 +353,7 @@ class AddFriendsViewModelTest {
             viewModel.requestFriendship(friendUi)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_search,
                 ),
@@ -377,7 +377,7 @@ class AddFriendsViewModelTest {
             } returns Result.failure(Exception())
             viewModel.searchUserWith("test")
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
                 ),

@@ -13,10 +13,10 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.statistics.BarEntries
 import aragones.sergio.readercollection.presentation.statistics.MapEntries
@@ -210,7 +210,7 @@ class StatisticsViewModelTest {
             Assert.assertEquals(null, awaitItem())
             viewModel.importData("[]")
             Assert.assertEquals(
-                ErrorResponse("", R.string.error_file_data),
+                ErrorModel("", R.string.error_file_data),
                 awaitItem(),
             )
 
@@ -300,7 +300,7 @@ class StatisticsViewModelTest {
             viewModel.importData("[{}]")
 
             Assert.assertEquals(
-                ErrorResponse("", R.string.error_file_data),
+                ErrorModel("", R.string.error_file_data),
                 awaitItem(),
             )
         }
@@ -330,7 +330,7 @@ class StatisticsViewModelTest {
             )
 
             Assert.assertEquals(
-                ErrorResponse("", R.string.error_file_data),
+                ErrorModel("", R.string.error_file_data),
                 awaitItem(),
             )
         }
@@ -402,7 +402,7 @@ class StatisticsViewModelTest {
             }
 
             Assert.assertEquals(
-                ErrorResponse("", R.string.error_database),
+                ErrorModel("", R.string.error_database),
                 awaitItem(),
             )
             Assert.assertEquals(null, json)

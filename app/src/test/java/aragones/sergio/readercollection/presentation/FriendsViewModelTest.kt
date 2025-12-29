@@ -12,9 +12,9 @@ import app.cash.turbine.test
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.domain.model.Users
 import aragones.sergio.readercollection.domain.toRemoteData
@@ -168,7 +168,7 @@ class FriendsViewModelTest {
             viewModel.acceptFriendRequest(friendId)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 ),
@@ -235,7 +235,7 @@ class FriendsViewModelTest {
             viewModel.rejectFriendRequest(friendId)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 ),
@@ -302,7 +302,7 @@ class FriendsViewModelTest {
             viewModel.deleteFriend(friendId)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
                 ),
@@ -338,7 +338,7 @@ class FriendsViewModelTest {
                 } returns Result.failure(RuntimeException("Firestore error"))
                 viewModel.rejectFriendRequest("")
                 Assert.assertEquals(
-                    ErrorResponse(
+                    ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.friend_action_failure,
                     ),

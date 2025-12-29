@@ -8,9 +8,9 @@ package aragones.sergio.readercollection.presentation.addfriend
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.model.User
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,12 +31,12 @@ class AddFriendsViewModel @Inject constructor(
             query = "",
         ),
     )
-    private val _error = MutableStateFlow<ErrorResponse?>(null)
+    private val _error = MutableStateFlow<ErrorModel?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<AddFriendsUiState> = _state
-    val error: StateFlow<ErrorResponse?> = _error
+    val error: StateFlow<ErrorModel?> = _error
     //endregion
 
     //region Public methods
@@ -59,7 +59,7 @@ class AddFriendsViewModel @Inject constructor(
                             )
                         }
                         else -> {
-                            _error.value = ErrorResponse(
+                            _error.value = ErrorModel(
                                 Constants.EMPTY_VALUE,
                                 R.string.error_server,
                             )
@@ -119,7 +119,7 @@ class AddFriendsViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _error.value = ErrorResponse(
+                _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_search,
                 )

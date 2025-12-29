@@ -8,10 +8,10 @@ package aragones.sergio.readercollection.presentation.search
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import com.aragones.sergio.util.BookState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -93,7 +93,7 @@ class SearchViewModel @Inject constructor(
                     _state.value = SearchUiState.Error(
                         isLoading = false,
                         query = this@SearchViewModel.query,
-                        value = ErrorResponse("", R.string.error_search),
+                        value = ErrorModel("", R.string.error_search),
                     )
                 },
             )

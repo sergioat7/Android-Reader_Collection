@@ -8,11 +8,11 @@ package aragones.sergio.readercollection.presentation.books
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
@@ -46,13 +46,13 @@ class BooksViewModel @Inject constructor(
             isSortDescending = userRepository.isSortDescending,
         ),
     )
-    private val _booksError = MutableStateFlow<ErrorResponse?>(null)
+    private val _booksError = MutableStateFlow<ErrorModel?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<BooksUiState> = _state
     val sortingPickerState: StateFlow<UiSortingPickerState> = _sortingPickerState
-    val booksError: StateFlow<ErrorResponse?> = _booksError
+    val booksError: StateFlow<ErrorModel?> = _booksError
     //endregion
 
     //region Public methods
@@ -140,7 +140,7 @@ class BooksViewModel @Inject constructor(
                     is BooksUiState.Empty -> currentState.copy(isLoading = false)
                     is BooksUiState.Success -> currentState.copy(isLoading = false)
                 }
-                _booksError.value = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database)
+                _booksError.value = ErrorModel(Constants.EMPTY_VALUE, R.string.error_database)
             },
         )
     }
@@ -197,7 +197,7 @@ class BooksViewModel @Inject constructor(
                     is BooksUiState.Empty -> currentState.copy(isLoading = false)
                     is BooksUiState.Success -> currentState.copy(isLoading = false)
                 }
-                _booksError.value = ErrorResponse(
+                _booksError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 )

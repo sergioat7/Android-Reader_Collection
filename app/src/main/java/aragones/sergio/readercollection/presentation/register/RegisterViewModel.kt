@@ -11,8 +11,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
@@ -30,14 +30,14 @@ class RegisterViewModel @Inject constructor(
 
     //region Private properties
     private var _uiState: MutableState<RegisterUiState> = mutableStateOf(RegisterUiState.empty())
-    private val _registerError = MutableStateFlow<ErrorResponse?>(null)
+    private val _registerError = MutableStateFlow<ErrorModel?>(null)
     private val _infoDialogMessageId = MutableStateFlow(-1)
     private val _activityName = MutableStateFlow<String?>(null)
     //endregion
 
     //region Public properties
     val uiState: State<RegisterUiState> = _uiState
-    val registerError: StateFlow<ErrorResponse?> = _registerError
+    val registerError: StateFlow<ErrorModel?> = _registerError
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     val activityName: StateFlow<String?> = _activityName
     //endregion
@@ -54,7 +54,7 @@ class RegisterViewModel @Inject constructor(
                     },
                     onFailure = {
                         manageError(
-                            ErrorResponse(
+                            ErrorModel(
                                 Constants.EMPTY_VALUE,
                                 R.string.error_server,
                             ),
@@ -65,12 +65,12 @@ class RegisterViewModel @Inject constructor(
             onFailure = {
                 manageError(
                     if (it is FirebaseAuthUserCollisionException) {
-                        ErrorResponse(
+                        ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_user_found,
                         )
                     } else {
-                        ErrorResponse(
+                        ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_server,
                         )
@@ -117,7 +117,7 @@ class RegisterViewModel @Inject constructor(
     //endregion
 
     //region Private methods
-    private fun manageError(error: ErrorResponse) {
+    private fun manageError(error: ErrorModel) {
         _uiState.value = _uiState.value.copy(isLoading = false)
         _registerError.value = error
     }

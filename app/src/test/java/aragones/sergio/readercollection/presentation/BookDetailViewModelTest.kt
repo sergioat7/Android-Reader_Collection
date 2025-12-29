@@ -12,11 +12,11 @@ import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.domain.toRemoteData
@@ -135,7 +135,7 @@ class BookDetailViewModelTest {
             viewModel.onCreate()
 
             Assert.assertEquals(
-                ErrorResponse("", R.string.error_no_book),
+                ErrorModel("", R.string.error_no_book),
                 awaitItem(),
             )
         }
@@ -239,7 +239,7 @@ class BookDetailViewModelTest {
                 viewModel.onCreate()
 
                 Assert.assertEquals(
-                    ErrorResponse("", R.string.error_no_book),
+                    ErrorModel("", R.string.error_no_book),
                     awaitItem(),
                 )
             }
@@ -258,7 +258,7 @@ class BookDetailViewModelTest {
             viewModel.onCreate()
 
             Assert.assertEquals(
-                ErrorResponse("", R.string.error_no_book),
+                ErrorModel("", R.string.error_no_book),
                 awaitItem(),
             )
         }
@@ -553,7 +553,7 @@ class BookDetailViewModelTest {
             viewModel.createBook(book.toDomain())
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 ),
@@ -607,7 +607,7 @@ class BookDetailViewModelTest {
             viewModel.setBook(book)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 ),
@@ -712,7 +712,7 @@ class BookDetailViewModelTest {
             viewModel.deleteBook()
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 ),
