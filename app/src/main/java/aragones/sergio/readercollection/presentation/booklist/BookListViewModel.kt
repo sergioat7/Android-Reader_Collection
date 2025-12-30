@@ -11,11 +11,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.utils.Constants.FORMATS
@@ -81,13 +81,13 @@ class BookListViewModel @Inject constructor(
             isSortDescending = params.isSortDescending,
         ),
     )
-    private val _booksError = MutableStateFlow<ErrorResponse?>(null)
+    private val _booksError = MutableStateFlow<ErrorModel?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<BookListUiState> = _state
     val sortingPickerState: StateFlow<UiSortingPickerState> = _sortingPickerState
-    val booksError: StateFlow<ErrorResponse?> = _booksError
+    val booksError: StateFlow<ErrorModel?> = _booksError
     //endregion
 
     //region Public methods
@@ -210,7 +210,7 @@ class BookListViewModel @Inject constructor(
     }
 
     private fun showError(
-        error: ErrorResponse = ErrorResponse(Constants.EMPTY_VALUE, R.string.error_database),
+        error: ErrorModel = ErrorModel(Constants.EMPTY_VALUE, R.string.error_database),
     ) {
         _state.value = BookListUiState(
             isLoading = false,

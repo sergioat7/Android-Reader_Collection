@@ -8,12 +8,13 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.BuildConfig
+import aragones.sergio.readercollection.data.remote.di.NetworkModule
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
-import aragones.sergio.readercollection.data.remote.services.GoogleApiService
 import aragones.sergio.readercollection.utils.Constants
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -25,9 +26,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.WriteBatch
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.mock.MockEngine
+import io.ktor.client.engine.mock.respond
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.URLBuilder
+import io.ktor.http.headersOf
 import io.mockk.EqMatcher
-import io.mockk.coEvery
-import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
@@ -38,15 +44,12 @@ import kotlinx.coroutines.test.runTest
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
-import retrofit2.HttpException
-import retrofit2.Response
 
 class BooksRemoteDataSourceTest {
 
-    private val googleApiService: GoogleApiService = mockk()
     private val remoteConfig: FirebaseRemoteConfig = mockk(relaxed = true)
     private val firestore: FirebaseFirestore = mockk()
-    private val dataSource = BooksRemoteDataSource(googleApiService, remoteConfig, firestore)
+    private val dataSource = BooksRemoteDataSource(mockk(), remoteConfig, firestore)
 
     @Test
     fun `GIVEN params without order and api success response WHEN search books is called THEN api is called without order param and return response`() =
@@ -54,20 +57,45 @@ class BooksRemoteDataSourceTest {
             val query = "bookTitle"
             val page = 1
             val params = mutableMapOf(
-                "key" to BuildConfig.API_KEY,
                 "q" to query,
                 "startIndex" to "0",
                 "maxResults" to "20",
+                "key" to BuildConfig.API_KEY,
             )
-            val response = mockk<GoogleBookListResponse>()
-            coEvery { googleApiService.searchGoogleBooks(params) } returns response
+            val url = URLBuilder("/books/v1/volumes")
+                .apply {
+                    for (param in params) {
+                        parameters.append(param.key, param.value)
+                    }
+                }.build()
+                .encodedPathAndQuery
+            val response = GoogleBookListResponse(
+                totalItems = 0,
+                items = emptyList(),
+            )
+            val mockEngine = MockEngine { request ->
+                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                respond(
+                    content =
+                        """
+                        {
+                          "kind": "books#volumes",
+                          "totalItems": ${response.totalItems},
+                          "items": [],
+                          "unknown_key": "unknown_value"
+                        }
+                        """.trimIndent(),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.searchBooks(query, page, null)
 
             Assert.assertEquals(true, result.isSuccess)
             Assert.assertEquals(response, result.getOrNull())
-            coVerify(exactly = 1) { googleApiService.searchGoogleBooks(params) }
-            confirmVerified(googleApiService)
         }
 
     @Test
@@ -77,21 +105,46 @@ class BooksRemoteDataSourceTest {
             val page = 1
             val order = "newest"
             val params = mutableMapOf(
-                "key" to BuildConfig.API_KEY,
                 "q" to query,
                 "startIndex" to "0",
                 "maxResults" to "20",
                 "orderBy" to order,
+                "key" to BuildConfig.API_KEY,
             )
-            val response = mockk<GoogleBookListResponse>()
-            coEvery { googleApiService.searchGoogleBooks(params) } returns response
+            val url = URLBuilder("/books/v1/volumes")
+                .apply {
+                    for (param in params) {
+                        parameters.append(param.key, param.value)
+                    }
+                }.build()
+                .encodedPathAndQuery
+            val response = GoogleBookListResponse(
+                totalItems = 0,
+                items = emptyList(),
+            )
+            val mockEngine = MockEngine { request ->
+                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                respond(
+                    content =
+                        """
+                        {
+                          "kind": "books#volumes",
+                          "totalItems": ${response.totalItems},
+                          "items": [],
+                          "unknown_key": "unknown_value"
+                        }
+                        """.trimIndent(),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.searchBooks(query, page, order)
 
             Assert.assertEquals(true, result.isSuccess)
             Assert.assertEquals(response, result.getOrNull())
-            coVerify(exactly = 1) { googleApiService.searchGoogleBooks(params) }
-            confirmVerified(googleApiService)
         }
 
     @Test
@@ -100,21 +153,39 @@ class BooksRemoteDataSourceTest {
         val page = 1
         val order = "newest"
         val params = mutableMapOf(
-            "key" to BuildConfig.API_KEY,
             "q" to query,
             "startIndex" to "0",
             "maxResults" to "20",
             "orderBy" to order,
+            "key" to BuildConfig.API_KEY,
         )
-        val exception = HttpException(Response.error<Any>(400, mockk(relaxed = true)))
-        coEvery { googleApiService.searchGoogleBooks(params) } throws exception
+        val url = URLBuilder("/books/v1/volumes")
+            .apply {
+                for (param in params) {
+                    parameters.append(param.key, param.value)
+                }
+            }.build()
+            .encodedPathAndQuery
+        val error = HttpStatusCode(400, "Client Error")
+        val mockEngine = MockEngine { request ->
+            Assert.assertEquals(url, request.url.encodedPathAndQuery)
+            respond(
+                content = "{}",
+                status = error,
+                headers = headersOf(HttpHeaders.ContentType, "application/json"),
+            )
+        }
+        val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+        val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
         val result = dataSource.searchBooks(query, page, order)
 
         Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
-        coVerify(exactly = 1) { googleApiService.searchGoogleBooks(params) }
-        confirmVerified(googleApiService)
+        Assert.assertTrue(result.exceptionOrNull() is IllegalStateException)
+        Assert.assertEquals(
+            "Unexpected status code response ${error.value} ${error.description}",
+            result.exceptionOrNull()?.message,
+        )
     }
 
     @Test
@@ -122,15 +193,67 @@ class BooksRemoteDataSourceTest {
         runTest {
             val bookId = "bookId"
             val params = mapOf("key" to BuildConfig.API_KEY)
-            val response = mockk<GoogleBookResponse>()
-            coEvery { googleApiService.getGoogleBook(bookId, params) } returns response
+            val url = URLBuilder("/books/v1/volumes/$bookId")
+                .apply {
+                    for (param in params) {
+                        parameters.append(param.key, param.value)
+                    }
+                }.build()
+                .encodedPathAndQuery
+            val response = GoogleBookResponse(
+                id = bookId,
+                volumeInfo = GoogleVolumeResponse(
+                    title = "",
+                    subtitle = "",
+                    authors = listOf(),
+                    publisher = "",
+                    publishedDate = null,
+                    description = "",
+                    industryIdentifiers = listOf(),
+                    pageCount = 0,
+                    categories = listOf(),
+                    averageRating = 0.0,
+                    ratingsCount = 0,
+                    imageLinks = null,
+                ),
+            )
+            val mockEngine = MockEngine { request ->
+                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                respond(
+                    content =
+                        """
+                        {
+                          "kind": "books#volume",
+                          "id": "${response.id}",
+                          "etag": "ZDiJO6z9ITU",
+                          "selfLink": "https://www.googleapis.com/books/v1/volumes/FEWrDwAAQBAJ",
+                          "volumeInfo": {
+                            "title": "${response.volumeInfo.title}",
+                            "subtitle": "${response.volumeInfo.subtitle}",
+                            "authors": ${response.volumeInfo.authors},
+                            "publisher": "${response.volumeInfo.publisher}",
+                            "publishedDate": ${response.volumeInfo.publishedDate?.let { '"' + it.toString() + '"' }},
+                            "description": "${response.volumeInfo.description}",
+                            "industryIdentifiers": ${response.volumeInfo.industryIdentifiers},
+                            "pageCount": ${response.volumeInfo.pageCount},
+                            "categories": ${response.volumeInfo.categories},
+                            "averageRating": ${response.volumeInfo.averageRating},
+                            "ratingsCount": ${response.volumeInfo.ratingsCount},
+                            "imageLinks": ${response.volumeInfo.imageLinks}
+                          }
+                        }
+                        """.trimIndent(),
+                    status = HttpStatusCode.OK,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.getBook(bookId)
 
             Assert.assertEquals(true, result.isSuccess)
             Assert.assertEquals(response, result.getOrNull())
-            coVerify(exactly = 1) { googleApiService.getGoogleBook(bookId, params) }
-            confirmVerified(googleApiService)
         }
 
     @Test
@@ -138,15 +261,33 @@ class BooksRemoteDataSourceTest {
         runTest {
             val bookId = "bookId"
             val params = mapOf("key" to BuildConfig.API_KEY)
-            val exception = HttpException(Response.error<Any>(400, mockk(relaxed = true)))
-            coEvery { googleApiService.getGoogleBook(bookId, params) } throws exception
+            val url = URLBuilder("/books/v1/volumes/$bookId")
+                .apply {
+                    for (param in params) {
+                        parameters.append(param.key, param.value)
+                    }
+                }.build()
+                .encodedPathAndQuery
+            val error = HttpStatusCode(400, "Client Error")
+            val mockEngine = MockEngine { request ->
+                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                respond(
+                    content = "{}",
+                    status = error,
+                    headers = headersOf(HttpHeaders.ContentType, "application/json"),
+                )
+            }
+            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.getBook(bookId)
 
             Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
-            coVerify(exactly = 1) { googleApiService.getGoogleBook(bookId, params) }
-            confirmVerified(googleApiService)
+            Assert.assertTrue(result.exceptionOrNull() is IllegalStateException)
+            Assert.assertEquals(
+                "Unexpected status code response ${error.value} ${error.description}",
+                result.exceptionOrNull()?.message,
+            )
         }
 
     @Test

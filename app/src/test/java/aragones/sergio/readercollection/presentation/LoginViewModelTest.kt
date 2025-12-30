@@ -16,9 +16,9 @@ import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.login.LoginViewModel
@@ -145,7 +145,7 @@ class LoginViewModelTest {
                 viewModel.login(testUsername, password)
 
                 Assert.assertEquals(
-                    ErrorResponse(
+                    ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
                     ),
@@ -189,7 +189,7 @@ class LoginViewModelTest {
                 viewModel.login(testUsername, password)
 
                 Assert.assertEquals(
-                    ErrorResponse(
+                    ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.wrong_credentials,
                     ),
@@ -299,7 +299,7 @@ class LoginViewModelTest {
             Assert.assertEquals(null, awaitItem())
             viewModel.login(testUsername, password)
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.wrong_credentials,
                 ),

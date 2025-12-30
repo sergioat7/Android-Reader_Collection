@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +39,7 @@ class BookDetailViewModel @Inject constructor(
             isEditable = false,
         ),
     )
-    private val _bookDetailError = MutableStateFlow<ErrorResponse?>(null)
+    private val _bookDetailError = MutableStateFlow<ErrorModel?>(null)
     private val _confirmationDialogMessageId = MutableStateFlow(-1)
     private val _infoDialogMessageId = MutableStateFlow(-1)
     private val _imageDialogMessageId = MutableStateFlow(-1)
@@ -49,7 +49,7 @@ class BookDetailViewModel @Inject constructor(
 
     //region Public properties
     val state: StateFlow<BookDetailUiState> = _state
-    val bookDetailError: StateFlow<ErrorResponse?> = _bookDetailError
+    val bookDetailError: StateFlow<ErrorModel?> = _bookDetailError
     var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
     var imageDialogMessageId: StateFlow<Int> = _imageDialogMessageId
@@ -99,7 +99,7 @@ class BookDetailViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _bookDetailError.value = ErrorResponse(
+                _bookDetailError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 )
@@ -119,7 +119,7 @@ class BookDetailViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _bookDetailError.value = ErrorResponse(
+                _bookDetailError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 )
@@ -139,7 +139,7 @@ class BookDetailViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                _bookDetailError.value = ErrorResponse(
+                _bookDetailError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
                 )
@@ -187,7 +187,7 @@ class BookDetailViewModel @Inject constructor(
                     }
                 },
                 onFailure = {
-                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                    _bookDetailError.value = ErrorModel("", R.string.error_no_book)
                 },
             )
         } else {
@@ -203,7 +203,7 @@ class BookDetailViewModel @Inject constructor(
                     }
                 },
                 onFailure = {
-                    _bookDetailError.value = ErrorResponse("", R.string.error_no_book)
+                    _bookDetailError.value = ErrorModel("", R.string.error_no_book)
                 },
             )
         }

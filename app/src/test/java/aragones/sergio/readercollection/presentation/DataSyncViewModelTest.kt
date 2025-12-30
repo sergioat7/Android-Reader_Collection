@@ -13,10 +13,10 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.datasync.DataSyncUiState
@@ -201,7 +201,7 @@ class DataSyncViewModelTest {
             viewModel.syncData()
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
                 ),
@@ -281,7 +281,7 @@ class DataSyncViewModelTest {
                     } returns Result.failure(Exception())
                     viewModel.syncData()
                     Assert.assertEquals(
-                        ErrorResponse(
+                        ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_server,
                         ),

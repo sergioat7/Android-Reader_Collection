@@ -8,9 +8,9 @@ package aragones.sergio.readercollection.presentation.account
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -32,7 +32,7 @@ class AccountViewModel @Inject constructor(
             password = userRepository.userData.password,
         ),
     )
-    private val _profileError = MutableStateFlow<ErrorResponse?>(null)
+    private val _profileError = MutableStateFlow<ErrorModel?>(null)
     private val _logOut = MutableStateFlow(false)
     private val _confirmationDialogMessageId = MutableStateFlow(-1)
     private val _infoDialogMessageId = MutableStateFlow(-1)
@@ -40,7 +40,7 @@ class AccountViewModel @Inject constructor(
 
     //region Public properties
     val state: StateFlow<AccountUiState> = _state
-    val profileError: StateFlow<ErrorResponse?> = _profileError
+    val profileError: StateFlow<ErrorModel?> = _profileError
     val logOut: StateFlow<Boolean> = _logOut
     val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
@@ -70,7 +70,7 @@ class AccountViewModel @Inject constructor(
                         _state.update { it.copy(isLoading = false) }
                     },
                     onFailure = {
-                        manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                        manageError(ErrorModel(Constants.EMPTY_VALUE, R.string.error_server))
                     },
                 )
             }
@@ -89,7 +89,7 @@ class AccountViewModel @Inject constructor(
                 }
             },
             onFailure = {
-                manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                manageError(ErrorModel(Constants.EMPTY_VALUE, R.string.error_server))
             },
         )
     }
@@ -101,7 +101,7 @@ class AccountViewModel @Inject constructor(
                 resetDatabase()
             },
             onFailure = {
-                manageError(ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server))
+                manageError(ErrorModel(Constants.EMPTY_VALUE, R.string.error_server))
             },
         )
     }
@@ -148,7 +148,7 @@ class AccountViewModel @Inject constructor(
         )
     }
 
-    private fun manageError(error: ErrorResponse) {
+    private fun manageError(error: ErrorModel) {
         _state.update { it.copy(isLoading = false) }
         _profileError.value = error
     }

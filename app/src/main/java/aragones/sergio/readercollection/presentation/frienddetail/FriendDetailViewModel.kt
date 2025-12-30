@@ -10,10 +10,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Books
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,14 +37,14 @@ class FriendDetailViewModel @Inject constructor(
         MutableStateFlow(FriendDetailUiState.Loading)
     private val _confirmationDialogMessageId = MutableStateFlow(-1)
     private val _infoDialogMessageId = MutableStateFlow(-1)
-    private val _error = MutableStateFlow<ErrorResponse?>(null)
+    private val _error = MutableStateFlow<ErrorModel?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<FriendDetailUiState> = _state
     var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
-    val error: StateFlow<ErrorResponse?> = _error
+    val error: StateFlow<ErrorModel?> = _error
     //endregion
 
     //region Public methods
@@ -67,13 +67,13 @@ class FriendDetailViewModel @Inject constructor(
             val error = friendResult.exceptionOrNull() ?: booksResult.exceptionOrNull()
             when (error) {
                 is NoSuchElementException -> {
-                    _error.value = ErrorResponse(
+                    _error.value = ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.no_friends_found,
                     )
                 }
                 else -> {
-                    _error.value = ErrorResponse(
+                    _error.value = ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
                     )
@@ -90,7 +90,7 @@ class FriendDetailViewModel @Inject constructor(
                 _infoDialogMessageId.value = R.string.friend_removed
             },
             onFailure = {
-                _error.value = ErrorResponse(
+                _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_search,
                 )

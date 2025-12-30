@@ -14,8 +14,8 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.UserRepository
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.register.RegisterViewModel
 import com.aragones.sergio.util.Constants
@@ -109,7 +109,7 @@ class RegisterViewModelTest {
                 viewModel.register(testUsername, password)
 
                 Assert.assertEquals(
-                    ErrorResponse(
+                    ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
                     ),
@@ -142,7 +142,7 @@ class RegisterViewModelTest {
             viewModel.register(testUsername, password)
 
             Assert.assertEquals(
-                ErrorResponse(
+                ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_user_found,
                 ),
@@ -304,7 +304,7 @@ class RegisterViewModelTest {
                 viewModel.showInfoDialog(R.string.username_info)
                 Assert.assertEquals(R.string.username_info, infoDialogMessageId.awaitItem())
                 Assert.assertEquals(
-                    ErrorResponse(
+                    ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
                     ),

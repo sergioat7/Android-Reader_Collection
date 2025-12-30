@@ -15,10 +15,10 @@ import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.data.remote.model.ErrorResponse
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.account.AccountUiState
 import aragones.sergio.readercollection.presentation.account.AccountViewModel
@@ -139,7 +139,7 @@ class AccountViewModelTest {
             viewModel.save()
 
             Assert.assertEquals(
-                ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
         }
@@ -163,7 +163,7 @@ class AccountViewModelTest {
             viewModel.save()
 
             Assert.assertEquals(
-                ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
         }
@@ -251,7 +251,7 @@ class AccountViewModelTest {
             viewModel.setPublicProfile(value)
 
             Assert.assertEquals(
-                ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
         }
@@ -320,7 +320,7 @@ class AccountViewModelTest {
             viewModel.deleteUser()
 
             Assert.assertEquals(
-                ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
         }
@@ -455,7 +455,7 @@ class AccountViewModelTest {
                     } returns Result.failure(Exception())
                     viewModel.deleteUser()
                     Assert.assertEquals(
-                        ErrorResponse(Constants.EMPTY_VALUE, R.string.error_server),
+                        ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                         awaitItem(),
                     )
 

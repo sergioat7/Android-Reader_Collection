@@ -104,8 +104,8 @@ dependencies {
     implementation(libs.android.chart)
     implementation(libs.app.update.ktx)
     implementation(libs.bundles.compose)
-    implementation(libs.bundles.retrofit)
     implementation(libs.bundles.firebase)
+    implementation(libs.bundles.ktor)
     implementation(platform(libs.compose.bom))
     implementation(libs.coil)
     implementation(libs.core.ktx)
@@ -129,6 +129,7 @@ dependencies {
 
     testImplementation(libs.coroutines.test)
     testImplementation(libs.junit)
+    testImplementation(libs.ktor.client.mock)
     testImplementation(libs.mockk)
     testImplementation(libs.robolectric)
     testImplementation(libs.turbine)
