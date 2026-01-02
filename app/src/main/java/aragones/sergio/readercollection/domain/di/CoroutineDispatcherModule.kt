@@ -12,6 +12,8 @@ import dagger.hilt.components.SingletonComponent
 import javax.inject.Qualifier
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.koin.core.qualifier.named
+import org.koin.dsl.module
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -41,3 +43,15 @@ annotation class MainDispatcher
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class IoDispatcher
+
+val coroutineDispatcherModule = module {
+    factory<CoroutineDispatcher>(named(DispatchersName.DEFAULT)) { Dispatchers.Default }
+    factory<CoroutineDispatcher>(named(DispatchersName.MAIN)) { Dispatchers.Main }
+    factory<CoroutineDispatcher>(named(DispatchersName.IO)) { Dispatchers.IO }
+}
+
+enum class DispatchersName {
+    DEFAULT,
+    MAIN,
+    IO,
+}

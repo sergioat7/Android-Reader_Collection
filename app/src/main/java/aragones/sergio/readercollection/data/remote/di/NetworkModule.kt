@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.BuildConfig
+import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
+import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -31,6 +33,8 @@ import javax.inject.Singleton
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -100,4 +104,64 @@ object NetworkModule {
     @Singleton
     @Provides
     fun providesFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
+}
+
+private const val BASE_GOOGLE_ENDPOINT = "www.googleapis.com/books/v1"
+private const val API_KEY = "key"
+
+val networkModule = module {
+    single<HttpClientEngine> {
+        OkHttp.create {
+            val interceptor = HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.HEADERS
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
+            }
+            preconfigured = OkHttpClient
+                .Builder()
+                .addInterceptor(interceptor)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .followRedirects(false)
+                .build()
+        }
+    }
+    single<HttpClient> {
+        val httpClientEngine = get<HttpClientEngine>()
+        HttpClient(httpClientEngine) {
+            engine {
+                httpClientEngine.config
+            }
+        }.config {
+            install(ContentNegotiation) {
+                json(
+                    json = Json { ignoreUnknownKeys = true },
+                    contentType = ContentType.Application.Json,
+                )
+            }
+            install(DefaultRequest) {
+                url {
+                    protocol = URLProtocol.HTTPS
+                    host = BASE_GOOGLE_ENDPOINT
+                    parameters.append(API_KEY, BuildConfig.API_KEY)
+                }
+            }
+        }
+    }
+    single<FirebaseRemoteConfig> {
+        val remoteConfig = Firebase.remoteConfig
+        remoteConfig.setConfigSettingsAsync(
+            remoteConfigSettings {
+                minimumFetchIntervalInSeconds = 3600
+            },
+        )
+        remoteConfig
+    }
+    single<FirebaseAuth> { Firebase.auth }
+    single<FirebaseFirestore> { Firebase.firestore }
+    factoryOf(::BooksRemoteDataSource)
+    factoryOf(::UserRemoteDataSource)
 }
