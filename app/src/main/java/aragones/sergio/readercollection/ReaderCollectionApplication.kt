@@ -6,7 +6,6 @@
 package aragones.sergio.readercollection
 
 import android.app.Application
-import android.content.Context
 import android.os.StrictMode
 import aragones.sergio.readercollection.presentation.di.activityModule
 import aragones.sergio.readercollection.presentation.di.presentationModule
@@ -17,19 +16,9 @@ import org.koin.core.context.startKoin
 
 class ReaderCollectionApplication : Application() {
 
-    //region Static properties
-    companion object {
-        val context: Context
-            get() = app.applicationContext
-        private lateinit var app: ReaderCollectionApplication
-    }
-    //endregion
-
     //region Lifecycle methods
     override fun onCreate() {
         super.onCreate()
-
-        app = this
 
         startKoin {
             androidLogger()
