@@ -26,11 +26,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class AddFriendsViewModelTest {
 
@@ -61,7 +61,7 @@ class AddFriendsViewModelTest {
         } returns Result.success(emptyList())
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Success(
                     users = UsersUi(),
                     query = "",
@@ -71,29 +71,29 @@ class AddFriendsViewModelTest {
 
             viewModel.searchUserWith(newFriend.username)
 
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Loading(newFriend.username),
                 awaitItem(),
             )
             val result = awaitItem()
-            Assert.assertEquals(
+            assertEquals(
                 true,
                 result is AddFriendsUiState.Success,
             )
             val user = (result as AddFriendsUiState.Success).users.users.first()
-            Assert.assertEquals(
+            assertEquals(
                 newFriend.id,
                 user.id,
             )
-            Assert.assertEquals(
+            assertEquals(
                 newFriend.username,
                 user.username,
             )
-            Assert.assertEquals(
+            assertEquals(
                 newFriend.status,
                 user.status,
             )
-            Assert.assertEquals(
+            assertEquals(
                 newFriend.username,
                 result.query,
             )
@@ -113,7 +113,7 @@ class AddFriendsViewModelTest {
         } returns Result.success(listOf(currentFriend.toRemoteData()))
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Success(
                     users = UsersUi(),
                     query = "",
@@ -123,29 +123,29 @@ class AddFriendsViewModelTest {
 
             viewModel.searchUserWith(currentFriend.username)
 
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Loading(currentFriend.username),
                 awaitItem(),
             )
             val result = awaitItem()
-            Assert.assertEquals(
+            assertEquals(
                 true,
                 result is AddFriendsUiState.Success,
             )
             val user = (result as AddFriendsUiState.Success).users.users.first()
-            Assert.assertEquals(
+            assertEquals(
                 currentFriend.id,
                 user.id,
             )
-            Assert.assertEquals(
+            assertEquals(
                 currentFriend.username,
                 user.username,
             )
-            Assert.assertEquals(
+            assertEquals(
                 currentFriend.status,
                 user.status,
             )
-            Assert.assertEquals(
+            assertEquals(
                 currentFriend.username,
                 result.query,
             )
@@ -166,7 +166,7 @@ class AddFriendsViewModelTest {
             } returns Result.failure(Exception())
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     AddFriendsUiState.Success(
                         users = UsersUi(),
                         query = "",
@@ -176,29 +176,29 @@ class AddFriendsViewModelTest {
 
                 viewModel.searchUserWith(newFriend.username)
 
-                Assert.assertEquals(
+                assertEquals(
                     AddFriendsUiState.Loading(newFriend.username),
                     awaitItem(),
                 )
                 val result = awaitItem()
-                Assert.assertEquals(
+                assertEquals(
                     true,
                     result is AddFriendsUiState.Success,
                 )
                 val user = (result as AddFriendsUiState.Success).users.users.first()
-                Assert.assertEquals(
+                assertEquals(
                     newFriend.id,
                     user.id,
                 )
-                Assert.assertEquals(
+                assertEquals(
                     newFriend.username,
                     user.username,
                 )
-                Assert.assertEquals(
+                assertEquals(
                     newFriend.status,
                     user.status,
                 )
-                Assert.assertEquals(
+                assertEquals(
                     newFriend.username,
                     result.query,
                 )
@@ -215,7 +215,7 @@ class AddFriendsViewModelTest {
         } returns Result.failure(NoSuchElementException())
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Success(
                     users = UsersUi(),
                     query = "",
@@ -225,11 +225,11 @@ class AddFriendsViewModelTest {
 
             viewModel.searchUserWith(userToSearch)
 
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Loading(userToSearch),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Success(
                     users = UsersUi(),
                     query = userToSearch,
@@ -249,11 +249,11 @@ class AddFriendsViewModelTest {
         } returns Result.failure(Exception())
 
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.searchUserWith(userToSearch)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
@@ -268,7 +268,7 @@ class AddFriendsViewModelTest {
     @Test
     fun `GIVEN empty username WHEN searchUserWith THEN do nothing`() = runTest {
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Success(
                     users = UsersUi(),
                     query = "",
@@ -305,7 +305,7 @@ class AddFriendsViewModelTest {
         } returns Result.success(Unit)
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 AddFriendsUiState.Success(
                     users = UsersUi(),
                     query = "",
@@ -348,11 +348,11 @@ class AddFriendsViewModelTest {
         } returns Result.failure(Exception())
 
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.requestFriendship(friendUi)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_search,
@@ -371,12 +371,12 @@ class AddFriendsViewModelTest {
     @Test
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog message is reset`() = runTest {
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
             coEvery {
                 userRemoteDataSource.getUser(any(), any())
             } returns Result.failure(Exception())
             viewModel.searchUserWith("test")
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
@@ -386,14 +386,14 @@ class AddFriendsViewModelTest {
 
             viewModel.closeDialogs()
 
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.closeDialogs()
 

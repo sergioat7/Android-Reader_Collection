@@ -20,11 +20,11 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class DisplaySettingsViewModelTest {
 
@@ -57,11 +57,11 @@ class DisplaySettingsViewModelTest {
         viewModel.profileDataChanged(newLanguage, newSortParam, newIsSortDescending, newThemeMode)
 
         viewModel.relaunch.test {
-            Assert.assertEquals(false, awaitItem())
+            assertEquals(false, awaitItem())
 
             viewModel.save()
 
-            Assert.assertEquals(true, awaitItem())
+            assertEquals(true, awaitItem())
         }
 
         verify(exactly = 2) { userLocalDataSource.language }
@@ -82,7 +82,7 @@ class DisplaySettingsViewModelTest {
         viewModel.profileDataChanged(newLanguage, "sortParam", true, 0)
 
         viewModel.relaunch.test {
-            Assert.assertEquals(false, awaitItem())
+            assertEquals(false, awaitItem())
 
             viewModel.save()
 
@@ -107,7 +107,7 @@ class DisplaySettingsViewModelTest {
         val newIsSortDescending = false
         val newThemeMode = 1
 
-        Assert.assertEquals(
+        assertEquals(
             DisplaySettingsUiState.empty().copy(
                 language = "en",
                 sortParam = "sortParam",
@@ -119,7 +119,7 @@ class DisplaySettingsViewModelTest {
 
         viewModel.profileDataChanged(newLanguage, newSortParam, newIsSortDescending, newThemeMode)
 
-        Assert.assertEquals(
+        assertEquals(
             DisplaySettingsUiState.empty().copy(
                 language = newLanguage,
                 sortParam = newSortParam,

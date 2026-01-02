@@ -25,11 +25,11 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class LandingViewModelTest {
 
@@ -58,7 +58,7 @@ class LandingViewModelTest {
 
         val result = viewModel.language
 
-        Assert.assertEquals(language, result)
+        assertEquals(language, result)
         verify { userLocalDataSource.language }
         confirmVerified(userLocalDataSource)
     }
@@ -68,11 +68,11 @@ class LandingViewModelTest {
         runTest {
             every { userLocalDataSource.isLoggedIn } returns true
             viewModel.landingClassToStart.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.checkIsLoggedIn()
 
-                Assert.assertEquals(MainActivity::class.java, awaitItem())
+                assertEquals(MainActivity::class.java, awaitItem())
             }
             verify { userLocalDataSource.isLoggedIn }
             confirmVerified(userLocalDataSource)
@@ -83,11 +83,11 @@ class LandingViewModelTest {
         runTest {
             every { userLocalDataSource.isLoggedIn } returns false
             viewModel.landingClassToStart.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.checkIsLoggedIn()
 
-                Assert.assertEquals(LoginActivity::class.java, awaitItem())
+                assertEquals(LoginActivity::class.java, awaitItem())
             }
             verify { userLocalDataSource.isLoggedIn }
             confirmVerified(userLocalDataSource)

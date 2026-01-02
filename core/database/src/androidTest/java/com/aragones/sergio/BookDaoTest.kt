@@ -17,12 +17,12 @@ import com.aragones.sergio.converters.DateConverter
 import com.aragones.sergio.converters.ListConverter
 import com.aragones.sergio.model.Book
 import javax.inject.Named
+import kotlin.test.AfterTest
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
-import org.junit.After
-import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -58,7 +58,7 @@ class BookDaoTest {
         priority = -1,
     )
 
-    @Before
+    @BeforeTest
     fun setup() {
         database = Room
             .inMemoryDatabaseBuilder(
@@ -71,7 +71,7 @@ class BookDaoTest {
         bookDao = database.bookDao()
     }
 
-    @After
+    @AfterTest
     fun tearDown() {
         database.close()
     }
@@ -88,7 +88,7 @@ class BookDaoTest {
         bookDao.insertBooks(listOf(book))
 
         val fetchedBook = getFromDatabase(listOf(book.id))?.firstOrNull()
-        Assert.assertEquals(book, fetchedBook)
+        assertEquals(book, fetchedBook)
     }
 
     @Named(
@@ -106,7 +106,7 @@ class BookDaoTest {
         bookDao.insertBooks(listOf(book1, book2))
 
         val books = getFromDatabase(listOf(book1.id, book2.id))
-        Assert.assertEquals(listOf(book1, book2), books)
+        assertEquals(listOf(book1, book2), books)
     }
 
     @Named(
@@ -124,7 +124,7 @@ class BookDaoTest {
         bookDao.updateBooks(listOf(updatedBook))
 
         val fetchedBook = getFromDatabase(listOf(updatedBook.id))?.firstOrNull()
-        Assert.assertEquals(updatedBook, fetchedBook)
+        assertEquals(updatedBook, fetchedBook)
     }
 
     @Named(
@@ -140,7 +140,7 @@ class BookDaoTest {
         bookDao.updateBooks(listOf(updatedBook))
 
         val fetchedBook = getFromDatabase(listOf(updatedBook.id))?.firstOrNull()
-        Assert.assertEquals(null, fetchedBook)
+        assertEquals(null, fetchedBook)
     }
 
     @Named(
@@ -157,7 +157,7 @@ class BookDaoTest {
         bookDao.deleteBooks(listOf(book))
 
         val fetchedBook = getFromDatabase(listOf(book.id))?.firstOrNull()
-        Assert.assertEquals(null, fetchedBook)
+        assertEquals(null, fetchedBook)
     }
 
     @Named(
@@ -172,7 +172,7 @@ class BookDaoTest {
         bookDao.deleteBooks(listOf(book))
 
         val fetchedBook = getFromDatabase(listOf(book.id))?.firstOrNull()
-        Assert.assertEquals(null, fetchedBook)
+        assertEquals(null, fetchedBook)
     }
 
     @Named(
@@ -190,7 +190,7 @@ class BookDaoTest {
 
         val books = bookDao.getAllBooks().first()
 
-        Assert.assertEquals(listOf(book1, book2), books)
+        assertEquals(listOf(book1, book2), books)
     }
 
     @Named(
@@ -204,7 +204,7 @@ class BookDaoTest {
     fun testGetNoBooks() = runTest {
         val books = bookDao.getAllBooks().first()
 
-        Assert.assertEquals(listOf<Book>(), books)
+        assertEquals(listOf<Book>(), books)
     }
 
     @Named(
@@ -224,7 +224,7 @@ class BookDaoTest {
 
         val books = bookDao.getReadBooks().first().sortedBy { it.id }
 
-        Assert.assertEquals(listOf(book1, book3), books)
+        assertEquals(listOf(book1, book3), books)
     }
 
     @Named(
@@ -242,7 +242,7 @@ class BookDaoTest {
 
         val books = bookDao.getReadBooks().first()
 
-        Assert.assertEquals(listOf<Book>(), books)
+        assertEquals(listOf<Book>(), books)
     }
 
     @Named(
@@ -258,7 +258,7 @@ class BookDaoTest {
 
         val fetchedBook = bookDao.getBook(book.id)
 
-        Assert.assertEquals(book, fetchedBook)
+        assertEquals(book, fetchedBook)
     }
 
     @Named(
@@ -274,7 +274,7 @@ class BookDaoTest {
 
         val fetchedBook = bookDao.getBook("another_id")
 
-        Assert.assertEquals(null, fetchedBook)
+        assertEquals(null, fetchedBook)
     }
 
     private fun insertInDatabase(books: List<Book>) {

@@ -31,12 +31,12 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class AccountViewModelTest {
 
@@ -76,11 +76,11 @@ class AccountViewModelTest {
             val initialValue = AccountUiState.empty().copy(
                 username = testUsername,
             )
-            Assert.assertEquals(initialValue, awaitItem())
+            assertEquals(initialValue, awaitItem())
 
             viewModel.onResume()
 
-            Assert.assertEquals(
+            assertEquals(
                 initialValue.copy(
                     password = userData.password,
                     passwordError = null,
@@ -107,15 +107,15 @@ class AccountViewModelTest {
                 username = testUsername,
                 password = newPassword,
             )
-            Assert.assertEquals(initialValue, awaitItem())
+            assertEquals(initialValue, awaitItem())
 
             viewModel.save()
 
-            Assert.assertEquals(
+            assertEquals(
                 initialValue.copy(isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 initialValue.copy(isLoading = false),
                 awaitItem(),
             )
@@ -134,11 +134,11 @@ class AccountViewModelTest {
         coEvery { userRemoteDataSource.login(any(), any()) } returns Result.failure(Exception())
 
         viewModel.profileError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.save()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
@@ -158,11 +158,11 @@ class AccountViewModelTest {
         coEvery { userRemoteDataSource.updatePassword(any()) } returns Result.failure(Exception())
 
         viewModel.profileError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.save()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
@@ -196,12 +196,12 @@ class AccountViewModelTest {
                 val initialValue = AccountUiState.empty().copy(
                     username = testUsername,
                 )
-                Assert.assertEquals(initialValue, awaitItem())
+                assertEquals(initialValue, awaitItem())
 
                 viewModel.setPublicProfile(value)
 
-                Assert.assertEquals(initialValue.copy(isLoading = true), awaitItem())
-                Assert.assertEquals(
+                assertEquals(initialValue.copy(isLoading = true), awaitItem())
+                assertEquals(
                     initialValue.copy(isProfilePublic = value, isLoading = false),
                     awaitItem(),
                 )
@@ -221,15 +221,15 @@ class AccountViewModelTest {
                 val initialValue = AccountUiState.empty().copy(
                     username = testUsername,
                 )
-                Assert.assertEquals(initialValue, awaitItem())
+                assertEquals(initialValue, awaitItem())
 
                 viewModel.setPublicProfile(value)
 
-                Assert.assertEquals(
+                assertEquals(
                     initialValue.copy(isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     initialValue.copy(isProfilePublic = value, isLoading = false),
                     awaitItem(),
                 )
@@ -246,11 +246,11 @@ class AccountViewModelTest {
         } returns Result.failure(Exception())
 
         viewModel.profileError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.setPublicProfile(value)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
@@ -270,11 +270,11 @@ class AccountViewModelTest {
             coEvery { booksLocalDataSource.deleteBooks(any()) } just Runs
 
             viewModel.logOut.test {
-                Assert.assertEquals(false, awaitItem())
+                assertEquals(false, awaitItem())
 
                 viewModel.deleteUser()
 
-                Assert.assertEquals(true, awaitItem())
+                assertEquals(true, awaitItem())
             }
             verify { booksLocalDataSource.getAllBooks() }
             coVerify { booksLocalDataSource.deleteBooks(listOf(book.toLocalData())) }
@@ -295,11 +295,11 @@ class AccountViewModelTest {
             coEvery { booksLocalDataSource.deleteBooks(any()) } throws Exception()
 
             viewModel.logOut.test {
-                Assert.assertEquals(false, awaitItem())
+                assertEquals(false, awaitItem())
 
                 viewModel.deleteUser()
 
-                Assert.assertEquals(true, awaitItem())
+                assertEquals(true, awaitItem())
             }
             verify { booksLocalDataSource.getAllBooks() }
             coVerify { booksLocalDataSource.deleteBooks(any()) }
@@ -315,11 +315,11 @@ class AccountViewModelTest {
         coEvery { userRemoteDataSource.deleteUser(any()) } returns Result.failure(Exception())
 
         viewModel.profileError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.deleteUser()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                 awaitItem(),
             )
@@ -337,11 +337,11 @@ class AccountViewModelTest {
                 val initialValue = AccountUiState.empty().copy(
                     username = testUsername,
                 )
-                Assert.assertEquals(initialValue, awaitItem())
+                assertEquals(initialValue, awaitItem())
 
                 viewModel.profileDataChanged(newPassword)
 
-                Assert.assertEquals(
+                assertEquals(
                     initialValue.copy(password = newPassword, passwordError = null),
                     awaitItem(),
                 )
@@ -357,11 +357,11 @@ class AccountViewModelTest {
                 val initialValue = AccountUiState.empty().copy(
                     username = testUsername,
                 )
-                Assert.assertEquals(initialValue, awaitItem())
+                assertEquals(initialValue, awaitItem())
 
                 viewModel.profileDataChanged(newPassword)
 
-                Assert.assertEquals(
+                assertEquals(
                     initialValue.copy(
                         password = newPassword,
                         passwordError = R.string.invalid_password,
@@ -374,20 +374,20 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
 
-            Assert.assertEquals(R.string.profile_delete_confirmation, awaitItem())
+            assertEquals(R.string.profile_delete_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
-            Assert.assertEquals(R.string.profile_delete_confirmation, awaitItem())
+            assertEquals(R.string.profile_delete_confirmation, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
 
@@ -398,20 +398,20 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showInfoDialog THEN dialog is shown`() = runTest {
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showInfoDialog(R.string.username_info)
 
-            Assert.assertEquals(R.string.username_info, awaitItem())
+            assertEquals(R.string.username_info, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showInfoDialog THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showInfoDialog(R.string.username_info)
-            Assert.assertEquals(R.string.username_info, awaitItem())
+            assertEquals(R.string.username_info, awaitItem())
 
             viewModel.showInfoDialog(R.string.username_info)
 
@@ -423,25 +423,25 @@ class AccountViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
             val confirmationDialogMessage = this
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
-            Assert.assertEquals(
+            assertEquals(
                 R.string.profile_delete_confirmation,
                 confirmationDialogMessage.awaitItem(),
             )
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
                 viewModel.showInfoDialog(R.string.username_info)
-                Assert.assertEquals(
+                assertEquals(
                     R.string.username_info,
                     infoDialogMessage.awaitItem(),
                 )
 
                 viewModel.profileError.test {
                     val profileError = this
-                    Assert.assertEquals(null, awaitItem())
+                    assertEquals(null, awaitItem())
                     coEvery {
                         userRemoteDataSource.login(
                             any(),
@@ -454,16 +454,16 @@ class AccountViewModelTest {
                         )
                     } returns Result.failure(Exception())
                     viewModel.deleteUser()
-                    Assert.assertEquals(
+                    assertEquals(
                         ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
                         awaitItem(),
                     )
 
                     viewModel.closeDialogs()
 
-                    Assert.assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    Assert.assertEquals(-1, infoDialogMessage.awaitItem())
-                    Assert.assertEquals(null, profileError.awaitItem())
+                    assertEquals(-1, confirmationDialogMessage.awaitItem())
+                    assertEquals(-1, infoDialogMessage.awaitItem())
+                    assertEquals(null, profileError.awaitItem())
                 }
             }
         }
@@ -472,13 +472,13 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.profileError.test {
-                    Assert.assertEquals(null, awaitItem())
+                    assertEquals(null, awaitItem())
 
                     viewModel.closeDialogs()
 

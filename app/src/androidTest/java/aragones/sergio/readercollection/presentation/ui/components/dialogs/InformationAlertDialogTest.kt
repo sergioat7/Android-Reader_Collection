@@ -13,9 +13,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import kotlin.test.Test
 import org.junit.Assert
 import org.junit.Rule
-import org.junit.Test
 
 class InformationAlertDialogTest {
 

@@ -31,12 +31,12 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class DataSyncViewModelTest {
 
@@ -69,7 +69,7 @@ class DataSyncViewModelTest {
 
         viewModel.changeAutomaticSync(value)
 
-        Assert.assertEquals(
+        assertEquals(
             DataSyncUiState(
                 isAutomaticSyncEnabled = value,
                 isLoading = false,
@@ -99,11 +99,11 @@ class DataSyncViewModelTest {
             } returns Result.success(Unit)
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.syncData()
 
-                Assert.assertEquals(R.string.data_sync_successfully, awaitItem())
+                assertEquals(R.string.data_sync_successfully, awaitItem())
             }
             verify { userLocalDataSource.isAutomaticSyncEnabled }
             verify { userLocalDataSource.userId }
@@ -132,11 +132,11 @@ class DataSyncViewModelTest {
             } returns Result.success(Unit)
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.syncData()
 
-                Assert.assertEquals(R.string.data_sync_successfully, awaitItem())
+                assertEquals(R.string.data_sync_successfully, awaitItem())
             }
             verify { userLocalDataSource.isAutomaticSyncEnabled }
             verify { userLocalDataSource.userId }
@@ -167,11 +167,11 @@ class DataSyncViewModelTest {
             } returns Result.success(Unit)
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.syncData()
 
-                Assert.assertEquals(R.string.data_sync_successfully, awaitItem())
+                assertEquals(R.string.data_sync_successfully, awaitItem())
             }
             verify { userLocalDataSource.isAutomaticSyncEnabled }
             verify { userLocalDataSource.userId }
@@ -196,11 +196,11 @@ class DataSyncViewModelTest {
         } returns Result.failure(Exception())
 
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.syncData()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
@@ -225,11 +225,11 @@ class DataSyncViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.sync_confirmation)
 
-            Assert.assertEquals(R.string.sync_confirmation, awaitItem())
+            assertEquals(R.string.sync_confirmation, awaitItem())
         }
     }
 
@@ -237,9 +237,9 @@ class DataSyncViewModelTest {
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN dialog message is not updated`() =
         runTest {
             viewModel.confirmationDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
                 viewModel.showConfirmationDialog(R.string.sync_confirmation)
-                Assert.assertEquals(R.string.sync_confirmation, awaitItem())
+                assertEquals(R.string.sync_confirmation, awaitItem())
 
                 viewModel.showConfirmationDialog(R.string.sync_confirmation)
 
@@ -257,30 +257,30 @@ class DataSyncViewModelTest {
 
         viewModel.infoDialogMessageId.test {
             val infoDialogMessage = this
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.syncData()
-            Assert.assertEquals(
+            assertEquals(
                 R.string.data_sync_successfully,
                 infoDialogMessage.awaitItem(),
             )
 
             viewModel.confirmationDialogMessageId.test {
                 val confirmationDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
                 viewModel.showConfirmationDialog(R.string.export_confirmation)
-                Assert.assertEquals(
+                assertEquals(
                     R.string.export_confirmation,
                     confirmationDialogMessage.awaitItem(),
                 )
                 viewModel.error.test {
                     val error = this
-                    Assert.assertEquals(null, awaitItem())
+                    assertEquals(null, awaitItem())
                     coEvery {
                         booksRemoteDataSource.syncBooks(any(), any(), any())
                     } returns Result.failure(Exception())
                     viewModel.syncData()
-                    Assert.assertEquals(
+                    assertEquals(
                         ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_server,
@@ -290,9 +290,9 @@ class DataSyncViewModelTest {
 
                     viewModel.closeDialogs()
 
-                    Assert.assertEquals(-1, infoDialogMessage.awaitItem())
-                    Assert.assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    Assert.assertEquals(null, error.awaitItem())
+                    assertEquals(-1, infoDialogMessage.awaitItem())
+                    assertEquals(-1, confirmationDialogMessage.awaitItem())
+                    assertEquals(null, error.awaitItem())
                 }
             }
         }
@@ -301,13 +301,13 @@ class DataSyncViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.confirmationDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.error.test {
-                    Assert.assertEquals(null, awaitItem())
+                    assertEquals(null, awaitItem())
 
                     viewModel.closeDialogs()
 

@@ -17,9 +17,10 @@ import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.SortingPickerAlertDialog
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import org.junit.Assert
 import org.junit.Rule
-import org.junit.Test
 
 class SortingPickerAlertDialogTest {
 
@@ -138,7 +139,7 @@ class SortingPickerAlertDialogTest {
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()
         Assert.assertTrue(isClosed)
-        Assert.assertEquals("readingDate", sortParam)
-        Assert.assertEquals(true, isSortDescending)
+        assertEquals("readingDate", sortParam)
+        assertEquals(true, isSortDescending)
     }
 }

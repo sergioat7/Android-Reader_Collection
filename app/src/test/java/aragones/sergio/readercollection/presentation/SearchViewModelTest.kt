@@ -32,13 +32,13 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Rule
-import org.junit.Test
 
 class SearchViewModelTest {
 
@@ -77,11 +77,11 @@ class SearchViewModelTest {
             )
 
             viewModel.state.test {
-                Assert.assertEquals(SearchUiState.Empty, awaitItem())
+                assertEquals(SearchUiState.Empty, awaitItem())
 
                 viewModel.searchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     SearchUiState.Success(
                         isLoading = true,
                         query = "",
@@ -89,7 +89,7 @@ class SearchViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     SearchUiState.Success(
                         isLoading = false,
                         query = "",
@@ -115,11 +115,11 @@ class SearchViewModelTest {
             )
 
             viewModel.state.test {
-                Assert.assertEquals(SearchUiState.Empty, awaitItem())
+                assertEquals(SearchUiState.Empty, awaitItem())
 
                 viewModel.searchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     SearchUiState.Success(
                         isLoading = true,
                         query = "",
@@ -127,7 +127,7 @@ class SearchViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     SearchUiState.Success(
                         isLoading = false,
                         query = "",
@@ -148,11 +148,11 @@ class SearchViewModelTest {
             } returns Result.failure(RuntimeException("Firestore error"))
 
             viewModel.state.test {
-                Assert.assertEquals(SearchUiState.Empty, awaitItem())
+                assertEquals(SearchUiState.Empty, awaitItem())
 
                 viewModel.searchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     SearchUiState.Success(
                         isLoading = true,
                         query = "",
@@ -160,7 +160,7 @@ class SearchViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     SearchUiState.Success(
                         isLoading = false,
                         query = "",
@@ -179,11 +179,11 @@ class SearchViewModelTest {
         givenSearchBooksSuccess(bookId)
 
         viewModel.state.test {
-            Assert.assertEquals(SearchUiState.Empty, awaitItem())
+            assertEquals(SearchUiState.Empty, awaitItem())
 
             viewModel.searchBooks()
 
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = true,
                     query = "",
@@ -191,7 +191,7 @@ class SearchViewModelTest {
                 ),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = false,
                     query = "",
@@ -207,7 +207,7 @@ class SearchViewModelTest {
 
             viewModel.searchBooks()
 
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = true,
                     query = "",
@@ -220,7 +220,7 @@ class SearchViewModelTest {
                 ),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = false,
                     query = "",
@@ -237,7 +237,7 @@ class SearchViewModelTest {
 
             viewModel.searchBooks(reload = true)
 
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = true,
                     query = "",
@@ -251,7 +251,7 @@ class SearchViewModelTest {
                 ),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = false,
                     query = "",
@@ -281,11 +281,11 @@ class SearchViewModelTest {
         val query = "text to search"
 
         viewModel.state.test {
-            Assert.assertEquals(SearchUiState.Empty, awaitItem())
+            assertEquals(SearchUiState.Empty, awaitItem())
 
             viewModel.searchBooks(query = query)
 
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = true,
                     query = query,
@@ -293,7 +293,7 @@ class SearchViewModelTest {
                 ),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 SearchUiState.Success(
                     isLoading = false,
                     query = query,
@@ -316,11 +316,11 @@ class SearchViewModelTest {
             coEvery { booksLocalDataSource.insertBooks(any()) } just Runs
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.addBook(bookId)
 
-                Assert.assertEquals(R.string.book_saved, awaitItem())
+                assertEquals(R.string.book_saved, awaitItem())
             }
 
             coVerify {
@@ -352,11 +352,11 @@ class SearchViewModelTest {
             coEvery { booksLocalDataSource.insertBooks(any()) } just Runs
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.addBook(bookId)
 
-                Assert.assertEquals(R.string.book_saved, awaitItem())
+                assertEquals(R.string.book_saved, awaitItem())
             }
 
             coVerify { booksLocalDataSource.getAllBooks() }
@@ -384,11 +384,11 @@ class SearchViewModelTest {
         } throws RuntimeException("Firestore error")
 
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.addBook(bookId)
 
-            Assert.assertEquals(R.string.error_database, awaitItem())
+            assertEquals(R.string.error_database, awaitItem())
         }
 
         coVerify {
@@ -413,11 +413,11 @@ class SearchViewModelTest {
         advanceUntilIdle()
 
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.addBook(bookId)
 
-            Assert.assertEquals(R.string.error_resource_found, awaitItem())
+            assertEquals(R.string.error_resource_found, awaitItem())
         }
 
         coVerify { booksLocalDataSource.getAllBooks() }
@@ -438,20 +438,20 @@ class SearchViewModelTest {
         advanceUntilIdle()
 
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.addBook(bookId)
-            Assert.assertEquals(R.string.error_database, awaitItem())
+            assertEquals(R.string.error_database, awaitItem())
 
             viewModel.closeDialogs()
 
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.closeDialogs()
 

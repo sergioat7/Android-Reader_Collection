@@ -36,13 +36,13 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Rule
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
@@ -94,7 +94,7 @@ class BookListViewModelTest {
         booksFlow.emit(listOf(book2, book3, book1))
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = true,
                     books = Books(),
@@ -106,7 +106,7 @@ class BookListViewModelTest {
 
             viewModel.fetchBooks()
 
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = false,
                     books = Books(listOf(book1, book2, book3)),
@@ -125,7 +125,7 @@ class BookListViewModelTest {
 
         viewModel.state.test {
             val state = this
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = true,
                     books = Books(),
@@ -135,11 +135,11 @@ class BookListViewModelTest {
                 awaitItem(),
             )
             viewModel.booksError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.fetchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(),
@@ -148,7 +148,7 @@ class BookListViewModelTest {
                     ),
                     state.awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_database,
@@ -169,7 +169,7 @@ class BookListViewModelTest {
             booksFlow.emit(listOf(book2, book3, book1))
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -181,7 +181,7 @@ class BookListViewModelTest {
 
                 viewModel.fetchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(book1, book2, book3)),
@@ -196,7 +196,7 @@ class BookListViewModelTest {
                 val book3Updated = book3.copy(title = "3")
                 booksFlow.emit(listOf(book1Updated, book2Updated, book3Updated))
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(book1Updated, book2Updated, book3Updated)),
@@ -218,7 +218,7 @@ class BookListViewModelTest {
             booksFlow.emit(listOf(book2, book3, book1))
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -230,7 +230,7 @@ class BookListViewModelTest {
 
                 viewModel.fetchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(book1, book2, book3)),
@@ -242,7 +242,7 @@ class BookListViewModelTest {
 
                 viewModel.updatePickerState("rating", testIsSortDescending)
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(book2, book1, book3)),
@@ -311,7 +311,7 @@ class BookListViewModelTest {
             )
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -323,7 +323,7 @@ class BookListViewModelTest {
 
                 viewModel.fetchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -332,7 +332,7 @@ class BookListViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(book2, book3, book1)),
@@ -349,7 +349,7 @@ class BookListViewModelTest {
     fun `GIVEN Success state with isDraggingEnabled false WHEN switchDraggingState THEN update state with isDraggingEnabled true`() =
         runTest {
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -361,7 +361,7 @@ class BookListViewModelTest {
 
                 viewModel.switchDraggingState()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -379,7 +379,7 @@ class BookListViewModelTest {
         val book2 = Book("2").copy(priority = 1)
         val book3 = Book("3").copy(priority = 2)
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = true,
                     books = Books(),
@@ -391,7 +391,7 @@ class BookListViewModelTest {
 
             viewModel.updateBookOrdering(listOf(book2, book3, book1))
 
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = true,
                     books = Books(
@@ -421,7 +421,7 @@ class BookListViewModelTest {
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = true,
                         books = Books(),
@@ -431,7 +431,7 @@ class BookListViewModelTest {
                     awaitItem(),
                 )
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(book1, book2, book3)),
@@ -447,7 +447,7 @@ class BookListViewModelTest {
                         .map { it.toLocalData().toDomain() },
                 )
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(listOf(updatedBook1, updatedBook2, book3)),
@@ -479,7 +479,7 @@ class BookListViewModelTest {
 
         viewModel.state.test {
             val state = this
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = true,
                     books = Books(),
@@ -489,7 +489,7 @@ class BookListViewModelTest {
                 awaitItem(),
             )
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BookListUiState(
                     isLoading = false,
                     books = Books(listOf(book1, book2, book3)),
@@ -500,11 +500,11 @@ class BookListViewModelTest {
             )
 
             viewModel.booksError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.setPriorityFor(listOf(book1, book2, book3))
 
-                Assert.assertEquals(
+                assertEquals(
                     BookListUiState(
                         isLoading = false,
                         books = Books(),
@@ -513,7 +513,7 @@ class BookListViewModelTest {
                     ),
                     state.awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_database,
@@ -536,7 +536,7 @@ class BookListViewModelTest {
 
     @Test
     fun `WHEN showSortingPickerState THEN update state with show true`() {
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = false,
                 sortParam = testSortParam,
@@ -547,7 +547,7 @@ class BookListViewModelTest {
 
         viewModel.showSortingPickerState()
 
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = true,
                 sortParam = testSortParam,
@@ -559,7 +559,7 @@ class BookListViewModelTest {
 
     @Test
     fun `GIVEN new values WHEN updatePickerState THEN update state with new values and show false`() {
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = false,
                 sortParam = testSortParam,
@@ -568,7 +568,7 @@ class BookListViewModelTest {
             viewModel.sortingPickerState.value,
         )
         viewModel.showSortingPickerState()
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = true,
                 sortParam = testSortParam,
@@ -581,7 +581,7 @@ class BookListViewModelTest {
 
         viewModel.updatePickerState(newSortParam, newIsSortDescending)
 
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = false,
                 sortParam = newSortParam,

@@ -16,9 +16,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
-import org.junit.Assert
+import kotlin.test.Test
+import kotlin.test.assertTrue
 import org.junit.Rule
-import org.junit.Test
 
 class ConfirmationAlertDialogTest {
 
@@ -84,7 +84,7 @@ class ConfirmationAlertDialogTest {
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onFirst().performClick()
-        Assert.assertTrue(isClosed)
+        assertTrue(isClosed)
     }
 
     @Test
@@ -102,6 +102,6 @@ class ConfirmationAlertDialogTest {
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()
-        Assert.assertTrue(isClosed)
+        assertTrue(isClosed)
     }
 }

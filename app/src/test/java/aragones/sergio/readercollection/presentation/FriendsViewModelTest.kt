@@ -26,11 +26,11 @@ import io.mockk.coVerify
 import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.mockk
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class FriendsViewModelTest {
 
@@ -56,11 +56,11 @@ class FriendsViewModelTest {
         } returns Result.success(listOf(friend.toRemoteData()))
 
         viewModel.state.test {
-            Assert.assertEquals(FriendsUiState.Loading, awaitItem())
+            assertEquals(FriendsUiState.Loading, awaitItem())
 
             viewModel.fetchFriends()
 
-            Assert.assertEquals(
+            assertEquals(
                 FriendsUiState.Success(Users(listOf(friend))),
                 awaitItem(),
             )
@@ -77,11 +77,11 @@ class FriendsViewModelTest {
             } returns Result.success(emptyList())
 
             viewModel.state.test {
-                Assert.assertEquals(FriendsUiState.Loading, awaitItem())
+                assertEquals(FriendsUiState.Loading, awaitItem())
 
                 viewModel.fetchFriends()
 
-                Assert.assertEquals(
+                assertEquals(
                     FriendsUiState.Success(Users()),
                     awaitItem(),
                 )
@@ -98,11 +98,11 @@ class FriendsViewModelTest {
             } returns Result.failure(RuntimeException("Firestore error"))
 
             viewModel.state.test {
-                Assert.assertEquals(FriendsUiState.Loading, awaitItem())
+                assertEquals(FriendsUiState.Loading, awaitItem())
 
                 viewModel.fetchFriends()
 
-                Assert.assertEquals(
+                assertEquals(
                     FriendsUiState.Success(Users()),
                     awaitItem(),
                 )
@@ -125,24 +125,24 @@ class FriendsViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
                     val state = this
-                    Assert.assertEquals(FriendsUiState.Loading, awaitItem())
+                    assertEquals(FriendsUiState.Loading, awaitItem())
                     viewModel.fetchFriends()
-                    Assert.assertEquals(
+                    assertEquals(
                         FriendsUiState.Success(Users(listOf(friend))),
                         awaitItem(),
                     )
 
                     viewModel.acceptFriendRequest(friendId)
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.friend_action_successfully_done,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         FriendsUiState.Success(
                             Users(listOf(friend.copy(status = RequestStatus.APPROVED))),
                         ),
@@ -163,11 +163,11 @@ class FriendsViewModelTest {
         } returns Result.failure(RuntimeException("Firestore error"))
 
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.acceptFriendRequest(friendId)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
@@ -194,24 +194,24 @@ class FriendsViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
                     val state = this
-                    Assert.assertEquals(FriendsUiState.Loading, awaitItem())
+                    assertEquals(FriendsUiState.Loading, awaitItem())
                     viewModel.fetchFriends()
-                    Assert.assertEquals(
+                    assertEquals(
                         FriendsUiState.Success(Users(listOf(friend))),
                         awaitItem(),
                     )
 
                     viewModel.rejectFriendRequest(friendId)
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.friend_action_successfully_done,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         FriendsUiState.Success(Users()),
                         state.awaitItem(),
                     )
@@ -230,11 +230,11 @@ class FriendsViewModelTest {
         } returns Result.failure(RuntimeException("Firestore error"))
 
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.rejectFriendRequest(friendId)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
@@ -261,24 +261,24 @@ class FriendsViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
                     val state = this
-                    Assert.assertEquals(FriendsUiState.Loading, awaitItem())
+                    assertEquals(FriendsUiState.Loading, awaitItem())
                     viewModel.fetchFriends()
-                    Assert.assertEquals(
+                    assertEquals(
                         FriendsUiState.Success(Users(listOf(friend))),
                         awaitItem(),
                     )
 
                     viewModel.deleteFriend(friendId)
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.friend_action_successfully_done,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         FriendsUiState.Success(Users()),
                         state.awaitItem(),
                     )
@@ -297,11 +297,11 @@ class FriendsViewModelTest {
         } returns Result.failure(RuntimeException("Firestore error"))
 
         viewModel.error.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.deleteFriend(friendId)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.friend_action_failure,
@@ -318,26 +318,26 @@ class FriendsViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.infoDialogMessageId.test {
             val infoDialogMessage = this
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             coEvery {
                 userRemoteDataSource.acceptFriendRequest(any(), any())
             } returns Result.success(Unit)
             viewModel.acceptFriendRequest("")
-            Assert.assertEquals(
+            assertEquals(
                 R.string.friend_action_successfully_done,
                 awaitItem(),
             )
 
             viewModel.error.test {
                 val error = this
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 coEvery {
                     userRemoteDataSource.rejectFriendRequest(any(), any())
                 } returns Result.failure(RuntimeException("Firestore error"))
                 viewModel.rejectFriendRequest("")
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.friend_action_failure,
@@ -347,8 +347,8 @@ class FriendsViewModelTest {
 
                 viewModel.closeDialogs()
 
-                Assert.assertEquals(-1, infoDialogMessage.awaitItem())
-                Assert.assertEquals(null, error.awaitItem())
+                assertEquals(-1, infoDialogMessage.awaitItem())
+                assertEquals(null, error.awaitItem())
             }
         }
     }
@@ -356,10 +356,10 @@ class FriendsViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.error.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.closeDialogs()
 

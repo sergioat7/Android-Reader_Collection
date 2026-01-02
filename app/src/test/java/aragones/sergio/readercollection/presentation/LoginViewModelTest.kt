@@ -33,11 +33,11 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class LoginViewModelTest {
 
@@ -88,11 +88,11 @@ class LoginViewModelTest {
             coEvery { booksLocalDataSource.insertBooks(domainBooks) } just Runs
 
             viewModel.activityName.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.login(testUsername, password)
 
-                Assert.assertEquals(MainActivity::class.simpleName, awaitItem())
+                assertEquals(MainActivity::class.simpleName, awaitItem())
             }
 
             verify(exactly = 2) { userLocalDataSource.username }
@@ -140,11 +140,11 @@ class LoginViewModelTest {
             every { userRemoteDataSource.logout() } just Runs
 
             viewModel.loginError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.login(testUsername, password)
 
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
@@ -184,11 +184,11 @@ class LoginViewModelTest {
             } returns Result.failure(exception)
 
             viewModel.loginError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.login(testUsername, password)
 
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.wrong_credentials,
@@ -210,14 +210,14 @@ class LoginViewModelTest {
 
     @Test
     fun `GIVEN valid username and password WHEN loginDataChanged THEN state updates with data valid true`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
 
         viewModel.loginDataChanged("username", "password")
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = null,
                 passwordError = null,
@@ -229,14 +229,14 @@ class LoginViewModelTest {
 
     @Test
     fun `GIVEN invalid username WHEN loginDataChanged THEN state updates with data valid false and username error`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
 
         viewModel.loginDataChanged("", "password")
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = R.string.invalid_username,
                 passwordError = null,
@@ -248,14 +248,14 @@ class LoginViewModelTest {
 
     @Test
     fun `GIVEN invalid password WHEN loginDataChanged THEN state updates with data valid false and password error`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
 
         viewModel.loginDataChanged("username", "pass")
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = null,
                 passwordError = R.string.invalid_password,
@@ -267,14 +267,14 @@ class LoginViewModelTest {
 
     @Test
     fun `GIVEN invalid username and password WHEN loginDataChanged THEN state updates with data valid false and username and password errors`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
 
         viewModel.loginDataChanged("", "pass")
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = R.string.invalid_username,
                 passwordError = R.string.invalid_password,
@@ -296,9 +296,9 @@ class LoginViewModelTest {
         } returns Result.failure(exception)
 
         viewModel.loginError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
             viewModel.login(testUsername, password)
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.wrong_credentials,
@@ -308,14 +308,14 @@ class LoginViewModelTest {
 
             viewModel.closeDialogs()
 
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.loginError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.closeDialogs()
 

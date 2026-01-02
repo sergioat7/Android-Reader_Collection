@@ -17,9 +17,11 @@ import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.text.input.KeyboardType
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.TextFieldAlertDialog
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import org.junit.Assert
 import org.junit.Rule
-import org.junit.Test
 
 class TextFieldAlertDialogTest {
 
@@ -115,7 +117,7 @@ class TextFieldAlertDialogTest {
 
         composeTestRule.onNodeWithTag("textField").performTextReplacement("New text to return")
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()
-        Assert.assertTrue(isClosed)
-        Assert.assertEquals("New text to return", text)
+        assertTrue(isClosed)
+        assertEquals("New text to return", text)
     }
 }

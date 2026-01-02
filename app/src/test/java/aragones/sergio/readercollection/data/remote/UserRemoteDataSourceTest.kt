@@ -32,9 +32,11 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
-import org.junit.Test
 
 class UserRemoteDataSourceTest {
 
@@ -54,8 +56,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.login(username, password)
 
-        Assert.assertEquals(true, result.isSuccess)
-        Assert.assertEquals(expectedUid, result.getOrNull())
+        assertEquals(true, result.isSuccess)
+        assertEquals(expectedUid, result.getOrNull())
         verify {
             auth.signInWithEmailAndPassword("$username@readercollection.app", password)
         }
@@ -71,11 +73,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.login(username, password)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(
-            NoSuchElementException::class.java,
-            result.exceptionOrNull()?.javaClass,
-        )
+        assertEquals(true, result.isFailure)
+        assertIs<NoSuchElementException>(result.exceptionOrNull())
         verify(exactly = 1) {
             auth.signInWithEmailAndPassword("$username@readercollection.app", password)
         }
@@ -94,8 +93,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.login(username, password)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) {
             auth.signInWithEmailAndPassword("$username@readercollection.app", password)
         }
@@ -123,7 +122,7 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.register(username, password)
 
-        Assert.assertEquals(true, result.isSuccess)
+        assertEquals(true, result.isSuccess)
         verify(exactly = 1) {
             auth.createUserWithEmailAndPassword("$username@readercollection.app", password)
         }
@@ -139,8 +138,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.register(username, password)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) {
             auth.createUserWithEmailAndPassword("$username@readercollection.app", password)
         }
@@ -156,7 +155,7 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.updatePassword(password)
 
-        Assert.assertEquals(true, result.isSuccess)
+        assertEquals(true, result.isSuccess)
         verify(exactly = 1) { auth.currentUser }
         verify(exactly = 1) { user.updatePassword(password) }
         confirmVerified(auth)
@@ -169,11 +168,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.updatePassword(password)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(
-            RuntimeException::class.java,
-            result.exceptionOrNull()?.javaClass,
-        )
+        assertEquals(true, result.isFailure)
+        assertIs<RuntimeException>(result.exceptionOrNull())
         verify(exactly = 1) { auth.currentUser }
         confirmVerified(auth)
     }
@@ -187,8 +183,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.updatePassword(password)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { user.updatePassword(password) }
         verify(exactly = 1) { auth.currentUser }
         confirmVerified(auth)
@@ -203,9 +199,9 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.registerPublicProfile(username, userId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(userId, dataSlot.captured["uuid"])
-            Assert.assertEquals("$username@readercollection.app", dataSlot.captured["email"])
+            assertEquals(true, result.isSuccess)
+            assertEquals(userId, dataSlot.captured["uuid"])
+            assertEquals("$username@readercollection.app", dataSlot.captured["email"])
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -220,8 +216,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.registerPublicProfile(username, userId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
+            assertEquals(true, result.isFailure)
+            assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -236,8 +232,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.isPublicProfileActive(username)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(true, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(true, result.getOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -250,8 +246,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.isPublicProfileActive(username)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(false, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(false, result.getOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -265,8 +261,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.isPublicProfileActive(username)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
+            assertEquals(true, result.isFailure)
+            assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -279,7 +275,7 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.deletePublicProfile(userId)
 
-            Assert.assertEquals(true, result.isSuccess)
+            assertEquals(true, result.isSuccess)
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -293,8 +289,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.deletePublicProfile(userId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
+            assertEquals(true, result.isFailure)
+            assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -312,8 +308,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getUser(username, userId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(
+            assertEquals(true, result.isSuccess)
+            assertEquals(
                 UserResponse(
                     id = friendId,
                     username = username,
@@ -334,11 +330,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getUser(username, userId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(
-                NoSuchElementException::class.java,
-                result.exceptionOrNull()?.javaClass,
-            )
+            assertEquals(true, result.isFailure)
+            assertIs<NoSuchElementException>(result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -355,11 +348,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getUser(username, userId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(
-                NoSuchElementException::class.java,
-                result.exceptionOrNull()?.javaClass,
-            )
+            assertEquals(true, result.isFailure)
+            assertIs<NoSuchElementException>(result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("public_profiles") }
             confirmVerified(firestore)
         }
@@ -373,8 +363,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.getUser(username, userId)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.collection("public_profiles") }
         confirmVerified(firestore)
     }
@@ -391,8 +381,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getFriends(userId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(friends, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(friends, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -406,8 +396,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getFriends(userId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(friends, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(friends, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -420,8 +410,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.getFriends(userId)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.collection("users") }
         confirmVerified(firestore)
     }
@@ -435,8 +425,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getFriend(userId, friend.id)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(friend, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(friend, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -450,11 +440,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getFriend(userId, friendId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(
-                NoSuchElementException::class.java,
-                result.exceptionOrNull()?.javaClass,
-            )
+            assertEquals(true, result.isFailure)
+            assertIs<NoSuchElementException>(result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -468,8 +455,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.getFriend(userId, friendId)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.collection("users") }
         confirmVerified(firestore)
     }
@@ -482,7 +469,7 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.requestFriendship(user, friend)
 
-        Assert.assertEquals(true, result.isSuccess)
+        assertEquals(true, result.isSuccess)
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 2) { firestore.collection("users") }
         confirmVerified(firestore)
@@ -497,8 +484,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.requestFriendship(user, friend)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 2) { firestore.collection("users") }
         confirmVerified(firestore)
@@ -513,7 +500,7 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.acceptFriendRequest(user.id, friend.id)
 
-            Assert.assertEquals(true, result.isSuccess)
+            assertEquals(true, result.isSuccess)
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 2) { firestore.collection("users") }
             confirmVerified(firestore)
@@ -529,8 +516,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.acceptFriendRequest(user.id, friend.id)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
+            assertEquals(true, result.isFailure)
+            assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 2) { firestore.collection("users") }
             confirmVerified(firestore)
@@ -545,7 +532,7 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.rejectFriendRequest(user.id, friend.id)
 
-            Assert.assertEquals(true, result.isSuccess)
+            assertEquals(true, result.isSuccess)
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 2) { firestore.collection("users") }
             confirmVerified(firestore)
@@ -561,8 +548,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.rejectFriendRequest(user.id, friend.id)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
+            assertEquals(true, result.isFailure)
+            assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 2) { firestore.collection("users") }
             confirmVerified(firestore)
@@ -576,7 +563,7 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.deleteFriend(user.id, friend.id)
 
-        Assert.assertEquals(true, result.isSuccess)
+        assertEquals(true, result.isSuccess)
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 2) { firestore.collection("users") }
         confirmVerified(firestore)
@@ -591,8 +578,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.deleteFriend(user.id, friend.id)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 2) { firestore.collection("users") }
         confirmVerified(firestore)
@@ -605,7 +592,7 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.deleteUser(userId)
 
-        Assert.assertEquals(true, result.isSuccess)
+        assertEquals(true, result.isSuccess)
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 1) { firestore.collection("public_profiles") }
         verify(exactly = 1) { firestore.collection("users") }
@@ -623,8 +610,8 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.deleteUser(userId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(exception, result.exceptionOrNull())
+            assertEquals(true, result.isFailure)
+            assertEquals(exception, result.exceptionOrNull())
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 1) { firestore.collection("public_profiles") }
             verify(exactly = 1) { firestore.collection("users") }
@@ -641,8 +628,8 @@ class UserRemoteDataSourceTest {
 
         val result = dataSource.deleteUser(userId)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 1) { firestore.collection("public_profiles") }
         verify(exactly = 1) { firestore.collection("users") }
@@ -659,7 +646,7 @@ class UserRemoteDataSourceTest {
 
             val result = dataSource.getMinVersion()
 
-            Assert.assertEquals(102030, result)
+            assertEquals(102030, result)
             verify(exactly = 1) { remoteConfig.fetch(0) }
             verify(exactly = 1) { remoteConfig.activate() }
             verify(exactly = 1) { remoteConfig.getString("min_version") }

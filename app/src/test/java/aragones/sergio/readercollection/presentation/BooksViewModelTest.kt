@@ -37,13 +37,13 @@ import io.mockk.mockk
 import io.mockk.verify
 import java.util.Date
 import kotlin.collections.map
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class BooksViewModelTest {
 
@@ -81,18 +81,18 @@ class BooksViewModelTest {
         booksFlow.emit(listOf(book2, book3, book1))
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
 
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, book3)),
                     query = "",
@@ -109,18 +109,18 @@ class BooksViewModelTest {
         booksFlow.emit(emptyList())
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
 
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(
                     query = "",
                     isLoading = false,
@@ -137,18 +137,18 @@ class BooksViewModelTest {
             booksFlow.emit(emptyList())
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(
                         query = "",
                         isLoading = false,
@@ -158,7 +158,7 @@ class BooksViewModelTest {
 
                 booksFlow.emit(listOf(Book("")))
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(Book(""))),
                         query = "",
@@ -179,18 +179,18 @@ class BooksViewModelTest {
             booksFlow.emit(listOf(book2, book3, book1))
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -201,7 +201,7 @@ class BooksViewModelTest {
 
                 viewModel.updatePickerState("rating", testIsSortDescending)
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book2, book1, book3)),
                         query = "",
@@ -216,12 +216,12 @@ class BooksViewModelTest {
     @Test
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog message is reset`() = runTest {
         viewModel.booksError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
             coEvery {
                 booksLocalDataSource.updateBooks(any())
             } throws Exception()
             viewModel.setBook(Book(""))
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_server,
@@ -231,14 +231,14 @@ class BooksViewModelTest {
 
             viewModel.closeDialogs()
 
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.booksError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.closeDialogs()
 
@@ -248,7 +248,7 @@ class BooksViewModelTest {
 
     @Test
     fun `WHEN showSortingPickerState THEN update state with show true`() {
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = false,
                 sortParam = testSortParam,
@@ -259,7 +259,7 @@ class BooksViewModelTest {
 
         viewModel.showSortingPickerState()
 
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = true,
                 sortParam = testSortParam,
@@ -271,7 +271,7 @@ class BooksViewModelTest {
 
     @Test
     fun `GIVEN new values WHEN updatePickerState THEN update state with new values and show false`() {
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = false,
                 sortParam = testSortParam,
@@ -280,7 +280,7 @@ class BooksViewModelTest {
             viewModel.sortingPickerState.value,
         )
         viewModel.showSortingPickerState()
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = true,
                 sortParam = testSortParam,
@@ -293,7 +293,7 @@ class BooksViewModelTest {
 
         viewModel.updatePickerState(newSortParam, newIsSortDescending)
 
-        Assert.assertEquals(
+        assertEquals(
             UiSortingPickerState(
                 show = false,
                 sortParam = newSortParam,
@@ -311,17 +311,17 @@ class BooksViewModelTest {
         booksFlow.emit(listOf(book2, book3, book1))
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, book3)),
                     query = "",
@@ -348,17 +348,17 @@ class BooksViewModelTest {
             booksFlow.emit(listOf(book2, book3, book1))
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -369,7 +369,7 @@ class BooksViewModelTest {
 
                 viewModel.searchBooks(query)
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = query,
@@ -377,7 +377,7 @@ class BooksViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2)),
                         query = query,
@@ -399,17 +399,17 @@ class BooksViewModelTest {
             booksFlow.emit(listOf(book2, book3, book1))
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -420,7 +420,7 @@ class BooksViewModelTest {
 
                 viewModel.searchBooks(query)
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = query,
@@ -428,7 +428,7 @@ class BooksViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(
                         query = query,
                         isLoading = false,
@@ -445,17 +445,17 @@ class BooksViewModelTest {
         booksFlow.emit(emptyList())
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(
                     query = "",
                     isLoading = false,
@@ -465,7 +465,7 @@ class BooksViewModelTest {
 
             viewModel.searchBooks(query)
 
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(
                     query = query,
                     isLoading = false,
@@ -486,17 +486,17 @@ class BooksViewModelTest {
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -516,7 +516,7 @@ class BooksViewModelTest {
                     },
                 )
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -524,7 +524,7 @@ class BooksViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(
                             listOf(book1.copy(priority = 1), book2.copy(priority = 0), book3),
@@ -556,17 +556,17 @@ class BooksViewModelTest {
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2)),
                         query = "",
@@ -598,17 +598,17 @@ class BooksViewModelTest {
         coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2)),
                     query = "",
@@ -641,17 +641,17 @@ class BooksViewModelTest {
         coEvery { booksLocalDataSource.updateBooks(any()) } throws RuntimeException()
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, book3)),
                     query = "",
@@ -662,11 +662,11 @@ class BooksViewModelTest {
 
             val state = this
             viewModel.booksError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.switchBooksPriority(fromIndex = 0, toIndex = 1)
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -674,7 +674,7 @@ class BooksViewModelTest {
                     ),
                     state.awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -682,7 +682,7 @@ class BooksViewModelTest {
                     ),
                     state.awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_database,
@@ -713,17 +713,17 @@ class BooksViewModelTest {
         coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, book3)),
                     query = "",
@@ -735,7 +735,7 @@ class BooksViewModelTest {
             viewModel.setBook(modifiedBook)
             booksFlow.emit(listOf(book1, book2, modifiedBook).map { it.toLocalData().toDomain() })
 
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, book3)),
                     query = "",
@@ -743,7 +743,7 @@ class BooksViewModelTest {
                 ),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, modifiedBook)),
                     query = "",
@@ -770,17 +770,17 @@ class BooksViewModelTest {
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -794,7 +794,7 @@ class BooksViewModelTest {
                     listOf(book1, book2, modifiedReadBook).map { it.toLocalData().toDomain() },
                 )
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -802,7 +802,7 @@ class BooksViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, modifiedReadBook)),
                         query = "",
@@ -827,17 +827,17 @@ class BooksViewModelTest {
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -851,7 +851,7 @@ class BooksViewModelTest {
                     listOf(book1, book2, modifiedPendingBook).map { it.toLocalData().toDomain() },
                 )
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -859,7 +859,7 @@ class BooksViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, modifiedPendingBook)),
                         query = "",
@@ -884,17 +884,17 @@ class BooksViewModelTest {
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = false),
                     awaitItem(),
                 )
 
                 viewModel.fetchBooks()
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Empty(query = "", isLoading = true),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -908,7 +908,7 @@ class BooksViewModelTest {
                     listOf(book1, book2, modifiedPendingBook).map { it.toLocalData().toDomain() },
                 )
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -916,7 +916,7 @@ class BooksViewModelTest {
                     ),
                     awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, modifiedPendingBook)),
                         query = "",
@@ -939,17 +939,17 @@ class BooksViewModelTest {
         coEvery { booksLocalDataSource.updateBooks(any()) } throws RuntimeException()
 
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = false),
                 awaitItem(),
             )
 
             viewModel.fetchBooks()
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Empty(query = "", isLoading = true),
                 awaitItem(),
             )
-            Assert.assertEquals(
+            assertEquals(
                 BooksUiState.Success(
                     books = Books(listOf(book1, book2, book3)),
                     query = "",
@@ -960,11 +960,11 @@ class BooksViewModelTest {
 
             val state = this
             viewModel.booksError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.setBook(modifiedBook)
 
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -972,7 +972,7 @@ class BooksViewModelTest {
                     ),
                     state.awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     BooksUiState.Success(
                         books = Books(listOf(book1, book2, book3)),
                         query = "",
@@ -980,7 +980,7 @@ class BooksViewModelTest {
                     ),
                     state.awaitItem(),
                 )
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,

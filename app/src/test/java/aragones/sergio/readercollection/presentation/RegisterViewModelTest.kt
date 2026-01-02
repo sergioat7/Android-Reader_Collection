@@ -28,11 +28,11 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class RegisterViewModelTest {
 
@@ -72,11 +72,11 @@ class RegisterViewModelTest {
             every { userLocalDataSource.storeLoginData(userData, authData) } just Runs
 
             viewModel.activityName.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.register(testUsername, password)
 
-                Assert.assertEquals(MainActivity::class.simpleName, awaitItem())
+                assertEquals(MainActivity::class.simpleName, awaitItem())
             }
 
             coVerify { userRemoteDataSource.register(testUsername, password) }
@@ -104,11 +104,11 @@ class RegisterViewModelTest {
             } returns Result.failure(exception)
 
             viewModel.registerError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.register(testUsername, password)
 
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
@@ -137,11 +137,11 @@ class RegisterViewModelTest {
         } returns Result.failure(exception)
 
         viewModel.registerError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.register(testUsername, password)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_user_found,
@@ -157,7 +157,7 @@ class RegisterViewModelTest {
 
     @Test
     fun `GIVEN valid username and passwords WHEN registerDataChanged THEN state updates with data valid true`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
@@ -168,7 +168,7 @@ class RegisterViewModelTest {
             confirmPassword = "password",
         )
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = null,
                 passwordError = null,
@@ -180,7 +180,7 @@ class RegisterViewModelTest {
 
     @Test
     fun `GIVEN invalid username WHEN registerDataChanged THEN state updates with data valid false and username error`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
@@ -191,7 +191,7 @@ class RegisterViewModelTest {
             confirmPassword = "password",
         )
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = R.string.invalid_username,
                 passwordError = null,
@@ -203,7 +203,7 @@ class RegisterViewModelTest {
 
     @Test
     fun `GIVEN invalid password WHEN registerDataChanged THEN state updates with data valid false and password error`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
@@ -214,7 +214,7 @@ class RegisterViewModelTest {
             confirmPassword = "pass",
         )
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = null,
                 passwordError = R.string.invalid_password,
@@ -226,7 +226,7 @@ class RegisterViewModelTest {
 
     @Test
     fun `GIVEN mismatch passwords WHEN registerDataChanged THEN state updates with data valid false and password error`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
@@ -237,7 +237,7 @@ class RegisterViewModelTest {
             confirmPassword = "password2",
         )
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = null,
                 passwordError = R.string.invalid_repeat_password,
@@ -249,7 +249,7 @@ class RegisterViewModelTest {
 
     @Test
     fun `GIVEN invalid username and mismatch passwords WHEN registerDataChanged THEN state updates with data valid false and username and password error`() {
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(),
             viewModel.uiState.value.formState,
         )
@@ -260,7 +260,7 @@ class RegisterViewModelTest {
             confirmPassword = "password2",
         )
 
-        Assert.assertEquals(
+        assertEquals(
             LoginFormState(
                 usernameError = R.string.invalid_username,
                 passwordError = R.string.invalid_repeat_password,
@@ -274,11 +274,11 @@ class RegisterViewModelTest {
     fun `GIVEN no dialog shown WHEN showInfoDialog THEN dialog is shown`() = runTest {
         val textId = R.string.username_info
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showInfoDialog(textId)
 
-            Assert.assertEquals(textId, awaitItem())
+            assertEquals(textId, awaitItem())
         }
     }
 
@@ -295,15 +295,15 @@ class RegisterViewModelTest {
 
         viewModel.infoDialogMessageId.test {
             val infoDialogMessageId = this
-            Assert.assertEquals(-1, infoDialogMessageId.awaitItem())
+            assertEquals(-1, infoDialogMessageId.awaitItem())
             viewModel.registerError.test {
                 val registerError = this
-                Assert.assertEquals(null, registerError.awaitItem())
+                assertEquals(null, registerError.awaitItem())
 
                 viewModel.register(testUsername, password)
                 viewModel.showInfoDialog(R.string.username_info)
-                Assert.assertEquals(R.string.username_info, infoDialogMessageId.awaitItem())
-                Assert.assertEquals(
+                assertEquals(R.string.username_info, infoDialogMessageId.awaitItem())
+                assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
                         R.string.error_server,
@@ -313,8 +313,8 @@ class RegisterViewModelTest {
 
                 viewModel.closeDialogs()
 
-                Assert.assertEquals(-1, infoDialogMessageId.awaitItem())
-                Assert.assertEquals(null, registerError.awaitItem())
+                assertEquals(-1, infoDialogMessageId.awaitItem())
+                assertEquals(null, registerError.awaitItem())
             }
         }
     }
@@ -322,9 +322,9 @@ class RegisterViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.registerError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.closeDialogs()
 

@@ -32,13 +32,13 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 
@@ -86,7 +86,7 @@ class BookDetailViewModelTest {
             } returns Result.success(book.toRemoteData())
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = null,
                         isAlreadySaved = true,
@@ -97,7 +97,7 @@ class BookDetailViewModelTest {
 
                 viewModel.onCreate()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isEditable = true,
@@ -130,11 +130,11 @@ class BookDetailViewModelTest {
         } returns Result.failure(RuntimeException("Firestore error"))
 
         viewModel.bookDetailError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.onCreate()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel("", R.string.error_no_book),
                 awaitItem(),
             )
@@ -150,7 +150,7 @@ class BookDetailViewModelTest {
             coEvery { booksLocalDataSource.getBook(any()) } returns book.toLocalData()
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = null,
                         isAlreadySaved = true,
@@ -161,7 +161,7 @@ class BookDetailViewModelTest {
 
                 viewModel.onCreate()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isAlreadySaved = true,
@@ -200,7 +200,7 @@ class BookDetailViewModelTest {
             } returns Result.success(book)
 
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = null,
                         isAlreadySaved = true,
@@ -211,7 +211,7 @@ class BookDetailViewModelTest {
 
                 viewModel.onCreate()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book.toDomain(),
                         isAlreadySaved = false,
@@ -234,11 +234,11 @@ class BookDetailViewModelTest {
             } returns Result.failure(RuntimeException("Firestore error"))
 
             viewModel.bookDetailError.test {
-                Assert.assertEquals(null, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.onCreate()
 
-                Assert.assertEquals(
+                assertEquals(
                     ErrorModel("", R.string.error_no_book),
                     awaitItem(),
                 )
@@ -253,11 +253,11 @@ class BookDetailViewModelTest {
         coEvery { booksLocalDataSource.getBook(any()) } throws RuntimeException("Database error")
 
         viewModel.bookDetailError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.onCreate()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel("", R.string.error_no_book),
                 awaitItem(),
             )
@@ -269,7 +269,7 @@ class BookDetailViewModelTest {
     @Test
     fun `WHEN enableEdition THEN update state with editable true`() = runTest {
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = null,
                     isAlreadySaved = true,
@@ -280,7 +280,7 @@ class BookDetailViewModelTest {
 
             viewModel.enableEdition()
 
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = null,
                     isAlreadySaved = true,
@@ -297,7 +297,7 @@ class BookDetailViewModelTest {
             val book = Book(testBookId)
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = null,
                         isAlreadySaved = true,
@@ -306,7 +306,7 @@ class BookDetailViewModelTest {
                     awaitItem(),
                 )
                 viewModel.setBook(book)
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isAlreadySaved = true,
@@ -315,7 +315,7 @@ class BookDetailViewModelTest {
                     awaitItem(),
                 )
                 viewModel.enableEdition()
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isAlreadySaved = true,
@@ -326,7 +326,7 @@ class BookDetailViewModelTest {
 
                 viewModel.disableEdition()
 
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isAlreadySaved = true,
@@ -342,7 +342,7 @@ class BookDetailViewModelTest {
     fun `GIVEN book WHEN changeData THEN updates state with book`() = runTest {
         val book = Book("bookId")
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = null,
                     isAlreadySaved = true,
@@ -353,7 +353,7 @@ class BookDetailViewModelTest {
 
             viewModel.changeData(book)
 
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = book,
                     isAlreadySaved = true,
@@ -399,10 +399,10 @@ class BookDetailViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = null,
                             isAlreadySaved = true,
@@ -411,7 +411,7 @@ class BookDetailViewModelTest {
                         awaitItem(),
                     )
                     viewModel.onCreate()
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = book.toDomain(),
                             isAlreadySaved = false,
@@ -422,11 +422,11 @@ class BookDetailViewModelTest {
 
                     viewModel.createBook(book.toDomain())
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.book_saved,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = newBook,
                             isAlreadySaved = true,
@@ -472,10 +472,10 @@ class BookDetailViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = null,
                             isAlreadySaved = true,
@@ -484,7 +484,7 @@ class BookDetailViewModelTest {
                         awaitItem(),
                     )
                     viewModel.onCreate()
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = book.toDomain(),
                             isAlreadySaved = false,
@@ -495,11 +495,11 @@ class BookDetailViewModelTest {
 
                     viewModel.createBook(book.toDomain())
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.book_saved,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = newBook,
                             isAlreadySaved = true,
@@ -548,11 +548,11 @@ class BookDetailViewModelTest {
         viewModel.onCreate()
 
         viewModel.bookDetailError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.createBook(book.toDomain())
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
@@ -572,7 +572,7 @@ class BookDetailViewModelTest {
             val book = Book(testBookId)
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = null,
                         isAlreadySaved = true,
@@ -583,7 +583,7 @@ class BookDetailViewModelTest {
 
                 viewModel.setBook(book)
 
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isAlreadySaved = true,
@@ -602,11 +602,11 @@ class BookDetailViewModelTest {
             booksLocalDataSource.updateBooks(any())
         } throws RuntimeException("Database error")
         viewModel.bookDetailError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.setBook(book)
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
@@ -629,10 +629,10 @@ class BookDetailViewModelTest {
             } just Runs
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = null,
                             isAlreadySaved = true,
@@ -643,11 +643,11 @@ class BookDetailViewModelTest {
 
                     viewModel.deleteBook()
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.book_removed,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = null,
                             isAlreadySaved = false,
@@ -669,10 +669,10 @@ class BookDetailViewModelTest {
             } returns null
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.state.test {
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = null,
                             isAlreadySaved = true,
@@ -683,11 +683,11 @@ class BookDetailViewModelTest {
 
                     viewModel.deleteBook()
 
-                    Assert.assertEquals(
+                    assertEquals(
                         R.string.book_removed,
                         infoDialogMessage.awaitItem(),
                     )
-                    Assert.assertEquals(
+                    assertEquals(
                         BookDetailUiState(
                             book = null,
                             isAlreadySaved = false,
@@ -707,11 +707,11 @@ class BookDetailViewModelTest {
             booksLocalDataSource.getBook(any())
         } throws RuntimeException("Database error")
         viewModel.bookDetailError.test {
-            Assert.assertEquals(null, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.deleteBook()
 
-            Assert.assertEquals(
+            assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
                     R.string.error_database,
@@ -729,7 +729,7 @@ class BookDetailViewModelTest {
         val imageUri = "uri"
         coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = null,
                     isAlreadySaved = true,
@@ -738,7 +738,7 @@ class BookDetailViewModelTest {
                 awaitItem(),
             )
             viewModel.setBook(book)
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = book,
                     isAlreadySaved = true,
@@ -749,7 +749,7 @@ class BookDetailViewModelTest {
 
             viewModel.setBookImage(imageUri)
 
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = book.copy(thumbnail = imageUri),
                     isAlreadySaved = true,
@@ -767,7 +767,7 @@ class BookDetailViewModelTest {
             val book = Book(testBookId).copy(thumbnail = "uri")
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs
             viewModel.state.test {
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = null,
                         isAlreadySaved = true,
@@ -776,7 +776,7 @@ class BookDetailViewModelTest {
                     awaitItem(),
                 )
                 viewModel.setBook(book)
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book,
                         isAlreadySaved = true,
@@ -787,7 +787,7 @@ class BookDetailViewModelTest {
 
                 viewModel.setBookImage(null)
 
-                Assert.assertEquals(
+                assertEquals(
                     BookDetailUiState(
                         book = book.copy(thumbnail = null),
                         isAlreadySaved = true,
@@ -802,7 +802,7 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no book saved in state WHEN setBookImage THEN do nothing`() = runTest {
         viewModel.state.test {
-            Assert.assertEquals(
+            assertEquals(
                 BookDetailUiState(
                     book = null,
                     isAlreadySaved = true,
@@ -820,20 +820,20 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
 
-            Assert.assertEquals(R.string.book_remove_confirmation, awaitItem())
+            assertEquals(R.string.book_remove_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
-            Assert.assertEquals(R.string.book_remove_confirmation, awaitItem())
+            assertEquals(R.string.book_remove_confirmation, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
 
@@ -844,20 +844,20 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showImageDialog THEN dialog is shown`() = runTest {
         viewModel.imageDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showImageDialog(R.string.enter_valid_url)
 
-            Assert.assertEquals(R.string.enter_valid_url, awaitItem())
+            assertEquals(R.string.enter_valid_url, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showImageDialog THEN do nothing`() = runTest {
         viewModel.imageDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showImageDialog(R.string.enter_valid_url)
-            Assert.assertEquals(R.string.enter_valid_url, awaitItem())
+            assertEquals(R.string.enter_valid_url, awaitItem())
 
             viewModel.showImageDialog(R.string.enter_valid_url)
 
@@ -869,36 +869,36 @@ class BookDetailViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
             val confirmationDialogMessage = this
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
-            Assert.assertEquals(
+            assertEquals(
                 R.string.book_remove_confirmation,
                 confirmationDialogMessage.awaitItem(),
             )
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
                 coEvery {
                     booksLocalDataSource.getBook(any())
                 } returns null
                 viewModel.deleteBook()
-                Assert.assertEquals(
+                assertEquals(
                     R.string.book_removed,
                     infoDialogMessage.awaitItem(),
                 )
 
                 viewModel.imageDialogMessageId.test {
                     val imageDialogMessage = this
-                    Assert.assertEquals(-1, awaitItem())
+                    assertEquals(-1, awaitItem())
                     viewModel.showImageDialog(R.string.enter_valid_url)
-                    Assert.assertEquals(R.string.enter_valid_url, awaitItem())
+                    assertEquals(R.string.enter_valid_url, awaitItem())
 
                     viewModel.closeDialogs()
 
-                    Assert.assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    Assert.assertEquals(-1, infoDialogMessage.awaitItem())
-                    Assert.assertEquals(-1, imageDialogMessage.awaitItem())
+                    assertEquals(-1, confirmationDialogMessage.awaitItem())
+                    assertEquals(-1, infoDialogMessage.awaitItem())
+                    assertEquals(-1, imageDialogMessage.awaitItem())
                 }
             }
         }
@@ -907,13 +907,13 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.infoDialogMessageId.test {
-                Assert.assertEquals(-1, awaitItem())
+                assertEquals(-1, awaitItem())
 
                 viewModel.imageDialogMessageId.test {
-                    Assert.assertEquals(-1, awaitItem())
+                    assertEquals(-1, awaitItem())
 
                     viewModel.closeDialogs()
 

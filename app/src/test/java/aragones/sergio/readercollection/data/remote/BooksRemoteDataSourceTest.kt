@@ -45,11 +45,12 @@ import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.slot
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
 import kotlinx.coroutines.test.runTest
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
-import org.junit.Assert
-import org.junit.Test
 
 class BooksRemoteDataSourceTest {
 
@@ -80,7 +81,7 @@ class BooksRemoteDataSourceTest {
                 items = emptyList(),
             )
             val mockEngine = MockEngine { request ->
-                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                assertEquals(url, request.url.encodedPathAndQuery)
                 respond(
                     content =
                         """
@@ -100,8 +101,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.searchBooks(query, page, null)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(response, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(response, result.getOrNull())
         }
 
     @Test
@@ -129,7 +130,7 @@ class BooksRemoteDataSourceTest {
                 items = emptyList(),
             )
             val mockEngine = MockEngine { request ->
-                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                assertEquals(url, request.url.encodedPathAndQuery)
                 respond(
                     content =
                         """
@@ -149,8 +150,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.searchBooks(query, page, order)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(response, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(response, result.getOrNull())
         }
 
     @Test
@@ -174,7 +175,7 @@ class BooksRemoteDataSourceTest {
             .encodedPathAndQuery
         val error = HttpStatusCode(400, "Client Error")
         val mockEngine = MockEngine { request ->
-            Assert.assertEquals(url, request.url.encodedPathAndQuery)
+            assertEquals(url, request.url.encodedPathAndQuery)
             respond(
                 content = "{}",
                 status = error,
@@ -186,9 +187,9 @@ class BooksRemoteDataSourceTest {
 
         val result = dataSource.searchBooks(query, page, order)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertTrue(result.exceptionOrNull() is IllegalStateException)
-        Assert.assertEquals(
+        assertEquals(true, result.isFailure)
+        assertIs<IllegalStateException>(result.exceptionOrNull())
+        assertEquals(
             "Unexpected status code response ${error.value} ${error.description}",
             result.exceptionOrNull()?.message,
         )
@@ -224,7 +225,7 @@ class BooksRemoteDataSourceTest {
                 ),
             )
             val mockEngine = MockEngine { request ->
-                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                assertEquals(url, request.url.encodedPathAndQuery)
                 respond(
                     content =
                         """
@@ -258,8 +259,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.getBook(bookId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(response, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(response, result.getOrNull())
         }
 
     @Test
@@ -276,7 +277,7 @@ class BooksRemoteDataSourceTest {
                 .encodedPathAndQuery
             val error = HttpStatusCode(400, "Client Error")
             val mockEngine = MockEngine { request ->
-                Assert.assertEquals(url, request.url.encodedPathAndQuery)
+                assertEquals(url, request.url.encodedPathAndQuery)
                 respond(
                     content = "{}",
                     status = error,
@@ -288,9 +289,9 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.getBook(bookId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertTrue(result.exceptionOrNull() is IllegalStateException)
-            Assert.assertEquals(
+            assertEquals(true, result.isFailure)
+            assertIs<IllegalStateException>(result.exceptionOrNull())
+            assertEquals(
                 "Unexpected status code response ${error.value} ${error.description}",
                 result.exceptionOrNull()?.message,
             )
@@ -303,8 +304,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        Assert.assertEquals(getFormats(), Constants.FORMATS)
-        Assert.assertEquals(getStates(), Constants.STATES)
+        assertEquals(getFormats(), Constants.FORMATS)
+        assertEquals(getStates(), Constants.STATES)
         verify(exactly = 1) { remoteConfig.fetchAndActivate() }
         verify(exactly = 2) { remoteConfig.getString("formats") }
         verify(exactly = 2) { remoteConfig.getString("states") }
@@ -320,8 +321,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues("es")
 
-        Assert.assertEquals(0, Constants.FORMATS.size)
-        Assert.assertEquals(0, Constants.STATES.size)
+        assertEquals(0, Constants.FORMATS.size)
+        assertEquals(0, Constants.STATES.size)
         verify(exactly = 1) { remoteConfig.fetchAndActivate() }
         verify(exactly = 2) { remoteConfig.getString("formats") }
         verify(exactly = 2) { remoteConfig.getString("states") }
@@ -337,8 +338,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        Assert.assertEquals(currentFormats, Constants.FORMATS)
-        Assert.assertEquals(currentStates, Constants.STATES)
+        assertEquals(currentFormats, Constants.FORMATS)
+        assertEquals(currentStates, Constants.STATES)
         verify(exactly = 1) { remoteConfig.fetchAndActivate() }
         verify(exactly = 2) { remoteConfig.getString("formats") }
         verify(exactly = 2) { remoteConfig.getString("states") }
@@ -354,8 +355,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        Assert.assertEquals(getFormats(), Constants.FORMATS)
-        Assert.assertEquals(getStates(), Constants.STATES)
+        assertEquals(getFormats(), Constants.FORMATS)
+        assertEquals(getStates(), Constants.STATES)
         verify(exactly = 1) { remoteConfig.fetchAndActivate() }
         verify(exactly = 2) { remoteConfig.getString("formats") }
         verify(exactly = 2) { remoteConfig.getString("states") }
@@ -371,8 +372,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.getBooks(userId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(books, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(books, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -386,8 +387,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.getBooks(userId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(books, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(books, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -400,8 +401,8 @@ class BooksRemoteDataSourceTest {
 
         val result = dataSource.getBooks(userId)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.collection("users") }
         confirmVerified(firestore)
     }
@@ -416,8 +417,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.getFriendBook(friendId, bookId)
 
-            Assert.assertEquals(true, result.isSuccess)
-            Assert.assertEquals(book, result.getOrNull())
+            assertEquals(true, result.isSuccess)
+            assertEquals(book, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -431,11 +432,8 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.getFriendBook(friendId, bookId)
 
-            Assert.assertEquals(true, result.isFailure)
-            Assert.assertEquals(
-                NoSuchElementException::class.java,
-                result.exceptionOrNull()?.javaClass,
-            )
+            assertEquals(true, result.isFailure)
+            assertIs<NoSuchElementException>(result.exceptionOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -449,8 +447,8 @@ class BooksRemoteDataSourceTest {
 
         val result = dataSource.getFriendBook(friendId, bookId)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.collection("users") }
         confirmVerified(firestore)
     }
@@ -466,7 +464,7 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.syncBooks(userId, booksToSave, booksToRemove)
 
-            Assert.assertEquals(true, result.isSuccess)
+            assertEquals(true, result.isSuccess)
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
@@ -487,7 +485,7 @@ class BooksRemoteDataSourceTest {
 
             val result = dataSource.syncBooks(userId, booksToSave, booksToRemove)
 
-            Assert.assertEquals(true, result.isSuccess)
+            assertEquals(true, result.isSuccess)
             verify(exactly = 1) { firestore.batch() }
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
@@ -508,8 +506,8 @@ class BooksRemoteDataSourceTest {
 
         val result = dataSource.syncBooks(userId, booksToSave, booksToRemove)
 
-        Assert.assertEquals(true, result.isFailure)
-        Assert.assertEquals(exception, result.exceptionOrNull())
+        assertEquals(true, result.isFailure)
+        assertEquals(exception, result.exceptionOrNull())
         verify(exactly = 1) { firestore.batch() }
         verify(exactly = 1) { firestore.collection("users") }
         confirmVerified(firestore)

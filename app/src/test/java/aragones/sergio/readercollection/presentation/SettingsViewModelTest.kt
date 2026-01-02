@@ -27,12 +27,12 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
-import org.junit.Test
 
 class SettingsViewModelTest {
 
@@ -65,11 +65,11 @@ class SettingsViewModelTest {
         every { booksLocalDataSource.getAllBooks() } returns flowOf(books)
         coEvery { booksLocalDataSource.deleteBooks(any()) } just Runs
         viewModel.logOut.test {
-            Assert.assertEquals(false, awaitItem())
+            assertEquals(false, awaitItem())
 
             viewModel.logout()
 
-            Assert.assertEquals(true, awaitItem())
+            assertEquals(true, awaitItem())
         }
         verify { userLocalDataSource.logout() }
         verify { userRemoteDataSource.logout() }
@@ -96,11 +96,11 @@ class SettingsViewModelTest {
                 booksLocalDataSource.deleteBooks(any())
             } throws RuntimeException("Database error")
             viewModel.logOut.test {
-                Assert.assertEquals(false, awaitItem())
+                assertEquals(false, awaitItem())
 
                 viewModel.logout()
 
-                Assert.assertEquals(true, awaitItem())
+                assertEquals(true, awaitItem())
             }
             verify { userLocalDataSource.logout() }
             verify { userRemoteDataSource.logout() }
@@ -116,20 +116,20 @@ class SettingsViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
 
-            Assert.assertEquals(R.string.profile_logout_confirmation, awaitItem())
+            assertEquals(R.string.profile_logout_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
-            Assert.assertEquals(R.string.profile_logout_confirmation, awaitItem())
+            assertEquals(R.string.profile_logout_confirmation, awaitItem())
 
             viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
 
@@ -140,20 +140,20 @@ class SettingsViewModelTest {
     @Test
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog message is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
             viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
-            Assert.assertEquals(R.string.profile_logout_confirmation, awaitItem())
+            assertEquals(R.string.profile_logout_confirmation, awaitItem())
 
             viewModel.closeDialogs()
 
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            Assert.assertEquals(-1, awaitItem())
+            assertEquals(-1, awaitItem())
 
             viewModel.closeDialogs()
 
