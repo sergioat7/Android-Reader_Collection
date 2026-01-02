@@ -22,6 +22,7 @@ firebase-bom = "34.6.0"
 google-services = "4.4.4"
 hilt = "2.57.2"
 junit = "4.13.2"
+koin-bom = "4.1.1"
 kotlin = "2.2.21"
 kotlinx-serialization="1.9.0"
 ksp = "2.3.3"
@@ -89,6 +90,15 @@ hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-comp
 hilt-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidx-hilt" }
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidx-hilt" }
 hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidx-hilt" }
+
+#Koin
+koin-bom = { group = "io.insert-koin", name = "koin-bom", version.ref = "koin-bom" }
+koin-core = { module = "io.insert-koin:koin-core" }
+koin-android = { module = "io.insert-koin:koin-android" }
+koin-compose = { module = "io.insert-koin:koin-compose" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel" }
+koin-compose-viewmodel-navigation = { module = "io.insert-koin:koin-compose-viewmodel-navigation" }
+koin-work-manager = { module = "io.insert-koin:koin-androidx-workmanager" }
 
 #Kotlin
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
@@ -170,6 +180,14 @@ firebase = [
     "firebase-config",
     "firebase-crashlytics",
     "firebase-firestore",
+]
+koin = [
+    "koin-core",
+    "koin-android",
+    "koin-compose",
+    "koin-compose-viewmodel",
+    "koin-compose-viewmodel-navigation",
+    "koin-work-manager",
 ]
 ktor = [
     "okhttp3-logging-interceptor",

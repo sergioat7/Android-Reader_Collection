@@ -51,6 +51,9 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
     implementation(libs.moshi)
     ksp(libs.room.compiler)
     implementation(libs.room.runtime)
