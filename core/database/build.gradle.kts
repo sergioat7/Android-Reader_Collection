@@ -49,8 +49,6 @@ kotlin {
 
 dependencies {
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
     implementation(libs.koin.android)
