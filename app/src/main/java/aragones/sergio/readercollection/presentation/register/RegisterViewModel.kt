@@ -17,14 +17,11 @@ import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class RegisterViewModel @Inject constructor(
+class RegisterViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 

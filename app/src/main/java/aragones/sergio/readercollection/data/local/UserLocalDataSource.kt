@@ -12,13 +12,11 @@ import android.os.LocaleList
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import com.google.firebase.auth.FirebaseAuth
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Locale
-import javax.inject.Inject
 
-class UserLocalDataSource @Inject constructor(
+class UserLocalDataSource(
     private val auth: FirebaseAuth,
-    @ApplicationContext private val context: Context,
+    private val context: Context,
     private val preferences: SharedPreferencesHandler,
 ) {
 

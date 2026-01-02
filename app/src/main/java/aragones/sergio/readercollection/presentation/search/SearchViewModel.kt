@@ -13,15 +13,12 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import com.aragones.sergio.util.BookState
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class SearchViewModel @Inject constructor(
+class SearchViewModel(
     private val booksRepository: BooksRepository,
 ) : ViewModel() {
 

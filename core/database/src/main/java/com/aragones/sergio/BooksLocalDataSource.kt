@@ -6,10 +6,9 @@
 package com.aragones.sergio
 
 import com.aragones.sergio.model.Book
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
-class BooksLocalDataSource @Inject constructor(
+class BooksLocalDataSource(
     private val bookDao: BookDao,
 ) {
 

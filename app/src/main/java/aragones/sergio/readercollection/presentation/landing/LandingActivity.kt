@@ -12,7 +12,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -42,21 +41,23 @@ import aragones.sergio.readercollection.presentation.navigation.authGraph
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
-import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
-import javax.inject.Inject
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
+import org.koin.android.scope.AndroidScopeComponent
+import org.koin.androidx.scope.activityScope
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.scope.Scope
 
-@AndroidEntryPoint
-class LandingActivity : ComponentActivity() {
+class LandingActivity : ComponentActivity(), AndroidScopeComponent {
 
     //region Public properties
-    @Inject
-    lateinit var inAppUpdateService: InAppUpdateService
+    override val scope: Scope by activityScope()
     //endregion
 
     //region Private properties
-    private val viewModel: LandingViewModel by viewModels()
+    private val inAppUpdateService: InAppUpdateService by inject()
+    private val viewModel: LandingViewModel by viewModel()
     private var appUpdated = mutableStateOf(false)
     //endregion
 

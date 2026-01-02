@@ -9,15 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun LoginView(
     onGoToMain: () -> Unit,
     onGoToRegister: () -> Unit,
-    viewModel: LoginViewModel = hiltViewModel(),
+    viewModel: LoginViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState
     val error by viewModel.loginError.collectAsState()

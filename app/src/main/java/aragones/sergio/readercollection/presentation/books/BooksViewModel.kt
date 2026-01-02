@@ -18,9 +18,7 @@ import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.toDate
 import com.aragones.sergio.util.extensions.toString
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Date
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -28,8 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class BooksViewModel @Inject constructor(
+class BooksViewModel(
     private val booksRepository: BooksRepository,
     userRepository: UserRepository,
 ) : ViewModel() {

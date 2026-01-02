@@ -8,15 +8,15 @@ package aragones.sergio.readercollection.presentation.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun SettingsView(
     onClickOption: (SettingsOption) -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel(),
+    viewModel: SettingsViewModel = koinViewModel(),
 ) {
     val isLoading by viewModel.isLoading
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()

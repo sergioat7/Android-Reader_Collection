@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
@@ -18,9 +17,10 @@ import aragones.sergio.readercollection.presentation.components.LaunchedEffectOn
 import aragones.sergio.readercollection.presentation.components.TextFieldAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import com.aragones.sergio.util.extensions.isNotBlank
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = hiltViewModel()) {
+fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState()
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()

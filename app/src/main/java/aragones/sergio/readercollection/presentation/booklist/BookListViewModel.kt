@@ -23,11 +23,9 @@ import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Month
 import java.time.format.TextStyle
 import java.util.Locale
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -35,8 +33,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class BookListViewModel @Inject constructor(
+class BookListViewModel(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,

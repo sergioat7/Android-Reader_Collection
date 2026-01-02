@@ -12,14 +12,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.UserRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Locale
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@HiltViewModel
-class DisplaySettingsViewModel @Inject constructor(
+class DisplaySettingsViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 

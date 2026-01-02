@@ -14,7 +14,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
@@ -23,12 +22,13 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun StatisticsView(
     onBookClick: (String) -> Unit,
     onShowAll: (String?, Boolean, Int, Int, String?, String?) -> Unit,
-    viewModel: StatisticsViewModel = hiltViewModel(),
+    viewModel: StatisticsViewModel = koinViewModel(),
 ) {
     val context = LocalContext.current
     val openFileLauncher = rememberLauncherForActivityResult(

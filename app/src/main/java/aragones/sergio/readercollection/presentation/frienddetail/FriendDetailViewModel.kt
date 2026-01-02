@@ -16,16 +16,12 @@ import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.navigation.Route
 import com.aragones.sergio.util.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlin.fold
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class FriendDetailViewModel @Inject constructor(
+class FriendDetailViewModel(
     state: SavedStateHandle,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
