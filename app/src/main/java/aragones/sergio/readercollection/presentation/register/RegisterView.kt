@@ -9,13 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = hiltViewModel()) {
+fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = koinViewModel()) {
     val state by viewModel.uiState
     val error by viewModel.registerError.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()

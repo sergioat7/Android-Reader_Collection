@@ -17,16 +17,13 @@ import com.aragones.sergio.util.extensions.getGroupedBy
 import com.aragones.sergio.util.extensions.getOrderedBy
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.Calendar
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class StatisticsViewModel @Inject constructor(
+class StatisticsViewModel(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {

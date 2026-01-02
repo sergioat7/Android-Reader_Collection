@@ -11,17 +11,15 @@ import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
-import aragones.sergio.readercollection.domain.di.IoDispatcher
 import aragones.sergio.readercollection.domain.model.User
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 
-class UserRepository @Inject constructor(
+class UserRepository(
     private val userLocalDataSource: UserLocalDataSource,
     private val userRemoteDataSource: UserRemoteDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     //region Public properties

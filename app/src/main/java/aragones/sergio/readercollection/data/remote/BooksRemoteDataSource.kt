@@ -18,11 +18,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
-import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import org.json.JSONObject
 
-class BooksRemoteDataSource @Inject constructor(
+class BooksRemoteDataSource(
     private val client: HttpClient,
     private val remoteConfig: FirebaseRemoteConfig,
     private val firestore: FirebaseFirestore,

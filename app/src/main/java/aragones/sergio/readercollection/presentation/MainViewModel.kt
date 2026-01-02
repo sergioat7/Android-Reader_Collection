@@ -7,11 +7,8 @@ package aragones.sergio.readercollection.presentation
 
 import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.UserRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 
-@HiltViewModel
-class MainViewModel @Inject constructor(
+class MainViewModel(
     private val userRepository: UserRepository,
 ) : ViewModel() {
 

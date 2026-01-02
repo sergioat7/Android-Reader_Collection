@@ -8,12 +8,10 @@ package aragones.sergio.readercollection.domain
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.domain.di.IoDispatcher
 import aragones.sergio.readercollection.domain.model.Book
 import com.aragones.sergio.BooksLocalDataSource
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
-import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -22,10 +20,10 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 
-class BooksRepository @Inject constructor(
+class BooksRepository(
     private val booksLocalDataSource: BooksLocalDataSource,
     private val booksRemoteDataSource: BooksRemoteDataSource,
-    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val ioDispatcher: CoroutineDispatcher,
 ) {
 
     //region Private properties

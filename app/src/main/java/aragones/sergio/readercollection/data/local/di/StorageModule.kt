@@ -6,17 +6,12 @@
 package aragones.sergio.readercollection.data.local.di
 
 import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import aragones.sergio.readercollection.data.local.UserLocalDataSource
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object StorageModule {
-
-    @Singleton
-    @Provides
-    fun providesSharedPreferencesHandler() = SharedPreferencesHandler()
+val storageModule = module {
+    singleOf(::SharedPreferencesHandler)
+    factoryOf(::UserLocalDataSource)
 }

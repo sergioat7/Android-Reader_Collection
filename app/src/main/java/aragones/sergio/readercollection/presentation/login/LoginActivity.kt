@@ -27,9 +27,7 @@ import androidx.navigation.createGraph
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.authGraph
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
 class LoginActivity : ComponentActivity() {
 
     //region Lifecycle methods

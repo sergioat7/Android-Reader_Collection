@@ -11,13 +11,10 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.LoginActivity
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-@HiltViewModel
-class LandingViewModel @Inject constructor(
+class LandingViewModel(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {

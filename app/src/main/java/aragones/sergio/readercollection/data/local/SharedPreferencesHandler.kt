@@ -8,17 +8,16 @@ package aragones.sergio.readercollection.data.local
 import android.content.Context
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
-import aragones.sergio.readercollection.ReaderCollectionApplication
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import com.aragones.sergio.util.Preferences
 import com.squareup.moshi.Moshi
 import java.util.Locale
 
-class SharedPreferencesHandler {
+class SharedPreferencesHandler(context: Context) {
 
     //region Private properties
-    private val appPreferences = ReaderCollectionApplication.context.getSharedPreferences(
+    private val appPreferences = context.getSharedPreferences(
         Preferences.PREFERENCES_NAME,
         Context.MODE_PRIVATE,
     )
@@ -26,7 +25,7 @@ class SharedPreferencesHandler {
     private val appEncryptedPreferences = EncryptedSharedPreferences.create(
         Preferences.ENCRYPTED_PREFERENCES_NAME,
         MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-        ReaderCollectionApplication.context,
+        context,
         EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
     )

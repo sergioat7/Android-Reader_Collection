@@ -12,15 +12,12 @@ import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import com.aragones.sergio.util.Constants
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-@HiltViewModel
-class AccountViewModel @Inject constructor(
+class AccountViewModel(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
 ) : ViewModel() {

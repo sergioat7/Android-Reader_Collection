@@ -6,6 +6,8 @@
 package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.BuildConfig
+import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
+import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -14,10 +16,6 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
@@ -27,40 +25,37 @@ import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
 import io.ktor.serialization.kotlinx.json.json
 import java.util.concurrent.TimeUnit
-import javax.inject.Singleton
 import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.koin.core.module.dsl.factoryOf
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object NetworkModule {
+private const val BASE_GOOGLE_ENDPOINT = "www.googleapis.com/books/v1"
+private const val API_KEY = "key"
 
-    private const val BASE_GOOGLE_ENDPOINT = "www.googleapis.com/books/v1"
-    private const val API_KEY = "key"
-
-    @Provides
-    fun providesHttpClientEngine(): HttpClientEngine = OkHttp.create {
-        val interceptor = HttpLoggingInterceptor().apply {
-            level = if (BuildConfig.DEBUG) {
-                HttpLoggingInterceptor.Level.HEADERS
-            } else {
-                HttpLoggingInterceptor.Level.NONE
+val networkModule = module {
+    single<HttpClientEngine> {
+        OkHttp.create {
+            val interceptor = HttpLoggingInterceptor().apply {
+                level = if (BuildConfig.DEBUG) {
+                    HttpLoggingInterceptor.Level.HEADERS
+                } else {
+                    HttpLoggingInterceptor.Level.NONE
+                }
             }
+            preconfigured = OkHttpClient
+                .Builder()
+                .addInterceptor(interceptor)
+                .connectTimeout(2, TimeUnit.MINUTES)
+                .readTimeout(60, TimeUnit.SECONDS)
+                .writeTimeout(30, TimeUnit.SECONDS)
+                .followRedirects(false)
+                .build()
         }
-        preconfigured = OkHttpClient
-            .Builder()
-            .addInterceptor(interceptor)
-            .connectTimeout(2, TimeUnit.MINUTES)
-            .readTimeout(60, TimeUnit.SECONDS)
-            .writeTimeout(30, TimeUnit.SECONDS)
-            .followRedirects(false)
-            .build()
     }
-
-    @Singleton
-    @Provides
-    fun providesHttpClient(httpClientEngine: HttpClientEngine): HttpClient =
+    single<HttpClient> {
+        val httpClientEngine = get<HttpClientEngine>()
         HttpClient(httpClientEngine) {
             engine {
                 httpClientEngine.config
@@ -80,24 +75,18 @@ object NetworkModule {
                 }
             }
         }
-
-    @Singleton
-    @Provides
-    fun providesFirebaseRemoteConfig(): FirebaseRemoteConfig {
+    }
+    single<FirebaseRemoteConfig> {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
             remoteConfigSettings {
                 minimumFetchIntervalInSeconds = 3600
             },
         )
-        return remoteConfig
+        remoteConfig
     }
-
-    @Singleton
-    @Provides
-    fun providesFirebaseAuth(): FirebaseAuth = Firebase.auth
-
-    @Singleton
-    @Provides
-    fun providesFirebaseFirestore(): FirebaseFirestore = Firebase.firestore
+    single<FirebaseAuth> { Firebase.auth }
+    single<FirebaseFirestore> { Firebase.firestore }
+    factoryOf(::BooksRemoteDataSource)
+    factoryOf(::UserRemoteDataSource)
 }

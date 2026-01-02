@@ -11,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
@@ -23,9 +22,10 @@ import aragones.sergio.readercollection.presentation.components.InformationAlert
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.SyncDataWorker
 import java.util.concurrent.TimeUnit
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = hiltViewModel()) {
+fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewModel()) {
     val state by viewModel.state
     val error by viewModel.error.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()

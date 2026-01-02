@@ -8,7 +8,6 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.BuildConfig
-import aragones.sergio.readercollection.data.remote.di.NetworkModule
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
@@ -27,12 +26,18 @@ import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.firestore.WriteBatch
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
 import io.ktor.client.engine.mock.respond
+import io.ktor.client.plugins.DefaultRequest
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.URLBuilder
+import io.ktor.http.URLProtocol
 import io.ktor.http.headersOf
+import io.ktor.serialization.kotlinx.json.json
 import io.mockk.EqMatcher
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -41,6 +46,7 @@ import io.mockk.mockkConstructor
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
+import kotlinx.serialization.json.Json
 import org.json.JSONObject
 import org.junit.Assert
 import org.junit.Test
@@ -89,7 +95,7 @@ class BooksRemoteDataSourceTest {
                     headers = headersOf(HttpHeaders.ContentType, "application/json"),
                 )
             }
-            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val client: HttpClient = getHttpClient(mockEngine)
             val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.searchBooks(query, page, null)
@@ -138,7 +144,7 @@ class BooksRemoteDataSourceTest {
                     headers = headersOf(HttpHeaders.ContentType, "application/json"),
                 )
             }
-            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val client: HttpClient = getHttpClient(mockEngine)
             val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.searchBooks(query, page, order)
@@ -175,7 +181,7 @@ class BooksRemoteDataSourceTest {
                 headers = headersOf(HttpHeaders.ContentType, "application/json"),
             )
         }
-        val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+        val client: HttpClient = getHttpClient(mockEngine)
         val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
         val result = dataSource.searchBooks(query, page, order)
@@ -247,7 +253,7 @@ class BooksRemoteDataSourceTest {
                     headers = headersOf(HttpHeaders.ContentType, "application/json"),
                 )
             }
-            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val client: HttpClient = getHttpClient(mockEngine)
             val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.getBook(bookId)
@@ -277,7 +283,7 @@ class BooksRemoteDataSourceTest {
                     headers = headersOf(HttpHeaders.ContentType, "application/json"),
                 )
             }
-            val client: HttpClient = NetworkModule.providesHttpClient(mockEngine)
+            val client: HttpClient = getHttpClient(mockEngine)
             val dataSource = BooksRemoteDataSource(client, remoteConfig, firestore)
 
             val result = dataSource.getBook(bookId)
@@ -511,6 +517,26 @@ class BooksRemoteDataSourceTest {
         verify(exactly = 1) { batch.delete(any()) }
         verify(exactly = 1) { batch.commit() }
         confirmVerified(batch)
+    }
+
+    private fun getHttpClient(httpClientEngine: HttpClientEngine) = HttpClient(httpClientEngine) {
+        engine {
+            httpClientEngine.config
+        }
+    }.config {
+        install(ContentNegotiation) {
+            json(
+                json = Json { ignoreUnknownKeys = true },
+                contentType = ContentType.Application.Json,
+            )
+        }
+        install(DefaultRequest) {
+            url {
+                protocol = URLProtocol.HTTPS
+                host = "www.googleapis.com/books/v1"
+                parameters.append("key", BuildConfig.API_KEY)
+            }
+        }
     }
 
     private fun getFormatsJson(language: String): String = """{"$language":${getFormatsJson()}}"""

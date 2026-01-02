@@ -6,34 +6,29 @@
 package aragones.sergio.readercollection
 
 import android.app.Application
-import android.content.Context
 import android.os.StrictMode
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import aragones.sergio.readercollection.presentation.di.activityModule
+import aragones.sergio.readercollection.presentation.di.presentationModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
-class ReaderCollectionApplication : Application(), Configuration.Provider {
-
-    //region Static properties
-    companion object {
-        val context: Context
-            get() = app.applicationContext
-        private lateinit var app: ReaderCollectionApplication
-    }
-    //endregion
-
-    //region Public properties
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
-    //endregion
+class ReaderCollectionApplication : Application() {
 
     //region Lifecycle methods
     override fun onCreate() {
         super.onCreate()
 
-        app = this
+        startKoin {
+            androidLogger()
+            androidContext(this@ReaderCollectionApplication)
+            workManagerFactory()
+            modules(
+                activityModule,
+                presentationModule,
+            )
+        }
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
@@ -53,13 +48,5 @@ class ReaderCollectionApplication : Application(), Configuration.Provider {
             )
         }
     }
-    //endregion
-
-    //region Interface methods
-    override val workManagerConfiguration: Configuration
-        get() = Configuration
-            .Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
     //endregion
 }

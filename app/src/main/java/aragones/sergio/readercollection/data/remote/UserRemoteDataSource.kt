@@ -10,11 +10,9 @@ import aragones.sergio.readercollection.data.remote.model.UserResponse
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import javax.inject.Inject
-import kotlin.NoSuchElementException
 import kotlinx.coroutines.tasks.await
 
-class UserRemoteDataSource @Inject constructor(
+class UserRemoteDataSource(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val remoteConfig: FirebaseRemoteConfig,
