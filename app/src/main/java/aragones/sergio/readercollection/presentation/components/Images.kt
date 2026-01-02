@@ -24,7 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import coil.compose.AsyncImage
+import coil3.compose.AsyncImage
 
 @Composable
 fun ImageWithLoading(

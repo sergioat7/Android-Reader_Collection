@@ -108,6 +108,7 @@ dependencies {
     implementation(libs.bundles.ktor)
     implementation(platform(libs.compose.bom))
     implementation(libs.coil)
+    implementation(libs.coil.network.ktor3)
     implementation(libs.core.ktx)
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.koin.bom))
