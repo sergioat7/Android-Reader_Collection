@@ -10,7 +10,12 @@ import android.content.Context
 import android.os.StrictMode
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
+import aragones.sergio.readercollection.presentation.di.activityModule
+import aragones.sergio.readercollection.presentation.di.presentationModule
 import dagger.hilt.android.HiltAndroidApp
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 import javax.inject.Inject
 
 @HiltAndroidApp
@@ -34,6 +39,15 @@ class ReaderCollectionApplication : Application(), Configuration.Provider {
         super.onCreate()
 
         app = this
+
+        startKoin {
+            androidLogger()
+            androidContext(this@ReaderCollectionApplication)
+            modules(
+                activityModule,
+                presentationModule,
+            )
+        }
 
         if (BuildConfig.DEBUG) {
             StrictMode.setThreadPolicy(
