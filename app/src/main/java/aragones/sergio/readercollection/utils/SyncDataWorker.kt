@@ -6,20 +6,16 @@
 package aragones.sergio.readercollection.utils
 
 import android.content.Context
-import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedInject
 
-@HiltWorker
-class SyncDataWorker @AssistedInject constructor(
+class SyncDataWorker(
+    context: Context,
+    workerParams: WorkerParameters,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
-    @Assisted private val context: Context,
-    @Assisted private val workerParams: WorkerParameters,
 ) : CoroutineWorker(context, workerParams) {
 
     companion object {

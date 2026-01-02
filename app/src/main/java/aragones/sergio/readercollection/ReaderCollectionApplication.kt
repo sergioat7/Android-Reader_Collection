@@ -8,18 +8,14 @@ package aragones.sergio.readercollection
 import android.app.Application
 import android.content.Context
 import android.os.StrictMode
-import androidx.hilt.work.HiltWorkerFactory
-import androidx.work.Configuration
 import aragones.sergio.readercollection.presentation.di.activityModule
 import aragones.sergio.readercollection.presentation.di.presentationModule
-import dagger.hilt.android.HiltAndroidApp
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
+import org.koin.androidx.workmanager.koin.workManagerFactory
 import org.koin.core.context.startKoin
-import javax.inject.Inject
 
-@HiltAndroidApp
-class ReaderCollectionApplication : Application(), Configuration.Provider {
+class ReaderCollectionApplication : Application() {
 
     //region Static properties
     companion object {
@@ -27,11 +23,6 @@ class ReaderCollectionApplication : Application(), Configuration.Provider {
             get() = app.applicationContext
         private lateinit var app: ReaderCollectionApplication
     }
-    //endregion
-
-    //region Public properties
-    @Inject
-    lateinit var workerFactory: HiltWorkerFactory
     //endregion
 
     //region Lifecycle methods
@@ -43,6 +34,7 @@ class ReaderCollectionApplication : Application(), Configuration.Provider {
         startKoin {
             androidLogger()
             androidContext(this@ReaderCollectionApplication)
+            workManagerFactory()
             modules(
                 activityModule,
                 presentationModule,
@@ -67,13 +59,5 @@ class ReaderCollectionApplication : Application(), Configuration.Provider {
             )
         }
     }
-    //endregion
-
-    //region Interface methods
-    override val workManagerConfiguration: Configuration
-        get() = Configuration
-            .Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
     //endregion
 }
