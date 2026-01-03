@@ -19,7 +19,7 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.tasks.await
 
-class FirebaseProvider(
+actual class FirebaseProvider(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val remoteConfig: FirebaseRemoteConfig,
@@ -37,18 +37,18 @@ class FirebaseProvider(
     //endregion
 
     //region Public methods
-    fun getUser(): UserResponse? = auth.currentUser?.let {
+    actual fun getUser(): UserResponse? = auth.currentUser?.let {
         UserResponse(
             id = it.uid,
             username = it.email ?: "",
         )
     }
 
-    suspend fun signIn(email: String, password: String) {
+    actual suspend fun signIn(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).await()
     }
 
-    suspend fun signUp(email: String, password: String) {
+    actual suspend fun signUp(email: String, password: String) {
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
         } catch (_: FirebaseAuthUserCollisionException) {
@@ -58,18 +58,18 @@ class FirebaseProvider(
         }
     }
 
-    suspend fun updatePassword(password: String) {
+    actual suspend fun updatePassword(password: String) {
         val user = auth.currentUser ?: throw RuntimeException("User is null")
         user.updatePassword(password).await()
     }
 
-    fun signOut() = auth.signOut()
+    actual fun signOut() = auth.signOut()
 
-    suspend fun deleteUser() {
+    actual suspend fun deleteUser() {
         auth.currentUser?.delete()?.await()
     }
 
-    suspend fun registerPublicProfile(username: String, userId: String) {
+    actual suspend fun registerPublicProfile(username: String, userId: String) {
         firestore
             .collection(PUBLIC_PROFILES_PATH)
             .document(userId)
@@ -77,7 +77,7 @@ class FirebaseProvider(
             .await()
     }
 
-    suspend fun isPublicProfileActive(username: String): Boolean = firestore
+    actual suspend fun isPublicProfileActive(username: String): Boolean = firestore
         .collection(PUBLIC_PROFILES_PATH)
         .whereEqualTo(EMAIL_KEY, username)
         .get()
@@ -86,7 +86,7 @@ class FirebaseProvider(
         .firstOrNull()
         ?.getString(EMAIL_KEY) != null
 
-    suspend fun deletePublicProfile(userId: String) {
+    actual suspend fun deletePublicProfile(userId: String) {
         firestore
             .collection(PUBLIC_PROFILES_PATH)
             .document(userId)
@@ -94,7 +94,7 @@ class FirebaseProvider(
             .await()
     }
 
-    suspend fun getUserFromDatabase(username: String, userId: String): UserResponse? {
+    actual suspend fun getUserFromDatabase(username: String, userId: String): UserResponse? {
         val result = firestore
             .collection(PUBLIC_PROFILES_PATH)
             .whereEqualTo(EMAIL_KEY, username)
@@ -118,7 +118,7 @@ class FirebaseProvider(
         }
     }
 
-    suspend fun getFriends(userId: String): List<UserResponse> = firestore
+    actual suspend fun getFriends(userId: String): List<UserResponse> = firestore
         .collection(USERS_PATH)
         .document(userId)
         .collection(FRIENDS_PATH)
@@ -126,7 +126,7 @@ class FirebaseProvider(
         .await()
         .toObjects(UserResponse::class.java)
 
-    suspend fun getFriend(userId: String, friendId: String): UserResponse? = firestore
+    actual suspend fun getFriend(userId: String, friendId: String): UserResponse? = firestore
         .collection(USERS_PATH)
         .document(userId)
         .collection(FRIENDS_PATH)
@@ -135,7 +135,7 @@ class FirebaseProvider(
         .await()
         .toObject(UserResponse::class.java)
 
-    suspend fun requestFriendship(user: UserResponse, friend: UserResponse) {
+    actual suspend fun requestFriendship(user: UserResponse, friend: UserResponse) {
         val batch = firestore.batch()
 
         val userRef = firestore
@@ -165,7 +165,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    suspend fun acceptFriendRequest(userId: String, friendId: String) {
+    actual suspend fun acceptFriendRequest(userId: String, friendId: String) {
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -186,7 +186,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    suspend fun rejectFriendRequest(userId: String, friendId: String) {
+    actual suspend fun rejectFriendRequest(userId: String, friendId: String) {
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -207,7 +207,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    suspend fun deleteFriendship(userId: String, friendId: String) {
+    actual suspend fun deleteFriendship(userId: String, friendId: String) {
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -228,7 +228,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    suspend fun deleteFriends(userId: String) {
+    actual suspend fun deleteFriends(userId: String) {
         val batch = firestore.batch()
         val friends = firestore
             .collection(USERS_PATH)
@@ -242,7 +242,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    suspend fun deleteUserFromDatabase(userId: String) {
+    actual suspend fun deleteUserFromDatabase(userId: String) {
         firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -250,7 +250,7 @@ class FirebaseProvider(
             .await()
     }
 
-    suspend fun getBooks(userId: String): List<BookResponse> = firestore
+    actual suspend fun getBooks(userId: String): List<BookResponse> = firestore
         .collection(USERS_PATH)
         .document(userId)
         .collection(BOOKS_PATH)
@@ -258,7 +258,7 @@ class FirebaseProvider(
         .await()
         .mapNotNull { it.toMap().toBook(it.id) }
 
-    suspend fun getBook(userId: String, bookId: String): BookResponse? {
+    actual suspend fun getBook(userId: String, bookId: String): BookResponse? {
         val document = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -270,7 +270,7 @@ class FirebaseProvider(
     }
 
     @OptIn(ExperimentalTime::class)
-    suspend fun syncBooks(
+    actual suspend fun syncBooks(
         uuid: String,
         booksToSave: List<BookResponse>,
         booksToRemove: List<BookResponse>,
@@ -297,7 +297,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    suspend fun deleteBooks(userId: String) {
+    actual suspend fun deleteBooks(userId: String) {
         val batch = firestore.batch()
         val books = firestore
             .collection(USERS_PATH)
@@ -311,7 +311,7 @@ class FirebaseProvider(
         batch.commit().await()
     }
 
-    fun fetchRemoteConfigString(key: String, onCompletion: (String) -> Unit) {
+    actual fun fetchRemoteConfigString(key: String, onCompletion: (String) -> Unit) {
         onCompletion(remoteConfig.getString(key))
 
         remoteConfig.fetchAndActivate().addOnCompleteListener {
@@ -319,7 +319,7 @@ class FirebaseProvider(
         }
     }
 
-    suspend fun getRemoteConfigString(key: String): String {
+    actual suspend fun getRemoteConfigString(key: String): String {
         try {
             remoteConfig.fetch(0)
             remoteConfig.activate().await()

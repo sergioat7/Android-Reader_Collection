@@ -7,7 +7,6 @@
 
 package aragones.sergio.readercollection.data.remote
 
-import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
@@ -57,7 +56,7 @@ class BooksRemoteDataSourceTest {
                 "q" to query,
                 "startIndex" to "0",
                 "maxResults" to "20",
-                "key" to BuildConfig.API_KEY,
+                "key" to "apiKey",
             )
             val url = URLBuilder("/books/v1/volumes")
                 .apply {
@@ -106,7 +105,7 @@ class BooksRemoteDataSourceTest {
                 "startIndex" to "0",
                 "maxResults" to "20",
                 "orderBy" to order,
-                "key" to BuildConfig.API_KEY,
+                "key" to "apiKey",
             )
             val url = URLBuilder("/books/v1/volumes")
                 .apply {
@@ -154,7 +153,7 @@ class BooksRemoteDataSourceTest {
             "startIndex" to "0",
             "maxResults" to "20",
             "orderBy" to order,
-            "key" to BuildConfig.API_KEY,
+            "key" to "apiKey",
         )
         val url = URLBuilder("/books/v1/volumes")
             .apply {
@@ -189,7 +188,7 @@ class BooksRemoteDataSourceTest {
     fun `GIVEN book id and api success response WHEN get book is called THEN return response`() =
         runTest {
             val bookId = "bookId"
-            val params = mapOf("key" to BuildConfig.API_KEY)
+            val params = mapOf("key" to "apiKey")
             val url = URLBuilder("/books/v1/volumes/$bookId")
                 .apply {
                     for (param in params) {
@@ -257,7 +256,7 @@ class BooksRemoteDataSourceTest {
     fun `GIVEN book id and api failure response WHEN get book is called THEN return failure`() =
         runTest {
             val bookId = "bookId"
-            val params = mapOf("key" to BuildConfig.API_KEY)
+            val params = mapOf("key" to "apiKey")
             val url = URLBuilder("/books/v1/volumes/$bookId")
                 .apply {
                     for (param in params) {
@@ -466,7 +465,7 @@ class BooksRemoteDataSourceTest {
             url {
                 protocol = URLProtocol.HTTPS
                 host = "www.googleapis.com/books/v1"
-                parameters.append("key", BuildConfig.API_KEY)
+                parameters.append("key", "apiKey")
             }
         }
     }

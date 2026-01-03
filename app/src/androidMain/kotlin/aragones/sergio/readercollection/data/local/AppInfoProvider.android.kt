@@ -12,23 +12,23 @@ import android.os.LocaleList
 import androidx.appcompat.app.AppCompatDelegate
 import java.util.Locale
 
-class AppInfoProvider(private val context: Context) {
+actual class AppInfoProvider(private val context: Context) {
 
-    fun getVersion(): String? = context
+    actual fun getVersion(): String? = context
         .packageManager
         .getPackageInfo(context.packageName, 0)
         .versionName
 
-    fun getCurrentLanguage(): String = Locale.getDefault().language
+    actual fun getCurrentLanguage(): String = Locale.getDefault().language
 
-    fun changeLocale(language: String) {
+    actual fun changeLocale(language: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val locale = context.getSystemService(LocaleManager::class.java)
             locale?.applicationLocales = LocaleList(Locale.forLanguageTag(language))
         }
     }
 
-    fun applyTheme(themeMode: Int) {
+    actual fun applyTheme(themeMode: Int) {
         when (themeMode) {
             1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
             2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)

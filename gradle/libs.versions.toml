@@ -172,16 +172,12 @@ firebase = [
 ]
 koin = [
     "koin-core",
-    "koin-android",
     "koin-compose",
     "koin-compose-viewmodel",
-    "koin-compose-viewmodel-navigation",
-    "koin-work-manager",
 ]
 ktor = [
     "okhttp3-logging-interceptor",
     "ktor-client-contentNegotiation",
     "ktor-client-core",
-    "ktor-client-okhttp",
     "ktor-client-serialization-kolinxJson",
 ]

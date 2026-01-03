@@ -10,16 +10,6 @@ import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKeys
 import com.aragones.sergio.util.Preferences
 
-interface SharedPreferencesProvider {
-    fun writeBoolean(key: String, value: Boolean, isEncrypted: Boolean = false)
-    fun writeInt(key: String, value: Int, isEncrypted: Boolean = false)
-    fun writeString(key: String, value: String?, isEncrypted: Boolean = false)
-    fun readBoolean(key: String, defaultValue: Boolean, isEncrypted: Boolean = false): Boolean
-    fun readInt(key: String, defaultValue: Int, isEncrypted: Boolean = false): Int
-    fun readString(key: String, isEncrypted: Boolean = false): String?
-    fun removeValues(keys: List<String>, isEncrypted: Boolean = false)
-}
-
 class SharedPreferencesProviderImpl(context: Context) : SharedPreferencesProvider {
 
     private val appPreferences = context.getSharedPreferences(

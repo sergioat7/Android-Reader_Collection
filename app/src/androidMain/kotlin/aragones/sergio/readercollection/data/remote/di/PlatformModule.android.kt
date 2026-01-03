@@ -1,14 +1,12 @@
 /*
- * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
- * Created by Sergio Aragonés on 21/8/2023
+ * Copyright (c) 2026 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 8/1/2026
  */
 
 package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.BuildConfig
-import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.FirebaseProvider
-import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -17,26 +15,17 @@ import com.google.firebase.firestore.firestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
-import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.okhttp.OkHttp
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.http.ContentType
-import io.ktor.http.URLProtocol
-import io.ktor.serialization.kotlinx.json.json
 import java.util.concurrent.TimeUnit
-import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.singleOf
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-private const val BASE_GOOGLE_ENDPOINT = "www.googleapis.com/books/v1"
-private const val API_KEY = "key"
-
-val networkModule = module {
+actual val platformModule = module {
+    single<String>(named("api_key")) { BuildConfig.API_KEY }
     single<HttpClientEngine> {
         OkHttp.create {
             val interceptor = HttpLoggingInterceptor().apply {
@@ -56,28 +45,6 @@ val networkModule = module {
                 .build()
         }
     }
-    single<HttpClient> {
-        val httpClientEngine = get<HttpClientEngine>()
-        HttpClient(httpClientEngine) {
-            engine {
-                httpClientEngine.config
-            }
-        }.config {
-            install(ContentNegotiation) {
-                json(
-                    json = Json { ignoreUnknownKeys = true },
-                    contentType = ContentType.Application.Json,
-                )
-            }
-            install(DefaultRequest) {
-                url {
-                    protocol = URLProtocol.HTTPS
-                    host = BASE_GOOGLE_ENDPOINT
-                    parameters.append(API_KEY, BuildConfig.API_KEY)
-                }
-            }
-        }
-    }
     single<FirebaseRemoteConfig> {
         val remoteConfig = Firebase.remoteConfig
         remoteConfig.setConfigSettingsAsync(
@@ -90,6 +57,4 @@ val networkModule = module {
     single<FirebaseAuth> { Firebase.auth }
     single<FirebaseFirestore> { Firebase.firestore }
     singleOf(::FirebaseProvider)
-    factoryOf(::BooksRemoteDataSource)
-    factoryOf(::UserRemoteDataSource)
 }
