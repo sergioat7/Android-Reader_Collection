@@ -5,8 +5,10 @@
 
 package com.aragones.sergio
 
+import androidx.room.ConstructedBy
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.RoomDatabaseConstructor
 import androidx.room.TypeConverters
 import com.aragones.sergio.converters.ListConverter
 import com.aragones.sergio.model.Book
@@ -18,9 +20,15 @@ import com.aragones.sergio.model.Book
 @TypeConverters(
     ListConverter::class,
 )
+@ConstructedBy(AppDatabaseConstructor::class)
 abstract class ReaderCollectionDatabase : RoomDatabase() {
 
     //region Public properties
     abstract fun bookDao(): BookDao
     //endregion
+}
+
+@Suppress("KotlinNoActualForExpect")
+expect object AppDatabaseConstructor : RoomDatabaseConstructor<ReaderCollectionDatabase> {
+    override fun initialize(): ReaderCollectionDatabase
 }

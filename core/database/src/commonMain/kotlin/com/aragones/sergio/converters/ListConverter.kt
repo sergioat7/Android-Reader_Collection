@@ -6,14 +6,13 @@
 package com.aragones.sergio.converters
 
 import androidx.room.TypeConverter
-import java.util.Collections
 import kotlinx.serialization.json.Json
 
 class ListConverter {
 
     @TypeConverter
     fun stringToStringList(data: String?): List<String>? =
-        data?.let { Json.decodeFromString<List<String>>(it) } ?: Collections.emptyList()
+        data?.let { Json.decodeFromString<List<String>>(it) } ?: emptyList()
 
     @TypeConverter
     fun stringListToString(elements: List<String>?): String? =
