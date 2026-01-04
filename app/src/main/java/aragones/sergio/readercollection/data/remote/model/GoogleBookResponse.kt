@@ -6,7 +6,7 @@
 package aragones.sergio.readercollection.data.remote.model
 
 import aragones.sergio.readercollection.data.remote.DateSerializer
-import java.util.Date
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -59,7 +59,7 @@ data class GoogleVolumeResponse(
     val publisher: String? = null,
     @SerialName("publishedDate")
     @Serializable(with = DateSerializer::class)
-    val publishedDate: Date? = null,
+    val publishedDate: LocalDate? = null,
     @SerialName("description")
     val description: String? = null,
     @SerialName("industryIdentifiers")

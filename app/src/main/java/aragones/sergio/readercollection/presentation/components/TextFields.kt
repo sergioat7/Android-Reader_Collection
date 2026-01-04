@@ -45,16 +45,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import com.aragones.sergio.util.Constants
+import aragones.sergio.readercollection.utils.UiDateMapper.toLong
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
-import com.aragones.sergio.util.extensions.toDate
-import java.util.TimeZone
 
 @Composable
 fun CustomOutlinedTextField(
@@ -336,14 +333,8 @@ fun DateCustomOutlinedTextField(
         onEndIconClicked = onEndIconClicked,
     )
     if (showDatePicker) {
-        val currentDateInMillis = text
-            .toDate(
-                format = language?.let { Constants.getDateFormatToShow(it) },
-                language = language,
-                timeZone = TimeZone.getTimeZone("UTC"),
-            )?.time
         CustomDatePickerDialog(
-            currentValue = currentDateInMillis,
+            currentValue = text.toLong(language),
             onDateSelected = onTextChanged,
             onDismiss = { showDatePicker = false },
         )

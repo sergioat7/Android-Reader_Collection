@@ -16,9 +16,7 @@ import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
-import com.aragones.sergio.util.extensions.toDate
-import com.aragones.sergio.util.extensions.toString
-import java.util.Date
+import com.aragones.sergio.util.extensions.currentLocalDate
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -119,7 +117,9 @@ class BooksViewModel(
         }
         var selectedBook = book
         if (book.readingDate == null && book.state == BookState.READ) {
-            selectedBook = selectedBook.copy(readingDate = Date().toString(format = null).toDate())
+            selectedBook = selectedBook.copy(
+                readingDate = currentLocalDate(),
+            )
         }
         if (book.priority == -1 && book.state == BookState.PENDING) {
             val maxPriority = when (val currentState = _state.value) {

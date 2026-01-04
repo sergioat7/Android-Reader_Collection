@@ -9,7 +9,7 @@ import androidx.compose.runtime.Immutable
 import androidx.room.Ignore
 import aragones.sergio.readercollection.data.remote.DateSerializer
 import com.aragones.sergio.util.BookState
-import java.util.Date
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -28,10 +28,10 @@ data class Book(
     val publisher: String? = null,
     @SerialName("publishedDate")
     @Serializable(with = DateSerializer::class)
-    val publishedDate: Date? = null,
+    val publishedDate: LocalDate? = null,
     @SerialName("readingDate")
     @Serializable(with = DateSerializer::class)
-    val readingDate: Date? = null,
+    val readingDate: LocalDate? = null,
     @SerialName("description")
     val description: String? = null,
     @SerialName("summary")

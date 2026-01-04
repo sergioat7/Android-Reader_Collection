@@ -35,6 +35,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
+import aragones.sergio.readercollection.presentation.LocalLanguage
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
@@ -45,8 +46,9 @@ import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.BookState
+import com.aragones.sergio.util.Constants as UtilConstants
 import com.aragones.sergio.util.extensions.getMonthNumber
-import com.aragones.sergio.util.extensions.toDate
+import com.aragones.sergio.util.extensions.toLocalDate
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -63,6 +65,10 @@ import com.github.mikephil.charting.formatter.PercentFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
+import kotlinx.datetime.LocalDate
 
 @Composable
 fun StatisticsScreen(
@@ -255,6 +261,7 @@ private fun BooksByYear(entries: BarEntries, onYearSelected: (Int?) -> Unit) {
 
 @Composable
 private fun BooksByMonth(entries: PieEntries, onMonthSelected: (Int?) -> Unit) {
+    val language = LocalLanguage.current
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
@@ -291,7 +298,10 @@ private fun BooksByMonth(entries: PieEntries, onMonthSelected: (Int?) -> Unit) {
                 setHoleColor(Color.TRANSPARENT)
                 setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onValueSelected(e: Entry?, h: Highlight?) {
-                        val month = (e as PieEntry).label.toDate("MMM").getMonthNumber()
+                        val month = (e as PieEntry)
+                            .label
+                            .toLocalFormattedDate(language)
+                            .getMonthNumber()
                         onMonthSelected(month)
                     }
 
@@ -586,3 +596,18 @@ private fun Context.getCustomColor(colorId: Int): Int =
     ResourcesCompat.getColor(resources, colorId, null)
 
 private fun Context.getCustomFont(fontId: Int): Typeface? = ResourcesCompat.getFont(this, fontId)
+
+private fun String.toLocalFormattedDate(language: String): LocalDate? {
+    val locale = Locale.forLanguageTag(language)
+    return try {
+        val date = SimpleDateFormat("MMM", locale)
+            .apply {
+                timeZone = TimeZone.getDefault()
+            }.parse(this)
+        date?.let {
+            SimpleDateFormat(UtilConstants.DATE_FORMAT, locale).format(date).toLocalDate()
+        }
+    } catch (_: Exception) {
+        null
+    }
+}

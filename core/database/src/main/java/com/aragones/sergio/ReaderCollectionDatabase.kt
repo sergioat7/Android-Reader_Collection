@@ -8,7 +8,6 @@ package com.aragones.sergio
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
-import com.aragones.sergio.converters.DateConverter
 import com.aragones.sergio.converters.ListConverter
 import com.aragones.sergio.model.Book
 
@@ -18,7 +17,6 @@ import com.aragones.sergio.model.Book
 )
 @TypeConverters(
     ListConverter::class,
-    DateConverter::class,
 )
 abstract class ReaderCollectionDatabase : RoomDatabase() {
 

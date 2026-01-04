@@ -5,9 +5,9 @@
 
 package aragones.sergio.readercollection.data.remote
 
-import com.aragones.sergio.util.extensions.toDate
+import com.aragones.sergio.util.extensions.toLocalDate
 import com.aragones.sergio.util.extensions.toString
-import java.util.Date
+import kotlinx.datetime.LocalDate
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.descriptors.PrimitiveKind
@@ -16,18 +16,18 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-object DateSerializer : KSerializer<Date?> {
+object DateSerializer : KSerializer<LocalDate?> {
     override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("Date", PrimitiveKind.STRING)
+        PrimitiveSerialDescriptor("LocalDate", PrimitiveKind.STRING)
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun serialize(encoder: Encoder, value: Date?) {
+    override fun serialize(encoder: Encoder, value: LocalDate?) {
         val dateString = value.toString("dd/MM/yyyy") ?: value.toString()
         dateString?.let { encoder.encodeString(it) } ?: encoder.encodeNull()
     }
 
-    override fun deserialize(decoder: Decoder): Date? {
+    override fun deserialize(decoder: Decoder): LocalDate? {
         val dateString = decoder.decodeString()
-        return dateString.toDate("dd/MM/yyyy") ?: dateString.toDate()
+        return dateString.toLocalDate("dd/MM/yyyy") ?: dateString.toLocalDate()
     }
 }

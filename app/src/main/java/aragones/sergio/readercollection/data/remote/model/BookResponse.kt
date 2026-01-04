@@ -5,7 +5,7 @@
 
 package aragones.sergio.readercollection.data.remote.model
 
-import java.util.Date
+import kotlinx.datetime.LocalDate
 
 data class BookResponse(
     override val id: String = "",
@@ -13,8 +13,8 @@ data class BookResponse(
     val subtitle: String? = null,
     val authors: List<String>? = null,
     val publisher: String? = null,
-    val publishedDate: Date? = null,
-    val readingDate: Date? = null,
+    val publishedDate: LocalDate? = null,
+    val readingDate: LocalDate? = null,
     val description: String? = null,
     val summary: String? = null,
     val isbn: String? = null,

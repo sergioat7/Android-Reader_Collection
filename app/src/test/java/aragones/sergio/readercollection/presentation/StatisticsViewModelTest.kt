@@ -24,7 +24,6 @@ import aragones.sergio.readercollection.presentation.statistics.PieEntries
 import aragones.sergio.readercollection.presentation.statistics.StatisticsUiState
 import aragones.sergio.readercollection.presentation.statistics.StatisticsViewModel
 import com.aragones.sergio.BooksLocalDataSource
-import com.aragones.sergio.util.extensions.toDate
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import io.mockk.Called
@@ -42,6 +41,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.Assert
 
 class StatisticsViewModelTest {
@@ -73,13 +73,13 @@ class StatisticsViewModelTest {
         runTest {
             val book1 = Book(id = "bookId1").copy(
                 authors = listOf("Author 1"),
-                readingDate = "2025-10-05".toDate(),
+                readingDate = LocalDate(2025, 10, 5),
                 pageCount = 100,
                 format = "PHYSICAL",
             )
             val book2 = Book(id = "bookId2").copy(
                 authors = listOf("Author 2"),
-                readingDate = "2025-09-05".toDate(),
+                readingDate = LocalDate(2025, 9, 5),
                 pageCount = 10,
             )
             val books = listOf(book1, book2)

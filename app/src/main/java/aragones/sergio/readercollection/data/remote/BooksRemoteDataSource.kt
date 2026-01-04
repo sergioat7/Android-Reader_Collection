@@ -11,12 +11,16 @@ import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.utils.Constants
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 import kotlinx.coroutines.tasks.await
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.jsonObject
@@ -107,22 +111,22 @@ class BooksRemoteDataSource(
             .collection(BOOKS_PATH)
             .get()
             .await()
-            .toObjects(BookResponse::class.java)
+            .mapNotNull { it.toMap().toBook(it.id) }
     }
 
     suspend fun getFriendBook(friendId: String, bookId: String): Result<BookResponse> =
         runCatching {
-            val book = firestore
+            val document = firestore
                 .collection(USERS_PATH)
                 .document(friendId)
                 .collection(BOOKS_PATH)
                 .document(bookId)
                 .get()
                 .await()
-                .toObject(BookResponse::class.java)
-            book ?: throw NoSuchElementException("Book not found")
+            document.toMap().toBook(document.id) ?: throw NoSuchElementException("Book not found")
         }
 
+    @OptIn(ExperimentalTime::class)
     suspend fun syncBooks(
         uuid: String,
         booksToSave: List<BookResponse>,
@@ -136,7 +140,10 @@ class BooksRemoteDataSource(
 
         booksToSave.forEach { book ->
             val docRef = booksRef.document(book.id)
-            batch.set(docRef, book)
+            val values = book.toMap().toMutableMap()
+            values["publishedDate"] = (values["publishedDate"] as? Instant)?.toTimestamp()
+            values["readingDate"] = (values["readingDate"] as? Instant)?.toTimestamp()
+            batch.set(docRef, values)
         }
 
         booksToRemove.forEach { book ->
@@ -183,6 +190,41 @@ class BooksRemoteDataSource(
             }
             Constants.STATES = states
         }
+    }
+    //endregion
+
+    //region Public methods
+    @OptIn(ExperimentalTime::class)
+    private fun DocumentSnapshot.toMap(): Map<String, Any?> = mapOf(
+        "title" to getString("title"),
+        "subtitle" to getString("subtitle"),
+        "authors" to get("authors"),
+        "publisher" to getString("publisher"),
+        "publishedDate" to (get("publishedDate") as? Timestamp).toInstant(),
+        "readingDate" to (get("readingDate") as? Timestamp).toInstant(),
+        "description" to getString("description"),
+        "summary" to getString("summary"),
+        "isbn" to getString("isbn"),
+        "pageCount" to get("pageCount"),
+        "categories" to get("categories"),
+        "averageRating" to getDouble("averageRating"),
+        "ratingsCount" to get("ratingsCount"),
+        "rating" to getDouble("rating"),
+        "thumbnail" to getString("thumbnail"),
+        "image" to getString("image"),
+        "format" to getString("format"),
+        "state" to getString("state"),
+        "priority" to get("priority"),
+    )
+
+    @OptIn(ExperimentalTime::class)
+    private fun Timestamp?.toInstant(): Instant? = this?.let {
+        Instant.fromEpochSeconds(it.seconds, it.nanoseconds)
+    }
+
+    @OptIn(ExperimentalTime::class)
+    private fun Instant?.toTimestamp(): Timestamp? = this?.let {
+        Timestamp(it.epochSeconds, it.nanosecondsOfSecond)
     }
     //endregion
 }

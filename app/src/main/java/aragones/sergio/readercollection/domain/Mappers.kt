@@ -13,6 +13,8 @@ import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.model.Book as BookLocal
+import com.aragones.sergio.util.extensions.toLocalDate
+import com.aragones.sergio.util.extensions.toLong
 
 fun Book.toLocalData(): BookLocal = BookLocal(
     id = id,
@@ -20,8 +22,8 @@ fun Book.toLocalData(): BookLocal = BookLocal(
     subtitle = subtitle,
     authors = authors,
     publisher = publisher,
-    publishedDate = publishedDate,
-    readingDate = readingDate,
+    publishedDate = publishedDate?.toLong(),
+    readingDate = readingDate?.toLong(),
     description = description,
     summary = summary,
     isbn = isbn,
@@ -74,8 +76,8 @@ fun BookLocal.toDomain(): Book = Book(
     subtitle = subtitle,
     authors = authors,
     publisher = publisher,
-    publishedDate = publishedDate,
-    readingDate = readingDate,
+    publishedDate = publishedDate?.toLocalDate(),
+    readingDate = readingDate?.toLocalDate(),
     description = description,
     summary = summary,
     isbn = isbn,

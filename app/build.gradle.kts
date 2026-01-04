@@ -111,6 +111,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(platform(libs.firebase.bom))
     implementation(platform(libs.koin.bom))
+    implementation(libs.kotlinx.datetime)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.lottie)

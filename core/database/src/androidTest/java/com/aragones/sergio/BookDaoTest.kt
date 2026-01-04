@@ -13,7 +13,6 @@ import androidx.sqlite.db.SupportSQLiteOpenHelper
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
-import com.aragones.sergio.converters.DateConverter
 import com.aragones.sergio.converters.ListConverter
 import com.aragones.sergio.model.Book
 import javax.inject.Named
@@ -32,7 +31,6 @@ class BookDaoTest {
     private lateinit var database: ReaderCollectionDatabase
     private lateinit var databaseHelper: SupportSQLiteOpenHelper
     private lateinit var bookDao: BookDao
-    private val dateConverter = DateConverter()
     private val listConverter = ListConverter()
 
     private val book = Book(
@@ -310,8 +308,8 @@ class BookDaoTest {
         subtitle = cursor.getString(2),
         authors = listConverter.stringToStringList(cursor.getStringOrNull(3)),
         publisher = cursor.getString(4),
-        publishedDate = dateConverter.toDate(cursor.getLongOrNull(5)),
-        readingDate = dateConverter.toDate(cursor.getLongOrNull(6)),
+        publishedDate = cursor.getLongOrNull(5),
+        readingDate = cursor.getLongOrNull(6),
         description = cursor.getString(7),
         summary = cursor.getString(8),
         isbn = cursor.getString(9),
@@ -333,8 +331,8 @@ class BookDaoTest {
         subtitle,
         listConverter.stringListToString(authors),
         publisher,
-        dateConverter.fromDate(publishedDate),
-        dateConverter.fromDate(readingDate),
+        publishedDate,
+        readingDate,
         description,
         summary,
         isbn,

@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.booklist
 
-import android.os.Build
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,13 +18,11 @@ import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.utils.Constants.FORMATS
+import aragones.sergio.readercollection.utils.UiDateMapper.toMonthName
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.getYear
-import java.time.Month
-import java.time.format.TextStyle
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -50,16 +47,7 @@ class BookListViewModel(
                 subtitle += "${params.year},"
             }
             params.month.takeIf { it >= 0 }?.let { month ->
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    subtitle += Month
-                        .of(
-                            month + 1,
-                        ).getDisplayName(
-                            TextStyle.FULL,
-                            Locale.forLanguageTag(userRepository.language),
-                        ).lowercase()
-                        .replaceFirstChar { it.uppercase() } + ","
-                }
+                subtitle += month.toMonthName(userRepository.language)
             }
             if (params.author != null) {
                 subtitle += "${params.author},"
@@ -173,7 +161,7 @@ class BookListViewModel(
                 book.readingDate.getYear() == params.year
             }
         }
-        if (params.month in 0..11) {
+        if (params.month in 1..12) {
             filteredBooks = filteredBooks.filter { book ->
                 book.readingDate.getMonthNumber() == params.month
             }

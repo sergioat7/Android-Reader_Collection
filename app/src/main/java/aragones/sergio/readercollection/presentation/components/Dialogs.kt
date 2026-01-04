@@ -49,7 +49,7 @@ import androidx.compose.ui.window.DialogProperties
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
-import java.util.Date
+import com.aragones.sergio.util.extensions.currentTime
 
 @Composable
 fun ConfirmationAlertDialog(
@@ -303,7 +303,7 @@ fun CustomDatePickerDialog(
             TextButtonAlertDialog(
                 text = stringResource(R.string.accept),
                 onClick = {
-                    onDateSelected(datePickerState.selectedDateMillis ?: Date().time)
+                    onDateSelected(datePickerState.selectedDateMillis ?: currentTime())
                     onDismiss()
                 },
             )
@@ -492,7 +492,7 @@ private fun SortingPickerAlertDialogPreview() {
 private fun CustomDatePickerDialogPreview() {
     ReaderCollectionTheme {
         CustomDatePickerDialog(
-            currentValue = Date().time,
+            currentValue = currentTime(),
             onDateSelected = {},
             onDismiss = {},
         )

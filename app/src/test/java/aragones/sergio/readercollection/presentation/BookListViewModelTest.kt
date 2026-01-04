@@ -28,7 +28,6 @@ import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
-import com.aragones.sergio.util.extensions.toDate
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -42,6 +41,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.LocalDate
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -290,7 +290,7 @@ class BookListViewModelTest {
             val book1 = Book("1").copy(
                 title = testQuery,
                 authors = listOf(testAuthor, "another author"),
-                readingDate = "2025-11-22".toDate(),
+                readingDate = LocalDate(2025, 11, 22),
                 rating = 0.0,
                 format = testFormat,
                 state = testState,
@@ -302,11 +302,11 @@ class BookListViewModelTest {
                     book1,
                     book2,
                     book3,
-                    book1.copy("4", title = "title"),
-                    book1.copy("5", authors = listOf("another author")),
-                    book1.copy("6", readingDate = "2024-11-22".toDate()),
-                    book1.copy("7", format = "DIGITAL"),
-                    book1.copy("8", state = BookState.PENDING),
+                    book1.copy(id = "4", title = "title"),
+                    book1.copy(id = "5", authors = listOf("another author")),
+                    book1.copy(id = "6", readingDate = LocalDate(2024, 11, 22)),
+                    book1.copy(id = "7", format = "DIGITAL"),
+                    book1.copy(id = "8", state = BookState.PENDING),
                 ),
             )
 

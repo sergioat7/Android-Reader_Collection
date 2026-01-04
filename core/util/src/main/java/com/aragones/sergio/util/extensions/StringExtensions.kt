@@ -6,33 +6,20 @@
 package com.aragones.sergio.util.extensions
 
 import com.aragones.sergio.util.Constants
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import java.util.TimeZone
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format.FormatStringsInDatetimeFormats
+import kotlinx.datetime.format.byUnicodePattern
 
-fun String?.toDate(
-    format: String? = null,
-    language: String? = null,
-    timeZone: TimeZone? = null,
-): Date? {
+@OptIn(FormatStringsInDatetimeFormats::class)
+fun String?.toLocalDate(format: String? = null): LocalDate? {
     val dateFormat = format ?: Constants.DATE_FORMAT
-    val locale = language?.let {
-        Locale.forLanguageTag(it)
-    } ?: run {
-        Locale.getDefault()
-    }
-    val simpleDateFormat = SimpleDateFormat(dateFormat, locale)
-    simpleDateFormat.timeZone = timeZone ?: TimeZone.getDefault()
-
-    this?.let {
-        return try {
-            simpleDateFormat.parse(it)
-        } catch (e: Exception) {
+    val customFormat = LocalDate.Format { byUnicodePattern(dateFormat) }
+    return this?.let {
+        try {
+            LocalDate.parse(it, customFormat)
+        } catch (_: Exception) {
             null
         }
-    } ?: run {
-        return null
     }
 }
 

@@ -13,15 +13,15 @@ import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.utils.Constants
-import com.aragones.sergio.util.extensions.getGroupedBy
-import com.aragones.sergio.util.extensions.getOrderedBy
+import aragones.sergio.readercollection.utils.UiDateMapper.getGroupedBy
+import com.aragones.sergio.util.extensions.toString
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
-import java.util.Calendar
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.datetime.number
 
 class StatisticsViewModel(
     private val booksRepository: BooksRepository,
@@ -114,8 +114,9 @@ class StatisticsViewModel(
     private fun createBooksByYearStats(books: List<Book>): BarEntries {
         val booksByYear = books
             .mapNotNull { it.readingDate }
-            .getOrderedBy(Calendar.YEAR)
-            .getGroupedBy("yyyy", userRepository.language)
+            .sortedBy { it.year }
+            .mapNotNull { it.toString("yyyy") }
+            .groupBy { it }
 
         val entries = mutableListOf<BarEntry>()
         for (entry in booksByYear.entries) {
@@ -132,7 +133,7 @@ class StatisticsViewModel(
     private fun createBooksByMonthStats(books: List<Book>): PieEntries {
         val booksByMonth = books
             .mapNotNull { it.readingDate }
-            .getOrderedBy(Calendar.MONTH)
+            .sortedBy { it.month.number }
             .getGroupedBy("MMM", userRepository.language)
 
         val entries = mutableListOf<PieEntry>()

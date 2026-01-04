@@ -7,7 +7,6 @@ package com.aragones.sergio.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.util.Date
 
 @Entity(tableName = "book")
 data class Book(
@@ -17,8 +16,8 @@ data class Book(
     val subtitle: String?,
     val authors: List<String>?,
     val publisher: String?,
-    val publishedDate: Date?,
-    val readingDate: Date?,
+    val publishedDate: Long?,
+    val readingDate: Long?,
     val description: String?,
     val summary: String?,
     val isbn: String?,

@@ -26,8 +26,7 @@ import aragones.sergio.readercollection.presentation.components.UiSortingPickerS
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
-import com.aragones.sergio.util.extensions.toDate
-import com.aragones.sergio.util.extensions.toString
+import com.aragones.sergio.util.extensions.currentLocalDate
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -35,7 +34,6 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import java.util.Date
 import kotlin.collections.map
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -764,7 +762,7 @@ class BooksViewModelTest {
             val book3 = Book("3").copy(state = BookState.READING)
             val modifiedBook = book3.copy(state = BookState.READ)
             val modifiedReadBook = modifiedBook.copy(
-                readingDate = Date().toString(format = null).toDate(),
+                readingDate = currentLocalDate(),
             )
             booksFlow.emit(listOf(book2, book3, book1))
             coEvery { booksLocalDataSource.updateBooks(any()) } just Runs

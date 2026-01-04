@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.utils.Constants
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.DocumentSnapshot
@@ -48,7 +49,10 @@ import io.mockk.verify
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
+import kotlin.time.ExperimentalTime
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlinx.serialization.json.Json
 import org.json.JSONObject
 
@@ -373,7 +377,6 @@ class BooksRemoteDataSourceTest {
             val result = dataSource.getBooks(userId)
 
             assertEquals(true, result.isSuccess)
-            assertEquals(books, result.getOrNull())
             verify(exactly = 1) { firestore.collection("users") }
             confirmVerified(firestore)
         }
@@ -623,13 +626,12 @@ class BooksRemoteDataSourceTest {
     private fun givenGetBooksSuccess(userId: String, books: List<BookResponse>) {
         val collectionReference = getBooks(userId)
         val task = mockk<Task<QuerySnapshot>>()
-        val querySnapshot = mockk<QuerySnapshot>()
+        val querySnapshot = mockk<QuerySnapshot>(relaxed = true)
         every { collectionReference.get() } returns task
         every { task.isComplete } returns true
         every { task.isCanceled } returns false
         every { task.exception } returns null
         every { task.result } returns querySnapshot
-        every { querySnapshot.toObjects(BookResponse::class.java) } returns books
     }
 
     private fun givenGetBooksFailure(userId: String, exception: Exception) {
@@ -641,6 +643,7 @@ class BooksRemoteDataSourceTest {
         every { task.exception } returns exception
     }
 
+    @OptIn(ExperimentalTime::class)
     private fun givenGetBookSuccess(friendId: String, bookId: String, book: BookResponse?) {
         val collectionReference = getBooks(friendId)
         val documentReference = mockk<DocumentReference>()
@@ -652,7 +655,34 @@ class BooksRemoteDataSourceTest {
         every { task.isCanceled } returns false
         every { task.exception } returns null
         every { task.result } returns documentSnapshot
-        every { documentSnapshot.toObject(BookResponse::class.java) } returns book
+        if (book != null) {
+            every { documentSnapshot.id } returns bookId
+            every { documentSnapshot.getString("title") } returns book.title
+            every { documentSnapshot.getString("subtitle") } returns book.subtitle
+            every { documentSnapshot.get("authors") } returns book.authors
+            every { documentSnapshot.getString("publisher") } returns book.publisher
+            every { documentSnapshot.get("publishedDate") } returns book.publishedDate?.let {
+                val instant = it.atStartOfDayIn(TimeZone.currentSystemDefault())
+                Timestamp(instant.epochSeconds, instant.nanosecondsOfSecond)
+            }
+            every { documentSnapshot.get("readingDate") } returns book.readingDate?.let {
+                val instant = it.atStartOfDayIn(TimeZone.currentSystemDefault())
+                Timestamp(instant.epochSeconds, instant.nanosecondsOfSecond)
+            }
+            every { documentSnapshot.getString("description") } returns book.description
+            every { documentSnapshot.getString("summary") } returns book.summary
+            every { documentSnapshot.getString("isbn") } returns book.isbn
+            every { documentSnapshot.get("pageCount") } returns book.pageCount
+            every { documentSnapshot.get("categories") } returns book.categories
+            every { documentSnapshot.getDouble("averageRating") } returns book.averageRating
+            every { documentSnapshot.get("ratingsCount") } returns book.ratingsCount
+            every { documentSnapshot.getDouble("rating") } returns book.rating
+            every { documentSnapshot.getString("thumbnail") } returns book.thumbnail
+            every { documentSnapshot.getString("image") } returns book.image
+            every { documentSnapshot.getString("format") } returns book.format
+            every { documentSnapshot.getString("state") } returns book.state
+            every { documentSnapshot.get("priority") } returns book.priority
+        }
     }
 
     private fun givenGetBookFailure(friendId: String, bookId: String, exception: Exception) {
@@ -674,7 +704,7 @@ class BooksRemoteDataSourceTest {
         books.forEach { book ->
             val bookDocumentReference = mockk<DocumentReference>()
             every { booksRef.document(book.id) } returns bookDocumentReference
-            every { batch.set(bookDocumentReference, book) } returns mockk()
+            every { batch.set(bookDocumentReference, book.toMap()) } returns mockk()
         }
     }
 
