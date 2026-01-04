@@ -7,52 +7,55 @@ package aragones.sergio.readercollection.domain.model
 
 import androidx.compose.runtime.Immutable
 import androidx.room.Ignore
+import aragones.sergio.readercollection.data.remote.DateSerializer
 import com.aragones.sergio.util.BookState
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
 import java.util.Date
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
 @Immutable
-@JsonClass(generateAdapter = true)
+@Serializable
 data class Book(
-    @Json(name = "googleId")
+    @SerialName("googleId")
     val id: String,
-    @Json(name = "title")
-    val title: String?,
-    @Json(name = "subtitle")
-    val subtitle: String?,
-    @Json(name = "authors")
-    val authors: List<String>?,
-    @Json(name = "publisher")
-    val publisher: String?,
-    @Json(name = "publishedDate")
-    val publishedDate: Date?,
-    @Json(name = "readingDate")
-    val readingDate: Date?,
-    @Json(name = "description")
-    val description: String?,
-    @Json(name = "summary")
-    val summary: String?,
-    @Json(name = "isbn")
-    val isbn: String?,
-    @Json(name = "pageCount")
+    @SerialName("title")
+    val title: String? = null,
+    @SerialName("subtitle")
+    val subtitle: String? = null,
+    @SerialName("authors")
+    val authors: List<String>? = null,
+    @SerialName("publisher")
+    val publisher: String? = null,
+    @SerialName("publishedDate")
+    @Serializable(with = DateSerializer::class)
+    val publishedDate: Date? = null,
+    @SerialName("readingDate")
+    @Serializable(with = DateSerializer::class)
+    val readingDate: Date? = null,
+    @SerialName("description")
+    val description: String? = null,
+    @SerialName("summary")
+    val summary: String? = null,
+    @SerialName("isbn")
+    val isbn: String? = null,
+    @SerialName("pageCount")
     val pageCount: Int,
-    @Json(name = "categories")
-    val categories: List<String>?,
-    @Json(name = "averageRating")
+    @SerialName("categories")
+    val categories: List<String>? = null,
+    @SerialName("averageRating")
     val averageRating: Double,
-    @Json(name = "ratingsCount")
+    @SerialName("ratingsCount")
     val ratingsCount: Int,
-    @Json(name = "rating")
+    @SerialName("rating")
     val rating: Double,
-    @Json(name = "thumbnail")
-    val thumbnail: String?,
-    @Json(name = "image")
-    val image: String?,
-    @Json(name = "format")
-    val format: String?,
-    @Json(name = "state")
-    var state: String?,
+    @SerialName("thumbnail")
+    val thumbnail: String? = null,
+    @SerialName("image")
+    val image: String? = null,
+    @SerialName("format")
+    val format: String? = null,
+    @SerialName("state")
+    var state: String? = null,
     var priority: Int,
 ) {
 

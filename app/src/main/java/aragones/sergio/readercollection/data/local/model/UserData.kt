@@ -5,9 +5,9 @@
 
 package aragones.sergio.readercollection.data.local.model
 
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class UserData(
     var username: String,
     var password: String,

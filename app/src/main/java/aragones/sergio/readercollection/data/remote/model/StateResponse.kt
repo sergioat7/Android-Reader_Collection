@@ -5,9 +5,9 @@
 
 package aragones.sergio.readercollection.data.remote.model
 
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class StateResponse(
     override val id: String,
     val name: String,

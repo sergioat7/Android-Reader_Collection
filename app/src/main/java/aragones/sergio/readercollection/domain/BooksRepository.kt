@@ -6,12 +6,9 @@
 package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
-import aragones.sergio.readercollection.data.remote.MoshiDateAdapter
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.domain.model.Book
 import com.aragones.sergio.BooksLocalDataSource
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -19,25 +16,13 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
+import kotlinx.serialization.json.Json
 
 class BooksRepository(
     private val booksLocalDataSource: BooksLocalDataSource,
     private val booksRemoteDataSource: BooksRemoteDataSource,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
-
-    //region Private properties
-    private val moshiAdapter = Moshi
-        .Builder()
-        .add(MoshiDateAdapter("dd/MM/yyyy"))
-        .build()
-        .adapter<List<Book?>?>(
-            Types.newParameterizedType(
-                List::class.java,
-                Book::class.java,
-            ),
-        )
-    //endregion
 
     //region Public methods
     suspend fun loadBooks(uuid: String): Result<Unit> = withContext(ioDispatcher) {
@@ -101,7 +86,7 @@ class BooksRepository(
         .map { it.map { book -> book.toDomain() } }
 
     suspend fun importDataFrom(jsonData: String): Result<Unit> = runCatching {
-        val books = moshiAdapter.fromJson(jsonData)?.mapNotNull { it } ?: listOf()
+        val books = Json.decodeFromString<List<Book?>>(jsonData).mapNotNull { it }
         booksLocalDataSource
             .importDataFrom(books.map { it.toLocalData() })
     }
@@ -112,8 +97,8 @@ class BooksRepository(
             .firstOrNull()
             ?.map { it.toDomain() }
             ?: emptyList()
-        val json = moshiAdapter.toJson(books)
-        return Result.success(json)
+        val jsonString = Json.encodeToString(books)
+        return Result.success(jsonString)
     }
 
     suspend fun getBook(id: String): Result<Pair<Book, Boolean>> = runCatching {

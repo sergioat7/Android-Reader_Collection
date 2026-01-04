@@ -11,8 +11,8 @@ import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import com.aragones.sergio.util.Preferences
-import com.squareup.moshi.Moshi
 import java.util.Locale
+import kotlinx.serialization.json.Json
 
 class SharedPreferencesHandler(context: Context) {
 
@@ -30,7 +30,6 @@ class SharedPreferencesHandler(context: Context) {
         EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
     )
     private val encryptedEditor = appEncryptedPreferences.edit()
-    private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Public properties
@@ -46,29 +45,23 @@ class SharedPreferencesHandler(context: Context) {
         get() {
             return appEncryptedPreferences
                 .getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
-                ?.let {
-                    moshi.adapter(AuthData::class.java).fromJson(it)
-                } ?: run {
-                AuthData("")
-            }
+                ?.let { Json.decodeFromString<AuthData>(it) }
+                ?: run { AuthData("") }
         }
         set(value) = encryptedEditor.setString(
             Preferences.AUTH_DATA_PREFERENCES_NAME,
-            moshi.adapter(AuthData::class.java).toJson(value),
+            Json.encodeToString(value),
         )
     var userData: UserData
         get() {
             return appEncryptedPreferences
                 .getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
-                ?.let {
-                    moshi.adapter(UserData::class.java).fromJson(it)
-                } ?: run {
-                UserData("", "")
-            }
+                ?.let { Json.decodeFromString<UserData>(it) }
+                ?: run { UserData("", "") }
         }
         set(value) = encryptedEditor.setString(
             Preferences.USER_DATA_PREFERENCES_NAME,
-            moshi.adapter(UserData::class.java).toJson(value),
+            Json.encodeToString(value),
         )
     val isLoggedIn: Boolean
         get() = credentials.uuid.isNotEmpty()

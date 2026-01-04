@@ -5,11 +5,11 @@
 
 package aragones.sergio.readercollection.data.local.model
 
-import com.squareup.moshi.Json
-import com.squareup.moshi.JsonClass
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-@JsonClass(generateAdapter = true)
+@Serializable
 data class AuthData(
-    @Json(name = "token")
+    @SerialName("token")
     var uuid: String,
 )

@@ -13,13 +13,13 @@ import aragones.sergio.readercollection.data.remote.model.StateResponse
 import aragones.sergio.readercollection.utils.Constants
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.squareup.moshi.Moshi
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.tasks.await
-import org.json.JSONObject
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.jsonObject
 
 class BooksRemoteDataSource(
     private val client: HttpClient,
@@ -40,10 +40,6 @@ class BooksRemoteDataSource(
         private const val BOOKS_PATH = "books"
         private const val USERS_PATH = "users"
     }
-    //endregion
-
-    //region Private properties
-    private val moshi = Moshi.Builder().build()
     //endregion
 
     //region Public methods
@@ -158,11 +154,12 @@ class BooksRemoteDataSource(
             var formats = listOf<FormatResponse>()
             try {
                 val languagedFormats =
-                    JSONObject(formatsString).get(language).toString()
-                formats = moshi
-                    .adapter(Array<FormatResponse>::class.java)
-                    .fromJson(languagedFormats)
-                    ?.asList() ?: listOf()
+                    Json
+                        .parseToJsonElement(formatsString)
+                        .jsonObject
+                        .getValue(language)
+                        .toString()
+                formats = Json.decodeFromString<Array<FormatResponse>>(languagedFormats).asList()
             } catch (e: Exception) {
                 println("BooksRemoteDataSource ${(e.message ?: "")}")
             }
@@ -175,11 +172,12 @@ class BooksRemoteDataSource(
             var states = listOf<StateResponse>()
             try {
                 val languagedStates =
-                    JSONObject(statesString).get(language).toString()
-                states = moshi
-                    .adapter(Array<StateResponse>::class.java)
-                    .fromJson(languagedStates)
-                    ?.asList() ?: listOf()
+                    Json
+                        .parseToJsonElement(statesString)
+                        .jsonObject
+                        .getValue(language)
+                        .toString()
+                states = Json.decodeFromString<Array<StateResponse>>(languagedStates).asList()
             } catch (e: Exception) {
                 println("BooksRemoteDataSource ${(e.message ?: "")}")
             }

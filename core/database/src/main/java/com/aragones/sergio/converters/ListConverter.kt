@@ -6,27 +6,16 @@
 package com.aragones.sergio.converters
 
 import androidx.room.TypeConverter
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.Types
 import java.util.Collections
+import kotlinx.serialization.json.Json
 
 class ListConverter {
 
-    private val moshiAdapter = Moshi.Builder().build().adapter<List<String>?>(
-        Types.newParameterizedType(
-            List::class.java,
-            String::class.java,
-        ),
-    )
+    @TypeConverter
+    fun stringToStringList(data: String?): List<String>? =
+        data?.let { Json.decodeFromString<List<String>>(it) } ?: Collections.emptyList()
 
     @TypeConverter
-    fun stringToStringList(data: String?): List<String>? {
-        if (data == null) {
-            return Collections.emptyList()
-        }
-        return moshiAdapter.fromJson(data).orEmpty()
-    }
-
-    @TypeConverter
-    fun stringListToString(elements: List<String>?): String? = moshiAdapter.toJson(elements)
+    fun stringListToString(elements: List<String>?): String? =
+        elements?.let { Json.encodeToString(it) }
 }

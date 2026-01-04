@@ -22,10 +22,12 @@ object DateSerializer : KSerializer<Date?> {
 
     @OptIn(ExperimentalSerializationApi::class)
     override fun serialize(encoder: Encoder, value: Date?) {
-        value.toString()?.let { dateString ->
-            encoder.encodeString(dateString)
-        } ?: encoder.encodeNull()
+        val dateString = value.toString("dd/MM/yyyy") ?: value.toString()
+        dateString?.let { encoder.encodeString(it) } ?: encoder.encodeNull()
     }
 
-    override fun deserialize(decoder: Decoder): Date? = decoder.decodeString().toDate()
+    override fun deserialize(decoder: Decoder): Date? {
+        val dateString = decoder.decodeString()
+        return dateString.toDate("dd/MM/yyyy") ?: dateString.toDate()
+    }
 }

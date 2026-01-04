@@ -9,7 +9,6 @@ plugins {
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -117,8 +116,6 @@ dependencies {
     implementation(libs.lottie)
     implementation(libs.material)
     implementation(libs.material3)
-    implementation(libs.moshi)
-    ksp(libs.moshi.kotlin.codegen)
     implementation(libs.navigation.compose)
     implementation(libs.room.runtime)
     implementation(libs.security.crypto)
