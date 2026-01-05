@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.data.local.di
 
+import aragones.sergio.readercollection.data.local.AppInfoProvider
 import aragones.sergio.readercollection.data.local.SharedPreferencesHandler
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import org.koin.core.module.dsl.factoryOf
@@ -12,6 +13,7 @@ import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 val storageModule = module {
+    singleOf(::AppInfoProvider)
     singleOf(::SharedPreferencesHandler)
     factoryOf(::UserLocalDataSource)
 }

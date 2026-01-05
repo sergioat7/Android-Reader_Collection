@@ -2,9 +2,6 @@
 
 package aragones.sergio.readercollection.data.local
 
-import android.content.Context
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import com.google.firebase.auth.FirebaseAuth
@@ -20,10 +17,10 @@ import kotlin.test.assertEquals
 
 class UserLocalDataSourceTest {
 
-    private val context: Context = mockk()
     private val auth: FirebaseAuth = mockk()
+    private val appInfoProvider: AppInfoProvider = mockk()
     private val preferences: SharedPreferencesHandler = mockk()
-    private val dataSource = UserLocalDataSource(auth, context, preferences)
+    private val dataSource = UserLocalDataSource(auth, appInfoProvider, preferences)
 
     @Test
     fun `GIVEN username in preferences WHEN get username THEN return value from preferences`() {
@@ -303,6 +300,19 @@ class UserLocalDataSourceTest {
     }
 
     @Test
+    fun `WHEN storeLanguage is called THEN preferences are invoked to save data`() {
+        val newVale = "es"
+        every { preferences.language = newVale } just Runs
+        every { appInfoProvider.changeLocale(any()) } just Runs
+
+        dataSource.storeLanguage(newVale)
+
+        verify(exactly = 1) { preferences.language = newVale }
+        verify(exactly = 1) { appInfoProvider.changeLocale(newVale) }
+        confirmVerified(preferences)
+    }
+
+    @Test
     fun `WHEN storeSortParam is called THEN preferences are invoked to save data`() {
         val sortParam = "author"
         every { preferences.sortParam = sortParam } just Runs
@@ -337,17 +347,7 @@ class UserLocalDataSourceTest {
 
     @Test
     fun `GIVEN version name is correct WHEN getCurrentVersion is called THEN returns version code`() {
-        val packageManager: PackageManager = mockk()
-        val packageInfo: PackageInfo = mockk()
-        every { context.packageManager } returns packageManager
-        every { context.packageName } returns "aragones.sergio.readercollection"
-        every {
-            packageManager.getPackageInfo(
-                "aragones.sergio.readercollection",
-                0,
-            )
-        } returns packageInfo
-        packageInfo.versionName = "1.2.3"
+        every { appInfoProvider.getVersion() } returns "1.2.3"
 
         val result = dataSource.getCurrentVersion()
 
@@ -356,17 +356,7 @@ class UserLocalDataSourceTest {
 
     @Test
     fun `GIVEN version name is malformed WHEN getCurrentVersion is called THEN returns 0`() {
-        val packageManager: PackageManager = mockk()
-        val packageInfo: PackageInfo = mockk()
-        every { context.packageManager } returns packageManager
-        every { context.packageName } returns "aragones.sergio.readercollection"
-        every {
-            packageManager.getPackageInfo(
-                "aragones.sergio.readercollection",
-                0,
-            )
-        } returns packageInfo
-        packageInfo.versionName = "1.2"
+        every { appInfoProvider.getVersion() } returns "1.2"
 
         val result = dataSource.getCurrentVersion()
 
@@ -375,12 +365,7 @@ class UserLocalDataSourceTest {
 
     @Test
     fun `GIVEN getPackageInfo throws exception WHEN getCurrentVersion is called THEN returns 0`() {
-        val packageManager: PackageManager = mockk()
-        every { context.packageManager } returns packageManager
-        every { context.packageName } returns "aragones.sergio.readercollection"
-        every {
-            packageManager.getPackageInfo("aragones.sergio.readercollection", 0)
-        } throws PackageManager.NameNotFoundException()
+        every { appInfoProvider.getVersion() } returns null
 
         val result = dataSource.getCurrentVersion()
 

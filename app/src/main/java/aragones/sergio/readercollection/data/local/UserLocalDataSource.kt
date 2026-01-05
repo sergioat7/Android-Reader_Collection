@@ -5,29 +5,15 @@
 
 package aragones.sergio.readercollection.data.local
 
-import android.app.LocaleManager
-import android.content.Context
-import android.os.Build
-import android.os.LocaleList
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import com.google.firebase.auth.FirebaseAuth
-import java.util.Locale
 
 class UserLocalDataSource(
     private val auth: FirebaseAuth,
-    private val context: Context,
+    private val appInfoProvider: AppInfoProvider,
     private val preferences: SharedPreferencesHandler,
 ) {
-
-    //region Private properties
-    private var localeManager: LocaleManager? =
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            context.getSystemService(LocaleManager::class.java)
-        } else {
-            null
-        }
-    //endregion
 
     //region Public properties
     val username: String
@@ -102,9 +88,7 @@ class UserLocalDataSource(
 
     fun storeLanguage(language: String) {
         preferences.language = language
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            localeManager?.applicationLocales = LocaleList(Locale.forLanguageTag(language))
-        }
+        appInfoProvider.changeLocale(language)
     }
 
     fun storeSortParam(sortParam: String?) {
@@ -121,11 +105,7 @@ class UserLocalDataSource(
 
     fun getCurrentVersion(): Int {
         return try {
-            val currentVersion = context
-                .packageManager
-                .getPackageInfo(context.packageName, 0)
-                .versionName
-                ?.split(".") ?: listOf()
+            val currentVersion = appInfoProvider.getVersion()?.split(".") ?: listOf()
             if (currentVersion.size != 3) return 0
 
             currentVersion[0].toInt() * 100000 +
