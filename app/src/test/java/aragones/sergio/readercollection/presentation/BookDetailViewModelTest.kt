@@ -11,10 +11,10 @@ package aragones.sergio.readercollection.presentation
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
-import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toDomain
@@ -57,7 +57,7 @@ class BookDetailViewModelTest {
     private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = BookDetailViewModel(
         savedStateHandle,
-        BooksRepository(
+        BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
             ioDispatcher,
@@ -74,7 +74,7 @@ class BookDetailViewModelTest {
             }
             val viewModel = BookDetailViewModel(
                 savedStateHandle,
-                BooksRepository(
+                BooksRepositoryImpl(
                     booksLocalDataSource,
                     booksRemoteDataSource,
                     ioDispatcher,
@@ -119,7 +119,7 @@ class BookDetailViewModelTest {
         }
         val viewModel = BookDetailViewModel(
             savedStateHandle,
-            BooksRepository(
+            BooksRepositoryImpl(
                 booksLocalDataSource,
                 booksRemoteDataSource,
                 ioDispatcher,

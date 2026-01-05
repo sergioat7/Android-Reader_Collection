@@ -10,10 +10,10 @@ package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.domain.toRemoteData
@@ -43,7 +43,7 @@ class AddFriendsViewModelTest {
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
     private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = AddFriendsViewModel(
-        UserRepository(
+        UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
             ioDispatcher,

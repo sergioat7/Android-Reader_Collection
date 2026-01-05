@@ -5,6 +5,8 @@
 
 package aragones.sergio.readercollection.domain.di
 
+import aragones.sergio.readercollection.data.BooksRepositoryImpl
+import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.di.storageModule
 import aragones.sergio.readercollection.data.remote.di.networkModule
 import aragones.sergio.readercollection.domain.BooksRepository
@@ -21,14 +23,14 @@ val domainModule = module {
         storageModule,
     )
     factory<BooksRepository> {
-        BooksRepository(
+        BooksRepositoryImpl(
             booksLocalDataSource = get(),
             booksRemoteDataSource = get(),
             ioDispatcher = get(named(DispatchersName.IO)),
         )
     }
     factory<UserRepository> {
-        UserRepository(
+        UserRepositoryImpl(
             userLocalDataSource = get(),
             userRemoteDataSource = get(),
             ioDispatcher = get(named(DispatchersName.IO)),

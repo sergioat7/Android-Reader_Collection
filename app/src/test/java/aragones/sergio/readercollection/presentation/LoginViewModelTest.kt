@@ -10,14 +10,14 @@ package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.BooksRepositoryImpl
+import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
@@ -50,12 +50,12 @@ class LoginViewModelTest {
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
     private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = LoginViewModel(
-        BooksRepository(
+        BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
             ioDispatcher,
         ),
-        UserRepository(
+        UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
             ioDispatcher,

@@ -9,9 +9,9 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
+import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsUiState
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsViewModel
 import io.mockk.Runs
@@ -37,7 +37,7 @@ class DisplaySettingsViewModelTest {
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
     private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = DisplaySettingsViewModel(
-        UserRepository(
+        UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
             ioDispatcher,

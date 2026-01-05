@@ -11,11 +11,11 @@ package aragones.sergio.readercollection.presentation
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.BooksRepositoryImpl
+import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -74,12 +74,12 @@ class BookListViewModelTest {
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
     private val viewModel = BookListViewModel(
         savedStateHandle,
-        BooksRepository(
+        BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
             mainDispatcherRule.testDispatcher,
         ),
-        UserRepository(
+        UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
             mainDispatcherRule.testDispatcher,
@@ -276,12 +276,12 @@ class BookListViewModelTest {
             }
             val viewModel = BookListViewModel(
                 savedStateHandle,
-                BooksRepository(
+                BooksRepositoryImpl(
                     booksLocalDataSource,
                     booksRemoteDataSource,
                     mainDispatcherRule.testDispatcher,
                 ),
-                UserRepository(
+                UserRepositoryImpl(
                     userLocalDataSource,
                     userRemoteDataSource,
                     mainDispatcherRule.testDispatcher,

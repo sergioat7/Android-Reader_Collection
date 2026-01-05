@@ -10,11 +10,11 @@ package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
-import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.toDomain
@@ -49,7 +49,7 @@ class SearchViewModelTest {
     private val booksRemoteDataSource: BooksRemoteDataSource = mockk()
 
     private val viewModel = SearchViewModel(
-        BooksRepository(
+        BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
             mainDispatcherRule.testDispatcher,

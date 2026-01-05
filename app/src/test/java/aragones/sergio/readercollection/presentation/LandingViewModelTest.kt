@@ -10,11 +10,11 @@ package aragones.sergio.readercollection.presentation
 
 import androidx.appcompat.app.AppCompatDelegate
 import app.cash.turbine.test
+import aragones.sergio.readercollection.data.BooksRepositoryImpl
+import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
-import aragones.sergio.readercollection.domain.BooksRepository
-import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.presentation.landing.LandingViewModel
 import aragones.sergio.readercollection.presentation.login.LoginActivity
 import com.aragones.sergio.BooksLocalDataSource
@@ -39,12 +39,12 @@ class LandingViewModelTest {
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
     private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = LandingViewModel(
-        BooksRepository(
+        BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
             ioDispatcher,
         ),
-        UserRepository(
+        UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
             ioDispatcher,
