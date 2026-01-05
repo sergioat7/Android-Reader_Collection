@@ -4,13 +4,15 @@
  */
 
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
 kotlin {
-    jvmToolchain(libs.versions.jdk.get().toInt())
-}
-
-dependencies {
-    implementation(libs.kotlinx.datetime)
+    jvm()
+    
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.datetime)
+        }
+    }
 }
