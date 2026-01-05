@@ -5,86 +5,93 @@
 
 package aragones.sergio.readercollection.data.local
 
-import android.content.Context
-import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import com.aragones.sergio.util.Preferences
-import java.util.Locale
 import kotlinx.serialization.json.Json
 
-class SharedPreferencesHandler(context: Context) {
-
-    //region Private properties
-    private val appPreferences = context.getSharedPreferences(
-        Preferences.PREFERENCES_NAME,
-        Context.MODE_PRIVATE,
-    )
-    private val editor = appPreferences.edit()
-    private val appEncryptedPreferences = EncryptedSharedPreferences.create(
-        Preferences.ENCRYPTED_PREFERENCES_NAME,
-        MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-        context,
-        EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
-        EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM,
-    )
-    private val encryptedEditor = appEncryptedPreferences.edit()
-    //endregion
+class SharedPreferencesHandler(
+    private val appInfoProvider: AppInfoProvider,
+    private val sharedPreferencesProvider: SharedPreferencesProvider,
+) {
 
     //region Public properties
     var language: String
         get() {
-            return appPreferences.getString(Preferences.LANGUAGE_PREFERENCE_NAME, null) ?: run {
-                language = Locale.getDefault().language
-                language
+            return sharedPreferencesProvider.readString(
+                Preferences.LANGUAGE_PREFERENCE_NAME,
+            ) ?: run {
+                appInfoProvider.getCurrentLanguage().also {
+                    language = it
+                }
             }
         }
-        set(value) = editor.setString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
+        set(value) =
+            sharedPreferencesProvider.writeString(Preferences.LANGUAGE_PREFERENCE_NAME, value)
     var credentials: AuthData
         get() {
-            return appEncryptedPreferences
-                .getString(Preferences.AUTH_DATA_PREFERENCES_NAME, null)
+            return sharedPreferencesProvider
+                .readString(Preferences.AUTH_DATA_PREFERENCES_NAME, true)
                 ?.let { Json.decodeFromString<AuthData>(it) }
                 ?: run { AuthData("") }
         }
-        set(value) = encryptedEditor.setString(
+        set(value) = sharedPreferencesProvider.writeString(
             Preferences.AUTH_DATA_PREFERENCES_NAME,
             Json.encodeToString(value),
+            true,
         )
     var userData: UserData
         get() {
-            return appEncryptedPreferences
-                .getString(Preferences.USER_DATA_PREFERENCES_NAME, null)
+            return sharedPreferencesProvider
+                .readString(Preferences.USER_DATA_PREFERENCES_NAME, true)
                 ?.let { Json.decodeFromString<UserData>(it) }
                 ?: run { UserData("", "") }
         }
-        set(value) = encryptedEditor.setString(
+        set(value) = sharedPreferencesProvider.writeString(
             Preferences.USER_DATA_PREFERENCES_NAME,
             Json.encodeToString(value),
+            true,
         )
     val isLoggedIn: Boolean
         get() = credentials.uuid.isNotEmpty()
     var isProfilePublic: Boolean
-        get() = appPreferences.getBoolean(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME, value)
+        get() = sharedPreferencesProvider.readBoolean(
+            Preferences.PUBLIC_PROFILE_PREFERENCE_NAME,
+            false,
+        )
+        set(value) = sharedPreferencesProvider.writeBoolean(
+            Preferences.PUBLIC_PROFILE_PREFERENCE_NAME,
+            value,
+        )
     var isAutomaticSyncEnabled: Boolean
-        get() = appPreferences.getBoolean(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME, true)
-        set(value) = editor.setBoolean(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME, value)
+        get() = sharedPreferencesProvider.readBoolean(
+            Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME,
+            true,
+        )
+        set(value) = sharedPreferencesProvider.writeBoolean(
+            Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME,
+            value,
+        )
     var sortParam: String?
-        get() = appPreferences.getString(Preferences.SORT_PARAM_PREFERENCE_NAME, null)
-        set(value) = editor.setString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
+        get() = sharedPreferencesProvider.readString(Preferences.SORT_PARAM_PREFERENCE_NAME)
+        set(value) =
+            sharedPreferencesProvider.writeString(Preferences.SORT_PARAM_PREFERENCE_NAME, value)
     var themeMode: Int
-        get() = appPreferences.getInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
-        set(value) = editor.setInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
+        get() = sharedPreferencesProvider.readInt(Preferences.THEME_MODE_PREFERENCE_NAME, 0)
+        set(value) =
+            sharedPreferencesProvider.writeInt(Preferences.THEME_MODE_PREFERENCE_NAME, value)
     var isSortDescending: Boolean
-        get() = appPreferences.getBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
-        set(value) = editor.setBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
+        get() = sharedPreferencesProvider.readBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, false)
+        set(value) =
+            sharedPreferencesProvider.writeBoolean(Preferences.SORT_ORDER_PREFERENCE_NAME, value)
     //endregion
 
     //region Public methods
     fun removeCredentials() {
-        encryptedEditor.remove(Preferences.AUTH_DATA_PREFERENCES_NAME)?.apply()
+        sharedPreferencesProvider.removeValues(
+            keys = listOf(Preferences.AUTH_DATA_PREFERENCES_NAME),
+            isEncrypted = true,
+        )
     }
 
     fun storePassword(password: String) {
@@ -96,19 +103,24 @@ class SharedPreferencesHandler(context: Context) {
     }
 
     fun removeUserData() {
-        encryptedEditor.remove(Preferences.USER_DATA_PREFERENCES_NAME)?.apply()
+        sharedPreferencesProvider.removeValues(
+            keys = listOf(Preferences.USER_DATA_PREFERENCES_NAME),
+            isEncrypted = true,
+        )
     }
 
     fun removeUserPreferences() {
-        editor
-            .apply {
-                remove(Preferences.LANGUAGE_PREFERENCE_NAME)
-                remove(Preferences.PUBLIC_PROFILE_PREFERENCE_NAME)
-                remove(Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME)
-                remove(Preferences.SORT_PARAM_PREFERENCE_NAME)
-                remove(Preferences.THEME_MODE_PREFERENCE_NAME)
-                remove(Preferences.SORT_ORDER_PREFERENCE_NAME)
-            }.apply()
+        sharedPreferencesProvider.removeValues(
+            keys = listOf(
+                Preferences.LANGUAGE_PREFERENCE_NAME,
+                Preferences.PUBLIC_PROFILE_PREFERENCE_NAME,
+                Preferences.AUTOMATIC_SYNC_PREFERENCE_NAME,
+                Preferences.SORT_PARAM_PREFERENCE_NAME,
+                Preferences.THEME_MODE_PREFERENCE_NAME,
+                Preferences.SORT_ORDER_PREFERENCE_NAME,
+            ),
+            isEncrypted = true,
+        )
     }
     //endregion
 }

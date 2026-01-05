@@ -18,6 +18,8 @@ class AppInfoProvider(private val context: Context) {
         .getPackageInfo(context.packageName, 0)
         .versionName
 
+    fun getCurrentLanguage(): String = Locale.getDefault().language
+
     fun changeLocale(language: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val locale = context.getSystemService(LocaleManager::class.java)
