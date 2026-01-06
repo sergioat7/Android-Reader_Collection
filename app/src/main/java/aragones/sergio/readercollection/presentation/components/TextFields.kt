@@ -59,7 +59,7 @@ fun CustomOutlinedTextField(
     labelText: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    errorTextId: Int? = null,
+    errorText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
@@ -81,7 +81,7 @@ fun CustomOutlinedTextField(
     val showLabel = !enabled || text.isNotBlank() || placeholderText == null || isFocused
 
     val currentTextStyle = textStyle.copy(
-        color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null } ?: textColor,
+        color = MaterialTheme.colorScheme.error.takeIf { errorText != null } ?: textColor,
         lineHeight = 24.sp,
     )
     val label: @Composable (() -> Unit) =
@@ -90,7 +90,7 @@ fun CustomOutlinedTextField(
                 text = labelText,
                 style = MaterialTheme.typography.displaySmall.takeIf { placeholderText != null }
                     ?: MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                color = MaterialTheme.colorScheme.error.takeIf { errorText != null }
                     ?: inputHintTextColor,
             )
         }
@@ -99,7 +99,7 @@ fun CustomOutlinedTextField(
             Text(
                 text = it,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                color = MaterialTheme.colorScheme.error.takeIf { errorText != null }
                     ?: inputHintTextColor,
             )
         }
@@ -110,12 +110,12 @@ fun CustomOutlinedTextField(
                 Icon(
                     painter = endIcon.painter,
                     contentDescription = endIcon.contentDescription,
-                    tint = MaterialTheme.colorScheme.primary.takeIf { errorTextId == null }
+                    tint = MaterialTheme.colorScheme.primary.takeIf { errorText == null }
                         ?: MaterialTheme.colorScheme.error,
                 )
             }
         }
-    } ?: errorTextId?.let {
+    } ?: errorText?.let {
         {
             IconButton(onClick = { onEndIconClicked?.invoke() }) {
                 Icon(
@@ -133,9 +133,9 @@ fun CustomOutlinedTextField(
                     .fillMaxWidth()
                     .padding(start = 0.dp, top = 5.dp, end = 0.dp, bottom = 0.dp),
             ) {
-                if (errorTextId != null) {
+                if (errorText != null) {
                     Text(
-                        text = stringResource(errorTextId),
+                        text = errorText,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.error,
                         modifier = Modifier.weight(1f),
@@ -157,7 +157,7 @@ fun CustomOutlinedTextField(
                         style = MaterialTheme.typography.bodyMedium.copy(
                             fontWeight = FontWeight.Bold,
                         ),
-                        color = MaterialTheme.colorScheme.error.takeIf { errorTextId != null }
+                        color = MaterialTheme.colorScheme.error.takeIf { errorText != null }
                             ?: textColor,
                     )
                 }
@@ -223,7 +223,7 @@ fun CustomOutlinedTextField(
         maxLines = maxLines,
         enabled = enabled.takeIf { inputType != CustomInputType.DATE } ?: false,
         readOnly = inputType == CustomInputType.DATE,
-        isError = errorTextId != null,
+        isError = errorText != null,
         onValueChange = { newText ->
             if (newText.length <= maxLength) {
                 onTextChanged(newText)
@@ -239,7 +239,7 @@ fun MultilineCustomOutlinedTextField(
     labelText: String,
     onTextChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    errorTextId: Int? = null,
+    errorText: String? = null,
     placeholderText: String? = null,
     inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
@@ -261,7 +261,7 @@ fun MultilineCustomOutlinedTextField(
             labelText = labelText,
             onTextChanged = onTextChanged,
             modifier = Modifier.fillMaxWidth(),
-            errorTextId = errorTextId,
+            errorText = errorText,
             placeholderText = placeholderText,
             inputHintTextColor = inputHintTextColor,
             textStyle = textStyle,
@@ -396,7 +396,7 @@ private fun ErrorOutlinedTextFieldPreview() {
             labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            errorTextId = R.string.invalid_username,
+            errorText = stringResource(R.string.invalid_username),
             maxLength = 100,
         )
     }

@@ -168,7 +168,7 @@ private fun ProfileInfo(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
-        errorTextId = passwordError,
+        errorText = passwordError?.let { stringResource(it) },
         endIcon = if (passwordVisibility) {
             painterResource(R.drawable.ic_hide_password)
                 .withDescription(stringResource(R.string.hide_password))

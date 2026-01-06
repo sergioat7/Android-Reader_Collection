@@ -12,3 +12,9 @@ data class StateResponse(
     override val id: String,
     val name: String,
 ) : BaseModel<String>
+
+var STATES = listOf(
+    StateResponse("PENDING", "Pending"),
+    StateResponse("READ", "Read"),
+    StateResponse("READING", "Reading"),
+)

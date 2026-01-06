@@ -58,6 +58,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
@@ -73,7 +74,6 @@ import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.utils.Constants as MyConstants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
@@ -503,7 +503,7 @@ private fun BottomSheetContent(
                 .padding(vertical = 24.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            for (state in MyConstants.STATES) {
+            for (state in STATES) {
                 CustomFilterChip(
                     title = state.name,
                     selected = state.id == bookState,

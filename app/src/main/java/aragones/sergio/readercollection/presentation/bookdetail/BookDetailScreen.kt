@@ -40,6 +40,8 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
 import aragones.sergio.readercollection.presentation.components.CustomChip
@@ -56,8 +58,6 @@ import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.isLight
-import aragones.sergio.readercollection.utils.Constants.FORMATS
-import aragones.sergio.readercollection.utils.Constants.STATES
 import aragones.sergio.readercollection.utils.UiDateMapper.getValueToShow
 import aragones.sergio.readercollection.utils.UiDateMapper.toLocalDate
 import com.aragones.sergio.util.BookState

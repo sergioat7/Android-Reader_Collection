@@ -8,11 +8,11 @@ package aragones.sergio.readercollection.presentation.statistics
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
-import aragones.sergio.readercollection.utils.Constants
 import aragones.sergio.readercollection.utils.UiDateMapper.getGroupedBy
 import com.aragones.sergio.util.extensions.toString
 import com.github.mikephil.charting.data.BarEntry
@@ -168,7 +168,7 @@ class StatisticsViewModel(
             entries.add(
                 PieEntry(
                     entry.value.size.toFloat(),
-                    Constants.FORMATS.first { it.id == entry.key }.name,
+                    FORMATS.first { it.id == entry.key }.name,
                 ),
             )
         }

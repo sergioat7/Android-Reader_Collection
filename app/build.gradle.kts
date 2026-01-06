@@ -118,7 +118,6 @@ dependencies {
     implementation(libs.material)
     implementation(libs.material3)
     implementation(libs.navigation.compose)
-    implementation(libs.room.runtime)
     implementation(libs.security.crypto)
     implementation(libs.work.manager)
 

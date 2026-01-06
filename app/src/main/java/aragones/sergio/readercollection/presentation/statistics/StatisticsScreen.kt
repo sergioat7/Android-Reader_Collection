@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
@@ -44,7 +45,6 @@ import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
-import aragones.sergio.readercollection.utils.Constants
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants as UtilConstants
 import com.aragones.sergio.util.extensions.getMonthNumber
@@ -479,7 +479,7 @@ private fun BooksByFormat(entries: PieEntries, onFormatSelected: (String?) -> Un
                 setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
                     override fun onValueSelected(e: Entry?, h: Highlight?) {
                         onFormatSelected(
-                            Constants.FORMATS.first { it.name == (e as? PieEntry)?.label }.id,
+                            FORMATS.first { it.name == (e as? PieEntry)?.label }.id,
                         )
                     }
 

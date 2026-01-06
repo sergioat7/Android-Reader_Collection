@@ -9,12 +9,13 @@ package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
+import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.data.remote.model.StateResponse
-import aragones.sergio.readercollection.utils.Constants
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.HttpClientEngine
 import io.ktor.client.engine.mock.MockEngine
@@ -298,8 +299,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        assertEquals(getFormats(), Constants.FORMATS)
-        assertEquals(getStates(), Constants.STATES)
+        assertEquals(getFormats(), FORMATS)
+        assertEquals(getStates(), STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
@@ -307,8 +308,8 @@ class BooksRemoteDataSourceTest {
 
     @Test
     fun `GIVEN success response and no values for language WHEN fetch remote config values is called THEN formats and states are not updated`() {
-        val currentFormats = Constants.FORMATS
-        val currentStates = Constants.STATES
+        val currentFormats = FORMATS
+        val currentStates = STATES
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
             secondArg<(String) -> Unit>().invoke(getFormatsJson("en"))
         }
@@ -318,8 +319,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues("es")
 
-        assertEquals(currentFormats, Constants.FORMATS)
-        assertEquals(currentStates, Constants.STATES)
+        assertEquals(currentFormats, FORMATS)
+        assertEquals(currentStates, STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
@@ -328,8 +329,8 @@ class BooksRemoteDataSourceTest {
     @Test
     fun `GIVEN wrong response WHEN fetch remote config values is called THEN formats and states are not updated`() {
         val language = "en"
-        val currentFormats = Constants.FORMATS
-        val currentStates = Constants.STATES
+        val currentFormats = FORMATS
+        val currentStates = STATES
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
             secondArg<(String) -> Unit>().invoke("values")
         }
@@ -339,8 +340,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        assertEquals(currentFormats, Constants.FORMATS)
-        assertEquals(currentStates, Constants.STATES)
+        assertEquals(currentFormats, FORMATS)
+        assertEquals(currentStates, STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)

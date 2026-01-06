@@ -6,12 +6,12 @@
 package aragones.sergio.readercollection.domain
 
 import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.User
-import aragones.sergio.readercollection.utils.Constants.FORMATS
-import aragones.sergio.readercollection.utils.Constants.STATES
 import com.aragones.sergio.model.Book as BookLocal
 import com.aragones.sergio.util.extensions.toLocalDate
 import com.aragones.sergio.util.extensions.toLong

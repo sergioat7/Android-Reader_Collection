@@ -24,6 +24,7 @@ import aragones.sergio.readercollection.presentation.statistics.PieEntries
 import aragones.sergio.readercollection.presentation.statistics.StatisticsUiState
 import aragones.sergio.readercollection.presentation.statistics.StatisticsViewModel
 import com.aragones.sergio.BooksLocalDataSource
+import com.aragones.sergio.util.extensions.toString
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.PieEntry
 import io.mockk.Called
@@ -35,6 +36,7 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.String
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -298,7 +300,7 @@ class StatisticsViewModelTest {
         viewModel.booksError.test {
             assertEquals(null, awaitItem())
 
-            viewModel.importData("[{}]")
+            viewModel.importData("[{\"titl\":\"\"}]")
 
             assertEquals(
                 ErrorModel("", R.string.error_file_data),
@@ -342,7 +344,28 @@ class StatisticsViewModelTest {
     @Test
     fun `GIVEN books WHEN getDataToExport THEN returns json with books data`() = runTest {
         var json: String? = null
-        val book = Book(id = "bookId")
+        val book = Book(
+            id = "bookId",
+            title = "title",
+            subtitle = "subtitle",
+            authors = listOf("author"),
+            publisher = "publisher",
+            publishedDate = LocalDate(2025, 10, 5),
+            readingDate = null,
+            description = "description",
+            summary = "summary",
+            isbn = "isbn",
+            pageCount = 10,
+            categories = listOf("category"),
+            averageRating = 2.0,
+            ratingsCount = 5,
+            rating = 4.0,
+            thumbnail = null,
+            image = "image",
+            format = "format",
+            state = "state",
+            priority = 8,
+        )
         every { booksLocalDataSource.getAllBooks() } returns flowOf(listOf(book.toLocalData()))
 
         viewModel.infoDialogMessageId.test {
@@ -357,10 +380,22 @@ class StatisticsViewModelTest {
                 """
                 [{
                     "googleId":"${book.id}",
+                    "title" : "${book.title}",
+                    "subtitle" : "${book.subtitle}",
+                    "authors" : ${book.authors?.map { "\"${it}\"" }},
+                    "publisher" : "${book.publisher}",
+                    "publishedDate" : "${book.publishedDate.toString("dd/MM/yyyy")}",
+                    "description" : "${book.description}",
+                    "summary" : "${book.summary}",
+                    "isbn" : "${book.isbn}",
                     "pageCount":${book.pageCount},
+                    "categories" : ${book.categories?.map { "\"${it}\"" }},
                     "averageRating":${book.averageRating},
                     "ratingsCount":${book.ratingsCount},
                     "rating":${book.rating},
+                    "image" : "${book.image}",
+                    "format" : "${book.format}",
+                    "state" : "${book.state}",
                     "priority":${book.priority}
                 }]
                 """.trimIndent().replace("\n", "").replace(" ", ""),

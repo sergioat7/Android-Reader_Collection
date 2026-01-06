@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
@@ -17,7 +18,6 @@ import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import aragones.sergio.readercollection.presentation.navigation.Route
-import aragones.sergio.readercollection.utils.Constants.FORMATS
 import aragones.sergio.readercollection.utils.UiDateMapper.toMonthName
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants

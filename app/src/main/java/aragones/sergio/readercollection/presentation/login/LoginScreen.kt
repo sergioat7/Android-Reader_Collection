@@ -79,7 +79,7 @@ fun LoginScreen(
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = state.formState.usernameError,
+            errorText = state.formState.usernameError?.let { stringResource(it) },
             isLastTextField = false,
             isRequired = true,
         )
@@ -95,7 +95,7 @@ fun LoginScreen(
                 .align(Alignment.CenterHorizontally)
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp),
-            errorTextId = state.formState.passwordError,
+            errorText = state.formState.passwordError?.let { stringResource(it) },
             endIcon = if (passwordVisibility) {
                 painterResource(R.drawable.ic_hide_password)
                     .withDescription(stringResource(R.string.hide_password))

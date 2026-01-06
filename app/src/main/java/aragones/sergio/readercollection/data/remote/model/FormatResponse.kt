@@ -12,3 +12,8 @@ data class FormatResponse(
     override val id: String,
     val name: String,
 ) : BaseModel<String>
+
+var FORMATS = listOf(
+    FormatResponse("DIGITAL", "Digital"),
+    FormatResponse("PHYSICAL", "Physical"),
+)

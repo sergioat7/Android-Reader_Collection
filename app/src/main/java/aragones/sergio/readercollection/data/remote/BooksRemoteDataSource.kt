@@ -6,11 +6,12 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.BookResponse
+import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
+import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.data.remote.model.StateResponse
-import aragones.sergio.readercollection.utils.Constants
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -122,7 +123,7 @@ class BooksRemoteDataSource(
                         .jsonObject
                         .getValue(language)
                         .toString()
-                Constants.FORMATS = Json
+                FORMATS = Json
                     .decodeFromString<Array<FormatResponse>>(
                         languagedFormats,
                     ).asList()
@@ -141,7 +142,7 @@ class BooksRemoteDataSource(
                         .jsonObject
                         .getValue(language)
                         .toString()
-                Constants.STATES = Json
+                STATES = Json
                     .decodeFromString<Array<StateResponse>>(
                         languagedStates,
                     ).asList()

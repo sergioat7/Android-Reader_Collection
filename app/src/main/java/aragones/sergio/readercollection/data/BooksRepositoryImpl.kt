@@ -90,16 +90,16 @@ class BooksRepositoryImpl(
         .map { it.map { book -> book.toDomain() } }
 
     override suspend fun importDataFrom(jsonData: String): Result<Unit> = runCatching {
-        val books = Json.decodeFromString<List<Book?>>(jsonData).mapNotNull { it }
+        val books = Json.decodeFromString<List<BookResponse?>>(jsonData).mapNotNull { it }
         booksLocalDataSource
-            .importDataFrom(books.map { it.toLocalData() })
+            .importDataFrom(books.map { it.toDomain().toLocalData() })
     }
 
     override suspend fun exportDataTo(): Result<String> = runCatching {
         val books = booksLocalDataSource
             .getAllBooks()
             .firstOrNull()
-            ?.map { it.toDomain() }
+            ?.map { it.toDomain().toRemoteData() }
             ?: emptyList()
         val jsonString = Json.encodeToString(books)
         return Result.success(jsonString)
