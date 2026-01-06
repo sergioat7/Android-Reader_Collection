@@ -15,11 +15,11 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.register.RegisterViewModel
 import com.aragones.sergio.util.Constants
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -128,7 +128,7 @@ class RegisterViewModelTest {
         val password = "pass"
         val userData = UserData(testUsername, password)
         val authData = AuthData("")
-        val exception: FirebaseAuthUserCollisionException = mockk()
+        val exception = CustomExceptions.ExistentUser()
         coEvery {
             userRemoteDataSource.register(
                 testUsername,

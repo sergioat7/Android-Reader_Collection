@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
+import aragones.sergio.readercollection.data.remote.FirebaseProvider
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
@@ -29,6 +30,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 private const val BASE_GOOGLE_ENDPOINT = "www.googleapis.com/books/v1"
@@ -87,6 +89,7 @@ val networkModule = module {
     }
     single<FirebaseAuth> { Firebase.auth }
     single<FirebaseFirestore> { Firebase.firestore }
+    singleOf(::FirebaseProvider)
     factoryOf(::BooksRemoteDataSource)
     factoryOf(::UserRemoteDataSource)
 }

@@ -11,12 +11,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.R
+import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -61,7 +61,7 @@ class RegisterViewModel(
             },
             onFailure = {
                 manageError(
-                    if (it is FirebaseAuthUserCollisionException) {
+                    if (it is CustomExceptions.ExistentUser) {
                         ErrorModel(
                             Constants.EMPTY_VALUE,
                             R.string.error_user_found,
