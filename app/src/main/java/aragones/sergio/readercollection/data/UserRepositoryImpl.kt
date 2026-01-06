@@ -48,7 +48,7 @@ class UserRepositoryImpl(
         }
 
     override val isLoggedIn: Boolean
-        get() = userLocalDataSource.isLoggedIn
+        get() = userLocalDataSource.isLoggedIn && userRemoteDataSource.userExists
 
     override val sortParam: String?
         get() = userLocalDataSource.sortParam

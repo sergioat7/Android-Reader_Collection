@@ -46,6 +46,28 @@ class UserRemoteDataSourceTest {
     private val dataSource = UserRemoteDataSource(auth, firestore, remoteConfig)
 
     @Test
+    fun `GIVEN current user not null WHEN check if user exists THEN return true`() {
+        every { auth.currentUser } returns mockk()
+
+        val result = dataSource.userExists
+
+        assertEquals(true, result)
+        verify { auth.currentUser }
+        confirmVerified(auth)
+    }
+
+    @Test
+    fun `GIVEN current user null WHEN check if user exists THEN return false`() {
+        every { auth.currentUser } returns null
+
+        val result = dataSource.userExists
+
+        assertEquals(false, result)
+        verify { auth.currentUser }
+        confirmVerified(auth)
+    }
+
+    @Test
     fun `GIVEN successful response WHEN login is called THEN return user id`() = runTest {
         val username = "testuser"
         val password = "password123"

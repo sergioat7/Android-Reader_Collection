@@ -4,8 +4,6 @@ package aragones.sergio.readercollection.data.local
 
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
-import com.google.firebase.auth.FirebaseAuth
-import io.mockk.Called
 import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -17,10 +15,9 @@ import kotlin.test.assertEquals
 
 class UserLocalDataSourceTest {
 
-    private val auth: FirebaseAuth = mockk()
     private val appInfoProvider: AppInfoProvider = mockk()
     private val preferences: SharedPreferencesHandler = mockk()
-    private val dataSource = UserLocalDataSource(auth, appInfoProvider, preferences)
+    private val dataSource = UserLocalDataSource(appInfoProvider, preferences)
 
     @Test
     fun `GIVEN username in preferences WHEN get username THEN return value from preferences`() {
@@ -104,59 +101,25 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun `GIVEN isLoggedIn true in preferences and currentUser is not null WHEN check if is logged in THEN return true`() {
+    fun `GIVEN isLoggedIn true in preferences WHEN check if is logged in THEN return true`() {
         every { preferences.isLoggedIn } returns true
-        every { auth.currentUser } returns mockk()
 
         val result = dataSource.isLoggedIn
 
         assertEquals(true, result)
         verify(exactly = 1) { preferences.isLoggedIn }
         confirmVerified(preferences)
-        verify(exactly = 1) { auth.currentUser }
-        confirmVerified(auth)
     }
 
     @Test
-    fun `GIVEN isLoggedIn true in preferences and currentUser is null WHEN check if is logged in THEN return false`() {
+    fun `GIVEN isLoggedIn false in preferences WHEN check if is logged in THEN return false`() {
         every { preferences.isLoggedIn } returns false
-        every { auth.currentUser } returns mockk()
 
         val result = dataSource.isLoggedIn
 
         assertEquals(false, result)
         verify(exactly = 1) { preferences.isLoggedIn }
         confirmVerified(preferences)
-        verify(exactly = 1) { auth.wasNot(Called) }
-        confirmVerified(auth)
-    }
-
-    @Test
-    fun `GIVEN isLoggedIn false in preferences and currentUser is not null WHEN check if is logged in THEN return false`() {
-        every { preferences.isLoggedIn } returns true
-        every { auth.currentUser } returns null
-
-        val result = dataSource.isLoggedIn
-
-        assertEquals(false, result)
-        verify(exactly = 1) { preferences.isLoggedIn }
-        confirmVerified(preferences)
-        verify(exactly = 1) { auth.currentUser }
-        confirmVerified(auth)
-    }
-
-    @Test
-    fun `GIVEN isLoggedIn false in preferences and currentUser is null WHEN check if is logged in THEN return false`() {
-        every { preferences.isLoggedIn } returns false
-        every { auth.currentUser } returns null
-
-        val result = dataSource.isLoggedIn
-
-        assertEquals(false, result)
-        verify(exactly = 1) { preferences.isLoggedIn }
-        confirmVerified(preferences)
-        verify(exactly = 1) { auth.wasNot(Called) }
-        confirmVerified(auth)
     }
 
     @Test

@@ -30,6 +30,11 @@ class UserRemoteDataSource(
     }
     //endregion
 
+    //region Public properties
+    val userExists: Boolean
+        get() = auth.currentUser != null
+    //endregion
+
     //region Public methods
     suspend fun login(username: String, password: String): Result<String> = runCatching {
         auth.signInWithEmailAndPassword("${username}$MAIL_END", password).await()

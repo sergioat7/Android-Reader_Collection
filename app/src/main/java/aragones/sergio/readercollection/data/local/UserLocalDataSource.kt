@@ -7,10 +7,8 @@ package aragones.sergio.readercollection.data.local
 
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
-import com.google.firebase.auth.FirebaseAuth
 
 class UserLocalDataSource(
-    private val auth: FirebaseAuth,
     private val appInfoProvider: AppInfoProvider,
     private val preferences: SharedPreferencesHandler,
 ) {
@@ -38,7 +36,7 @@ class UserLocalDataSource(
         }
 
     val isLoggedIn: Boolean
-        get() = preferences.isLoggedIn && auth.currentUser != null
+        get() = preferences.isLoggedIn
 
     val sortParam: String?
         get() = preferences.sortParam
