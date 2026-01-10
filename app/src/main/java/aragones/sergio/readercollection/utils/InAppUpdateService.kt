@@ -10,9 +10,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.UserRepository
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.appupdate.AppUpdateOptions
@@ -28,7 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class InAppUpdateService(
-    private val activity: ComponentActivity,
+    activity: ComponentActivity,
     private val userRepository: UserRepository,
     private val ioDispatcher: CoroutineDispatcher,
 ) {
@@ -92,11 +90,15 @@ class InAppUpdateService(
 
     fun isImmediateUpdate() = appUpdateType == AppUpdateType.IMMEDIATE
 
+    fun completeUpdate() {
+        appUpdateManager.completeUpdate()
+    }
+
     fun onResume() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { info ->
 
             if (isFlexibleUpdate() && isUpdateAlreadyInstalled(info)) {
-                flexibleUpdateDownloadCompleted()
+                _installStatus.value = InstallStatus.DOWNLOADED + InstallStatus.INSTALLED
             } else if (isImmediateUpdate() && isUpdateDownloading(info)) {
                 startUpdate(info, AppUpdateType.IMMEDIATE)
             }
@@ -127,22 +129,6 @@ class InAppUpdateService(
             AppUpdateOptions.newBuilder(type).build(),
         )
         appUpdateType = type
-    }
-
-    private fun flexibleUpdateDownloadCompleted() {
-        Snackbar
-            .make(
-                activity.findViewById(android.R.id.content),
-                activity.getString(R.string.message_app_update_downloaded),
-                Snackbar.LENGTH_INDEFINITE,
-            ).apply {
-                setAction(
-                    activity.getString(R.string.restart),
-                ) { appUpdateManager.completeUpdate() }
-                setBackgroundTint(activity.getColor(R.color.colorPrimary))
-                setActionTextColor(activity.getColor(R.color.colorSecondary))
-                show()
-            }
     }
     //endregion
 }

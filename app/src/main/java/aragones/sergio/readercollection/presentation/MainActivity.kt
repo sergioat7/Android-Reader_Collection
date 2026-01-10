@@ -11,10 +11,19 @@ import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
+import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
@@ -37,6 +46,7 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
     private val inAppUpdateService: InAppUpdateService by inject()
     private val navigator: Navigator by inject()
     private val viewModel: MainViewModel by viewModel()
+    private var appUpdated = mutableStateOf(false)
     //endregion
 
     //region Lifecycle methods
@@ -46,7 +56,29 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         setContent {
             ReaderCollectionApp {
                 CompositionLocalProvider(LocalLanguage provides viewModel.language) {
-                    MainScreen(navigator)
+                    val scope = rememberCoroutineScope()
+                    val snackbarHostState = remember { SnackbarHostState() }
+                    MainScreen(navigator, snackbarHostState)
+
+                    val message = stringResource(R.string.message_app_update_downloaded)
+                    val action = stringResource(R.string.restart)
+                    LaunchedEffect(appUpdated.value) {
+                        if (appUpdated.value) {
+                            scope.launch {
+                                val result = snackbarHostState.showSnackbar(
+                                    message = message,
+                                    actionLabel = action,
+                                    duration = SnackbarDuration.Indefinite,
+                                )
+                                when (result) {
+                                    SnackbarResult.ActionPerformed -> {
+                                        inAppUpdateService.completeUpdate()
+                                    }
+                                    SnackbarResult.Dismissed -> { /*no-op*/ }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -55,6 +87,8 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
             inAppUpdateService.installStatus.collect {
                 if (it == InstallStatus.DOWNLOADED) {
                     inAppUpdateService.onResume()
+                } else if (it == InstallStatus.DOWNLOADED + InstallStatus.INSTALLED) {
+                    appUpdated.value = true
                 }
             }
         }
