@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.statistics
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Typeface
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -223,7 +222,6 @@ private fun BooksByYear(entries: Entries, onYearSelected: (Int?) -> Unit) {
             val dataSet = BarDataSet(barEntries, "").apply {
                 valueTextColor = context.getCustomColor(R.color.textPrimary)
                 valueTextSize = 12.sp.value
-                valueTypeface = context.getCustomFont(R.font.roboto_serif_regular)
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
                 highLightColor = context.getCustomColor(R.color.colorTertiary)
@@ -239,7 +237,6 @@ private fun BooksByYear(entries: Entries, onYearSelected: (Int?) -> Unit) {
                     position = XAxisPosition.BOTTOM
                     textColor = context.getCustomColor(R.color.textPrimary)
                     textSize = 14.sp.value
-                    typeface = context.getCustomFont(R.font.roboto_serif_thin)
                     valueFormatter = NumberValueFormatter()
                     setDrawGridLines(false)
                 }
@@ -301,7 +298,6 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
             val data = PieData(dataSet).apply {
                 setValueTextColor(context.getCustomColor(R.color.textPrimary))
                 setValueTextSize(12.sp.value)
-                setValueTypeface(context.getCustomFont(R.font.roboto_serif_regular))
             }
             PieChart(context).apply {
                 isRotationEnabled = false
@@ -310,11 +306,9 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
                 centerText = monthsTitle
                 setCenterTextColor(context.getCustomColor(R.color.textPrimary))
                 setCenterTextSize(14.sp.value)
-                setCenterTextTypeface(context.getCustomFont(R.font.roboto_serif_regular))
                 setDrawCenterText(true)
                 setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
                 setEntryLabelTextSize(14.sp.value)
-                setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_thin))
                 setExtraOffsets(5f, 10f, 5f, 5f)
                 setUsePercentValues(false)
                 setHoleColor(Color.TRANSPARENT)
@@ -357,7 +351,6 @@ private fun BooksByAuthor(entries: MapEntries, onAuthorSelected: (String?) -> Un
             val dataSet = BarDataSet(barEntries, "").apply {
                 valueTextColor = context.getCustomColor(R.color.textPrimary)
                 valueTextSize = 12.sp.value
-                valueTypeface = context.getCustomFont(R.font.roboto_serif_regular)
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
                 highLightColor = context.getCustomColor(R.color.colorTertiary)
@@ -373,7 +366,6 @@ private fun BooksByAuthor(entries: MapEntries, onAuthorSelected: (String?) -> Un
                     position = XAxisPosition.BOTTOM
                     textColor = context.getCustomColor(R.color.textPrimary)
                     textSize = 14.sp.value
-                    typeface = context.getCustomFont(R.font.roboto_serif_thin)
                     setDrawGridLines(false)
                 }
                 axisLeft.apply {
@@ -488,7 +480,6 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
                 setValueFormatter(PercentFormatter(pieChart))
                 setValueTextColor(context.getCustomColor(R.color.textPrimary))
                 setValueTextSize(14.sp.value)
-                setValueTypeface(context.getCustomFont(R.font.roboto_serif_regular))
             }
             pieChart.apply {
                 isRotationEnabled = false
@@ -497,11 +488,9 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
                 centerText = formatsTitle
                 setCenterTextColor(context.getCustomColor(R.color.textPrimary))
                 setCenterTextSize(14.sp.value)
-                setCenterTextTypeface(context.getCustomFont(R.font.roboto_serif_regular))
                 setDrawCenterText(true)
                 setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
                 setEntryLabelTextSize(14.sp.value)
-                setEntryLabelTypeface(context.getCustomFont(R.font.roboto_serif_thin))
                 setExtraOffsets(5F, 10F, 5F, 5F)
                 setUsePercentValues(true)
                 setHoleColor(Color.TRANSPARENT)
@@ -623,8 +612,6 @@ private class StringValueFormatter(private val map: Map<String, List<Any>>) : Va
 
 private fun Context.getCustomColor(colorId: Int): Int =
     ResourcesCompat.getColor(resources, colorId, null)
-
-private fun Context.getCustomFont(fontId: Int): Typeface? = ResourcesCompat.getFont(this, fontId)
 
 private fun String.toLocalFormattedDate(language: String): LocalDate? {
     val locale = Locale.forLanguageTag(language)
