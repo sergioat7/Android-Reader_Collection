@@ -5,10 +5,12 @@
 
 package aragones.sergio.readercollection.presentation
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -17,6 +19,7 @@ import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
+import java.util.Locale
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.AndroidScopeComponent
@@ -65,6 +68,10 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         super.onResume()
 
         inAppUpdateService.onResume()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
+            viewModel.setLanguage(locale.language)
+        }
     }
 
     override fun onDestroy() {

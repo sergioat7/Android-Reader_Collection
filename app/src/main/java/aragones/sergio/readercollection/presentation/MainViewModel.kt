@@ -16,4 +16,10 @@ class MainViewModel(
     val language: String
         get() = userRepository.language
     //endregion
+
+    //region Public methods
+    fun setLanguage(language: String) {
+        userRepository.language = language
+    }
+    //endregion
 }

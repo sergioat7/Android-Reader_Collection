@@ -5,14 +5,12 @@
 
 package aragones.sergio.readercollection.presentation.displaysettings
 
-import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.UserRepository
-import java.util.Locale
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -39,11 +37,6 @@ class DisplaySettingsViewModel(
 
     //region Lifecycle methods
     fun onResume() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
-            userRepository.language = locale.language
-        }
-
         _state.value = _state.value.copy(
             language = userRepository.language,
             sortParam = userRepository.sortParam,
