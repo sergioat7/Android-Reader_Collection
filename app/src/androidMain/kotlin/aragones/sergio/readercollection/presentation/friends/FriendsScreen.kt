@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -55,6 +54,18 @@ import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.add_friend_action
+import reader_collection.app.generated.resources.delete
+import reader_collection.app.generated.resources.find_friends_action
+import reader_collection.app.generated.resources.friends_title
+import reader_collection.app.generated.resources.go_to_add_new_friend
+import reader_collection.app.generated.resources.no_friends_yet_subtitle
+import reader_collection.app.generated.resources.no_friends_yet_title
+import reader_collection.app.generated.resources.pending_status
+import reader_collection.app.generated.resources.reject_friend_action
+import reader_collection.app.generated.resources.rejected_status
 
 @Composable
 fun FriendsScreen(
@@ -98,7 +109,7 @@ fun FriendsScreen(
 @Composable
 private fun FriendsScreenToolbar(onBack: (() -> Unit)) {
     CustomToolbar(
-        title = stringResource(R.string.friends_title),
+        title = stringResource(Res.string.friends_title),
         backgroundColor = MaterialTheme.colorScheme.background,
         onBack = onBack,
     )
@@ -122,7 +133,7 @@ private fun NoFriendsContent(onAddFriend: () -> Unit, modifier: Modifier = Modif
         )
         Spacer(Modifier.height(24.dp))
         Text(
-            text = stringResource(R.string.no_friends_yet_title),
+            text = stringResource(Res.string.no_friends_yet_title),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 24.dp),
@@ -132,7 +143,7 @@ private fun NoFriendsContent(onAddFriend: () -> Unit, modifier: Modifier = Modif
         )
         Spacer(Modifier.height(12.dp))
         Text(
-            text = stringResource(R.string.no_friends_yet_subtitle),
+            text = stringResource(Res.string.no_friends_yet_subtitle),
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .padding(horizontal = 24.dp),
@@ -141,7 +152,7 @@ private fun NoFriendsContent(onAddFriend: () -> Unit, modifier: Modifier = Modif
             textAlign = TextAlign.Center,
         )
         MainActionButton(
-            text = stringResource(R.string.find_friends_action),
+            text = stringResource(Res.string.find_friends_action),
             enabled = true,
             onClick = onAddFriend,
             modifier = Modifier
@@ -179,7 +190,7 @@ private fun FriendsScreenContent(
         }
         ListButton(
             painter = rememberVectorPainter(Icons.Default.PersonAddAlt1)
-                .withDescription(stringResource(R.string.go_to_add_new_friend)),
+                .withDescription(stringResource(Res.string.go_to_add_new_friend)),
             onClick = onAddFriend,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -252,7 +263,7 @@ private fun FriendItem(
                     ),
                 ) {
                     Text(
-                        text = stringResource(R.string.delete),
+                        text = stringResource(Res.string.delete),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onErrorContainer,
                         maxLines = 2,
@@ -275,7 +286,7 @@ private fun FriendItem(
                     ),
                 ) {
                     Text(
-                        text = stringResource(R.string.add_friend_action),
+                        text = stringResource(Res.string.add_friend_action),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onPrimary,
                         maxLines = 1,
@@ -290,7 +301,7 @@ private fun FriendItem(
                     ),
                 ) {
                     Text(
-                        text = stringResource(R.string.reject_friend_action),
+                        text = stringResource(Res.string.reject_friend_action),
                         style = MaterialTheme.typography.bodyLarge,
                         color = MaterialTheme.colorScheme.onError,
                         maxLines = 1,
@@ -303,11 +314,11 @@ private fun FriendItem(
 
 @Composable
 private fun RequestStatus.title(): String? = when (this) {
-    RequestStatus.PENDING_MINE, RequestStatus.PENDING_FRIEND -> stringResource(
-        R.string.pending_status,
-    )
+    RequestStatus.PENDING_MINE,
+    RequestStatus.PENDING_FRIEND,
+    -> stringResource(Res.string.pending_status)
     RequestStatus.APPROVED -> null
-    RequestStatus.REJECTED -> stringResource(R.string.rejected_status)
+    RequestStatus.REJECTED -> stringResource(Res.string.rejected_status)
 }
 
 @Composable

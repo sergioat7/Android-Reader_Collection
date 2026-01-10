@@ -30,12 +30,12 @@
     //BOOKS
     <string name="title_books">Librería</string>
     <plurals name="title_books_count">
-        <item quantity="one">%s libro disponible</item>
-        <item quantity="many">%s libros disponibles</item>
-        <item quantity="other">%s libros disponibles</item>
+        <item quantity="one">%1$d libro disponible</item>
+        <item quantity="many">%1$d libros disponibles</item>
+        <item quantity="other">%1$d libros disponibles</item>
     </plurals>
     <string name="new_book">Nuevo</string>
-    <string name="format">Formato</string>
+    <string name="format_title">Formato</string>
     <string name="state">Estado</string>
     <string name="load_more">Cargar más</string>
     <string name="reading">Leyendo</string>

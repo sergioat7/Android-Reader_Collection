@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -39,12 +39,12 @@ fun SearchView(
         )
     }
 
-    val text = if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
+    val text = if (infoDialogMessageId != null) {
+        stringResource(requireNotNull(infoDialogMessageId))
     } else {
         ""
     }
-    InformationAlertDialog(show = infoDialogMessageId != -1, text = text) {
+    InformationAlertDialog(show = infoDialogMessageId != null, text = text) {
         viewModel.closeDialogs()
     }
 

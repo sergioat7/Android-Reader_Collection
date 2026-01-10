@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
@@ -49,6 +48,13 @@ import aragones.sergio.readercollection.presentation.theme.roseBud
 import aragones.sergio.readercollection.presentation.theme.selector
 import com.aragones.sergio.util.extensions.isNotBlank
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.decrease_priority_description
+import reader_collection.app.generated.resources.dragging_enabled_description
+import reader_collection.app.generated.resources.increase_priority_description
+import reader_collection.app.generated.resources.new_book
+import reader_collection.app.generated.resources.no_rated_description
 
 @Composable
 fun BookItem(
@@ -83,7 +89,7 @@ fun BookItem(
                 Spacer(Modifier.width(24.dp))
                 Icon(
                     painter = painterResource(R.drawable.ic_enable_drag),
-                    contentDescription = stringResource(R.string.dragging_enabled_description),
+                    contentDescription = stringResource(Res.string.dragging_enabled_description),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.CenterVertically),
                 )
@@ -149,9 +155,9 @@ private fun BookInfo(book: Book, modifier: Modifier = Modifier) {
                 modifier = Modifier.height(30.dp),
             )
         } else {
-            val contentDescription = stringResource(R.string.no_rated_description)
+            val contentDescription = stringResource(Res.string.no_rated_description)
             Text(
-                text = stringResource(R.string.new_book),
+                text = stringResource(Res.string.new_book),
                 style = MaterialTheme.typography.displayLarge,
                 color = MaterialTheme.colorScheme.roseBud,
                 overflow = TextOverflow.Ellipsis,
@@ -265,7 +271,7 @@ fun VerticalBookItem(
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_left),
                         contentDescription = stringResource(
-                            R.string.increase_priority_description,
+                            Res.string.increase_priority_description,
                             book.title ?: "",
                         ),
                         tint = MaterialTheme.colorScheme.primary,
@@ -278,7 +284,7 @@ fun VerticalBookItem(
                     Icon(
                         painter = painterResource(R.drawable.ic_round_switch_right),
                         contentDescription = stringResource(
-                            R.string.decrease_priority_description,
+                            Res.string.decrease_priority_description,
                             book.title ?: "",
                         ),
                         tint = MaterialTheme.colorScheme.primary,

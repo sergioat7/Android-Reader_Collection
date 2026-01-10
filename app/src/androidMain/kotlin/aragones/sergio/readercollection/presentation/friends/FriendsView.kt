@@ -9,9 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -45,8 +45,8 @@ fun FriendsView(
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
+    } else if (infoDialogMessageId != null) {
+        stringResource(requireNotNull(infoDialogMessageId))
     } else {
         ""
     }

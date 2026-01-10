@@ -6,7 +6,6 @@
 package aragones.sergio.readercollection.presentation.components
 
 import android.content.res.Configuration
-import androidx.annotation.StringRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -38,27 +37,34 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import com.aragones.sergio.util.extensions.currentTime
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.accept
+import reader_collection.app.generated.resources.book_remove_confirmation
+import reader_collection.app.generated.resources.book_saved
+import reader_collection.app.generated.resources.cancel
+import reader_collection.app.generated.resources.enter_valid_url
+import reader_collection.app.generated.resources.order_by
+import reader_collection.app.generated.resources.select_a_date
+import reader_collection.app.generated.resources.sorting_order_values
+import reader_collection.app.generated.resources.sorting_param_keys
+import reader_collection.app.generated.resources.sorting_param_values
+import reader_collection.app.generated.resources.sync_title
 
 @Composable
-fun ConfirmationAlertDialog(
-    show: Boolean,
-    @StringRes textId: Int,
-    onCancel: () -> Unit,
-    onAccept: () -> Unit,
-) {
-    if (show) {
+fun ConfirmationAlertDialog(textId: StringResource?, onCancel: () -> Unit, onAccept: () -> Unit) {
+    if (textId != null) {
         Dialog(
             onDismissRequest = onCancel,
             properties = DialogProperties(
@@ -83,11 +89,11 @@ fun ConfirmationAlertDialog(
                     )
                     Row(modifier = Modifier.align(Alignment.End)) {
                         TextButtonAlertDialog(
-                            text = stringResource(R.string.cancel),
+                            text = stringResource(Res.string.cancel),
                             onClick = onCancel,
                         )
                         TextButtonAlertDialog(
-                            text = stringResource(R.string.accept),
+                            text = stringResource(Res.string.accept),
                             onClick = onAccept,
                         )
                     }
@@ -123,7 +129,7 @@ fun InformationAlertDialog(show: Boolean, text: String, onDismiss: () -> Unit) {
                         modifier = Modifier.padding(horizontal = 12.dp),
                     )
                     TextButtonAlertDialog(
-                        text = stringResource(R.string.accept),
+                        text = stringResource(Res.string.accept),
                         modifier = Modifier.align(Alignment.End),
                         onClick = onDismiss,
                     )
@@ -135,13 +141,12 @@ fun InformationAlertDialog(show: Boolean, text: String, onDismiss: () -> Unit) {
 
 @Composable
 fun TextFieldAlertDialog(
-    show: Boolean,
-    @StringRes titleTextId: Int,
+    titleTextId: StringResource?,
     type: KeyboardType,
     onCancel: () -> Unit,
     onAccept: (String) -> Unit,
 ) {
-    if (show) {
+    if (titleTextId != null) {
         var text by rememberSaveable { mutableStateOf("") }
 
         Dialog(
@@ -186,11 +191,11 @@ fun TextFieldAlertDialog(
                     )
                     Row(modifier = Modifier.align(Alignment.End)) {
                         TextButtonAlertDialog(
-                            text = stringResource(R.string.cancel),
+                            text = stringResource(Res.string.cancel),
                             onClick = onCancel,
                         )
                         TextButtonAlertDialog(
-                            text = stringResource(R.string.accept),
+                            text = stringResource(Res.string.accept),
                             onClick = { onAccept(text) },
                         )
                     }
@@ -210,12 +215,9 @@ fun SortingPickerAlertDialog(
         var newSortParam by rememberSaveable { mutableStateOf(state.sortParam) }
         var newIsSortDescending by rememberSaveable { mutableStateOf(state.isSortDescending) }
 
-        val context = LocalContext.current
-        val sortParamKeys = context.resources.getStringArray(R.array.sorting_param_keys).toList()
-        val sortParamValues =
-            context.resources.getStringArray(R.array.sorting_param_values).toList()
-        val sortOrderValues =
-            context.resources.getStringArray(R.array.sorting_order_values).toList()
+        val sortParamKeys = stringArrayResource(Res.array.sorting_param_keys)
+        val sortParamValues = stringArrayResource(Res.array.sorting_param_values)
+        val sortOrderValues = stringArrayResource(Res.array.sorting_order_values)
 
         val isPortrait =
             LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
@@ -238,7 +240,7 @@ fun SortingPickerAlertDialog(
                 Column {
                     Spacer(Modifier.height(24.dp))
                     TextTitleAlertDialog(
-                        text = stringResource(R.string.order_by),
+                        text = stringResource(Res.string.order_by),
                         modifier = Modifier.padding(horizontal = 24.dp),
                     )
                     Row(horizontalArrangement = Arrangement.Center) {
@@ -263,11 +265,11 @@ fun SortingPickerAlertDialog(
                     }
                     Row(modifier = Modifier.align(Alignment.End)) {
                         TextButtonAlertDialog(
-                            text = stringResource(R.string.cancel),
+                            text = stringResource(Res.string.cancel),
                             onClick = onCancel,
                         )
                         TextButtonAlertDialog(
-                            text = stringResource(R.string.accept),
+                            text = stringResource(Res.string.accept),
                             onClick = {
                                 onAccept(newSortParam, newIsSortDescending)
                             },
@@ -301,7 +303,7 @@ fun CustomDatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
             TextButtonAlertDialog(
-                text = stringResource(R.string.accept),
+                text = stringResource(Res.string.accept),
                 onClick = {
                     onDateSelected(datePickerState.selectedDateMillis ?: currentTime())
                     onDismiss()
@@ -311,7 +313,7 @@ fun CustomDatePickerDialog(
         modifier = modifier,
         dismissButton = {
             TextButtonAlertDialog(
-                text = stringResource(R.string.cancel),
+                text = stringResource(Res.string.cancel),
                 onClick = onDismiss,
             )
         },
@@ -323,7 +325,7 @@ fun CustomDatePickerDialog(
             state = datePickerState,
             title = {
                 Text(
-                    text = stringResource(R.string.select_a_date),
+                    text = stringResource(Res.string.select_a_date),
                     modifier = Modifier.padding(start = 24.dp, end = 12.dp, top = 16.dp),
                     style = MaterialTheme.typography.displayMedium,
                     color = MaterialTheme.colorScheme.primary,
@@ -385,7 +387,7 @@ fun SyncAlertDialog() {
                 )
                 Spacer(Modifier.height(24.dp))
                 TextMessageAlertDialog(
-                    text = stringResource(R.string.sync_title),
+                    text = stringResource(Res.string.sync_title),
                     modifier = Modifier.padding(horizontal = 12.dp),
                 )
             }
@@ -437,8 +439,7 @@ private fun TextButtonAlertDialog(
 private fun ConfirmationAlertDialogPreview() {
     ReaderCollectionTheme {
         ConfirmationAlertDialog(
-            show = true,
-            textId = R.string.book_remove_confirmation,
+            textId = Res.string.book_remove_confirmation,
             onCancel = {},
             onAccept = {},
         )
@@ -451,7 +452,7 @@ private fun InformationAlertDialogPreview() {
     ReaderCollectionTheme {
         InformationAlertDialog(
             show = true,
-            text = stringResource(R.string.book_saved),
+            text = stringResource(Res.string.book_saved),
             onDismiss = {},
         )
     }
@@ -462,8 +463,7 @@ private fun InformationAlertDialogPreview() {
 private fun TextFieldAlertDialogPreview() {
     ReaderCollectionTheme {
         TextFieldAlertDialog(
-            show = true,
-            titleTextId = R.string.enter_valid_url,
+            titleTextId = Res.string.enter_valid_url,
             type = KeyboardType.Uri,
             onCancel = {},
             onAccept = {},

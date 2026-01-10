@@ -5,8 +5,10 @@
 
 package aragones.sergio.readercollection.presentation.login.model
 
+import org.jetbrains.compose.resources.StringResource
+
 data class LoginFormState(
-    val usernameError: Int? = null,
-    val passwordError: Int? = null,
+    val usernameError: StringResource? = null,
+    val passwordError: StringResource? = null,
     val isDataValid: Boolean = false,
 )

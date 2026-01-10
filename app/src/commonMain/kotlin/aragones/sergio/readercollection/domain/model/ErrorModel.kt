@@ -5,7 +5,9 @@
 
 package aragones.sergio.readercollection.domain.model
 
+import org.jetbrains.compose.resources.StringResource
+
 data class ErrorModel(
     val error: String,
-    val errorKey: Int,
+    val errorKey: StringResource,
 )

@@ -28,7 +28,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -43,6 +42,17 @@ import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.create_account
+import reader_collection.app.generated.resources.hide_password
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.invalid_username
+import reader_collection.app.generated.resources.not_account
+import reader_collection.app.generated.resources.password
+import reader_collection.app.generated.resources.show_password
+import reader_collection.app.generated.resources.sign_in
+import reader_collection.app.generated.resources.username
 
 @Composable
 fun LoginScreen(
@@ -70,7 +80,7 @@ fun LoginScreen(
         Spacer(Modifier.height(24.dp))
         CustomOutlinedTextField(
             text = state.username,
-            labelText = stringResource(R.string.username),
+            labelText = stringResource(Res.string.username),
             onTextChanged = { newUsername ->
                 onLoginDataChange(newUsername, state.password)
             },
@@ -86,7 +96,7 @@ fun LoginScreen(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = state.password,
-            labelText = stringResource(R.string.password),
+            labelText = stringResource(Res.string.password),
             onTextChanged = { newPassword ->
                 onLoginDataChange(state.username, newPassword)
             },
@@ -98,10 +108,10 @@ fun LoginScreen(
             errorText = state.formState.passwordError?.let { stringResource(it) },
             endIcon = if (passwordVisibility) {
                 painterResource(R.drawable.ic_hide_password)
-                    .withDescription(stringResource(R.string.hide_password))
+                    .withDescription(stringResource(Res.string.hide_password))
             } else {
                 painterResource(R.drawable.ic_show_password)
-                    .withDescription(stringResource(R.string.show_password))
+                    .withDescription(stringResource(Res.string.show_password))
             },
             inputType = CustomInputType.PASSWORD,
             isLastTextField = true,
@@ -110,7 +120,7 @@ fun LoginScreen(
         )
         Spacer(modifier = Modifier.weight(1f))
         MainActionButton(
-            text = stringResource(R.string.sign_in),
+            text = stringResource(Res.string.sign_in),
             modifier = Modifier
                 .widthIn(min = 200.dp)
                 .align(Alignment.CenterHorizontally)
@@ -126,14 +136,14 @@ fun LoginScreen(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(R.string.not_account),
+                text = stringResource(Res.string.not_account),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.tertiary,
             )
             Spacer(Modifier.width(5.dp))
             TextButton(onClick = onGoToRegister) {
                 Text(
-                    text = stringResource(R.string.create_account),
+                    text = stringResource(Res.string.create_account),
                     style = MaterialTheme.typography.bodyLarge.copy(
                         fontWeight = FontWeight.Bold,
                         letterSpacing = 0.sp,
@@ -182,8 +192,8 @@ private class LoginScreenPreviewParameterProvider :
                 username = "",
                 password = "",
                 formState = LoginFormState(
-                    usernameError = R.string.invalid_username,
-                    passwordError = R.string.invalid_password,
+                    usernameError = Res.string.invalid_username,
+                    passwordError = Res.string.invalid_password,
                     isDataValid = false,
                 ),
                 isLoading = false,

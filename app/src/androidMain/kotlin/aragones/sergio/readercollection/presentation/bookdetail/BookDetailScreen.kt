@@ -35,7 +35,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -66,6 +65,36 @@ import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.currentLocalDate
 import com.aragones.sergio.util.extensions.isNotBlank
 import com.aragones.sergio.util.extensions.toLocalDate
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.add_author
+import reader_collection.app.generated.resources.add_book
+import reader_collection.app.generated.resources.add_description
+import reader_collection.app.generated.resources.add_isbn
+import reader_collection.app.generated.resources.add_pages
+import reader_collection.app.generated.resources.add_photo
+import reader_collection.app.generated.resources.add_publisher
+import reader_collection.app.generated.resources.add_summary
+import reader_collection.app.generated.resources.add_title
+import reader_collection.app.generated.resources.authors
+import reader_collection.app.generated.resources.cancel_changes
+import reader_collection.app.generated.resources.clear_text
+import reader_collection.app.generated.resources.description
+import reader_collection.app.generated.resources.edit_book
+import reader_collection.app.generated.resources.format_title
+import reader_collection.app.generated.resources.isbn
+import reader_collection.app.generated.resources.pages
+import reader_collection.app.generated.resources.published_date
+import reader_collection.app.generated.resources.publisher
+import reader_collection.app.generated.resources.reading_date
+import reader_collection.app.generated.resources.remove_book
+import reader_collection.app.generated.resources.save_changes
+import reader_collection.app.generated.resources.select_a_date
+import reader_collection.app.generated.resources.select_format
+import reader_collection.app.generated.resources.select_state
+import reader_collection.app.generated.resources.state
+import reader_collection.app.generated.resources.summary
+import reader_collection.app.generated.resources.title
 
 @Composable
 fun BookDetailScreen(
@@ -94,13 +123,13 @@ fun BookDetailScreen(
                     {
                         TopAppBarIcon(
                             accessibilityPainter = painterResource(R.drawable.ic_edit_book)
-                                .withDescription(stringResource(R.string.edit_book)),
+                                .withDescription(stringResource(Res.string.edit_book)),
                             onClick = onEdit,
                             tint = MaterialTheme.colorScheme.secondary,
                         )
                         TopAppBarIcon(
                             accessibilityPainter = painterResource(R.drawable.ic_remove_book)
-                                .withDescription(stringResource(R.string.remove_book)),
+                                .withDescription(stringResource(Res.string.remove_book)),
                             onClick = onRemove,
                             tint = MaterialTheme.colorScheme.secondary,
                         )
@@ -110,13 +139,13 @@ fun BookDetailScreen(
                     {
                         TopAppBarIcon(
                             accessibilityPainter = painterResource(R.drawable.ic_cancel_changes)
-                                .withDescription(stringResource(R.string.cancel_changes)),
+                                .withDescription(stringResource(Res.string.cancel_changes)),
                             onClick = onCancel,
                             tint = MaterialTheme.colorScheme.secondary,
                         )
                         TopAppBarIcon(
                             accessibilityPainter = painterResource(R.drawable.ic_save_changes)
-                                .withDescription(stringResource(R.string.save_changes)),
+                                .withDescription(stringResource(Res.string.save_changes)),
                             onClick = {
                                 onSave(state.book)
                             },
@@ -128,7 +157,7 @@ fun BookDetailScreen(
                     {
                         TopAppBarIcon(
                             accessibilityPainter = painterResource(R.drawable.ic_save_book)
-                                .withDescription(stringResource(R.string.add_book)),
+                                .withDescription(stringResource(Res.string.add_book)),
                             onClick = {
                                 onSave(state.book)
                             },
@@ -179,7 +208,7 @@ fun BookDetailScreen(
                         ) {
                             Icon(
                                 painter = painterResource(R.drawable.ic_add_a_photo),
-                                contentDescription = stringResource(R.string.add_photo),
+                                contentDescription = stringResource(Res.string.add_photo),
                                 tint = MaterialTheme.colorScheme.secondary,
                             )
                         }
@@ -243,15 +272,15 @@ private fun BookDetailContent(
         Spacer(Modifier.height(12.dp))
         CustomOutlinedTextField(
             text = book.title?.takeIf { it.isNotBlank() }.orElse(isEditable),
-            labelText = stringResource(R.string.title),
+            labelText = stringResource(Res.string.title),
             onTextChanged = {
                 onChangeData(book.copy(title = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_title),
+            placeholderText = stringResource(Res.string.add_title),
             textStyle = MaterialTheme.typography.displayLarge,
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.title?.isNotBlank() == true },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
@@ -262,14 +291,14 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = book.authorsToString().takeIf { it.isNotBlank() }.orElse(isEditable),
-            labelText = stringResource(R.string.authors),
+            labelText = stringResource(Res.string.authors),
             onTextChanged = {
                 onChangeData(book.copy(authors = it.split(",")))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_author),
+            placeholderText = stringResource(Res.string.add_author),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.authorsToString().isNotBlank() },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
@@ -294,14 +323,14 @@ private fun BookDetailContent(
         Spacer(Modifier.height(24.dp))
         MultilineCustomOutlinedTextField(
             text = book.description.takeIf { it.isNotBlank() }.orElse(isEditable),
-            labelText = stringResource(R.string.description),
+            labelText = stringResource(Res.string.description),
             onTextChanged = {
                 onChangeData(book.copy(description = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_description),
+            placeholderText = stringResource(Res.string.add_description),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.description?.isNotBlank() == true },
             maxLength = 10240,
             maxLines = 8,
@@ -313,14 +342,14 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         MultilineCustomOutlinedTextField(
             text = book.summary.takeIf { it.isNotBlank() }.orElse(isEditable),
-            labelText = stringResource(R.string.summary),
+            labelText = stringResource(Res.string.summary),
             onTextChanged = {
                 onChangeData(book.copy(summary = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_summary),
+            placeholderText = stringResource(Res.string.add_summary),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.summary?.isNotBlank() == true },
             maxLength = 10240,
             maxLines = 8,
@@ -340,7 +369,7 @@ private fun BookDetailContent(
         CustomDropdownMenu(
             currentValue = bookState,
             values = DropdownValues(stateValues),
-            labelText = stringResource(R.string.state),
+            labelText = stringResource(Res.string.state),
             onOptionSelected = { newStateValue ->
                 val newStateId = STATES.firstOrNull { it.name == newStateValue }?.id
                 val newReadingDate = currentLocalDate().takeIf {
@@ -354,7 +383,7 @@ private fun BookDetailContent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.select_state),
+            placeholderText = stringResource(Res.string.select_state),
             enabled = isEditable,
         )
         Spacer(Modifier.height(16.dp))
@@ -362,7 +391,7 @@ private fun BookDetailContent(
             text = book.readingDate.getValueToShow(language)
                 ?: Constants.NO_VALUE.takeIf { !isEditable }
                 ?: Constants.EMPTY_VALUE,
-            labelText = stringResource(R.string.reading_date),
+            labelText = stringResource(Res.string.reading_date),
             onTextChanged = {
                 onChangeData(
                     book.copy(
@@ -372,9 +401,9 @@ private fun BookDetailContent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.select_a_date),
+            placeholderText = stringResource(Res.string.select_a_date),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.readingDate != null },
             enabled = isEditable,
             onEndIconClicked = {
@@ -393,13 +422,13 @@ private fun BookDetailContent(
         CustomDropdownMenu(
             currentValue = bookFormat,
             values = DropdownValues(formatValues),
-            labelText = stringResource(R.string.format),
+            labelText = stringResource(Res.string.format_title),
             onOptionSelected = { newFormatValue ->
                 val newFormatId = FORMATS.firstOrNull { it.name == newFormatValue }?.id
                 onChangeData(book.copy(format = newFormatId))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.select_format),
+            placeholderText = stringResource(Res.string.select_format),
             enabled = isEditable,
         )
         Spacer(Modifier.height(16.dp))
@@ -408,15 +437,15 @@ private fun BookDetailContent(
                 .takeIf { it > 0 }
                 ?.toString()
                 .orElse(isEditable),
-            labelText = stringResource(R.string.pages),
+            labelText = stringResource(Res.string.pages),
             onTextChanged = { newPages ->
                 val pages = newPages.takeIf { it.isNotBlank() }?.toInt() ?: 0
                 onChangeData(book.copy(pageCount = pages))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_pages),
+            placeholderText = stringResource(Res.string.add_pages),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.pageCount > 0 },
             inputType = CustomInputType.NUMBER,
             maxLength = 5,
@@ -428,14 +457,14 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = book.isbn.takeIf { it.isNotBlank() }.orElse(isEditable),
-            labelText = stringResource(R.string.isbn),
+            labelText = stringResource(Res.string.isbn),
             onTextChanged = {
                 onChangeData(book.copy(isbn = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_isbn),
+            placeholderText = stringResource(Res.string.add_isbn),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.isbn?.isNotBlank() == true },
             inputType = CustomInputType.NUMBER,
             enabled = isEditable,
@@ -446,14 +475,14 @@ private fun BookDetailContent(
         Spacer(Modifier.height(8.dp))
         CustomOutlinedTextField(
             text = book.publisher.takeIf { it.isNotBlank() }.orElse(isEditable),
-            labelText = stringResource(R.string.publisher),
+            labelText = stringResource(Res.string.publisher),
             onTextChanged = {
                 onChangeData(book.copy(publisher = it))
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.add_publisher),
+            placeholderText = stringResource(Res.string.add_publisher),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.publisher?.isNotBlank() == true },
             inputType = CustomInputType.MULTI_LINE_TEXT,
             enabled = isEditable,
@@ -466,7 +495,7 @@ private fun BookDetailContent(
             text = book.publishedDate.getValueToShow(language)
                 ?: Constants.NO_VALUE.takeIf { !isEditable }
                 ?: Constants.EMPTY_VALUE,
-            labelText = stringResource(R.string.published_date),
+            labelText = stringResource(Res.string.published_date),
             onTextChanged = {
                 onChangeData(
                     book.copy(
@@ -475,9 +504,9 @@ private fun BookDetailContent(
                 )
             },
             modifier = Modifier.fillMaxWidth(),
-            placeholderText = stringResource(R.string.select_a_date),
+            placeholderText = stringResource(Res.string.select_a_date),
             endIcon = painterResource(R.drawable.ic_clear_text)
-                .withDescription(stringResource(R.string.clear_text))
+                .withDescription(stringResource(Res.string.clear_text))
                 .takeIf { isEditable && book.publishedDate != null },
             enabled = isEditable,
             onEndIconClicked = {

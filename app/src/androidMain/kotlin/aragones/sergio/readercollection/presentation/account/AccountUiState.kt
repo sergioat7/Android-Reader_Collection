@@ -5,10 +5,12 @@
 
 package aragones.sergio.readercollection.presentation.account
 
+import org.jetbrains.compose.resources.StringResource
+
 data class AccountUiState(
     val username: String,
     val password: String,
-    val passwordError: Int?,
+    val passwordError: StringResource?,
     val isProfilePublic: Boolean,
     val isLoading: Boolean,
 ) {

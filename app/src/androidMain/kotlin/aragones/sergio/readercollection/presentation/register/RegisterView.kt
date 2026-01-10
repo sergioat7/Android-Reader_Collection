@@ -8,10 +8,11 @@ package aragones.sergio.readercollection.presentation.register
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.username_info
 
 @Composable
 fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = koinViewModel()) {
@@ -27,7 +28,7 @@ fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = koinView
 
     RegisterScreen(
         state = state,
-        onShowInfo = { viewModel.showInfoDialog(R.string.username_info) },
+        onShowInfo = { viewModel.showInfoDialog(Res.string.username_info) },
         onRegisterDataChange = viewModel::registerDataChanged,
         onRegister = viewModel::register,
     )
@@ -40,8 +41,8 @@ fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = koinView
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
+    } else if (infoDialogMessageId != null) {
+        stringResource(requireNotNull(infoDialogMessageId))
     } else {
         ""
     }

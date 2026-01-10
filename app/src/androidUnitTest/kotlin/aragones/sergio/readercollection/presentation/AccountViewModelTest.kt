@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -37,6 +36,11 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.profile_delete_confirmation
+import reader_collection.app.generated.resources.username_info
 
 class AccountViewModelTest {
 
@@ -139,7 +143,7 @@ class AccountViewModelTest {
             viewModel.save()
 
             assertEquals(
-                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server),
                 awaitItem(),
             )
         }
@@ -163,7 +167,7 @@ class AccountViewModelTest {
             viewModel.save()
 
             assertEquals(
-                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server),
                 awaitItem(),
             )
         }
@@ -251,7 +255,7 @@ class AccountViewModelTest {
             viewModel.setPublicProfile(value)
 
             assertEquals(
-                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server),
                 awaitItem(),
             )
         }
@@ -320,7 +324,7 @@ class AccountViewModelTest {
             viewModel.deleteUser()
 
             assertEquals(
-                ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
+                ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server),
                 awaitItem(),
             )
         }
@@ -364,7 +368,7 @@ class AccountViewModelTest {
                 assertEquals(
                     initialValue.copy(
                         password = newPassword,
-                        passwordError = R.string.invalid_password,
+                        passwordError = Res.string.invalid_password,
                     ),
                     awaitItem(),
                 )
@@ -374,22 +378,22 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+            viewModel.showConfirmationDialog(Res.string.profile_delete_confirmation)
 
-            assertEquals(R.string.profile_delete_confirmation, awaitItem())
+            assertEquals(Res.string.profile_delete_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
-            assertEquals(R.string.profile_delete_confirmation, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.profile_delete_confirmation)
+            assertEquals(Res.string.profile_delete_confirmation, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+            viewModel.showConfirmationDialog(Res.string.profile_delete_confirmation)
 
             expectNoEvents()
         }
@@ -398,22 +402,22 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showInfoDialog THEN dialog is shown`() = runTest {
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showInfoDialog(R.string.username_info)
+            viewModel.showInfoDialog(Res.string.username_info)
 
-            assertEquals(R.string.username_info, awaitItem())
+            assertEquals(Res.string.username_info, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showInfoDialog THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showInfoDialog(R.string.username_info)
-            assertEquals(R.string.username_info, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showInfoDialog(Res.string.username_info)
+            assertEquals(Res.string.username_info, awaitItem())
 
-            viewModel.showInfoDialog(R.string.username_info)
+            viewModel.showInfoDialog(Res.string.username_info)
 
             expectNoEvents()
         }
@@ -423,19 +427,19 @@ class AccountViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
             val confirmationDialogMessage = this
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.profile_delete_confirmation)
             assertEquals(
-                R.string.profile_delete_confirmation,
+                Res.string.profile_delete_confirmation,
                 confirmationDialogMessage.awaitItem(),
             )
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
-                viewModel.showInfoDialog(R.string.username_info)
+                assertEquals(null, awaitItem())
+                viewModel.showInfoDialog(Res.string.username_info)
                 assertEquals(
-                    R.string.username_info,
+                    Res.string.username_info,
                     infoDialogMessage.awaitItem(),
                 )
 
@@ -455,14 +459,14 @@ class AccountViewModelTest {
                     } returns Result.failure(Exception())
                     viewModel.deleteUser()
                     assertEquals(
-                        ErrorModel(Constants.EMPTY_VALUE, R.string.error_server),
+                        ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server),
                         awaitItem(),
                     )
 
                     viewModel.closeDialogs()
 
-                    assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    assertEquals(-1, infoDialogMessage.awaitItem())
+                    assertEquals(null, confirmationDialogMessage.awaitItem())
+                    assertEquals(null, infoDialogMessage.awaitItem())
                     assertEquals(null, profileError.awaitItem())
                 }
             }
@@ -472,10 +476,10 @@ class AccountViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.infoDialogMessageId.test {
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.profileError.test {
                     assertEquals(null, awaitItem())

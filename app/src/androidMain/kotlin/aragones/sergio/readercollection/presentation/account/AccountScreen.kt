@@ -37,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
@@ -53,6 +52,24 @@ import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
+import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.account_details_title
+import reader_collection.app.generated.resources.account_management_title
+import reader_collection.app.generated.resources.account_title
+import reader_collection.app.generated.resources.delete_account_action
+import reader_collection.app.generated.resources.delete_account_description
+import reader_collection.app.generated.resources.delete_account_title
+import reader_collection.app.generated.resources.hide_password
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.password
+import reader_collection.app.generated.resources.public_profile_description
+import reader_collection.app.generated.resources.public_profile_title
+import reader_collection.app.generated.resources.save
+import reader_collection.app.generated.resources.show_info
+import reader_collection.app.generated.resources.show_password
+import reader_collection.app.generated.resources.username
 
 @Composable
 fun AccountScreen(
@@ -82,7 +99,7 @@ fun AccountScreen(
                 .verticalScroll(scrollState),
         ) {
             Spacer(Modifier.height(12.dp))
-            HeaderText(text = stringResource(R.string.account_details_title))
+            HeaderText(text = stringResource(Res.string.account_details_title))
             ProfileInfo(
                 username = state.username,
                 password = state.password,
@@ -93,7 +110,7 @@ fun AccountScreen(
                 },
             )
             MainActionButton(
-                text = stringResource(R.string.save),
+                text = stringResource(Res.string.save),
                 modifier = Modifier
                     .widthIn(min = 200.dp)
                     .align(Alignment.CenterHorizontally)
@@ -102,7 +119,7 @@ fun AccountScreen(
                 onClick = onSave,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            HeaderText(text = stringResource(R.string.account_management_title))
+            HeaderText(text = stringResource(Res.string.account_management_title))
             PublicProfileItem(
                 isEnabled = state.isProfilePublic,
                 onChange = onChangePublicProfile,
@@ -123,7 +140,7 @@ private fun AccountToolbar(scrollState: ScrollState, onBack: (() -> Unit)) {
         else -> 4.dp
     }
     CustomToolbar(
-        title = stringResource(R.string.account_title),
+        title = stringResource(Res.string.account_title),
         modifier = Modifier.shadow(elevation = elevation),
         backgroundColor = MaterialTheme.colorScheme.background,
         onBack = onBack,
@@ -145,25 +162,25 @@ private fun HeaderText(text: String, modifier: Modifier = Modifier) {
 private fun ProfileInfo(
     username: String,
     password: String,
-    passwordError: Int?,
+    passwordError: StringResource?,
     onShowInfo: () -> Unit,
     onPasswordChange: (String) -> Unit,
 ) {
     var passwordVisibility by rememberSaveable { mutableStateOf(false) }
     CustomOutlinedTextField(
         text = username,
-        labelText = stringResource(R.string.username),
+        labelText = stringResource(Res.string.username),
         onTextChanged = {},
         modifier = Modifier.fillMaxWidth(),
         endIcon = painterResource(R.drawable.ic_show_info)
-            .withDescription(stringResource(R.string.show_info)),
+            .withDescription(stringResource(Res.string.show_info)),
         enabled = false,
         onEndIconClicked = onShowInfo,
     )
     Spacer(Modifier.height(8.dp))
     CustomOutlinedTextField(
         text = password,
-        labelText = stringResource(R.string.password),
+        labelText = stringResource(Res.string.password),
         onTextChanged = onPasswordChange,
         modifier = Modifier
             .fillMaxWidth()
@@ -171,10 +188,10 @@ private fun ProfileInfo(
         errorText = passwordError?.let { stringResource(it) },
         endIcon = if (passwordVisibility) {
             painterResource(R.drawable.ic_hide_password)
-                .withDescription(stringResource(R.string.hide_password))
+                .withDescription(stringResource(Res.string.hide_password))
         } else {
             painterResource(R.drawable.ic_show_password)
-                .withDescription(stringResource(R.string.show_password))
+                .withDescription(stringResource(Res.string.show_password))
         },
         inputType = CustomInputType.PASSWORD,
         isLastTextField = true,
@@ -197,14 +214,14 @@ private fun PublicProfileItem(
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(R.string.public_profile_title),
+                text = stringResource(Res.string.public_profile_title),
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.public_profile_description),
+                text = stringResource(Res.string.public_profile_description),
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.tertiary,
@@ -247,14 +264,14 @@ fun DeleteAccountItem(onClick: () -> Unit) {
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(R.string.delete_account_title),
+                text = stringResource(Res.string.delete_account_title),
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.delete_account_description),
+                text = stringResource(Res.string.delete_account_description),
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.tertiary,
@@ -270,7 +287,7 @@ fun DeleteAccountItem(onClick: () -> Unit) {
             ),
         ) {
             Text(
-                text = stringResource(R.string.delete_account_action),
+                text = stringResource(Res.string.delete_account_action),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onError,
                 maxLines = 2,
@@ -312,7 +329,7 @@ private class AccountScreenPreviewParameterProvider :
             AccountUiState(
                 username = "Username very very very very very very very long",
                 password = "",
-                passwordError = R.string.invalid_password,
+                passwordError = Res.string.invalid_password,
                 isProfilePublic = false,
                 isLoading = false,
             ),

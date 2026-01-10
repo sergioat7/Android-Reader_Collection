@@ -10,7 +10,6 @@ package aragones.sergio.readercollection.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
@@ -41,6 +40,13 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_remove_confirmation
+import reader_collection.app.generated.resources.book_removed
+import reader_collection.app.generated.resources.book_saved
+import reader_collection.app.generated.resources.enter_valid_url
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_no_book
 
 @RunWith(RobolectricTestRunner::class)
 class BookDetailViewModelTest {
@@ -135,7 +141,7 @@ class BookDetailViewModelTest {
             viewModel.onCreate()
 
             assertEquals(
-                ErrorModel("", R.string.error_no_book),
+                ErrorModel("", Res.string.error_no_book),
                 awaitItem(),
             )
         }
@@ -239,7 +245,7 @@ class BookDetailViewModelTest {
                 viewModel.onCreate()
 
                 assertEquals(
-                    ErrorModel("", R.string.error_no_book),
+                    ErrorModel("", Res.string.error_no_book),
                     awaitItem(),
                 )
             }
@@ -258,7 +264,7 @@ class BookDetailViewModelTest {
             viewModel.onCreate()
 
             assertEquals(
-                ErrorModel("", R.string.error_no_book),
+                ErrorModel("", Res.string.error_no_book),
                 awaitItem(),
             )
         }
@@ -399,7 +405,7 @@ class BookDetailViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     assertEquals(
@@ -423,7 +429,7 @@ class BookDetailViewModelTest {
                     viewModel.createBook(book.toDomain())
 
                     assertEquals(
-                        R.string.book_saved,
+                        Res.string.book_saved,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -472,7 +478,7 @@ class BookDetailViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     assertEquals(
@@ -496,7 +502,7 @@ class BookDetailViewModelTest {
                     viewModel.createBook(book.toDomain())
 
                     assertEquals(
-                        R.string.book_saved,
+                        Res.string.book_saved,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -555,7 +561,7 @@ class BookDetailViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 ),
                 awaitItem(),
             )
@@ -609,7 +615,7 @@ class BookDetailViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 ),
                 awaitItem(),
             )
@@ -629,7 +635,7 @@ class BookDetailViewModelTest {
             } just Runs
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     assertEquals(
@@ -644,7 +650,7 @@ class BookDetailViewModelTest {
                     viewModel.deleteBook()
 
                     assertEquals(
-                        R.string.book_removed,
+                        Res.string.book_removed,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -669,7 +675,7 @@ class BookDetailViewModelTest {
             } returns null
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     assertEquals(
@@ -684,7 +690,7 @@ class BookDetailViewModelTest {
                     viewModel.deleteBook()
 
                     assertEquals(
-                        R.string.book_removed,
+                        Res.string.book_removed,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -714,7 +720,7 @@ class BookDetailViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 ),
                 awaitItem(),
             )
@@ -820,22 +826,22 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
+            viewModel.showConfirmationDialog(Res.string.book_remove_confirmation)
 
-            assertEquals(R.string.book_remove_confirmation, awaitItem())
+            assertEquals(Res.string.book_remove_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
-            assertEquals(R.string.book_remove_confirmation, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.book_remove_confirmation)
+            assertEquals(Res.string.book_remove_confirmation, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
+            viewModel.showConfirmationDialog(Res.string.book_remove_confirmation)
 
             expectNoEvents()
         }
@@ -844,22 +850,22 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showImageDialog THEN dialog is shown`() = runTest {
         viewModel.imageDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showImageDialog(R.string.enter_valid_url)
+            viewModel.showImageDialog(Res.string.enter_valid_url)
 
-            assertEquals(R.string.enter_valid_url, awaitItem())
+            assertEquals(Res.string.enter_valid_url, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showImageDialog THEN do nothing`() = runTest {
         viewModel.imageDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showImageDialog(R.string.enter_valid_url)
-            assertEquals(R.string.enter_valid_url, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showImageDialog(Res.string.enter_valid_url)
+            assertEquals(Res.string.enter_valid_url, awaitItem())
 
-            viewModel.showImageDialog(R.string.enter_valid_url)
+            viewModel.showImageDialog(Res.string.enter_valid_url)
 
             expectNoEvents()
         }
@@ -869,36 +875,36 @@ class BookDetailViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
             val confirmationDialogMessage = this
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.book_remove_confirmation)
             assertEquals(
-                R.string.book_remove_confirmation,
+                Res.string.book_remove_confirmation,
                 confirmationDialogMessage.awaitItem(),
             )
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
                 coEvery {
                     booksLocalDataSource.getBook(any())
                 } returns null
                 viewModel.deleteBook()
                 assertEquals(
-                    R.string.book_removed,
+                    Res.string.book_removed,
                     infoDialogMessage.awaitItem(),
                 )
 
                 viewModel.imageDialogMessageId.test {
                     val imageDialogMessage = this
-                    assertEquals(-1, awaitItem())
-                    viewModel.showImageDialog(R.string.enter_valid_url)
-                    assertEquals(R.string.enter_valid_url, awaitItem())
+                    assertEquals(null, awaitItem())
+                    viewModel.showImageDialog(Res.string.enter_valid_url)
+                    assertEquals(Res.string.enter_valid_url, awaitItem())
 
                     viewModel.closeDialogs()
 
-                    assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    assertEquals(-1, infoDialogMessage.awaitItem())
-                    assertEquals(-1, imageDialogMessage.awaitItem())
+                    assertEquals(null, confirmationDialogMessage.awaitItem())
+                    assertEquals(null, infoDialogMessage.awaitItem())
+                    assertEquals(null, imageDialogMessage.awaitItem())
                 }
             }
         }
@@ -907,13 +913,13 @@ class BookDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.infoDialogMessageId.test {
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.imageDialogMessageId.test {
-                    assertEquals(-1, awaitItem())
+                    assertEquals(null, awaitItem())
 
                     viewModel.closeDialogs()
 

@@ -30,17 +30,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.SearchBar
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.add_friend_action
+import reader_collection.app.generated.resources.add_friends_title
+import reader_collection.app.generated.resources.no_friends_found
+import reader_collection.app.generated.resources.search_friends_instructions
 
 @Composable
 fun AddFriendsScreen(
@@ -84,9 +88,9 @@ fun AddFriendsScreen(
                     if (state.users.users.isEmpty()) {
                         val textKey =
                             if (state.query.isEmpty()) {
-                                R.string.search_friends_instructions
+                                Res.string.search_friends_instructions
                             } else {
-                                R.string.no_friends_found
+                                Res.string.no_friends_found
                             }
                         Text(
                             text = stringResource(textKey),
@@ -109,7 +113,7 @@ fun AddFriendsScreen(
 @Composable
 private fun AddFriendsToolbar(onBack: (() -> Unit)) {
     CustomToolbar(
-        title = stringResource(R.string.add_friends_title),
+        title = stringResource(Res.string.add_friends_title),
         backgroundColor = MaterialTheme.colorScheme.background,
         onBack = onBack,
     )
@@ -179,7 +183,7 @@ private fun FriendItem(friend: UserUi, onRequestFriend: () -> Unit, modifier: Mo
                             ),
                         ) {
                             Text(
-                                text = stringResource(R.string.add_friend_action),
+                                text = stringResource(Res.string.add_friend_action),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onPrimary,
                                 maxLines = 2,

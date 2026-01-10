@@ -8,16 +8,18 @@ package aragones.sergio.readercollection.presentation.bookdetail
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.components.LaunchedEffectOnce
 import aragones.sergio.readercollection.presentation.components.TextFieldAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import com.aragones.sergio.util.extensions.isNotBlank
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_remove_confirmation
+import reader_collection.app.generated.resources.enter_valid_url
 
 @Composable
 fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = koinViewModel()) {
@@ -35,7 +37,7 @@ fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = koinView
                 viewModel.enableEdition()
             },
             onRemove = {
-                viewModel.showConfirmationDialog(R.string.book_remove_confirmation)
+                viewModel.showConfirmationDialog(Res.string.book_remove_confirmation)
             },
             onCancel = {
                 viewModel.disableEdition()
@@ -49,13 +51,12 @@ fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = koinView
             },
             onChangeData = viewModel::changeData,
             onSetImage = {
-                viewModel.showImageDialog(R.string.enter_valid_url)
+                viewModel.showImageDialog(Res.string.enter_valid_url)
             },
         )
     }
 
     ConfirmationAlertDialog(
-        show = confirmationMessageId != -1,
         textId = confirmationMessageId,
         onCancel = {
             viewModel.closeDialogs()
@@ -74,8 +75,8 @@ fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = koinView
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
+    } else if (infoDialogMessageId != null) {
+        stringResource(requireNotNull(infoDialogMessageId))
     } else {
         ""
     }
@@ -85,7 +86,6 @@ fun BookDetailView(onBack: () -> Unit, viewModel: BookDetailViewModel = koinView
     }
 
     TextFieldAlertDialog(
-        show = imageDialogMessageId != -1,
         titleTextId = imageDialogMessageId,
         type = KeyboardType.Uri,
         onCancel = {

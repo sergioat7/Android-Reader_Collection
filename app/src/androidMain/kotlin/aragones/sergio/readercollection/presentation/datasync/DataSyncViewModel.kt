@@ -10,7 +10,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -18,6 +17,10 @@ import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.data_sync_successfully
+import reader_collection.app.generated.resources.error_server
 
 class DataSyncViewModel(
     private val booksRepository: BooksRepository,
@@ -33,15 +36,15 @@ class DataSyncViewModel(
         ),
     )
     private val _error = MutableStateFlow<ErrorModel?>(null)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
+    private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
     val state: State<DataSyncUiState> = _state
     val error: StateFlow<ErrorModel?> = _error
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
-    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
     //endregion
 
     //region Public methods
@@ -53,26 +56,26 @@ class DataSyncViewModel(
         _state.value = _state.value.copy(isLoading = true)
         booksRepository.syncBooks(userId).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.data_sync_successfully
+                _infoDialogMessageId.value = Res.string.data_sync_successfully
                 _state.value = _state.value.copy(isLoading = false)
             },
             onFailure = {
                 _state.value = _state.value.copy(isLoading = false)
                 _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_server,
+                    Res.string.error_server,
                 )
             },
         )
     }
 
-    fun showConfirmationDialog(textId: Int) {
+    fun showConfirmationDialog(textId: StringResource) {
         _confirmationDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
-        _infoDialogMessageId.value = -1
-        _confirmationDialogMessageId.value = -1
+        _infoDialogMessageId.value = null
+        _confirmationDialogMessageId.value = null
         _error.value = null
     }
     //endregion

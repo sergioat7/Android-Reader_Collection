@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.friends
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -17,6 +16,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.friend_action_failure
+import reader_collection.app.generated.resources.friend_action_successfully_done
 
 class FriendsViewModel(
     private val userRepository: UserRepository,
@@ -25,13 +28,13 @@ class FriendsViewModel(
     //region Private properties
     private var _state: MutableStateFlow<FriendsUiState> = MutableStateFlow(FriendsUiState.Loading)
     private val _error = MutableStateFlow<ErrorModel?>(null)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<FriendsUiState> = _state
     val error: StateFlow<ErrorModel?> = _error
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
     //endregion
 
     //region Public methods
@@ -44,7 +47,7 @@ class FriendsViewModel(
     fun acceptFriendRequest(friendId: String) = viewModelScope.launch {
         userRepository.acceptFriendRequest(friendId).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                _infoDialogMessageId.value = Res.string.friend_action_successfully_done
                 _state.update {
                     when (it) {
                         FriendsUiState.Loading -> it
@@ -65,7 +68,7 @@ class FriendsViewModel(
             onFailure = {
                 _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.friend_action_failure,
+                    Res.string.friend_action_failure,
                 )
             },
         )
@@ -74,7 +77,7 @@ class FriendsViewModel(
     fun rejectFriendRequest(friendId: String) = viewModelScope.launch {
         userRepository.rejectFriendRequest(friendId).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                _infoDialogMessageId.value = Res.string.friend_action_successfully_done
                 _state.update {
                     when (it) {
                         FriendsUiState.Loading -> it
@@ -89,7 +92,7 @@ class FriendsViewModel(
             onFailure = {
                 _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.friend_action_failure,
+                    Res.string.friend_action_failure,
                 )
             },
         )
@@ -98,7 +101,7 @@ class FriendsViewModel(
     fun deleteFriend(friendId: String) = viewModelScope.launch {
         userRepository.deleteFriend(friendId).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.friend_action_successfully_done
+                _infoDialogMessageId.value = Res.string.friend_action_successfully_done
                 _state.update {
                     when (it) {
                         FriendsUiState.Loading -> it
@@ -113,14 +116,14 @@ class FriendsViewModel(
             onFailure = {
                 _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.friend_action_failure,
+                    Res.string.friend_action_failure,
                 )
             },
         )
     }
 
     fun closeDialogs() {
-        _infoDialogMessageId.value = -1
+        _infoDialogMessageId.value = null
         _error.value = null
     }
     //endregion

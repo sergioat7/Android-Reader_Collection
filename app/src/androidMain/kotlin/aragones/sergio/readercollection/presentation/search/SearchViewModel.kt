@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
@@ -17,6 +16,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_saved
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_resource_found
+import reader_collection.app.generated.resources.error_search
 
 class SearchViewModel(
     private val booksRepository: BooksRepository,
@@ -30,12 +35,12 @@ class SearchViewModel(
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
     private val _state: MutableStateFlow<SearchUiState> = MutableStateFlow(SearchUiState.Empty)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
     var state: StateFlow<SearchUiState> = _state
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -90,7 +95,7 @@ class SearchViewModel(
                     _state.value = SearchUiState.Error(
                         isLoading = false,
                         query = this@SearchViewModel.query,
-                        value = ErrorModel("", R.string.error_search),
+                        value = ErrorModel("", Res.string.error_search),
                     )
                 },
             )
@@ -99,7 +104,7 @@ class SearchViewModel(
 
     fun addBook(bookId: String) {
         if (savedBooks.firstOrNull { it.id == bookId } != null) {
-            _infoDialogMessageId.value = R.string.error_resource_found
+            _infoDialogMessageId.value = Res.string.error_resource_found
             return
         }
 
@@ -110,17 +115,17 @@ class SearchViewModel(
         viewModelScope.launch {
             booksRepository.createBook(newBook).fold(
                 onSuccess = {
-                    _infoDialogMessageId.value = R.string.book_saved
+                    _infoDialogMessageId.value = Res.string.book_saved
                 },
                 onFailure = {
-                    _infoDialogMessageId.value = R.string.error_database
+                    _infoDialogMessageId.value = Res.string.error_database
                 },
             )
         }
     }
 
     fun closeDialogs() {
-        _infoDialogMessageId.value = -1
+        _infoDialogMessageId.value = null
     }
     //endregion
 

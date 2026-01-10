@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.addfriend
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -16,6 +15,9 @@ import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_search
+import reader_collection.app.generated.resources.error_server
 
 class AddFriendsViewModel(
     private val userRepository: UserRepository,
@@ -58,7 +60,7 @@ class AddFriendsViewModel(
                         else -> {
                             _error.value = ErrorModel(
                                 Constants.EMPTY_VALUE,
-                                R.string.error_server,
+                                Res.string.error_server,
                             )
                             _state.value = AddFriendsUiState.Success(
                                 users = UsersUi(),
@@ -118,7 +120,7 @@ class AddFriendsViewModel(
             onFailure = {
                 _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_search,
+                    Res.string.error_search,
                 )
                 _state.value = AddFriendsUiState.Success(
                     users = UsersUi(),

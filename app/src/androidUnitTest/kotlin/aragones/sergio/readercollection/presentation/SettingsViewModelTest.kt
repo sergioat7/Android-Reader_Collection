@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -33,6 +32,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.profile_logout_confirmation
 
 class SettingsViewModelTest {
 
@@ -116,22 +117,22 @@ class SettingsViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
+            viewModel.showConfirmationDialog(Res.string.profile_logout_confirmation)
 
-            assertEquals(R.string.profile_logout_confirmation, awaitItem())
+            assertEquals(Res.string.profile_logout_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
-            assertEquals(R.string.profile_logout_confirmation, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.profile_logout_confirmation)
+            assertEquals(Res.string.profile_logout_confirmation, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
+            viewModel.showConfirmationDialog(Res.string.profile_logout_confirmation)
 
             expectNoEvents()
         }
@@ -140,20 +141,20 @@ class SettingsViewModelTest {
     @Test
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog message is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.profile_logout_confirmation)
-            assertEquals(R.string.profile_logout_confirmation, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.profile_logout_confirmation)
+            assertEquals(Res.string.profile_logout_confirmation, awaitItem())
 
             viewModel.closeDialogs()
 
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.closeDialogs()
 

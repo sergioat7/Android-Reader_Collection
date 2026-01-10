@@ -25,8 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -69,6 +67,17 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.export_data
+import reader_collection.app.generated.resources.formats
+import reader_collection.app.generated.resources.import_data
+import reader_collection.app.generated.resources.longer_book
+import reader_collection.app.generated.resources.months
+import reader_collection.app.generated.resources.shorter_book
+import reader_collection.app.generated.resources.title_books_count
+import reader_collection.app.generated.resources.title_stats
 
 @Composable
 fun StatisticsScreen(
@@ -118,19 +127,19 @@ private fun StatisticsToolbar(
         else -> 4.dp
     }
     CustomToolbar(
-        title = stringResource(R.string.title_stats),
+        title = stringResource(Res.string.title_stats),
         modifier = modifier.shadow(elevation),
-        subtitle = pluralStringResource(R.plurals.title_books_count, booksRead, booksRead),
+        subtitle = pluralStringResource(Res.plurals.title_books_count, booksRead, booksRead),
         backgroundColor = MaterialTheme.colorScheme.background,
         actions = {
             TopAppBarIcon(
                 accessibilityPainter = painterResource(R.drawable.ic_file_import)
-                    .withDescription(stringResource(R.string.import_data)),
+                    .withDescription(stringResource(Res.string.import_data)),
                 onClick = onImportClick,
             )
             TopAppBarIcon(
                 accessibilityPainter = painterResource(R.drawable.ic_file_export)
-                    .withDescription(stringResource(R.string.export_data)),
+                    .withDescription(stringResource(Res.string.export_data)),
                 onClick = onExportClick,
             )
         },
@@ -274,6 +283,7 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
         )
     }
     val language = LocalLanguage.current
+    val monthsTitle = stringResource(Res.string.months)
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
@@ -297,7 +307,7 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
                 isRotationEnabled = false
                 legend.isEnabled = false
                 description.isEnabled = false
-                centerText = resources.getString(R.string.months)
+                centerText = monthsTitle
                 setCenterTextColor(context.getCustomColor(R.color.textPrimary))
                 setCenterTextSize(14.sp.value)
                 setCenterTextTypeface(context.getCustomFont(R.font.roboto_serif_regular))
@@ -413,7 +423,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
         shorterBook?.let { book ->
             Column {
                 Text(
-                    text = stringResource(R.string.shorter_book),
+                    text = stringResource(Res.string.shorter_book),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.tertiary,
                 )
@@ -432,7 +442,7 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
         longerBook?.let { book ->
             Column {
                 Text(
-                    text = stringResource(R.string.longer_book),
+                    text = stringResource(Res.string.longer_book),
                     style = MaterialTheme.typography.bodyLarge,
                     color = MaterialTheme.colorScheme.tertiary,
                 )
@@ -459,6 +469,7 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
             it.key,
         )
     }
+    val formatsTitle = stringResource(Res.string.formats)
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
@@ -483,7 +494,7 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
                 isRotationEnabled = false
                 legend.isEnabled = false
                 description.isEnabled = false
-                centerText = resources.getString(R.string.formats)
+                centerText = formatsTitle
                 setCenterTextColor(context.getCustomColor(R.color.textPrimary))
                 setCenterTextSize(14.sp.value)
                 setCenterTextTypeface(context.getCustomFont(R.font.roboto_serif_regular))

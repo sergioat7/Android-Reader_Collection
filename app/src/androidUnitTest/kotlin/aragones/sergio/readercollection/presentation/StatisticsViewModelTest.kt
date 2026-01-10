@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -43,6 +42,12 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import org.junit.Assert
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.data_imported
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_file_data
+import reader_collection.app.generated.resources.export_confirmation
+import reader_collection.app.generated.resources.file_created
 
 class StatisticsViewModelTest {
 
@@ -181,11 +186,11 @@ class StatisticsViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.export_confirmation)
+            viewModel.showConfirmationDialog(Res.string.export_confirmation)
 
-            assertEquals(R.string.export_confirmation, awaitItem())
+            assertEquals(Res.string.export_confirmation, awaitItem())
         }
     }
 
@@ -193,11 +198,11 @@ class StatisticsViewModelTest {
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN dialog message is not updated`() =
         runTest {
             viewModel.confirmationDialogMessageId.test {
-                assertEquals(-1, awaitItem())
-                viewModel.showConfirmationDialog(R.string.export_confirmation)
-                assertEquals(R.string.export_confirmation, awaitItem())
+                assertEquals(null, awaitItem())
+                viewModel.showConfirmationDialog(Res.string.export_confirmation)
+                assertEquals(Res.string.export_confirmation, awaitItem())
 
-                viewModel.showConfirmationDialog(R.string.export_confirmation)
+                viewModel.showConfirmationDialog(Res.string.export_confirmation)
 
                 expectNoEvents()
             }
@@ -211,35 +216,35 @@ class StatisticsViewModelTest {
             assertEquals(null, awaitItem())
             viewModel.importData("[]")
             assertEquals(
-                ErrorModel("", R.string.error_file_data),
+                ErrorModel("", Res.string.error_file_data),
                 awaitItem(),
             )
 
             viewModel.confirmationDialogMessageId.test {
                 val confirmationDialogMessage = this
-                assertEquals(-1, awaitItem())
-                viewModel.showConfirmationDialog(R.string.export_confirmation)
+                assertEquals(null, awaitItem())
+                viewModel.showConfirmationDialog(Res.string.export_confirmation)
                 assertEquals(
-                    R.string.export_confirmation,
+                    Res.string.export_confirmation,
                     confirmationDialogMessage.awaitItem(),
                 )
 
                 viewModel.infoDialogMessageId.test {
                     val infoDialogMessage = this
-                    assertEquals(-1, awaitItem())
+                    assertEquals(null, awaitItem())
 
                     coEvery { booksLocalDataSource.importDataFrom(any()) } just Runs
                     viewModel.importData("[]")
                     assertEquals(
-                        R.string.data_imported,
+                        Res.string.data_imported,
                         infoDialogMessage.awaitItem(),
                     )
 
                     viewModel.closeDialogs()
 
                     assertEquals(null, booksError.awaitItem())
-                    assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    assertEquals(-1, infoDialogMessage.awaitItem())
+                    assertEquals(null, confirmationDialogMessage.awaitItem())
+                    assertEquals(null, infoDialogMessage.awaitItem())
                 }
             }
         }
@@ -251,10 +256,10 @@ class StatisticsViewModelTest {
             assertEquals(null, awaitItem())
 
             viewModel.confirmationDialogMessageId.test {
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.infoDialogMessageId.test {
-                    assertEquals(-1, awaitItem())
+                    assertEquals(null, awaitItem())
 
                     viewModel.closeDialogs()
 
@@ -270,7 +275,7 @@ class StatisticsViewModelTest {
         coEvery { booksLocalDataSource.importDataFrom(any()) } just Runs
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.importData(
                 """
@@ -285,7 +290,7 @@ class StatisticsViewModelTest {
                 """.trimIndent(),
             )
 
-            assertEquals(R.string.data_imported, awaitItem())
+            assertEquals(Res.string.data_imported, awaitItem())
         }
         coVerify { booksLocalDataSource.importDataFrom(listOf(book.toLocalData())) }
         confirmVerified(booksLocalDataSource)
@@ -301,7 +306,7 @@ class StatisticsViewModelTest {
             viewModel.importData("[{\"titl\":\"\"}]")
 
             assertEquals(
-                ErrorModel("", R.string.error_file_data),
+                ErrorModel("", Res.string.error_file_data),
                 awaitItem(),
             )
         }
@@ -331,7 +336,7 @@ class StatisticsViewModelTest {
             )
 
             assertEquals(
-                ErrorModel("", R.string.error_file_data),
+                ErrorModel("", Res.string.error_file_data),
                 awaitItem(),
             )
         }
@@ -367,13 +372,13 @@ class StatisticsViewModelTest {
         every { booksLocalDataSource.getAllBooks() } returns flowOf(listOf(book.toLocalData()))
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.getDataToExport {
                 json = it
             }
 
-            assertEquals(R.string.file_created, awaitItem())
+            assertEquals(Res.string.file_created, awaitItem())
             assertEquals(
                 """
                 [{
@@ -410,13 +415,13 @@ class StatisticsViewModelTest {
         every { booksLocalDataSource.getAllBooks() } returns flowOf(emptyList())
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.getDataToExport {
                 json = it
             }
 
-            assertEquals(R.string.file_created, awaitItem())
+            assertEquals(Res.string.file_created, awaitItem())
             assertEquals("[]", json)
         }
         verify { booksLocalDataSource.getAllBooks() }
@@ -436,7 +441,7 @@ class StatisticsViewModelTest {
             }
 
             assertEquals(
-                ErrorModel("", R.string.error_database),
+                ErrorModel("", Res.string.error_database),
                 awaitItem(),
             )
             assertEquals(null, json)

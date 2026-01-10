@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library) apply false
     alias(libs.plugins.androidx.room) apply false
     alias(libs.plugins.compose.compiler) apply false
+    alias(libs.plugins.compose.jetbrains) apply false
     alias(libs.plugins.crashlytics) apply false
     alias(libs.plugins.detekt)
     alias(libs.plugins.google.services) apply false

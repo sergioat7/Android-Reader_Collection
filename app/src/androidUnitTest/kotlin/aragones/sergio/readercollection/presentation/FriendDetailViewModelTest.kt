@@ -10,7 +10,6 @@ package aragones.sergio.readercollection.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -37,6 +36,13 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_search
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.friend_removed
+import reader_collection.app.generated.resources.no_friends_found
+import reader_collection.app.generated.resources.profile_delete_confirmation
+import reader_collection.app.generated.resources.user_remove_confirmation
 
 @RunWith(RobolectricTestRunner::class)
 class FriendDetailViewModelTest {
@@ -111,7 +117,7 @@ class FriendDetailViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.no_friends_found,
+                    Res.string.no_friends_found,
                 ),
                 awaitItem(),
             )
@@ -138,7 +144,7 @@ class FriendDetailViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_server,
+                    Res.string.error_server,
                 ),
                 awaitItem(),
             )
@@ -154,12 +160,12 @@ class FriendDetailViewModelTest {
         } returns Result.success(Unit)
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.deleteFriend()
 
             assertEquals(
-                R.string.friend_removed,
+                Res.string.friend_removed,
                 awaitItem(),
             )
         }
@@ -180,7 +186,7 @@ class FriendDetailViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_search,
+                    Res.string.error_search,
                 ),
                 awaitItem(),
             )
@@ -191,22 +197,22 @@ class FriendDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN showConfirmationDialog THEN dialog is shown`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.user_remove_confirmation)
+            viewModel.showConfirmationDialog(Res.string.user_remove_confirmation)
 
-            assertEquals(R.string.user_remove_confirmation, awaitItem())
+            assertEquals(Res.string.user_remove_confirmation, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN same dialog message shown WHEN showConfirmationDialog THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.user_remove_confirmation)
-            assertEquals(R.string.user_remove_confirmation, awaitItem())
+            assertEquals(null, awaitItem())
+            viewModel.showConfirmationDialog(Res.string.user_remove_confirmation)
+            assertEquals(Res.string.user_remove_confirmation, awaitItem())
 
-            viewModel.showConfirmationDialog(R.string.user_remove_confirmation)
+            viewModel.showConfirmationDialog(Res.string.user_remove_confirmation)
 
             expectNoEvents()
         }
@@ -216,22 +222,22 @@ class FriendDetailViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.confirmationDialogMessageId.test {
             val confirmationDialogMessage = this
-            assertEquals(-1, awaitItem())
-            viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+            assertEquals(null, awaitItem())
+            viewModel.run { showConfirmationDialog(Res.string.profile_delete_confirmation) }
             assertEquals(
-                R.string.profile_delete_confirmation,
+                Res.string.profile_delete_confirmation,
                 confirmationDialogMessage.awaitItem(),
             )
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
                 coEvery {
                     userRemoteDataSource.deleteFriend(any(), any())
                 } returns Result.success(Unit)
                 viewModel.deleteFriend()
                 assertEquals(
-                    R.string.friend_removed,
+                    Res.string.friend_removed,
                     infoDialogMessage.awaitItem(),
                 )
 
@@ -245,15 +251,15 @@ class FriendDetailViewModelTest {
                     assertEquals(
                         ErrorModel(
                             Constants.EMPTY_VALUE,
-                            R.string.error_search,
+                            Res.string.error_search,
                         ),
                         awaitItem(),
                     )
 
                     viewModel.closeDialogs()
 
-                    assertEquals(-1, confirmationDialogMessage.awaitItem())
-                    assertEquals(-1, infoDialogMessage.awaitItem())
+                    assertEquals(null, confirmationDialogMessage.awaitItem())
+                    assertEquals(null, infoDialogMessage.awaitItem())
                     assertEquals(null, profileError.awaitItem())
                 }
             }
@@ -263,10 +269,10 @@ class FriendDetailViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.confirmationDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.infoDialogMessageId.test {
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.error.test {
                     assertEquals(null, awaitItem())

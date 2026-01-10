@@ -45,8 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -77,6 +75,18 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.accept
+import reader_collection.app.generated.resources.go_to_add_new_book
+import reader_collection.app.generated.resources.not_reading_anything_yet
+import reader_collection.app.generated.resources.pending
+import reader_collection.app.generated.resources.read
+import reader_collection.app.generated.resources.show_all
+import reader_collection.app.generated.resources.sort_books
+import reader_collection.app.generated.resources.title_books
+import reader_collection.app.generated.resources.title_books_count
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,7 +126,7 @@ fun BooksScreen(
         )
         ListButton(
             painter = painterResource(R.drawable.ic_save_book)
-                .withDescription(stringResource(R.string.go_to_add_new_book)),
+                .withDescription(stringResource(Res.string.go_to_add_new_book)),
             onClick = onAddBook,
             modifier = Modifier.align(Alignment.BottomEnd),
         )
@@ -169,12 +179,12 @@ private fun BooksScreenContent(
 ) {
     val subtitle = when (state) {
         is BooksUiState.Empty -> pluralStringResource(
-            R.plurals.title_books_count,
+            Res.plurals.title_books_count,
             0,
             0,
         )
         is BooksUiState.Success -> pluralStringResource(
-            R.plurals.title_books_count,
+            Res.plurals.title_books_count,
             state.books.books.size,
             state.books.books.size,
         )
@@ -182,13 +192,13 @@ private fun BooksScreenContent(
 
     Column(modifier = modifier) {
         CustomToolbar(
-            title = stringResource(R.string.title_books),
+            title = stringResource(Res.string.title_books),
             subtitle = subtitle,
             backgroundColor = MaterialTheme.colorScheme.background,
             actions = {
                 TopAppBarIcon(
                     accessibilityPainter = painterResource(R.drawable.ic_sort_books)
-                        .withDescription(stringResource(R.string.sort_books)),
+                        .withDescription(stringResource(Res.string.sort_books)),
                     onClick = onSortClick,
                 )
             },
@@ -257,7 +267,7 @@ private fun BooksComponent(
         }
         item {
             BooksSection(
-                title = stringResource(R.string.pending),
+                title = stringResource(Res.string.pending),
                 books = Books(pendingBooks.take(Constants.BOOKS_TO_SHOW)),
                 isSwitchingEnabled = isSwitchingEnabled,
                 showAll = pendingBooks.size > Constants.BOOKS_TO_SHOW,
@@ -272,7 +282,7 @@ private fun BooksComponent(
         }
         item {
             BooksSection(
-                title = stringResource(R.string.read),
+                title = stringResource(Res.string.read),
                 books = Books(readBooks.take(Constants.BOOKS_TO_SHOW)),
                 isSwitchingEnabled = isSwitchingEnabled,
                 showAll = readBooks.size > Constants.BOOKS_TO_SHOW,
@@ -309,7 +319,7 @@ private fun ReadingBooksSection(
         } else {
             Image(
                 painter = painterResource(R.drawable.image_user_reading),
-                contentDescription = stringResource(R.string.not_reading_anything_yet),
+                contentDescription = stringResource(Res.string.not_reading_anything_yet),
                 modifier = Modifier
                     .fillMaxHeight()
                     .fillMaxWidth(0.5f)
@@ -430,7 +440,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
         if (showAll) {
             TextButton(onClick = onShowAll) {
                 Text(
-                    text = stringResource(R.string.show_all),
+                    text = stringResource(Res.string.show_all),
                     style = MaterialTheme.typography.displaySmall,
                     color = MaterialTheme.colorScheme.primary,
                     overflow = TextOverflow.Ellipsis,
@@ -443,7 +453,7 @@ private fun BooksSectionHeader(title: String, showAll: Boolean, onShowAll: () ->
 
 @Composable
 private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
-    val text = stringResource(R.string.show_all)
+    val text = stringResource(Res.string.show_all)
     Column(
         modifier = modifier
             .padding(horizontal = 12.dp)
@@ -519,7 +529,7 @@ private fun BottomSheetContent(
             }
         }
         MainActionButton(
-            text = stringResource(R.string.accept),
+            text = stringResource(Res.string.accept),
             modifier = Modifier.fillMaxWidth(),
             enabled = true,
             onClick = onDone,

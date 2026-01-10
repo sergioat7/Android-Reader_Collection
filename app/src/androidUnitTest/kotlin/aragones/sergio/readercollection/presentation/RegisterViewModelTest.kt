@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.local.model.AuthData
@@ -33,6 +32,13 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.error_user_found
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.invalid_repeat_password
+import reader_collection.app.generated.resources.invalid_username
+import reader_collection.app.generated.resources.username_info
 
 class RegisterViewModelTest {
 
@@ -111,7 +117,7 @@ class RegisterViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_server,
+                        Res.string.error_server,
                     ),
                     awaitItem(),
                 )
@@ -144,7 +150,7 @@ class RegisterViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_user_found,
+                    Res.string.error_user_found,
                 ),
                 awaitItem(),
             )
@@ -193,7 +199,7 @@ class RegisterViewModelTest {
 
         assertEquals(
             LoginFormState(
-                usernameError = R.string.invalid_username,
+                usernameError = Res.string.invalid_username,
                 passwordError = null,
                 isDataValid = false,
             ),
@@ -217,7 +223,7 @@ class RegisterViewModelTest {
         assertEquals(
             LoginFormState(
                 usernameError = null,
-                passwordError = R.string.invalid_password,
+                passwordError = Res.string.invalid_password,
                 isDataValid = false,
             ),
             viewModel.uiState.value.formState,
@@ -240,7 +246,7 @@ class RegisterViewModelTest {
         assertEquals(
             LoginFormState(
                 usernameError = null,
-                passwordError = R.string.invalid_repeat_password,
+                passwordError = Res.string.invalid_repeat_password,
                 isDataValid = false,
             ),
             viewModel.uiState.value.formState,
@@ -262,8 +268,8 @@ class RegisterViewModelTest {
 
         assertEquals(
             LoginFormState(
-                usernameError = R.string.invalid_username,
-                passwordError = R.string.invalid_repeat_password,
+                usernameError = Res.string.invalid_username,
+                passwordError = Res.string.invalid_repeat_password,
                 isDataValid = false,
             ),
             viewModel.uiState.value.formState,
@@ -272,9 +278,9 @@ class RegisterViewModelTest {
 
     @Test
     fun `GIVEN no dialog shown WHEN showInfoDialog THEN dialog is shown`() = runTest {
-        val textId = R.string.username_info
+        val textId = Res.string.username_info
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.showInfoDialog(textId)
 
@@ -295,25 +301,25 @@ class RegisterViewModelTest {
 
         viewModel.infoDialogMessageId.test {
             val infoDialogMessageId = this
-            assertEquals(-1, infoDialogMessageId.awaitItem())
+            assertEquals(null, infoDialogMessageId.awaitItem())
             viewModel.registerError.test {
                 val registerError = this
                 assertEquals(null, registerError.awaitItem())
 
                 viewModel.register(testUsername, password)
-                viewModel.showInfoDialog(R.string.username_info)
-                assertEquals(R.string.username_info, infoDialogMessageId.awaitItem())
+                viewModel.showInfoDialog(Res.string.username_info)
+                assertEquals(Res.string.username_info, infoDialogMessageId.awaitItem())
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_server,
+                        Res.string.error_server,
                     ),
                     registerError.awaitItem(),
                 )
 
                 viewModel.closeDialogs()
 
-                assertEquals(-1, infoDialogMessageId.awaitItem())
+                assertEquals(null, infoDialogMessageId.awaitItem())
                 assertEquals(null, registerError.awaitItem())
             }
         }
@@ -322,7 +328,7 @@ class RegisterViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
             viewModel.registerError.test {
                 assertEquals(null, awaitItem())
 

@@ -53,8 +53,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
@@ -72,11 +70,23 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.lightRoseBud
 import aragones.sergio.readercollection.presentation.theme.roseBud
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_rating_description
+import reader_collection.app.generated.resources.clear_text
+import reader_collection.app.generated.resources.no_results_text
+import reader_collection.app.generated.resources.search
+import reader_collection.app.generated.resources.star_empty
+import reader_collection.app.generated.resources.star_filled
+import reader_collection.app.generated.resources.star_half_filled
+import reader_collection.app.generated.resources.star_rate_description
+import reader_collection.app.generated.resources.star_status_description
 
 @Composable
 fun NoResultsComponent(
     modifier: Modifier = Modifier,
-    text: String = stringResource(R.string.no_results_text),
+    text: String = stringResource(Res.string.no_results_text),
     @DrawableRes image: Int = R.drawable.image_no_results,
 ) {
     Column(
@@ -117,7 +127,7 @@ fun StarRatingBar(
     val starSpacing = with(LocalDensity.current) { (0.5f * density).dp }
 
     val contentDescription =
-        stringResource(R.string.book_rating_description, (rating * 10 / maxStars).toInt())
+        stringResource(Res.string.book_rating_description, (rating * 10 / maxStars).toInt())
     Row(
         modifier = modifier
             .selectableGroup()
@@ -140,15 +150,15 @@ fun StarRatingBar(
             }
             val stateText = stringResource(
                 when {
-                    i <= rating -> R.string.star_filled
-                    i.toFloat() == rating + 0.5f -> R.string.star_half_filled
-                    else -> R.string.star_empty
+                    i <= rating -> Res.string.star_filled
+                    i.toFloat() == rating + 0.5f -> Res.string.star_half_filled
+                    else -> Res.string.star_empty
                 },
             )
             val statusDescription =
-                stringResource(R.string.star_status_description, stateText, i, maxStars)
+                stringResource(Res.string.star_status_description, stateText, i, maxStars)
             val starContentDescription =
-                pluralStringResource(R.plurals.star_rate_description, i, statusDescription, i)
+                pluralStringResource(Res.plurals.star_rate_description, i, statusDescription, i)
             IconButton(
                 onClick = { onRatingChanged(i.toFloat()) },
                 modifier = Modifier
@@ -207,7 +217,7 @@ fun SearchBar(
 
     val placeholder: @Composable (() -> Unit) = {
         Text(
-            text = stringResource(R.string.search),
+            text = stringResource(Res.string.search),
             color = inputHintTextColor,
             style = MaterialTheme.typography.bodyLarge,
         )
@@ -216,7 +226,7 @@ fun SearchBar(
         {
             Icon(
                 painter = painterResource(R.drawable.ic_search),
-                contentDescription = stringResource(R.string.search),
+                contentDescription = stringResource(Res.string.search),
                 tint = MaterialTheme.colorScheme.primary,
             )
         }
@@ -227,7 +237,7 @@ fun SearchBar(
         {
             TopAppBarIcon(
                 accessibilityPainter = painterResource(R.drawable.ic_clear_text)
-                    .withDescription(stringResource(R.string.clear_text)),
+                    .withDescription(stringResource(Res.string.clear_text)),
                 onClick = {
                     textFieldValueState = TextFieldValue("")
                 },

@@ -13,8 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.components.LaunchedEffectOnce
@@ -22,7 +20,11 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.export_confirmation
+import reader_collection.app.generated.resources.import_confirmation
 
 @Composable
 fun StatisticsView(
@@ -78,10 +80,10 @@ fun StatisticsView(
         StatisticsScreen(
             state = state,
             onImportClick = {
-                viewModel.showConfirmationDialog(R.string.import_confirmation)
+                viewModel.showConfirmationDialog(Res.string.import_confirmation)
             },
             onExportClick = {
-                viewModel.showConfirmationDialog(R.string.export_confirmation)
+                viewModel.showConfirmationDialog(Res.string.export_confirmation)
             },
             onGroupClick = { year, month, author, format ->
                 onShowAll(
@@ -98,19 +100,18 @@ fun StatisticsView(
     }
 
     ConfirmationAlertDialog(
-        show = confirmationMessageId != -1,
         textId = confirmationMessageId,
         onCancel = {
             viewModel.closeDialogs()
         },
         onAccept = {
             when (confirmationMessageId) {
-                R.string.import_confirmation -> {
+                Res.string.import_confirmation -> {
                     val intent = Intent(Intent.ACTION_GET_CONTENT)
                     intent.type = "*/*"
                     openFileLauncher.launch(intent)
                 }
-                R.string.export_confirmation -> {
+                Res.string.export_confirmation -> {
                     val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
                         addCategory(Intent.CATEGORY_OPENABLE)
                         type = "text/txt"
@@ -118,8 +119,8 @@ fun StatisticsView(
                     }
                     newFileLauncher.launch(intent)
                 }
-                else -> {
-                    Unit
+                null -> {
+                    /*no-op*/
                 }
             }
             viewModel.closeDialogs()
@@ -134,8 +135,8 @@ fun StatisticsView(
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoMessageId != -1) {
-        stringResource(infoMessageId)
+    } else if (infoMessageId != null) {
+        stringResource(requireNotNull(infoMessageId))
     } else {
         ""
     }

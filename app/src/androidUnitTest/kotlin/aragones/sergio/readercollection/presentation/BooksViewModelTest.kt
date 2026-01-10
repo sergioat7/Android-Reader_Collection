@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -34,7 +33,6 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import kotlin.collections.map
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,6 +40,9 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_server
 
 class BooksViewModelTest {
 
@@ -222,7 +223,7 @@ class BooksViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_server,
+                    Res.string.error_server,
                 ),
                 awaitItem(),
             )
@@ -683,7 +684,7 @@ class BooksViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_database,
+                        Res.string.error_database,
                     ),
                     awaitItem(),
                 )
@@ -981,7 +982,7 @@ class BooksViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_server,
+                        Res.string.error_server,
                     ),
                     awaitItem(),
                 )

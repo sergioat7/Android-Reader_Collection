@@ -17,10 +17,13 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.delete
+import reader_collection.app.generated.resources.sign_in
 
 @Composable
 fun MainActionButton(
@@ -92,7 +95,7 @@ fun MainTextButton(text: String, onClick: () -> Unit, modifier: Modifier = Modif
 private fun MainActionButtonPreview() {
     ReaderCollectionTheme {
         MainActionButton(
-            text = stringResource(R.string.sign_in),
+            text = stringResource(Res.string.sign_in),
             enabled = true,
             onClick = {},
         )
@@ -104,7 +107,7 @@ private fun MainActionButtonPreview() {
 private fun MainDestructiveActionButtonPreview() {
     ReaderCollectionTheme {
         MainActionButton(
-            text = stringResource(R.string.delete),
+            text = stringResource(Res.string.delete),
             enabled = true,
             onClick = {},
             type = ButtonType.DESTRUCTIVE,

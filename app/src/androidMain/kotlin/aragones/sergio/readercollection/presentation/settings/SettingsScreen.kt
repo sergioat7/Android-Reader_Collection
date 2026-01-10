@@ -33,18 +33,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.account_description
+import reader_collection.app.generated.resources.account_title
+import reader_collection.app.generated.resources.data_sync_description
+import reader_collection.app.generated.resources.data_sync_title
+import reader_collection.app.generated.resources.display_settings_description
+import reader_collection.app.generated.resources.display_settings_title
+import reader_collection.app.generated.resources.friends_description
+import reader_collection.app.generated.resources.friends_title
+import reader_collection.app.generated.resources.logout_description
+import reader_collection.app.generated.resources.logout_title
+import reader_collection.app.generated.resources.preferences
+import reader_collection.app.generated.resources.title_settings
 
 @Composable
 fun SettingsScreen(
@@ -63,45 +75,45 @@ fun SettingsScreen(
                 .verticalScroll(scrollState),
         ) {
             Spacer(Modifier.height(12.dp))
-            HeaderText(text = stringResource(R.string.account_title))
+            HeaderText(text = stringResource(Res.string.account_title))
             SettingItem(
                 icon = Icons.Default.AccountCircle,
-                title = stringResource(R.string.account_title),
-                subtitle = stringResource(R.string.account_description),
+                title = stringResource(Res.string.account_title),
+                subtitle = stringResource(Res.string.account_description),
                 onClick = {
                     onClickOption(SettingsOption.Account)
                 },
             )
             SettingItem(
                 icon = Icons.Default.SupervisorAccount,
-                title = stringResource(R.string.friends_title),
-                subtitle = stringResource(R.string.friends_description),
+                title = stringResource(Res.string.friends_title),
+                subtitle = stringResource(Res.string.friends_description),
                 onClick = {
                     onClickOption(SettingsOption.Friends)
                 },
             )
             Spacer(modifier = Modifier.height(16.dp))
-            HeaderText(text = stringResource(R.string.preferences))
+            HeaderText(text = stringResource(Res.string.preferences))
             SettingItem(
                 icon = Icons.Default.Backup,
-                title = stringResource(R.string.data_sync_title),
-                subtitle = stringResource(R.string.data_sync_description),
+                title = stringResource(Res.string.data_sync_title),
+                subtitle = stringResource(Res.string.data_sync_description),
                 onClick = {
                     onClickOption(SettingsOption.DataSync)
                 },
             )
             SettingItem(
                 icon = Icons.Default.DisplaySettings,
-                title = stringResource(R.string.display_settings_title),
-                subtitle = stringResource(R.string.display_settings_description),
+                title = stringResource(Res.string.display_settings_title),
+                subtitle = stringResource(Res.string.display_settings_description),
                 onClick = {
                     onClickOption(SettingsOption.DisplaySettings)
                 },
             )
             SettingItem(
                 icon = Icons.AutoMirrored.Default.Logout,
-                title = stringResource(R.string.logout_title),
-                subtitle = stringResource(R.string.logout_description),
+                title = stringResource(Res.string.logout_title),
+                subtitle = stringResource(Res.string.logout_description),
                 onClick = {
                     onClickOption(SettingsOption.Logout)
                 },
@@ -120,7 +132,7 @@ private fun SettingsToolbar(scrollState: ScrollState) {
         else -> 4.dp
     }
     CustomToolbar(
-        title = stringResource(R.string.title_settings),
+        title = stringResource(Res.string.title_settings),
         modifier = Modifier.shadow(elevation = elevation),
         backgroundColor = MaterialTheme.colorScheme.background,
     )

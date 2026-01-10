@@ -9,7 +9,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Books
@@ -20,6 +19,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_search
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.friend_removed
+import reader_collection.app.generated.resources.no_friends_found
 
 class FriendDetailViewModel(
     state: SavedStateHandle,
@@ -31,15 +36,15 @@ class FriendDetailViewModel(
     private val params = state.toRoute<Route.FriendDetail>()
     private var _state: MutableStateFlow<FriendDetailUiState> =
         MutableStateFlow(FriendDetailUiState.Loading)
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
     private val _error = MutableStateFlow<ErrorModel?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<FriendDetailUiState> = _state
-    var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    var confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
     val error: StateFlow<ErrorModel?> = _error
     //endregion
 
@@ -65,13 +70,13 @@ class FriendDetailViewModel(
                 is NoSuchElementException -> {
                     _error.value = ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.no_friends_found,
+                        Res.string.no_friends_found,
                     )
                 }
                 else -> {
                     _error.value = ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_server,
+                        Res.string.error_server,
                     )
                 }
             }
@@ -83,25 +88,25 @@ class FriendDetailViewModel(
         _state.value = FriendDetailUiState.Loading
         userRepository.deleteFriend(params.userId).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.friend_removed
+                _infoDialogMessageId.value = Res.string.friend_removed
             },
             onFailure = {
                 _error.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_search,
+                    Res.string.error_search,
                 )
                 _state.value = currentState
             },
         )
     }
 
-    fun showConfirmationDialog(textId: Int) {
+    fun showConfirmationDialog(textId: StringResource) {
         _confirmationDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
-        _confirmationDialogMessageId.value = -1
-        _infoDialogMessageId.value = -1
+        _confirmationDialogMessageId.value = null
+        _infoDialogMessageId.value = null
         _error.value = null
     }
     //endregion

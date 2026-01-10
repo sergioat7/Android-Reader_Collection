@@ -10,19 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.SyncDataWorker
 import java.util.concurrent.TimeUnit
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.sync_confirmation
 
 @Composable
 fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewModel()) {
@@ -37,7 +38,7 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewMode
             onBack = onBack,
             onChange = viewModel::changeAutomaticSync,
             onSync = {
-                viewModel.showConfirmationDialog(R.string.sync_confirmation)
+                viewModel.showConfirmationDialog(Res.string.sync_confirmation)
             },
         )
     }
@@ -60,8 +61,8 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewMode
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
+    } else if (infoDialogMessageId != null) {
+        stringResource(requireNotNull(infoDialogMessageId))
     } else {
         ""
     }
@@ -70,18 +71,17 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewMode
     }
 
     ConfirmationAlertDialog(
-        show = confirmationMessageId != -1,
         textId = confirmationMessageId,
         onCancel = {
             viewModel.closeDialogs()
         },
         onAccept = {
             when (confirmationMessageId) {
-                R.string.sync_confirmation -> {
+                Res.string.sync_confirmation -> {
                     viewModel.syncData()
                 }
-                else -> {
-                    Unit
+                null -> {
+                    /*no-op*/
                 }
             }
             viewModel.closeDialogs()

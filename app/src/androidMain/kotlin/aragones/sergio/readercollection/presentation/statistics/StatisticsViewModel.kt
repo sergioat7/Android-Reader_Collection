@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.statistics
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
@@ -20,6 +19,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.datetime.number
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.data_imported
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_file_data
+import reader_collection.app.generated.resources.file_created
 
 class StatisticsViewModel(
     private val booksRepository: BooksRepository,
@@ -30,8 +35,8 @@ class StatisticsViewModel(
     private var _state: MutableStateFlow<StatisticsUiState> =
         MutableStateFlow(StatisticsUiState.Empty)
     private val _booksError = MutableStateFlow<ErrorModel?>(null)
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
@@ -39,8 +44,8 @@ class StatisticsViewModel(
     val booksError: StateFlow<ErrorModel?> = _booksError
     var sortParam = userRepository.sortParam
     var isSortDescending = userRepository.isSortDescending
-    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
     //endregion
 
     //region Public methods
@@ -73,23 +78,23 @@ class StatisticsViewModel(
         }
     }
 
-    fun showConfirmationDialog(textId: Int) {
+    fun showConfirmationDialog(textId: StringResource) {
         _confirmationDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
         _booksError.value = null
-        _confirmationDialogMessageId.value = -1
-        _infoDialogMessageId.value = -1
+        _confirmationDialogMessageId.value = null
+        _infoDialogMessageId.value = null
     }
 
     fun importData(jsonData: String) = viewModelScope.launch {
         booksRepository.importDataFrom(jsonData).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.data_imported
+                _infoDialogMessageId.value = Res.string.data_imported
             },
             onFailure = {
-                _booksError.value = ErrorModel("", R.string.error_file_data)
+                _booksError.value = ErrorModel("", Res.string.error_file_data)
             },
         )
     }
@@ -98,11 +103,11 @@ class StatisticsViewModel(
         booksRepository.exportDataTo().fold(
             onSuccess = {
                 completion(it)
-                _infoDialogMessageId.value = R.string.file_created
+                _infoDialogMessageId.value = Res.string.file_created
             },
             onFailure = {
                 completion(null)
-                _booksError.value = ErrorModel("", R.string.error_database)
+                _booksError.value = ErrorModel("", Res.string.error_database)
             },
         )
     }

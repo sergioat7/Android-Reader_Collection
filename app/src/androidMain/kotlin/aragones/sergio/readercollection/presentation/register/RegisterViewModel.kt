@@ -10,7 +10,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -19,6 +18,13 @@ import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.error_user_found
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.invalid_repeat_password
+import reader_collection.app.generated.resources.invalid_username
 
 class RegisterViewModel(
     private val userRepository: UserRepository,
@@ -27,14 +33,14 @@ class RegisterViewModel(
     //region Private properties
     private var _uiState: MutableState<RegisterUiState> = mutableStateOf(RegisterUiState.empty())
     private val _registerError = MutableStateFlow<ErrorModel?>(null)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
     private val _registerSuccess = MutableStateFlow(false)
     //endregion
 
     //region Public properties
     val uiState: State<RegisterUiState> = _uiState
     val registerError: StateFlow<ErrorModel?> = _registerError
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
     val registerSuccess: StateFlow<Boolean> = _registerSuccess
     //endregion
 
@@ -52,7 +58,7 @@ class RegisterViewModel(
                         manageError(
                             ErrorModel(
                                 Constants.EMPTY_VALUE,
-                                R.string.error_server,
+                                Res.string.error_server,
                             ),
                         )
                     },
@@ -63,12 +69,12 @@ class RegisterViewModel(
                     if (it is CustomExceptions.ExistentUser) {
                         ErrorModel(
                             Constants.EMPTY_VALUE,
-                            R.string.error_user_found,
+                            Res.string.error_user_found,
                         )
                     } else {
                         ErrorModel(
                             Constants.EMPTY_VALUE,
-                            R.string.error_server,
+                            Res.string.error_server,
                         )
                     },
                 )
@@ -77,20 +83,20 @@ class RegisterViewModel(
     }
 
     fun registerDataChanged(username: String, password: String, confirmPassword: String) {
-        var usernameError: Int? = null
-        var passwordError: Int? = null
+        var usernameError: StringResource? = null
+        var passwordError: StringResource? = null
         var isDataValid = true
 
         if (!Constants.isUserNameValid(username)) {
-            usernameError = R.string.invalid_username
+            usernameError = Res.string.invalid_username
             isDataValid = false
         }
         if (!Constants.isPasswordValid(password)) {
-            passwordError = R.string.invalid_password
+            passwordError = Res.string.invalid_password
             isDataValid = false
         }
         if (password != confirmPassword) {
-            passwordError = R.string.invalid_repeat_password
+            passwordError = Res.string.invalid_repeat_password
             isDataValid = false
         }
 
@@ -102,13 +108,13 @@ class RegisterViewModel(
         )
     }
 
-    fun showInfoDialog(textId: Int) {
+    fun showInfoDialog(textId: StringResource) {
         _infoDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
         _registerError.value = null
-        _infoDialogMessageId.value = -1
+        _infoDialogMessageId.value = null
     }
     //endregion
 

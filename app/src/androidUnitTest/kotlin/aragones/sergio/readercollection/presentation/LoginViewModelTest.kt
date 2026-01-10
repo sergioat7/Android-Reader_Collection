@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -38,6 +37,11 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.invalid_username
+import reader_collection.app.generated.resources.wrong_credentials
 
 class LoginViewModelTest {
 
@@ -147,7 +151,7 @@ class LoginViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_server,
+                        Res.string.error_server,
                     ),
                     awaitItem(),
                 )
@@ -191,7 +195,7 @@ class LoginViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.wrong_credentials,
+                        Res.string.wrong_credentials,
                     ),
                     awaitItem(),
                 )
@@ -238,7 +242,7 @@ class LoginViewModelTest {
 
         assertEquals(
             LoginFormState(
-                usernameError = R.string.invalid_username,
+                usernameError = Res.string.invalid_username,
                 passwordError = null,
                 isDataValid = false,
             ),
@@ -258,7 +262,7 @@ class LoginViewModelTest {
         assertEquals(
             LoginFormState(
                 usernameError = null,
-                passwordError = R.string.invalid_password,
+                passwordError = Res.string.invalid_password,
                 isDataValid = false,
             ),
             viewModel.uiState.value.formState,
@@ -276,8 +280,8 @@ class LoginViewModelTest {
 
         assertEquals(
             LoginFormState(
-                usernameError = R.string.invalid_username,
-                passwordError = R.string.invalid_password,
+                usernameError = Res.string.invalid_username,
+                passwordError = Res.string.invalid_password,
                 isDataValid = false,
             ),
             viewModel.uiState.value.formState,
@@ -301,7 +305,7 @@ class LoginViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.wrong_credentials,
+                    Res.string.wrong_credentials,
                 ),
                 awaitItem(),
             )

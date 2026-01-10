@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.domain.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
 
 class SettingsViewModel(
     private val booksRepository: BooksRepository,
@@ -24,13 +25,13 @@ class SettingsViewModel(
     //region Private properties
     private var _isLoading: MutableState<Boolean> = mutableStateOf(false)
     private val _logOut = MutableStateFlow(false)
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
     val isLoading: State<Boolean> = _isLoading
     val logOut: StateFlow<Boolean> = _logOut
-    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
+    val confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
     //endregion
 
     //region Public methods
@@ -49,12 +50,12 @@ class SettingsViewModel(
         )
     }
 
-    fun showConfirmationDialog(textId: Int) {
+    fun showConfirmationDialog(textId: StringResource) {
         _confirmationDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
-        _confirmationDialogMessageId.value = -1
+        _confirmationDialogMessageId.value = null
     }
     //endregion
 }

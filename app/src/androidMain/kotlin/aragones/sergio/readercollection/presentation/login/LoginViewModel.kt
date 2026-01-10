@@ -10,7 +10,6 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -19,6 +18,12 @@ import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.invalid_password
+import reader_collection.app.generated.resources.invalid_username
+import reader_collection.app.generated.resources.wrong_credentials
 
 class LoginViewModel(
     private val booksRepository: BooksRepository,
@@ -55,7 +60,7 @@ class LoginViewModel(
                         _uiState.value = _uiState.value.copy(isLoading = false)
                         _loginError.value = ErrorModel(
                             Constants.EMPTY_VALUE,
-                            R.string.error_server,
+                            Res.string.error_server,
                         )
                     },
                 )
@@ -64,23 +69,23 @@ class LoginViewModel(
                 _uiState.value = _uiState.value.copy(isLoading = false)
                 _loginError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.wrong_credentials,
+                    Res.string.wrong_credentials,
                 )
             },
         )
     }
 
     fun loginDataChanged(username: String, password: String) {
-        var usernameError: Int? = null
-        var passwordError: Int? = null
+        var usernameError: StringResource? = null
+        var passwordError: StringResource? = null
         var isDataValid = true
 
         if (!Constants.isUserNameValid(username)) {
-            usernameError = R.string.invalid_username
+            usernameError = Res.string.invalid_username
             isDataValid = false
         }
         if (!Constants.isPasswordValid(password)) {
-            passwordError = R.string.invalid_password
+            passwordError = Res.string.invalid_password
             isDataValid = false
         }
 

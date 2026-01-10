@@ -14,13 +14,21 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.SortingPickerAlertDialog
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
 import org.junit.Assert
 import org.junit.Rule
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.accept
+import reader_collection.app.generated.resources.cancel
+import reader_collection.app.generated.resources.order_by
+import reader_collection.app.generated.resources.sorting_order_values
+import reader_collection.app.generated.resources.sorting_param_keys
+import reader_collection.app.generated.resources.sorting_param_values
 
 class SortingPickerAlertDialogTest {
 
@@ -64,7 +72,23 @@ class SortingPickerAlertDialogTest {
     @Test
     fun whenShowDialog_thenShowTextAndButtonsAndSelectedOptions() {
         val sortParam = "readingDate"
+        lateinit var title: String
+        lateinit var acceptText: String
+        lateinit var cancelText: String
+        var sortParamIndexSelected = -1
+        lateinit var sortParamSelected: String
+        lateinit var sortOrderSelected: String
         composeTestRule.setContent {
+            title = stringResource(Res.string.order_by)
+            acceptText = stringResource(Res.string.accept)
+            cancelText = stringResource(Res.string.cancel)
+            sortParamIndexSelected = stringArrayResource(
+                Res.array.sorting_param_keys,
+            ).indexOf(sortParam)
+            sortParamSelected = stringArrayResource(
+                Res.array.sorting_param_values,
+            )[sortParamIndexSelected]
+            sortOrderSelected = stringArrayResource(Res.array.sorting_order_values).first()
             SortingPickerAlertDialog(
                 state = UiSortingPickerState(
                     show = true,
@@ -76,21 +100,11 @@ class SortingPickerAlertDialogTest {
             )
         }
 
-        val title = composeTestRule.activity.getString(R.string.order_by)
-        val acceptText = composeTestRule.activity.getString(R.string.accept)
-        val cancelText = composeTestRule.activity.getString(R.string.cancel)
         composeTestRule.onNodeWithText(title).assertExists()
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").apply {
             onFirst().assertTextContains(cancelText, ignoreCase = true)
             onLast().assertTextContains(acceptText, ignoreCase = true)
         }
-        val context = composeTestRule.activity
-        val sortParamIndexSelected =
-            context.resources.getStringArray(R.array.sorting_param_keys).indexOf(sortParam)
-        val sortParamSelected =
-            context.resources.getStringArray(R.array.sorting_param_values)[sortParamIndexSelected]
-        val sortOrderSelected =
-            context.resources.getStringArray(R.array.sorting_order_values).first()
         composeTestRule.onNodeWithText(sortParamSelected).assertExists()
         composeTestRule.onNodeWithText(sortOrderSelected).assertExists()
     }

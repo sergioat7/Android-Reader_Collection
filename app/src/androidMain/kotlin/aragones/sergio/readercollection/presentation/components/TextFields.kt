@@ -38,7 +38,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +51,12 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.UiDateMapper.toLong
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.field_required
+import reader_collection.app.generated.resources.invalid_username
+import reader_collection.app.generated.resources.read_more
+import reader_collection.app.generated.resources.show_password
 
 @Composable
 fun CustomOutlinedTextField(
@@ -142,7 +147,7 @@ fun CustomOutlinedTextField(
                     )
                 } else if (isRequired) {
                     Text(
-                        text = stringResource(R.string.field_required),
+                        text = stringResource(Res.string.field_required),
                         style = MaterialTheme.typography.bodyMedium,
                         color = textColor,
                         modifier = Modifier.weight(1f),
@@ -183,7 +188,7 @@ fun CustomOutlinedTextField(
         )
     }
     val visualTransformation = if (endIcon?.contentDescription == stringResource(
-            R.string.show_password,
+            Res.string.show_password,
         )
     ) {
         PasswordVisualTransformation()
@@ -276,7 +281,7 @@ fun MultilineCustomOutlinedTextField(
         )
         if (showReadMore) {
             MainTextButton(
-                text = stringResource(R.string.read_more),
+                text = stringResource(Res.string.read_more),
                 onClick = {
                     showReadMore = !showReadMore
                     readMoreHiddenByUser = true
@@ -396,7 +401,7 @@ private fun ErrorOutlinedTextFieldPreview() {
             labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            errorText = stringResource(R.string.invalid_username),
+            errorText = stringResource(Res.string.invalid_username),
             maxLength = 100,
         )
     }

@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
@@ -31,6 +30,9 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_search
+import reader_collection.app.generated.resources.error_server
 
 class AddFriendsViewModelTest {
 
@@ -256,7 +258,7 @@ class AddFriendsViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_server,
+                    Res.string.error_server,
                 ),
                 awaitItem(),
             )
@@ -355,7 +357,7 @@ class AddFriendsViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_search,
+                    Res.string.error_search,
                 ),
                 awaitItem(),
             )
@@ -379,7 +381,7 @@ class AddFriendsViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_server,
+                    Res.string.error_server,
                 ),
                 awaitItem(),
             )

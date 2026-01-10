@@ -21,10 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import coil3.compose.AsyncImage
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_cover_description
 
 @Composable
 fun ImageWithLoading(
@@ -41,7 +43,7 @@ fun ImageWithLoading(
         AsyncImage(
             model = imageUrl?.replace("http:", "https:"),
             contentDescription = stringResource(
-                R.string.book_cover_description,
+                Res.string.book_cover_description,
                 contentDescription ?: "",
             ),
             modifier = Modifier

@@ -31,15 +31,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.dropdown_item_description
+import reader_collection.app.generated.resources.dropdown_text_field_description
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +58,7 @@ fun CustomDropdownMenu(
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
     val contentDescription = stringResource(
-        R.string.dropdown_text_field_description,
+        Res.string.dropdown_text_field_description,
         labelText,
         currentValue,
     )
@@ -131,7 +133,7 @@ fun CustomDropdownMenu(
             ) {
                 for (value in values.values) {
                     val itemContentDescription = stringResource(
-                        R.string.dropdown_item_description,
+                        Res.string.dropdown_item_description,
                         values.values.indexOf(value) + 1,
                         values.values.size,
                     )

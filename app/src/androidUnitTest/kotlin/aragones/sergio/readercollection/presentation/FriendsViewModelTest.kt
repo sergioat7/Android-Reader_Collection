@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
@@ -31,6 +30,9 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.friend_action_failure
+import reader_collection.app.generated.resources.friend_action_successfully_done
 
 class FriendsViewModelTest {
 
@@ -125,7 +127,7 @@ class FriendsViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     val state = this
@@ -139,7 +141,7 @@ class FriendsViewModelTest {
                     viewModel.acceptFriendRequest(friendId)
 
                     assertEquals(
-                        R.string.friend_action_successfully_done,
+                        Res.string.friend_action_successfully_done,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -170,7 +172,7 @@ class FriendsViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.friend_action_failure,
+                    Res.string.friend_action_failure,
                 ),
                 awaitItem(),
             )
@@ -194,7 +196,7 @@ class FriendsViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     val state = this
@@ -208,7 +210,7 @@ class FriendsViewModelTest {
                     viewModel.rejectFriendRequest(friendId)
 
                     assertEquals(
-                        R.string.friend_action_successfully_done,
+                        Res.string.friend_action_successfully_done,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -237,7 +239,7 @@ class FriendsViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.friend_action_failure,
+                    Res.string.friend_action_failure,
                 ),
                 awaitItem(),
             )
@@ -261,7 +263,7 @@ class FriendsViewModelTest {
 
             viewModel.infoDialogMessageId.test {
                 val infoDialogMessage = this
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.state.test {
                     val state = this
@@ -275,7 +277,7 @@ class FriendsViewModelTest {
                     viewModel.deleteFriend(friendId)
 
                     assertEquals(
-                        R.string.friend_action_successfully_done,
+                        Res.string.friend_action_successfully_done,
                         infoDialogMessage.awaitItem(),
                     )
                     assertEquals(
@@ -304,7 +306,7 @@ class FriendsViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.friend_action_failure,
+                    Res.string.friend_action_failure,
                 ),
                 awaitItem(),
             )
@@ -318,14 +320,14 @@ class FriendsViewModelTest {
     fun `GIVEN dialog shown WHEN closeDialogs THEN dialog is reset`() = runTest {
         viewModel.infoDialogMessageId.test {
             val infoDialogMessage = this
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             coEvery {
                 userRemoteDataSource.acceptFriendRequest(any(), any())
             } returns Result.success(Unit)
             viewModel.acceptFriendRequest("")
             assertEquals(
-                R.string.friend_action_successfully_done,
+                Res.string.friend_action_successfully_done,
                 awaitItem(),
             )
 
@@ -340,14 +342,14 @@ class FriendsViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.friend_action_failure,
+                        Res.string.friend_action_failure,
                     ),
                     awaitItem(),
                 )
 
                 viewModel.closeDialogs()
 
-                assertEquals(-1, infoDialogMessage.awaitItem())
+                assertEquals(null, infoDialogMessage.awaitItem())
                 assertEquals(null, error.awaitItem())
             }
         }
@@ -356,7 +358,7 @@ class FriendsViewModelTest {
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.error.test {
                 assertEquals(null, awaitItem())

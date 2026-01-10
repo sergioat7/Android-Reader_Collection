@@ -41,7 +41,6 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -49,6 +48,11 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.isLight
 import com.aragones.sergio.util.extensions.isNotBlank
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.go_back
+import reader_collection.app.generated.resources.search
+import reader_collection.app.generated.resources.title_search
 
 @Composable
 fun TopAppBarIcon(
@@ -103,7 +107,7 @@ fun CustomToolbar(
             {
                 TopAppBarIcon(
                     accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
-                        .withDescription(stringResource(R.string.go_back)),
+                        .withDescription(stringResource(Res.string.go_back)),
                     onClick = it,
                     tint = backTintColor,
                 )
@@ -132,7 +136,7 @@ fun CustomSearchBar(
         {
             TopAppBarIcon(
                 accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
-                    .withDescription(stringResource(R.string.go_back)),
+                    .withDescription(stringResource(Res.string.go_back)),
                 onClick = {
                     if (isSearching) {
                         isSearching = false
@@ -178,7 +182,7 @@ fun CustomSearchBar(
             if (!isSearching) {
                 TopAppBarIcon(
                     accessibilityPainter = painterResource(R.drawable.ic_search)
-                        .withDescription(stringResource(R.string.search)),
+                        .withDescription(stringResource(Res.string.search)),
                     onClick = { isSearching = true },
                 )
             }
@@ -283,7 +287,7 @@ private fun CustomToolbarPreview() {
 private fun CustomSearchBarPreview() {
     ReaderCollectionTheme {
         CustomSearchBar(
-            title = stringResource(R.string.title_search),
+            title = stringResource(Res.string.title_search),
             query = "",
             onSearch = {},
         )

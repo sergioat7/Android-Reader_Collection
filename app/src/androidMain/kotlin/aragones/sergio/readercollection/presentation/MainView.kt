@@ -15,11 +15,13 @@ import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.res.stringResource
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.message_app_update_downloaded
+import reader_collection.app.generated.resources.restart
 
 @Composable
 fun MainView(
@@ -34,8 +36,8 @@ fun MainView(
             val snackbarHostState = remember { SnackbarHostState() }
             MainScreen(navigator, snackbarHostState)
 
-            val message = stringResource(R.string.message_app_update_downloaded)
-            val action = stringResource(R.string.restart)
+            val message = stringResource(Res.string.message_app_update_downloaded)
+            val action = stringResource(Res.string.restart)
             LaunchedEffect(isAppUpdated) {
                 if (isAppUpdated) {
                     scope.launch {

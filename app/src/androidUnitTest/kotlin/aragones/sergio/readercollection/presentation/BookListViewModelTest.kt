@@ -10,7 +10,6 @@ package aragones.sergio.readercollection.presentation
 
 import androidx.lifecycle.SavedStateHandle
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
@@ -45,6 +44,8 @@ import kotlinx.datetime.LocalDate
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_database
 
 @RunWith(RobolectricTestRunner::class)
 class BookListViewModelTest {
@@ -151,7 +152,7 @@ class BookListViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_database,
+                        Res.string.error_database,
                     ),
                     awaitItem(),
                 )
@@ -516,7 +517,7 @@ class BookListViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        R.string.error_database,
+                        Res.string.error_database,
                     ),
                     awaitItem(),
                 )

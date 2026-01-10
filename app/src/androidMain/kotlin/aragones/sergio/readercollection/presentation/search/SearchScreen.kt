@@ -38,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
@@ -62,6 +61,15 @@ import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.go_to_end
+import reader_collection.app.generated.resources.go_to_start
+import reader_collection.app.generated.resources.load_more
+import reader_collection.app.generated.resources.no_search_yet_text
+import reader_collection.app.generated.resources.save
+import reader_collection.app.generated.resources.title_search
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,7 +111,7 @@ fun SearchScreen(
             .background(MaterialTheme.colorScheme.background),
     ) {
         CustomSearchBar(
-            title = stringResource(R.string.title_search),
+            title = stringResource(Res.string.title_search),
             query = query ?: "",
             onSearch = onSearch,
             modifier = Modifier.shadow(elevation),
@@ -127,7 +135,7 @@ fun SearchScreen(
             when (state) {
                 is SearchUiState.Empty -> {
                     NoResultsComponent(
-                        text = stringResource(R.string.no_search_yet_text),
+                        text = stringResource(Res.string.no_search_yet_text),
                         image = R.drawable.image_no_search,
                     )
                 }
@@ -203,7 +211,7 @@ private fun ErrorContent() {
         verticalArrangement = Arrangement.Center,
     ) {
         item {
-            NoResultsComponent(text = stringResource(R.string.error_server))
+            NoResultsComponent(text = stringResource(Res.string.error_server))
         }
     }
 }
@@ -228,7 +236,7 @@ private fun SearchContent(
         ) {
             itemsIndexed(books.books) { index, book ->
                 if (book.id.isNotBlank()) {
-                    val swipeActionLabel = stringResource(R.string.save)
+                    val swipeActionLabel = stringResource(Res.string.save)
                     val direction = SwipeDirection.LEFT
                     SwipeItem(
                         direction = direction,
@@ -275,7 +283,7 @@ private fun SearchContent(
 
         ListButton(
             painter = painterResource(R.drawable.ic_double_arrow_up)
-                .withDescription(stringResource(R.string.go_to_start)),
+                .withDescription(stringResource(Res.string.go_to_start)),
             onClick = onTopButtonClick,
             modifier = Modifier
                 .align(Alignment.TopEnd)
@@ -284,7 +292,7 @@ private fun SearchContent(
 
         ListButton(
             painter = painterResource(R.drawable.ic_double_arrow_down)
-                .withDescription(stringResource(R.string.go_to_end)),
+                .withDescription(stringResource(Res.string.go_to_end)),
             onClick = onBottomButtonClick,
             modifier = Modifier
                 .align(Alignment.BottomEnd)
@@ -310,7 +318,7 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
                 tint = MaterialTheme.colorScheme.secondary,
             )
             Text(
-                text = stringResource(R.string.load_more),
+                text = stringResource(Res.string.load_more),
                 modifier = Modifier.padding(12.dp),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.secondary,
@@ -454,7 +462,7 @@ private class SearchScreenPreviewParameterProvider :
             SearchUiState.Error(
                 isLoading = false,
                 query = null,
-                value = ErrorModel("", 0),
+                value = ErrorModel("", Res.string.error_server),
             ),
         )
 }

@@ -31,18 +31,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.SyncAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.automatic_sync_description
+import reader_collection.app.generated.resources.automatic_sync_title
+import reader_collection.app.generated.resources.data_sync_title
+import reader_collection.app.generated.resources.manual_sync_description
+import reader_collection.app.generated.resources.manual_sync_title
+import reader_collection.app.generated.resources.sync_now_action
+import reader_collection.app.generated.resources.syncing_options_title
 
 @Composable
 fun DataSyncScreen(
@@ -67,7 +74,7 @@ fun DataSyncScreen(
                 .verticalScroll(scrollState),
         ) {
             Spacer(Modifier.height(12.dp))
-            HeaderText(text = stringResource(R.string.syncing_options_title))
+            HeaderText(text = stringResource(Res.string.syncing_options_title))
             SyncAutomaticallyItem(
                 isEnabled = state.isAutomaticSyncEnabled,
                 onChange = onChange,
@@ -88,7 +95,7 @@ private fun DataSyncToolbar(scrollState: ScrollState, onBack: (() -> Unit)) {
         else -> 4.dp
     }
     CustomToolbar(
-        title = stringResource(R.string.data_sync_title),
+        title = stringResource(Res.string.data_sync_title),
         modifier = Modifier.shadow(elevation = elevation),
         backgroundColor = MaterialTheme.colorScheme.background,
         onBack = onBack,
@@ -116,14 +123,14 @@ private fun SyncAutomaticallyItem(isEnabled: Boolean, onChange: (Boolean) -> Uni
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(R.string.automatic_sync_title),
+                text = stringResource(Res.string.automatic_sync_title),
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.automatic_sync_description),
+                text = stringResource(Res.string.automatic_sync_description),
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.tertiary,
@@ -166,14 +173,14 @@ private fun SyncManuallyItem(onSync: () -> Unit) {
     ) {
         Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = stringResource(R.string.manual_sync_title),
+                text = stringResource(Res.string.manual_sync_title),
                 style = MaterialTheme.typography.bodyLarge,
                 fontSize = 16.sp,
                 color = MaterialTheme.colorScheme.primary,
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.manual_sync_description),
+                text = stringResource(Res.string.manual_sync_description),
                 style = MaterialTheme.typography.bodyMedium,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.tertiary,
@@ -188,7 +195,7 @@ private fun SyncManuallyItem(onSync: () -> Unit) {
             ),
         ) {
             Text(
-                text = stringResource(R.string.sync_now_action),
+                text = stringResource(Res.string.sync_now_action),
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.secondary,
                 maxLines = 2,

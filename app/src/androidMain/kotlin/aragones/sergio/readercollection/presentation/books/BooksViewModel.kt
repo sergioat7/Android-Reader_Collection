@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.books
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.Book
@@ -23,6 +22,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_database
 
 class BooksViewModel(
     private val booksRepository: BooksRepository,
@@ -137,7 +138,7 @@ class BooksViewModel(
                     is BooksUiState.Empty -> currentState.copy(isLoading = false)
                     is BooksUiState.Success -> currentState.copy(isLoading = false)
                 }
-                _booksError.value = ErrorModel(Constants.EMPTY_VALUE, R.string.error_database)
+                _booksError.value = ErrorModel(Constants.EMPTY_VALUE, Res.string.error_database)
             },
         )
     }
@@ -196,7 +197,7 @@ class BooksViewModel(
                 }
                 _booksError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 )
             },
         )

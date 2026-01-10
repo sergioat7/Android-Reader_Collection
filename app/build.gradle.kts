@@ -5,6 +5,7 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.jetbrains)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.google.services)
     alias(libs.plugins.kotlin.multiplatform)
@@ -100,6 +101,7 @@ kotlin {
                 implementation(libs.bundles.firebase)
                 implementation(libs.bundles.koin)
                 implementation(libs.bundles.ktor)
+                implementation(libs.cmp.components.resources)
                 implementation(project.dependencies.platform(libs.firebase.bom))
                 implementation(project.dependencies.platform(libs.koin.bom))
                 implementation(libs.kotlinx.datetime)

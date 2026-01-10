@@ -34,8 +34,6 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
@@ -57,6 +55,15 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.pluralStringResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.disable_dragging
+import reader_collection.app.generated.resources.enable_dragging
+import reader_collection.app.generated.resources.go_to_end
+import reader_collection.app.generated.resources.go_to_start
+import reader_collection.app.generated.resources.sort_books
+import reader_collection.app.generated.resources.title_books_count
 
 @Composable
 fun BookListScreen(
@@ -82,7 +89,7 @@ fun BookListScreen(
 
     val title = if (state.books.books.isNotEmpty()) {
         pluralStringResource(
-            R.plurals.title_books_count,
+            Res.plurals.title_books_count,
             state.books.books.size,
             state.books.books.size,
         )
@@ -94,17 +101,17 @@ fun BookListScreen(
             TopAppBarIcon(
                 accessibilityPainter = if (state.isDraggingEnabled) {
                     painterResource(R.drawable.ic_disable_drag)
-                        .withDescription(stringResource(R.string.disable_dragging))
+                        .withDescription(stringResource(Res.string.disable_dragging))
                 } else {
                     painterResource(R.drawable.ic_enable_drag)
-                        .withDescription(stringResource(R.string.enable_dragging))
+                        .withDescription(stringResource(Res.string.enable_dragging))
                 },
                 onClick = onDragClick,
             )
         } else {
             TopAppBarIcon(
                 accessibilityPainter = painterResource(R.drawable.ic_sort_books)
-                    .withDescription(stringResource(R.string.sort_books)),
+                    .withDescription(stringResource(Res.string.sort_books)),
                 onClick = onSortClick,
             )
         }
@@ -243,7 +250,7 @@ private fun BookListContent(
         }
         ListButton(
             painter = painterResource(R.drawable.ic_double_arrow_up)
-                .withDescription(stringResource(R.string.go_to_start)),
+                .withDescription(stringResource(Res.string.go_to_start)),
             onClick = {
                 coroutineScope.launch {
                     dragAndDropListState.lazyListState.animateScrollToItem(index = 0)
@@ -255,7 +262,7 @@ private fun BookListContent(
         )
         ListButton(
             painter = painterResource(R.drawable.ic_double_arrow_down)
-                .withDescription(stringResource(R.string.go_to_end)),
+                .withDescription(stringResource(Res.string.go_to_end)),
             onClick = {
                 coroutineScope.launch {
                     dragAndDropListState.lazyListState.animateScrollToItem(

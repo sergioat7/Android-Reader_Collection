@@ -8,8 +8,8 @@ package aragones.sergio.readercollection.presentation.login
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable

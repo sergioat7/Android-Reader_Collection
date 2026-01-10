@@ -23,14 +23,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
@@ -40,6 +37,22 @@ import aragones.sergio.readercollection.presentation.components.DropdownValues
 import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.Preferences
+import org.jetbrains.compose.resources.stringArrayResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.app_language
+import reader_collection.app.generated.resources.app_theme
+import reader_collection.app.generated.resources.app_theme_values
+import reader_collection.app.generated.resources.display_settings_title
+import reader_collection.app.generated.resources.english
+import reader_collection.app.generated.resources.save
+import reader_collection.app.generated.resources.sort_books_param
+import reader_collection.app.generated.resources.sort_order
+import reader_collection.app.generated.resources.sort_param
+import reader_collection.app.generated.resources.sorting_order_values
+import reader_collection.app.generated.resources.sorting_param_keys
+import reader_collection.app.generated.resources.sorting_param_values
+import reader_collection.app.generated.resources.spanish
 
 @Composable
 fun DisplaySettingsScreen(
@@ -64,7 +77,7 @@ fun DisplaySettingsScreen(
                 .verticalScroll(scrollState),
         ) {
             Spacer(Modifier.height(12.dp))
-            HeaderText(text = stringResource(R.string.app_language))
+            HeaderText(text = stringResource(Res.string.app_language))
             LanguageInfo(
                 language = state.language,
                 onLanguageChange = {
@@ -77,7 +90,7 @@ fun DisplaySettingsScreen(
                 },
             )
             Spacer(Modifier.height(24.dp))
-            HeaderText(text = stringResource(R.string.sort_books_param))
+            HeaderText(text = stringResource(Res.string.sort_books_param))
             SortingInfo(
                 sortParam = state.sortParam,
                 isSortDescending = state.isSortDescending,
@@ -99,7 +112,7 @@ fun DisplaySettingsScreen(
                 },
             )
             Spacer(Modifier.height(24.dp))
-            HeaderText(text = stringResource(R.string.app_theme))
+            HeaderText(text = stringResource(Res.string.app_theme))
             AppThemeInfo(
                 selectedThemeIndex = state.themeMode,
                 onThemeChange = {
@@ -113,7 +126,7 @@ fun DisplaySettingsScreen(
             )
             Spacer(modifier = Modifier.weight(1f))
             MainActionButton(
-                text = stringResource(R.string.save),
+                text = stringResource(Res.string.save),
                 modifier = Modifier
                     .widthIn(min = 200.dp)
                     .align(Alignment.CenterHorizontally)
@@ -135,7 +148,7 @@ private fun DisplaySettingsToolbar(scrollState: ScrollState, onBack: (() -> Unit
         else -> 4.dp
     }
     CustomToolbar(
-        title = stringResource(R.string.display_settings_title),
+        title = stringResource(Res.string.display_settings_title),
         modifier = Modifier.shadow(elevation = elevation),
         backgroundColor = MaterialTheme.colorScheme.background,
         onBack = onBack,
@@ -161,7 +174,7 @@ private fun LanguageInfo(language: String, onLanguageChange: (String) -> Unit) {
             .padding(horizontal = 12.dp),
     ) {
         CustomRadioButton(
-            text = stringResource(R.string.english),
+            text = stringResource(Res.string.english),
             selected = language == Preferences.ENGLISH_LANGUAGE_KEY,
             onClick = {
                 onLanguageChange(Preferences.ENGLISH_LANGUAGE_KEY)
@@ -169,7 +182,7 @@ private fun LanguageInfo(language: String, onLanguageChange: (String) -> Unit) {
             modifier = Modifier.weight(1f),
         )
         CustomRadioButton(
-            text = stringResource(R.string.spanish),
+            text = stringResource(Res.string.spanish),
             selected = language == Preferences.SPANISH_LANGUAGE_KEY,
             onClick = {
                 onLanguageChange(Preferences.SPANISH_LANGUAGE_KEY)
@@ -186,20 +199,20 @@ private fun SortingInfo(
     onSortParamValueChange: (String?) -> Unit,
     onSortOrderValueChange: (Boolean) -> Unit,
 ) {
-    val sortingParamValues = stringArrayResource(R.array.sorting_param_values).toList()
-    val sortingParamKeys = stringArrayResource(R.array.sorting_param_keys).toList()
+    val sortingParamValues = stringArrayResource(Res.array.sorting_param_values)
+    val sortingParamKeys = stringArrayResource(Res.array.sorting_param_keys)
     val sortParamValue =
         if (sortParam == null) {
             sortingParamValues.first()
         } else {
             sortingParamValues[sortingParamKeys.indexOf(sortParam)]
         }
-    val sortingOrderValues = stringArrayResource(R.array.sorting_order_values).toList()
+    val sortingOrderValues = stringArrayResource(Res.array.sorting_order_values)
 
     CustomDropdownMenu(
         currentValue = sortParamValue,
         values = DropdownValues(sortingParamValues),
-        labelText = stringResource(R.string.sort_param),
+        labelText = stringResource(Res.string.sort_param),
         onOptionSelected = {
             val index = sortingParamValues.indexOf(it)
             val newSortParam = sortingParamKeys[index].takeIf { index != 0 }
@@ -215,7 +228,7 @@ private fun SortingInfo(
             sortingOrderValues.first()
         },
         values = DropdownValues(sortingOrderValues),
-        labelText = stringResource(R.string.sort_order),
+        labelText = stringResource(Res.string.sort_order),
         onOptionSelected = {
             val index = sortingOrderValues.indexOf(it)
             onSortOrderValueChange(index == 1)
@@ -226,11 +239,11 @@ private fun SortingInfo(
 
 @Composable
 private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) {
-    val appThemes = stringArrayResource(R.array.app_theme_values).toList()
+    val appThemes = stringArrayResource(Res.array.app_theme_values)
     CustomDropdownMenu(
         currentValue = appThemes[selectedThemeIndex],
         values = DropdownValues(appThemes),
-        labelText = stringResource(R.string.app_theme),
+        labelText = stringResource(Res.string.app_theme),
         onOptionSelected = {
             onThemeChange(appThemes.indexOf(it))
         },

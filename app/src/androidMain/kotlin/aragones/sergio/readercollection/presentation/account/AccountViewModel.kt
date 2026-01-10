@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.account
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -16,6 +15,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_server
+import reader_collection.app.generated.resources.invalid_password
 
 class AccountViewModel(
     private val booksRepository: BooksRepository,
@@ -31,16 +34,16 @@ class AccountViewModel(
     )
     private val _profileError = MutableStateFlow<ErrorModel?>(null)
     private val _logOut = MutableStateFlow(false)
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
     val state: StateFlow<AccountUiState> = _state
     val profileError: StateFlow<ErrorModel?> = _profileError
     val logOut: StateFlow<Boolean> = _logOut
-    val confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
+    val confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -67,7 +70,7 @@ class AccountViewModel(
                         _state.update { it.copy(isLoading = false) }
                     },
                     onFailure = {
-                        manageError(ErrorModel(Constants.EMPTY_VALUE, R.string.error_server))
+                        manageError(ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server))
                     },
                 )
             }
@@ -86,7 +89,7 @@ class AccountViewModel(
                 }
             },
             onFailure = {
-                manageError(ErrorModel(Constants.EMPTY_VALUE, R.string.error_server))
+                manageError(ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server))
             },
         )
     }
@@ -98,15 +101,15 @@ class AccountViewModel(
                 resetDatabase()
             },
             onFailure = {
-                manageError(ErrorModel(Constants.EMPTY_VALUE, R.string.error_server))
+                manageError(ErrorModel(Constants.EMPTY_VALUE, Res.string.error_server))
             },
         )
     }
 
     fun profileDataChanged(newPassword: String) {
-        var passwordError: Int? = null
+        var passwordError: StringResource? = null
         if (!Constants.isPasswordValid(newPassword)) {
-            passwordError = R.string.invalid_password
+            passwordError = Res.string.invalid_password
         }
         _state.update {
             it.copy(
@@ -116,17 +119,17 @@ class AccountViewModel(
         }
     }
 
-    fun showConfirmationDialog(textId: Int) {
+    fun showConfirmationDialog(textId: StringResource) {
         _confirmationDialogMessageId.value = textId
     }
 
-    fun showInfoDialog(textId: Int) {
+    fun showInfoDialog(textId: StringResource) {
         _infoDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
-        _confirmationDialogMessageId.value = -1
-        _infoDialogMessageId.value = -1
+        _confirmationDialogMessageId.value = null
+        _infoDialogMessageId.value = null
         _profileError.value = null
     }
     //endregion

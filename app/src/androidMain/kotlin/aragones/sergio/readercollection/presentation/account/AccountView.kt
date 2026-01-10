@@ -9,12 +9,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.stringResource
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
+import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.profile_delete_confirmation
+import reader_collection.app.generated.resources.public_profile_disable_confirmation
+import reader_collection.app.generated.resources.username_info
 
 @Composable
 fun AccountView(
@@ -37,7 +40,7 @@ fun AccountView(
         AccountScreen(
             state = state,
             onShowInfo = {
-                viewModel.showInfoDialog(R.string.username_info)
+                viewModel.showInfoDialog(Res.string.username_info)
             },
             onProfileDataChange = viewModel::profileDataChanged,
             onBack = onBack,
@@ -46,31 +49,30 @@ fun AccountView(
                 if (enable) {
                     viewModel.setPublicProfile(true)
                 } else {
-                    viewModel.showConfirmationDialog(R.string.public_profile_disable_confirmation)
+                    viewModel.showConfirmationDialog(Res.string.public_profile_disable_confirmation)
                 }
             },
             onDeleteAccount = {
-                viewModel.showConfirmationDialog(R.string.profile_delete_confirmation)
+                viewModel.showConfirmationDialog(Res.string.profile_delete_confirmation)
             },
         )
     }
 
     ConfirmationAlertDialog(
-        show = confirmationMessageId != -1,
         textId = confirmationMessageId,
         onCancel = {
             viewModel.closeDialogs()
         },
         onAccept = {
             when (confirmationMessageId) {
-                R.string.profile_delete_confirmation -> {
+                Res.string.profile_delete_confirmation -> {
                     viewModel.deleteUser()
                 }
-                R.string.public_profile_disable_confirmation -> {
+                Res.string.public_profile_disable_confirmation -> {
                     viewModel.setPublicProfile(false)
                 }
-                else -> {
-                    Unit
+                null -> {
+                    /*no-op*/
                 }
             }
             viewModel.closeDialogs()
@@ -85,8 +87,8 @@ fun AccountView(
             errorText.append(stringResource(requireNotNull(error).errorKey))
         }
         errorText.toString()
-    } else if (infoDialogMessageId != -1) {
-        stringResource(infoDialogMessageId)
+    } else if (infoDialogMessageId != null) {
+        stringResource(requireNotNull(infoDialogMessageId))
     } else {
         ""
     }

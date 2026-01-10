@@ -9,7 +9,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -19,6 +18,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.StringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_removed
+import reader_collection.app.generated.resources.book_saved
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_no_book
 
 class BookDetailViewModel(
     state: SavedStateHandle,
@@ -37,9 +42,9 @@ class BookDetailViewModel(
         ),
     )
     private val _bookDetailError = MutableStateFlow<ErrorModel?>(null)
-    private val _confirmationDialogMessageId = MutableStateFlow(-1)
-    private val _infoDialogMessageId = MutableStateFlow(-1)
-    private val _imageDialogMessageId = MutableStateFlow(-1)
+    private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
+    private val _infoDialogMessageId = MutableStateFlow<StringResource?>(null)
+    private val _imageDialogMessageId = MutableStateFlow<StringResource?>(null)
     private val pendingBooks: List<Book>
         get() = savedBooks.filter { it.isPending() }
     //endregion
@@ -47,9 +52,9 @@ class BookDetailViewModel(
     //region Public properties
     val state: StateFlow<BookDetailUiState> = _state
     val bookDetailError: StateFlow<ErrorModel?> = _bookDetailError
-    var confirmationDialogMessageId: StateFlow<Int> = _confirmationDialogMessageId
-    val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
-    var imageDialogMessageId: StateFlow<Int> = _imageDialogMessageId
+    var confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
+    val infoDialogMessageId: StateFlow<StringResource?> = _infoDialogMessageId
+    var imageDialogMessageId: StateFlow<StringResource?> = _imageDialogMessageId
     //endregion
 
     //region Lifecycle methods
@@ -86,7 +91,7 @@ class BookDetailViewModel(
         val book = newBook.copy(priority = maxPriority + 1)
         booksRepository.createBook(book).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.book_saved
+                _infoDialogMessageId.value = Res.string.book_saved
                 _state.update {
                     it.copy(
                         book = book,
@@ -98,7 +103,7 @@ class BookDetailViewModel(
             onFailure = {
                 _bookDetailError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 )
             },
         )
@@ -118,7 +123,7 @@ class BookDetailViewModel(
             onFailure = {
                 _bookDetailError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 )
             },
         )
@@ -127,7 +132,7 @@ class BookDetailViewModel(
     fun deleteBook() = viewModelScope.launch {
         booksRepository.deleteBook(params.bookId).fold(
             onSuccess = {
-                _infoDialogMessageId.value = R.string.book_removed
+                _infoDialogMessageId.value = Res.string.book_removed
                 _state.update {
                     it.copy(
                         isAlreadySaved = false,
@@ -138,7 +143,7 @@ class BookDetailViewModel(
             onFailure = {
                 _bookDetailError.value = ErrorModel(
                     Constants.EMPTY_VALUE,
-                    R.string.error_database,
+                    Res.string.error_database,
                 )
             },
         )
@@ -154,18 +159,18 @@ class BookDetailViewModel(
         }
     }
 
-    fun showConfirmationDialog(textId: Int) {
+    fun showConfirmationDialog(textId: StringResource) {
         _confirmationDialogMessageId.value = textId
     }
 
-    fun showImageDialog(textId: Int) {
+    fun showImageDialog(textId: StringResource) {
         _imageDialogMessageId.value = textId
     }
 
     fun closeDialogs() {
-        _confirmationDialogMessageId.value = -1
-        _infoDialogMessageId.value = -1
-        _imageDialogMessageId.value = -1
+        _confirmationDialogMessageId.value = null
+        _infoDialogMessageId.value = null
+        _imageDialogMessageId.value = null
     }
     //endregion
 
@@ -184,7 +189,7 @@ class BookDetailViewModel(
                     }
                 },
                 onFailure = {
-                    _bookDetailError.value = ErrorModel("", R.string.error_no_book)
+                    _bookDetailError.value = ErrorModel("", Res.string.error_no_book)
                 },
             )
         } else {
@@ -200,7 +205,7 @@ class BookDetailViewModel(
                     }
                 },
                 onFailure = {
-                    _bookDetailError.value = ErrorModel("", R.string.error_no_book)
+                    _bookDetailError.value = ErrorModel("", Res.string.error_no_book)
                 },
             )
         }

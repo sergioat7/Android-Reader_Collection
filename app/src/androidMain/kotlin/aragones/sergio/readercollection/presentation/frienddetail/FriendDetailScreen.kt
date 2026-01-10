@@ -33,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
@@ -41,7 +40,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
@@ -54,6 +52,12 @@ import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.delete
+import reader_collection.app.generated.resources.pending
+import reader_collection.app.generated.resources.read
+import reader_collection.app.generated.resources.reading
 
 @Composable
 fun FriendDetailScreen(
@@ -102,9 +106,9 @@ private fun FriendDetailContent(
     onDeleteFriend: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val readingTitle = stringResource(R.string.reading)
-    val readTitle = stringResource(R.string.read)
-    val pendingTitle = stringResource(R.string.pending)
+    val readingTitle = stringResource(Res.string.reading)
+    val readTitle = stringResource(Res.string.read)
+    val pendingTitle = stringResource(Res.string.pending)
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = modifier
@@ -120,7 +124,7 @@ private fun FriendDetailContent(
             Row {
                 Spacer(Modifier.weight(1f))
                 MainActionButton(
-                    text = stringResource(R.string.delete),
+                    text = stringResource(Res.string.delete),
                     modifier = Modifier
                         .widthIn(min = 200.dp)
                         .padding(vertical = 24.dp),

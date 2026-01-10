@@ -9,7 +9,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
@@ -29,6 +28,8 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.error_database
 
 class BookListViewModel(
     state: SavedStateHandle,
@@ -195,7 +196,7 @@ class BookListViewModel(
     }
 
     private fun showError(
-        error: ErrorModel = ErrorModel(Constants.EMPTY_VALUE, R.string.error_database),
+        error: ErrorModel = ErrorModel(Constants.EMPTY_VALUE, Res.string.error_database),
     ) {
         _state.value = BookListUiState(
             isLoading = false,

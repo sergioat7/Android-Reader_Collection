@@ -8,10 +8,11 @@ package aragones.sergio.readercollection.presentation.settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import org.koin.compose.viewmodel.koinViewModel
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.profile_logout_confirmation
 
 @Composable
 fun SettingsView(
@@ -38,7 +39,7 @@ fun SettingsView(
                     is SettingsOption.DisplaySettings,
                     -> onClickOption(it)
                     is SettingsOption.Logout -> viewModel.showConfirmationDialog(
-                        R.string.profile_logout_confirmation,
+                        Res.string.profile_logout_confirmation,
                     )
                 }
             },
@@ -46,18 +47,17 @@ fun SettingsView(
     }
 
     ConfirmationAlertDialog(
-        show = confirmationMessageId != -1,
         textId = confirmationMessageId,
         onCancel = {
             viewModel.closeDialogs()
         },
         onAccept = {
             when (confirmationMessageId) {
-                R.string.profile_logout_confirmation -> {
+                Res.string.profile_logout_confirmation -> {
                     viewModel.logout()
                 }
-                else -> {
-                    Unit
+                null -> {
+                    /*no-op*/
                 }
             }
             viewModel.closeDialogs()

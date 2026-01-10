@@ -9,7 +9,6 @@
 package aragones.sergio.readercollection.presentation
 
 import app.cash.turbine.test
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
@@ -39,6 +38,10 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_saved
+import reader_collection.app.generated.resources.error_database
+import reader_collection.app.generated.resources.error_resource_found
 
 class SearchViewModelTest {
 
@@ -316,11 +319,11 @@ class SearchViewModelTest {
             coEvery { booksLocalDataSource.insertBooks(any()) } just Runs
 
             viewModel.infoDialogMessageId.test {
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.addBook(bookId)
 
-                assertEquals(R.string.book_saved, awaitItem())
+                assertEquals(Res.string.book_saved, awaitItem())
             }
 
             coVerify {
@@ -352,11 +355,11 @@ class SearchViewModelTest {
             coEvery { booksLocalDataSource.insertBooks(any()) } just Runs
 
             viewModel.infoDialogMessageId.test {
-                assertEquals(-1, awaitItem())
+                assertEquals(null, awaitItem())
 
                 viewModel.addBook(bookId)
 
-                assertEquals(R.string.book_saved, awaitItem())
+                assertEquals(Res.string.book_saved, awaitItem())
             }
 
             coVerify { booksLocalDataSource.getAllBooks() }
@@ -384,11 +387,11 @@ class SearchViewModelTest {
         } throws RuntimeException("Firestore error")
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.addBook(bookId)
 
-            assertEquals(R.string.error_database, awaitItem())
+            assertEquals(Res.string.error_database, awaitItem())
         }
 
         coVerify {
@@ -413,11 +416,11 @@ class SearchViewModelTest {
         advanceUntilIdle()
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.addBook(bookId)
 
-            assertEquals(R.string.error_resource_found, awaitItem())
+            assertEquals(Res.string.error_resource_found, awaitItem())
         }
 
         coVerify { booksLocalDataSource.getAllBooks() }
@@ -438,20 +441,20 @@ class SearchViewModelTest {
         advanceUntilIdle()
 
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
             viewModel.addBook(bookId)
-            assertEquals(R.string.error_database, awaitItem())
+            assertEquals(Res.string.error_database, awaitItem())
 
             viewModel.closeDialogs()
 
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
         }
     }
 
     @Test
     fun `GIVEN no dialog shown WHEN closeDialogs THEN do nothing`() = runTest {
         viewModel.infoDialogMessageId.test {
-            assertEquals(-1, awaitItem())
+            assertEquals(null, awaitItem())
 
             viewModel.closeDialogs()
 
