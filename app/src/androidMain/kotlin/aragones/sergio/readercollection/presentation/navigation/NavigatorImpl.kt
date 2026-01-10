@@ -12,11 +12,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.landing.LandingActivity
 
-interface Navigator {
-    fun goToLanding()
-    fun goToMain(withOptions: Boolean = true)
-}
-
 class NavigatorImpl(private val context: Context) : Navigator {
     override fun goToLanding() {
         val intent = Intent(context, LandingActivity::class.java).apply {

@@ -1,4 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
@@ -98,46 +97,32 @@ kotlin {
                 implementation(projects.core.database)
                 implementation(projects.core.util)
 
-                implementation(libs.bundles.firebase)
-                implementation(libs.bundles.koin)
-                implementation(libs.bundles.ktor)
-                implementation(libs.cmp.components.resources)
                 implementation(project.dependencies.platform(libs.firebase.bom))
                 implementation(project.dependencies.platform(libs.koin.bom))
+
+                implementation(libs.bundles.compose.multiplatform)
+                implementation(libs.bundles.koin)
+                implementation(libs.bundles.ktor)
+                implementation(libs.coil)
+                implementation(libs.coil.network.ktor3)
                 implementation(libs.kotlinx.datetime)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.navigation.compose)
             }
         }
 
         val androidMain by getting {
             dependencies {
-                implementation(projects.core.database)
-                implementation(projects.core.util)
                 implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
 
                 implementation(libs.android.chart)
                 implementation(libs.app.update.ktx)
-                implementation(libs.bundles.compose)
                 implementation(libs.bundles.firebase)
-                implementation(libs.bundles.koin)
-                implementation(libs.bundles.ktor)
                 implementation(libs.ktor.client.okhttp)
-                implementation(project.dependencies.platform(libs.compose.bom))
-                implementation(project.dependencies.platform(libs.firebase.bom))
-                implementation(project.dependencies.platform(libs.koin.bom))
-                implementation(libs.coil)
-                implementation(libs.coil.network.ktor3)
-                implementation(libs.core.ktx)
-                implementation(libs.koin.android)
-                implementation(libs.koin.compose.viewmodel.navigation)
                 implementation(libs.koin.work.manager)
-                implementation(libs.kotlinx.datetime)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.lifecycle.viewmodel.ktx)
                 implementation(libs.lottie)
                 implementation(libs.material)
-                implementation(libs.material3)
-                implementation(libs.navigation.compose)
+                implementation(libs.okhttp3.logging.interceptor)
                 implementation(libs.security.crypto)
                 implementation(libs.work.manager)
             }

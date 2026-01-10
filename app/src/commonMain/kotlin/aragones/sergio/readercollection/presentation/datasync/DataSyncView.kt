@@ -5,21 +5,14 @@
 
 package aragones.sergio.readercollection.presentation.datasync
 
-import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
-import androidx.work.Constraints
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.NetworkType
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
+import aragones.sergio.readercollection.presentation.theme.AppUiProvider.cancelWorker
+import aragones.sergio.readercollection.presentation.theme.AppUiProvider.launchWorker
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
-import aragones.sergio.readercollection.utils.SyncDataWorker
-import java.util.concurrent.TimeUnit
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import reader_collection.app.generated.resources.Res
@@ -43,14 +36,10 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewMode
         )
     }
 
-    val context = LocalContext.current
-
     if (state.isAutomaticSyncEnabled) {
-        setupWorker(context)
+        launchWorker()
     } else {
-        WorkManager
-            .getInstance(context)
-            .cancelUniqueWork(SyncDataWorker.WORK_NAME)
+        cancelWorker()
     }
 
     val text = if (error != null) {
@@ -87,22 +76,4 @@ fun DataSyncView(onBack: () -> Unit, viewModel: DataSyncViewModel = koinViewMode
             viewModel.closeDialogs()
         },
     )
-}
-
-private fun setupWorker(context: Context) {
-    val workRequest = PeriodicWorkRequestBuilder<SyncDataWorker>(7, TimeUnit.DAYS)
-        .setConstraints(
-            Constraints
-                .Builder()
-                .setRequiredNetworkType(NetworkType.CONNECTED)
-                .build(),
-        ).build()
-
-    WorkManager
-        .getInstance(context)
-        .enqueueUniquePeriodicWork(
-            uniqueWorkName = SyncDataWorker.WORK_NAME,
-            existingPeriodicWorkPolicy = ExistingPeriodicWorkPolicy.KEEP,
-            request = workRequest,
-        )
 }

@@ -43,7 +43,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -69,6 +68,7 @@ import aragones.sergio.readercollection.presentation.components.SearchBar
 import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.components.withDescription
+import aragones.sergio.readercollection.presentation.theme.AppUiProvider.getScreenWidth
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
@@ -348,7 +348,7 @@ private fun ReadingBooksContentSection(
     onLongClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val screenWidthDp = getScreenWidth()
     LazyRow(modifier) {
         items(books.books) { book ->
             ReadingBookItem(

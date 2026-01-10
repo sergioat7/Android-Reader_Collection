@@ -7,12 +7,10 @@ package aragones.sergio.readercollection
 
 import android.app.Application
 import android.os.StrictMode
-import aragones.sergio.readercollection.presentation.di.activityModule
-import aragones.sergio.readercollection.presentation.di.presentationModule
+import aragones.sergio.readercollection.presentation.di.initKoin
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.workmanager.koin.workManagerFactory
-import org.koin.core.context.startKoin
 
 class ReaderCollectionApplication : Application() {
 
@@ -20,14 +18,10 @@ class ReaderCollectionApplication : Application() {
     override fun onCreate() {
         super.onCreate()
 
-        startKoin {
+        initKoin {
             androidLogger()
             androidContext(this@ReaderCollectionApplication)
             workManagerFactory()
-            modules(
-                activityModule,
-                presentationModule,
-            )
         }
 
         if (BuildConfig.DEBUG) {

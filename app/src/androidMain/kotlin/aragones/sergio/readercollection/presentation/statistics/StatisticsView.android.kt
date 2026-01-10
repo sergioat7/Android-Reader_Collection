@@ -21,16 +21,15 @@ import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
 import org.jetbrains.compose.resources.stringResource
-import org.koin.compose.viewmodel.koinViewModel
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.export_confirmation
 import reader_collection.app.generated.resources.import_confirmation
 
 @Composable
-fun StatisticsView(
+actual fun StatisticsView(
     onBookClick: (String) -> Unit,
     onShowAll: (String?, Boolean, Int, Int, String?, String?) -> Unit,
-    viewModel: StatisticsViewModel = koinViewModel(),
+    viewModel: StatisticsViewModel,
 ) {
     val context = LocalContext.current
     val openFileLauncher = rememberLauncherForActivityResult(

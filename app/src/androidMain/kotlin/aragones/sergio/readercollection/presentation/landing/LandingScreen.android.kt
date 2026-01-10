@@ -26,7 +26,7 @@ import com.airbnb.lottie.compose.rememberLottieDynamicProperties
 import com.airbnb.lottie.compose.rememberLottieDynamicProperty
 
 @Composable
-fun LandingScreen(onAnimationFinished: () -> Unit) {
+actual fun LandingScreen(onAnimationFinished: () -> Unit) {
     val composition = rememberLottieComposition(
         LottieCompositionSpec.RawRes(R.raw.landing_animation),
     )

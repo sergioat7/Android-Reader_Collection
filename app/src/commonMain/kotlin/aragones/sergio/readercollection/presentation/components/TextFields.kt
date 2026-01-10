@@ -72,8 +72,8 @@ fun CustomOutlinedTextField(
     endIcon: AccessibilityPainter? = null,
     inputType: CustomInputType? = CustomInputType.TEXT,
     isLastTextField: Boolean? = null,
-    maxLength: Int = Integer.MAX_VALUE,
-    maxLines: Int = Integer.MAX_VALUE,
+    maxLength: Int = Int.MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     enabled: Boolean = true,
     isRequired: Boolean = false,
     onEndIconClicked: (() -> Unit)? = null,
@@ -156,7 +156,7 @@ fun CustomOutlinedTextField(
                     Spacer(Modifier.weight(1f))
                 }
                 Spacer(Modifier.width(4.dp))
-                if (enabled && maxLength != Integer.MAX_VALUE) {
+                if (enabled && maxLength != Int.MAX_VALUE) {
                     Text(
                         text = "${text.length} / $maxLength",
                         style = MaterialTheme.typography.bodyMedium.copy(
@@ -251,8 +251,8 @@ fun MultilineCustomOutlinedTextField(
     textColor: Color = MaterialTheme.colorScheme.primary,
     endIcon: AccessibilityPainter? = null,
     isLastTextField: Boolean? = null,
-    maxLength: Int = Integer.MAX_VALUE,
-    maxLines: Int = Integer.MAX_VALUE,
+    maxLength: Int = Int.MAX_VALUE,
+    maxLines: Int = Int.MAX_VALUE,
     enabled: Boolean = true,
     onEndIconClicked: (() -> Unit)? = null,
 ) {
@@ -275,7 +275,7 @@ fun MultilineCustomOutlinedTextField(
             inputType = CustomInputType.MULTI_LINE_TEXT,
             isLastTextField = isLastTextField,
             maxLength = maxLength,
-            maxLines = Integer.MAX_VALUE.takeIf { !showReadMore } ?: maxLines,
+            maxLines = Int.MAX_VALUE.takeIf { !showReadMore } ?: maxLines,
             enabled = enabled,
             onEndIconClicked = onEndIconClicked,
         )

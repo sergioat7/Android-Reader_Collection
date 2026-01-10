@@ -81,13 +81,13 @@ import reader_collection.app.generated.resources.title_books_count
 import reader_collection.app.generated.resources.title_stats
 
 @Composable
-fun StatisticsScreen(
+actual fun StatisticsScreen(
     state: StatisticsUiState,
     onImportClick: () -> Unit,
     onExportClick: () -> Unit,
     onGroupClick: (Int?, Int?, String?, String?) -> Unit,
     onBookClick: (String) -> Unit,
-    modifier: Modifier = Modifier,
+    modifier: Modifier,
 ) {
     val scrollState = rememberScrollState()
     Column(modifier = modifier.fillMaxSize()) {

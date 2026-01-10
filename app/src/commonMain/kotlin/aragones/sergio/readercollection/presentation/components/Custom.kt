@@ -5,8 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -62,6 +60,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_NIGHT_YES
+import androidx.compose.ui.tooling.preview.AndroidUiModes.UI_MODE_TYPE_NORMAL
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
@@ -409,10 +409,20 @@ private fun CustomChipPreview() {
 
 @Retention(AnnotationRetention.BINARY)
 @Target(AnnotationTarget.ANNOTATION_CLASS, AnnotationTarget.FUNCTION)
-@Preview(name = "Light", locale = "en")
-@Preview(name = "Light", locale = "es")
-@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "en")
-@Preview(name = "Dark", uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL, locale = "es")
+@Preview(name = "Light-en", group = "Light", locale = "en")
+@Preview(name = "Light-es", group = "Light", locale = "es")
+@Preview(
+    name = "Dark-en",
+    group = "Dark",
+    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+    locale = "en",
+)
+@Preview(
+    name = "Dark-es",
+    group = "Dark",
+    uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
+    locale = "es",
+)
 annotation class CustomPreviewLightDark
 
 @Retention(AnnotationRetention.BINARY)
@@ -420,16 +430,18 @@ annotation class CustomPreviewLightDark
     AnnotationTarget.ANNOTATION_CLASS,
     AnnotationTarget.FUNCTION,
 )
-@Preview(name = "Light", locale = "en", showBackground = true)
-@Preview(name = "Light", locale = "es", showBackground = true)
+@Preview(name = "Light-en", group = "Light", locale = "en", showBackground = true)
+@Preview(name = "Light-es", group = "Light", locale = "es", showBackground = true)
 @Preview(
-    name = "Dark",
+    name = "Dark-en",
+    group = "Dark",
     uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
     locale = "en",
     showBackground = true,
 )
 @Preview(
-    name = "Dark",
+    name = "Dark-es",
+    group = "Dark",
     uiMode = UI_MODE_NIGHT_YES or UI_MODE_TYPE_NORMAL,
     locale = "es",
     showBackground = true,

@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -36,13 +35,13 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import aragones.sergio.readercollection.presentation.theme.AppUiProvider.isPortrait
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import com.aragones.sergio.util.extensions.currentTime
@@ -219,8 +218,7 @@ fun SortingPickerAlertDialog(
         val sortParamValues = stringArrayResource(Res.array.sorting_param_values)
         val sortOrderValues = stringArrayResource(Res.array.sorting_order_values)
 
-        val isPortrait =
-            LocalConfiguration.current.orientation == Configuration.ORIENTATION_PORTRAIT
+        val isPortrait = isPortrait()
 
         Dialog(
             onDismissRequest = { onCancel() },

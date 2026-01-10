@@ -22,13 +22,12 @@ import aragones.sergio.readercollection.presentation.register.RegisterViewModel
 import aragones.sergio.readercollection.presentation.search.SearchViewModel
 import aragones.sergio.readercollection.presentation.settings.SettingsViewModel
 import aragones.sergio.readercollection.presentation.statistics.StatisticsViewModel
-import aragones.sergio.readercollection.utils.SyncDataWorker
-import org.koin.androidx.workmanager.dsl.workerOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val presentationModule = module {
     includes(domainModule)
+    includes(platformModule)
     viewModelOf(::MainViewModel)
     viewModelOf(::AccountViewModel)
     viewModelOf(::AddFriendsViewModel)
@@ -45,5 +44,4 @@ val presentationModule = module {
     viewModelOf(::SearchViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::StatisticsViewModel)
-    workerOf(::SyncDataWorker)
 }

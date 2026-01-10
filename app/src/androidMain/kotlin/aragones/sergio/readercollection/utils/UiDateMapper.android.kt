@@ -18,9 +18,12 @@ import java.util.Locale
 import java.util.TimeZone
 import kotlinx.datetime.LocalDate
 
-object UiDateMapper {
+actual object UiDateMapper {
 
-    fun List<LocalDate>.getGroupedBy(pattern: String, language: String): Map<String, List<Any>> {
+    actual fun List<LocalDate>.getGroupedBy(
+        pattern: String,
+        language: String,
+    ): Map<String, List<Any>> {
         val locale = Locale.forLanguageTag(language)
         val calendar = Calendar.getInstance()
         return this.mapNotNull { it.toString(format = null).toDate() }.groupBy {
@@ -29,7 +32,7 @@ object UiDateMapper {
         }
     }
 
-    fun LocalDate?.getValueToShow(language: String): String? = this
+    actual fun LocalDate?.getValueToShow(language: String): String? = this
         ?.toString(format = null)
         .toDate()
         .toString(
@@ -37,14 +40,14 @@ object UiDateMapper {
             language = language,
         )
 
-    fun String.toLong(language: String?): Long? = this
+    actual fun String.toLong(language: String?): Long? = this
         .toDate(
             format = language?.let { Constants.getDateFormatToShow(it) },
             language = language,
             timeZone = TimeZone.getTimeZone("UTC"),
         )?.time
 
-    fun Long.toLocalDate(language: String): LocalDate? {
+    actual fun Long.toLocalDate(language: String): LocalDate? {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = this
         val dateString = calendar.time
@@ -59,7 +62,7 @@ object UiDateMapper {
         return dateString
     }
 
-    fun Int.toMonthName(language: String): String =
+    actual fun Int.toMonthName(language: String): String =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Month
                 .of(this)
