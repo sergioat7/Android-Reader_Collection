@@ -9,8 +9,6 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
-import aragones.sergio.readercollection.presentation.MainActivity
-import aragones.sergio.readercollection.presentation.login.LoginActivity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -20,22 +18,18 @@ class LandingViewModel(
 ) : ViewModel() {
 
     //region Private properties
-    private val _landingClassToStart = MutableStateFlow<Class<*>?>(null)
+    private val _isLogged = MutableStateFlow<Boolean?>(null)
     //endregion
 
     //region Public properties
     val language: String
         get() = userRepository.language
-    val landingClassToStart: StateFlow<Class<*>?> = _landingClassToStart
+    val isLogged: StateFlow<Boolean?> = _isLogged
     //endregion
 
     //region Public methods
     fun checkIsLoggedIn() {
-        _landingClassToStart.value = if (userRepository.isLoggedIn) {
-            MainActivity::class.java
-        } else {
-            LoginActivity::class.java
-        }
+        _isLogged.value = userRepository.isLoggedIn
     }
 
     fun checkTheme() {

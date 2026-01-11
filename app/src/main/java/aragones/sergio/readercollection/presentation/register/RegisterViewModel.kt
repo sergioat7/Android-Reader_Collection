@@ -14,7 +14,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
-import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,14 +28,14 @@ class RegisterViewModel(
     private var _uiState: MutableState<RegisterUiState> = mutableStateOf(RegisterUiState.empty())
     private val _registerError = MutableStateFlow<ErrorModel?>(null)
     private val _infoDialogMessageId = MutableStateFlow(-1)
-    private val _activityName = MutableStateFlow<String?>(null)
+    private val _registerSuccess = MutableStateFlow(false)
     //endregion
 
     //region Public properties
     val uiState: State<RegisterUiState> = _uiState
     val registerError: StateFlow<ErrorModel?> = _registerError
     val infoDialogMessageId: StateFlow<Int> = _infoDialogMessageId
-    val activityName: StateFlow<String?> = _activityName
+    val registerSuccess: StateFlow<Boolean> = _registerSuccess
     //endregion
 
     //region Public methods
@@ -47,7 +46,7 @@ class RegisterViewModel(
                 userRepository.login(username, password).fold(
                     onSuccess = {
                         _uiState.value = _uiState.value.copy(isLoading = false)
-                        _activityName.value = MainActivity::class.simpleName
+                        _registerSuccess.value = true
                     },
                     onFailure = {
                         manageError(

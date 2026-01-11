@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -22,10 +21,10 @@ fun LoginView(
     val state by viewModel.uiState
     val error by viewModel.loginError.collectAsState()
 
-    val activityName = viewModel.activityName.collectAsState()
-    when (activityName.value) {
-        MainActivity::class.simpleName -> onGoToMain()
-        else -> Unit
+    val loginSuccess = viewModel.loginSuccess.collectAsState()
+    when (loginSuccess.value) {
+        true -> onGoToMain()
+        false -> Unit
     }
 
     LoginScreen(

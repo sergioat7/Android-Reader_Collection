@@ -16,7 +16,6 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.presentation.landing.LandingViewModel
-import aragones.sergio.readercollection.presentation.login.LoginActivity
 import com.aragones.sergio.BooksLocalDataSource
 import io.mockk.Called
 import io.mockk.Runs
@@ -65,16 +64,16 @@ class LandingViewModelTest {
     }
 
     @Test
-    fun `GIVEN user logged in and exist user WHEN check if is logged in THEN class launched is MainActivity`() =
+    fun `GIVEN user logged in and exist user WHEN check if is logged in THEN return true`() =
         runTest {
             every { userLocalDataSource.isLoggedIn } returns true
             every { userRemoteDataSource.userExists } returns true
-            viewModel.landingClassToStart.test {
+            viewModel.isLogged.test {
                 assertEquals(null, awaitItem())
 
                 viewModel.checkIsLoggedIn()
 
-                assertEquals(MainActivity::class.java, awaitItem())
+                assertEquals(true, awaitItem())
             }
             verify { userLocalDataSource.isLoggedIn }
             verify { userRemoteDataSource.userExists }
@@ -82,16 +81,16 @@ class LandingViewModelTest {
         }
 
     @Test
-    fun `GIVEN user logged in and not exist user WHEN check if is logged in THEN class launched is LoginActivity`() =
+    fun `GIVEN user logged in and not exist user WHEN check if is logged in THEN return false`() =
         runTest {
             every { userLocalDataSource.isLoggedIn } returns true
             every { userRemoteDataSource.userExists } returns false
-            viewModel.landingClassToStart.test {
+            viewModel.isLogged.test {
                 assertEquals(null, awaitItem())
 
                 viewModel.checkIsLoggedIn()
 
-                assertEquals(LoginActivity::class.java, awaitItem())
+                assertEquals(false, awaitItem())
             }
             verify { userLocalDataSource.isLoggedIn }
             verify { userRemoteDataSource.userExists }
@@ -99,15 +98,15 @@ class LandingViewModelTest {
         }
 
     @Test
-    fun `GIVEN user not logged in with current user not null WHEN check if is logged in THEN class launched is LoginActivity`() =
+    fun `GIVEN user not logged in with current user not null WHEN check if is logged in THEN return false`() =
         runTest {
             every { userLocalDataSource.isLoggedIn } returns false
-            viewModel.landingClassToStart.test {
+            viewModel.isLogged.test {
                 assertEquals(null, awaitItem())
 
                 viewModel.checkIsLoggedIn()
 
-                assertEquals(LoginActivity::class.java, awaitItem())
+                assertEquals(false, awaitItem())
             }
             verify { userLocalDataSource.isLoggedIn }
             verify { userRemoteDataSource.wasNot(Called) }
@@ -115,15 +114,15 @@ class LandingViewModelTest {
         }
 
     @Test
-    fun `GIVEN user not logged in with current user null WHEN check if is logged in THEN class launched is LoginActivity`() =
+    fun `GIVEN user not logged in with current user null WHEN check if is logged in THEN return false`() =
         runTest {
             every { userLocalDataSource.isLoggedIn } returns false
-            viewModel.landingClassToStart.test {
+            viewModel.isLogged.test {
                 assertEquals(null, awaitItem())
 
                 viewModel.checkIsLoggedIn()
 
-                assertEquals(LoginActivity::class.java, awaitItem())
+                assertEquals(false, awaitItem())
             }
             verify { userLocalDataSource.isLoggedIn }
             verify { userRemoteDataSource.wasNot(Called) }

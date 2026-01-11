@@ -14,7 +14,6 @@ import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import aragones.sergio.readercollection.domain.model.ErrorModel
-import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,13 +30,13 @@ class LoginViewModel(
         LoginUiState.empty().copy(username = userRepository.username),
     )
     private val _loginError = MutableStateFlow<ErrorModel?>(null)
-    private val _activityName = MutableStateFlow<String?>(null)
+    private val _loginSuccess = MutableStateFlow(false)
     //endregion
 
     //region Public properties
     val uiState: State<LoginUiState> = _uiState
     val loginError: StateFlow<ErrorModel?> = _loginError
-    val activityName: StateFlow<String?> = _activityName
+    val loginSuccess: StateFlow<Boolean> = _loginSuccess
     //endregion
 
     //region Public methods
@@ -49,7 +48,7 @@ class LoginViewModel(
                 booksRepository.loadBooks(userRepository.userId).fold(
                     onSuccess = {
                         _uiState.value = _uiState.value.copy(isLoading = false)
-                        _activityName.value = MainActivity::class.simpleName
+                        _loginSuccess.value = true
                     },
                     onFailure = {
                         userRepository.logout()

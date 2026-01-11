@@ -51,7 +51,7 @@ class RegisterViewModelTest {
     )
 
     @Test
-    fun `GIVEN valid username and password WHEN register THEN user is registered and logged in and MainActivity is launched`() =
+    fun `GIVEN valid username and password WHEN register THEN user is registered and logged in and true is returned`() =
         runTest {
             val password = "pass"
             val userId = "userId"
@@ -71,12 +71,12 @@ class RegisterViewModelTest {
             } returns Result.success(userId)
             every { userLocalDataSource.storeLoginData(userData, authData) } just Runs
 
-            viewModel.activityName.test {
-                assertEquals(null, awaitItem())
+            viewModel.registerSuccess.test {
+                assertEquals(false, awaitItem())
 
                 viewModel.register(testUsername, password)
 
-                assertEquals(MainActivity::class.simpleName, awaitItem())
+                assertEquals(true, awaitItem())
             }
 
             coVerify { userRemoteDataSource.register(testUsername, password) }

@@ -35,7 +35,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.MainActivity
-import aragones.sergio.readercollection.presentation.login.LoginActivity
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.authGraph
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
@@ -79,12 +78,12 @@ class LandingActivity : ComponentActivity(), AndroidScopeComponent {
                         .padding(WindowInsets.safeDrawing.asPaddingValues()),
                 ) {
                     val navController = rememberNavController()
-                    val cls = viewModel.landingClassToStart.collectAsState()
-                    when (cls.value) {
-                        MainActivity::class.java -> {
+                    val isLogged = viewModel.isLogged.collectAsState()
+                    when (isLogged.value) {
+                        true -> {
                             launchMainActivity()
                         }
-                        LoginActivity::class.java -> {
+                        false -> {
                             val navGraph = remember(navController) {
                                 navController.createGraph(startDestination = Route.Auth) {
                                     authGraph(navController)

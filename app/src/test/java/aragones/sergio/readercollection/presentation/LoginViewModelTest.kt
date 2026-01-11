@@ -63,7 +63,7 @@ class LoginViewModelTest {
     )
 
     @Test
-    fun `GIVEN valid username and password WHEN login THEN user config and books are loaded and MainActivity is launched`() =
+    fun `GIVEN valid username and password WHEN login THEN user config and books are loaded and true is returned`() =
         runTest {
             val password = "pass"
             val userId = "userId"
@@ -87,12 +87,12 @@ class LoginViewModelTest {
             coEvery { booksRemoteDataSource.getBooks(userId) } returns Result.success(books)
             coEvery { booksLocalDataSource.insertBooks(domainBooks) } just Runs
 
-            viewModel.activityName.test {
-                assertEquals(null, awaitItem())
+            viewModel.loginSuccess.test {
+                assertEquals(false, awaitItem())
 
                 viewModel.login(testUsername, password)
 
-                assertEquals(MainActivity::class.simpleName, awaitItem())
+                assertEquals(true, awaitItem())
             }
 
             verify(exactly = 2) { userLocalDataSource.username }

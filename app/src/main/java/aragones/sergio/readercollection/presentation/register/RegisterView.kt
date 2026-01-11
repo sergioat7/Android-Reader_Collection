@@ -10,7 +10,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
 import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.components.InformationAlertDialog
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -20,10 +19,10 @@ fun RegisterView(onGoToMain: () -> Unit, viewModel: RegisterViewModel = koinView
     val error by viewModel.registerError.collectAsState()
     val infoDialogMessageId by viewModel.infoDialogMessageId.collectAsState()
 
-    val activityName = viewModel.activityName.collectAsState()
-    when (activityName.value) {
-        MainActivity::class.simpleName -> onGoToMain()
-        else -> Unit
+    val registerSuccess = viewModel.registerSuccess.collectAsState()
+    when (registerSuccess.value) {
+        true -> onGoToMain()
+        false -> Unit
     }
 
     RegisterScreen(
