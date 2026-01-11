@@ -13,6 +13,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.lifecycle.lifecycleScope
+import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
 
     //region Private properties
     private val inAppUpdateService: InAppUpdateService by inject()
+    private val navigator: Navigator by inject()
     private val viewModel: MainViewModel by viewModel()
     //endregion
 
@@ -41,7 +43,7 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         setContent {
             ReaderCollectionApp {
                 CompositionLocalProvider(LocalLanguage provides viewModel.language) {
-                    MainScreen()
+                    MainScreen(navigator)
                 }
             }
         }

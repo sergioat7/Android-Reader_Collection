@@ -5,18 +5,12 @@
 
 package aragones.sergio.readercollection.presentation.navigation
 
-import android.app.ActivityOptions
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
-import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.MainActivity
 import aragones.sergio.readercollection.presentation.account.AccountView
 import aragones.sergio.readercollection.presentation.addfriend.AddFriendsView
 import aragones.sergio.readercollection.presentation.bookdetail.BookDetailView
@@ -26,7 +20,6 @@ import aragones.sergio.readercollection.presentation.datasync.DataSyncView
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsView
 import aragones.sergio.readercollection.presentation.frienddetail.FriendDetailView
 import aragones.sergio.readercollection.presentation.friends.FriendsView
-import aragones.sergio.readercollection.presentation.landing.LandingActivity
 import aragones.sergio.readercollection.presentation.login.LoginView
 import aragones.sergio.readercollection.presentation.register.RegisterView
 import aragones.sergio.readercollection.presentation.search.SearchView
@@ -35,25 +28,15 @@ import aragones.sergio.readercollection.presentation.settings.SettingsView
 import aragones.sergio.readercollection.presentation.statistics.StatisticsView
 import com.aragones.sergio.util.BookState
 
-fun NavGraphBuilder.authGraph(navController: NavHostController) {
+fun NavGraphBuilder.authGraph(navController: NavHostController, navigator: Navigator) {
     navigation<Route.Auth>(startDestination = Route.Login) {
         composable<Route.Login>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            val context = LocalContext.current
             LoginView(
                 onGoToMain = {
-                    val intent = Intent(context, MainActivity::class.java).apply {
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                    val options = ActivityOptions
-                        .makeCustomAnimation(
-                            context,
-                            R.anim.slide_in_right,
-                            R.anim.slide_out_left,
-                        ).toBundle()
-                    context.startActivity(intent, options)
+                    navigator.goToMain()
                 },
                 onGoToRegister = {
                     navController.navigate(Route.Register)
@@ -64,19 +47,9 @@ fun NavGraphBuilder.authGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
-            val context = LocalContext.current
             RegisterView(
                 onGoToMain = {
-                    val intent = Intent(context, MainActivity::class.java).apply {
-                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                    val options = ActivityOptions
-                        .makeCustomAnimation(
-                            context,
-                            R.anim.slide_in_right,
-                            R.anim.slide_out_left,
-                        ).toBundle()
-                    context.startActivity(intent, options)
+                    navigator.goToMain()
                 },
             )
         }
@@ -216,13 +189,12 @@ fun NavGraphBuilder.statisticsGraph(navController: NavHostController) {
     }
 }
 
-fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
+fun NavGraphBuilder.settingsGraph(navController: NavHostController, navigator: Navigator) {
     navigation<Route.Settings>(startDestination = Route.SettingsHome) {
         composable<Route.SettingsHome>(
             enterTransition = { EnterTransition.None },
             exitTransition = { ExitTransition.None },
         ) {
-            val context = LocalContext.current
             SettingsView(
                 onClickOption = {
                     when (it) {
@@ -232,7 +204,7 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
                         is SettingsOption.DisplaySettings -> navController.navigate(
                             Route.DisplaySettings,
                         )
-                        is SettingsOption.Logout -> logout(context)
+                        is SettingsOption.Logout -> navigator.goToLanding()
                     }
                 },
             )
@@ -241,13 +213,12 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
-            val context = LocalContext.current
             AccountView(
                 onBack = {
                     navController.navigateUp()
                 },
                 onLogout = {
-                    logout(context)
+                    navigator.goToLanding()
                 },
             )
         }
@@ -318,32 +289,14 @@ fun NavGraphBuilder.settingsGraph(navController: NavHostController) {
             enterTransition = { slideIntoContainer() },
             exitTransition = { slideOutOfContainer() },
         ) {
-            val context = LocalContext.current
             DisplaySettingsView(
                 onBack = {
                     navController.navigateUp()
                 },
                 onRelaunch = {
-                    val intent = Intent(context, MainActivity::class.java).apply {
-                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                    }
-                    context.startActivity(intent)
+                    navigator.goToMain(withOptions = false)
                 },
             )
         }
     }
-}
-
-private fun logout(context: Context) {
-    val intent = Intent(context, LandingActivity::class.java).apply {
-        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        putExtra("SKIP_ANIMATION", true)
-    }
-    val options = ActivityOptions
-        .makeCustomAnimation(
-            context,
-            R.anim.slide_in_left,
-            R.anim.slide_out_right,
-        ).toBundle()
-    context.startActivity(intent, options)
 }

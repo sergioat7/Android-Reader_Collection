@@ -37,6 +37,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
+import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.booksGraph
 import aragones.sergio.readercollection.presentation.navigation.settingsGraph
@@ -45,7 +46,7 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 
 @Composable
-fun MainScreen() {
+fun MainScreen(navigator: Navigator) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     Scaffold(
@@ -61,7 +62,7 @@ fun MainScreen() {
         },
     ) { padding ->
         Box(modifier = Modifier.padding(bottom = padding.calculateBottomPadding())) {
-            NavigationStack(navController)
+            NavigationStack(navController, navigator)
         }
     }
 }
@@ -118,12 +119,12 @@ private fun BottomNavigationBar(
 }
 
 @Composable
-private fun NavigationStack(navController: NavHostController) {
+private fun NavigationStack(navController: NavHostController, navigator: Navigator) {
     val navGraph = remember(navController) {
         navController.createGraph(startDestination = Route.Books) {
             booksGraph(navController)
             statisticsGraph(navController)
-            settingsGraph(navController)
+            settingsGraph(navController, navigator)
         }
     }
     NavHost(
@@ -138,7 +139,10 @@ private fun NavigationStack(navController: NavHostController) {
 @Composable
 private fun MainScreenPreview() {
     ReaderCollectionTheme {
-        MainScreen()
+        MainScreen(object : Navigator {
+            override fun goToLanding() {}
+            override fun goToMain(withOptions: Boolean) {}
+        })
     }
 }
 

@@ -5,8 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.landing
 
-import android.app.ActivityOptions
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -33,8 +31,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
-import aragones.sergio.readercollection.R
-import aragones.sergio.readercollection.presentation.MainActivity
+import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.navigation.Route
 import aragones.sergio.readercollection.presentation.navigation.authGraph
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
@@ -56,6 +53,7 @@ class LandingActivity : ComponentActivity(), AndroidScopeComponent {
 
     //region Private properties
     private val inAppUpdateService: InAppUpdateService by inject()
+    private val navigator: Navigator by inject()
     private val viewModel: LandingViewModel by viewModel()
     private var appUpdated = mutableStateOf(false)
     //endregion
@@ -81,12 +79,12 @@ class LandingActivity : ComponentActivity(), AndroidScopeComponent {
                     val isLogged = viewModel.isLogged.collectAsState()
                     when (isLogged.value) {
                         true -> {
-                            launchMainActivity()
+                            navigator.goToMain()
                         }
                         false -> {
                             val navGraph = remember(navController) {
                                 navController.createGraph(startDestination = Route.Auth) {
-                                    authGraph(navController)
+                                    authGraph(navController, navigator)
                                 }
                             }
                             NavHost(
@@ -173,19 +171,6 @@ class LandingActivity : ComponentActivity(), AndroidScopeComponent {
             val locale = AppCompatDelegate.getApplicationLocales().get(0) ?: Locale.getDefault()
             viewModel.setLanguage(locale.language)
         }
-    }
-
-    private fun launchMainActivity() {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        val options = ActivityOptions
-            .makeCustomAnimation(
-                this,
-                R.anim.slide_in_right,
-                R.anim.slide_out_left,
-            ).toBundle()
-        startActivity(intent, options)
     }
     //endregion
 }
