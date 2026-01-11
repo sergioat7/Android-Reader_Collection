@@ -276,6 +276,10 @@ class UserRepositoryImpl(
         val minVersion = userRemoteDataSource.getMinVersion()
         return currentVersion < minVersion
     }
+
+    override fun applyTheme() {
+        userLocalDataSource.applyTheme()
+    }
     //endregion
 }
 

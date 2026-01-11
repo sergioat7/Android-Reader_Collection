@@ -40,4 +40,5 @@ interface UserRepository {
     fun storeIsSortDescending(isSortDescending: Boolean)
     fun storeThemeMode(themeMode: Int)
     suspend fun isThereMandatoryUpdate(): Boolean
+    fun applyTheme()
 }

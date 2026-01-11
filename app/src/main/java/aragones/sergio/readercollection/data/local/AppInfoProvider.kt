@@ -9,6 +9,7 @@ import android.app.LocaleManager
 import android.content.Context
 import android.os.Build
 import android.os.LocaleList
+import androidx.appcompat.app.AppCompatDelegate
 import java.util.Locale
 
 class AppInfoProvider(private val context: Context) {
@@ -24,6 +25,16 @@ class AppInfoProvider(private val context: Context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val locale = context.getSystemService(LocaleManager::class.java)
             locale?.applicationLocales = LocaleList(Locale.forLanguageTag(language))
+        }
+    }
+
+    fun applyTheme(themeMode: Int) {
+        when (themeMode) {
+            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            else -> AppCompatDelegate.setDefaultNightMode(
+                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
+            )
         }
     }
 }

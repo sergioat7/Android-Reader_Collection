@@ -101,6 +101,10 @@ class UserLocalDataSource(
         preferences.themeMode = themeMode
     }
 
+    fun applyTheme() {
+        appInfoProvider.applyTheme(themeMode)
+    }
+
     fun getCurrentVersion(): Int {
         return try {
             val currentVersion = appInfoProvider.getVersion()?.split(".") ?: listOf()

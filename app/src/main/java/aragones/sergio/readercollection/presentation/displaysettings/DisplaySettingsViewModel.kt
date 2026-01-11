@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.displaysettings
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -72,13 +71,7 @@ class DisplaySettingsViewModel(
 
         if (changeThemeMode) {
             userRepository.storeThemeMode(newThemeMode)
-            when (newThemeMode) {
-                1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                else -> AppCompatDelegate.setDefaultNightMode(
-                    AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
-                )
-            }
+            userRepository.applyTheme()
         }
 
         if (changeSortParam || changeIsSortDescending || changeThemeMode) {

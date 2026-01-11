@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.landing
 
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.ViewModel
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
@@ -33,13 +32,7 @@ class LandingViewModel(
     }
 
     fun checkTheme() {
-        when (userRepository.themeMode) {
-            1 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            2 -> AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            else -> AppCompatDelegate.setDefaultNightMode(
-                AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
-            )
-        }
+        userRepository.applyTheme()
     }
 
     fun fetchRemoteConfigValues() {

@@ -54,6 +54,7 @@ class DisplaySettingsViewModelTest {
         every { userLocalDataSource.storeSortParam(any()) } just Runs
         every { userLocalDataSource.storeIsSortDescending(any()) } just Runs
         every { userLocalDataSource.storeThemeMode(any()) } just Runs
+        every { userLocalDataSource.applyTheme() } just Runs
         viewModel.profileDataChanged(newLanguage, newSortParam, newIsSortDescending, newThemeMode)
 
         viewModel.relaunch.test {
@@ -72,6 +73,7 @@ class DisplaySettingsViewModelTest {
         verify { userLocalDataSource.storeSortParam(newSortParam) }
         verify { userLocalDataSource.storeIsSortDescending(newIsSortDescending) }
         verify { userLocalDataSource.storeThemeMode(newThemeMode) }
+        verify { userLocalDataSource.applyTheme() }
         confirmVerified(userLocalDataSource)
     }
 

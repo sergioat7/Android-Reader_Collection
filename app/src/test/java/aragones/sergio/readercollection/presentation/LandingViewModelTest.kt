@@ -8,7 +8,6 @@
 
 package aragones.sergio.readercollection.presentation
 
-import androidx.appcompat.app.AppCompatDelegate
 import app.cash.turbine.test
 import aragones.sergio.readercollection.data.BooksRepositoryImpl
 import aragones.sergio.readercollection.data.UserRepositoryImpl
@@ -23,7 +22,6 @@ import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -130,33 +128,13 @@ class LandingViewModelTest {
         }
 
     @Test
-    fun `GIVEN theme mode is 1 WHEN check theme THEN theme is light`() {
-        every { userLocalDataSource.themeMode } returns 1
-        mockkStatic(AppCompatDelegate::class)
+    fun `WHEN check theme THEN userLocalDataSource is called`() {
+        every { userLocalDataSource.applyTheme() } just Runs
 
         viewModel.checkTheme()
 
-        verify { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO) }
-    }
-
-    @Test
-    fun `GIVEN theme mode is 2 WHEN check theme THEN theme is dark`() {
-        every { userLocalDataSource.themeMode } returns 2
-        mockkStatic(AppCompatDelegate::class)
-
-        viewModel.checkTheme()
-
-        verify { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) }
-    }
-
-    @Test
-    fun `GIVEN theme mode is other WHEN check theme THEN theme is system default`() {
-        every { userLocalDataSource.themeMode } returns 3
-        mockkStatic(AppCompatDelegate::class)
-
-        viewModel.checkTheme()
-
-        verify { AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) }
+        verify { userLocalDataSource.applyTheme() }
+        confirmVerified(userLocalDataSource)
     }
 
     @Test

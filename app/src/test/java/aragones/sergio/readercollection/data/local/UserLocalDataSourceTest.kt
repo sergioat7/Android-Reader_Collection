@@ -309,6 +309,18 @@ class UserLocalDataSourceTest {
     }
 
     @Test
+    fun `WHEN applyTheme is called THEN appInfoProvider is invoked to apply theme`() {
+        val themeMode = 2
+        every { preferences.themeMode } returns themeMode
+        every { appInfoProvider.applyTheme(any()) } just Runs
+
+        dataSource.applyTheme()
+
+        verify(exactly = 1) { appInfoProvider.applyTheme(themeMode) }
+        confirmVerified(appInfoProvider)
+    }
+
+    @Test
     fun `GIVEN version name is correct WHEN getCurrentVersion is called THEN returns version code`() {
         every { appInfoProvider.getVersion() } returns "1.2.3"
 

@@ -5,18 +5,13 @@
 
 package aragones.sergio.readercollection.presentation.theme
 
-import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
-import androidx.activity.compose.LocalActivity
-import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.SideEffect
-import androidx.compose.ui.graphics.toArgb
+import aragones.sergio.readercollection.presentation.theme.AppUiProvider.applyBarsStyle
+import aragones.sergio.readercollection.presentation.theme.AppUiProvider.isDarkThemeApplied
 
 private val LightColorScheme = lightColorScheme(
     primary = EbonyClay,
@@ -44,64 +39,29 @@ fun ReaderCollectionApp(
     navigationBarSameAsBackground: Boolean = true,
     content: @Composable () -> Unit,
 ) {
-    val darkTheme = when (AppCompatDelegate.getDefaultNightMode()) {
-        AppCompatDelegate.MODE_NIGHT_YES -> true
-        AppCompatDelegate.MODE_NIGHT_NO -> false
-        else -> isSystemInDarkTheme()
-    }
-    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
+    val isDarkTheme = isDarkThemeApplied()
+    val colors = if (isDarkTheme) DarkColorScheme else LightColorScheme
 
-    val systemBarAsBackground = if (darkTheme) {
-        SystemBarStyle.dark(
-            colors.secondary.toArgb(),
-        )
-    } else {
-        SystemBarStyle.light(
-            colors.secondary.toArgb(),
-            colors.secondary.toArgb(),
-        )
-    }
-    val systemBarOppositeToBackground = if (darkTheme) {
-        SystemBarStyle.light(
-            colors.primary.toArgb(),
-            colors.primary.toArgb(),
-        )
-    } else {
-        SystemBarStyle.dark(colors.primary.toArgb())
-    }
-
-    val statusBarStyle = if (statusBarSameAsBackground) {
-        systemBarAsBackground
-    } else {
-        systemBarOppositeToBackground
-    }
-    val navigationBarStyle = if (navigationBarSameAsBackground) {
-        systemBarAsBackground
-    } else {
-        systemBarOppositeToBackground
-    }
-
-    val activity = LocalActivity.current as ComponentActivity
-    SideEffect {
-        activity.enableEdgeToEdge(
-            statusBarStyle = statusBarStyle,
-            navigationBarStyle = navigationBarStyle,
-        )
-    }
+    applyBarsStyle(
+        isDarkTheme = isDarkTheme,
+        colors = colors,
+        statusBarSameAsBackground = statusBarSameAsBackground,
+        navigationBarSameAsBackground = navigationBarSameAsBackground,
+    )
 
     ReaderCollectionTheme(
-        darkTheme = darkTheme,
+        isDarkTheme = isDarkTheme,
         content = content,
     )
 }
 
 @Composable
 fun ReaderCollectionTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    isDarkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
     MaterialTheme(
-        colorScheme = if (darkTheme) DarkColorScheme else LightColorScheme,
+        colorScheme = if (isDarkTheme) DarkColorScheme else LightColorScheme,
         typography = Typography,
         shapes = Shapes,
         content = content,
