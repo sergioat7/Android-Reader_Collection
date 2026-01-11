@@ -201,11 +201,17 @@ private fun StatisticsComponent(
 }
 
 @Composable
-private fun BooksByYear(entries: BarEntries, onYearSelected: (Int?) -> Unit) {
+private fun BooksByYear(entries: Entries, onYearSelected: (Int?) -> Unit) {
+    val barEntries = entries.entries.map {
+        BarEntry(
+            it.key.toFloat(),
+            it.size.toFloat(),
+        )
+    }
     AndroidView(
         factory = { context ->
             val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
-            val dataSet = BarDataSet(entries.entries, "").apply {
+            val dataSet = BarDataSet(barEntries, "").apply {
                 valueTextColor = context.getCustomColor(R.color.textPrimary)
                 valueTextSize = 12.sp.value
                 valueTypeface = context.getCustomFont(R.font.roboto_serif_regular)
@@ -260,13 +266,19 @@ private fun BooksByYear(entries: BarEntries, onYearSelected: (Int?) -> Unit) {
 }
 
 @Composable
-private fun BooksByMonth(entries: PieEntries, onMonthSelected: (Int?) -> Unit) {
+private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
+    val pieEntries = entries.entries.map {
+        PieEntry(
+            it.size.toFloat(),
+            it.key,
+        )
+    }
     val language = LocalLanguage.current
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
             val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
-            val dataSet = PieDataSet(entries.entries, "").apply {
+            val dataSet = PieDataSet(pieEntries, "").apply {
                 sliceSpace = 1F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
@@ -440,12 +452,18 @@ private fun BooksByPages(shorterBook: Book?, longerBook: Book?, onBookClick: (St
 }
 
 @Composable
-private fun BooksByFormat(entries: PieEntries, onFormatSelected: (String?) -> Unit) {
+private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit) {
+    val pieEntries = entries.entries.map {
+        PieEntry(
+            it.size.toFloat(),
+            it.key,
+        )
+    }
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
             val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
-            val dataSet = PieDataSet(entries.entries, "").apply {
+            val dataSet = PieDataSet(pieEntries, "").apply {
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
@@ -541,16 +559,16 @@ private class StatisticsScreenPreviewParameterProvider :
         get() = sequenceOf(
             StatisticsUiState.Success(
                 totalBooksRead = 12345,
-                booksByYearEntries = BarEntries(
+                booksByYearEntries = Entries(
                     listOf(
-                        BarEntry(2023f, 10f),
-                        BarEntry(2024f, 20f),
+                        Entry("2023", 10),
+                        Entry("2024", 20),
                     ),
                 ),
-                booksByMonthEntries = PieEntries(
+                booksByMonthEntries = Entries(
                     listOf(
-                        PieEntry(10f, "FEB"),
-                        PieEntry(20f, "AGO"),
+                        Entry("FEB", 10),
+                        Entry("AGO", 20),
                     ),
                 ),
                 booksByAuthorStats = MapEntries(
@@ -561,22 +579,22 @@ private class StatisticsScreenPreviewParameterProvider :
                 ),
                 shorterBook = book.copy(title = "Shortest read book"),
                 longerBook = book.copy(title = "Longest read book"),
-                booksByFormatEntries = PieEntries(
+                booksByFormatEntries = Entries(
                     listOf(
-                        PieEntry(10f, "Physical"),
-                        PieEntry(20f, "Digital"),
+                        Entry("Physical", 10),
+                        Entry("Digital", 20),
                     ),
                 ),
                 isLoading = false,
             ),
             StatisticsUiState.Success(
                 totalBooksRead = 12345,
-                booksByYearEntries = BarEntries(),
-                booksByMonthEntries = PieEntries(),
+                booksByYearEntries = Entries(),
+                booksByMonthEntries = Entries(),
                 booksByAuthorStats = MapEntries(),
                 shorterBook = book.copy(title = "Shortest read book"),
                 longerBook = book.copy(title = "Longest read book"),
-                booksByFormatEntries = PieEntries(),
+                booksByFormatEntries = Entries(),
                 isLoading = true,
             ),
             StatisticsUiState.Empty,

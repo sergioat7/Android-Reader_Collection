@@ -15,8 +15,6 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.utils.UiDateMapper.getGroupedBy
 import com.aragones.sergio.util.extensions.toString
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.PieEntry
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -111,41 +109,41 @@ class StatisticsViewModel(
     //endregion
 
     //region Private methods
-    private fun createBooksByYearStats(books: List<Book>): BarEntries {
+    private fun createBooksByYearStats(books: List<Book>): Entries {
         val booksByYear = books
             .mapNotNull { it.readingDate }
             .sortedBy { it.year }
             .mapNotNull { it.toString("yyyy") }
             .groupBy { it }
 
-        val entries = mutableListOf<BarEntry>()
+        val entries = mutableListOf<Entry>()
         for (entry in booksByYear.entries) {
             entries.add(
-                BarEntry(
-                    entry.key.toFloat(),
-                    entry.value.size.toFloat(),
+                Entry(
+                    key = entry.key,
+                    size = entry.value.size,
                 ),
             )
         }
-        return BarEntries(entries)
+        return Entries(entries)
     }
 
-    private fun createBooksByMonthStats(books: List<Book>): PieEntries {
+    private fun createBooksByMonthStats(books: List<Book>): Entries {
         val booksByMonth = books
             .mapNotNull { it.readingDate }
             .sortedBy { it.month.number }
             .getGroupedBy("MMM", userRepository.language)
 
-        val entries = mutableListOf<PieEntry>()
+        val entries = mutableListOf<Entry>()
         for (entry in booksByMonth.entries) {
             entries.add(
-                PieEntry(
-                    entry.value.size.toFloat(),
-                    entry.key,
+                Entry(
+                    key = entry.key,
+                    size = entry.value.size,
                 ),
             )
         }
-        return PieEntries(entries)
+        return Entries(entries)
     }
 
     private fun createBooksByAuthorStats(books: List<Book>): MapEntries = MapEntries(
@@ -158,21 +156,21 @@ class StatisticsViewModel(
             .toMap(),
     )
 
-    private fun createFormatStats(books: List<Book>): PieEntries {
+    private fun createFormatStats(books: List<Book>): Entries {
         val booksByFormat = books
             .filter { !it.format.isNullOrEmpty() }
             .groupBy { it.format }
 
-        val entries = mutableListOf<PieEntry>()
+        val entries = mutableListOf<Entry>()
         for (entry in booksByFormat.entries) {
             entries.add(
-                PieEntry(
-                    entry.value.size.toFloat(),
-                    FORMATS.first { it.id == entry.key }.name,
+                Entry(
+                    key = FORMATS.first { it.id == entry.key }.name,
+                    size = entry.value.size,
                 ),
             )
         }
-        return PieEntries(entries)
+        return Entries(entries)
     }
     //endregion
 }

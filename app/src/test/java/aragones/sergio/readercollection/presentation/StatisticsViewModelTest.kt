@@ -18,15 +18,13 @@ import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
-import aragones.sergio.readercollection.presentation.statistics.BarEntries
+import aragones.sergio.readercollection.presentation.statistics.Entries
+import aragones.sergio.readercollection.presentation.statistics.Entry
 import aragones.sergio.readercollection.presentation.statistics.MapEntries
-import aragones.sergio.readercollection.presentation.statistics.PieEntries
 import aragones.sergio.readercollection.presentation.statistics.StatisticsUiState
 import aragones.sergio.readercollection.presentation.statistics.StatisticsViewModel
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.extensions.toString
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.PieEntry
 import io.mockk.Called
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -100,11 +98,11 @@ class StatisticsViewModelTest {
                 )
                 val expected = StatisticsUiState.Success(
                     totalBooksRead = books.size,
-                    booksByYearEntries = BarEntries(listOf(BarEntry(2025f, 2f))),
-                    booksByMonthEntries = PieEntries(
+                    booksByYearEntries = Entries(listOf(Entry("2025", 2))),
+                    booksByMonthEntries = Entries(
                         listOf(
-                            PieEntry(1f, "Sep"),
-                            PieEntry(1f, "Oct"),
+                            Entry("Sep", 1),
+                            Entry("Oct", 1),
                         ),
                     ),
                     booksByAuthorStats = MapEntries(
@@ -115,7 +113,7 @@ class StatisticsViewModelTest {
                     ),
                     shorterBook = book2,
                     longerBook = book1,
-                    booksByFormatEntries = PieEntries(listOf(PieEntry(1f, "Physical"))),
+                    booksByFormatEntries = Entries(listOf(Entry("Physical", 1))),
                     isLoading = false,
                 )
                 val result = awaitItem()
@@ -126,12 +124,12 @@ class StatisticsViewModelTest {
                     result.totalBooksRead,
                 )
                 assertEquals(
-                    expected.booksByYearEntries.entries.map { it.x to it.y },
-                    result.booksByYearEntries.entries.map { it.x to it.y },
+                    expected.booksByYearEntries.entries.map { it.key to it.size },
+                    result.booksByYearEntries.entries.map { it.key to it.size },
                 )
                 assertEquals(
-                    expected.booksByMonthEntries.entries.map { it.value to it.label },
-                    result.booksByMonthEntries.entries.map { it.value to it.label },
+                    expected.booksByMonthEntries.entries.map { it.key to it.size },
+                    result.booksByMonthEntries.entries.map { it.key to it.size },
                 )
                 assertEquals(
                     expected.booksByAuthorStats,
@@ -146,8 +144,8 @@ class StatisticsViewModelTest {
                     result.longerBook,
                 )
                 assertEquals(
-                    expected.booksByFormatEntries.entries.map { it.value to it.label },
-                    result.booksByFormatEntries.entries.map { it.value to it.label },
+                    expected.booksByFormatEntries.entries.map { it.key to it.size },
+                    result.booksByFormatEntries.entries.map { it.key to it.size },
                 )
                 assertEquals(
                     expected.isLoading,
