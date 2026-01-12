@@ -40,17 +40,23 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.isLight
 import com.aragones.sergio.util.extensions.isNotBlank
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.go_back
+import reader_collection.app.generated.resources.ic_arrow_back
+import reader_collection.app.generated.resources.ic_default_book_cover_blue
+import reader_collection.app.generated.resources.ic_default_book_cover_white
+import reader_collection.app.generated.resources.ic_edit_book
+import reader_collection.app.generated.resources.ic_remove_book
+import reader_collection.app.generated.resources.ic_search
+import reader_collection.app.generated.resources.ic_sort_books
 import reader_collection.app.generated.resources.search
 import reader_collection.app.generated.resources.title_search
 
@@ -106,7 +112,7 @@ fun CustomToolbar(
         navigationIcon = onBack?.let {
             {
                 TopAppBarIcon(
-                    accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
+                    accessibilityPainter = painterResource(Res.drawable.ic_arrow_back)
                         .withDescription(stringResource(Res.string.go_back)),
                     onClick = it,
                     tint = backTintColor,
@@ -135,7 +141,7 @@ fun CustomSearchBar(
     val backIcon: @Composable (() -> Unit)? = if (isSearching || onBack != null) {
         {
             TopAppBarIcon(
-                accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
+                accessibilityPainter = painterResource(Res.drawable.ic_arrow_back)
                     .withDescription(stringResource(Res.string.go_back)),
                 onClick = {
                     if (isSearching) {
@@ -181,7 +187,7 @@ fun CustomSearchBar(
         actions = {
             if (!isSearching) {
                 TopAppBarIcon(
-                    accessibilityPainter = painterResource(R.drawable.ic_search)
+                    accessibilityPainter = painterResource(Res.drawable.ic_search)
                         .withDescription(stringResource(Res.string.search)),
                     onClick = { isSearching = true },
                 )
@@ -299,7 +305,7 @@ private fun CustomSearchBarPreview() {
 private fun TopAppBarIconPreview() {
     ReaderCollectionTheme {
         TopAppBarIcon(
-            accessibilityPainter = painterResource(R.drawable.ic_sort_books)
+            accessibilityPainter = painterResource(Res.drawable.ic_sort_books)
                 .withDescription(null),
             onClick = {},
         )
@@ -315,7 +321,7 @@ private fun CollapsingToolbarPreview() {
             modifier = Modifier.size(300.dp),
             startContent = {
                 TopAppBarIcon(
-                    accessibilityPainter = painterResource(R.drawable.ic_arrow_back)
+                    accessibilityPainter = painterResource(Res.drawable.ic_arrow_back)
                         .withDescription(null),
                     onClick = {},
                     tint = MaterialTheme.colorScheme.secondary,
@@ -325,9 +331,9 @@ private fun CollapsingToolbarPreview() {
                 ImageWithLoading(
                     imageUrl = null,
                     placeholder = if (MaterialTheme.colorScheme.isLight()) {
-                        R.drawable.ic_default_book_cover_white
+                        Res.drawable.ic_default_book_cover_white
                     } else {
-                        R.drawable.ic_default_book_cover_blue
+                        Res.drawable.ic_default_book_cover_blue
                     },
                     modifier = it,
                     shape = MaterialTheme.shapes.medium,
@@ -336,13 +342,13 @@ private fun CollapsingToolbarPreview() {
             },
             endContent = {
                 TopAppBarIcon(
-                    accessibilityPainter = painterResource(R.drawable.ic_edit_book)
+                    accessibilityPainter = painterResource(Res.drawable.ic_edit_book)
                         .withDescription(null),
                     onClick = {},
                     tint = MaterialTheme.colorScheme.secondary,
                 )
                 TopAppBarIcon(
-                    accessibilityPainter = painterResource(R.drawable.ic_remove_book)
+                    accessibilityPainter = painterResource(Res.drawable.ic_remove_book)
                         .withDescription(null),
                     onClick = {},
                     tint = MaterialTheme.colorScheme.secondary,

@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation.components
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.shape.CornerBasedShape
@@ -20,18 +19,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import coil3.compose.AsyncImage
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.book_cover_description
+import reader_collection.app.generated.resources.ic_default_book_cover_blue
 
 @Composable
 fun ImageWithLoading(
     imageUrl: String?,
-    @DrawableRes placeholder: Int,
+    placeholder: DrawableResource,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
@@ -73,7 +73,7 @@ private fun ImageWithLoadingPreview() {
     ReaderCollectionTheme {
         ImageWithLoading(
             imageUrl = null,
-            placeholder = R.drawable.ic_default_book_cover_blue,
+            placeholder = Res.drawable.ic_default_book_cover_blue,
         )
     }
 }

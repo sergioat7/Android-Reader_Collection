@@ -5,7 +5,6 @@
 
 package aragones.sergio.readercollection.presentation
 
-import androidx.annotation.DrawableRes
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.Box
@@ -24,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hasRoute
@@ -35,7 +33,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.navigation.Navigator
 import aragones.sergio.readercollection.presentation.navigation.Route
@@ -44,9 +41,14 @@ import aragones.sergio.readercollection.presentation.navigation.settingsGraph
 import aragones.sergio.readercollection.presentation.navigation.statisticsGraph
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.StringResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.ic_book_statistics
+import reader_collection.app.generated.resources.ic_bookshelf
+import reader_collection.app.generated.resources.ic_settings
 import reader_collection.app.generated.resources.title_books
 import reader_collection.app.generated.resources.title_settings
 import reader_collection.app.generated.resources.title_stats
@@ -157,10 +159,10 @@ private fun MainScreenPreview() {
 
 private enum class NavItem(
     val route: Route,
-    @DrawableRes val icon: Int,
+    val icon: DrawableResource,
     val title: StringResource,
 ) {
-    BOOKS(Route.Books, R.drawable.ic_bookshelf, Res.string.title_books),
-    STATISTICS(Route.Statistics, R.drawable.ic_book_statistics, Res.string.title_stats),
-    SETTINGS(Route.Settings, R.drawable.ic_settings, Res.string.title_settings),
+    BOOKS(Route.Books, Res.drawable.ic_bookshelf, Res.string.title_books),
+    STATISTICS(Route.Statistics, Res.drawable.ic_book_statistics, Res.string.title_stats),
+    SETTINGS(Route.Settings, Res.drawable.ic_settings, Res.string.title_settings),
 }

@@ -27,13 +27,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
@@ -42,12 +40,16 @@ import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.login.model.LoginFormState
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.CustomInputType
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.create_account
 import reader_collection.app.generated.resources.hide_password
+import reader_collection.app.generated.resources.ic_hide_password
+import reader_collection.app.generated.resources.ic_show_password
 import reader_collection.app.generated.resources.invalid_password
 import reader_collection.app.generated.resources.invalid_username
+import reader_collection.app.generated.resources.login_register_image
 import reader_collection.app.generated.resources.not_account
 import reader_collection.app.generated.resources.password
 import reader_collection.app.generated.resources.show_password
@@ -71,7 +73,7 @@ fun LoginScreen(
             .padding(24.dp),
     ) {
         Image(
-            painter = painterResource(R.drawable.login_register_image),
+            painter = painterResource(Res.drawable.login_register_image),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
@@ -107,10 +109,10 @@ fun LoginScreen(
                 .padding(horizontal = 12.dp),
             errorText = state.formState.passwordError?.let { stringResource(it) },
             endIcon = if (passwordVisibility) {
-                painterResource(R.drawable.ic_hide_password)
+                painterResource(Res.drawable.ic_hide_password)
                     .withDescription(stringResource(Res.string.hide_password))
             } else {
-                painterResource(R.drawable.ic_show_password)
+                painterResource(Res.drawable.ic_show_password)
                     .withDescription(stringResource(Res.string.show_password))
             },
             inputType = CustomInputType.PASSWORD,

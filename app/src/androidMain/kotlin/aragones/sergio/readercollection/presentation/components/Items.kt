@@ -34,13 +34,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.isLight
@@ -48,10 +46,18 @@ import aragones.sergio.readercollection.presentation.theme.roseBud
 import aragones.sergio.readercollection.presentation.theme.selector
 import com.aragones.sergio.util.extensions.isNotBlank
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.decrease_priority_description
 import reader_collection.app.generated.resources.dragging_enabled_description
+import reader_collection.app.generated.resources.ic_default_book_cover_blue
+import reader_collection.app.generated.resources.ic_default_book_cover_white
+import reader_collection.app.generated.resources.ic_enable_drag
+import reader_collection.app.generated.resources.ic_remove_book
+import reader_collection.app.generated.resources.ic_round_switch_left
+import reader_collection.app.generated.resources.ic_round_switch_right
+import reader_collection.app.generated.resources.ic_save_book
 import reader_collection.app.generated.resources.increase_priority_description
 import reader_collection.app.generated.resources.new_book
 import reader_collection.app.generated.resources.no_rated_description
@@ -88,7 +94,7 @@ fun BookItem(
             if (isDraggingEnabled) {
                 Spacer(Modifier.width(24.dp))
                 Icon(
-                    painter = painterResource(R.drawable.ic_enable_drag),
+                    painter = painterResource(Res.drawable.ic_enable_drag),
                     contentDescription = stringResource(Res.string.dragging_enabled_description),
                     tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.align(Alignment.CenterVertically),
@@ -97,9 +103,9 @@ fun BookItem(
             ImageWithLoading(
                 imageUrl = book.thumbnail,
                 placeholder = if (MaterialTheme.colorScheme.isLight()) {
-                    R.drawable.ic_default_book_cover_blue
+                    Res.drawable.ic_default_book_cover_blue
                 } else {
-                    R.drawable.ic_default_book_cover_white
+                    Res.drawable.ic_default_book_cover_white
                 },
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
@@ -218,9 +224,9 @@ fun ReadingBookItem(
         ImageWithLoading(
             imageUrl = book.thumbnail,
             placeholder = if (MaterialTheme.colorScheme.isLight()) {
-                R.drawable.ic_default_book_cover_blue
+                Res.drawable.ic_default_book_cover_blue
             } else {
-                R.drawable.ic_default_book_cover_white
+                Res.drawable.ic_default_book_cover_white
             },
             contentDescription = book.title,
             contentScale = ContentScale.FillWidth,
@@ -269,7 +275,7 @@ fun VerticalBookItem(
             if (isSwitchLeftIconEnabled) {
                 IconButton(onClick = onSwitchToLeft) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_round_switch_left),
+                        painter = painterResource(Res.drawable.ic_round_switch_left),
                         contentDescription = stringResource(
                             Res.string.increase_priority_description,
                             book.title ?: "",
@@ -282,7 +288,7 @@ fun VerticalBookItem(
             if (isSwitchRightIconEnabled) {
                 IconButton(onClick = onSwitchToRight) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_round_switch_right),
+                        painter = painterResource(Res.drawable.ic_round_switch_right),
                         contentDescription = stringResource(
                             Res.string.decrease_priority_description,
                             book.title ?: "",
@@ -303,9 +309,9 @@ fun VerticalBookItem(
             ImageWithLoading(
                 imageUrl = book.thumbnail,
                 placeholder = if (MaterialTheme.colorScheme.isLight()) {
-                    R.drawable.ic_default_book_cover_blue
+                    Res.drawable.ic_default_book_cover_blue
                 } else {
-                    R.drawable.ic_default_book_cover_white
+                    Res.drawable.ic_default_book_cover_white
                 },
                 modifier = Modifier
                     .height(200.dp)
@@ -542,7 +548,7 @@ private fun SwipeItemToLeftPreview() {
                 SwipeItemBackground(
                     direction = SwipeDirection.LEFT,
                     color = MaterialTheme.colorScheme.roseBud,
-                    accessibilityPainter = painterResource(R.drawable.ic_save_book)
+                    accessibilityPainter = painterResource(Res.drawable.ic_save_book)
                         .withDescription(null),
                 )
             },
@@ -565,7 +571,7 @@ private fun SwipeItemToRightPreview() {
                 SwipeItemBackground(
                     direction = SwipeDirection.RIGHT,
                     color = MaterialTheme.colorScheme.roseBud,
-                    accessibilityPainter = painterResource(R.drawable.ic_remove_book)
+                    accessibilityPainter = painterResource(Res.drawable.ic_remove_book)
                         .withDescription(null),
                 )
             },

@@ -44,7 +44,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.LiveRegionMode
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.heading
@@ -55,7 +54,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
@@ -75,11 +73,16 @@ import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.accept
 import reader_collection.app.generated.resources.go_to_add_new_book
+import reader_collection.app.generated.resources.ic_arrow_circle_right
+import reader_collection.app.generated.resources.ic_save_book
+import reader_collection.app.generated.resources.ic_sort_books
+import reader_collection.app.generated.resources.image_user_reading
 import reader_collection.app.generated.resources.not_reading_anything_yet
 import reader_collection.app.generated.resources.pending
 import reader_collection.app.generated.resources.read
@@ -125,7 +128,7 @@ fun BooksScreen(
             onSwitchToRight = onSwitchToRight,
         )
         ListButton(
-            painter = painterResource(R.drawable.ic_save_book)
+            painter = painterResource(Res.drawable.ic_save_book)
                 .withDescription(stringResource(Res.string.go_to_add_new_book)),
             onClick = onAddBook,
             modifier = Modifier.align(Alignment.BottomEnd),
@@ -197,7 +200,7 @@ private fun BooksScreenContent(
             backgroundColor = MaterialTheme.colorScheme.background,
             actions = {
                 TopAppBarIcon(
-                    accessibilityPainter = painterResource(R.drawable.ic_sort_books)
+                    accessibilityPainter = painterResource(Res.drawable.ic_sort_books)
                         .withDescription(stringResource(Res.string.sort_books)),
                     onClick = onSortClick,
                 )
@@ -318,7 +321,7 @@ private fun ReadingBooksSection(
             )
         } else {
             Image(
-                painter = painterResource(R.drawable.image_user_reading),
+                painter = painterResource(Res.drawable.image_user_reading),
                 contentDescription = stringResource(Res.string.not_reading_anything_yet),
                 modifier = Modifier
                     .fillMaxHeight()
@@ -467,7 +470,7 @@ private fun ShowAllItems(onClick: () -> Unit, modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Icon(
-            painter = painterResource(R.drawable.ic_arrow_circle_right),
+            painter = painterResource(Res.drawable.ic_arrow_circle_right),
             contentDescription = null,
             tint = MaterialTheme.colorScheme.primary,
         )

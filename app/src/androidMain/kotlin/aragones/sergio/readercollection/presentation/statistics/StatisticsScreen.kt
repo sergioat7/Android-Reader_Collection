@@ -23,7 +23,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -66,11 +65,14 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
 import kotlinx.datetime.LocalDate
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.export_data
 import reader_collection.app.generated.resources.formats
+import reader_collection.app.generated.resources.ic_file_export
+import reader_collection.app.generated.resources.ic_file_import
 import reader_collection.app.generated.resources.import_data
 import reader_collection.app.generated.resources.longer_book
 import reader_collection.app.generated.resources.months
@@ -132,12 +134,12 @@ private fun StatisticsToolbar(
         backgroundColor = MaterialTheme.colorScheme.background,
         actions = {
             TopAppBarIcon(
-                accessibilityPainter = painterResource(R.drawable.ic_file_import)
+                accessibilityPainter = painterResource(Res.drawable.ic_file_import)
                     .withDescription(stringResource(Res.string.import_data)),
                 onClick = onImportClick,
             )
             TopAppBarIcon(
-                accessibilityPainter = painterResource(R.drawable.ic_file_export)
+                accessibilityPainter = painterResource(Res.drawable.ic_file_export)
                     .withDescription(stringResource(Res.string.export_data)),
                 onClick = onExportClick,
             )

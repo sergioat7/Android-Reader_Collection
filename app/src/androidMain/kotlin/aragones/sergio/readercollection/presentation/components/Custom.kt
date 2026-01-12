@@ -7,7 +7,6 @@ package aragones.sergio.readercollection.presentation.components
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.content.res.Configuration.UI_MODE_TYPE_NORMAL
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -52,7 +51,6 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.semantics
@@ -66,15 +64,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.lightRoseBud
 import aragones.sergio.readercollection.presentation.theme.roseBud
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.pluralStringResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.book_rating_description
 import reader_collection.app.generated.resources.clear_text
+import reader_collection.app.generated.resources.ic_clear_text
+import reader_collection.app.generated.resources.ic_round_star_24
+import reader_collection.app.generated.resources.ic_round_star_border_24
+import reader_collection.app.generated.resources.ic_round_star_half_24
+import reader_collection.app.generated.resources.ic_search
+import reader_collection.app.generated.resources.image_no_results
 import reader_collection.app.generated.resources.no_results_text
 import reader_collection.app.generated.resources.search
 import reader_collection.app.generated.resources.star_empty
@@ -87,7 +92,7 @@ import reader_collection.app.generated.resources.star_status_description
 fun NoResultsComponent(
     modifier: Modifier = Modifier,
     text: String = stringResource(Res.string.no_results_text),
-    @DrawableRes image: Int = R.drawable.image_no_results,
+    image: DrawableResource = Res.drawable.image_no_results,
 ) {
     Column(
         modifier = modifier
@@ -138,13 +143,16 @@ fun StarRatingBar(
     ) {
         for (i in 1..maxStars) {
             val (icon, tint) = when {
-                i <= rating -> Pair(R.drawable.ic_round_star_24, MaterialTheme.colorScheme.roseBud)
+                i <= rating -> Pair(
+                    Res.drawable.ic_round_star_24,
+                    MaterialTheme.colorScheme.roseBud,
+                )
                 i.toFloat() == rating + 0.5f -> Pair(
-                    R.drawable.ic_round_star_half_24,
+                    Res.drawable.ic_round_star_half_24,
                     MaterialTheme.colorScheme.roseBud,
                 )
                 else -> Pair(
-                    R.drawable.ic_round_star_border_24,
+                    Res.drawable.ic_round_star_border_24,
                     MaterialTheme.colorScheme.lightRoseBud,
                 )
             }
@@ -225,7 +233,7 @@ fun SearchBar(
     val leadingIcon: @Composable (() -> Unit)? = if (showLeadingIcon) {
         {
             Icon(
-                painter = painterResource(R.drawable.ic_search),
+                painter = painterResource(Res.drawable.ic_search),
                 contentDescription = stringResource(Res.string.search),
                 tint = MaterialTheme.colorScheme.primary,
             )
@@ -236,7 +244,7 @@ fun SearchBar(
     val trailingIcon: @Composable (() -> Unit)? = if (textFieldValueState.text.isNotBlank()) {
         {
             TopAppBarIcon(
-                accessibilityPainter = painterResource(R.drawable.ic_clear_text)
+                accessibilityPainter = painterResource(Res.drawable.ic_clear_text)
                     .withDescription(stringResource(Res.string.clear_text)),
                 onClick = {
                     textFieldValueState = TextFieldValue("")

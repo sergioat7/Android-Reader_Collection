@@ -37,7 +37,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
@@ -45,7 +44,6 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -61,11 +59,17 @@ import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.presentation.theme.roseBud
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.error_server
 import reader_collection.app.generated.resources.go_to_end
 import reader_collection.app.generated.resources.go_to_start
+import reader_collection.app.generated.resources.ic_add_circle_outline
+import reader_collection.app.generated.resources.ic_double_arrow_down
+import reader_collection.app.generated.resources.ic_double_arrow_up
+import reader_collection.app.generated.resources.ic_save_book
+import reader_collection.app.generated.resources.image_no_search
 import reader_collection.app.generated.resources.load_more
 import reader_collection.app.generated.resources.no_search_yet_text
 import reader_collection.app.generated.resources.save
@@ -136,7 +140,7 @@ fun SearchScreen(
                 is SearchUiState.Empty -> {
                     NoResultsComponent(
                         text = stringResource(Res.string.no_search_yet_text),
-                        image = R.drawable.image_no_search,
+                        image = Res.drawable.image_no_search,
                     )
                 }
                 is SearchUiState.Success -> {
@@ -246,7 +250,7 @@ private fun SearchContent(
                             SwipeItemBackground(
                                 direction = direction,
                                 color = MaterialTheme.colorScheme.roseBud,
-                                accessibilityPainter = painterResource(R.drawable.ic_save_book)
+                                accessibilityPainter = painterResource(Res.drawable.ic_save_book)
                                     .withDescription(swipeActionLabel),
                             )
                         },
@@ -282,7 +286,7 @@ private fun SearchContent(
         )
 
         ListButton(
-            painter = painterResource(R.drawable.ic_double_arrow_up)
+            painter = painterResource(Res.drawable.ic_double_arrow_up)
                 .withDescription(stringResource(Res.string.go_to_start)),
             onClick = onTopButtonClick,
             modifier = Modifier
@@ -291,7 +295,7 @@ private fun SearchContent(
         )
 
         ListButton(
-            painter = painterResource(R.drawable.ic_double_arrow_down)
+            painter = painterResource(Res.drawable.ic_double_arrow_down)
                 .withDescription(stringResource(Res.string.go_to_end)),
             onClick = onBottomButtonClick,
             modifier = Modifier
@@ -313,7 +317,7 @@ private fun LoadMoreButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
-                painter = painterResource(R.drawable.ic_add_circle_outline),
+                painter = painterResource(Res.drawable.ic_add_circle_outline),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary,
             )

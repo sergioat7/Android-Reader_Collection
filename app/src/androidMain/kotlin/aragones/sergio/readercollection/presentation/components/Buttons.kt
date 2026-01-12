@@ -16,13 +16,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.delete
+import reader_collection.app.generated.resources.ic_double_arrow_up
 import reader_collection.app.generated.resources.sign_in
 
 @Composable
@@ -120,7 +120,7 @@ private fun MainDestructiveActionButtonPreview() {
 private fun ListButtonPreview() {
     ReaderCollectionTheme {
         ListButton(
-            painter = painterResource(R.drawable.ic_double_arrow_up)
+            painter = painterResource(Res.drawable.ic_double_arrow_up)
                 .withDescription(null),
             onClick = {},
         )

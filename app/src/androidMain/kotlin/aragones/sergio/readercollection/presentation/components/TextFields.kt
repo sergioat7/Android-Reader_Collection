@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,14 +45,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
 import aragones.sergio.readercollection.utils.UiDateMapper.toLong
 import com.aragones.sergio.util.CustomInputType
 import com.aragones.sergio.util.extensions.isNotBlank
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.field_required
+import reader_collection.app.generated.resources.ic_show_password
 import reader_collection.app.generated.resources.invalid_username
 import reader_collection.app.generated.resources.read_more
 import reader_collection.app.generated.resources.show_password
@@ -369,7 +369,7 @@ private fun PasswordOutlinedTextFieldPreview() {
             labelText = "Label",
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
-            endIcon = painterResource(R.drawable.ic_show_password)
+            endIcon = painterResource(Res.drawable.ic_show_password)
                 .withDescription(null),
             isRequired = true,
             onEndIconClicked = {},

@@ -37,13 +37,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.domain.model.User
 import aragones.sergio.readercollection.domain.model.Users
@@ -54,6 +52,7 @@ import aragones.sergio.readercollection.presentation.components.ListButton
 import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.add_friend_action
@@ -61,6 +60,7 @@ import reader_collection.app.generated.resources.delete
 import reader_collection.app.generated.resources.find_friends_action
 import reader_collection.app.generated.resources.friends_title
 import reader_collection.app.generated.resources.go_to_add_new_friend
+import reader_collection.app.generated.resources.image_no_friends
 import reader_collection.app.generated.resources.no_friends_yet_subtitle
 import reader_collection.app.generated.resources.no_friends_yet_title
 import reader_collection.app.generated.resources.pending_status
@@ -124,7 +124,7 @@ private fun NoFriendsContent(onAddFriend: () -> Unit, modifier: Modifier = Modif
         verticalArrangement = Arrangement.Center,
     ) {
         Image(
-            painter = painterResource(R.drawable.image_no_friends),
+            painter = painterResource(Res.drawable.image_no_friends),
             contentDescription = null,
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
