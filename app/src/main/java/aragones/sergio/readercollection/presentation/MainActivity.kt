@@ -11,21 +11,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.lifecycleScope
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.navigation.Navigator
-import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import java.util.Locale
@@ -54,33 +42,14 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         super.onCreate(savedInstanceState)
 
         setContent {
-            ReaderCollectionApp {
-                CompositionLocalProvider(LocalLanguage provides viewModel.language) {
-                    val scope = rememberCoroutineScope()
-                    val snackbarHostState = remember { SnackbarHostState() }
-                    MainScreen(navigator, snackbarHostState)
-
-                    val message = stringResource(R.string.message_app_update_downloaded)
-                    val action = stringResource(R.string.restart)
-                    LaunchedEffect(appUpdated.value) {
-                        if (appUpdated.value) {
-                            scope.launch {
-                                val result = snackbarHostState.showSnackbar(
-                                    message = message,
-                                    actionLabel = action,
-                                    duration = SnackbarDuration.Indefinite,
-                                )
-                                when (result) {
-                                    SnackbarResult.ActionPerformed -> {
-                                        inAppUpdateService.completeUpdate()
-                                    }
-                                    SnackbarResult.Dismissed -> { /*no-op*/ }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            MainView(
+                navigator = navigator,
+                viewModel = viewModel,
+                isAppUpdated = appUpdated.value,
+                onCompleteUpdate = {
+                    inAppUpdateService.completeUpdate()
+                },
+            )
         }
 
         lifecycleScope.launch {
@@ -114,8 +83,4 @@ class MainActivity : ComponentActivity(), AndroidScopeComponent {
         inAppUpdateService.onDestroy()
     }
     //endregion
-}
-
-val LocalLanguage: ProvidableCompositionLocal<String> = staticCompositionLocalOf {
-    error("CompositionLocal LocalLanguage not present")
 }
