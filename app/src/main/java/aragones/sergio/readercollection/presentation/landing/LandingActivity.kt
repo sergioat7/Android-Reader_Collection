@@ -11,30 +11,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.addCallback
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.createGraph
 import aragones.sergio.readercollection.presentation.navigation.Navigator
-import aragones.sergio.readercollection.presentation.navigation.Route
-import aragones.sergio.readercollection.presentation.navigation.authGraph
-import aragones.sergio.readercollection.presentation.theme.ReaderCollectionApp
 import aragones.sergio.readercollection.utils.InAppUpdateService
 import com.google.android.play.core.install.model.InstallStatus
 import java.util.Locale
@@ -67,51 +46,12 @@ class LandingActivity : ComponentActivity(), AndroidScopeComponent {
         setUp()
 
         setContent {
-            val animationFinished = rememberSaveable { mutableStateOf(false) }
-            ReaderCollectionApp {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(MaterialTheme.colorScheme.background)
-                        .padding(WindowInsets.safeDrawing.asPaddingValues()),
-                ) {
-                    val navController = rememberNavController()
-                    val isLogged = viewModel.isLogged.collectAsState()
-                    when (isLogged.value) {
-                        true -> {
-                            navigator.goToMain()
-                        }
-                        false -> {
-                            val navGraph = remember(navController) {
-                                navController.createGraph(startDestination = Route.Auth) {
-                                    authGraph(navController, navigator)
-                                }
-                            }
-                            NavHost(
-                                navController = navController,
-                                graph = navGraph,
-                                enterTransition = { EnterTransition.None },
-                                exitTransition = { ExitTransition.None },
-                            )
-                        }
-                        else -> {
-                            if (skipAnimation) {
-                                animationFinished.value = true
-                            } else {
-                                LandingScreen(onAnimationFinished = {
-                                    animationFinished.value = true
-                                })
-                            }
-                        }
-                    }
-                }
-
-                LaunchedEffect(appUpdated.value, animationFinished.value) {
-                    if (appUpdated.value && animationFinished.value) {
-                        viewModel.checkIsLoggedIn()
-                    }
-                }
-            }
+            LandingView(
+                navigator = navigator,
+                viewModel = viewModel,
+                skipAnimation = skipAnimation,
+                isAppUpdated = appUpdated.value,
+            )
         }
 
         onBackPressedDispatcher.addCallback {
