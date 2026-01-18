@@ -335,7 +335,7 @@ class UserLocalDataSourceTest {
 
         val result = dataSource.getCurrentVersion()
 
-        assertEquals(0, result)
+        assertEquals(Int.MAX_VALUE, result)
     }
 
     @Test
@@ -344,6 +344,6 @@ class UserLocalDataSourceTest {
 
         val result = dataSource.getCurrentVersion()
 
-        assertEquals(0, result)
+        assertEquals(Int.MAX_VALUE, result)
     }
 }
