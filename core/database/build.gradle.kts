@@ -25,6 +25,9 @@ kotlin {
             instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     jvmToolchain(libs.versions.jdk.get().toInt())
     compilerOptions {
@@ -44,6 +47,10 @@ kotlin {
             implementation(libs.koin.android)
         }
 
+        iosMain.dependencies {
+            implementation(libs.androidx.sqlite.bundled)
+        }
+
         commonTest.dependencies {
             implementation(libs.coroutines.test)
             implementation(libs.kotlinx.test.core)
@@ -60,6 +67,9 @@ kotlin {
 
 dependencies {
     add("kspAndroid", libs.room.compiler)
+    add("kspIosX64", libs.room.compiler)
+    add("kspIosArm64", libs.room.compiler)
+    add("kspIosSimulatorArm64", libs.room.compiler)
 }
 
 room {
