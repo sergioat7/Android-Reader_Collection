@@ -119,6 +119,7 @@ fun BookDetailScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.primary),
+        verticalArrangement = Arrangement.Center,
     ) {
         if (state.book == null) {
             CircularProgressIndicator(

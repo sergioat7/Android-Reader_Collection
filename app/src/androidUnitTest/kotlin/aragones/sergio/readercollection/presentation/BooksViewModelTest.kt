@@ -42,7 +42,6 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.error_database
-import reader_collection.app.generated.resources.error_server
 
 class BooksViewModelTest {
 
@@ -223,7 +222,7 @@ class BooksViewModelTest {
             assertEquals(
                 ErrorModel(
                     Constants.EMPTY_VALUE,
-                    Res.string.error_server,
+                    Res.string.error_database,
                 ),
                 awaitItem(),
             )
@@ -982,7 +981,7 @@ class BooksViewModelTest {
                 assertEquals(
                     ErrorModel(
                         Constants.EMPTY_VALUE,
-                        Res.string.error_server,
+                        Res.string.error_database,
                     ),
                     awaitItem(),
                 )

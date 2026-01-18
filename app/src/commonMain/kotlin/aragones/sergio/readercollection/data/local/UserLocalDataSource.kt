@@ -108,13 +108,13 @@ class UserLocalDataSource(
     fun getCurrentVersion(): Int {
         return try {
             val currentVersion = appInfoProvider.getVersion()?.split(".") ?: listOf()
-            if (currentVersion.size != 3) return 0
+            if (currentVersion.size != 3) return Int.MAX_VALUE
 
             currentVersion[0].toInt() * 100000 +
                 currentVersion[1].toInt() * 1000 +
                 currentVersion[2].toInt() * 10
-        } catch (e: Exception) {
-            0
+        } catch (_: Exception) {
+            Int.MAX_VALUE
         }
     }
     //endregion

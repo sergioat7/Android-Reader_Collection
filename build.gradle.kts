@@ -63,6 +63,7 @@ configure<SpotlessExtension> {
                     "ktlint_standard_mixed-condition-operators" to "enabled",
                     "ktlint_standard_square-brackets-spacing" to "enabled",
                     "ktlint_standard_when-entry-bracing" to "enabled",
+                    "ktlint_standard_no-unused-imports" to "enabled",
                 ),
             )
     }
