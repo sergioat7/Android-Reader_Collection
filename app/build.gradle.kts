@@ -1,15 +1,14 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.jetbrains)
     alias(libs.plugins.crashlytics)
     alias(libs.plugins.google.services)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.ksp)
     id("androidx.navigation.safeargs.kotlin")
 }
 
@@ -82,58 +81,79 @@ android {
         sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
         targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
     }
-
-    kotlin {
-        jvmToolchain(libs.versions.jdk.get().toInt())
-    }
 }
 
 kotlin {
+    androidTarget()
+
+    jvmToolchain(libs.versions.jdk.get().toInt())
     compilerOptions {
-        jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
+    sourceSets {
+        val commonMain by getting {
+            dependencies {
+                implementation(projects.core.database)
+                implementation(projects.core.util)
+
+                implementation(project.dependencies.platform(libs.firebase.bom))
+                implementation(project.dependencies.platform(libs.koin.bom))
+
+                implementation(libs.bundles.compose.multiplatform)
+                implementation(libs.bundles.koin)
+                implementation(libs.bundles.ktor)
+                implementation(libs.coil)
+                implementation(libs.coil.network.ktor3)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.serialization.json)
+                implementation(libs.navigation.compose)
+            }
+        }
+
+        val androidMain by getting {
+            dependencies {
+                implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+
+                implementation(libs.android.chart)
+                implementation(libs.app.update.ktx)
+                implementation(libs.bundles.firebase)
+                implementation(libs.ktor.client.okhttp)
+                implementation(libs.koin.work.manager)
+                implementation(libs.lottie)
+                implementation(libs.material)
+                implementation(libs.okhttp3.logging.interceptor)
+                implementation(libs.security.crypto)
+                implementation(libs.work.manager)
+            }
+        }
+
+        val commonTest by getting {
+        }
+
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.coroutines.test)
+                implementation(libs.kotlinx.test.core)
+                implementation(libs.ktor.client.mock)
+                implementation(libs.mockk)
+                implementation(libs.robolectric)
+                implementation(libs.turbine)
+            }
+        }
+
+        val androidInstrumentedTest by getting {
+            dependencies {
+                implementation(libs.androidx.test.ext.junit)
+                implementation(libs.kotlinx.test.core)
+                implementation(libs.espresso.core)
+                implementation(libs.compose.test.junit)
+            }
+        }
     }
 }
 
 dependencies {
-
-    implementation(projects.core.database)
-    implementation(projects.core.util)
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
-
-    implementation(libs.android.chart)
-    implementation(libs.app.update.ktx)
-    implementation(libs.bundles.compose)
-    implementation(libs.bundles.firebase)
-    implementation(libs.bundles.koin)
-    implementation(libs.bundles.ktor)
-    implementation(platform(libs.compose.bom))
-    implementation(libs.coil)
-    implementation(libs.core.ktx)
-    implementation(platform(libs.firebase.bom))
-    implementation(platform(libs.koin.bom))
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.lifecycle.viewmodel.ktx)
-    implementation(libs.lottie)
-    implementation(libs.material)
-    implementation(libs.material3)
-    implementation(libs.moshi)
-    ksp(libs.moshi.kotlin.codegen)
-    implementation(libs.navigation.compose)
-    implementation(libs.room.runtime)
-    implementation(libs.security.crypto)
-    implementation(libs.work.manager)
-
-    testImplementation(libs.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.ktor.client.mock)
-    testImplementation(libs.mockk)
-    testImplementation(libs.robolectric)
-    testImplementation(libs.turbine)
-
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
-    androidTestImplementation(libs.compose.test.junit)
-
-    debugImplementation(libs.leak.canary)
-    debugImplementation(libs.compose.test.manifest)
+    add("debugImplementation", libs.leak.canary)
+    add("debugImplementation", libs.compose.test.manifest)
 }

@@ -14,11 +14,15 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
-import org.junit.Assert
+import kotlin.test.Test
+import kotlin.test.assertTrue
+import org.jetbrains.compose.resources.stringResource
 import org.junit.Rule
-import org.junit.Test
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.accept
+import reader_collection.app.generated.resources.cancel
+import reader_collection.app.generated.resources.profile_logout_confirmation
 
 class ConfirmationAlertDialogTest {
 
@@ -26,11 +30,10 @@ class ConfirmationAlertDialogTest {
     val composeTestRule = createAndroidComposeRule<ComponentActivity>()
 
     @Test
-    fun whenSendTrueToComponent_thenShowDialog() {
+    fun whenSendTextToComponent_thenShowDialog() {
         composeTestRule.setContent {
             ConfirmationAlertDialog(
-                show = true,
-                textId = R.string.profile_logout_confirmation,
+                textId = Res.string.profile_logout_confirmation,
                 onCancel = {},
                 onAccept = {},
             )
@@ -40,11 +43,10 @@ class ConfirmationAlertDialogTest {
     }
 
     @Test
-    fun whenSendFalseToComponent_thenDoNotShowDialog() {
+    fun whenSendNullToComponent_thenDoNotShowDialog() {
         composeTestRule.setContent {
             ConfirmationAlertDialog(
-                show = false,
-                textId = R.string.profile_logout_confirmation,
+                textId = null,
                 onCancel = {},
             ) {}
         }
@@ -54,14 +56,17 @@ class ConfirmationAlertDialogTest {
 
     @Test
     fun whenShowDialog_thenShowTextAndButtons() {
-        val textId = R.string.profile_logout_confirmation
+        val textId = Res.string.profile_logout_confirmation
+        lateinit var text: String
+        lateinit var acceptText: String
+        lateinit var cancelText: String
         composeTestRule.setContent {
-            ConfirmationAlertDialog(show = true, textId = textId, onCancel = {}) {}
+            text = stringResource(textId)
+            acceptText = stringResource(Res.string.accept)
+            cancelText = stringResource(Res.string.cancel)
+            ConfirmationAlertDialog(textId = textId, onCancel = {}) {}
         }
 
-        val text = composeTestRule.activity.getString(textId)
-        val acceptText = composeTestRule.activity.getString(R.string.accept)
-        val cancelText = composeTestRule.activity.getString(R.string.cancel)
         composeTestRule.onNodeWithText(text).assertExists()
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").apply {
             onFirst().assertTextContains(cancelText, ignoreCase = true)
@@ -74,8 +79,7 @@ class ConfirmationAlertDialogTest {
         var isClosed = false
         composeTestRule.setContent {
             ConfirmationAlertDialog(
-                show = true,
-                textId = R.string.profile_logout_confirmation,
+                textId = Res.string.profile_logout_confirmation,
                 onCancel = {
                     isClosed = true
                 },
@@ -84,7 +88,7 @@ class ConfirmationAlertDialogTest {
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onFirst().performClick()
-        Assert.assertTrue(isClosed)
+        assertTrue(isClosed)
     }
 
     @Test
@@ -92,8 +96,7 @@ class ConfirmationAlertDialogTest {
         var isClosed = false
         composeTestRule.setContent {
             ConfirmationAlertDialog(
-                show = true,
-                textId = R.string.profile_logout_confirmation,
+                textId = Res.string.profile_logout_confirmation,
                 onCancel = {},
                 onAccept = {
                     isClosed = true
@@ -102,6 +105,6 @@ class ConfirmationAlertDialogTest {
         }
 
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()
-        Assert.assertTrue(isClosed)
+        assertTrue(isClosed)
     }
 }

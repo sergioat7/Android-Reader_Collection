@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
+ * Created by Sergio Aragonés on 16/5/2024
+ */
+
+package aragones.sergio.readercollection.presentation.components
+
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.shape.CornerBasedShape
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import coil3.compose.AsyncImage
+import org.jetbrains.compose.resources.DrawableResource
+import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.book_cover_description
+import reader_collection.app.generated.resources.ic_default_book_cover_blue
+
+@Composable
+fun ImageWithLoading(
+    imageUrl: String?,
+    placeholder: DrawableResource,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+    contentScale: ContentScale = ContentScale.Fit,
+    shape: CornerBasedShape? = null,
+) {
+    var isLoading by rememberSaveable { mutableStateOf(true) }
+
+    Box(modifier) {
+        AsyncImage(
+            model = imageUrl?.replace("http:", "https:"),
+            contentDescription = stringResource(
+                Res.string.book_cover_description,
+                contentDescription ?: "",
+            ),
+            modifier = Modifier
+                .fillMaxSize()
+                .run {
+                    if (shape != null) clip(shape) else this
+                },
+            placeholder = painterResource(placeholder),
+            error = painterResource(placeholder),
+            onLoading = { isLoading = true },
+            onSuccess = { isLoading = false },
+            onError = { isLoading = false },
+            contentScale = contentScale,
+        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.align(Alignment.Center),
+            )
+        }
+    }
+}
+
+@CustomPreviewLightDarkWithBackground
+@Composable
+private fun ImageWithLoadingPreview() {
+    ReaderCollectionTheme {
+        ImageWithLoading(
+            imageUrl = null,
+            placeholder = Res.drawable.ic_default_book_cover_blue,
+        )
+    }
+}
