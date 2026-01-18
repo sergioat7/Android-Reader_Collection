@@ -29,9 +29,22 @@
 		DB57D78F2F1D6A0F00FC5B76 /* ReaderCollectionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReaderCollectionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		DB57D7CC2F1D6AF200FC5B76 /* Exceptions for "ReaderCollection" folder in "ReaderCollection" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = DB57D7772F1D6A0E00FC5B76 /* ReaderCollection */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		DB57D77A2F1D6A0E00FC5B76 /* ReaderCollection */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DB57D7CC2F1D6AF200FC5B76 /* Exceptions for "ReaderCollection" folder in "ReaderCollection" target */,
+			);
 			path = ReaderCollection;
 			sourceTree = "<group>";
 		};
@@ -421,6 +434,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReaderCollection/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Reader Collection";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -459,6 +473,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ReaderCollection/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Reader Collection";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
