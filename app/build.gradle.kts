@@ -86,6 +86,17 @@ android {
 kotlin {
     androidTarget()
 
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach { iosTarget ->
+        iosTarget.binaries.framework {
+            baseName = "App"
+            isStatic = true
+        }
+    }
+
     jvmToolchain(libs.versions.jdk.get().toInt())
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
@@ -126,6 +137,10 @@ kotlin {
                 implementation(libs.security.crypto)
                 implementation(libs.work.manager)
             }
+        }
+
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin)
         }
 
         val commonTest by getting {
