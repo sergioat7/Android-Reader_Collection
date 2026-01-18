@@ -15,11 +15,17 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextReplacement
 import androidx.compose.ui.text.input.KeyboardType
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.presentation.components.TextFieldAlertDialog
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import org.jetbrains.compose.resources.stringResource
 import org.junit.Assert
 import org.junit.Rule
-import org.junit.Test
+import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.accept
+import reader_collection.app.generated.resources.cancel
+import reader_collection.app.generated.resources.enter_valid_url
 
 class TextFieldAlertDialogTest {
 
@@ -30,8 +36,7 @@ class TextFieldAlertDialogTest {
     fun whenSendTrueToComponent_thenShowDialog() {
         composeTestRule.setContent {
             TextFieldAlertDialog(
-                show = true,
-                titleTextId = R.string.enter_valid_url,
+                titleTextId = Res.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {},
                 onAccept = {},
@@ -45,8 +50,7 @@ class TextFieldAlertDialogTest {
     fun whenSendFalseToComponent_thenDoNotShowDialog() {
         composeTestRule.setContent {
             TextFieldAlertDialog(
-                show = false,
-                titleTextId = R.string.enter_valid_url,
+                titleTextId = null,
                 type = KeyboardType.Text,
                 onCancel = {},
                 onAccept = {},
@@ -58,18 +62,19 @@ class TextFieldAlertDialogTest {
 
     @Test
     fun whenShowDialog_thenShowTextFieldAndButton() {
+        lateinit var acceptText: String
+        lateinit var cancelText: String
         composeTestRule.setContent {
+            acceptText = stringResource(Res.string.accept)
+            cancelText = stringResource(Res.string.cancel)
             TextFieldAlertDialog(
-                show = true,
-                titleTextId = R.string.enter_valid_url,
+                titleTextId = Res.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {},
                 onAccept = {},
             )
         }
 
-        val acceptText = composeTestRule.activity.getString(R.string.accept)
-        val cancelText = composeTestRule.activity.getString(R.string.cancel)
         composeTestRule.onNodeWithTag("textField").assertExists()
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").apply {
             onFirst().assertTextContains(cancelText, ignoreCase = true)
@@ -82,8 +87,7 @@ class TextFieldAlertDialogTest {
         var isClosed = false
         composeTestRule.setContent {
             TextFieldAlertDialog(
-                show = true,
-                titleTextId = R.string.enter_valid_url,
+                titleTextId = Res.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {
                     isClosed = true
@@ -102,8 +106,7 @@ class TextFieldAlertDialogTest {
         var text = ""
         composeTestRule.setContent {
             TextFieldAlertDialog(
-                show = true,
-                titleTextId = R.string.enter_valid_url,
+                titleTextId = Res.string.enter_valid_url,
                 type = KeyboardType.Text,
                 onCancel = {},
                 onAccept = {
@@ -115,7 +118,7 @@ class TextFieldAlertDialogTest {
 
         composeTestRule.onNodeWithTag("textField").performTextReplacement("New text to return")
         composeTestRule.onAllNodesWithTag("textButtonAlertDialog").onLast().performClick()
-        Assert.assertTrue(isClosed)
-        Assert.assertEquals("New text to return", text)
+        assertTrue(isClosed)
+        assertEquals("New text to return", text)
     }
 }

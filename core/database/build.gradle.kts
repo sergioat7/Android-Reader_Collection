@@ -1,61 +1,67 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 /*
  * Copyright (c) 2024 Sergio Aragonés. All rights reserved.
  * Created by Sergio Aragonés on 22/2/2024
  */
 
+import com.android.build.api.dsl.androidLibrary
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
-    alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
+    alias(libs.plugins.androidx.room)
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.ksp)
 }
 
-android {
-    namespace = "com.aragones.sergio.database"
-    compileSdk = libs.versions.sdk.compile.get().toInt()
-
-    defaultConfig {
+kotlin {
+    androidLibrary {
+        namespace = "com.aragones.sergio.database"
+        compileSdk = libs.versions.sdk.compile.get().toInt()
         minSdk = libs.versions.sdk.min.get().toInt()
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }.configure {
+            instrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jdk.get())
-    }
-    ksp {
-        arg("room.schemaLocation", "$projectDir/schemas")
-    }
-}
-
-kotlin {
+    jvmToolchain(libs.versions.jdk.get().toInt())
     compilerOptions {
-        jvmTarget = JvmTarget.fromTarget(libs.versions.jdk.get())
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project.dependencies.platform(libs.koin.bom))
+
+            implementation(libs.koin.core)
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.room.runtime)
+        }
+
+        androidMain.dependencies {
+            implementation(libs.koin.android)
+        }
+
+        commonTest.dependencies {
+            implementation(libs.coroutines.test)
+            implementation(libs.kotlinx.test.core)
+        }
+
+        getByName("androidDeviceTest") {
+            dependencies {
+                implementation(libs.androidx.test.ext.junit)
+                implementation(libs.espresso.core)
+            }
+        }
     }
 }
 
 dependencies {
+    add("kspAndroid", libs.room.compiler)
+}
 
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.android.compiler)
-    implementation(libs.moshi)
-    ksp(libs.room.compiler)
-    implementation(libs.room.runtime)
-
-    androidTestImplementation(libs.coroutines.test)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+room {
+    schemaDirectory("$projectDir/schemas")
 }
