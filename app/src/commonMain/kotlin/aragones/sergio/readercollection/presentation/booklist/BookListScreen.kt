@@ -195,7 +195,7 @@ private fun BookListContent(
                             overscrollJob = coroutineScope.launch {
                                 dragAndDropListState.lazyListState.scrollBy(it)
                             }
-                        } ?: kotlin.run { overscrollJob?.cancel() }
+                        } ?: run { overscrollJob?.cancel() }
 
                     draggingIndex = dragAndDropListState.currentIndexOfDraggedItem ?: -1
                 },
