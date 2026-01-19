@@ -12,30 +12,28 @@ class UserDefaultsImpl : SharedPreferencesProvider {
     private val defaults = NSUserDefaults.standardUserDefaults
 
     override fun writeBoolean(key: String, value: Boolean, isEncrypted: Boolean) {
-        TODO("Not yet implemented")
+        defaults.setBool(value, key)
     }
 
     override fun writeInt(key: String, value: Int, isEncrypted: Boolean) {
-        TODO("Not yet implemented")
+        defaults.setInteger(value.toLong(), key)
     }
 
     override fun writeString(key: String, value: String?, isEncrypted: Boolean) {
-        TODO("Not yet implemented")
+        defaults.setObject(value, key)
     }
 
-    override fun readBoolean(key: String, defaultValue: Boolean, isEncrypted: Boolean): Boolean {
-        TODO("Not yet implemented")
-    }
+    override fun readBoolean(key: String, defaultValue: Boolean, isEncrypted: Boolean): Boolean =
+        defaults.boolForKey(key)
 
-    override fun readInt(key: String, defaultValue: Int, isEncrypted: Boolean): Int {
-        TODO("Not yet implemented")
-    }
+    override fun readInt(key: String, defaultValue: Int, isEncrypted: Boolean): Int =
+        defaults.integerForKey(key).toInt()
 
-    override fun readString(key: String, isEncrypted: Boolean): String? {
-        TODO("Not yet implemented")
-    }
+    override fun readString(key: String, isEncrypted: Boolean): String? = defaults.stringForKey(key)
 
     override fun removeValues(keys: List<String>, isEncrypted: Boolean) {
-        TODO("Not yet implemented")
+        for (key in keys) {
+            defaults.removeObjectForKey(key)
+        }
     }
 }
