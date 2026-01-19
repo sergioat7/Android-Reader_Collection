@@ -5,21 +5,22 @@
 
 package aragones.sergio.readercollection.data.local
 
+import platform.Foundation.NSBundle
+import platform.Foundation.NSLocale
+import platform.Foundation.NSUserDefaults
+import platform.Foundation.preferredLanguages
+
 actual class AppInfoProvider {
 
-    actual fun getVersion(): String? {
-        TODO("Not yet implemented")
-    }
+    actual fun getVersion(): String? =
+        NSBundle.mainBundle.objectForInfoDictionaryKey("CFBundleShortVersionString") as? String
 
-    actual fun getCurrentLanguage(): String {
-        TODO("Not yet implemented")
-    }
+    actual fun getCurrentLanguage(): String =
+        (NSLocale.preferredLanguages.first() as String).split("-").first()
 
     actual fun changeLocale(language: String) {
-        TODO("Not yet implemented")
+        NSUserDefaults.standardUserDefaults.setObject(arrayListOf(language), "AppleLanguages")
     }
 
-    actual fun applyTheme(themeMode: Int) {
-        TODO("Not yet implemented")
-    }
+    actual fun applyTheme(themeMode: Int) {}
 }

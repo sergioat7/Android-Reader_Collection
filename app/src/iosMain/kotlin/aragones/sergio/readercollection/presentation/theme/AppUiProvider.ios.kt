@@ -5,15 +5,20 @@
 
 package aragones.sergio.readercollection.presentation.theme
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.ColorScheme
 import androidx.compose.runtime.Composable
+import kotlinx.cinterop.ExperimentalForeignApi
+import kotlinx.cinterop.useContents
+import platform.UIKit.UIApplication
+import platform.UIKit.UIInterfaceOrientationPortrait
+import platform.UIKit.UIInterfaceOrientationPortraitUpsideDown
+import platform.UIKit.UIScreen
 
 actual object AppUiProvider {
 
     @Composable
-    actual fun isDarkThemeApplied(): Boolean {
-        TODO("Not yet implemented")
-    }
+    actual fun isDarkThemeApplied(): Boolean = isSystemInDarkTheme()
 
     @Composable
     actual fun applyBarsStyle(
@@ -21,27 +26,23 @@ actual object AppUiProvider {
         colors: ColorScheme,
         statusBarSameAsBackground: Boolean,
         navigationBarSameAsBackground: Boolean,
-    ) {
-        TODO("Not yet implemented")
-    }
+    ) {}
 
     @Composable
     actual fun isPortrait(): Boolean {
-        TODO("Not yet implemented")
+        val orientation = UIApplication.sharedApplication.statusBarOrientation
+        return orientation == UIInterfaceOrientationPortrait ||
+            orientation == UIInterfaceOrientationPortraitUpsideDown
     }
 
+    @OptIn(ExperimentalForeignApi::class)
     @Composable
-    actual fun getScreenWidth(): Int {
-        TODO("Not yet implemented")
-    }
+    actual fun getScreenWidth(): Int =
+        UIScreen.mainScreen.bounds.useContents { this.size.width.toInt() }
 
     @Composable
-    actual fun launchWorker() {
-        TODO("Not yet implemented")
-    }
+    actual fun launchWorker() {}
 
     @Composable
-    actual fun cancelWorker() {
-        TODO("Not yet implemented")
-    }
+    actual fun cancelWorker() {}
 }
