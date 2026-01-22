@@ -95,12 +95,12 @@ class BooksRemoteDataSource(
     }
 
     suspend fun getBooks(uuid: String): Result<List<BookResponse>> = runCatching {
-        firebaseProvider.getBooks(uuid)
+        firebaseProvider.getBooks(uuid).mapNotNull { it.second.toBook(it.first) }
     }
 
     suspend fun getFriendBook(friendId: String, bookId: String): Result<BookResponse> =
         runCatching {
-            val book = firebaseProvider.getBook(friendId, bookId)
+            val book = firebaseProvider.getBook(friendId, bookId).toBook(bookId)
             book ?: throw NoSuchElementException("Book not found")
         }
 

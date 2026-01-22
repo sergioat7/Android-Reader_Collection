@@ -19,11 +19,11 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 import kotlinx.coroutines.tasks.await
 
-actual class FirebaseProvider(
+class FirebaseProviderAndroid(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val remoteConfig: FirebaseRemoteConfig,
-) {
+) : FirebaseProvider {
 
     //region Static properties
     companion object {
@@ -37,18 +37,18 @@ actual class FirebaseProvider(
     //endregion
 
     //region Public methods
-    actual fun getUser(): UserResponse? = auth.currentUser?.let {
+    override fun getUser(): UserResponse? = auth.currentUser?.let {
         UserResponse(
             id = it.uid,
             username = it.email ?: "",
         )
     }
 
-    actual suspend fun signIn(email: String, password: String) {
+    override suspend fun signIn(email: String, password: String) {
         auth.signInWithEmailAndPassword(email, password).await()
     }
 
-    actual suspend fun signUp(email: String, password: String) {
+    override suspend fun signUp(email: String, password: String) {
         try {
             auth.createUserWithEmailAndPassword(email, password).await()
         } catch (_: FirebaseAuthUserCollisionException) {
@@ -58,18 +58,18 @@ actual class FirebaseProvider(
         }
     }
 
-    actual suspend fun updatePassword(password: String) {
+    override suspend fun updatePassword(password: String) {
         val user = auth.currentUser ?: throw RuntimeException("User is null")
         user.updatePassword(password).await()
     }
 
-    actual fun signOut() = auth.signOut()
+    override fun signOut() = auth.signOut()
 
-    actual suspend fun deleteUser() {
+    override suspend fun deleteUser() {
         auth.currentUser?.delete()?.await()
     }
 
-    actual suspend fun registerPublicProfile(username: String, userId: String) {
+    override suspend fun registerPublicProfile(username: String, userId: String) {
         firestore
             .collection(PUBLIC_PROFILES_PATH)
             .document(userId)
@@ -77,7 +77,7 @@ actual class FirebaseProvider(
             .await()
     }
 
-    actual suspend fun isPublicProfileActive(username: String): Boolean = firestore
+    override suspend fun isPublicProfileActive(username: String): Boolean = firestore
         .collection(PUBLIC_PROFILES_PATH)
         .whereEqualTo(EMAIL_KEY, username)
         .get()
@@ -86,7 +86,7 @@ actual class FirebaseProvider(
         .firstOrNull()
         ?.getString(EMAIL_KEY) != null
 
-    actual suspend fun deletePublicProfile(userId: String) {
+    override suspend fun deletePublicProfile(userId: String) {
         firestore
             .collection(PUBLIC_PROFILES_PATH)
             .document(userId)
@@ -94,7 +94,7 @@ actual class FirebaseProvider(
             .await()
     }
 
-    actual suspend fun getUserFromDatabase(username: String, userId: String): UserResponse? {
+    override suspend fun getUserFromDatabase(username: String, userId: String): UserResponse? {
         val result = firestore
             .collection(PUBLIC_PROFILES_PATH)
             .whereEqualTo(EMAIL_KEY, username)
@@ -118,7 +118,7 @@ actual class FirebaseProvider(
         }
     }
 
-    actual suspend fun getFriends(userId: String): List<UserResponse> = firestore
+    override suspend fun getFriends(userId: String): List<UserResponse> = firestore
         .collection(USERS_PATH)
         .document(userId)
         .collection(FRIENDS_PATH)
@@ -126,7 +126,7 @@ actual class FirebaseProvider(
         .await()
         .toObjects(UserResponse::class.java)
 
-    actual suspend fun getFriend(userId: String, friendId: String): UserResponse? = firestore
+    override suspend fun getFriend(userId: String, friendId: String): UserResponse? = firestore
         .collection(USERS_PATH)
         .document(userId)
         .collection(FRIENDS_PATH)
@@ -135,7 +135,7 @@ actual class FirebaseProvider(
         .await()
         .toObject(UserResponse::class.java)
 
-    actual suspend fun requestFriendship(user: UserResponse, friend: UserResponse) {
+    override suspend fun requestFriendship(user: UserResponse, friend: UserResponse) {
         val batch = firestore.batch()
 
         val userRef = firestore
@@ -165,7 +165,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual suspend fun acceptFriendRequest(userId: String, friendId: String) {
+    override suspend fun acceptFriendRequest(userId: String, friendId: String) {
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -186,7 +186,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual suspend fun rejectFriendRequest(userId: String, friendId: String) {
+    override suspend fun rejectFriendRequest(userId: String, friendId: String) {
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -207,7 +207,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual suspend fun deleteFriendship(userId: String, friendId: String) {
+    override suspend fun deleteFriendship(userId: String, friendId: String) {
         val userRef = firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -228,7 +228,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual suspend fun deleteFriends(userId: String) {
+    override suspend fun deleteFriends(userId: String) {
         val batch = firestore.batch()
         val friends = firestore
             .collection(USERS_PATH)
@@ -242,7 +242,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual suspend fun deleteUserFromDatabase(userId: String) {
+    override suspend fun deleteUserFromDatabase(userId: String) {
         firestore
             .collection(USERS_PATH)
             .document(userId)
@@ -250,27 +250,25 @@ actual class FirebaseProvider(
             .await()
     }
 
-    actual suspend fun getBooks(userId: String): List<BookResponse> = firestore
+    override suspend fun getBooks(userId: String): List<Pair<String, Map<String, Any?>>> = firestore
         .collection(USERS_PATH)
         .document(userId)
         .collection(BOOKS_PATH)
         .get()
         .await()
-        .mapNotNull { it.toMap().toBook(it.id) }
+        .map { it.id to it.toMap() }
 
-    actual suspend fun getBook(userId: String, bookId: String): BookResponse? {
-        val document = firestore
-            .collection(USERS_PATH)
-            .document(userId)
-            .collection(BOOKS_PATH)
-            .document(bookId)
-            .get()
-            .await()
-        return document.toMap().toBook(document.id)
-    }
+    override suspend fun getBook(userId: String, bookId: String): Map<String, Any?> = firestore
+        .collection(USERS_PATH)
+        .document(userId)
+        .collection(BOOKS_PATH)
+        .document(bookId)
+        .get()
+        .await()
+        .toMap()
 
     @OptIn(ExperimentalTime::class)
-    actual suspend fun syncBooks(
+    override suspend fun syncBooks(
         uuid: String,
         booksToSave: List<BookResponse>,
         booksToRemove: List<BookResponse>,
@@ -297,7 +295,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual suspend fun deleteBooks(userId: String) {
+    override suspend fun deleteBooks(userId: String) {
         val batch = firestore.batch()
         val books = firestore
             .collection(USERS_PATH)
@@ -311,7 +309,7 @@ actual class FirebaseProvider(
         batch.commit().await()
     }
 
-    actual fun fetchRemoteConfigString(key: String, onCompletion: (String) -> Unit) {
+    override fun fetchRemoteConfigString(key: String, onCompletion: (String) -> Unit) {
         onCompletion(remoteConfig.getString(key))
 
         remoteConfig.fetchAndActivate().addOnCompleteListener {
@@ -319,7 +317,7 @@ actual class FirebaseProvider(
         }
     }
 
-    actual suspend fun getRemoteConfigString(key: String): String {
+    override suspend fun getRemoteConfigString(key: String): String {
         try {
             remoteConfig.fetch(0)
             remoteConfig.activate().await()
@@ -329,7 +327,7 @@ actual class FirebaseProvider(
     }
     //endregion
 
-    //region Public methods
+    //region Private methods
     @OptIn(ExperimentalTime::class)
     private fun DocumentSnapshot.toMap(): Map<String, Any?> = mapOf(
         "title" to getString("title"),
