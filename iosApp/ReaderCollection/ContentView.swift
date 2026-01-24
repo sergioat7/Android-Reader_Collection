@@ -5,20 +5,25 @@
 //  Created by Sergio Aragonés on 18/1/26.
 //
 
+import App
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+            ComposeView().ignoresSafeArea()
         }
-        .padding()
-    }
 }
 
 #Preview {
     ContentView()
+}
+
+struct ComposeView: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UIViewController {
+        LandingViewControllerKt.LandingViewController(
+            firebaseProvider: FirebaseProviderIos.instance
+        )
+    }
+
+    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
 }
