@@ -28,6 +28,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
+import aragones.sergio.readercollection.isAndroid
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
@@ -77,19 +78,21 @@ fun DisplaySettingsScreen(
                 .verticalScroll(scrollState),
         ) {
             Spacer(Modifier.height(12.dp))
-            HeaderText(text = stringResource(Res.string.app_language))
-            LanguageInfo(
-                language = state.language,
-                onLanguageChange = {
-                    onProfileDataChange(
-                        it,
-                        state.sortParam,
-                        state.isSortDescending,
-                        state.themeMode,
-                    )
-                },
-            )
-            Spacer(Modifier.height(24.dp))
+            if (isAndroid()) {
+                HeaderText(text = stringResource(Res.string.app_language))
+                LanguageInfo(
+                    language = state.language,
+                    onLanguageChange = {
+                        onProfileDataChange(
+                            it,
+                            state.sortParam,
+                            state.isSortDescending,
+                            state.themeMode,
+                        )
+                    },
+                )
+                Spacer(Modifier.height(24.dp))
+            }
             HeaderText(text = stringResource(Res.string.sort_books_param))
             SortingInfo(
                 sortParam = state.sortParam,
@@ -112,19 +115,21 @@ fun DisplaySettingsScreen(
                 },
             )
             Spacer(Modifier.height(24.dp))
-            HeaderText(text = stringResource(Res.string.app_theme))
-            AppThemeInfo(
-                selectedThemeIndex = state.themeMode,
-                onThemeChange = {
-                    onProfileDataChange(
-                        state.language,
-                        state.sortParam,
-                        state.isSortDescending,
-                        it,
-                    )
-                },
-            )
-            Spacer(modifier = Modifier.weight(1f))
+            if (isAndroid()) {
+                HeaderText(text = stringResource(Res.string.app_theme))
+                AppThemeInfo(
+                    selectedThemeIndex = state.themeMode,
+                    onThemeChange = {
+                        onProfileDataChange(
+                            state.language,
+                            state.sortParam,
+                            state.isSortDescending,
+                            it,
+                        )
+                    },
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
             MainActionButton(
                 text = stringResource(Res.string.save),
                 modifier = Modifier
