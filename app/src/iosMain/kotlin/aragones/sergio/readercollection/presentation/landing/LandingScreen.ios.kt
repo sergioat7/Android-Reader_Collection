@@ -6,7 +6,11 @@
 package aragones.sergio.readercollection.presentation.landing
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 actual fun LandingScreen(onAnimationFinished: () -> Unit) {
+    LaunchedEffect(Unit) {
+        onAnimationFinished()
+    }
 }
