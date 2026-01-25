@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DB914B032F26222E00F60283 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = DB914B022F26222E00F60283 /* Lottie */; };
+		DB914B052F26224A00F60283 /* landing_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = DB914B042F26224A00F60283 /* landing_animation.json */; };
 		DBB106F52F22B1C900AD4B64 /* FirebaseAnalytics in Frameworks */ = {isa = PBXBuildFile; productRef = DBB106F42F22B1C900AD4B64 /* FirebaseAnalytics */; };
 		DBB106F72F22B1C900AD4B64 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = DBB106F62F22B1C900AD4B64 /* FirebaseAuth */; };
 		DBB106F92F22B1C900AD4B64 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = DBB106F82F22B1C900AD4B64 /* FirebaseCrashlytics */; };
@@ -36,6 +38,7 @@
 		DB57D7782F1D6A0E00FC5B76 /* ReaderCollection.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ReaderCollection.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB57D7852F1D6A0F00FC5B76 /* ReaderCollectionTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReaderCollectionTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB57D78F2F1D6A0F00FC5B76 /* ReaderCollectionUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ReaderCollectionUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB914B042F26224A00F60283 /* landing_animation.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = landing_animation.json; sourceTree = "<group>"; };
 		DBB1070C2F22B37700AD4B64 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,6 +83,7 @@
 				DBB106F52F22B1C900AD4B64 /* FirebaseAnalytics in Frameworks */,
 				DBB106F72F22B1C900AD4B64 /* FirebaseAuth in Frameworks */,
 				DBB106FD2F22B1C900AD4B64 /* FirebaseRemoteConfig in Frameworks */,
+				DB914B032F26222E00F60283 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +112,7 @@
 				DB57D7922F1D6A0F00FC5B76 /* ReaderCollectionUITests */,
 				DB57D7792F1D6A0E00FC5B76 /* Products */,
 				DBB1070C2F22B37700AD4B64 /* GoogleService-Info.plist */,
+				DB914B042F26224A00F60283 /* landing_animation.json */,
 			);
 			sourceTree = "<group>";
 		};
@@ -148,6 +153,7 @@
 				DBB106F82F22B1C900AD4B64 /* FirebaseCrashlytics */,
 				DBB106FA2F22B1C900AD4B64 /* FirebaseFirestore */,
 				DBB106FC2F22B1C900AD4B64 /* FirebaseRemoteConfig */,
+				DB914B022F26222E00F60283 /* Lottie */,
 			);
 			productName = ReaderCollection;
 			productReference = DB57D7782F1D6A0E00FC5B76 /* ReaderCollection.app */;
@@ -233,6 +239,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				DBB106F32F22B1C900AD4B64 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				DB914B012F26222E00F60283 /* XCRemoteSwiftPackageReference "lottie-spm" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = DB57D7792F1D6A0E00FC5B76 /* Products */;
@@ -252,6 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DBB1070D2F22B37700AD4B64 /* GoogleService-Info.plist in Resources */,
+				DB914B052F26224A00F60283 /* landing_animation.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -675,6 +683,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		DB914B012F26222E00F60283 /* XCRemoteSwiftPackageReference "lottie-spm" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-spm.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.6.0;
+			};
+		};
 		DBB106F32F22B1C900AD4B64 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -686,6 +702,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		DB914B022F26222E00F60283 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DB914B012F26222E00F60283 /* XCRemoteSwiftPackageReference "lottie-spm" */;
+			productName = Lottie;
+		};
 		DBB106F42F22B1C900AD4B64 /* FirebaseAnalytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DBB106F32F22B1C900AD4B64 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

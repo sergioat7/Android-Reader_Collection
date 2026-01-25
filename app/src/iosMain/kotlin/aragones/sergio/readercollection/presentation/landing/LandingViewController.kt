@@ -95,6 +95,7 @@ private fun Landing(navigator: Navigator) {
     LandingView(
         navigator = navigator,
         viewModel = viewModel,
+        skipAnimation = true,
         isAppUpdated = true,
     )
     LaunchedEffect(Unit) {
