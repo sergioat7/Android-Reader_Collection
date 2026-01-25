@@ -5,15 +5,13 @@
 
 package aragones.sergio.readercollection.presentation.settings
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import aragones.sergio.readercollection.domain.BooksRepository
 import aragones.sergio.readercollection.domain.UserRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.StringResource
 
@@ -23,28 +21,37 @@ class SettingsViewModel(
 ) : ViewModel() {
 
     //region Private properties
-    private var _isLoading: MutableState<Boolean> = mutableStateOf(false)
+    private val _state: MutableStateFlow<SettingsUiState> =
+        MutableStateFlow(SettingsUiState("", false))
     private val _logOut = MutableStateFlow(false)
     private val _confirmationDialogMessageId = MutableStateFlow<StringResource?>(null)
     //endregion
 
     //region Public properties
-    val isLoading: State<Boolean> = _isLoading
+    var state: StateFlow<SettingsUiState> = _state
     val logOut: StateFlow<Boolean> = _logOut
     val confirmationDialogMessageId: StateFlow<StringResource?> = _confirmationDialogMessageId
     //endregion
 
+    //region Lifecycle methods
+    fun onResume() {
+        _state.update {
+            it.copy(version = userRepository.getAppVersion())
+        }
+    }
+    //endregion
+
     //region Public methods
     fun logout() = viewModelScope.launch {
-        _isLoading.value = true
+        _state.update { it.copy(isLoading = true) }
         userRepository.logout()
         booksRepository.resetTable().fold(
             onSuccess = {
-                _isLoading.value = false
+                _state.update { it.copy(isLoading = false) }
                 _logOut.value = true
             },
             onFailure = {
-                _isLoading.value = false
+                _state.update { it.copy(isLoading = false) }
                 _logOut.value = true
             },
         )

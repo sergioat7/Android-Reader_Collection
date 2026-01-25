@@ -272,14 +272,16 @@ class UserRepositoryImpl(
     }
 
     override suspend fun isThereMandatoryUpdate(): Boolean {
-        val currentVersion = userLocalDataSource.getCurrentVersion()
-        val minVersion = userRemoteDataSource.getMinVersion()
+        val currentVersion = userLocalDataSource.getCalculatedCurrentVersion()
+        val minVersion = userRemoteDataSource.getCalculatedMinVersion()
         return currentVersion < minVersion
     }
 
     override fun applyTheme() {
         userLocalDataSource.applyTheme()
     }
+
+    override fun getAppVersion(): String = userLocalDataSource.getCurrentVersion()
     //endregion
 }
 

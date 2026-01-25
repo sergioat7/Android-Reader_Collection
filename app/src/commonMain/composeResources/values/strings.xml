@@ -91,6 +91,7 @@
     <string name="display_settings_description">Personalize display settings</string>
     <string name="logout_title">Logout</string>
     <string name="logout_description">Close this session</string>
+    <string name="version">Version %1$s</string>
 
     //ACCOUNT
     <string name="account_details_title">Account details</string>

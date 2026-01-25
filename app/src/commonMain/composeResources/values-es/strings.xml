@@ -95,6 +95,7 @@
     <string name="display_settings_description">Personaliza la apariencia de la app</string>
     <string name="logout_title">Salir</string>
     <string name="logout_description">Cierra la sesión</string>
+    <string name="version">Versión %1$s</string>
 
     //ACCOUNT
     <string name="account_details_title">Detalles de la cuenta</string>

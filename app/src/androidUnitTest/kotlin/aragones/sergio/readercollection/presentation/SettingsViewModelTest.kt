@@ -16,6 +16,7 @@ import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.toLocalData
+import aragones.sergio.readercollection.presentation.settings.SettingsUiState
 import aragones.sergio.readercollection.presentation.settings.SettingsViewModel
 import com.aragones.sergio.BooksLocalDataSource
 import io.mockk.Runs
@@ -54,6 +55,28 @@ class SettingsViewModelTest {
             ioDispatcher,
         ),
     )
+
+    @Test
+    fun `GIVEN version WHEN onResume THEN state is updated with version`() = runTest {
+        val version = "1.2.3"
+        every { userLocalDataSource.getCurrentVersion() } returns version
+
+        viewModel.state.test {
+            assertEquals(
+                SettingsUiState("", false),
+                awaitItem(),
+            )
+
+            viewModel.onResume()
+
+            assertEquals(
+                SettingsUiState(version, false),
+                awaitItem(),
+            )
+        }
+        verify { userLocalDataSource.getCurrentVersion() }
+        confirmVerified(userLocalDataSource)
+    }
 
     @Test
     fun `WHEN logout THEN data sources are invoked and logOut state returns true`() = runTest {

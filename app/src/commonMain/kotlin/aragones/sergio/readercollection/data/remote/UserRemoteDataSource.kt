@@ -90,7 +90,7 @@ class UserRemoteDataSource(
         firebaseProvider.deleteUser()
     }
 
-    suspend fun getMinVersion(): Int {
+    suspend fun getCalculatedMinVersion(): Int {
         val minVersion = firebaseProvider.getRemoteConfigString("min_version").split(".")
         if (minVersion.size != 3) return 0
 

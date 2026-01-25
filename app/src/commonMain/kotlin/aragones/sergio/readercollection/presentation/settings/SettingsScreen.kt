@@ -35,6 +35,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
@@ -57,10 +58,11 @@ import reader_collection.app.generated.resources.logout_description
 import reader_collection.app.generated.resources.logout_title
 import reader_collection.app.generated.resources.preferences
 import reader_collection.app.generated.resources.title_settings
+import reader_collection.app.generated.resources.version
 
 @Composable
 fun SettingsScreen(
-    isLoading: Boolean,
+    state: SettingsUiState,
     onClickOption: (SettingsOption) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -118,9 +120,18 @@ fun SettingsScreen(
                     onClickOption(SettingsOption.Logout)
                 },
             )
+            Spacer(Modifier.weight(1f))
+            Text(
+                text = stringResource(Res.string.version, state.version),
+                modifier = Modifier.fillMaxWidth(),
+                style = MaterialTheme.typography.bodySmall,
+                fontSize = 12.sp,
+                color = MaterialTheme.colorScheme.tertiary,
+                textAlign = TextAlign.Center,
+            )
         }
     }
-    if (isLoading) {
+    if (state.isLoading) {
         CustomCircularProgressIndicator()
     }
 }
@@ -195,7 +206,7 @@ private fun SettingsScreenPreview(
 ) {
     ReaderCollectionTheme {
         SettingsScreen(
-            isLoading = isLoading,
+            state = SettingsUiState("1.0.0", false),
             onClickOption = {},
             modifier = Modifier.background(MaterialTheme.colorScheme.background),
         )

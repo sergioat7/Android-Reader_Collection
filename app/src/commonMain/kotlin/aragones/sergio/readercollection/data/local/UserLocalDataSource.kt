@@ -105,7 +105,7 @@ class UserLocalDataSource(
         appInfoProvider.applyTheme(themeMode)
     }
 
-    fun getCurrentVersion(): Int {
+    fun getCalculatedCurrentVersion(): Int {
         return try {
             val currentVersion = appInfoProvider.getVersion()?.split(".") ?: listOf()
             if (currentVersion.size != 3) return Int.MAX_VALUE
@@ -117,5 +117,7 @@ class UserLocalDataSource(
             Int.MAX_VALUE
         }
     }
+
+    fun getCurrentVersion(): String = appInfoProvider.getVersion() ?: ""
     //endregion
 }

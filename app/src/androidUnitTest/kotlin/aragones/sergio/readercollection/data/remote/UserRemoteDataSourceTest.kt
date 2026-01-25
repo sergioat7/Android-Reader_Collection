@@ -549,38 +549,40 @@ class UserRemoteDataSourceTest {
     }
 
     @Test
-    fun `GIVEN version name is correct WHEN get min version THEN returns version code`() = runTest {
-        val key = "min_version"
-        val minVersion = "1.2.3"
-        coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
+    fun `GIVEN version name is correct WHEN get calculated min version THEN returns version code`() =
+        runTest {
+            val key = "min_version"
+            val minVersion = "1.2.3"
+            coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
 
-        val result = dataSource.getMinVersion()
+            val result = dataSource.getCalculatedMinVersion()
 
-        assertEquals(102030, result)
-        coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
-        confirmVerified(firebaseProvider)
-    }
-
-    @Test
-    fun `GIVEN version name is malformed WHEN get min version THEN returns 0`() = runTest {
-        val key = "min_version"
-        val minVersion = "1.2"
-        coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
-
-        val result = dataSource.getMinVersion()
-
-        assertEquals(0, result)
-        coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
-        confirmVerified(firebaseProvider)
-    }
+            assertEquals(102030, result)
+            coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
+            confirmVerified(firebaseProvider)
+        }
 
     @Test
-    fun `GIVEN remote config error WHEN get min version THEN returns last fetched version code`() =
+    fun `GIVEN version name is malformed WHEN get calculated in version THEN returns 0`() =
+        runTest {
+            val key = "min_version"
+            val minVersion = "1.2"
+            coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
+
+            val result = dataSource.getCalculatedMinVersion()
+
+            assertEquals(0, result)
+            coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
+            confirmVerified(firebaseProvider)
+        }
+
+    @Test
+    fun `GIVEN remote config error WHEN get calculated min version THEN returns last fetched version code`() =
         runTest {
             val key = "min_version"
             coEvery { firebaseProvider.getRemoteConfigString(key) } returns ""
 
-            val result = dataSource.getMinVersion()
+            val result = dataSource.getCalculatedMinVersion()
 
             assertEquals(0, result)
             coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
