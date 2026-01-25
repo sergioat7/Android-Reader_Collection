@@ -49,7 +49,7 @@ class FirebaseProviderTest {
     private val auth: FirebaseAuth = mockk()
     private val remoteConfig: FirebaseRemoteConfig = mockk(relaxed = true)
     private val firestore: FirebaseFirestore = mockk()
-    private val firebaseProvider = FirebaseProvider(auth, firestore, remoteConfig)
+    private val firebaseProvider = FirebaseProviderAndroid(auth, firestore, remoteConfig)
 
     @Test
     fun `GIVEN current user not null WHEN get user THEN return user`() {

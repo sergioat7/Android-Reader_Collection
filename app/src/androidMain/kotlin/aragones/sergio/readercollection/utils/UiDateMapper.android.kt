@@ -25,10 +25,9 @@ actual object UiDateMapper {
         language: String,
     ): Map<String, List<Any>> {
         val locale = Locale.forLanguageTag(language)
-        val calendar = Calendar.getInstance()
+        val simpleDateFormat = SimpleDateFormat(pattern, locale)
         return this.mapNotNull { it.toString(format = null).toDate() }.groupBy {
-            calendar.time = it
-            SimpleDateFormat(pattern, locale).format(calendar.time)
+            simpleDateFormat.format(it)
         }
     }
 
@@ -51,13 +50,7 @@ actual object UiDateMapper {
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = this
         val dateString = calendar.time
-            .toString(
-                format = Constants.getDateFormatToShow(language),
-                language = language,
-            ).toDate(
-                format = Constants.getDateFormatToShow(language),
-                language = language,
-            ).toString()
+            .toString(format = null)
             .toLocalDate()
         return dateString
     }
