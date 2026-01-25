@@ -217,6 +217,7 @@ private fun BooksScreenContent(
                 .padding(horizontal = 24.dp),
             showLeadingIcon = true,
             requestFocusByDefault = false,
+            searchOnClear = true,
         )
         Spacer(Modifier.height(16.dp))
         when (state) {
