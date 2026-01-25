@@ -490,11 +490,11 @@ class SharedPreferencesHandlerTest {
             Preferences.THEME_MODE_PREFERENCE_NAME,
             Preferences.SORT_ORDER_PREFERENCE_NAME,
         )
-        every { sharedPreferencesProvider.removeValues(keys, true) } just Runs
+        every { sharedPreferencesProvider.removeValues(keys, false) } just Runs
 
         preferences.removeUserPreferences()
 
-        verify(exactly = 1) { sharedPreferencesProvider.removeValues(keys, true) }
+        verify(exactly = 1) { sharedPreferencesProvider.removeValues(keys, false) }
         confirmVerified(sharedPreferencesProvider)
     }
 }
