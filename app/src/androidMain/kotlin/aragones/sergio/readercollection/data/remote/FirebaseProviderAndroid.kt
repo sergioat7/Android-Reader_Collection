@@ -6,12 +6,10 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
@@ -49,13 +47,7 @@ class FirebaseProviderAndroid(
     }
 
     override suspend fun signUp(email: String, password: String) {
-        try {
-            auth.createUserWithEmailAndPassword(email, password).await()
-        } catch (_: FirebaseAuthUserCollisionException) {
-            throw CustomExceptions.ExistentUser()
-        } catch (e: Exception) {
-            throw e
-        }
+        auth.createUserWithEmailAndPassword(email, password).await()
     }
 
     override suspend fun updatePassword(password: String) {

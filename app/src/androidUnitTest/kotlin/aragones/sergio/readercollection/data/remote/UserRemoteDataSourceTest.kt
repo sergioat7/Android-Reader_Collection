@@ -7,6 +7,7 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 import io.mockk.Runs
@@ -123,6 +124,23 @@ class UserRemoteDataSourceTest {
         val result = dataSource.register(username, password)
 
         assertEquals(true, result.isSuccess)
+        coVerify {
+            firebaseProvider.signUp("$username@readercollection.app", password)
+        }
+        confirmVerified(firebaseProvider)
+    }
+
+    @Test
+    fun `GIVEN already registered failure response WHEN register THEN return failure`() = runTest {
+        val username = "testuser"
+        val password = "wrongpassword"
+        val exception = RuntimeException("The email address is already in use by another account.")
+        coEvery { firebaseProvider.signUp(any(), any()) } throws exception
+
+        val result = dataSource.register(username, password)
+
+        assertEquals(true, result.isFailure)
+        assertIs<CustomExceptions.ExistentUser>(result.exceptionOrNull())
         coVerify {
             firebaseProvider.signUp("$username@readercollection.app", password)
         }

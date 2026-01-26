@@ -53,7 +53,7 @@ class FirebaseProviderIos: FirebaseProvider {
         do {
             try await auth.createUser(withEmail: email, password: password)
         } catch {
-            print(error)
+            throw error
         }
     }
     
