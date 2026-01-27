@@ -203,6 +203,7 @@ fun SearchBar(
     textColor: Color = MaterialTheme.colorScheme.primary,
     textStyle: TextStyle = MaterialTheme.typography.bodyLarge,
     requestFocusByDefault: Boolean = true,
+    searchOnClear: Boolean = false,
 ) {
     var textFieldValueState by remember {
         mutableStateOf(
@@ -248,6 +249,9 @@ fun SearchBar(
                     .withDescription(stringResource(Res.string.clear_text)),
                 onClick = {
                     textFieldValueState = TextFieldValue("")
+                    if (searchOnClear) {
+                        onSearch("")
+                    }
                 },
             )
         }

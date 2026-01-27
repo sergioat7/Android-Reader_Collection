@@ -95,6 +95,7 @@
     <string name="display_settings_description">Personaliza la apariencia de la app</string>
     <string name="logout_title">Salir</string>
     <string name="logout_description">Cierra la sesión</string>
+    <string name="version">Versión %1$s</string>
 
     //ACCOUNT
     <string name="account_details_title">Detalles de la cuenta</string>
@@ -169,7 +170,7 @@
         <item>Descendente</item>
     </string-array>
     <string name="sync_title">Sincronizando…</string>
-    <string name="sync_confirmation">¿Estás seguro de que quieres sincronizar la app? Este proceso puede llevar un tiempo.</string>
+    <string name="sync_confirmation">¿Estás seguro/a de que quieres sincronizar la app? Si lo haces, sobrescribirás lo que hayas guardado desde otro dispositivo con la información almacenada aquí.</string>
     <string name="enter_valid_url">Introduce un enlace válido</string>
     <string name="user_remove_confirmation">¿Estás seguro de que quieres borrar este amigo?</string>
 

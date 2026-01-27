@@ -3,9 +3,6 @@
  * Created by Sergio Aragonés on 22/2/2024
  */
 
-import com.android.build.api.dsl.androidLibrary
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.androidx.room)

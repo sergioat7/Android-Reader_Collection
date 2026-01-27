@@ -43,7 +43,7 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DB57D7CC2F1D6AF200FC5B76 /* Exceptions for "ReaderCollection" folder in "ReaderCollection" target */ = {
+		DB57D7CC2F1D6AF200FC5B76 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
@@ -56,7 +56,7 @@
 		DB57D77A2F1D6A0E00FC5B76 /* ReaderCollection */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				DB57D7CC2F1D6AF200FC5B76 /* Exceptions for "ReaderCollection" folder in "ReaderCollection" target */,
+				DB57D7CC2F1D6AF200FC5B76 /* PBXFileSystemSynchronizedBuildFileExceptionSet */,
 			);
 			path = ReaderCollection;
 			sourceTree = "<group>";
@@ -488,6 +488,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "${TEAM_ID}";
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GENERATE_INFOPLIST_FILE = YES;

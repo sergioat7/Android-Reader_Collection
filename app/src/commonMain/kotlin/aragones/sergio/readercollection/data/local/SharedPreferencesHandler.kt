@@ -119,7 +119,7 @@ class SharedPreferencesHandler(
                 Preferences.THEME_MODE_PREFERENCE_NAME,
                 Preferences.SORT_ORDER_PREFERENCE_NAME,
             ),
-            isEncrypted = true,
+            isEncrypted = false,
         )
     }
     //endregion

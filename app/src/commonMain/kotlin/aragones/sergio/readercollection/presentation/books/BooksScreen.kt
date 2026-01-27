@@ -217,6 +217,7 @@ private fun BooksScreenContent(
                 .padding(horizontal = 24.dp),
             showLeadingIcon = true,
             requestFocusByDefault = false,
+            searchOnClear = true,
         )
         Spacer(Modifier.height(16.dp))
         when (state) {
@@ -227,7 +228,7 @@ private fun BooksScreenContent(
             )
             is BooksUiState.Success -> BooksComponent(
                 books = state.books,
-                isSwitchingEnabled = state.query.isBlank(),
+                query = state.query,
                 onBookClick = onBookClick,
                 onLongClickBook = onLongClickBook,
                 onShowAll = onShowAll,
@@ -245,7 +246,7 @@ private fun BooksScreenContent(
 @Composable
 private fun BooksComponent(
     books: Books,
-    isSwitchingEnabled: Boolean,
+    query: String,
     onBookClick: (String) -> Unit,
     onLongClickBook: (Book) -> Unit,
     onShowAll: (String) -> Unit,
@@ -261,6 +262,7 @@ private fun BooksComponent(
         item {
             ReadingBooksSection(
                 books = Books(readingBooks),
+                isSearching = query.isNotBlank(),
                 onBookClick = onBookClick,
                 onLongClick = onLongClickBook,
                 modifier = Modifier
@@ -272,7 +274,7 @@ private fun BooksComponent(
             BooksSection(
                 title = stringResource(Res.string.pending),
                 books = Books(pendingBooks.take(Constants.BOOKS_TO_SHOW)),
-                isSwitchingEnabled = isSwitchingEnabled,
+                isSwitchingEnabled = query.isBlank(),
                 showAll = pendingBooks.size > Constants.BOOKS_TO_SHOW,
                 onShowAll = {
                     onShowAll(BookState.PENDING)
@@ -287,7 +289,7 @@ private fun BooksComponent(
             BooksSection(
                 title = stringResource(Res.string.read),
                 books = Books(readBooks.take(Constants.BOOKS_TO_SHOW)),
-                isSwitchingEnabled = isSwitchingEnabled,
+                isSwitchingEnabled = query.isBlank(),
                 showAll = readBooks.size > Constants.BOOKS_TO_SHOW,
                 onShowAll = {
                     onShowAll(BookState.READ)
@@ -305,39 +307,42 @@ private fun BooksComponent(
 @Composable
 private fun ReadingBooksSection(
     books: Books,
+    isSearching: Boolean,
     onBookClick: (String) -> Unit,
     onLongClick: (Book) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier) {
-        if (books.books.isNotEmpty()) {
-            ReadingBooksContentSection(
-                books = books,
-                onBookClick = onBookClick,
-                onLongClick = onLongClick,
+    if (books.books.isNotEmpty() || !isSearching) {
+        Column(modifier) {
+            if (books.books.isNotEmpty()) {
+                ReadingBooksContentSection(
+                    books = books,
+                    onBookClick = onBookClick,
+                    onLongClick = onLongClick,
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                )
+            } else {
+                Image(
+                    painter = painterResource(Res.drawable.image_user_reading),
+                    contentDescription = stringResource(Res.string.not_reading_anything_yet),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .fillMaxWidth(0.5f)
+                        .weight(1f)
+                        .align(Alignment.CenterHorizontally),
+                )
+            }
+            Spacer(Modifier.height(16.dp))
+            HorizontalDivider(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp),
+                color = MaterialTheme.colorScheme.tertiary,
             )
-        } else {
-            Image(
-                painter = painterResource(Res.drawable.image_user_reading),
-                contentDescription = stringResource(Res.string.not_reading_anything_yet),
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth(0.5f)
-                    .weight(1f)
-                    .align(Alignment.CenterHorizontally),
-            )
+            Spacer(Modifier.height(16.dp))
         }
-        Spacer(Modifier.height(16.dp))
-        HorizontalDivider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 24.dp),
-            color = MaterialTheme.colorScheme.tertiary,
-        )
-        Spacer(Modifier.height(16.dp))
     }
 }
 
