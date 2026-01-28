@@ -6,10 +6,12 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.ALL_FORMATS
+import aragones.sergio.readercollection.data.remote.model.ALL_GENRES
 import aragones.sergio.readercollection.data.remote.model.ALL_STATES
 import aragones.sergio.readercollection.data.remote.model.BaseModel
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GENRES
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
@@ -34,6 +36,7 @@ class BooksRemoteDataSource(
         private const val ORDER_PARAM = "orderBy"
         private const val RESULTS = 20
         private const val FORMATS_KEY = "formats"
+        private const val GENRES_KEY = "genres"
         private const val STATES_KEY = "states"
     }
     //endregion
@@ -90,6 +93,10 @@ class BooksRemoteDataSource(
         firebaseProvider.fetchRemoteConfigString(FORMATS_KEY) {
             ALL_FORMATS = parseValues(it)
             FORMATS = ALL_FORMATS[language] ?: emptyList()
+        }
+        firebaseProvider.fetchRemoteConfigString(GENRES_KEY) {
+            ALL_GENRES = parseValues(it)
+            GENRES = ALL_GENRES[language] ?: emptyList()
         }
         firebaseProvider.fetchRemoteConfigString(STATES_KEY) {
             ALL_STATES = parseValues(it)

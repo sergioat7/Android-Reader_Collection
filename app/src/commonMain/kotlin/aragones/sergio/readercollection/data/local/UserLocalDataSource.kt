@@ -8,8 +8,10 @@ package aragones.sergio.readercollection.data.local
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
 import aragones.sergio.readercollection.data.remote.model.ALL_FORMATS
+import aragones.sergio.readercollection.data.remote.model.ALL_GENRES
 import aragones.sergio.readercollection.data.remote.model.ALL_STATES
 import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GENRES
 import aragones.sergio.readercollection.data.remote.model.STATES
 
 class UserLocalDataSource(
@@ -92,6 +94,7 @@ class UserLocalDataSource(
         preferences.language = language
         appInfoProvider.changeLocale(language)
         FORMATS = ALL_FORMATS[language] ?: emptyList()
+        GENRES = ALL_GENRES[language] ?: emptyList()
         STATES = ALL_STATES[language] ?: emptyList()
     }
 
