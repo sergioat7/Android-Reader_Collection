@@ -11,3 +11,6 @@
 /app/readercollection-keystore.jks
 /app/release/*
 core/database/schemas/com.aragones.sergio.ReaderCollectionDatabase/*.json
+*.xcuserstate
+xcschememanagement.plist
+*.xcscheme

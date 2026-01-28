@@ -37,6 +37,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import aragones.sergio.readercollection.isAndroid
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.SyncAlertDialog
@@ -73,12 +74,14 @@ fun DataSyncScreen(
                 .padding(12.dp)
                 .verticalScroll(scrollState),
         ) {
-            Spacer(Modifier.height(12.dp))
-            HeaderText(text = stringResource(Res.string.syncing_options_title))
-            SyncAutomaticallyItem(
-                isEnabled = state.isAutomaticSyncEnabled,
-                onChange = onChange,
-            )
+            if (isAndroid()) {
+                Spacer(Modifier.height(12.dp))
+                HeaderText(text = stringResource(Res.string.syncing_options_title))
+                SyncAutomaticallyItem(
+                    isEnabled = state.isAutomaticSyncEnabled,
+                    onChange = onChange,
+                )
+            }
             Spacer(Modifier.height(12.dp))
             SyncManuallyItem(onSync = onSync)
         }

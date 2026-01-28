@@ -321,29 +321,38 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun `GIVEN version name is correct WHEN getCurrentVersion is called THEN returns version code`() {
+    fun `GIVEN version name is correct WHEN getCalculatedCurrentVersion is called THEN returns version code`() {
         every { appInfoProvider.getVersion() } returns "1.2.3"
 
-        val result = dataSource.getCurrentVersion()
+        val result = dataSource.getCalculatedCurrentVersion()
 
         assertEquals(102030, result)
     }
 
     @Test
-    fun `GIVEN version name is malformed WHEN getCurrentVersion is called THEN returns 0`() {
+    fun `GIVEN version name is malformed WHEN getCalculatedCurrentVersion is called THEN returns 0`() {
         every { appInfoProvider.getVersion() } returns "1.2"
 
-        val result = dataSource.getCurrentVersion()
+        val result = dataSource.getCalculatedCurrentVersion()
 
         assertEquals(Int.MAX_VALUE, result)
     }
 
     @Test
-    fun `GIVEN getPackageInfo throws exception WHEN getCurrentVersion is called THEN returns 0`() {
+    fun `GIVEN getPackageInfo throws exception WHEN getCalculatedCurrentVersion is called THEN returns 0`() {
         every { appInfoProvider.getVersion() } returns null
+
+        val result = dataSource.getCalculatedCurrentVersion()
+
+        assertEquals(Int.MAX_VALUE, result)
+    }
+
+    @Test
+    fun `WHEN getCurrentVersion is called THEN returns version`() {
+        every { appInfoProvider.getVersion() } returns "1.2.3"
 
         val result = dataSource.getCurrentVersion()
 
-        assertEquals(Int.MAX_VALUE, result)
+        assertEquals("1.2.3", result)
     }
 }

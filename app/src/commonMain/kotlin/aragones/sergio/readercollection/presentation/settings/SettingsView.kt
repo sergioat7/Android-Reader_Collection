@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.presentation.settings
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import aragones.sergio.readercollection.presentation.components.ConfirmationAlertDialog
@@ -19,7 +20,7 @@ fun SettingsView(
     onClickOption: (SettingsOption) -> Unit,
     viewModel: SettingsViewModel = koinViewModel(),
 ) {
-    val isLoading by viewModel.isLoading
+    val state by viewModel.state.collectAsState()
     val confirmationMessageId by viewModel.confirmationDialogMessageId.collectAsState()
 
     val logOut by viewModel.logOut.collectAsState()
@@ -30,7 +31,7 @@ fun SettingsView(
 
     ReaderCollectionApp(navigationBarSameAsBackground = false) {
         SettingsScreen(
-            isLoading = isLoading,
+            state = state,
             onClickOption = {
                 when (it) {
                     is SettingsOption.Account,
@@ -63,4 +64,8 @@ fun SettingsView(
             viewModel.closeDialogs()
         },
     )
+
+    LaunchedEffect(Unit) {
+        viewModel.onResume()
+    }
 }

@@ -349,8 +349,55 @@ class BooksRemoteDataSourceTest {
     @Test
     fun `GIVEN success response WHEN get books THEN return list`() = runTest {
         val userId = "testUserId"
-        val books = listOf(BookResponse(id = "1"), BookResponse(id = "2"))
-        coEvery { firebaseProvider.getBooks(any()) } returns books
+        val books = listOf(
+            BookResponse(id = "1", title = "Title 1"),
+            BookResponse(id = "2", title = "Title 2"),
+        )
+        val response = listOf(
+            "1" to mapOf(
+                "title" to "Title 1",
+                "subtitle" to null,
+                "authors" to null,
+                "publisher" to null,
+                "publishedDate" to null,
+                "readingDate" to null,
+                "description" to null,
+                "summary" to null,
+                "isbn" to null,
+                "pageCount" to null,
+                "categories" to null,
+                "averageRating" to null,
+                "ratingsCount" to null,
+                "rating" to null,
+                "thumbnail" to null,
+                "image" to null,
+                "format" to null,
+                "state" to null,
+                "priority" to null,
+            ),
+            "2" to mapOf(
+                "title" to "Title 2",
+                "subtitle" to null,
+                "authors" to null,
+                "publisher" to null,
+                "publishedDate" to null,
+                "readingDate" to null,
+                "description" to null,
+                "summary" to null,
+                "isbn" to null,
+                "pageCount" to null,
+                "categories" to null,
+                "averageRating" to null,
+                "ratingsCount" to null,
+                "rating" to null,
+                "thumbnail" to null,
+                "image" to null,
+                "format" to null,
+                "state" to null,
+                "priority" to null,
+            ),
+        )
+        coEvery { firebaseProvider.getBooks(any()) } returns response
 
         val result = dataSource.getBooks(userId)
 
@@ -379,8 +426,29 @@ class BooksRemoteDataSourceTest {
         runTest {
             val friendId = "testFriendId"
             val bookId = "bookId"
-            val book = BookResponse(id = bookId)
-            coEvery { firebaseProvider.getBook(any(), any()) } returns book
+            val book = BookResponse(id = bookId, title = "Title")
+            val response = mapOf(
+                "title" to "Title",
+                "subtitle" to null,
+                "authors" to null,
+                "publisher" to null,
+                "publishedDate" to null,
+                "readingDate" to null,
+                "description" to null,
+                "summary" to null,
+                "isbn" to null,
+                "pageCount" to null,
+                "categories" to null,
+                "averageRating" to null,
+                "ratingsCount" to null,
+                "rating" to null,
+                "thumbnail" to null,
+                "image" to null,
+                "format" to null,
+                "state" to null,
+                "priority" to null,
+            )
+            coEvery { firebaseProvider.getBook(any(), any()) } returns response
 
             val result = dataSource.getFriendBook(friendId, bookId)
 
@@ -395,7 +463,7 @@ class BooksRemoteDataSourceTest {
         runTest {
             val friendId = "testFriendId"
             val bookId = "bookId"
-            coEvery { firebaseProvider.getBook(any(), any()) } returns null
+            coEvery { firebaseProvider.getBook(any(), any()) } returns mapOf()
 
             val result = dataSource.getFriendBook(friendId, bookId)
 

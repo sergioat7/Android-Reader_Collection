@@ -5,6 +5,7 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 
 class UserRemoteDataSource(
@@ -14,6 +15,7 @@ class UserRemoteDataSource(
     //region Static properties
     companion object {
         private const val MAIL_END = "@readercollection.app"
+        const val EXISTENT_USER_MESSAGE = "The email address is already in use by another account."
     }
     //endregion
 
@@ -32,6 +34,12 @@ class UserRemoteDataSource(
 
     suspend fun register(username: String, password: String): Result<Unit> = runCatching {
         firebaseProvider.signUp("${username}$MAIL_END", password)
+    }.recoverCatching {
+        if (it.message == EXISTENT_USER_MESSAGE) {
+            throw CustomExceptions.ExistentUser()
+        } else {
+            throw it
+        }
     }
 
     suspend fun updatePassword(password: String): Result<Unit> = runCatching {
@@ -90,7 +98,7 @@ class UserRemoteDataSource(
         firebaseProvider.deleteUser()
     }
 
-    suspend fun getMinVersion(): Int {
+    suspend fun getCalculatedMinVersion(): Int {
         val minVersion = firebaseProvider.getRemoteConfigString("min_version").split(".")
         if (minVersion.size != 3) return 0
 

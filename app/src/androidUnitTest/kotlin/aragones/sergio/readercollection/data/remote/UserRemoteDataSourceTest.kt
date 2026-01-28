@@ -7,6 +7,7 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 import io.mockk.Runs
@@ -123,6 +124,23 @@ class UserRemoteDataSourceTest {
         val result = dataSource.register(username, password)
 
         assertEquals(true, result.isSuccess)
+        coVerify {
+            firebaseProvider.signUp("$username@readercollection.app", password)
+        }
+        confirmVerified(firebaseProvider)
+    }
+
+    @Test
+    fun `GIVEN already registered failure response WHEN register THEN return failure`() = runTest {
+        val username = "testuser"
+        val password = "wrongpassword"
+        val exception = RuntimeException("The email address is already in use by another account.")
+        coEvery { firebaseProvider.signUp(any(), any()) } throws exception
+
+        val result = dataSource.register(username, password)
+
+        assertEquals(true, result.isFailure)
+        assertIs<CustomExceptions.ExistentUser>(result.exceptionOrNull())
         coVerify {
             firebaseProvider.signUp("$username@readercollection.app", password)
         }
@@ -549,38 +567,40 @@ class UserRemoteDataSourceTest {
     }
 
     @Test
-    fun `GIVEN version name is correct WHEN get min version THEN returns version code`() = runTest {
-        val key = "min_version"
-        val minVersion = "1.2.3"
-        coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
+    fun `GIVEN version name is correct WHEN get calculated min version THEN returns version code`() =
+        runTest {
+            val key = "min_version"
+            val minVersion = "1.2.3"
+            coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
 
-        val result = dataSource.getMinVersion()
+            val result = dataSource.getCalculatedMinVersion()
 
-        assertEquals(102030, result)
-        coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
-        confirmVerified(firebaseProvider)
-    }
-
-    @Test
-    fun `GIVEN version name is malformed WHEN get min version THEN returns 0`() = runTest {
-        val key = "min_version"
-        val minVersion = "1.2"
-        coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
-
-        val result = dataSource.getMinVersion()
-
-        assertEquals(0, result)
-        coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
-        confirmVerified(firebaseProvider)
-    }
+            assertEquals(102030, result)
+            coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
+            confirmVerified(firebaseProvider)
+        }
 
     @Test
-    fun `GIVEN remote config error WHEN get min version THEN returns last fetched version code`() =
+    fun `GIVEN version name is malformed WHEN get calculated in version THEN returns 0`() =
+        runTest {
+            val key = "min_version"
+            val minVersion = "1.2"
+            coEvery { firebaseProvider.getRemoteConfigString(key) } returns minVersion
+
+            val result = dataSource.getCalculatedMinVersion()
+
+            assertEquals(0, result)
+            coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }
+            confirmVerified(firebaseProvider)
+        }
+
+    @Test
+    fun `GIVEN remote config error WHEN get calculated min version THEN returns last fetched version code`() =
         runTest {
             val key = "min_version"
             coEvery { firebaseProvider.getRemoteConfigString(key) } returns ""
 
-            val result = dataSource.getMinVersion()
+            val result = dataSource.getCalculatedMinVersion()
 
             assertEquals(0, result)
             coVerify(exactly = 1) { firebaseProvider.getRemoteConfigString(key) }

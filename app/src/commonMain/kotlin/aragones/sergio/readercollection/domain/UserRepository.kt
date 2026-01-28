@@ -41,4 +41,5 @@ interface UserRepository {
     fun storeThemeMode(themeMode: Int)
     suspend fun isThereMandatoryUpdate(): Boolean
     fun applyTheme()
+    fun getAppVersion(): String
 }

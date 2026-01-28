@@ -7,6 +7,7 @@ package aragones.sergio.readercollection.data.remote.di
 
 import aragones.sergio.readercollection.BuildConfig
 import aragones.sergio.readercollection.data.remote.FirebaseProvider
+import aragones.sergio.readercollection.data.remote.FirebaseProviderAndroid
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
@@ -22,6 +23,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 actual val platformModule = module {
@@ -56,5 +58,5 @@ actual val platformModule = module {
     }
     single<FirebaseAuth> { Firebase.auth }
     single<FirebaseFirestore> { Firebase.firestore }
-    singleOf(::FirebaseProvider)
+    singleOf(::FirebaseProviderAndroid) bind FirebaseProvider::class
 }

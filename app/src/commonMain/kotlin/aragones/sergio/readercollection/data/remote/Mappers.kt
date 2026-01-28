@@ -6,13 +6,8 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDate
 
-@OptIn(ExperimentalTime::class)
 fun Map<String, Any?>.toBook(id: String): BookResponse? = try {
     BookResponse(
         id = id,
@@ -20,12 +15,8 @@ fun Map<String, Any?>.toBook(id: String): BookResponse? = try {
         subtitle = getValue("subtitle") as? String,
         authors = getValue("authors") as? List<String>,
         publisher = getValue("publisher") as? String,
-        publishedDate = (getValue("publishedDate") as? Instant)
-            ?.toLocalDateTime(TimeZone.currentSystemDefault())
-            ?.date,
-        readingDate = (getValue("readingDate") as? Instant)
-            ?.toLocalDateTime(TimeZone.currentSystemDefault())
-            ?.date,
+        publishedDate = getValue("publishedDate")?.fromNativeDate(),
+        readingDate = getValue("readingDate")?.fromNativeDate(),
         description = getValue("description") as? String,
         summary = getValue("summary") as? String,
         isbn = getValue("isbn") as? String,
@@ -44,15 +35,14 @@ fun Map<String, Any?>.toBook(id: String): BookResponse? = try {
     null
 }
 
-@OptIn(ExperimentalTime::class)
 fun BookResponse.toMap(): Map<String, Any?> = mapOf(
     "id" to id,
     "title" to title,
     "subtitle" to subtitle,
     "authors" to authors,
     "publisher" to publisher,
-    "publishedDate" to publishedDate?.atStartOfDayIn(TimeZone.currentSystemDefault()),
-    "readingDate" to readingDate?.atStartOfDayIn(TimeZone.currentSystemDefault()),
+    "publishedDate" to publishedDate?.toNativeDate(),
+    "readingDate" to readingDate?.toNativeDate(),
     "description" to description,
     "summary" to summary,
     "isbn" to isbn,
@@ -67,3 +57,7 @@ fun BookResponse.toMap(): Map<String, Any?> = mapOf(
     "state" to state,
     "priority" to priority,
 )
+
+expect fun Any?.fromNativeDate(): LocalDate?
+
+expect fun LocalDate?.toNativeDate(): Any?
