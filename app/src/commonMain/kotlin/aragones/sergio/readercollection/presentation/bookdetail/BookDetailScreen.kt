@@ -38,6 +38,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
@@ -316,19 +317,23 @@ private fun BookDetailContent(
             }.takeIf { isEditable },
         )
         Spacer(Modifier.height(8.dp))
-        book.categories?.takeIf { it.isNotEmpty() }?.let { categories ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                categories.forEach {
-                    CustomChip(it)
+        book.categories
+            ?.takeIf { it.isNotEmpty() }
+            ?.map { it.name }
+            ?.sorted()
+            ?.let { categories ->
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    categories.forEach {
+                        CustomChip(it)
+                    }
                 }
             }
-        }
         Spacer(Modifier.height(24.dp))
         MultilineCustomOutlinedTextField(
             text = book.description.takeIf { it.isNotBlank() }.orElse(isEditable),
@@ -570,12 +575,12 @@ private class BookDetailScreenPreviewParameterProvider :
                     summary = "Summary",
                     pageCount = 100,
                     categories = listOf(
-                        "Category 1",
-                        "Category 2",
-                        "Category 3",
-                        "Category 4",
-                        "Category 5",
-                        "Category 6",
+                        GenreResponse("1", "Category 1"),
+                        GenreResponse("2", "Category 2"),
+                        GenreResponse("3", "Category 3"),
+                        GenreResponse("4", "Category 4"),
+                        GenreResponse("5", "Category 5"),
+                        GenreResponse("6", "Category 6"),
                     ),
                     averageRating = 7.0,
                     ratingsCount = 100,
@@ -595,7 +600,7 @@ private class BookDetailScreenPreviewParameterProvider :
                     description = "Description",
                     summary = "Summary",
                     pageCount = 100,
-                    categories = listOf("Category"),
+                    categories = listOf(GenreResponse("", "Category")),
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,

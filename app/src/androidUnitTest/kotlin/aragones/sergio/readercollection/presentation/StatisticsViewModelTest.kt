@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
@@ -359,7 +360,7 @@ class StatisticsViewModelTest {
             summary = "summary",
             isbn = "isbn",
             pageCount = 10,
-            categories = listOf("category"),
+            categories = listOf(GenreResponse("categoryId", "Category")),
             averageRating = 2.0,
             ratingsCount = 5,
             rating = 4.0,
@@ -392,7 +393,7 @@ class StatisticsViewModelTest {
                     "summary" : "${book.summary}",
                     "isbn" : "${book.isbn}",
                     "pageCount":${book.pageCount},
-                    "categories" : ${book.categories?.map { "\"${it}\"" }},
+                    "categories" : ${book.categories?.map { "\"${it.id}\"" }},
                     "averageRating":${book.averageRating},
                     "ratingsCount":${book.ratingsCount},
                     "rating":${book.rating},

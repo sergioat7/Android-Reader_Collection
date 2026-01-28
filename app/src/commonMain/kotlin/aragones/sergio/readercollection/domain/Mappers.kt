@@ -5,8 +5,11 @@
 
 package aragones.sergio.readercollection.domain
 
+import aragones.sergio.readercollection.data.remote.model.ALL_GENRES
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GENRES
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.data.remote.model.UserResponse
@@ -28,11 +31,7 @@ fun Book.toLocalData(): BookLocal = BookLocal(
     summary = summary,
     isbn = isbn,
     pageCount = pageCount,
-    categories = categories
-        ?.joinToString(" / ")
-        ?.split("/")
-        ?.map { it.trim() }
-        ?.distinct(),
+    categories = categories?.map { it.id },
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     rating = rating,
@@ -55,11 +54,7 @@ fun Book.toRemoteData(): BookResponse = BookResponse(
     summary = summary,
     isbn = isbn,
     pageCount = pageCount,
-    categories = categories
-        ?.joinToString(" / ")
-        ?.split("/")
-        ?.map { it.trim() }
-        ?.distinct(),
+    categories = categories?.map { it.id },
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     rating = rating,
@@ -82,7 +77,12 @@ fun BookLocal.toDomain(): Book = Book(
     summary = summary,
     isbn = isbn,
     pageCount = pageCount,
-    categories = categories,
+    categories = categories?.map { categoryId ->
+        GENRES.firstOrNull { it.id == categoryId } ?: GenreResponse(
+            categoryId,
+            categoryId.lowercase(),
+        )
+    },
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     rating = rating,
@@ -105,7 +105,10 @@ fun BookResponse.toDomain(): Book = Book(
     summary = summary,
     isbn = isbn,
     pageCount = pageCount,
-    categories = categories,
+    categories = categories
+        ?.filter { it.isNotEmpty() }
+        ?.map { it.toGenre() }
+        ?.distinct(),
     averageRating = averageRating,
     ratingsCount = ratingsCount,
     rating = rating,
@@ -142,6 +145,25 @@ fun GoogleBookResponse.toDomain(): Book = Book(
     state = STATES.firstOrNull()?.id,
     priority = -1,
 )
+
+fun String.toGenre(): GenreResponse {
+    var genre: GenreResponse? = null
+    for (genres in ALL_GENRES.values) {
+        genre = genre ?: genres
+            .toSet()
+            .run {
+                firstOrNull {
+                    it.name.equals(this@toGenre, true)
+                } ?: firstOrNull {
+                    val regex = "\\b${Regex.escape(it.name)}".toRegex(RegexOption.IGNORE_CASE)
+                    regex.containsMatchIn(this@toGenre)
+                }
+            }?.let { selectedGenre ->
+                GENRES.firstOrNull { it.id == selectedGenre.id }
+            }
+    }
+    return genre ?: GenreResponse(this.uppercase(), this)
+}
 
 fun UserResponse.toDomain(): User = User(
     id = id,

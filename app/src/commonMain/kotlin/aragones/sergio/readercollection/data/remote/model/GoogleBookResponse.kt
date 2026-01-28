@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.data.remote.model
 
 import aragones.sergio.readercollection.data.remote.DateSerializer
+import aragones.sergio.readercollection.domain.toGenre
 import kotlinx.datetime.LocalDate
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -39,10 +40,12 @@ data class GoogleBookResponse(
         return null
     }
 
-    fun getCategories(): List<String>? = volumeInfo.categories
+    fun getCategories(): List<GenreResponse>? = volumeInfo.categories
         ?.joinToString(" / ")
         ?.split("/")
         ?.map { it.trim() }
+        ?.filter { it.isNotEmpty() }
+        ?.map { it.toGenre() }
         ?.distinct()
 
     fun getGoogleBookThumbnail(): String? =

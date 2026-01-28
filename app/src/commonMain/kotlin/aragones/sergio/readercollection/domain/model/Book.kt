@@ -6,6 +6,7 @@
 package aragones.sergio.readercollection.domain.model
 
 import androidx.compose.runtime.Immutable
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import com.aragones.sergio.util.BookState
 import kotlinx.datetime.LocalDate
 
@@ -22,7 +23,7 @@ data class Book(
     val summary: String? = null,
     val isbn: String? = null,
     val pageCount: Int,
-    val categories: List<String>? = null,
+    val categories: List<GenreResponse>? = null,
     val averageRating: Double,
     val ratingsCount: Int,
     val rating: Double,
