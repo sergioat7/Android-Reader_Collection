@@ -5,13 +5,14 @@
 
 package aragones.sergio.readercollection.data.remote
 
+import aragones.sergio.readercollection.data.remote.model.ALL_FORMATS
+import aragones.sergio.readercollection.data.remote.model.ALL_STATES
+import aragones.sergio.readercollection.data.remote.model.BaseModel
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FORMATS
-import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
-import aragones.sergio.readercollection.data.remote.model.StateResponse
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
@@ -87,10 +88,12 @@ class BooksRemoteDataSource(
 
     fun fetchRemoteConfigValues(language: String) {
         firebaseProvider.fetchRemoteConfigString(FORMATS_KEY) {
-            setupFormats(it, language)
+            ALL_FORMATS = parseValues(it)
+            FORMATS = ALL_FORMATS[language] ?: emptyList()
         }
         firebaseProvider.fetchRemoteConfigString(STATES_KEY) {
-            setupStates(it, language)
+            ALL_STATES = parseValues(it)
+            STATES = ALL_STATES[language] ?: emptyList()
         }
     }
 
@@ -114,42 +117,23 @@ class BooksRemoteDataSource(
     //endregion
 
     //region Private methods
-    private fun setupFormats(formatsString: String, language: String) {
-        if (formatsString.isNotEmpty()) {
-            try {
-                val languagedFormats =
-                    Json
-                        .parseToJsonElement(formatsString)
-                        .jsonObject
-                        .getValue(language)
-                        .toString()
-                FORMATS = Json
-                    .decodeFromString<Array<FormatResponse>>(
-                        languagedFormats,
-                    ).asList()
-            } catch (e: Exception) {
-                println("BooksRemoteDataSource ${(e.message ?: "")}")
-            }
+    private inline fun <reified T : BaseModel<String>> parseValues(
+        values: String,
+    ): Map<String, List<T>> = if (values.isNotEmpty()) {
+        try {
+            val valuesJson = Json
+                .parseToJsonElement(values)
+                .jsonObject
+                .toString()
+            Json
+                .decodeFromString<Map<String, Array<T>>>(valuesJson)
+                .mapValues { it.value.asList() }
+        } catch (e: Exception) {
+            println("BooksRemoteDataSource ${(e.message ?: "")}")
+            emptyMap()
         }
-    }
-
-    private fun setupStates(statesString: String, language: String) {
-        if (statesString.isNotEmpty()) {
-            try {
-                val languagedStates =
-                    Json
-                        .parseToJsonElement(statesString)
-                        .jsonObject
-                        .getValue(language)
-                        .toString()
-                STATES = Json
-                    .decodeFromString<Array<StateResponse>>(
-                        languagedStates,
-                    ).asList()
-            } catch (e: Exception) {
-                println("BooksRemoteDataSource ${(e.message ?: "")}")
-            }
-        }
+    } else {
+        emptyMap()
     }
     //endregion
 }

@@ -306,9 +306,7 @@ class BooksRemoteDataSourceTest {
     }
 
     @Test
-    fun `GIVEN success response and no values for language WHEN fetch remote config values is called THEN formats and states are not updated`() {
-        val currentFormats = FORMATS
-        val currentStates = STATES
+    fun `GIVEN success response and no values for language WHEN fetch remote config values is called THEN formats and states are empty`() {
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
             secondArg<(String) -> Unit>().invoke(getFormatsJson("en"))
         }
@@ -318,18 +316,16 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues("es")
 
-        assertEquals(currentFormats, FORMATS)
-        assertEquals(currentStates, STATES)
+        assertEquals(emptyList(), FORMATS)
+        assertEquals(emptyList(), STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
     }
 
     @Test
-    fun `GIVEN wrong response WHEN fetch remote config values is called THEN formats and states are not updated`() {
+    fun `GIVEN wrong response WHEN fetch remote config values is called THEN formats and states are empty`() {
         val language = "en"
-        val currentFormats = FORMATS
-        val currentStates = STATES
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
             secondArg<(String) -> Unit>().invoke("values")
         }
@@ -339,8 +335,8 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        assertEquals(currentFormats, FORMATS)
-        assertEquals(currentStates, STATES)
+        assertEquals(emptyList(), FORMATS)
+        assertEquals(emptyList(), STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
