@@ -553,14 +553,11 @@ private class BookDetailScreenPreviewParameterProvider :
     override val values: Sequence<BookDetailUiState>
         get() = sequenceOf(
             BookDetailUiState(
-                book = Book(
-                    id = "1",
+                book = Book("1").copy(
                     title = "Book title",
                     subtitle = "Book subtitle",
                     authors = listOf("Author1", "Author 2 with a long name"),
                     publisher = "Publisher",
-                    publishedDate = null,
-                    readingDate = null,
                     description =
                         """
                         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -571,7 +568,6 @@ private class BookDetailScreenPreviewParameterProvider :
                         deserunt mollit anim id est laborum."
                         """.trimIndent(),
                     summary = "Summary",
-                    isbn = null,
                     pageCount = 100,
                     categories = listOf(
                         "Category 1",
@@ -584,63 +580,43 @@ private class BookDetailScreenPreviewParameterProvider :
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,
-                    thumbnail = null,
-                    image = null,
                     format = "PHYSICAL",
                     state = BookState.READING,
-                    priority = 0,
                 ),
                 isAlreadySaved = true,
                 isEditable = false,
             ),
             BookDetailUiState(
-                book = Book(
-                    id = "1",
+                book = Book("1").copy(
                     title = "Book title",
                     subtitle = "Book subtitle",
                     authors = listOf("Author1", "Author 2 with a long name"),
                     publisher = "Publisher",
-                    publishedDate = null,
-                    readingDate = null,
                     description = "Description",
                     summary = "Summary",
-                    isbn = null,
                     pageCount = 100,
                     categories = listOf("Category"),
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,
-                    thumbnail = null,
-                    image = null,
                     format = "PHYSICAL",
                     state = BookState.READING,
-                    priority = 0,
                 ),
                 isAlreadySaved = true,
                 isEditable = true,
             ),
             BookDetailUiState(
-                book = Book(
-                    id = "1",
+                book = Book("1").copy(
                     title = "Book title",
                     subtitle = "Book subtitle",
                     authors = listOf("Author1", "Author 2 with a long name"),
                     publisher = "Publisher",
-                    publishedDate = null,
-                    readingDate = null,
-                    description = null,
-                    summary = null,
-                    isbn = null,
                     pageCount = 100,
-                    categories = null,
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,
-                    thumbnail = null,
-                    image = null,
                     format = "PHYSICAL",
                     state = BookState.READING,
-                    priority = 0,
                 ),
                 isAlreadySaved = false,
                 isEditable = false,

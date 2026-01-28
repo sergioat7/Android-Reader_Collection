@@ -132,11 +132,7 @@ fun GoogleBookResponse.toDomain(): Book = Book(
     summary = null,
     isbn = getGoogleBookIsbn(),
     pageCount = volumeInfo.pageCount ?: 0,
-    categories = volumeInfo.categories
-        ?.joinToString(" / ")
-        ?.split("/")
-        ?.map { it.trim() }
-        ?.distinct(),
+    categories = getCategories(),
     averageRating = volumeInfo.averageRating ?: 0.0,
     ratingsCount = volumeInfo.ratingsCount ?: 0,
     rating = 0.0,

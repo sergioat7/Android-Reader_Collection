@@ -39,6 +39,12 @@ data class GoogleBookResponse(
         return null
     }
 
+    fun getCategories(): List<String>? = volumeInfo.categories
+        ?.joinToString(" / ")
+        ?.split("/")
+        ?.map { it.trim() }
+        ?.distinct()
+
     fun getGoogleBookThumbnail(): String? =
         volumeInfo.imageLinks?.thumbnail ?: volumeInfo.imageLinks?.smallThumbnail
 
