@@ -25,13 +25,20 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,6 +48,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GENRES
 import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
@@ -74,6 +82,7 @@ import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.add_author
 import reader_collection.app.generated.resources.add_book
 import reader_collection.app.generated.resources.add_description
+import reader_collection.app.generated.resources.add_genre
 import reader_collection.app.generated.resources.add_isbn
 import reader_collection.app.generated.resources.add_pages
 import reader_collection.app.generated.resources.add_photo
@@ -322,37 +331,52 @@ private fun BookDetailContent(
             }.takeIf { isEditable },
         )
         Spacer(Modifier.height(8.dp))
-        book.categories
-            ?.takeIf { it.isNotEmpty() }
-            ?.map { it.name }
-            ?.sorted()
-            ?.let { categoryNames ->
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState()),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    categoryNames.forEach { categoryName ->
-                        CustomInputChip(
-                            text = categoryName,
-                            onEndIconClick = {
-                                onChangeData(
-                                    book.copy(
-                                        categories = book.categories.filter {
-                                            it.name != categoryName
-                                        },
-                                    ),
-                                )
-                            },
-                            endIcon = rememberVectorPainter(Icons.Default.Close)
-                                .withDescription(stringResource(Res.string.delete))
-                                .takeIf { isEditable },
-                        )
+        (book.categories ?: emptyList()).let { categories ->
+            categories
+                .map { it.name }
+                .sorted()
+                .let { categoryNames ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (isEditable) {
+                            InputChipWithDropdownMenu(
+                                onChangeData = { newCategoryName ->
+                                    val currentCategories = categories.toMutableList()
+                                    if (currentCategories.any { it.name == newCategoryName }) {
+                                        return@InputChipWithDropdownMenu
+                                    }
+                                    GENRES.firstOrNull { it.name == newCategoryName }?.let {
+                                        currentCategories.add(it)
+                                    }
+                                    onChangeData(book.copy(categories = currentCategories))
+                                },
+                            )
+                        }
+                        categoryNames.forEach { categoryName ->
+                            CustomInputChip(
+                                text = categoryName,
+                                onEndIconClick = {
+                                    onChangeData(
+                                        book.copy(
+                                            categories = categories.filter {
+                                                it.name != categoryName
+                                            },
+                                        ),
+                                    )
+                                },
+                                endIcon = rememberVectorPainter(Icons.Default.Close)
+                                    .withDescription(stringResource(Res.string.delete))
+                                    .takeIf { isEditable },
+                            )
+                        }
                     }
                 }
-            }
+        }
         Spacer(Modifier.height(24.dp))
         MultilineCustomOutlinedTextField(
             text = book.description.takeIf { it.isNotBlank() }.orElse(isEditable),
@@ -546,6 +570,34 @@ private fun BookDetailContent(
                 onChangeData(book.copy(publishedDate = null))
             }.takeIf { isEditable },
             language = language,
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InputChipWithDropdownMenu(onChangeData: (String) -> Unit) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    CustomDropdownMenu(
+        values = DropdownValues(GENRES.map { it.name }.sorted()),
+        expanded = expanded,
+        onExpand = {},
+        onOptionSelected = {
+            expanded = false
+            onChangeData(it)
+        },
+    ) {
+        CustomInputChip(
+            text = stringResource(Res.string.add_genre),
+            onClick = { expanded = !expanded },
+            onEndIconClick = { expanded = !expanded },
+            endIcon = rememberVectorPainter(
+                if (expanded) {
+                    Icons.Default.KeyboardArrowUp
+                } else {
+                    Icons.Default.KeyboardArrowDown
+                },
+            ).withDescription(null),
         )
     }
 }
