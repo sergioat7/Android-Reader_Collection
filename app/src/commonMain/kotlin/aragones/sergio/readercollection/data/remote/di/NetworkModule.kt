@@ -24,7 +24,7 @@ private const val API_KEY = "key"
 
 val networkModule = module {
     includes(platformModule)
-    single<HttpClient> {
+    factory<HttpClient> {
         val httpClientEngine = get<HttpClientEngine>()
         HttpClient(httpClientEngine) {
             engine {
