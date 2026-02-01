@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
@@ -33,6 +35,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
@@ -42,8 +45,8 @@ import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
-import aragones.sergio.readercollection.presentation.components.CustomChip
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
+import aragones.sergio.readercollection.presentation.components.CustomInputChip
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
@@ -79,6 +82,7 @@ import reader_collection.app.generated.resources.add_title
 import reader_collection.app.generated.resources.authors
 import reader_collection.app.generated.resources.cancel_changes
 import reader_collection.app.generated.resources.clear_text
+import reader_collection.app.generated.resources.delete
 import reader_collection.app.generated.resources.description
 import reader_collection.app.generated.resources.edit_book
 import reader_collection.app.generated.resources.format_title
@@ -321,7 +325,7 @@ private fun BookDetailContent(
             ?.takeIf { it.isNotEmpty() }
             ?.map { it.name }
             ?.sorted()
-            ?.let { categories ->
+            ?.let { categoryNames ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -329,8 +333,22 @@ private fun BookDetailContent(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    categories.forEach {
-                        CustomChip(it)
+                    categoryNames.forEach { categoryName ->
+                        CustomInputChip(
+                            text = categoryName,
+                            onEndIconClick = {
+                                onChangeData(
+                                    book.copy(
+                                        categories = book.categories.filter {
+                                            it.name != categoryName
+                                        },
+                                    ),
+                                )
+                            },
+                            endIcon = rememberVectorPainter(Icons.Default.Close)
+                                .withDescription(stringResource(Res.string.delete))
+                                .takeIf { isEditable },
+                        )
                     }
                 }
             }
