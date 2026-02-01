@@ -30,10 +30,10 @@ import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.isAndroid
 import aragones.sergio.readercollection.presentation.components.CustomCircularProgressIndicator
-import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomRadioButton
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
+import aragones.sergio.readercollection.presentation.components.DropdownOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.DropdownValues
 import aragones.sergio.readercollection.presentation.components.MainActionButton
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
@@ -214,7 +214,7 @@ private fun SortingInfo(
         }
     val sortingOrderValues = stringArrayResource(Res.array.sorting_order_values)
 
-    CustomDropdownMenu(
+    DropdownOutlinedTextField(
         currentValue = sortParamValue,
         values = DropdownValues(sortingParamValues),
         labelText = stringResource(Res.string.sort_param),
@@ -226,7 +226,7 @@ private fun SortingInfo(
         modifier = Modifier.padding(horizontal = 24.dp),
     )
     Spacer(Modifier.height(8.dp))
-    CustomDropdownMenu(
+    DropdownOutlinedTextField(
         currentValue = if (isSortDescending) {
             sortingOrderValues.last()
         } else {
@@ -245,7 +245,7 @@ private fun SortingInfo(
 @Composable
 private fun AppThemeInfo(selectedThemeIndex: Int, onThemeChange: (Int) -> Unit) {
     val appThemes = stringArrayResource(Res.array.app_theme_values)
-    CustomDropdownMenu(
+    DropdownOutlinedTextField(
         currentValue = appThemes[selectedThemeIndex],
         values = DropdownValues(appThemes),
         labelText = stringResource(Res.string.app_theme),

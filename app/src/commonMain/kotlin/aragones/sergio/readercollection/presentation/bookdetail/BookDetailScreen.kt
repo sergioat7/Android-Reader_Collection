@@ -51,6 +51,7 @@ import aragones.sergio.readercollection.presentation.components.CustomOutlinedTe
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.DateCustomOutlinedTextField
+import aragones.sergio.readercollection.presentation.components.DropdownOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.DropdownValues
 import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
@@ -398,7 +399,7 @@ private fun BookDetailContent(
             } else {
                 stateValues[STATES.map { it.id }.indexOf(book.state)]
             }
-        CustomDropdownMenu(
+        DropdownOutlinedTextField(
             currentValue = bookState,
             values = DropdownValues(stateValues),
             labelText = stringResource(Res.string.state),
@@ -451,7 +452,7 @@ private fun BookDetailContent(
             } else {
                 formatValues[FORMATS.map { it.id }.indexOf(book.format)]
             }
-        CustomDropdownMenu(
+        DropdownOutlinedTextField(
             currentValue = bookFormat,
             values = DropdownValues(formatValues),
             labelText = stringResource(Res.string.format_title),
