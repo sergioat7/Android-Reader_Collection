@@ -8,7 +8,6 @@
 package aragones.sergio.readercollection.data.remote
 
 import aragones.sergio.readercollection.data.remote.model.BookResponse
-import aragones.sergio.readercollection.data.remote.model.CustomExceptions
 import aragones.sergio.readercollection.data.remote.model.RequestStatus
 import aragones.sergio.readercollection.data.remote.model.UserResponse
 import com.google.android.gms.tasks.OnCompleteListener
@@ -138,7 +137,7 @@ class FirebaseProviderTest {
             try {
                 firebaseProvider.signUp(username, password)
             } catch (e: Exception) {
-                assertIs<CustomExceptions.ExistentUser>(e)
+                assertIs<FirebaseAuthUserCollisionException>(e)
             }
             verify(exactly = 1) { auth.createUserWithEmailAndPassword(username, password) }
             confirmVerified(auth)

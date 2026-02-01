@@ -15,6 +15,8 @@ import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -259,6 +261,7 @@ class BookListViewModelTest {
     @Test
     fun `GIVEN params pass to view model WHEN fetchBooks THEN return Success state with books filtered and subtitle formed`() =
         runTest {
+            FORMATS = listOf(FormatResponse("PHYSICAL", "Physical"))
             val testState = BookState.READ
             val testSortParam = "rating"
             val testIsSortDescending = true

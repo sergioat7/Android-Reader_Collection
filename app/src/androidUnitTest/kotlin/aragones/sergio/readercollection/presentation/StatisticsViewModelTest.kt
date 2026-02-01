@@ -14,6 +14,8 @@ import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
 import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
@@ -77,6 +79,7 @@ class StatisticsViewModelTest {
     @Test
     fun `GIVEN read books WHEN fetch books THEN return Success state with statistics data`() =
         runTest {
+            FORMATS = listOf(FormatResponse("PHYSICAL", "Physical"))
             val book1 = Book(id = "bookId1").copy(
                 authors = listOf("Author 1"),
                 readingDate = LocalDate(2025, 10, 5),
