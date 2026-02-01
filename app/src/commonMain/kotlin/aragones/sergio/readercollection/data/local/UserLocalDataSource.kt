@@ -7,6 +7,12 @@ package aragones.sergio.readercollection.data.local
 
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
+import aragones.sergio.readercollection.data.remote.model.ALL_FORMATS
+import aragones.sergio.readercollection.data.remote.model.ALL_GENRES
+import aragones.sergio.readercollection.data.remote.model.ALL_STATES
+import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GENRES
+import aragones.sergio.readercollection.data.remote.model.STATES
 
 class UserLocalDataSource(
     private val appInfoProvider: AppInfoProvider,
@@ -87,6 +93,9 @@ class UserLocalDataSource(
     fun storeLanguage(language: String) {
         preferences.language = language
         appInfoProvider.changeLocale(language)
+        FORMATS = ALL_FORMATS[language] ?: emptyList()
+        GENRES = ALL_GENRES[language] ?: emptyList()
+        STATES = ALL_STATES[language] ?: emptyList()
     }
 
     fun storeSortParam(sortParam: String?) {

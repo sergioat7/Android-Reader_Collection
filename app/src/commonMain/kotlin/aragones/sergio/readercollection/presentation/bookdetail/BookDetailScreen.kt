@@ -23,30 +23,43 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.GENRES
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.data.remote.model.STATES
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
-import aragones.sergio.readercollection.presentation.components.CustomChip
 import aragones.sergio.readercollection.presentation.components.CustomDropdownMenu
+import aragones.sergio.readercollection.presentation.components.CustomInputChip
 import aragones.sergio.readercollection.presentation.components.CustomOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomToolbar
 import aragones.sergio.readercollection.presentation.components.DateCustomOutlinedTextField
+import aragones.sergio.readercollection.presentation.components.DropdownOutlinedTextField
 import aragones.sergio.readercollection.presentation.components.DropdownValues
 import aragones.sergio.readercollection.presentation.components.ImageWithLoading
 import aragones.sergio.readercollection.presentation.components.MultilineCustomOutlinedTextField
@@ -69,6 +82,7 @@ import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.add_author
 import reader_collection.app.generated.resources.add_book
 import reader_collection.app.generated.resources.add_description
+import reader_collection.app.generated.resources.add_genre
 import reader_collection.app.generated.resources.add_isbn
 import reader_collection.app.generated.resources.add_pages
 import reader_collection.app.generated.resources.add_photo
@@ -78,6 +92,7 @@ import reader_collection.app.generated.resources.add_title
 import reader_collection.app.generated.resources.authors
 import reader_collection.app.generated.resources.cancel_changes
 import reader_collection.app.generated.resources.clear_text
+import reader_collection.app.generated.resources.delete
 import reader_collection.app.generated.resources.description
 import reader_collection.app.generated.resources.edit_book
 import reader_collection.app.generated.resources.format_title
@@ -316,18 +331,51 @@ private fun BookDetailContent(
             }.takeIf { isEditable },
         )
         Spacer(Modifier.height(8.dp))
-        book.categories?.takeIf { it.isNotEmpty() }?.let { categories ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .horizontalScroll(rememberScrollState()),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                categories.forEach {
-                    CustomChip(it)
+        (book.categories ?: emptyList()).let { categories ->
+            categories
+                .map { it.name }
+                .sorted()
+                .let { categoryNames ->
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .horizontalScroll(rememberScrollState()),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (isEditable) {
+                            InputChipWithDropdownMenu(
+                                onChangeData = { newCategoryName ->
+                                    val currentCategories = categories.toMutableList()
+                                    if (currentCategories.any { it.name == newCategoryName }) {
+                                        return@InputChipWithDropdownMenu
+                                    }
+                                    GENRES.firstOrNull { it.name == newCategoryName }?.let {
+                                        currentCategories.add(it)
+                                    }
+                                    onChangeData(book.copy(categories = currentCategories))
+                                },
+                            )
+                        }
+                        categoryNames.forEach { categoryName ->
+                            CustomInputChip(
+                                text = categoryName,
+                                onEndIconClick = {
+                                    onChangeData(
+                                        book.copy(
+                                            categories = categories.filter {
+                                                it.name != categoryName
+                                            },
+                                        ),
+                                    )
+                                },
+                                endIcon = rememberVectorPainter(Icons.Default.Close)
+                                    .withDescription(stringResource(Res.string.delete))
+                                    .takeIf { isEditable },
+                            )
+                        }
+                    }
                 }
-            }
         }
         Spacer(Modifier.height(24.dp))
         MultilineCustomOutlinedTextField(
@@ -375,7 +423,7 @@ private fun BookDetailContent(
             } else {
                 stateValues[STATES.map { it.id }.indexOf(book.state)]
             }
-        CustomDropdownMenu(
+        DropdownOutlinedTextField(
             currentValue = bookState,
             values = DropdownValues(stateValues),
             labelText = stringResource(Res.string.state),
@@ -428,7 +476,7 @@ private fun BookDetailContent(
             } else {
                 formatValues[FORMATS.map { it.id }.indexOf(book.format)]
             }
-        CustomDropdownMenu(
+        DropdownOutlinedTextField(
             currentValue = bookFormat,
             values = DropdownValues(formatValues),
             labelText = stringResource(Res.string.format_title),
@@ -526,6 +574,34 @@ private fun BookDetailContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InputChipWithDropdownMenu(onChangeData: (String) -> Unit) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    CustomDropdownMenu(
+        values = DropdownValues(GENRES.map { it.name }.sorted()),
+        expanded = expanded,
+        onExpand = {},
+        onOptionSelected = {
+            expanded = false
+            onChangeData(it)
+        },
+    ) {
+        CustomInputChip(
+            text = stringResource(Res.string.add_genre),
+            onClick = { expanded = !expanded },
+            onEndIconClick = { expanded = !expanded },
+            endIcon = rememberVectorPainter(
+                if (expanded) {
+                    Icons.Default.KeyboardArrowUp
+                } else {
+                    Icons.Default.KeyboardArrowDown
+                },
+            ).withDescription(null),
+        )
+    }
+}
+
 @CustomPreviewLightDark
 @Composable
 fun BookDetailScreenPreview(
@@ -553,14 +629,11 @@ private class BookDetailScreenPreviewParameterProvider :
     override val values: Sequence<BookDetailUiState>
         get() = sequenceOf(
             BookDetailUiState(
-                book = Book(
-                    id = "1",
+                book = Book("1").copy(
                     title = "Book title",
                     subtitle = "Book subtitle",
                     authors = listOf("Author1", "Author 2 with a long name"),
                     publisher = "Publisher",
-                    publishedDate = null,
-                    readingDate = null,
                     description =
                         """
                         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
@@ -571,76 +644,55 @@ private class BookDetailScreenPreviewParameterProvider :
                         deserunt mollit anim id est laborum."
                         """.trimIndent(),
                     summary = "Summary",
-                    isbn = null,
                     pageCount = 100,
                     categories = listOf(
-                        "Category 1",
-                        "Category 2",
-                        "Category 3",
-                        "Category 4",
-                        "Category 5",
-                        "Category 6",
+                        GenreResponse("1", "Category 1"),
+                        GenreResponse("2", "Category 2"),
+                        GenreResponse("3", "Category 3"),
+                        GenreResponse("4", "Category 4"),
+                        GenreResponse("5", "Category 5"),
+                        GenreResponse("6", "Category 6"),
                     ),
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,
-                    thumbnail = null,
-                    image = null,
                     format = "PHYSICAL",
                     state = BookState.READING,
-                    priority = 0,
                 ),
                 isAlreadySaved = true,
                 isEditable = false,
             ),
             BookDetailUiState(
-                book = Book(
-                    id = "1",
+                book = Book("1").copy(
                     title = "Book title",
                     subtitle = "Book subtitle",
                     authors = listOf("Author1", "Author 2 with a long name"),
                     publisher = "Publisher",
-                    publishedDate = null,
-                    readingDate = null,
                     description = "Description",
                     summary = "Summary",
-                    isbn = null,
                     pageCount = 100,
-                    categories = listOf("Category"),
+                    categories = listOf(GenreResponse("", "Category")),
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,
-                    thumbnail = null,
-                    image = null,
                     format = "PHYSICAL",
                     state = BookState.READING,
-                    priority = 0,
                 ),
                 isAlreadySaved = true,
                 isEditable = true,
             ),
             BookDetailUiState(
-                book = Book(
-                    id = "1",
+                book = Book("1").copy(
                     title = "Book title",
                     subtitle = "Book subtitle",
                     authors = listOf("Author1", "Author 2 with a long name"),
                     publisher = "Publisher",
-                    publishedDate = null,
-                    readingDate = null,
-                    description = null,
-                    summary = null,
-                    isbn = null,
                     pageCount = 100,
-                    categories = null,
                     averageRating = 7.0,
                     ratingsCount = 100,
                     rating = 5.0,
-                    thumbnail = null,
-                    image = null,
                     format = "PHYSICAL",
                     state = BookState.READING,
-                    priority = 0,
                 ),
                 isAlreadySaved = false,
                 isEditable = false,

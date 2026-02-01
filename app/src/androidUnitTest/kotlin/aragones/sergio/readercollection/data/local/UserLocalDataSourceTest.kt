@@ -4,6 +4,15 @@ package aragones.sergio.readercollection.data.local
 
 import aragones.sergio.readercollection.data.local.model.AuthData
 import aragones.sergio.readercollection.data.local.model.UserData
+import aragones.sergio.readercollection.data.remote.model.ALL_FORMATS
+import aragones.sergio.readercollection.data.remote.model.ALL_GENRES
+import aragones.sergio.readercollection.data.remote.model.ALL_STATES
+import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
+import aragones.sergio.readercollection.data.remote.model.GENRES
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
+import aragones.sergio.readercollection.data.remote.model.STATES
+import aragones.sergio.readercollection.data.remote.model.StateResponse
 import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -263,13 +272,40 @@ class UserLocalDataSourceTest {
     }
 
     @Test
-    fun `WHEN storeLanguage is called THEN preferences are invoked to save data`() {
+    fun `WHEN storeLanguage is called THEN preferences are invoked to save data and formats and genres and states are stored for that language`() {
         val newVale = "es"
+        val formats = listOf(
+            FormatResponse("1", ""),
+            FormatResponse("2", ""),
+        )
+        val genres = listOf(
+            GenreResponse("1", ""),
+            GenreResponse("2", ""),
+        )
+        val states = listOf(
+            StateResponse("1", ""),
+            StateResponse("2", ""),
+        )
+        ALL_FORMATS = mapOf(
+            "en" to formats.map { it.copy(name = "English") },
+            "es" to formats.map { it.copy(name = "Español") },
+        )
+        ALL_GENRES = mapOf(
+            "en" to genres.map { it.copy(name = "English") },
+            "es" to genres.map { it.copy(name = "Español") },
+        )
+        ALL_STATES = mapOf(
+            "en" to states.map { it.copy(name = "English") },
+            "es" to states.map { it.copy(name = "Español") },
+        )
         every { preferences.language = newVale } just Runs
         every { appInfoProvider.changeLocale(any()) } just Runs
 
         dataSource.storeLanguage(newVale)
 
+        assertEquals(formats.map { it.copy(name = "Español") }, FORMATS)
+        assertEquals(genres.map { it.copy(name = "Español") }, GENRES)
+        assertEquals(states.map { it.copy(name = "Español") }, STATES)
         verify(exactly = 1) { preferences.language = newVale }
         verify(exactly = 1) { appInfoProvider.changeLocale(newVale) }
         confirmVerified(preferences)
