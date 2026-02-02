@@ -20,6 +20,7 @@ import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.datasync.DataSyncUiState
 import aragones.sergio.readercollection.presentation.datasync.DataSyncViewModel
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.Constants
 import io.mockk.Runs
@@ -34,8 +35,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.data_sync_successfully
 import reader_collection.app.generated.resources.error_server
@@ -43,6 +44,9 @@ import reader_collection.app.generated.resources.export_confirmation
 import reader_collection.app.generated.resources.sync_confirmation
 
 class DataSyncViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val testUserId = "userId"
     private val booksLocalDataSource: BooksLocalDataSource = mockk()
@@ -52,17 +56,16 @@ class DataSyncViewModelTest {
         every { userId } returns testUserId
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = DataSyncViewModel(
         BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 

@@ -36,6 +36,7 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.advanceUntilIdle
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
 import org.junit.Rule
 import reader_collection.app.generated.resources.Res
@@ -64,6 +65,8 @@ class SearchViewModelTest {
         every { booksLocalDataSource.getAllBooks() } returns flowOf(emptyList())
 
         viewModel.onResume()
+
+        runCurrent()
 
         verify { booksLocalDataSource.getAllBooks() }
         confirmVerified(booksLocalDataSource)
