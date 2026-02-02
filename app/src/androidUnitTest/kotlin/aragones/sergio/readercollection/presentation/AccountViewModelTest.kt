@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.account.AccountUiState
 import aragones.sergio.readercollection.presentation.account.AccountViewModel
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.Constants
 import io.mockk.Runs
@@ -34,8 +35,8 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.error_server
 import reader_collection.app.generated.resources.invalid_password
@@ -43,6 +44,9 @@ import reader_collection.app.generated.resources.profile_delete_confirmation
 import reader_collection.app.generated.resources.username_info
 
 class AccountViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val testUserId = "userId"
     private val testUsername = "userId"
@@ -55,17 +59,16 @@ class AccountViewModelTest {
         every { userData } returns UserData(testUsername, testPassword)
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = AccountViewModel(
         BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 

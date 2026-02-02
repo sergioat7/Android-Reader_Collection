@@ -171,4 +171,5 @@ kotlin {
 dependencies {
     add("debugImplementation", libs.leak.canary)
     add("debugImplementation", libs.compose.test.manifest)
+    add("debugImplementation", libs.cmp.ui.tooling)
 }

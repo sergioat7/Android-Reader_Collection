@@ -15,6 +15,7 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.presentation.landing.LandingViewModel
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import io.mockk.Called
 import io.mockk.Runs
@@ -26,26 +27,28 @@ import io.mockk.verify
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 
 class LandingViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val booksLocalDataSource: BooksLocalDataSource = mockk()
     private val booksRemoteDataSource: BooksRemoteDataSource = mockk()
     private val userLocalDataSource: UserLocalDataSource = mockk()
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = LandingViewModel(
         BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 

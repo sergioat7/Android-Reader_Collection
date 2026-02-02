@@ -22,6 +22,7 @@ import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.presentation.books.BooksUiState
 import aragones.sergio.readercollection.presentation.books.BooksViewModel
 import aragones.sergio.readercollection.presentation.components.UiSortingPickerState
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
@@ -38,12 +39,15 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.error_database
 
 class BooksViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val booksFlow = MutableSharedFlow<List<Book>>(replay = Int.MAX_VALUE)
     private val testSortParam = null
@@ -57,17 +61,16 @@ class BooksViewModelTest {
         every { isSortDescending } returns testIsSortDescending
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = BooksViewModel(
         BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 
