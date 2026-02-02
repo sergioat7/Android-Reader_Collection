@@ -56,11 +56,8 @@ jobs:
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Build with Gradle
-        run: ./gradlew build
-
       - name: Assemble release bundle
-        run: ./gradlew bundleRelease
+        run: ./gradlew :app:bundleRelease
 
       - name: Create service_account.json
         run: echo '${{ secrets.SERVICE_ACCOUNT_JSON }}' > service_account.json
