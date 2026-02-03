@@ -48,7 +48,7 @@ class BooksRemoteDataSource(
         order: String?,
     ): Result<GoogleBookListResponse> = try {
         val params = mutableMapOf(
-            SEARCH_PARAM to query,
+            SEARCH_PARAM to "$query+intitle:$query",
             PAGE_PARAM to ((page - 1) * RESULTS).toString(),
             RESULTS_PARAM to RESULTS.toString(),
         )

@@ -55,7 +55,7 @@ class BooksRemoteDataSourceTest {
             val query = "bookTitle"
             val page = 1
             val params = mutableMapOf(
-                "q" to query,
+                "q" to "$query+intitle:$query",
                 "startIndex" to "0",
                 "maxResults" to "20",
                 "key" to "apiKey",
@@ -103,7 +103,7 @@ class BooksRemoteDataSourceTest {
             val page = 1
             val order = "newest"
             val params = mutableMapOf(
-                "q" to query,
+                "q" to "$query+intitle:$query",
                 "startIndex" to "0",
                 "maxResults" to "20",
                 "orderBy" to order,
@@ -151,7 +151,7 @@ class BooksRemoteDataSourceTest {
         val page = 1
         val order = "newest"
         val params = mutableMapOf(
-            "q" to query,
+            "q" to "$query+intitle:$query",
             "startIndex" to "0",
             "maxResults" to "20",
             "orderBy" to order,
