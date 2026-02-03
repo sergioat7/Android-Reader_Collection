@@ -8,6 +8,7 @@ package aragones.sergio.readercollection.presentation.statistics
 import android.content.Context
 import android.graphics.Color
 import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,13 +24,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.res.ResourcesCompat
-import aragones.sergio.readercollection.R
 import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.presentation.LocalLanguage
@@ -41,8 +42,9 @@ import aragones.sergio.readercollection.presentation.components.TopAppBarIcon
 import aragones.sergio.readercollection.presentation.components.VerticalBookItem
 import aragones.sergio.readercollection.presentation.components.withDescription
 import aragones.sergio.readercollection.presentation.theme.ReaderCollectionTheme
+import aragones.sergio.readercollection.presentation.theme.roseBud
 import com.aragones.sergio.util.BookState
-import com.aragones.sergio.util.Constants as UtilConstants
+import com.aragones.sergio.util.Constants
 import com.aragones.sergio.util.extensions.getMonthNumber
 import com.aragones.sergio.util.extensions.toLocalDate
 import com.github.mikephil.charting.animation.Easing
@@ -218,15 +220,17 @@ private fun BooksByYear(entries: Entries, onYearSelected: (Int?) -> Unit) {
             it.size.toFloat(),
         )
     }
+    val colorPrimary = MaterialTheme.colorScheme.primary.toArgb()
+    val roseBud = MaterialTheme.colorScheme.roseBud.toArgb()
     AndroidView(
         factory = { context ->
-            val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
+            val customColors = arrayListOf(colorPrimary)
             val dataSet = BarDataSet(barEntries, "").apply {
-                valueTextColor = context.getCustomColor(R.color.textPrimary)
+                valueTextColor = colorPrimary
                 valueTextSize = 12.sp.value
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
-                highLightColor = context.getCustomColor(R.color.colorTertiary)
+                highLightColor = roseBud
                 setDrawValues(true)
             }
             val data = BarData(dataSet)
@@ -237,7 +241,7 @@ private fun BooksByYear(entries: Entries, onYearSelected: (Int?) -> Unit) {
                 description.isEnabled = false
                 xAxis.apply {
                     position = XAxisPosition.BOTTOM
-                    textColor = context.getCustomColor(R.color.textPrimary)
+                    textColor = colorPrimary
                     textSize = 14.sp.value
                     valueFormatter = NumberValueFormatter()
                     setDrawGridLines(false)
@@ -283,22 +287,24 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
     }
     val language = LocalLanguage.current
     val monthsTitle = stringResource(Res.string.months)
+    val colorPrimary = MaterialTheme.colorScheme.primary.toArgb()
+    val colorSecondary = MaterialTheme.colorScheme.secondary.toArgb()
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
-            val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
+            val customColors = arrayListOf(colorPrimary)
             val dataSet = PieDataSet(pieEntries, "").apply {
                 sliceSpace = 1F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
-                valueLineColor = context.getCustomColor(R.color.colorPrimary)
+                valueLineColor = colorPrimary
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
             }
 
             val data = PieData(dataSet).apply {
-                setValueTextColor(context.getCustomColor(R.color.textPrimary))
+                setValueTextColor(colorPrimary)
                 setValueTextSize(12.sp.value)
             }
             PieChart(context).apply {
@@ -306,10 +312,10 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
                 legend.isEnabled = false
                 description.isEnabled = false
                 centerText = monthsTitle
-                setCenterTextColor(context.getCustomColor(R.color.textPrimary))
+                setCenterTextColor(colorPrimary)
                 setCenterTextSize(14.sp.value)
                 setDrawCenterText(true)
-                setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
+                setEntryLabelColor(colorSecondary)
                 setEntryLabelTextSize(14.sp.value)
                 setExtraOffsets(5f, 10f, 5f, 5f)
                 setUsePercentValues(false)
@@ -337,10 +343,12 @@ private fun BooksByMonth(entries: Entries, onMonthSelected: (Int?) -> Unit) {
 
 @Composable
 private fun BooksByAuthor(entries: MapEntries, onAuthorSelected: (String?) -> Unit) {
+    val colorPrimary = MaterialTheme.colorScheme.primary.toArgb()
+    val roseBud = MaterialTheme.colorScheme.roseBud.toArgb()
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
-            val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
+            val customColors = arrayListOf(colorPrimary)
             val barEntries = mutableListOf<BarEntry>()
             for ((index, entry) in entries.entries.toList().withIndex()) {
                 barEntries.add(
@@ -351,11 +359,11 @@ private fun BooksByAuthor(entries: MapEntries, onAuthorSelected: (String?) -> Un
                 )
             }
             val dataSet = BarDataSet(barEntries, "").apply {
-                valueTextColor = context.getCustomColor(R.color.textPrimary)
+                valueTextColor = colorPrimary
                 valueTextSize = 12.sp.value
                 valueFormatter = NumberValueFormatter()
                 colors = customColors
-                highLightColor = context.getCustomColor(R.color.colorTertiary)
+                highLightColor = roseBud
                 setDrawValues(true)
             }
             val data = BarData(dataSet)
@@ -366,7 +374,7 @@ private fun BooksByAuthor(entries: MapEntries, onAuthorSelected: (String?) -> Un
                 description.isEnabled = false
                 xAxis.apply {
                     position = XAxisPosition.BOTTOM
-                    textColor = context.getCustomColor(R.color.textPrimary)
+                    textColor = colorPrimary
                     textSize = 14.sp.value
                     setDrawGridLines(false)
                 }
@@ -464,15 +472,17 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
         )
     }
     val formatsTitle = stringResource(Res.string.formats)
+    val colorPrimary = MaterialTheme.colorScheme.primary.toArgb()
+    val colorSecondary = MaterialTheme.colorScheme.secondary.toArgb()
     Spacer(Modifier.height(24.dp))
     AndroidView(
         factory = { context ->
-            val customColors = arrayListOf(context.getCustomColor(R.color.colorPrimary))
+            val customColors = arrayListOf(colorPrimary)
             val dataSet = PieDataSet(pieEntries, "").apply {
                 sliceSpace = 5F
                 valueLinePart1Length = 0.4F
                 valueLinePart2Length = 0.8F
-                valueLineColor = context.getCustomColor(R.color.colorPrimary)
+                valueLineColor = colorPrimary
                 yValuePosition = PieDataSet.ValuePosition.OUTSIDE_SLICE
                 colors = customColors
             }
@@ -480,7 +490,7 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
             val pieChart = PieChart(context)
             val data = PieData(dataSet).apply {
                 setValueFormatter(PercentFormatter(pieChart))
-                setValueTextColor(context.getCustomColor(R.color.textPrimary))
+                setValueTextColor(colorPrimary)
                 setValueTextSize(14.sp.value)
             }
             pieChart.apply {
@@ -488,10 +498,10 @@ private fun BooksByFormat(entries: Entries, onFormatSelected: (String?) -> Unit)
                 legend.isEnabled = false
                 description.isEnabled = false
                 centerText = formatsTitle
-                setCenterTextColor(context.getCustomColor(R.color.textPrimary))
+                setCenterTextColor(colorPrimary)
                 setCenterTextSize(14.sp.value)
                 setDrawCenterText(true)
-                setEntryLabelColor(context.getCustomColor(R.color.textTertiary))
+                setEntryLabelColor(colorSecondary)
                 setEntryLabelTextSize(14.sp.value)
                 setExtraOffsets(5F, 10F, 5F, 5F)
                 setUsePercentValues(true)
@@ -527,6 +537,7 @@ private fun StatisticsScreenPreview(
             onExportClick = {},
             onGroupClick = { _, _, _, _ -> },
             onBookClick = {},
+            modifier = Modifier.background(MaterialTheme.colorScheme.background),
         )
     }
 }
@@ -534,27 +545,11 @@ private fun StatisticsScreenPreview(
 private class StatisticsScreenPreviewParameterProvider :
     PreviewParameterProvider<StatisticsUiState> {
 
-    private val book = Book(
-        id = "1",
+    private val book = Book("1").copy(
         title = "Shortest read book",
-        subtitle = null,
         authors = listOf("Author"),
-        publisher = null,
-        publishedDate = null,
-        readingDate = null,
-        description = null,
-        summary = null,
-        isbn = null,
-        pageCount = 0,
-        categories = null,
-        averageRating = 0.0,
-        ratingsCount = 0,
         rating = 5.0,
-        thumbnail = null,
-        image = null,
-        format = null,
         state = BookState.READ,
-        priority = 0,
     )
 
     override val values: Sequence<StatisticsUiState>
@@ -623,7 +618,7 @@ private fun String.toLocalFormattedDate(language: String): LocalDate? {
                 timeZone = TimeZone.getDefault()
             }.parse(this)
         date?.let {
-            SimpleDateFormat(UtilConstants.DATE_FORMAT, locale).format(date).toLocalDate()
+            SimpleDateFormat(Constants.DATE_FORMAT, locale).format(date).toLocalDate()
         }
     } catch (_: Exception) {
         null

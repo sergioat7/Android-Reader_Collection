@@ -403,27 +403,10 @@ enum class SwipeDirection {
 private fun BookItemPreview() {
     ReaderCollectionTheme {
         BookItem(
-            book = Book(
-                id = "1",
+            book = Book("1").copy(
                 title = "Book title with a very very very very very very very very long text",
-                subtitle = null,
                 authors = listOf("Author with a very long name"),
-                publisher = null,
-                publishedDate = null,
-                readingDate = null,
-                description = null,
-                summary = null,
-                isbn = null,
-                pageCount = 0,
-                categories = null,
-                averageRating = 0.0,
-                ratingsCount = 0,
                 rating = 7.0,
-                thumbnail = null,
-                image = null,
-                format = null,
-                state = null,
-                priority = 0,
             ),
             onBookClick = {},
             isDraggingEnabled = false,
@@ -436,27 +419,9 @@ private fun BookItemPreview() {
 private fun BookItemWithDraggingPreview() {
     ReaderCollectionTheme {
         BookItem(
-            book = Book(
-                id = "1",
+            book = Book("1").copy(
                 title = "Book title with a very very very very very very very very long text",
-                subtitle = null,
                 authors = listOf("Author with a very long name"),
-                publisher = null,
-                publishedDate = null,
-                readingDate = null,
-                description = null,
-                summary = null,
-                isbn = null,
-                pageCount = 0,
-                categories = null,
-                averageRating = 0.0,
-                ratingsCount = 0,
-                rating = 0.0,
-                thumbnail = null,
-                image = null,
-                format = null,
-                state = null,
-                priority = 0,
             ),
             onBookClick = {},
             isDraggingEnabled = true,
@@ -470,27 +435,9 @@ private fun BookItemWithDraggingPreview() {
 private fun ReadingBookItemPreview() {
     ReaderCollectionTheme {
         ReadingBookItem(
-            book = Book(
-                id = "1",
+            book = Book("1").copy(
                 title = "Book title with a very very very very very very very very long text",
-                subtitle = null,
                 authors = listOf("Author with a very long name"),
-                publisher = null,
-                publishedDate = null,
-                readingDate = null,
-                description = null,
-                summary = null,
-                isbn = null,
-                pageCount = 0,
-                categories = null,
-                averageRating = 0.0,
-                ratingsCount = 0,
-                rating = 0.0,
-                thumbnail = null,
-                image = null,
-                format = null,
-                state = null,
-                priority = 0,
             ),
             onBookClick = {},
             onLongClick = {},
@@ -504,27 +451,9 @@ private fun ReadingBookItemPreview() {
 private fun VerticalBookItemPreview() {
     ReaderCollectionTheme {
         VerticalBookItem(
-            book = Book(
-                id = "1",
+            book = Book("1").copy(
                 title = "Book title with a very very very very very very very very long text",
-                subtitle = null,
                 authors = listOf("Author with a very long name"),
-                publisher = null,
-                publishedDate = null,
-                readingDate = null,
-                description = null,
-                summary = null,
-                isbn = null,
-                pageCount = 0,
-                categories = null,
-                averageRating = 0.0,
-                ratingsCount = 0,
-                rating = 0.0,
-                thumbnail = null,
-                image = null,
-                format = null,
-                state = null,
-                priority = 0,
             ),
             isSwitchLeftIconEnabled = true,
             isSwitchRightIconEnabled = true,

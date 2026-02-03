@@ -20,7 +20,7 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 8
-val versionPatch = 6
+val versionPatch = 7
 val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
@@ -171,4 +171,5 @@ kotlin {
 dependencies {
     add("debugImplementation", libs.leak.canary)
     add("debugImplementation", libs.compose.test.manifest)
+    add("debugImplementation", libs.cmp.ui.tooling)
 }

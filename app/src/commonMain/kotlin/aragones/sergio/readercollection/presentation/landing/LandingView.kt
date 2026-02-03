@@ -81,5 +81,8 @@ fun LandingView(
                 viewModel.checkIsLoggedIn()
             }
         }
+        LaunchedEffect(Unit) {
+            viewModel.mapGenres()
+        }
     }
 }

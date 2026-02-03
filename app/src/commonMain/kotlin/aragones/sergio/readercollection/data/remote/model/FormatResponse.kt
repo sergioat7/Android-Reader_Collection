@@ -13,7 +13,5 @@ data class FormatResponse(
     val name: String,
 ) : BaseModel<String>
 
-var FORMATS = listOf(
-    FormatResponse("DIGITAL", "Digital"),
-    FormatResponse("PHYSICAL", "Physical"),
-)
+var FORMATS = listOf<FormatResponse>()
+var ALL_FORMATS: Map<String, List<FormatResponse>> = mapOf()

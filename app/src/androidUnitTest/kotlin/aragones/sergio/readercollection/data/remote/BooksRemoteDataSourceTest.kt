@@ -10,6 +10,8 @@ package aragones.sergio.readercollection.data.remote
 import aragones.sergio.readercollection.data.remote.model.BookResponse
 import aragones.sergio.readercollection.data.remote.model.FORMATS
 import aragones.sergio.readercollection.data.remote.model.FormatResponse
+import aragones.sergio.readercollection.data.remote.model.GENRES
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookListResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleBookResponse
 import aragones.sergio.readercollection.data.remote.model.GoogleVolumeResponse
@@ -292,6 +294,9 @@ class BooksRemoteDataSourceTest {
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
             secondArg<(String) -> Unit>().invoke(getFormatsJson(language))
         }
+        every { firebaseProvider.fetchRemoteConfigString("genres", any()) } answers {
+            secondArg<(String) -> Unit>().invoke(getGenresJson(language))
+        }
         every { firebaseProvider.fetchRemoteConfigString("states", any()) } answers {
             secondArg<(String) -> Unit>().invoke(getStatesJson(language))
         }
@@ -299,18 +304,21 @@ class BooksRemoteDataSourceTest {
         dataSource.fetchRemoteConfigValues(language)
 
         assertEquals(getFormats(), FORMATS)
+        assertEquals(getGenres(), GENRES)
         assertEquals(getStates(), STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
+        verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("genres", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
     }
 
     @Test
-    fun `GIVEN success response and no values for language WHEN fetch remote config values is called THEN formats and states are not updated`() {
-        val currentFormats = FORMATS
-        val currentStates = STATES
+    fun `GIVEN success response and no values for language WHEN fetch remote config values is called THEN formats and states are empty`() {
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
             secondArg<(String) -> Unit>().invoke(getFormatsJson("en"))
+        }
+        every { firebaseProvider.fetchRemoteConfigString("genres", any()) } answers {
+            secondArg<(String) -> Unit>().invoke(getGenresJson("en"))
         }
         every { firebaseProvider.fetchRemoteConfigString("states", any()) } answers {
             secondArg<(String) -> Unit>().invoke(getStatesJson("en"))
@@ -318,19 +326,22 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues("es")
 
-        assertEquals(currentFormats, FORMATS)
-        assertEquals(currentStates, STATES)
+        assertEquals(emptyList(), FORMATS)
+        assertEquals(emptyList(), GENRES)
+        assertEquals(emptyList(), STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
+        verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("genres", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
     }
 
     @Test
-    fun `GIVEN wrong response WHEN fetch remote config values is called THEN formats and states are not updated`() {
+    fun `GIVEN wrong response WHEN fetch remote config values is called THEN formats and states are empty`() {
         val language = "en"
-        val currentFormats = FORMATS
-        val currentStates = STATES
         every { firebaseProvider.fetchRemoteConfigString("formats", any()) } answers {
+            secondArg<(String) -> Unit>().invoke("values")
+        }
+        every { firebaseProvider.fetchRemoteConfigString("genres", any()) } answers {
             secondArg<(String) -> Unit>().invoke("values")
         }
         every { firebaseProvider.fetchRemoteConfigString("states", any()) } answers {
@@ -339,9 +350,11 @@ class BooksRemoteDataSourceTest {
 
         dataSource.fetchRemoteConfigValues(language)
 
-        assertEquals(currentFormats, FORMATS)
-        assertEquals(currentStates, STATES)
+        assertEquals(emptyList(), FORMATS)
+        assertEquals(emptyList(), GENRES)
+        assertEquals(emptyList(), STATES)
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("formats", any()) }
+        verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("genres", any()) }
         verify(exactly = 1) { firebaseProvider.fetchRemoteConfigString("states", any()) }
         confirmVerified(firebaseProvider)
     }
@@ -546,6 +559,16 @@ class BooksRemoteDataSourceTest {
     private fun getFormats(): List<FormatResponse> = listOf(
         FormatResponse("PHYSICAL", "Physical"),
         FormatResponse("DIGITAL", "Digital"),
+    )
+
+    private fun getGenresJson(language: String): String = """{"$language":${getGenresJson()}}"""
+
+    private fun getGenresJson(): String =
+        """[{"id":"FICTION","name":"Fiction"},{"id":"HISTORY","name":"History"}]"""
+
+    private fun getGenres(): List<GenreResponse> = listOf(
+        GenreResponse("FICTION", "Fiction"),
+        GenreResponse("HISTORY", "History"),
     )
 
     private fun getStatesJson(language: String): String = """{"$language":${getStatesJson()}}"""

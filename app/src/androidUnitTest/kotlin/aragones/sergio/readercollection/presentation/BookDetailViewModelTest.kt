@@ -21,6 +21,7 @@ import aragones.sergio.readercollection.domain.toLocalData
 import aragones.sergio.readercollection.domain.toRemoteData
 import aragones.sergio.readercollection.presentation.bookdetail.BookDetailUiState
 import aragones.sergio.readercollection.presentation.bookdetail.BookDetailViewModel
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.BookState
 import com.aragones.sergio.util.Constants
@@ -36,8 +37,8 @@ import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import reader_collection.app.generated.resources.Res
@@ -51,6 +52,9 @@ import reader_collection.app.generated.resources.error_no_book
 @RunWith(RobolectricTestRunner::class)
 class BookDetailViewModelTest {
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     private val testBookId = "bookId"
     private val savedStateHandle: SavedStateHandle = SavedStateHandle().apply {
         this["bookId"] = testBookId
@@ -60,13 +64,12 @@ class BookDetailViewModelTest {
         every { getAllBooks() } returns booksFlow.map { it.map { book -> book.toLocalData() } }
     }
     private val booksRemoteDataSource: BooksRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = BookDetailViewModel(
         savedStateHandle,
         BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 
@@ -83,7 +86,7 @@ class BookDetailViewModelTest {
                 BooksRepositoryImpl(
                     booksLocalDataSource,
                     booksRemoteDataSource,
-                    ioDispatcher,
+                    mainDispatcherRule.testDispatcher,
                 ),
             )
             val book = Book(testBookId)
@@ -128,7 +131,7 @@ class BookDetailViewModelTest {
             BooksRepositoryImpl(
                 booksLocalDataSource,
                 booksRemoteDataSource,
-                ioDispatcher,
+                mainDispatcherRule.testDispatcher,
             ),
         )
         coEvery {

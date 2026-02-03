@@ -20,6 +20,7 @@ import aragones.sergio.readercollection.presentation.addfriend.AddFriendsUiState
 import aragones.sergio.readercollection.presentation.addfriend.AddFriendsViewModel
 import aragones.sergio.readercollection.presentation.addfriend.UserUi
 import aragones.sergio.readercollection.presentation.addfriend.UsersUi
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.util.Constants
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -28,13 +29,17 @@ import io.mockk.mockk
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.runCurrent
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.error_search
 import reader_collection.app.generated.resources.error_server
 
 class AddFriendsViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val testUserId = "userId"
     private val testUsername = "username"
@@ -43,12 +48,11 @@ class AddFriendsViewModelTest {
         every { username } returns testUsername
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = AddFriendsViewModel(
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 
@@ -317,6 +321,7 @@ class AddFriendsViewModelTest {
 
             viewModel.requestFriendship(friendUi)
 
+            runCurrent()
             expectNoEvents()
         }
         coVerify {

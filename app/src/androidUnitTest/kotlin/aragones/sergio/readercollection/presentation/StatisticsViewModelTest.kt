@@ -14,6 +14,9 @@ import aragones.sergio.readercollection.data.UserRepositoryImpl
 import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.BooksRemoteDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
+import aragones.sergio.readercollection.data.remote.model.FORMATS
+import aragones.sergio.readercollection.data.remote.model.FormatResponse
+import aragones.sergio.readercollection.data.remote.model.GenreResponse
 import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.domain.toLocalData
@@ -22,6 +25,7 @@ import aragones.sergio.readercollection.presentation.statistics.Entry
 import aragones.sergio.readercollection.presentation.statistics.MapEntries
 import aragones.sergio.readercollection.presentation.statistics.StatisticsUiState
 import aragones.sergio.readercollection.presentation.statistics.StatisticsViewModel
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import com.aragones.sergio.BooksLocalDataSource
 import com.aragones.sergio.util.extensions.toString
 import io.mockk.Called
@@ -38,10 +42,10 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import org.junit.Assert
+import org.junit.Rule
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.data_imported
 import reader_collection.app.generated.resources.error_database
@@ -51,6 +55,9 @@ import reader_collection.app.generated.resources.file_created
 
 class StatisticsViewModelTest {
 
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
+
     private val booksLocalDataSource: BooksLocalDataSource = mockk()
     private val booksRemoteDataSource: BooksRemoteDataSource = mockk()
     private val userLocalDataSource: UserLocalDataSource = mockk {
@@ -59,23 +66,23 @@ class StatisticsViewModelTest {
         every { language } returns "en"
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = StatisticsViewModel(
         BooksRepositoryImpl(
             booksLocalDataSource,
             booksRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 
     @Test
     fun `GIVEN read books WHEN fetch books THEN return Success state with statistics data`() =
         runTest {
+            FORMATS = listOf(FormatResponse("PHYSICAL", "Physical"))
             val book1 = Book(id = "bookId1").copy(
                 authors = listOf("Author 1"),
                 readingDate = LocalDate(2025, 10, 5),
@@ -359,7 +366,7 @@ class StatisticsViewModelTest {
             summary = "summary",
             isbn = "isbn",
             pageCount = 10,
-            categories = listOf("category"),
+            categories = listOf(GenreResponse("categoryId", "Category")),
             averageRating = 2.0,
             ratingsCount = 5,
             rating = 4.0,
@@ -392,7 +399,7 @@ class StatisticsViewModelTest {
                     "summary" : "${book.summary}",
                     "isbn" : "${book.isbn}",
                     "pageCount":${book.pageCount},
-                    "categories" : ${book.categories?.map { "\"${it}\"" }},
+                    "categories" : ${book.categories?.map { "\"${it.id}\"" }},
                     "averageRating":${book.averageRating},
                     "ratingsCount":${book.ratingsCount},
                     "rating":${book.rating},

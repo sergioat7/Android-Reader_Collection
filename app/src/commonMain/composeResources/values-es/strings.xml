@@ -64,6 +64,7 @@
     <string name="authors">Autor</string>
     <string name="add_title">Añade un título</string>
     <string name="add_author">Añade el autor(es)</string>
+    <string name="add_genre">Añade un género</string>
     <string name="description">Descripción</string>
     <string name="add_description">Añade una descripción</string>
     <string name="read_more">Leer más</string>

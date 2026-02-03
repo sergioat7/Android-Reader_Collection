@@ -13,8 +13,5 @@ data class StateResponse(
     val name: String,
 ) : BaseModel<String>
 
-var STATES = listOf(
-    StateResponse("PENDING", "Pending"),
-    StateResponse("READ", "Read"),
-    StateResponse("READING", "Reading"),
-)
+var STATES = listOf<StateResponse>()
+var ALL_STATES: Map<String, List<StateResponse>> = mapOf()

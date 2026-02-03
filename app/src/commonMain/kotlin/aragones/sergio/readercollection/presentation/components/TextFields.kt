@@ -21,6 +21,10 @@ import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +36,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -52,6 +61,7 @@ import com.aragones.sergio.util.extensions.isNotBlank
 import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
+import reader_collection.app.generated.resources.dropdown_text_field_description
 import reader_collection.app.generated.resources.field_required
 import reader_collection.app.generated.resources.ic_show_password
 import reader_collection.app.generated.resources.invalid_username
@@ -346,6 +356,90 @@ fun DateCustomOutlinedTextField(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DropdownOutlinedTextField(
+    currentValue: String,
+    values: DropdownValues,
+    labelText: String,
+    onOptionSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
+    placeholderText: String? = null,
+    inputHintTextColor: Color = MaterialTheme.colorScheme.tertiary,
+    textColor: Color = MaterialTheme.colorScheme.primary,
+    enabled: Boolean = true,
+) {
+    var expanded by rememberSaveable { mutableStateOf(false) }
+    val contentDescription = stringResource(
+        Res.string.dropdown_text_field_description,
+        labelText,
+        currentValue,
+    )
+
+    val label: @Composable () -> Unit =
+        {
+            Text(
+                text = labelText,
+                style = MaterialTheme.typography.displaySmall,
+                color = MaterialTheme.colorScheme.tertiary,
+            )
+        }
+    val placeholder: @Composable (() -> Unit)? = placeholderText?.let {
+        {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.bodyMedium,
+                color = inputHintTextColor,
+            )
+        }
+    }
+    val trailingIcon: @Composable (() -> Unit) =
+        {
+            Icon(
+                imageVector = if (expanded) {
+                    Icons.Default.KeyboardArrowUp
+                } else {
+                    Icons.Default.KeyboardArrowDown
+                },
+                contentDescription = null,
+                tint = textColor,
+            )
+        }
+
+    CustomDropdownMenu(
+        values = values,
+        expanded = expanded,
+        onExpand = { expanded = it },
+        onOptionSelected = onOptionSelected,
+        modifier = modifier,
+        textColor = textColor,
+    ) {
+        OutlinedTextField(
+            value = currentValue,
+            modifier = Modifier
+                .fillMaxWidth()
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable, enabled)
+                .clearAndSetSemantics {
+                    this.contentDescription = contentDescription
+                    role = Role.DropdownList
+                },
+            shape = MaterialTheme.shapes.medium,
+            colors = OutlinedTextFieldDefaults.colors(
+                disabledBorderColor = MaterialTheme.colorScheme.tertiary.takeIf { enabled }
+                    ?: Color.Transparent,
+            ),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(color = textColor),
+            label = label,
+            placeholder = placeholder,
+            trailingIcon = trailingIcon.takeIf { enabled },
+            singleLine = true,
+            enabled = false,
+            readOnly = true,
+            onValueChange = {},
+        )
+    }
+}
+
 @CustomPreviewLightDarkWithBackground
 @Composable
 private fun TextOutlinedTextFieldPreview() {
@@ -439,6 +533,21 @@ private fun DateCustomOutlinedTextFieldPreview() {
             onTextChanged = {},
             modifier = Modifier.padding(12.dp),
             enabled = true,
+        )
+    }
+}
+
+@CustomPreviewLightDarkWithBackground
+@Composable
+private fun DropdownOutlinedTextFieldPreview() {
+    ReaderCollectionTheme {
+        DropdownOutlinedTextField(
+            currentValue = "Value",
+            values = DropdownValues(listOf("Option 1", "Option 2", "Option 3")),
+            onOptionSelected = {},
+            modifier = Modifier.padding(12.dp),
+            labelText = "Header",
+            placeholderText = "Please choose",
         )
     }
 }

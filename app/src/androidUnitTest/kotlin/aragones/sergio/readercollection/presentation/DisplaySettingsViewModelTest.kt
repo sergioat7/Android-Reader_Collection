@@ -14,6 +14,7 @@ import aragones.sergio.readercollection.data.local.UserLocalDataSource
 import aragones.sergio.readercollection.data.remote.UserRemoteDataSource
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsUiState
 import aragones.sergio.readercollection.presentation.displaysettings.DisplaySettingsViewModel
+import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
 import io.mockk.Runs
 import io.mockk.confirmVerified
 import io.mockk.every
@@ -23,10 +24,13 @@ import io.mockk.verify
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.Rule
 
 class DisplaySettingsViewModelTest {
+
+    @get:Rule
+    val mainDispatcherRule = MainDispatcherRule()
 
     private val userLocalDataSource: UserLocalDataSource = mockk {
         every { language } returns "en"
@@ -35,12 +39,11 @@ class DisplaySettingsViewModelTest {
         every { themeMode } returns 0
     }
     private val userRemoteDataSource: UserRemoteDataSource = mockk()
-    private val ioDispatcher = UnconfinedTestDispatcher()
     private val viewModel = DisplaySettingsViewModel(
         UserRepositoryImpl(
             userLocalDataSource,
             userRemoteDataSource,
-            ioDispatcher,
+            mainDispatcherRule.testDispatcher,
         ),
     )
 

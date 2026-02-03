@@ -152,27 +152,11 @@ private fun StatisticsScreenPreview(
 private class StatisticsScreenPreviewParameterProvider :
     PreviewParameterProvider<StatisticsUiState> {
 
-    private val book = Book(
-        id = "1",
+    private val book = Book("1").copy(
         title = "Shortest read book",
-        subtitle = null,
         authors = listOf("Author"),
-        publisher = null,
-        publishedDate = null,
-        readingDate = null,
-        description = null,
-        summary = null,
-        isbn = null,
-        pageCount = 0,
-        categories = null,
-        averageRating = 0.0,
-        ratingsCount = 0,
         rating = 5.0,
-        thumbnail = null,
-        image = null,
-        format = null,
         state = BookState.READ,
-        priority = 0,
     )
 
     override val values: Sequence<StatisticsUiState>

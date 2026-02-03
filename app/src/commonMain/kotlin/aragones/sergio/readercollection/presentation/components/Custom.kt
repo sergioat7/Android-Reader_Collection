@@ -7,9 +7,8 @@ package aragones.sergio.readercollection.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,11 +22,14 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.InputChip
+import androidx.compose.material3.InputChipDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -41,7 +43,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
@@ -74,6 +75,7 @@ import org.jetbrains.compose.resources.stringResource
 import reader_collection.app.generated.resources.Res
 import reader_collection.app.generated.resources.book_rating_description
 import reader_collection.app.generated.resources.clear_text
+import reader_collection.app.generated.resources.delete
 import reader_collection.app.generated.resources.ic_clear_text
 import reader_collection.app.generated.resources.ic_round_star_24
 import reader_collection.app.generated.resources.ic_round_star_border_24
@@ -334,21 +336,43 @@ fun CustomFilterChip(
 }
 
 @Composable
-fun CustomChip(text: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .clip(RoundedCornerShape(24.dp))
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(8.dp),
-    ) {
-        Text(
-            text = text,
-            color = MaterialTheme.colorScheme.secondary,
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-        )
+fun CustomInputChip(
+    text: String,
+    modifier: Modifier = Modifier,
+    onClick: (() -> Unit)? = null,
+    onEndIconClick: (() -> Unit)? = null,
+    endIcon: AccessibilityPainter? = null,
+) {
+    val trailingIcon: @Composable (() -> Unit)? = endIcon?.let {
+        {
+            Icon(
+                painter = endIcon.painter,
+                contentDescription = endIcon.contentDescription,
+                tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.size(24.dp).clickable { onEndIconClick?.invoke() },
+            )
+        }
     }
+    InputChip(
+        selected = false,
+        onClick = onClick ?: {},
+        label = {
+            Text(
+                text = text,
+                color = MaterialTheme.colorScheme.secondary,
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+            )
+        },
+        modifier = modifier,
+        trailingIcon = trailingIcon,
+        shape = RoundedCornerShape(24.dp),
+        colors = InputChipDefaults.inputChipColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            selectedContainerColor = MaterialTheme.colorScheme.primary,
+        ),
+    )
 }
 
 @CustomPreviewLightDarkWithBackground
@@ -405,9 +429,13 @@ private fun FilterChipPreview() {
 
 @CustomPreviewLightDark
 @Composable
-private fun CustomChipPreview() {
+private fun CustomInputChipPreview() {
     ReaderCollectionTheme {
-        CustomChip("Value")
+        CustomInputChip(
+            text = "Value",
+            endIcon = rememberVectorPainter(Icons.Default.Close)
+                .withDescription(stringResource(Res.string.delete)),
+        )
     }
 }
 
