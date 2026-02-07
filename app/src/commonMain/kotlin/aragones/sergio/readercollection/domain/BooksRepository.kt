@@ -21,7 +21,12 @@ interface BooksRepository {
     suspend fun setBooks(books: List<Book>): Result<Unit>
     suspend fun deleteBook(bookId: String): Result<Unit>
     suspend fun resetTable(): Result<Unit>
-    suspend fun searchBooks(query: String, page: Int, order: String?): Result<List<Book>>
+    suspend fun searchBooks(
+        query: String,
+        filter: String,
+        page: Int,
+        order: String?,
+    ): Result<List<Book>>
     fun fetchRemoteConfigValues(language: String)
     suspend fun getBooksFrom(uuid: String): Result<List<Book>>
     suspend fun getFriendBook(friendId: String, bookId: String): Result<Book>

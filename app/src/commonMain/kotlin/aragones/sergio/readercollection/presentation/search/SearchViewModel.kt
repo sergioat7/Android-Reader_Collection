@@ -74,34 +74,40 @@ class SearchViewModel(
         }
 
         viewModelScope.launch {
-            booksRepository.searchBooks(this@SearchViewModel.query, page, null).fold(
-                onSuccess = { newBooks ->
-                    if (books.isEmpty()) {
-                        books.add(Book(id = ""))
-                    }
-                    books.addAll(books.size - 1, newBooks)
-                    if (newBooks.isEmpty()) {
-                        books.removeAt(books.lastIndex)
-                    }
-                    val updatedBooks = mutableListOf<Book>().apply { addAll(books) }
+            booksRepository
+                .searchBooks(
+                    query = this@SearchViewModel.query,
+                    filter = _state.value.param.key,
+                    page = page,
+                    order = null,
+                ).fold(
+                    onSuccess = { newBooks ->
+                        if (books.isEmpty()) {
+                            books.add(Book(id = ""))
+                        }
+                        books.addAll(books.size - 1, newBooks)
+                        if (newBooks.isEmpty()) {
+                            books.removeAt(books.lastIndex)
+                        }
+                        val updatedBooks = mutableListOf<Book>().apply { addAll(books) }
 
-                    page++
-                    _state.value = SearchUiState.Success(
-                        isLoading = false,
-                        query = this@SearchViewModel.query,
-                        books = Books(updatedBooks),
-                        param = _state.value.param,
-                    )
-                },
-                onFailure = {
-                    _state.value = SearchUiState.Error(
-                        isLoading = false,
-                        query = this@SearchViewModel.query,
-                        value = ErrorModel("", Res.string.error_search),
-                        param = _state.value.param,
-                    )
-                },
-            )
+                        page++
+                        _state.value = SearchUiState.Success(
+                            isLoading = false,
+                            query = this@SearchViewModel.query,
+                            books = Books(updatedBooks),
+                            param = _state.value.param,
+                        )
+                    },
+                    onFailure = {
+                        _state.value = SearchUiState.Error(
+                            isLoading = false,
+                            query = this@SearchViewModel.query,
+                            value = ErrorModel("", Res.string.error_search),
+                            param = _state.value.param,
+                        )
+                    },
+                )
         }
     }
 

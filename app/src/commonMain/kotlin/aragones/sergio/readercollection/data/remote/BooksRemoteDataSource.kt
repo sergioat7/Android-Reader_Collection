@@ -33,8 +33,8 @@ class BooksRemoteDataSource(
         private const val SEARCH_PARAM = "q"
         private const val PAGE_PARAM = "startIndex"
         private const val RESULTS_PARAM = "maxResults"
-        private const val ORDER_PARAM = "orderBy"
         private const val RESULTS = 20
+        private const val ORDER_PARAM = "orderBy"
         private const val FORMATS_KEY = "formats"
         private const val GENRES_KEY = "genres"
         private const val STATES_KEY = "states"
@@ -44,11 +44,12 @@ class BooksRemoteDataSource(
     //region Public methods
     suspend fun searchBooks(
         query: String,
+        filter: String,
         page: Int,
         order: String?,
     ): Result<GoogleBookListResponse> = try {
         val params = mutableMapOf(
-            SEARCH_PARAM to "$query+intitle:$query",
+            SEARCH_PARAM to "$query+$filter:$query",
             PAGE_PARAM to ((page - 1) * RESULTS).toString(),
             RESULTS_PARAM to RESULTS.toString(),
         )

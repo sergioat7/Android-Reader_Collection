@@ -107,7 +107,14 @@ class SearchViewModelTest {
                     awaitItem(),
                 )
             }
-            coVerify { booksRemoteDataSource.searchBooks("", 1, null) }
+            coVerify {
+                booksRemoteDataSource.searchBooks(
+                    query = "",
+                    filter = "intitle",
+                    page = 1,
+                    order = null,
+                )
+            }
             confirmVerified(booksRemoteDataSource)
         }
 
@@ -115,7 +122,7 @@ class SearchViewModelTest {
     fun `GIVEN empty response WHEN searchBooks THEN return Success state with empty list`() =
         runTest {
             coEvery {
-                booksRemoteDataSource.searchBooks(any(), any(), any())
+                booksRemoteDataSource.searchBooks(any(), any(), any(), any())
             } returns Result.success(
                 GoogleBookListResponse(
                     totalItems = 0,
@@ -147,7 +154,14 @@ class SearchViewModelTest {
                     awaitItem(),
                 )
             }
-            coVerify { booksRemoteDataSource.searchBooks("", 1, null) }
+            coVerify {
+                booksRemoteDataSource.searchBooks(
+                    query = "",
+                    filter = "intitle",
+                    page = 1,
+                    order = null,
+                )
+            }
             confirmVerified(booksRemoteDataSource)
         }
 
@@ -155,7 +169,7 @@ class SearchViewModelTest {
     fun `GIVEN failure response WHEN searchBooks THEN return Success state with empty list`() =
         runTest {
             coEvery {
-                booksRemoteDataSource.searchBooks(any(), any(), any())
+                booksRemoteDataSource.searchBooks(any(), any(), any(), any())
             } returns Result.failure(RuntimeException("Firestore error"))
 
             viewModel.state.test {
@@ -182,7 +196,14 @@ class SearchViewModelTest {
                     awaitItem(),
                 )
             }
-            coVerify { booksRemoteDataSource.searchBooks("", 1, null) }
+            coVerify {
+                booksRemoteDataSource.searchBooks(
+                    query = "",
+                    filter = "intitle",
+                    page = 1,
+                    order = null,
+                )
+            }
             confirmVerified(booksRemoteDataSource)
         }
 
@@ -284,8 +305,22 @@ class SearchViewModelTest {
                 awaitItem(),
             )
         }
-        coVerify(exactly = 2) { booksRemoteDataSource.searchBooks("", 1, null) }
-        coVerify { booksRemoteDataSource.searchBooks("", 2, null) }
+        coVerify(exactly = 2) {
+            booksRemoteDataSource.searchBooks(
+                query = "",
+                filter = "intitle",
+                page = 1,
+                order = null,
+            )
+        }
+        coVerify {
+            booksRemoteDataSource.searchBooks(
+                query = "",
+                filter = "intitle",
+                page = 2,
+                order = null,
+            )
+        }
         confirmVerified(booksRemoteDataSource)
     }
 
@@ -323,7 +358,14 @@ class SearchViewModelTest {
                 awaitItem(),
             )
         }
-        coVerify { booksRemoteDataSource.searchBooks(query, 1, null) }
+        coVerify {
+            booksRemoteDataSource.searchBooks(
+                query = query,
+                filter = "intitle",
+                page = 1,
+                order = null,
+            )
+        }
         confirmVerified(booksRemoteDataSource)
     }
 
@@ -504,7 +546,7 @@ class SearchViewModelTest {
             items = listOf(getDefaultGoogleBook(bookId)),
         )
         coEvery {
-            booksRemoteDataSource.searchBooks(any(), any(), any())
+            booksRemoteDataSource.searchBooks(any(), any(), any(), any())
         } returns Result.success(response)
     }
 }

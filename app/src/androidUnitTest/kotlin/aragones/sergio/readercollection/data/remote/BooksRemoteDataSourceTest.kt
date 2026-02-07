@@ -90,7 +90,12 @@ class BooksRemoteDataSourceTest {
             val client: HttpClient = getHttpClient(mockEngine)
             val dataSource = BooksRemoteDataSource(client, firebaseProvider)
 
-            val result = dataSource.searchBooks(query, page, null)
+            val result = dataSource.searchBooks(
+                query = query,
+                filter = "intitle",
+                page = page,
+                order = null,
+            )
 
             assertEquals(true, result.isSuccess)
             assertEquals(response, result.getOrNull())
@@ -103,7 +108,7 @@ class BooksRemoteDataSourceTest {
             val page = 1
             val order = "newest"
             val params = mutableMapOf(
-                "q" to "$query+intitle:$query",
+                "q" to "$query+inauthor:$query",
                 "startIndex" to "0",
                 "maxResults" to "20",
                 "orderBy" to order,
@@ -139,7 +144,12 @@ class BooksRemoteDataSourceTest {
             val client: HttpClient = getHttpClient(mockEngine)
             val dataSource = BooksRemoteDataSource(client, firebaseProvider)
 
-            val result = dataSource.searchBooks(query, page, order)
+            val result = dataSource.searchBooks(
+                query = query,
+                filter = "inauthor",
+                page = page,
+                order = order,
+            )
 
             assertEquals(true, result.isSuccess)
             assertEquals(response, result.getOrNull())
@@ -176,7 +186,12 @@ class BooksRemoteDataSourceTest {
         val client: HttpClient = getHttpClient(mockEngine)
         val dataSource = BooksRemoteDataSource(client, firebaseProvider)
 
-        val result = dataSource.searchBooks(query, page, order)
+        val result = dataSource.searchBooks(
+            query = query,
+            filter = "intitle",
+            page = page,
+            order = order,
+        )
 
         assertEquals(true, result.isFailure)
         assertIs<IllegalStateException>(result.exceptionOrNull())
