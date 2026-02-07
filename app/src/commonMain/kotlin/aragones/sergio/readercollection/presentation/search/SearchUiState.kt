@@ -24,3 +24,12 @@ sealed class SearchUiState {
         val value: ErrorModel,
     ) : SearchUiState()
 }
+
+enum class SearchParam(
+    val value: StringResource,
+    val icon: ImageVector,
+    val key: String,
+) {
+    TITLE(Res.string.title, Icons.Default.Title, "intitle"),
+    AUTHOR(Res.string.authors, Icons.Default.Person, "inauthor"),
+}
