@@ -18,6 +18,7 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.toDomain
 import aragones.sergio.readercollection.domain.toLocalData
+import aragones.sergio.readercollection.presentation.search.SearchParam
 import aragones.sergio.readercollection.presentation.search.SearchUiState
 import aragones.sergio.readercollection.presentation.search.SearchViewModel
 import aragones.sergio.readercollection.presentation.utils.MainDispatcherRule
@@ -92,6 +93,7 @@ class SearchViewModelTest {
                         isLoading = true,
                         query = "",
                         books = Books(),
+                        param = SearchParam.TITLE,
                     ),
                     awaitItem(),
                 )
@@ -100,6 +102,7 @@ class SearchViewModelTest {
                         isLoading = false,
                         query = "",
                         books = Books(expectedBooks),
+                        param = SearchParam.TITLE,
                     ),
                     awaitItem(),
                 )
@@ -130,6 +133,7 @@ class SearchViewModelTest {
                         isLoading = true,
                         query = "",
                         books = Books(),
+                        param = SearchParam.TITLE,
                     ),
                     awaitItem(),
                 )
@@ -138,6 +142,7 @@ class SearchViewModelTest {
                         isLoading = false,
                         query = "",
                         books = Books(),
+                        param = SearchParam.TITLE,
                     ),
                     awaitItem(),
                 )
@@ -163,6 +168,7 @@ class SearchViewModelTest {
                         isLoading = true,
                         query = "",
                         books = Books(),
+                        param = SearchParam.TITLE,
                     ),
                     awaitItem(),
                 )
@@ -171,6 +177,7 @@ class SearchViewModelTest {
                         isLoading = false,
                         query = "",
                         books = Books(),
+                        param = SearchParam.TITLE,
                     ),
                     awaitItem(),
                 )
@@ -194,6 +201,7 @@ class SearchViewModelTest {
                     isLoading = true,
                     query = "",
                     books = Books(),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -207,6 +215,7 @@ class SearchViewModelTest {
                             Book(""),
                         ),
                     ),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -223,6 +232,7 @@ class SearchViewModelTest {
                             Book(""),
                         ),
                     ),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -237,6 +247,7 @@ class SearchViewModelTest {
                             Book(""),
                         ),
                     ),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -254,6 +265,7 @@ class SearchViewModelTest {
                             Book(""),
                         ),
                     ),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -267,6 +279,7 @@ class SearchViewModelTest {
                             Book(""),
                         ),
                     ),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -296,6 +309,7 @@ class SearchViewModelTest {
                     isLoading = true,
                     query = query,
                     books = Books(),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )
@@ -304,6 +318,7 @@ class SearchViewModelTest {
                     isLoading = false,
                     query = query,
                     books = Books(expectedBooks),
+                    param = SearchParam.TITLE,
                 ),
                 awaitItem(),
             )

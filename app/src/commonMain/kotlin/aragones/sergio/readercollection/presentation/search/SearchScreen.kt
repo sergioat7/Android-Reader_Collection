@@ -86,6 +86,7 @@ import reader_collection.app.generated.resources.title_search
 fun SearchScreen(
     state: SearchUiState,
     onSearch: (String) -> Unit,
+    onFilter: (SearchParam) -> Unit,
     onBookClick: (String) -> Unit,
     onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
@@ -130,8 +131,10 @@ fun SearchScreen(
         )
 
         Filters(
-            selectedParam = SearchParam.TITLE,
-            onSelectParam = {},
+            selectedParam = state.param,
+            onSelectParam = {
+                onFilter(it)
+            },
         )
 
         val modifier = if (query != null) {
@@ -389,6 +392,7 @@ private fun SearchScreenPreview(
         SearchScreen(
             state = state,
             onSearch = {},
+            onFilter = {},
             onBookClick = {},
             onSwipe = {},
             onLoadMoreClick = {},
@@ -426,17 +430,20 @@ private class SearchScreenPreviewParameterProvider :
                 ),
                 isLoading = true,
                 query = null,
+                param = SearchParam.TITLE,
             ),
             SearchUiState.Success(
                 books = Books(),
                 isLoading = false,
                 query = null,
+                param = SearchParam.AUTHOR,
             ),
             SearchUiState.Empty,
             SearchUiState.Error(
                 isLoading = false,
                 query = null,
                 value = ErrorModel("", Res.string.error_server),
+                param = SearchParam.TITLE,
             ),
         )
 }

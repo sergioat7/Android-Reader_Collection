@@ -66,6 +66,7 @@ class SearchViewModel(
                     isLoading = true,
                     query = this.query,
                     books = Books(),
+                    param = _state.value.param,
                 )
                 is SearchUiState.Success -> it.copy(isLoading = true)
                 is SearchUiState.Error -> it.copy(isLoading = true)
@@ -89,6 +90,7 @@ class SearchViewModel(
                         isLoading = false,
                         query = this@SearchViewModel.query,
                         books = Books(updatedBooks),
+                        param = _state.value.param,
                     )
                 },
                 onFailure = {
@@ -96,9 +98,25 @@ class SearchViewModel(
                         isLoading = false,
                         query = this@SearchViewModel.query,
                         value = ErrorModel("", Res.string.error_search),
+                        param = _state.value.param,
                     )
                 },
             )
+        }
+    }
+
+    fun changeFilter(param: SearchParam) {
+        _state.update {
+            when (it) {
+                SearchUiState.Empty -> SearchUiState.Success(
+                    isLoading = false,
+                    query = this.query,
+                    books = Books(),
+                    param = param,
+                )
+                is SearchUiState.Success -> it.copy(param = param)
+                is SearchUiState.Error -> it.copy(param = param)
+            }
         }
     }
 
