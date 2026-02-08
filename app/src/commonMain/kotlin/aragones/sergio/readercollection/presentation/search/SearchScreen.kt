@@ -6,12 +6,15 @@
 package aragones.sergio.readercollection.presentation.search
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
@@ -19,6 +22,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +41,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.customActions
 import androidx.compose.ui.semantics.semantics
@@ -48,6 +53,7 @@ import aragones.sergio.readercollection.domain.model.Book
 import aragones.sergio.readercollection.domain.model.Books
 import aragones.sergio.readercollection.domain.model.ErrorModel
 import aragones.sergio.readercollection.presentation.components.BookItem
+import aragones.sergio.readercollection.presentation.components.CustomFilterChip
 import aragones.sergio.readercollection.presentation.components.CustomPreviewLightDark
 import aragones.sergio.readercollection.presentation.components.CustomSearchBar
 import aragones.sergio.readercollection.presentation.components.ListButton
@@ -80,6 +86,7 @@ import reader_collection.app.generated.resources.title_search
 fun SearchScreen(
     state: SearchUiState,
     onSearch: (String) -> Unit,
+    onFilter: (SearchParam) -> Unit,
     onBookClick: (String) -> Unit,
     onSwipe: (String) -> Unit,
     onLoadMoreClick: () -> Unit,
@@ -121,6 +128,13 @@ fun SearchScreen(
             modifier = Modifier.shadow(elevation),
             backgroundColor = MaterialTheme.colorScheme.background,
             onBack = onBack,
+        )
+
+        Filters(
+            selectedParam = state.param,
+            onSelectParam = {
+                onFilter(it)
+            },
         )
 
         val modifier = if (query != null) {
@@ -191,6 +205,37 @@ fun SearchScreen(
                     )
                 },
                 content = {},
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Filters(
+    selectedParam: SearchParam,
+    onSelectParam: (SearchParam) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        for (entry in SearchParam.entries) {
+            CustomFilterChip(
+                title = stringResource(entry.value),
+                selected = selectedParam == entry,
+                onClick = { onSelectParam(entry) },
+                border = BorderStroke(
+                    width = 1.dp,
+                    color = MaterialTheme.colorScheme.tertiary,
+                ),
+                selectedIcon = rememberVectorPainter(entry.icon)
+                    .withDescription(null),
             )
         }
     }
@@ -347,6 +392,7 @@ private fun SearchScreenPreview(
         SearchScreen(
             state = state,
             onSearch = {},
+            onFilter = {},
             onBookClick = {},
             onSwipe = {},
             onLoadMoreClick = {},
@@ -384,17 +430,20 @@ private class SearchScreenPreviewParameterProvider :
                 ),
                 isLoading = true,
                 query = null,
+                param = SearchParam.TITLE,
             ),
             SearchUiState.Success(
                 books = Books(),
                 isLoading = false,
                 query = null,
+                param = SearchParam.AUTHOR,
             ),
             SearchUiState.Empty,
             SearchUiState.Error(
                 isLoading = false,
                 query = null,
                 value = ErrorModel("", Res.string.error_server),
+                param = SearchParam.TITLE,
             ),
         )
 }
