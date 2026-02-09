@@ -26,11 +26,12 @@ fun SearchView(
     ReaderCollectionApp {
         SearchScreen(
             state = state,
-            onBookClick = onBookClick,
-            onSwipe = viewModel::addBook,
             onSearch = {
                 viewModel.searchBooks(reload = true, query = it)
             },
+            onFilter = viewModel::changeFilter,
+            onBookClick = onBookClick,
+            onSwipe = viewModel::addBook,
             onLoadMoreClick = viewModel::searchBooks,
             onRefresh = {
                 viewModel.searchBooks(reload = true)

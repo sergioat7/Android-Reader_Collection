@@ -20,8 +20,8 @@ val appName = "aragones.sergio.readercollection"
 
 val versionMajor = 2
 val versionMinor = 8
-val versionPatch = 7
-val versionBuild = 1 // bump for dogfood builds, public betas, etc.
+val versionPatch = 8
+val versionBuild = 0 // bump for dogfood builds, public betas, etc.
 
 android {
 

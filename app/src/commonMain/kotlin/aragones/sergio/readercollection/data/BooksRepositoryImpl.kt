@@ -158,19 +158,23 @@ class BooksRepositoryImpl(
         Result.success(Unit)
     }
 
-    override suspend fun searchBooks(query: String, page: Int, order: String?): Result<List<Book>> =
-        withTimeout(TIMEOUT) {
-            withContext(ioDispatcher) {
-                booksRemoteDataSource.searchBooks(query, page, order)
-            }
-        }.fold(
-            onSuccess = { books ->
-                Result.success(books.items?.map { it.toDomain() } ?: listOf())
-            },
-            onFailure = {
-                Result.success(emptyList())
-            },
-        )
+    override suspend fun searchBooks(
+        query: String,
+        filter: String,
+        page: Int,
+        order: String?,
+    ): Result<List<Book>> = withTimeout(TIMEOUT) {
+        withContext(ioDispatcher) {
+            booksRemoteDataSource.searchBooks(query, filter, page, order)
+        }
+    }.fold(
+        onSuccess = { books ->
+            Result.success(books.items?.map { it.toDomain() } ?: listOf())
+        },
+        onFailure = {
+            Result.success(emptyList())
+        },
+    )
 
     override fun fetchRemoteConfigValues(language: String) =
         booksRemoteDataSource.fetchRemoteConfigValues(language)
